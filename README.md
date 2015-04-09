@@ -125,7 +125,7 @@ var appID = "Your-App-Name";
 firebaseSync = new FirebaseSync( firebaseRootURL, appID );
 firebaseSync.add( cube, "cube" ); // object and unique id
 // add all objects you want to sync before calling ...
-firebaseSync.initFirebase();
+firebaseSync.connect();
 ..
 // after changing position.y of cube above
 firebaseSync.saveObject( cube );

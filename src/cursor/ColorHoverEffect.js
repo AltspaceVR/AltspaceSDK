@@ -60,14 +60,10 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
       object.userData.origTintColor = object.userData.tintColor;
     }
 
-    // XXX object.userData.tintColor = this.color;
-    object.userData.tintColor = this.tintColor; // XXX
+    object.userData.tintColor = this.tintColor;
     object.position.x += 0.001; // hack to force AltRender to redraw scene
 
   } else {
-
-    // Needs to be outside callbac, since inside "this" doesn't work as expected.
-    // XXXvar colorObj = new THREE.Color(this.color.r, this.color.g, this.color.b);
 
     object.traverse( function(child) { // TODO: Is traverse still needed?
       if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
@@ -76,11 +72,9 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
           child.userData.origAmbientColor = child.material.ambient;
         }
 
-        // XXX child.material.ambient = colorObj;
         child.material.ambient = this.color;
 
       }
-    // XXX }); 
     }.bind( this )); 
 
   }

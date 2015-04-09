@@ -26,10 +26,10 @@
 </ul>
 <p>Not currently supported:</p>
 <ul>
-<li><a href="http://threejs.org/examples/#webgl_lights_hemisphere">Hemisphere Lights</a> - Flying bird, with a shadown beneath it that changes based on the type of light in the scene.</li>
-<li><a href="http://threejs.org/examples/#webgl_materials_cars_camaro">Materials Reflection</a> - Shiney Camaro with a material that can change color and reflect the surrounding environment.</li>
-<li><a href="http://threejs.org/examples/#webgl_particles_dynamic">Dynamic Particles</a> - People make of sand that fall into piles of dust on the ground and then reconstruct themselves.</li>
-<li><a href="http://threejs.org/examples/#webgl_loader_scene">Three.js Scene</a> - Scene exported from Three.js then imported back again, containing models, geometries, lights, etc. </li>
+<li><a href="http://threejs.org/examples/#webgl_lights_hemisphere">Hemisphere Lights</a> - Flying bird, with a dynamic shadow and toggleable lighting.</li>
+<li><a href="http://threejs.org/examples/#webgl_materials_cars_camaro">Materials Reflection</a> - Car with a reflective material that can change color.</li>
+<li><a href="http://threejs.org/examples/#webgl_particles_dynamic">Dynamic Particles</a> - People made of point clouds that fall to the ground then reconstruct.</li>
+<li><a href="http://threejs.org/examples/#webgl_loader_scene">Three.js Scene</a> - Scene with eclectic objects exported from Three.js then imported back.</li>
 <li><a href="http://threejs.org/examples/#webgl_shaders_ocean">Ocean Shader</a> - Sphere submerging into an ocean rendered with a custom WebGL ocean shader.</li>
 </ul>
 <p>Habits of Successful Altspace Web Apps:</p>
@@ -105,7 +105,7 @@ var appID = &quot;Your-App-Name&quot;;
 firebaseSync = new FirebaseSync( firebaseRootURL, appID );
 firebaseSync.add( cube, &quot;cube&quot; ); // object and unique id
 // add all objects you want to sync before calling ...
-firebaseSync.initFirebase();
+firebaseSync.connect();
 ..
 // after changing position.y of cube above
 firebaseSync.saveObject( cube );
