@@ -37,7 +37,7 @@ FirebaseSync = function(firebaseRootURL, appID, params) {
 	this.lastObjectData = {}; // uuid to last objectData synced
 
 	// TODO: Use unique IDs instead of random. 
-	this.senderID = "user" + Math.round(Math.random() * 1000);
+	this.senderID = "user" + Math.floor(Math.random() * Math.pow(2, 31));
 
 	this.roomID;
 	this.roomKey;
