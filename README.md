@@ -28,10 +28,10 @@ Types of apps you can build:
 * [Sharp Dressed Man] - Load objects from OBJ/MTL files from Blender.  
 
 Not currently supported:
-* [Hemisphere Lights] - Flying bird, with a shadown beneath it that changes based on the type of light in the scene.
-* [Materials Reflection] - Shiney Camaro with a material that can change color and reflect the surrounding environment.
-* [Dynamic Particles] - People make of sand that fall into piles of dust on the ground and then reconstruct themselves.
-* [Three.js Scene] - Scene exported from Three.js then imported back again, containing models, geometries, lights, etc. 
+* [Hemisphere Lights] - Flying bird, with a dynamic shadow and toggleable lighting.
+* [Materials Reflection] - Car with a reflective material that can change color.
+* [Dynamic Particles] - People made of point clouds that fall to the ground then reconstruct.
+* [Three.js Scene] - Scene with eclectic objects exported from Three.js then imported back.
 * [Ocean Shader] - Sphere submerging into an ocean rendered with a custom WebGL ocean shader.
 
 Habits of Successful Altspace Web Apps:
