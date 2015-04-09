@@ -1,0 +1,192 @@
+<!--
+	Example of how to make object follow the mouse cursor.
+
+	Author: Amber Roy
+	Copyright (c) 2015 Altspace VR
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<title>Follow Cursor Example</title>
+
+		<!-- Required by AltOBJMTLLoader.js -->
+		<script src="../lib/three.min.js"></script>
+		<script src="../lib/OBJMTLLoader.js"></script>
+		<script src="../lib/MTLLoader.js"></script>
+
+		<!-- Altspace SDK -->
+		<script src="../src/AltOBJMTLLoader.js"></script>
+		<script src="../src/AltRenderer.js"></script>
+		<script src="../src/cursor/CursorEvents.js"></script>
+		<script src="../src/cursor/AltObjectControls.js"></script>
+
+		<style>
+			body {
+				background-color: rgba(1, 0, 0, 0);
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				position: absolute;
+				margin: 10px;
+				font-family: Arial;
+			}
+		</style>
+
+</head>
+<body>
+<body>
+		<div id="info">
+				<a href="http://github.com/AltspaceVR/alt-three.js" 
+					 target="_blank">alt-three.js</a> - Cursor Follow
+		</div>
+		<div id="container"></div>
+</body>
+</body>
+
+<script>
+
+var inAltspace = !!window.Alt;
+
+var scene, camera, renderer;
+var cursorEvents;
+var cube;
+var sound = null;
+
+
+// start off by loading .obj and .mtl files
+loadModels();
+
+function onModelsLoaded() {
+
+	initScene();
+	initControls();
+	animate();
+
+}
+
+function loadModels() {
+
+	// loader assumes .mtl file has same basename as .obj file
+	var filenameOBJ = "spinning_cube/cube.obj";
+	var isLoadingDone = false;
+
+	// Load cube and add it to the scene.
+	var loader = new THREE.AltOBJMTLLoader();
+	loader.load(filenameOBJ, function ( loadedObject ) {
+
+		console.log("loaded object from " + filenameOBJ, loadedObject);
+		cube = loadedObject;
+		isLoadingDone = true;
+
+	});
+
+	var intervalID = setInterval( function() {
+
+		if ( isLoadingDone ) {
+			clearInterval( intervalID );
+			onModelsLoaded();
+		}
+
+	}, 200); // Check every 200 milliseconds
+
+	// NO CODE HERE unless you want it to run before models finish loading.
+}
+
+function initScene() {
+
+	scene = new THREE.Scene();
+
+	if ( inAltspace ) {
+
+		renderer = new THREE.AltRenderer();
+		// hide any elements on webpage
+		document.getElementById("info").style.visibility = "hidden";
+
+		var scale = new THREE.Vector3( 2, 2, 2);
+		cube.scale.copy( scale );
+		// or cube.scale.set( scale.x, scale.y, scale.z)
+		// note cube.scale = scale won't work, same for cube.position
+		cube.position.y = 25; // off the ground
+
+	} else {
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setClearColor("#AAAAAA");
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+	}
+
+	var aspect = window.innerWidth / window.innerHeight;
+	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+	camera.position.z = 100;	// stand back from origin
+	camera.lookAt( scene.position );
+
+	// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
+	var ambient = new THREE.AmbientLight( 0xffffff );
+	scene.add( ambient );
+
+	// Don't forget to add loaded model into the scene.
+	scene.add(cube);
+
+}
+
+
+function initControls() {
+
+	var params = { defaultTarget: cube };
+	cursorEvents = new CursorEvents( params );
+	cursorEvents.enableMouseEvents( camera );
+
+	cube.userData.prevMousePosition = new THREE.Vector3();
+	cube.userData.selectY = 0;
+
+	cube.addEventListener( "holocursormove", function( event ) {
+
+		// Move event not associated with a particular object, but dispatched
+		// to cube since we set it as defaultTarget for ObjectCursorEvents.
+		// Typically the optional defaultTarget would be a manager object.
+
+		// Cube is placed 100 units from the user, along the cursor ray.
+		var cursorRay = event.detail.cursorRay;
+		var offset =  cursorRay.direction.multiplyScalar(100);
+		this.position.copy( cursorRay.origin.add( offset ) );
+
+	});
+
+	cursorEvents.add( cube );
+
+}
+
+function onWindowResize() {
+
+	if ( inAltspace ) return ; // Resize not supported yet.
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+window.addEventListener( 'resize', onWindowResize, false );
+
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	cursorEvents.update();
+
+	renderer.render( scene, camera );
+
+}
+
+
+
+</script>
+</body>
+</html>
+
+
+
