@@ -1,6 +1,6 @@
 # Altspace Web App SDK
 
-This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altsapce web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.
+This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.
 
 To create an Altspace Web App:
 
