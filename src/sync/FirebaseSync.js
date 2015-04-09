@@ -1,6 +1,8 @@
 /**
- * FirebaseSync synchronizes the positions of objects across the network.
- * Uses Firebase object database. See schema at bottom of file.
+ * FirebaseSync synchronizes objects between multiple clients using Firebase DB.
+ * Automatically creates a new room, if room not specified in URL query string.
+ * Syncs object position, rotation, and scale (must be THREE.Object3D instance).
+ * Optionally syncs object.userData properties given in syncUserDataProps param. 
  *
  * @author amberroy / http://github.com/amberroyVR
  * Copyright (c) 2015 Amber Roy
@@ -16,7 +18,12 @@ FirebaseSync = function(firebaseRootURL, appID, params) {
 	this.firebaseRoot = new Firebase(firebaseRootURL);
 	this.appID = appID;
 
+	this.onConnectComplete;
+
 	var p = params || {};
+
+	// List of which properties to sync in object.userData
+	this.syncUserDataProps = p.syncUserDataProps || [];
 
 	// set object.visibile to false until initial position synced with server. 
 	// TODO: Make this work in Altspace. visible flag not yet supported.
@@ -27,7 +34,7 @@ FirebaseSync = function(firebaseRootURL, appID, params) {
 	this.uuid2key = {};	// uuid2key[ object.uuid ] = key
 	this.objectsInitialized = [];
 
-	this.lastObjectData = {}; // uuid to last objectData synced // XXX
+	this.lastObjectData = {}; // uuid to last objectData synced
 
 	// TODO: Use unique IDs instead of random. 
 	this.senderID = "user" + Math.round(Math.random() * 1000);
@@ -42,7 +49,14 @@ FirebaseSync = function(firebaseRootURL, appID, params) {
 	this.reloadWithNewURL = false;
 	this.roomCreated = false;
 
-	this.TRACE = false; // log events to console, for debugging
+	this.TRACE = false; // console.log firebase events, for debugging only
+
+	// type check
+	if ( p.syncUserDataProps && ! (p.syncUserDataProps instanceof Array)) {
+		var errMsg = "Expected array for syncUserDataProps";
+		console.log(errMsg);
+		throw new Error(errMsg);
+	}
 };
 
 
@@ -76,7 +90,9 @@ FirebaseSync.prototype.add = function( object, key ) {
 }
 
 
-FirebaseSync.prototype.initFirebase = function() {
+FirebaseSync.prototype.connect = function( onCompleteCallback ) {
+
+	this.onConnectComplete = onCompleteCallback;
 
 	// Handle these cases:
 	// (1) No roomID specified in URL: create room with random roomID and join it.
@@ -84,7 +100,7 @@ FirebaseSync.prototype.initFirebase = function() {
 	// (3) RoomID specified in URL, but room does not exists: create and join it. 
 
 	if ( this.objects.length === 0) {
-		console.error("Must FirebaseSync.add() objects before calling initFirebase.");
+		console.error("Must FirebaseSync.add() objects before calling connect.");
 		// We can subscribe to all objects in the room, instead of specific object keys,
 		// but then cannot handle a position update for an object we don't have locally.
 		// Basically all clients need to know up front which objects are being synced.
@@ -261,6 +277,22 @@ FirebaseSync.prototype._startListeningRoom = function() {
 
 	}
 
+	if ( this.onConnectComplete ) {
+
+		var roomInfo = {
+
+			thisUrl: this.roomURL,
+			appId: this.appID,
+			roomId: this.roomID,
+			senderId: this.senderID,
+			firebaseRoomKey: this.roomKey,
+			firebaseRootUrl: this.firebaseRoot.toString(),
+			firebaseRoomUrl: this.firebaseRoom.toString(),
+
+		};
+
+		this.onConnectComplete( roomInfo );
+	}
 
 };
 
@@ -337,33 +369,8 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 	}
 
 	if (! snapshot.exists() ) {
-
 		// First game ever (or we cleared the database).
 		this.saveObject( object );
-
-/* XXX
-		// First game ever (or we cleared the database).
-		var objectData = {
-			"position": {
-				x: object.position.x,
-				y: object.position.y,
-				z: object.position.z
-			},
-			"rotation": {
-				x: object.rotation.x,
-				y: object.rotation.y,
-				z: object.rotation.z
-			},
-			"senderID": this.senderID,
-			"sentAt": Date.now()
-		};
-		this.firebaseRoom.child("objects").child(key).set(
-			objectData, this._firebaseComplete
-		);
-		this.firebaseRoom.child("updatedAt").set(
-			Firebase.ServerValue.TIMESTAMP, this._firebaseComplete
-		);
-*/
 
 		// above set will trigger this callback again
 		return;
@@ -372,19 +379,13 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 
 	var objectData = snapshot.val();
 
-	this.lastObjectData[ object.uuid ] = objectData;  // XXX	
+	this.lastObjectData[ object.uuid ] = objectData;
 
 	var objectInitialized = this.objectsInitialized.indexOf( object ) !== -1;
 	if ( objectData.senderID !== this.senderID || !objectInitialized ) {
 
 		// Another player moved the object!
-		object.position.x = objectData.position.x;
-		object.position.y = objectData.position.y;
-		object.position.z = objectData.position.z;
-
-		object.rotation.x = objectData.rotation.x;
-		object.rotation.y = objectData.rotation.y;
-		object.rotation.z = objectData.rotation.z;
+		this._copyObjectData( object, objectData );
 
 		if ( this.TRACE ) console.log("RECV update for " + key, objectData);
 
@@ -441,22 +442,6 @@ FirebaseSync.prototype.saveObject = function(object) {
 	}
 
 	var objectData = this._createObjectData( object );
-/* XXX
-	var objectData = {
-		"position": {
-			x: object.position.x,
-			y: object.position.y,
-			z: object.position.z
-		},
-		"rotation": {
-			x: object.rotation.x,
-			y: object.rotation.y,
-			z: object.rotation.z
-		},
-		"senderID": this.senderID,
-		"sentAt": Date.now()
-	};
-*/
 	this.firebaseRoom.child("objects").child(objectKey).set(
 		objectData, this._firebaseComplete
 	);
@@ -468,7 +453,6 @@ FirebaseSync.prototype.saveObject = function(object) {
 };
 
 
-// XXX
 FirebaseSync.prototype.save = function() {
 	// Save ALL objects, if they have changed since the last time we synced.
 	// NOT recommended to call this in your update loop if objects change
@@ -490,6 +474,9 @@ FirebaseSync.prototype.save = function() {
 FirebaseSync.prototype._createObjectData = function( object ) {
 
 	var objectData = {
+
+		// flatten THREE.Vector3 objects into x, y, z
+
 		"position": {
 			x: object.position.x,
 			y: object.position.y,
@@ -500,9 +487,27 @@ FirebaseSync.prototype._createObjectData = function( object ) {
 			y: object.rotation.y,
 			z: object.rotation.z
 		},
+		"scale" : {
+			x: object.scale.x,
+			y: object.scale.y,
+			z: object.scale.z
+		},
 		"senderID": this.senderID,
 		"sentAt": Date.now()
 	};
+
+	for ( var i=0; i < this.syncUserDataProps.length; i++ ) {
+		var prop = this.syncUserDataProps[i];
+		if ( typeof object.userData[prop] !== "undefined" ) {
+
+			if ( !objectData.userData ) {
+				objectData.userData = {};
+			}
+
+			objectData.userData[prop] = object.userData[prop];
+		}
+
+	}
 
 	return objectData;
 }
@@ -510,17 +515,71 @@ FirebaseSync.prototype._createObjectData = function( object ) {
 FirebaseSync.prototype._sameObjectData = function( object, objectData ) {
 
 	if ( object.position.x !== objectData.position.x ||
-	     object.position.y !== objectData.position.y ||
-	     object.position.z !== objectData.position.z )
+		object.position.y !== objectData.position.y ||
+		object.position.z !== objectData.position.z )
 		return false;
 
 	if ( object.rotation.x !== objectData.rotation.x ||
-	     object.rotation.y !== objectData.rotation.y ||
-	     object.rotation.z !== objectData.rotation.z )
+		object.rotation.y !== objectData.rotation.y ||
+		object.rotation.z !== objectData.rotation.z )
 		return false;
 
+	if ( object.scale.x !== objectData.scale.x ||
+		object.scale.y !== objectData.scale.y ||
+		object.scale.z !== objectData.scale.z )
+		return false;
+
+	for ( var i=0; i < this.syncUserDataProps.length; i++ ) {
+
+		var prop = this.syncUserDataProps[i];
+		if ( typeof object.userData[prop] === "undefined" && objectData.userData &&
+			typeof objectData.userData[prop] !== "undefined" ) {
+
+			return false;
+		}
+		if ( (!objectData.userData ||
+			typeof objectData.userData[prop] === "undefined") && 
+			typeof object.userData[prop] !== "undefined" ) {
+
+			return false;
+		}
+
+		if ( typeof object.userData[prop] != "undefined" && 
+			object.userData[prop] !== objectData.userData[prop] ) {
+
+			return false;
+		}
+
+	}
 
 	return true;
+}
+
+FirebaseSync.prototype._copyObjectData = function( object, objectData) {
+
+	object.position.x = objectData.position.x;
+	object.position.y = objectData.position.y;
+	object.position.z = objectData.position.z;
+
+	object.rotation.x = objectData.rotation.x;
+	object.rotation.y = objectData.rotation.y;
+	object.rotation.z = objectData.rotation.z;
+
+	object.scale.x = objectData.scale.x;
+	object.scale.y = objectData.scale.y;
+	object.scale.z = objectData.scale.z;
+
+	for ( var i=0; i < this.syncUserDataProps.length; i++ ) {
+
+		var prop = this.syncUserDataProps[i];
+		if ( objectData.userData &&
+			typeof objectData.userData[prop] !== "undefined" ) {
+
+			object.userData[prop] = objectData.userData[prop];
+		}
+
+	}
+
 }
 
 
@@ -556,19 +615,13 @@ FirebaseSync.prototype._firebaseError = function(errorObject) {
 				joinedAt: 1424724849003,
 				userID: "user45"
 			}
-			<autogen-unique-id>: 
-				joinedAt: 1424724859003,
-				userId: "user247"
+			...
 		},
 		objects: {
 			<user-provided-key>: {
 				position: {x: 4, y: 0, z: 26 },
-				rotation: {x: 4, y: 0, z: 26 },
-				senderID: "user45"
-			},
-			<user-provided-key>: {
-				position: {x: 4, y: 0, z: -26 },
-				rotation: {x: 4, y: 0, z: 26 },
+				rotation: {x: 180, y: 180, z: 0 },
+				scale: {x: 2, y: 2, z: 2 },
 				senderID: "user45"
 			},
 			...

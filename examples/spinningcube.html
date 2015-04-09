@@ -127,18 +127,17 @@ function initScene() {
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		document.body.appendChild( renderer.domElement );
 
+		var aspect = window.innerWidth / window.innerHeight;
+		camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+		camera.position.z = 100; // stand back from origin
+		camera.position.y = 25;	// slightly above origin
+		camera.lookAt( scene.position );
+
+
+		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
+		var ambient = new THREE.AmbientLight( 0xffffff );
+		scene.add( ambient );
 	}
-
-	var aspect = window.innerWidth / window.innerHeight;
-	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
-	camera.position.z = 100; // stand back from origin
-	camera.position.y = 25;	// slightly above origin
-	camera.lookAt( scene.position );
-
-
-	// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
-	var ambient = new THREE.AmbientLight( 0xffffff );
-	scene.add( ambient );
 
 	// Don't forget to add loaded model into the scene.
 	scene.add(cube);
@@ -170,6 +169,7 @@ function initEvents() {
 
 	var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
 	var hoverEffect = new ColorHoverEffect( { color: new THREE.Color(0, 1, 1) });
+	// hover listens for holocursorenter / holocursorleave for hover over / out
 
 	cursorEvents.enableEffects();
 	cursorEvents.addEffect( dragEffect, cube );
@@ -184,7 +184,7 @@ function initFirebase() {
 	firebaseSync = new FirebaseSync( firebaseRootURL, appID );
 	firebaseSync.add( cube, "cube" );
 
-	firebaseSync.initFirebase();
+	firebaseSync.connect();
 
 }
 
