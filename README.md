@@ -1,6 +1,8 @@
 # Altspace Web App SDK
 
-This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.  Below is an overview of the types of apps you can build, the basic steps to create an app, and this repository contents.  See the [AltspaceSDK Wiki] for additional documentation.
+This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.  Below is an overview of the types of apps you can build, the basic steps to create an app, and this repository contents.  
+
+See the [AltspaceSDK Wiki] for additional documentation, including a list of [Known Issues].
 
 To create an Altspace Web App:
 
@@ -159,6 +161,8 @@ Now this basic app is complete, and you can see the full source code listing at 
 * top level (three.min.js, etc) - Open source modules used by src and examples. 
 
 [AltspaceSDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
+[Known Issues]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Known-Issues
+
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter
 [Draggable Cubes]: http://threejs.org/examples/#webgl_interactive_draggablecubes
