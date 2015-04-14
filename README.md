@@ -4,13 +4,14 @@ This SDK will enable you to create interactive, multi-user web apps with 3D cont
 
 To create an Altspace Web App:
 
-1. Load one or more OBJ/MTL models using the [AltOBJMTLLoader]
-2. Render your scene using the [AltRender] in your animate loop.
-3. Implement your animations and app logic using [Three.js]
-4. Add Altspace user interaction to your app
+1. Clone/download this repo and create your app HTML file.
+2. Load one or more OBJ/MTL models using the [AltOBJMTLLoader]
+3. Render your scene using the [AltRender] in your animate loop.
+4. Implement your animations and app logic using [Three.js]
+5. Add Altspace user interaction to your app
 	* Add event handlers to objects with [CursorEvents]
 	* Add pre-defined interactive behavior with [CursorEffects]
-5. Add muti-player networking with [FirebaseSync]
+6. Add muti-player networking with [FirebaseSync]
 
 The above steps are explained in more detail in the Getting Started section below, but first a brief overview of what types of 3D web apps are currently supported.
 
@@ -46,7 +47,12 @@ Habits of Successful Altspace Web Apps:
 
 Let's look at how to create a simple interactive, multi-player Altspace Web App. (See [spinningcube.html] for full example)
 
-**Step 1**:
+**Step 1**
+Clone/download this repo and create your app HTML file.
+
+Your app HTML file should contain script tags pointing to the SDK files (and also any desired HTML/CSS, if you app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK (in **bold**).  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
+
+**Step 2**:
 Load one or more OBJ/MTL models using the **AltOBJMTLLoader**
 ```
 var loader = new THREE.AltOBJMTLLoader();
@@ -62,7 +68,7 @@ scene.add( cube );
 ```
 Loading can take a second or two, so an app typically waits until are models are loaded before continuing its initialization. Above we set a flag in the loader callback that is checked by an interval timer.
 
-**Step 2**:
+**Step 3**:
 Render your scene using the **AltRender** in your animate loop.
 ```
 renderer = new THREE.AltRenderer(); // during scene initialization
@@ -71,7 +77,7 @@ renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 ```
 Any objects loaded in the first step and added to the Three.js scene are now imported (a.k.a. spawned) into the Altspace VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the Altspace environment.
 
-**Step 3**:
+**Step 4**:
 Implement your animations and app logic using **Three.js**
 ```
 // in animate loop
@@ -81,7 +87,7 @@ cube.rotation.y += 0.01;
 The AltRenderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
 
 
-**Step 4a**:
+**Step 5a**:
 Add event handlers to objects with **CursorEvents**
 ```
 cursorEvents = new CursorEvents();
@@ -103,7 +109,7 @@ cursorEvents.update();
 ```
 Cursor event names are **holocursordown** / **holocursorup** for clicking on a hologram, **holocursorenter** / **holocursorleave** for hovering a hologram, and **holocursormove** for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)
 
-**Step 4b**:
+**Step 5b**:
 Add pre-defined interactive behavior with **CursorEffects**
 ```
 cursorEvents.enableEffects();
@@ -117,7 +123,7 @@ cursorEvents.addEffect( hoverEffect, cube );
 ```
 Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. Note these interactive effects, comprising 200 lines of Javascript, were added above with just a half-dozen lines. In addition to using pre-made effects, you can also create your own, for use in your apps or to share with the Altspace developer community.
 
-**Step 5**:
+**Step 6**:
 Add muti-player networking with **FirebaseSync**
 ```
 var firebaseRootURL = "https://your-firebase-root.firebaseio.com/";
