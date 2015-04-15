@@ -155,16 +155,16 @@ Now this basic app is complete, and you can see the full source code listing at 
 [AltspaceSDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [Known Issues]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Known-Issues
 
-[Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html
-[Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter
-[Draggable Cubes]: http://threejs.org/examples/#webgl_interactive_draggablecubes
-[Hemisphere Light]: http://threejs.org/examples/#webgl_lights_hemisphere
-[Material Reflection]: http://threejs.org/examples/#webgl_materials_cars_camaro
-[Point Cloud]: http://threejs.org/examples/#webgl_particles_dynamic
-[OBJ/MTL Import]: http://threejs.org/examples/#webgl_loader_obj_mtl
-[Three.js Scene]: http://threejs.org/examples/#webgl_loader_scene
-[Ocean Shader]: http://threejs.org/examples/#webgl_shaders_ocean
-[Falling Cubes]: http://chandlerprall.github.io/Physijs/examples/collisions.html
+[Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
+[Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."
+[Draggable Cubes]: http://threejs.org/examples/#webgl_interactive_draggablecubes "Click-and-drag to move objects around."
+[Falling Cubes]: http://chandlerprall.github.io/Physijs/examples/collisions.html "Gravity/collision simulation using Physijs plugin."
+[OBJ/MTL Import]: http://threejs.org/examples/#webgl_loader_obj_mtl "Load objects from OBJ/MTL files from Blender."
+[Hemisphere Light]: http://threejs.org/examples/#webgl_lights_hemisphere "Flying bird, with a dynamic shadow and toggleable lighting."
+[Material Reflection]: http://threejs.org/examples/#webgl_materials_cars_camaro "Car with a reflective material that can change color."
+[Point Cloud]: http://threejs.org/examples/#webgl_particles_dynamic "People made of particles that fall to the ground then reconstruct."
+[Three.js Scene]: http://threejs.org/examples/#webgl_loader_scene "Scene with eclectic objects exported from Three.js then imported back."
+[Ocean Shader]: http://threejs.org/examples/#webgl_shaders_ocean "Sphere submerging into an ocean rendered with a custom WebGL shader."
 
 [AltOBJMTLLoader]: src/AltOBJMTLLoader.js
 [AltRender]: src/AltRenderer.js
