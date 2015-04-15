@@ -17,16 +17,18 @@ To create an Altspace Web App:
 
 The above steps are explained in more detail in the Getting Started section below, but first a brief overview of what types of 3D web apps are currently supported.
 
-## App Examples (and Counter-Examples)
+## Scope of Current SDK
 
-Altspace Web Apps typically consist of 3D objects that are rendered in Altsapce by a custom renderer, included in this SDK, that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
-
-Apps that work best in the Altspace VR environment generally use 3D graphics to *simulate real-world physical objects*. Think retro video games (Tetris blocks, Asteroids rocks), not impressionist art or floating UI elements.  Also note that 3D objects loaded into Altspace by your app currently behave like *holograms*: avatars cannot climb onto them, and they do not have any Physics behaviors (gravity, collisions, etc) besides what you implement.
+Altspace Web Apps typically consist of 3D objects that are rendered in the Altsapce virtual environment by a custom renderer, included in this SDK, that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
 
 Types of apps you can build:
+* apps that *simulate real-world physical objects* tend to work best in Altspace, for example...
 * [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
 Not currently supported:
+* Running existing Three.js apps (must be ported to use our SDK for rendering, input, etc)
+* Platformer scenes (app objects behave like *holograms*; avatars cannot climb onto them)
+* Point clouds, custom shaders, dynamic/modified meshes or materials, screen space effects.
 * [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
 
 Habits of Successful Altspace Web Apps:
