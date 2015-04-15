@@ -1,8 +1,8 @@
 # Altspace Web App SDK
 
-This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.  Below is an overview of the types of apps you can build, the basic steps to create an app, and this repository contents.  
+This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.
 
-See the [AltspaceSDK Wiki] for additional documentation, including a list of [Known Issues].
+Below is an overview of the types of apps you can build, the basic steps to create an app, and this repository contents. See the [AltspaceSDK Wiki] for additional documentation, including a list of [Known Issues].
 
 To create an Altspace Web App:
 
@@ -24,18 +24,10 @@ Altspace Web Apps typically consist of 3D objects that are rendered in Altsapce 
 Apps that work best in the Altspace VR environment generally use 3D graphics to *simulate real-world physical objects*. Think retro video games (Tetris blocks, Asteroids rocks), not impressionist art or floating UI elements.  Also note that 3D objects loaded into Altspace by your app currently behave like *holograms*: avatars cannot climb onto them, and they do not have any Physics behaviors (gravity, collisions, etc) besides what you implement.
 
 Types of apps you can build:
-* [Draggable Cubes] - Click-and-drag to move objects around.
-* [Voxel Painter] - Interactively add objects to the world.
-* [Falling Cubes] - Gravity/collision simulation using Physijs plugin. 
-* [Flocking Birds] - Objects simulating the Boid flocking algorithm.
-* [Sharp Dressed Man] - Load objects from OBJ/MTL files from Blender.  
+* [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
 Not currently supported:
-* [Hemisphere Lights] - Flying bird, with a dynamic shadow and toggleable lighting.
-* [Materials Reflection] - Car with a reflective material that can change color.
-* [Dynamic Particles] - People made of point clouds that fall to the ground then reconstruct.
-* [Three.js Scene] - Scene with eclectic objects exported from Three.js then imported back.
-* [Ocean Shader] - Sphere submerging into an ocean rendered with a custom WebGL ocean shader.
+* [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
 
 Habits of Successful Altspace Web Apps:
 * Use models loaded from and OBJ file, not Three.js geometry.
@@ -166,10 +158,10 @@ Now this basic app is complete, and you can see the full source code listing at 
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter
 [Draggable Cubes]: http://threejs.org/examples/#webgl_interactive_draggablecubes
-[Hemisphere Lights]: http://threejs.org/examples/#webgl_lights_hemisphere
-[Materials Reflection]: http://threejs.org/examples/#webgl_materials_cars_camaro
-[Dynamic Particles]: http://threejs.org/examples/#webgl_particles_dynamic
-[Sharp Dressed Man]: http://threejs.org/examples/#webgl_loader_obj_mtl
+[Hemisphere Light]: http://threejs.org/examples/#webgl_lights_hemisphere
+[Material Reflection]: http://threejs.org/examples/#webgl_materials_cars_camaro
+[Point Cloud]: http://threejs.org/examples/#webgl_particles_dynamic
+[OBJ/MTL Import]: http://threejs.org/examples/#webgl_loader_obj_mtl
 [Three.js Scene]: http://threejs.org/examples/#webgl_loader_scene
 [Ocean Shader]: http://threejs.org/examples/#webgl_shaders_ocean
 [Falling Cubes]: http://chandlerprall.github.io/Physijs/examples/collisions.html

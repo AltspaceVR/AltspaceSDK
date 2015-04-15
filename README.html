@@ -1,7 +1,9 @@
 <h1 id="altspace-web-app-sdk">Altspace Web App SDK</h1>
-<p>This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altsapce web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.</p>
+<p>This SDK will enable you to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.</p>
+<p>Below is an overview of the types of apps you can build, the basic steps to create an app, and this repository contents. See the <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">AltspaceSDK Wiki</a> for additional documentation, including a list of <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki/Known-Issues">Known Issues</a>.</p>
 <p>To create an Altspace Web App:</p>
 <ol>
+<li>Clone/download this repo and create your app HTML file.</li>
 <li>Load one or more OBJ/MTL models using the <a href="src/AltOBJMTLLoader.js">AltOBJMTLLoader</a></li>
 <li>Render your scene using the <a href="src/AltRenderer.js">AltRender</a> in your animate loop.</li>
 <li>Implement your animations and app logic using <a href="http://https://github.com/mrdoob/three.js/">Three.js</a></li>
@@ -18,19 +20,11 @@
 <p>Apps that work best in the Altspace VR environment generally use 3D graphics to <em>simulate real-world physical objects</em>. Think retro video games (Tetris blocks, Asteroids rocks), not impressionist art or floating UI elements.  Also note that 3D objects loaded into Altspace by your app currently behave like <em>holograms</em>: avatars cannot climb onto them, and they do not have any Physics behaviors (gravity, collisions, etc) besides what you implement.</p>
 <p>Types of apps you can build:</p>
 <ul>
-<li><a href="http://threejs.org/examples/#webgl_interactive_draggablecubes">Draggable Cubes</a> - Click-and-drag to move objects around.</li>
-<li><a href="http://threejs.org/examples/#webgl_interactive_voxelpainter">Voxel Painter</a> - Interactively add objects to the world.</li>
-<li><a href="http://chandlerprall.github.io/Physijs/examples/collisions.html">Falling Cubes</a> - Gravity/collision simulation using Physijs plugin. </li>
-<li><a href="http://threejs.org/examples/canvas_geometry_birds.html">Flocking Birds</a> - Objects simulating the Boid flocking algorithm.</li>
-<li><a href="http://threejs.org/examples/#webgl_loader_obj_mtl">Sharp Dressed Man</a> - Load objects from OBJ/MTL files from Blender.  </li>
+<li><a href="http://threejs.org/examples/#webgl_interactive_draggablecubes">Draggable Cubes</a> - <a href="http://threejs.org/examples/#webgl_interactive_voxelpainter">Voxel Painter</a> - <a href="http://chandlerprall.github.io/Physijs/examples/collisions.html">Falling Cubes</a> - <a href="http://threejs.org/examples/canvas_geometry_birds.html">Flocking Birds</a> - <a href="http://threejs.org/examples/#webgl_loader_obj_mtl">OBJ/MTL Import</a></li>
 </ul>
 <p>Not currently supported:</p>
 <ul>
-<li><a href="http://threejs.org/examples/#webgl_lights_hemisphere">Hemisphere Lights</a> - Flying bird, with a dynamic shadow and toggleable lighting.</li>
-<li><a href="http://threejs.org/examples/#webgl_materials_cars_camaro">Materials Reflection</a> - Car with a reflective material that can change color.</li>
-<li><a href="http://threejs.org/examples/#webgl_particles_dynamic">Dynamic Particles</a> - People made of point clouds that fall to the ground then reconstruct.</li>
-<li><a href="http://threejs.org/examples/#webgl_loader_scene">Three.js Scene</a> - Scene with eclectic objects exported from Three.js then imported back.</li>
-<li><a href="http://threejs.org/examples/#webgl_shaders_ocean">Ocean Shader</a> - Sphere submerging into an ocean rendered with a custom WebGL ocean shader.</li>
+<li><a href="http://threejs.org/examples/#webgl_lights_hemisphere">Hemisphere Light</a> - <a href="http://threejs.org/examples/#webgl_materials_cars_camaro">Material Reflection</a> - <a href="http://threejs.org/examples/#webgl_particles_dynamic">Point Cloud</a> - <a href="http://threejs.org/examples/#webgl_loader_scene">Three.js Scene</a> - <a href="http://threejs.org/examples/#webgl_shaders_ocean">Ocean Shader</a></li>
 </ul>
 <p>Habits of Successful Altspace Web Apps:</p>
 <ul>
@@ -43,7 +37,10 @@
 </ul>
 <h2 id="getting-started">Getting Started</h2>
 <p>Let&#39;s look at how to create a simple interactive, multi-player Altspace Web App. (See <a href="examples/spinningcube.html">spinningcube.html</a> for full example)</p>
-<p><strong>Step 1</strong>:
+<p><strong>Step 1</strong>
+Clone/download this repo and create your app HTML file.</p>
+<p>Your app HTML file should contain script tags pointing to the SDK files (and also any desired HTML/CSS, if you app supports running in a tranditional browser).  Next, let&#39;s add Javascript that uses standard Three.js commands along with new functions from our SDK (in <strong>bold</strong>).  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  </p>
+<p><strong>Step 2</strong>:
 Load one or more OBJ/MTL models using the <strong>AltOBJMTLLoader</strong></p>
 <pre><code>var loader = new THREE.AltOBJMTLLoader();
 loader.load(filenameOBJ, function ( loadedObject ) {
@@ -56,19 +53,19 @@ loader.load(filenameOBJ, function ( loadedObject ) {
 // after loading done
 scene.add( cube );
 </code></pre><p>Loading can take a second or two, so an app typically waits until are models are loaded before continuing its initialization. Above we set a flag in the loader callback that is checked by an interval timer.</p>
-<p><strong>Step 2</strong>:
+<p><strong>Step 3</strong>:
 Render your scene using the <strong>AltRender</strong> in your animate loop.</p>
 <pre><code>renderer = new THREE.AltRenderer(); // during scene initialization
 ...
 renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 </code></pre><p>Any objects loaded in the first step and added to the Three.js scene are now imported (a.k.a. spawned) into the Altspace VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the Altspace environment.</p>
-<p><strong>Step 3</strong>:
+<p><strong>Step 4</strong>:
 Implement your animations and app logic using <strong>Three.js</strong></p>
 <pre><code>// in animate loop
 cube.rotation.x += 0.01;
 cube.rotation.y += 0.01;
 </code></pre><p>The AltRenderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. <strong>Hologram</strong> refers to the in-Altspace 3D object controlled by an Altspace Web App.</p>
-<p><strong>Step 4a</strong>:
+<p><strong>Step 5a</strong>:
 Add event handlers to objects with <strong>CursorEvents</strong></p>
 <pre><code>cursorEvents = new CursorEvents();
 cursorEvents.add( cube );
@@ -87,7 +84,7 @@ cube.addEventListener( &quot;holocursorup&quot;,  function( event ) {
 // in animate loop
 cursorEvents.update();
 </code></pre><p>Cursor event names are <strong>holocursordown</strong> / <strong>holocursorup</strong> for clicking on a hologram, <strong>holocursorenter</strong> / <strong>holocursorleave</strong> for hovering a hologram, and <strong>holocursormove</strong> for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)</p>
-<p><strong>Step 4b</strong>:
+<p><strong>Step 5b</strong>:
 Add pre-defined interactive behavior with <strong>CursorEffects</strong></p>
 <pre><code>cursorEvents.enableEffects();
 
@@ -98,7 +95,7 @@ var hoverEffect = new ColorHoverEffect( blueGreen );
 cursorEvents.addEffect( dragEffect, cube );
 cursorEvents.addEffect( hoverEffect, cube );
 </code></pre><p>Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. Note these interactive effects, comprising 200 lines of Javascript, were added above with just a half-dozen lines. In addition to using pre-made effects, you can also create your own, for use in your apps or to share with the Altspace developer community.</p>
-<p><strong>Step 5</strong>:
+<p><strong>Step 6</strong>:
 Add muti-player networking with <strong>FirebaseSync</strong></p>
 <pre><code>var firebaseRootURL = &quot;https://your-firebase-root.firebaseio.com/&quot;;
 var appID = &quot;Your-App-Name&quot;;
