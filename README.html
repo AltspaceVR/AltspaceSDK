@@ -15,15 +15,18 @@
 <li>Add muti-player networking with <a href="src/sync/FirebaseSync.js">FirebaseSync</a></li>
 </ol>
 <p>The above steps are explained in more detail in the Getting Started section below, but first a brief overview of what types of 3D web apps are currently supported.</p>
-<h2 id="app-examples-and-counter-examples-">App Examples (and Counter-Examples)</h2>
-<p>Altspace Web Apps typically consist of 3D objects that are rendered in Altsapce by a custom renderer, included in this SDK, that supports a subset of <a href="http://https://github.com/mrdoob/three.js/">Three.js</a>. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.</p>
-<p>Apps that work best in the Altspace VR environment generally use 3D graphics to <em>simulate real-world physical objects</em>. Think retro video games (Tetris blocks, Asteroids rocks), not impressionist art or floating UI elements.  Also note that 3D objects loaded into Altspace by your app currently behave like <em>holograms</em>: avatars cannot climb onto them, and they do not have any Physics behaviors (gravity, collisions, etc) besides what you implement.</p>
+<h2 id="scope-of-current-sdk">Scope of Current SDK</h2>
+<p>Altspace Web Apps typically consist of 3D objects that are rendered in the Altsapce virtual environment by a custom renderer, included in this SDK, that supports a subset of <a href="http://https://github.com/mrdoob/three.js/">Three.js</a>. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.</p>
 <p>Types of apps you can build:</p>
 <ul>
+<li>apps that <em>simulate real-world physical objects</em> tend to work best in Altspace, for example...</li>
 <li><a href="http://threejs.org/examples/#webgl_interactive_draggablecubes" title="Click-and-drag to move objects around.">Draggable Cubes</a> - <a href="http://threejs.org/examples/#webgl_interactive_voxelpainter" title="Interactively add objects to the world.">Voxel Painter</a> - <a href="http://chandlerprall.github.io/Physijs/examples/collisions.html" title="Gravity/collision simulation using Physijs plugin.">Falling Cubes</a> - <a href="http://threejs.org/examples/canvas_geometry_birds.html" title="Objects simulating the Boid flocking algorithm.">Flocking Birds</a> - <a href="http://threejs.org/examples/#webgl_loader_obj_mtl" title="Load objects from OBJ/MTL files from Blender.">OBJ/MTL Import</a></li>
 </ul>
 <p>Not currently supported:</p>
 <ul>
+<li>Running existing Three.js apps (must be ported to use our SDK for rendering, input, etc)</li>
+<li>Platformer scenes (app objects behave like <em>holograms</em>; avatars cannot climb onto them)</li>
+<li>Point clouds, custom shaders, dynamic/modified meshes or materials, screen space effects.</li>
 <li><a href="http://threejs.org/examples/#webgl_lights_hemisphere" title="Flying bird, with a dynamic shadow and toggleable lighting.">Hemisphere Light</a> - <a href="http://threejs.org/examples/#webgl_materials_cars_camaro" title="Car with a reflective material that can change color.">Material Reflection</a> - <a href="http://threejs.org/examples/#webgl_particles_dynamic" title="People made of particles that fall to the ground then reconstruct.">Point Cloud</a> - <a href="http://threejs.org/examples/#webgl_loader_scene" title="Scene with eclectic objects exported from Three.js then imported back.">Three.js Scene</a> - <a href="http://threejs.org/examples/#webgl_shaders_ocean" title="Sphere submerging into an ocean rendered with a custom WebGL shader.">Ocean Shader</a></li>
 </ul>
 <p>Habits of Successful Altspace Web Apps:</p>
