@@ -9,7 +9,7 @@
 <li>Implement your animations and app logic using <a href="http://https://github.com/mrdoob/three.js/">Three.js</a></li>
 <li>Add Altspace user interaction to your app<ul>
 <li>Add event handlers to objects with <a href="src/cursor/CursorEvents.js">CursorEvents</a></li>
-<li>Add pre-defined interactive behavior with <a href="src/cursor/CursorEffects.js">CursorEffects</a></li>
+<li>Add optional effect plugins (e.g. <a href="src/cursor/ColorHighlightEffect.js">ColorHighlightEffect</a>)</li>
 </ul>
 </li>
 <li>Add muti-player networking with <a href="src/sync/FirebaseSync.js">FirebaseSync</a></li>
@@ -71,7 +71,7 @@ cube.rotation.y += 0.01;
 <p><strong>Step 5a</strong>:
 Add event handlers to objects with <strong>CursorEvents</strong></p>
 <pre><code>cursorEvents = new CursorEvents();
-cursorEvents.add( cube );
+cursorEvents.addObject( cube );
 // cursorEvents.enableMouseEvents( camera )
 // optionally map mouse events to cursor events outside of Altsapce
 
@@ -88,10 +88,8 @@ cube.addEventListener( &quot;holocursorup&quot;,  function( event ) {
 cursorEvents.update();
 </code></pre><p>Cursor event names are <strong>holocursordown</strong> / <strong>holocursorup</strong> for clicking on a hologram, <strong>holocursorenter</strong> / <strong>holocursorleave</strong> for hovering a hologram, and <strong>holocursormove</strong> for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)</p>
 <p><strong>Step 5b</strong>:
-Add pre-defined interactive behavior with <strong>CursorEffects</strong></p>
-<pre><code>cursorEvents.enableEffects();
-
-var dragEffect = new DragPlaneEffect();
+Add pre-defined interactive behavior with cursor effect plugins.</p>
+<pre><code>var dragEffect = new DragPlaneEffect();
 var blueGreen = new THREE.Color(0, 1, 1);
 var hoverEffect = new ColorHoverEffect( blueGreen );
 

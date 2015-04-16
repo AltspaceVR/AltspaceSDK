@@ -20,20 +20,16 @@ CursorEvents = function( params ) {
 
 	this.objectLookup = {};  // objectLookup[ object.uuid ] = object
 
-	this.camera;
-	this.objectControls;
-	this.objectControlsDelegate;
-
-	this.objectEffects;
-
-	// TODO: add camera for when not in altspace
-	// TODO: add raycaster
+	// Cursor Effects
+	this.objectEffects = {};  // objectEffects[ object.uuid ] = [ effect1, effect2, ... ]
+	this.effects = [];  // flat list of all effects
+	this.effectsState = {}; // built-in: copy of lastEvent, other values added by effects
 
 	this.inAltspace = !!window.Alt;
 
 	if ( inAltspace ) {
 
-		var dispatcher = this.holoCursorDispatch.bind( this ); 
+		var dispatcher = this._holoCursorDispatch.bind( this ); 
 
 		// Cursor Events from Altspace
 		window.addEventListener("holocursormove", dispatcher);
@@ -47,21 +43,39 @@ CursorEvents = function( params ) {
 };
 
 
-CursorEvents.prototype.enableEffects = function() {
-
-	this.objectEffects = new CursorEffects();
-
-};
-
-
 CursorEvents.prototype.addEffect = function( effect, object ) {
 
-	if ( !this.objectEffects ) {
-		console.error("CursorEffects not enabled");
-		return ; // sanity check 
+	if ( !object || !effect ) {
+		console.error("AddEffect requires a valid effect and object", effect, object );
+		return ; // sanity check
 	}
 
-	this.objectEffects.addEffect( effect, object );
+	if ( !this.objectEffects[ object.uuid ] ) {
+
+		// First time an effect added to this object, initialize it.
+		this.objectEffects[ object.uuid ] = [];		
+
+	}
+
+	if ( this.effects.indexOf( effect ) === -1 ) {
+		this.effects.push( effect );
+	}
+
+	if ( object ) {
+
+		this.objectEffects[ object.uuid ].push( effect );
+
+	} else {
+
+		// If no object given, add this effect for all objects.
+		var uuids = Object.keys( this.objectEffects );
+		for (var i=0; i < uuids.length; i++) {
+
+			this.objectEffects[ uuids[i] ].push( effect ); 
+
+		}
+
+	}
 
 };	
 
@@ -83,7 +97,7 @@ CursorEvents.prototype.enableMouseEvents = function( camera ) {
 	};
 	this.objectControls = new AltObjectControls( this.camera, params );
 
-	var dispatcher = this.objectControlsDispatch.bind( this ); 
+	var dispatcher = this._objectControlsDispatch.bind( this ); 
 
 	this.objectControlsDelegate.hoverOver = dispatcher;
 	this.objectControlsDelegate.hoverOut = dispatcher;
@@ -101,18 +115,15 @@ CursorEvents.prototype.update = function() {
 
 	}
 
-	if ( this.objectEffects ) {
+	this._updateEffects();
 
-		this.objectEffects.update();
-
-	}
 };
 
-CursorEvents.prototype.add = function( object ) {
+CursorEvents.prototype.addObject = function( object ) {
   // TODO: Corresponding removeEffect method.
 
   if ( !object ) {
-    console.error("CursorEvents.add object missing");
+    console.error("CursorEvents.addObject expected one argument");
     return ; // sanity check
   }
 
@@ -128,7 +139,7 @@ CursorEvents.prototype.add = function( object ) {
 };
 
 
-CursorEvents.prototype.holoCursorDispatch = function( event ) {
+CursorEvents.prototype._holoCursorDispatch = function( event ) {
 
 	var detail = this._createEventDetail( event );
 	var objectEvent = new CustomEvent( event.type, { detail: detail });
@@ -144,11 +155,8 @@ CursorEvents.prototype.holoCursorDispatch = function( event ) {
 
 			targetObject.dispatchEvent( objectEvent );
 
-			if ( this.objectEffects ) {
+			this._dispatchEffects( targetObject, objectEvent );
 
-				this.objectEffects.dispatchEffects( targetObject, objectEvent );
-
-			}
 		}
 
 	} else {
@@ -161,19 +169,15 @@ CursorEvents.prototype.holoCursorDispatch = function( event ) {
 
 		}
 
-		if ( this.objectEffects ) {
-
-			// Always dispatch to objectEffects, which needs latest cursorRay
-			// for effects like drag, otherwise cursor can "escpace" object.
-			this.objectEffects.dispatchEffects( this.defaultTarget, objectEvent );
-
-		}
+		// Always dispatch to objectEffects, which needs latest cursorRay
+		// for effects like drag, otherwise cursor can "escpace" object.
+		this._dispatchEffects( this.defaultTarget, objectEvent );
 
 	}
 
 };
 
-CursorEvents.prototype.objectControlsDispatch = function( object, eventDetail ) {
+CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail ) {
 
 	var eventNameMapping = {
 		"hoverOver" : "holocursorenter",
@@ -195,7 +199,7 @@ CursorEvents.prototype.objectControlsDispatch = function( object, eventDetail ) 
 		cursorRay: eventDetail.raycaster.ray,
 	};
 
-    this.holoCursorDispatch( mockCursorEvent );
+    this._holoCursorDispatch( mockCursorEvent );
 
 }
 
@@ -224,4 +228,57 @@ CursorEvents.prototype._createEventDetail = function( event ) {
 
 	return detail;
 };
+
+
+CursorEvents.prototype._dispatchEffects = function( object, event ) {
+
+  // Save most recent event, for effects that track cursorRay (like drag).
+  this.effectsState.lastEvent = event;
+
+  // No object (e.g. move event with no defaultTarget) or no effects for object.
+  if ( !object || !this.objectEffects[ object.uuid ] ) return ;
+
+  var effects = this.objectEffects[ object.uuid ];
+  for ( var i=0; i < effects.length; i++) {
+
+    var effect = effects[ i ];
+    var effectCallback = null;
+
+    if ( effect[ event.type ]) {
+
+      var effectCallback = effect[ event.type ].bind( effect );
+      effectCallback( object, event );
+    }
+  }
+
+};
+
+
+CursorEvents.prototype._updateEffects = function() {
+
+  // Call update( this.effectState ) on all effects that define it.
+  // Optional return value is the new effect state, useful for effects
+  // that need to share state between them. Note we are chaining updates,
+  // so an effect that depends on state managed by other events should
+  // be added after them.
+
+  for (var i=0; i < this.effects.length; i++) {
+
+    var effect = this.effects[i];
+    if ( effect.update ) {
+
+      var newEffectsState = effect.update( this.effectsState );
+      if ( newEffectsState ) {
+
+        this.effectsState = newEffectsState;
+
+      }
+
+    }
+    
+  }
+
+};
+
+
 

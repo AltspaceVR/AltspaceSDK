@@ -12,7 +12,7 @@ To create an Altspace Web App:
 4. Implement your animations and app logic using [Three.js]
 5. Add Altspace user interaction to your app
 	* Add event handlers to objects with [CursorEvents]
-	* Add pre-defined interactive behavior with [CursorEffects]
+	* Add optional effect plugins (e.g. [ColorHighlightEffect])
 6. Add muti-player networking with [FirebaseSync]
 
 The above steps are explained in more detail in the Getting Started section below, but first a brief overview of what types of 3D web apps are currently supported.
@@ -87,7 +87,7 @@ The AltRenderer serializes key information about objects in your scene for use b
 Add event handlers to objects with **CursorEvents**
 ```
 cursorEvents = new CursorEvents();
-cursorEvents.add( cube );
+cursorEvents.addObject( cube );
 // cursorEvents.enableMouseEvents( camera )
 // optionally map mouse events to cursor events outside of Altsapce
 
@@ -106,10 +106,8 @@ cursorEvents.update();
 Cursor event names are **holocursordown** / **holocursorup** for clicking on a hologram, **holocursorenter** / **holocursorleave** for hovering a hologram, and **holocursormove** for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)
 
 **Step 5b**:
-Add pre-defined interactive behavior with **CursorEffects**
+Add pre-defined interactive behavior with cursor effect plugins.
 ```
-cursorEvents.enableEffects();
-
 var dragEffect = new DragPlaneEffect();
 var blueGreen = new THREE.Color(0, 1, 1);
 var hoverEffect = new ColorHoverEffect( blueGreen );
@@ -171,7 +169,7 @@ Now this basic app is complete, and you can see the full source code listing at 
 [AltOBJMTLLoader]: src/AltOBJMTLLoader.js
 [AltRender]: src/AltRenderer.js
 [CursorEvents]: src/cursor/CursorEvents.js
-[CursorEffects]: src/cursor/CursorEffects.js
+[ColorHighlightEffect]: src/cursor/ColorHighlightEffect.js
 [FirebaseSync]: src/sync/FirebaseSync.js
 [Three.js]: http://https://github.com/mrdoob/three.js/
 

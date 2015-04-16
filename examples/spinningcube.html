@@ -22,7 +22,6 @@
 		<script src="../src/AltOBJMTLLoader.js"></script>
 		<script src="../src/AltRenderer.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
-		<script src="../src/cursor/CursorEffects.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
 		<script src="../src/sync/FirebaseSync.js"></script>
 
@@ -150,7 +149,7 @@ function initEvents() {
 	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
 
-	cursorEvents.add( cube );
+	cursorEvents.addObject( cube );
 
 	cube.addEventListener( "holocursordown", function( event ) {
 		if (!sound) loadSoundEffect();
@@ -165,13 +164,12 @@ function initEvents() {
 	});
 
 	// In addition to defining event listeners, you can apply pre-made effects
-	// or create your own effects that work with the CursorEffects framework.
+	// or create your own effects that work with the CursorEvents framework.
 
 	var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
 	var hoverEffect = new ColorHoverEffect( { color: new THREE.Color(0, 1, 1) });
 	// hover listens for holocursorenter / holocursorleave for hover over / out
 
-	cursorEvents.enableEffects();
 	cursorEvents.addEffect( dragEffect, cube );
 	cursorEvents.addEffect( hoverEffect, cube );
 
