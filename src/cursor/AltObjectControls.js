@@ -1,10 +1,17 @@
 /**
- * AltObjectControls dispatches mouse events to CursorEvents system.
+ * NOTE: Used internally by CursorEvents; no need to instantiate manually! 
+ *
+ * AltObjectControls detects mouse events using the Three.js raycaster.
  * This allows events to function similarly in and outside Altspace.
- * Used internally by CursorEvents when enableMouseEvents is turned on,
+ * To activate: cursorEventsSingleton.enableMouseEvents( camera )
  *
  * Attribution: based on ObjectControls by cabbibo (http://cabbi.bo)
  * Version 3/17/2015 from https://github.com/cabbibo/ObjectControls
+ * 
+ * Modifications
+ * Added intersectionPoint: where raycast meets the target object.
+ * Added delegate: optionally receives all events, instead of target object.
+ * Added eventDetail: contains ray origin, direction, intersection point, etc. 
  *
  * @author Amber Roy
  * Copyright (c) 2015 AltspaceVR

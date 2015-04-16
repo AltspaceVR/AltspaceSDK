@@ -71,9 +71,11 @@ cube.rotation.y += 0.01;
 <p><strong>Step 5a</strong>:
 Add event handlers to objects with <strong>CursorEvents</strong></p>
 <pre><code>cursorEvents = new CursorEvents();
-cursorEvents.addObject( cube );
-// cursorEvents.enableMouseEvents( camera )
+
 // optionally map mouse events to cursor events outside of Altsapce
+// cursorEvents.enableMouseEvents( camera )
+
+cursorEvents.addObject( cube );
 
 cube.addEventListener( &quot;holocursordown&quot;, function( event ) {
     this.position.y += 2;

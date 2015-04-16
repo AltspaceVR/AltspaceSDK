@@ -87,9 +87,11 @@ The AltRenderer serializes key information about objects in your scene for use b
 Add event handlers to objects with **CursorEvents**
 ```
 cursorEvents = new CursorEvents();
-cursorEvents.addObject( cube );
-// cursorEvents.enableMouseEvents( camera )
+
 // optionally map mouse events to cursor events outside of Altsapce
+// cursorEvents.enableMouseEvents( camera )
+
+cursorEvents.addObject( cube );
 
 cube.addEventListener( "holocursordown", function( event ) {
 	this.position.y += 2;
