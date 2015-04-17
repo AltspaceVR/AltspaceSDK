@@ -99,7 +99,7 @@ cube.addEventListener( "holocursorup",  function( event ) {
 // in animate loop
 cursorEvents.update();
 ```
-Cursor event names are `holocursordown` / `holocursorup` for clicking on a hologram, `holocursorenter` / `holocursorleave` for hovering a hologram, and `holocursormove` for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)
+Cursor event names are `holocursordown` / `holocursorup` for clicking on a hologram, `holocursorenter` / `holocursorleave` for hovering a hologram, and `holocursormove` for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor (or add listeners for cursor events directly to the global window element).
 
 **Step 5b**:
 Add interactive behavior with cursor effect plugins ([ColorHighlightEffect], [DragPlaneEffect]).
