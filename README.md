@@ -51,13 +51,15 @@ Your app HTML file should contain script tags pointing to the SDK files (and als
 **Step 2**:
 Load one or more OBJ/MTL models using the **AltOBJMTLLoader**
 ```
+var cube;
 var loader = new THREE.AltOBJMTLLoader();
-loader.load(filenameOBJ, function ( loadedObject ) {
 
-	console.log("loaded object from " + filenameOBJ, loadedObject);
+// loader assumes .mtl file has same basename as .obj file
+loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
+
 	cube = loadedObject;
-	isLoadingDone = true;
-
+	onModelsLoaded();
+		
 });
 // after loading done
 scene.add( cube );

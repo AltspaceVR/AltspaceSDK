@@ -45,12 +45,14 @@ Clone/download this repo and create your app HTML file.</p>
 <p>Your app HTML file should contain script tags pointing to the SDK files (and also any desired HTML/CSS, if you app supports running in a tranditional browser).  Next, let&#39;s add Javascript that uses standard Three.js commands along with new functions from our SDK (in <strong>bold</strong>).  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  </p>
 <p><strong>Step 2</strong>:
 Load one or more OBJ/MTL models using the <strong>AltOBJMTLLoader</strong></p>
-<pre><code>var loader = new THREE.AltOBJMTLLoader();
-loader.load(filenameOBJ, function ( loadedObject ) {
+<pre><code>var cube;
+var loader = new THREE.AltOBJMTLLoader();
 
-    console.log(&quot;loaded object from &quot; + filenameOBJ, loadedObject);
+// loader assumes .mtl file has same basename as .obj file
+loader.load(&quot;spinning_cube/cube.obj&quot;, function ( loadedObject ) {
+
     cube = loadedObject;
-    isLoadingDone = true;
+    onModelsLoaded();
 
 });
 // after loading done

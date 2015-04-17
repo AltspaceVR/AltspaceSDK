@@ -22,15 +22,20 @@
 
 		<style>
 			body {
-				background-color: rgba(1, 0, 0, 0);
-				color: #fff;
+				background-color: rgba(0, 0, 0, 1);
 				margin: 0px;
 				overflow: hidden;
+
+				color: #FFFFFF;
+				font-family: Monospace;
+				font-size: 18px;
+				text-align: center;
 			}
 			#info {
 				position: absolute;
-				margin: 10px;
-				font-family: Arial;
+				top: 0px;
+				width: 100%;
+				padding: 10px;
 			}
 		</style>
 
@@ -41,8 +46,6 @@
 				<a href="http://github.com/AltspaceVR/AltspaceSDK" 
 					 target="_blank">AltspaceSDK</a> - Cursor Follow
 		</div>
-		<div id="container"></div>
-</body>
 </body>
 
 <script>
@@ -68,30 +71,16 @@ function onModelsLoaded() {
 
 function loadModels() {
 
-	// loader assumes .mtl file has same basename as .obj file
-	var filenameOBJ = "spinning_cube/cube.obj";
-	var isLoadingDone = false;
-
-	// Load cube and add it to the scene.
 	var loader = new THREE.AltOBJMTLLoader();
-	loader.load(filenameOBJ, function ( loadedObject ) {
+	
+	// loader assumes .mtl file has same basename as .obj file
+	loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
 
-		console.log("loaded object from " + filenameOBJ, loadedObject);
 		cube = loadedObject;
-		isLoadingDone = true;
+		onModelsLoaded();
 
 	});
 
-	var intervalID = setInterval( function() {
-
-		if ( isLoadingDone ) {
-			clearInterval( intervalID );
-			onModelsLoaded();
-		}
-
-	}, 200); // Check every 200 milliseconds
-
-	// NO CODE HERE unless you want it to run before models finish loading.
 }
 
 function initScene() {
