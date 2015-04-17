@@ -37,7 +37,7 @@ Let's look at how to create a simple interactive, multi-player Altspace Web App.
 **Step 1**
 Clone/download this repo and create your app HTML file.
 
-Your app HTML file should contain script tags pointing to the SDK files (and also any desired HTML/CSS, if you app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK (in **bold**).  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
+Your app HTML file should contain script tags pointing to the SDK files (and HTML/CSS, if you app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK.  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
 
 **Step 2**:
 Load one or more OBJ/MTL models using the [AltOBJMTLLoader]
@@ -46,16 +46,17 @@ var cube;
 var loader = new THREE.AltOBJMTLLoader();
 
 // loader assumes .mtl file has same basename as .obj file
-loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
+loader.load("spinning_cube/cube.obj", function ( object ) {
 
 	cube = loadedObject;
 	onModelsLoaded();
 		
 });
+...
 // after loading done
 scene.add( cube );
 ```
-Loading can take a second or two, so an app typically waits until are models are loaded before continuing its initialization. Above we set a flag in the loader callback that is checked by an interval timer.
+Note that loading models is not instanteneous, so take care to wait until loading completes before proceeding with your app initialization sequence.
 
 **Step 3**:
 Render your scene using the [AltRender] in your animate loop.
@@ -64,7 +65,7 @@ renderer = new THREE.AltRenderer(); // during scene initialization
 ...
 renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 ```
-Any objects loaded in the first step and added to the Three.js scene are now imported (a.k.a. spawned) into the Altspace VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the Altspace environment.
+Any objects loaded by AltOBJMTLLoader and added to the Three.js scene are now imported (a.k.a. spawned) into the Altspace VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the Altspace environment.
 
 **Step 4**:
 Implement your animations and app logic using [Three.js]
@@ -98,7 +99,7 @@ cube.addEventListener( "holocursorup",  function( event ) {
 // in animate loop
 cursorEvents.update();
 ```
-Cursor event names are **holocursordown** / **holocursorup** for clicking on a hologram, **holocursorenter** / **holocursorleave** for hovering a hologram, and **holocursormove** for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)
+Cursor event names are `holocursordown` / `holocursorup` for clicking on a hologram, `holocursorenter` / `holocursorleave` for hovering a hologram, and `holocursormove` for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor. (Alternatively, add listeners for cursor events directly to the global window element.)
 
 **Step 5b**:
 Add interactive behavior with cursor effect plugins ([ColorHighlightEffect], [DragPlaneEffect]).
