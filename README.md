@@ -127,17 +127,16 @@ The new object state is now saved to the [Firebase](http://firebase.com) cloud a
 
 Now this basic app is complete, and you can see the full source code listing at [spinningcube.html]. Also check out [cube.obj] and [cube.mtl] for examples of simple OBJ and MTL files.
 
+## Learning More
+
 More documentation is available in the [AltspaceSDK Wiki], including Tutorials and Tips for Developers.  
 
 Or dive info the source code, organized as follows:
-* [examples](examples) - sample web apps demonstrating various features
 * [src](src) - source code for this SDK; top-level files are requried by all Altspace web apps
 * [src/cursor](src/cursor) - Extends the Cursor API to implement per-object event dispatch, etc.
 * [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
 * [lib](lib) - third-party libraries used by the SDK
-
-
-In addition to the API reference docs above, 
+* [examples](examples) - sample web apps demonstrating various features
 
 [AltspaceSDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [Known Issues]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Known-Issues
