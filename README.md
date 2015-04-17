@@ -15,6 +15,7 @@ Types of apps you can build:
 Not currently supported:
 * Running existing Three.js apps (must be ported to use our SDK for rendering, input, etc)
 * Platformer scenes (app objects behave like *holograms*; avatars cannot climb onto them)
+* Dynamic text, dynamic or animated textures, CSS 3D, Dat.gui or other UI widgets/elements.
 * Point clouds, custom shaders, dynamic/modified meshes or materials, screen space effects.
 * [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
 
