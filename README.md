@@ -9,7 +9,10 @@ Learn more in the [AltspaceSDK Wiki].
 Altspace Web Apps are powered by a custom renderer that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
 
 Types of apps you can build:
-* apps that *simulate real-world physical objects* tend to work best in Altspace, for example...
+* Games (arcade-style, table-top, etc), interactive scenes, art & science sims, and much more.
+* Tech demos, computational art, data visualizaion, demoscene-style audio/visual experiences.
+* Interfaces to popular websites and mobile apps, or original VR creations inspired by them.
+* Apps that *simulate real-world physical objects* tend to work best in Altspace, for example...
 * [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
 Not currently supported:
