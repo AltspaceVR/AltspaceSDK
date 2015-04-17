@@ -130,7 +130,7 @@ firebaseSync.saveObject( cube );
 ```
 The new object state is now saved to the [Firebase](http://firebase.com) cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it recieves broadcasts from other clients.  You can select a room manually by appending "roomID=XXX" (where X is a digit) to your app url query string, or if none is provided one is chosen randomly.
 
-Now this basic app is complete, and you can see the full source code listing at [spinningcube.html]. Also check out [cube.obj] and [cube.mtl] for examples of simple OBJ and MTL files.
+Now this basic app is complete! For details, see the source code: [spinningcube.html].
 
 ## Learning More
 
