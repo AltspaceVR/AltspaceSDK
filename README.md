@@ -32,7 +32,7 @@ Habits of Successful Altspace Web Apps:
 
 ## Getting Started
 
-Let's look at how to create a simple interactive, multi-player Altspace Web App. (Or jump to the source code:  [spinningcube.html])
+Let's create an interactive, multi-player Altspace Web App (full source code:  [spinningcube.html]).
 
 **Step 1**
 Clone/download this repo and create your app HTML file.
