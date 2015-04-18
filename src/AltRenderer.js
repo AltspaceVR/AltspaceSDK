@@ -51,10 +51,6 @@ THREE.AltRenderer = function ( parameters ) {
 
 		object3d.matrixWorld.decompose( worldPosition, worldRotation, worldScale );
 
-		worldPosition.x = -worldPosition.x; // convert positions from left handed coordinate system to right handed
-		worldRotation.y = -worldRotation.y; // fix rotations over y axis
-		worldRotation.z = -worldRotation.z; // fix rotations over z axis
-
 		transform += '|' + worldPosition.x + '|' + worldPosition.y + '|' + worldPosition.z;
 		transform += '|' + worldRotation.x + '|' + worldRotation.y + '|' + worldRotation.z + '|' + worldRotation.w;
 		transform += '|' + worldScale.x + '|' + worldScale.y + '|' + worldScale.z;
