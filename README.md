@@ -140,6 +140,7 @@ Or dive info the source code, organized as follows:
 * [src](src) - source code for this SDK; top-level files are requried by all Altspace web apps
 * [src/cursor](src/cursor) - Extends the Cursor API to implement per-object event dispatch, etc.
 * [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
+* [src/helpers](src/helpers) - Convenience utilities for common tasks
 * [lib](lib) - third-party libraries used by the SDK
 * [examples](examples) - sample web apps demonstrating various features
 
