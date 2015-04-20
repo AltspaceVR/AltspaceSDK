@@ -1,7 +1,7 @@
 Listing of Bug Fixes, Features, Performance Improvements, and Breaking Changes for each version. Version numbers are "unofficial" and may change in the future.
 
 ## v0.1.0 (2015-04-20)
-First version of the SDK deployed to http://sdk.altvr.com
+First version of the SDK deployed to [sdk.altvr.com] (http://sdk.altvr.com/src/AltRenderer.js)
 
 ### Bug Fixes
 
