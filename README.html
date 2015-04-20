@@ -29,7 +29,7 @@
 <li>Do not change object geometries or materials (except tint color).</li>
 </ul>
 <h2 id="getting-started">Getting Started</h2>
-<p>Let&#39;s create an interactive, multi-player Altspace Web App (full source code:  <a href="examples/spinningcube.html">spinningcube.html</a>).</p>
+<p>Let&#39;s create an interactive, multi-player Altspace Web App.<br>Source: <a href="examples/spinning-cube.html">examples/spinning-cube.html</a></p>
 <p><strong>Step 1</strong>
 Clone/download this repo and create your app HTML file.</p>
 <p>Your app HTML file should contain script tags pointing to the SDK files (and HTML/CSS, if you app supports running in a tranditional browser).  Next, let&#39;s add Javascript that uses standard Three.js commands along with new functions from our SDK.  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  </p>
@@ -39,16 +39,13 @@ Load one or more OBJ/MTL models using the <a href="src/AltOBJMTLLoader.js">AltOB
 var loader = new THREE.AltOBJMTLLoader();
 
 // loader assumes .mtl file has same basename as .obj file
-loader.load(&quot;spinning_cube/cube.obj&quot;, function ( object ) {
+loader.load(&quot;spinning_cube/cube.obj&quot;, function ( loadedObject ) {
 
     cube = loadedObject;
-    onModelsLoaded();
+    scene.add( cube );
 
 });
-...
-// after loading done
-scene.add( cube );
-</code></pre><p>Note that loading models is not instanteneous, so take care to wait until loading completes before proceeding with your app initialization sequence.</p>
+</code></pre><p>The object is now loaded, but it will not appear until the scene is rendered.</p>
 <p><strong>Step 3</strong>:
 Render your scene using the <a href="src/AltRenderer.js">AltRender</a> in your animate loop.</p>
 <pre><code>renderer = new THREE.AltRenderer(); // during scene initialization
@@ -62,11 +59,11 @@ cube.rotation.x += 0.01;
 cube.rotation.y += 0.01;
 </code></pre><p>The AltRenderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. <strong>Hologram</strong> refers to the in-Altspace 3D object controlled by an Altspace Web App.</p>
 <p><strong>Step 5a</strong>:
-Add event handlers to objects with <a href="src/cursor/CursorEvents.js">CursorEvents</a></p>
+Register objects for Altspce events with <a href="src/cursor/CursorEvents.js">CursorEvents</a></p>
 <pre><code>cursorEvents = new CursorEvents();
 
 // optionally map mouse events to cursor events outside of Altsapce
-// cursorEvents.enableMouseEvents( camera )
+cursorEvents.enableMouseEvents( camera )
 
 cursorEvents.addObject( cube );
 
@@ -81,16 +78,16 @@ cube.addEventListener( &quot;holocursorup&quot;,  function( event ) {
 ...
 // in animate loop
 cursorEvents.update();
-</code></pre><p>Cursor event names are <code>holocursordown</code> / <code>holocursorup</code> for clicking on a hologram, <code>holocursorenter</code> / <code>holocursorleave</code> for hovering a hologram, and <code>holocursormove</code> for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor (or add listeners for cursor events directly to the global window element).</p>
+</code></pre><p>Now the cube will apper to &quot;jump&quot; slightly up and down on Altspace cursor press and release.  It will also respond to correspond HTML5 mouse events in a traditional browser.</p>
 <p><strong>Step 5b</strong>:
-Add interactive behavior with cursor effect plugins (<a href="src/cursor/ColorHighlightEffect.js">ColorHighlightEffect</a>, <a href="src/cursor/DragPlaneEffect.js">DragPlaneEffect</a>).</p>
+Add interactive behavior with [Cursor Effect Plugins]</p>
 <pre><code>var dragEffect = new DragPlaneEffect();
 var blueGreen = new THREE.Color(0, 1, 1);
 var hoverEffect = new ColorHoverEffect( blueGreen );
 
 cursorEvents.addEffect( dragEffect, cube );
 cursorEvents.addEffect( hoverEffect, cube );
-</code></pre><p>Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. Note these interactive effects, comprising 200 lines of Javascript, were added above with just a half-dozen lines. In addition to using pre-made effects, you can also create your own, for use in your apps or to share with the Altspace developer community.</p>
+</code></pre><p>Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the Altspace developer community.</p>
 <p><strong>Step 6</strong>:
 Add muti-player networking with <a href="src/sync/FirebaseSync.js">FirebaseSync</a></p>
 <pre><code>var firebaseRootURL = &quot;https://your-firebase-root.firebaseio.com/&quot;;
@@ -104,8 +101,8 @@ firebaseSync.connect();
 firebaseSync.saveObject( cube );
 // or call firebaseSync.update() in your animate loop to save all objects,
 // but not recommended if objects change position or rotation every frame.
-</code></pre><p>The new object state is now saved to the <a href="http://firebase.com">Firebase</a> cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it recieves broadcasts from other clients.  You can select a room manually by appending &quot;roomID=XXX&quot; (where X is a digit) to your app url query string, or if none is provided one is chosen randomly.</p>
-<p>Now this basic app is complete! For details, see the source code: <a href="examples/spinningcube.html">spinningcube.html</a>.</p>
+</code></pre><p>The new object state is now saved to the <a href="http://firebase.com">Firebase</a> cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it recieves broadcasts from other clients.</p>
+<p>Now this basic app is complete! For details, see the source code: <a href="examples/spinning-cube.html">examples/spinning-cube.html</a>.</p>
 <h2 id="learning-more">Learning More</h2>
 <p>More documentation is available in the <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">AltspaceSDK Wiki</a>, including Tutorials and Tips for Developers.  </p>
 <p>Or dive info the source code, organized as follows:</p>

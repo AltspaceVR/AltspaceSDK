@@ -32,7 +32,8 @@ Habits of Successful Altspace Web Apps:
 
 ## Getting Started
 
-Let's create an interactive, multi-player Altspace Web App (full source code:  [spinningcube.html]).
+Let's create an interactive, multi-player Altspace Web App.  
+Source: [examples/spinning-cube.html]
 
 **Step 1**
 Clone/download this repo and create your app HTML file.
@@ -46,17 +47,14 @@ var cube;
 var loader = new THREE.AltOBJMTLLoader();
 
 // loader assumes .mtl file has same basename as .obj file
-loader.load("spinning_cube/cube.obj", function ( object ) {
+loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
 
 	cube = loadedObject;
-	onModelsLoaded();
+	scene.add( cube );
 		
 });
-...
-// after loading done
-scene.add( cube );
 ```
-Note that loading models is not instanteneous, so take care to wait until loading completes before proceeding with your app initialization sequence.
+The object is now loaded, but it will not appear until the scene is rendered.
 
 **Step 3**:
 Render your scene using the [AltRender] in your animate loop.
@@ -78,12 +76,12 @@ The AltRenderer serializes key information about objects in your scene for use b
 
 
 **Step 5a**:
-Add event handlers to objects with [CursorEvents]
+Register objects for Altspce events with [CursorEvents]
 ```
 cursorEvents = new CursorEvents();
 
 // optionally map mouse events to cursor events outside of Altsapce
-// cursorEvents.enableMouseEvents( camera )
+cursorEvents.enableMouseEvents( camera )
 
 cursorEvents.addObject( cube );
 
@@ -99,10 +97,10 @@ cube.addEventListener( "holocursorup",  function( event ) {
 // in animate loop
 cursorEvents.update();
 ```
-Cursor event names are `holocursordown` / `holocursorup` for clicking on a hologram, `holocursorenter` / `holocursorleave` for hovering a hologram, and `holocursormove` for cursor movement. Since holocursormove is not tied to a specific hologram, to receive this event provide a default target in the CursorEvents constructor (or add listeners for cursor events directly to the global window element).
+Now the cube will apper to "jump" slightly up and down on Altspace cursor press and release.  It will also respond to correspond HTML5 mouse events in a traditional browser.
 
 **Step 5b**:
-Add interactive behavior with cursor effect plugins ([ColorHighlightEffect], [DragPlaneEffect]).
+Add interactive behavior with [Cursor Effect Plugins]
 ```
 var dragEffect = new DragPlaneEffect();
 var blueGreen = new THREE.Color(0, 1, 1);
@@ -111,7 +109,7 @@ var hoverEffect = new ColorHoverEffect( blueGreen );
 cursorEvents.addEffect( dragEffect, cube );
 cursorEvents.addEffect( hoverEffect, cube );
 ```
-Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. Note these interactive effects, comprising 200 lines of Javascript, were added above with just a half-dozen lines. In addition to using pre-made effects, you can also create your own, for use in your apps or to share with the Altspace developer community.
+Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the Altspace developer community.
 
 **Step 6**:
 Add muti-player networking with [FirebaseSync]
@@ -128,9 +126,9 @@ firebaseSync.saveObject( cube );
 // or call firebaseSync.update() in your animate loop to save all objects,
 // but not recommended if objects change position or rotation every frame.
 ```
-The new object state is now saved to the [Firebase](http://firebase.com) cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it recieves broadcasts from other clients.  You can select a room manually by appending "roomID=XXX" (where X is a digit) to your app url query string, or if none is provided one is chosen randomly.
+The new object state is now saved to the [Firebase](http://firebase.com) cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it recieves broadcasts from other clients.
 
-Now this basic app is complete! For details, see the source code: [spinningcube.html].
+Now this basic app is complete! For details, see the source code: [examples/spinning-cube.html].
 
 ## Learning More
 
@@ -166,7 +164,7 @@ Or dive info the source code, organized as follows:
 [FirebaseSync]: src/sync/FirebaseSync.js
 [Three.js]: http://https://github.com/mrdoob/three.js/
 
-[spinningcube.html]: examples/spinningcube.html
+[examples/spinning-cube.html]: examples/spinning-cube.html
 [cube.obj]: examples/spinning_cube/cube.obj
 [cube.mtl]: examples/spinning_cube/cube.mtl
 
