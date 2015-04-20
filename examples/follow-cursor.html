@@ -74,8 +74,10 @@ function loadModels() {
 	var loader = new THREE.AltOBJMTLLoader();
 	
 	// loader assumes .mtl file has same basename as .obj file
-	loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
+	var filename = "models/SpinningCube/cube.obj";
+	loader.load(filename, function ( loadedObject ) {
 
+		console.log("Loaded object from " + filename, loadedObject);
 		cube = loadedObject;
 		onModelsLoaded();
 

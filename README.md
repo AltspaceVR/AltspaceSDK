@@ -47,7 +47,7 @@ var cube;
 var loader = new THREE.AltOBJMTLLoader();
 
 // loader assumes .mtl file has same basename as .obj file
-loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
+loader.load("models/SpinningCube/cube.obj", function ( loadedObject ) {
 
 	cube = loadedObject;
 	scene.add( cube );
@@ -115,8 +115,8 @@ Now the cube is draggable (click once to start drag, click again to release) and
 Add muti-player networking with [FirebaseSync]
 ```
 var firebaseRootURL = "https://your-firebase-root.firebaseio.com/";
-var appID = "Your-App-Name";
-firebaseSync = new FirebaseSync( firebaseRootURL, appID );
+var appId = "Your-App-Name";
+firebaseSync = new FirebaseSync( firebaseRootURL, appId );
 firebaseSync.addObject( cube, "cube" ); // object and unique id
 // add all objects you want to sync before calling ...
 firebaseSync.connect();

@@ -83,8 +83,10 @@ function loadModels() {
 	var loader = new THREE.AltOBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	loader.load("spinning_cube/cube.obj", function ( loadedObject ) {
+	var filename = "models/SpinningCube/cube.obj";
+	loader.load(filename, function ( loadedObject ) {
 
+		console.log("Loaded object from " + filename, loadedObject);
 		cube = loadedObject;
 		onModelsLoaded();
 		
@@ -167,9 +169,9 @@ function initEvents() {
 
 function initFirebase() {
 
-	var firebaseRootURL = "https://altspace-apps.firebaseio.com/";
-	var appID = "spinningcube";
-	firebaseSync = new FirebaseSync( firebaseRootURL, appID );
+	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
+	var appId = "spinning-cube";
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
 	firebaseSync.addObject( cube, "cube" );
 
 	firebaseSync.connect();
@@ -180,7 +182,7 @@ function loadSoundEffect() {
 
 	// Load sound effect. Chromium doesn't support mp3 so include wav too.
 	var ext = (new Audio()).canPlayType('audio/mpeg') ? ".mp3" : ".wav";
-	sound = new Audio("spinning_cube/drippy" + ext);	
+	sound = new Audio("models/SpinningCube/drippy" + ext);	
 
 }
 

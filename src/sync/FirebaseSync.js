@@ -10,13 +10,13 @@
 
 
 
-FirebaseSync = function(firebaseRootURL, appID, params) {
+FirebaseSync = function(firebaseRootUrl, appId, params) {
 
-	console.log("Using firebase " + firebaseRootURL);
+	console.log("Using firebase " + firebaseRootUrl);
 
-	this.firebaseRootURL = firebaseRootURL;
-	this.firebaseRoot = new Firebase(firebaseRootURL);
-	this.appID = appID;
+	this.firebaseRootUrl = firebaseRootUrl;
+	this.firebaseRoot = new Firebase(firebaseRootUrl);
+	this.appId = appId;
 
 	this.onConnectComplete;
 
@@ -36,10 +36,10 @@ FirebaseSync = function(firebaseRootURL, appID, params) {
 
 	this.lastObjectData = {}; // uuid to last objectData synced
 
-	// TODO: Use unique IDs instead of random. 
-	this.senderID = "user" + Math.round(Math.random() * 1000);
+	// TODO: Use unique ids instead of random. 
+	this.senderId = "user" + Math.round(Math.random() * 1000);
 
-	this.roomID;
+	this.roomId;
 	this.roomKey;
 	this.roomURL;
 	this.firebaseRoom;
@@ -95,9 +95,9 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 	this.onConnectComplete = onCompleteCallback;
 
 	// Handle these cases:
-	// (1) No roomID specified in URL: create room with random roomID and join it.
-	// (2) RoomID specified in URL, and room exists in DB: join it.
-	// (3) RoomID specified in URL, but room does not exists: create and join it. 
+	// (1) No roomId specified in URL: create room with random roomId and join it.
+	// (2) RoomId specified in URL, and room exists in DB: join it.
+	// (3) RoomId specified in URL, but room does not exists: create and join it. 
 
 	if ( this.objects.length === 0) {
 		console.error("Must FirebaseSync.add() objects before calling connect.");
@@ -119,26 +119,26 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 		// Search for 'room=something' in the URL for this page.
 		var kvp = tokens[i];
 		if (kvp.match(/room=/)) {
-			this.roomID = kvp.split('=')[1];
-			break ; // use the first roomID we find (should only be one)
+			this.roomId = kvp.split('=')[1];
+			break ; // use the first roomId we find (should only be one)
 		}
 
 	}
 
 	// Three exit conditions for this method.
 
-	if (!this.roomID) {
+	if (!this.roomId) {
 
-		// If query string didn't specify a valid roomID, create new room. 
-		console.log("No roomID specified in URL, generating one randomly.");
-		var randID = Math.round(Math.random() * 1000);
-		this.roomID = "room" + randID;
-		this.roomURL = document.URL + "?room=" + this.roomID;
+		// If query string didn't specify a valid roomId, create new room. 
+		console.log("No roomId specified in URL, generating one randomly.");
+		var randId = Math.round(Math.random() * 1000);
+		this.roomId = "room" + randId;
+		this.roomURL = document.URL + "?room=" + this.roomId;
 
 		this.reloadWithNewURL = true;
 		this.roomKey = this._createFirebaseRoom();
 
-		return ; // (1) No roomID in URL, wait to reload the page with new room URL
+		return ; // (1) No roomId in URL, wait to reload the page with new room URL
 
 	} 
 
@@ -155,10 +155,10 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 
 			if (this.roomKey !== -1) {
 				this._startListeningRoom();
-				return ;	// (2) Existing Room ID given in URL, no need to create room.
+				return ;	// (2) Existing Room Id given in URL, no need to create room.
 			}
 
-			// (3) Room ID specified in URL, but room doesn't exist, need to create it.
+			// (3) Room Id specified in URL, but room doesn't exist, need to create it.
 			this.roomCreated = false;
 			this.roomKey = this._createFirebaseRoom();
 			console.log("Waiting to create room on server...")
@@ -182,9 +182,9 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 FirebaseSync.prototype.getRoomKey = function() {
 
 	// Throw exception if connecting to Firebase fails, to avoid hanging.
-	var errMsg = "Room id " + this.roomID + " not valid, expected format: room123 (< 1000)";
+	var errMsg = "Room id " + this.roomId + " not valid, expected format: room123 (< 1000)";
 
-	var split = this.roomID.split("room");
+	var split = this.roomId.split("room");
 	if (!split || split.length !== 2) {
 
 		throw new Error(errMsg);
@@ -194,14 +194,14 @@ FirebaseSync.prototype.getRoomKey = function() {
 
 	if (isNaN(roomNum) || roomNum < 0 || roomNum >= 1000) {
 
-		// TODO: Better validation on roomID
+		// TODO: Better validation on roomId
 		throw new Error(errMsg);
 
 	}
 
-	// Find the roomKey for this roomID.
-	var roomsRef = this.firebaseRoot.child(this.appID).child("rooms");
-	var path = this.firebaseRoot.toString() + "/" + this.appID + "/rooms";
+	// Find the roomKey for this roomId.
+	var roomsRef = this.firebaseRoot.child(this.appId).child("rooms");
+	var path = this.firebaseRoot.toString() + "/" + this.appId + "/rooms";
 	if (!roomsRef) {
 
 		var errMsg = "Failed to get rooms at " + path;
@@ -209,21 +209,21 @@ FirebaseSync.prototype.getRoomKey = function() {
 
 	}
 
-	var queryRef = roomsRef.orderByChild("roomID").equalTo(this.roomID);
+	var queryRef = roomsRef.orderByChild("roomId").equalTo(this.roomId);
 
 	queryRef.once("value", function(querySnapshot) {
 
 		if (!querySnapshot.exists()) {
 
-			console.log("No room at " + path + "/" + this.roomID + ", creating it.");
+			console.log("No room at " + path + "/" + this.roomId + ", creating it.");
 			this.roomKey = -1;	// indicates that this room doesn't exist
 
 		} else {
 
-			// TODO: Warn user if multiple rooms with same roomID.
+			// TODO: Warn user if multiple rooms with same roomId.
 			this.roomKey = Object.keys(querySnapshot.val())[0];
 			this.roomURL = document.URL;
-			console.log("Got roomID from page URL " + document.URL);
+			console.log("Got roomId from page URL " + document.URL);
 
 		}
 
@@ -235,15 +235,15 @@ FirebaseSync.prototype.getRoomKey = function() {
 FirebaseSync.prototype._startListeningRoom = function() {
 
 	if ( !this.roomKey || this.roomKey === -1 ) {
-		throw new Error("Cannot subscribe to firebase, no roomKey for room", this.roomID);
+		throw new Error("Cannot subscribe to firebase, no roomKey for room", this.roomId);
 	}
 
 	// roomKey gets us into the right room.	=:-)
-	this.firebaseRoom = this.firebaseRoot.child(this.appID).child("rooms").child(this.roomKey);
+	this.firebaseRoom = this.firebaseRoot.child(this.appId).child("rooms").child(this.roomKey);
 	if (this.firebaseRoom) {
 
 		// TODO: return this link to caller
-		console.log("Subscribing to " + this.roomID + " at " + this.firebaseRoom.toString());
+		console.log("Subscribing to " + this.roomId + " at " + this.firebaseRoom.toString());
 
 	} else {
 
@@ -254,7 +254,7 @@ FirebaseSync.prototype._startListeningRoom = function() {
 
 	// Add ourself as a member in this room.
 	var memberData = {
-		userID: this.senderID,
+		userId: this.senderId,
 		joinedAt: Firebase.ServerValue.TIMESTAMP,
 	};
 	this.firebaseRoom.child("members").push( memberData, this._firebaseComplete );
@@ -282,9 +282,9 @@ FirebaseSync.prototype._startListeningRoom = function() {
 		var roomInfo = {
 
 			thisUrl: this.roomURL,
-			appId: this.appID,
-			roomId: this.roomID,
-			senderId: this.senderID,
+			appId: this.appId,
+			roomId: this.roomId,
+			senderId: this.senderId,
 			firebaseRoomKey: this.roomKey,
 			firebaseRootUrl: this.firebaseRoot.toString(),
 			firebaseRoomUrl: this.firebaseRoom.toString(),
@@ -305,13 +305,13 @@ FirebaseSync.prototype._saveLatencyStats = function() {
 	var average = Math.round(sum / this.latencySamples.length);
 	var latencyData = {
 
-		recieverID: this.senderID,
-		roomID: this.roomID,
+		recieverId: this.senderId,
+		roomId: this.roomId,
 		savedAt: Date.now(),
 		samples: this.latencySamples,
 		average: average
 	}
-	var firebaseLatency = this.firebaseRoot.child(this.appID).child("stats/latency");
+	var firebaseLatency = this.firebaseRoot.child(this.appId).child("stats/latency");
 	firebaseLatency.push(latencyData, this._firebaseComplete);
 
 	console.log("Firebase latency samples : " + this.latencySamples + " ms");
@@ -321,29 +321,29 @@ FirebaseSync.prototype._saveLatencyStats = function() {
 
 FirebaseSync.prototype._createFirebaseRoom = function() {
 
-	var randID = Math.round(Math.random() * 1000);
+	var randId = Math.round(Math.random() * 1000);
 
 	var roomData = {
-		roomName: "Room " + randID, 
-		roomID: this.roomID,
+		roomName: "Room " + randId, 
+		roomId: this.roomId,
 		createdAt: Firebase.ServerValue.TIMESTAMP,
 		updatedAt: Firebase.ServerValue.TIMESTAMP,
 		members: null,
 		objects: null
 	};
-	var newRoomRef = this.firebaseRoot.child(this.appID).child("rooms").push(roomData, 
+	var newRoomRef = this.firebaseRoot.child(this.appId).child("rooms").push(roomData, 
 		function(ErrorObject) {
 			if (ErrorObject) {
 				this._firebaseError(ErrorObject); 
 			} else {
-				console.log("Created " + this.roomID + " at " + newRoomRef.toString());
+				console.log("Created " + this.roomId + " at " + newRoomRef.toString());
 
 				if (this.reloadWithNewURL) {
 
 					// Add the query string for this room to the current URL and reload.
-					console.log("Reloading page with roomID in URL");
-					window.location.search = "room=" + this.roomID;
-					// we never get here, reloads page with this roomID in URL
+					console.log("Reloading page with roomId in URL");
+					window.location.search = "room=" + this.roomId;
+					// we never get here, reloads page with this roomId in URL
 
 				}
 
@@ -382,14 +382,14 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 	this.lastObjectData[ object.uuid ] = objectData;
 
 	var objectInitialized = this.objectsInitialized.indexOf( object ) !== -1;
-	if ( objectData.senderID !== this.senderID || !objectInitialized ) {
+	if ( objectData.senderId !== this.senderId || !objectInitialized ) {
 
 		// Another player moved the object!
 		this._copyObjectData( object, objectData );
 
 		if ( this.TRACE ) console.log("RECV update for " + key, objectData);
 
-		if ( objectData !== this.senderID && objectInitialized ) {
+		if ( objectData !== this.senderId && objectInitialized ) {
 
 			this._collectLatencyStats(snapshot.val());
 
@@ -492,7 +492,7 @@ FirebaseSync.prototype._createObjectData = function( object ) {
 			y: object.scale.y,
 			z: object.scale.z
 		},
-		"senderID": this.senderID,
+		"senderId": this.senderId,
 		"sentAt": Date.now()
 	};
 
@@ -605,15 +605,15 @@ FirebaseSync.prototype._firebaseError = function(errorObject) {
 
 
 /*
-	schema: root/appID/rooms/<unique-id> = {
+	schema: root/appId/rooms/<unique-id> = {
 		roomName: "My Room",
-		roomID: 247,
+		roomId: 247,
 		createdAt: 1424724849003,
 		updatedAt: 1424724849003,
 		members: { 
 			<autogen-unique-id>: {
 				joinedAt: 1424724849003,
-				userID: "user45"
+				userId: "user45"
 			}
 			...
 		},
@@ -622,16 +622,16 @@ FirebaseSync.prototype._firebaseError = function(errorObject) {
 				position: {x: 4, y: 0, z: 26 },
 				rotation: {x: 180, y: 180, z: 0 },
 				scale: {x: 2, y: 2, z: 2 },
-				senderID: "user45"
+				senderId: "user45"
 			},
 			...
 		}
 	}
 
-	schema: root/appID/stats/latency/<unique-id> = {
+	schema: root/appId/stats/latency/<unique-id> = {
 
-		receiverID: "user389",
-		roomID: "room869",
+		receiverId: "user389",
+		roomId: "room869",
 		savedAt: 1424854776730,
 		samples: {
 			0: 72,

@@ -39,7 +39,7 @@ Load one or more OBJ/MTL models using the <a href="src/AltOBJMTLLoader.js">AltOB
 var loader = new THREE.AltOBJMTLLoader();
 
 // loader assumes .mtl file has same basename as .obj file
-loader.load(&quot;spinning_cube/cube.obj&quot;, function ( loadedObject ) {
+loader.load(&quot;models/SpinningCube/cube.obj&quot;, function ( loadedObject ) {
 
     cube = loadedObject;
     scene.add( cube );
@@ -91,8 +91,8 @@ cursorEvents.addEffect( hoverEffect, cube );
 <p><strong>Step 6</strong>:
 Add muti-player networking with <a href="src/sync/FirebaseSync.js">FirebaseSync</a></p>
 <pre><code>var firebaseRootURL = &quot;https://your-firebase-root.firebaseio.com/&quot;;
-var appID = &quot;Your-App-Name&quot;;
-firebaseSync = new FirebaseSync( firebaseRootURL, appID );
+var appId = &quot;Your-App-Name&quot;;
+firebaseSync = new FirebaseSync( firebaseRootURL, appId );
 firebaseSync.addObject( cube, &quot;cube&quot; ); // object and unique id
 // add all objects you want to sync before calling ...
 firebaseSync.connect();
