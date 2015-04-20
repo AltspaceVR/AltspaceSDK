@@ -170,7 +170,7 @@ function initFirebase() {
 	var firebaseRootURL = "https://altspace-apps.firebaseio.com/";
 	var appID = "spinningcube";
 	firebaseSync = new FirebaseSync( firebaseRootURL, appID );
-	firebaseSync.add( cube, "cube" );
+	firebaseSync.addObject( cube, "cube" );
 
 	firebaseSync.connect();
 

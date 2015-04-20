@@ -60,7 +60,7 @@ FirebaseSync = function(firebaseRootURL, appID, params) {
 };
 
 
-FirebaseSync.prototype.add = function( object, key ) {
+FirebaseSync.prototype.addObject = function( object, key ) {
 
 	if (! object ) {
 		console.error("Object cannot be null.");
