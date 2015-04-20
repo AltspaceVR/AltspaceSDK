@@ -47,7 +47,7 @@ var cube;
 var loader = new THREE.AltOBJMTLLoader();
 
 // loader assumes .mtl file has same basename as .obj file
-loader.load("models/SpinningCube/cube.obj", function ( loadedObject ) {
+loader.load("models/AltspaceCube/cube.obj", function ( loadedObject ) {
 
 	cube = loadedObject;
 	scene.add( cube );

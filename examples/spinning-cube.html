@@ -1,10 +1,6 @@
 <!--
 	Example of how to get a Spinning Cube into Altspace.
 
-	Attributions:
-	image: AltspaceVR logo - from AltspaceVR 
-	sound: drippy - https://www.freesound.org/people/Corsica_S/sounds/30047/
-
 	Author: Amber Roy
 	Copyright (c) 2015 Altspace VR
 -->
@@ -83,7 +79,7 @@ function loadModels() {
 	var loader = new THREE.AltOBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = "models/SpinningCube/cube.obj";
+	var filename = "models/AltspaceCube/cube.obj";
 	loader.load(filename, function ( loadedObject ) {
 
 		console.log("Loaded object from " + filename, loadedObject);
@@ -182,7 +178,7 @@ function loadSoundEffect() {
 
 	// Load sound effect. Chromium doesn't support mp3 so include wav too.
 	var ext = (new Audio()).canPlayType('audio/mpeg') ? ".mp3" : ".wav";
-	sound = new Audio("models/SpinningCube/drippy" + ext);	
+	sound = new Audio("sounds/drippy" + ext);	
 
 }
 
