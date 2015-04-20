@@ -2,7 +2,7 @@
 
 This SDK will enable you to use Javascript to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.
 
-The Altspace SDK is in beta and actively under development. It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.
+The Altspace SDK is in beta and actively under development. *It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.*
 
 ## Scope of Current SDK
 
