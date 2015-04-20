@@ -2,7 +2,7 @@
 
 This SDK will enable you to use Javascript to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.
 
-Learn more in the [AltspaceSDK Wiki].
+The Altspace SDK is in beta and actively under development. It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.
 
 ## Scope of Current SDK
 
@@ -144,6 +144,7 @@ Or dive info the source code, organized as follows:
 
 [AltspaceSDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [Known Issues]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Known-Issues
+[GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."
