@@ -1,0 +1,209 @@
+<!--
+	Example of how to load many objects into Altspace.
+
+	Author: Kevin Lee
+	Copyright (c) 2015 Altspace VR
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<title>Dice Grid Example</title>
+
+		<!-- Required by AltOBJMTLLoader.js -->
+		<script src="../lib/three.min.js"></script>
+		<script src="../lib/MTLLoader.js"></script>
+		<script src="../lib/OBJMTLLoader.js"></script>
+		<script src="../lib/async.js"></script>
+
+		<script src="../src/AltOBJMTLLoader.js"></script>
+		<script src="../src/AltRenderer.js"></script>
+		<script src="../src/helpers/MultiLoader.js"></script>
+		<script src="../src/cursor/AltObjectControls.js"></script>
+
+		<style>
+			body {
+				background-color: rgba(1, 0, 0, 0);
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				position: absolute;
+				margin: 10px;
+				font-family: Arial;
+			}
+		</style>
+
+</head>
+<body>
+<body>
+		<div id="info">
+			<a href="http://github.com/AltspaceVR/alt-three.js" 
+				 target="_blank">alt-three.js</a> - Dice Grid
+		</div>
+		<div id="container"></div>
+</body>
+</body>
+
+<script>
+
+
+var inAltspace = !!window.Alt;
+
+var scene, camera, renderer;
+var group;
+var started = 0;
+
+var models = {};
+
+var diceList = [
+	["d4", 49],
+	["d6", 49],
+	["d8", 49],
+	["d10", 49],
+	["d00", 49],
+	["d12", 49],
+	["d20", 49],
+];
+
+// start off by loading .obj and .mtl files
+loadModels();
+
+function onModelsLoaded() {
+	console.log("Load took: " + (Date.now() - started) + " ms");
+
+	group = new THREE.Object3D();
+
+	var x = -300;
+
+	diceList.forEach(function(object){
+		var z = -300;
+		var id = 0;
+		for (var i = 0; i < 7; i++){
+			var y = -300;
+			for (var j = 0; j < 7; j++){
+				var model = models[object[0] + id];
+				fixAmbient(model);
+				group.add(model);
+				model.scale.set(10,10,10);
+				model.position.set(x, y, z);
+				y += 100;
+				id++;
+			}
+			z += 100;
+		}
+		x += 100;
+	});
+
+	initScene();
+	animate();
+}
+
+function fixAmbient(object) {
+	var color = new THREE.Color(1, 1, 1);
+
+    object.traverse( function(child) {
+      	if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
+
+	        if (! child.userData.origAmbientColor ) {
+	          child.userData.origAmbientColor = color;
+	        }
+
+        	child.material.ambient = color;
+
+      	}
+    }.bind( this )); 
+}
+
+function loadModel(fileParams, cb) {
+	var fileName = fileParams[0];
+	var fileKey = fileParams[1];
+
+	var loader = new THREE.AltOBJMTLLoader();
+	loader.load(fileName, function ( loadedObject ) {
+		models[fileKey] = loadedObject;
+		cb();
+	});
+}
+
+function loadModels() {
+
+	var fileList = [];
+
+	diceList.forEach(function(object){
+		for (var i = 0; i < object[1]; i++){
+			fileList.push(["models/AltspaceDice/" + object[0] + "_high.obj", object[0] + i]);
+		}
+	});
+
+	started = Date.now();
+	// MultiLoader.loadFilesInParallel(fileList, loadModel, onModelsLoaded);
+	MultiLoader.loadFilesInSeries(fileList, loadModel, onModelsLoaded);
+
+}
+
+function initScene() {
+
+	scene = new THREE.Scene();
+
+	if ( inAltspace ) {
+
+		renderer = new THREE.AltRenderer();
+		// hide any elements on webpage
+		document.getElementById("info").style.visibility = "hidden";
+	} else {
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setClearColor("#AAAAAA");
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		var aspect = window.innerWidth / window.innerHeight;
+		camera = new THREE.PerspectiveCamera(70, aspect, 1, 2000 );
+		camera.position.z = 600; // stand back from origin
+		camera.position.y = 300;	// slightly above origin
+		camera.lookAt( group.position );
+
+
+		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
+		var ambient = new THREE.AmbientLight( 0xffffff );
+		scene.add( ambient );
+	}
+
+	scene.add(group);
+
+}
+
+function onWindowResize() {
+
+	if ( inAltspace ) return ; // Resize not supported yet.
+
+	if(camera){
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+	}
+
+}
+window.addEventListener( 'resize', onWindowResize, false );
+
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	group.rotation.x += 0.01;
+	group.rotation.y += 0.01;
+
+	renderer.render( scene, camera );
+
+}
+
+
+
+</script>
+</body>
+</html>
+
+
+
