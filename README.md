@@ -4,6 +4,8 @@ This SDK will enable you to use Javascript to create interactive, multi-user web
 
 The Altspace SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.**
 
+Consequently, it good practice to link to the latest SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored to our sdk subdomain, so AltRender can be linked from [http://sdk.altvr.com/src/AltRenderer.js]
+
 ## Scope of Current SDK
 
 Altspace Web Apps are powered by a custom renderer that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
