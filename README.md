@@ -4,7 +4,7 @@ This SDK will enable you to use Javascript to create interactive, multi-user web
 
 The Altspace SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.**
 
-Consequently, it good practice to link to the latest SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored to our sdk subdomain, so AltRender can be linked from http://sdk.altvr.com/src/AltRenderer.js
+Consequently, it good practice to link to the latest SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored to our sdk subdomain so, for example, AltRender can be linked from http://sdk.altvr.com/src/AltRenderer.js
 
 ## Scope of Current SDK
 
