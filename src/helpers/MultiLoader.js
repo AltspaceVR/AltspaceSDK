@@ -1,8 +1,8 @@
 /**
  * MultiLoader is a helper for loading multiple files at once.
+ * It requires a callback to be specified which will be called once all loading is completed.
+ * By default, it uses THREE.AltOBJMTLLoader, however a custom loader can be specified.
  * It requires async.js https://github.com/caolan/async
- * It expects a loader callback to be passed in which will do the actual loading of assets. 
- * as well as a final callback that is called at the end.
  *
  * @author Kevin Lee
  * Copyright (c) 2015 AltspaceVR
@@ -10,10 +10,29 @@
 
 var MultiLoader = function() {
 
+	var cache = {};
+
 	/**
-	 * loadFilesInParallel should be faster for loading many different types of objects.
+	 * Default loader for loading obj's
 	 */
-	function loadFilesInParallel(fileList, loader, cb) {
+	function loadModel(fileParams, cb) {
+		var fileName = fileParams.fileName;
+		var cacheKey = fileParams.cacheKey;
+
+		var loader = new THREE.AltOBJMTLLoader();
+		loader.load(fileName, function ( loadedObject ) {
+			cache[cacheKey] = loadedObject;
+			cb();
+		});
+	}
+
+	 /**
+	  * loadFilesInParallel should be faster for loading many different types of objects.
+	  */
+	function loadFilesInParallel(fileList, cb, optionalLoader) {
+
+		var loader = optionalLoader || loadModel;
+
 		files = [];
 
 		fileList.forEach(function(fileParams){
@@ -30,7 +49,10 @@ var MultiLoader = function() {
 	/**
 	 * loadFilesInSeries should be faster for loading many similar objects if your loader is properly cached.
 	 */
-	function loadFilesInSeries(fileList, loader, cb) {
+	function loadFilesInSeries(fileList, cb, optionalLoader) {
+
+		var loader = optionalLoader || loadModel;
+
 		files = [];
 
 		fileList.forEach(function(fileParams){
@@ -44,8 +66,16 @@ var MultiLoader = function() {
 		});
 	}
 
+	/**
+	 * Retrieve the cached item. Returns null if the item does not exist.
+	 */
+	function getCached(cacheKey) {
+		return cache[cacheKey] || null;
+	}
+
 	return {
 		loadFilesInParallel: loadFilesInParallel,
-		loadFilesInSeries: loadFilesInSeries
+		loadFilesInSeries: loadFilesInSeries,
+		getCached: getCached
 	};
 }();
