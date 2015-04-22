@@ -1,12 +1,12 @@
-/**
+/*
  * CursorEvents dispatches Cursor API events to the target object.
  * Thus you can attach event listeners to objects instead of the window:
  * myObject.addEventListener( "holocursorenter", myEventHandler );
  *
  * Can also manage AltObjectControls and CursorEffects, if enabled then
  * those two libraries are also required for this one to function.
-
- * @author Amber Roy
+ *
+ * Author: Amber Roy
  * Copyright (c) 2015 AltspaceVR
  */
 

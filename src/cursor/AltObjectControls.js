@@ -1,4 +1,4 @@
-/**
+/*
  * NOTE: Used internally by CursorEvents; no need to instantiate manually! 
  *
  * AltObjectControls detects mouse events using the Three.js raycaster.
@@ -13,7 +13,7 @@
  * Added delegate: optionally receives all events, instead of target object.
  * Added eventDetail: contains ray origin, direction, intersection point, etc. 
  *
- * @author Amber Roy
+ * Author: Amber Roy
  * Copyright (c) 2015 AltspaceVR
  */
 function AltObjectControls( eye , params ){

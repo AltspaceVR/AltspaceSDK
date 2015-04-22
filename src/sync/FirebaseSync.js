@@ -1,11 +1,11 @@
-/**
+/*
  * FirebaseSync synchronizes objects between multiple clients using Firebase DB.
  * Automatically creates a new room, if room not specified in URL query string.
  * Syncs object position, rotation, and scale (must be THREE.Object3D instance).
  * Optionally syncs object.userData properties given in syncUserDataProps param. 
  *
- * @author amberroy / http://github.com/amberroyVR
- * Copyright (c) 2015 Amber Roy
+ * Author: Amber Roy
+ * Copyright (c) 2015 AltspaceVR
  */
 
 

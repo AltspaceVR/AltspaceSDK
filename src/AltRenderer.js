@@ -1,7 +1,7 @@
-/**
+/*
  * AltRenderer renders a Three.js scene in the Altspace web browser.
  *
- * @author Gavan Wilhite
+ * Author: Gavan Wilhite
  * Copyright (c) 2015 AltspaceVR
  */
 

@@ -1,10 +1,10 @@
-/**
+/*
  * MultiLoader is a helper for loading multiple files at once.
  * It requires a callback to be specified which will be called once all loading is completed.
  * By default, it uses THREE.AltOBJMTLLoader, however a custom loader can be specified.
  * It requires async.js https://github.com/caolan/async
  *
- * @author Kevin Lee
+ * Author: Kevin Lee
  * Copyright (c) 2015 AltspaceVR
  */
 

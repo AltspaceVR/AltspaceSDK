@@ -1,8 +1,8 @@
-/**
+/*
  * ColorHoverEffect makes objects change color on hover.
  * Apply using CursorEfects.
  *
- * @author Amber Roy
+ * Author: Amber Roy
  * Copyright (c) 2015 AltspaceVR
  */
 

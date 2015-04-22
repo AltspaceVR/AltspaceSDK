@@ -1,8 +1,8 @@
-/**
+/*
  * AltOBJMTLLoader imports models into Three.js and also into Altspace.
  * Based on the THREE.OBJMTLLoader (and requires it and MTLLoader to run).
  * 
- * @author Gavan Wilhite
+ * Author: Gavan Wilhite
  * Copyright (c) 2015 AltspaceVR
  */
 
