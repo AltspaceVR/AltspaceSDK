@@ -12,7 +12,7 @@ var MultiLoader = function() {
 
 	var cache = {};
 
-	/**
+	/* 
 	 * Default loader for loading obj's
 	 */
 	function loadModel(fileParams, cb) {
@@ -26,7 +26,7 @@ var MultiLoader = function() {
 		});
 	}
 
-	 /**
+	 /* 
 	  * loadFilesInParallel should be faster for loading many different types of objects.
 	  */
 	function loadFilesInParallel(fileList, cb, optionalLoader) {
@@ -46,7 +46,7 @@ var MultiLoader = function() {
 		});
 	}
 
-	/**
+	/* 
 	 * loadFilesInSeries should be faster for loading many similar objects if your loader is properly cached.
 	 */
 	function loadFilesInSeries(fileList, cb, optionalLoader) {
@@ -66,7 +66,7 @@ var MultiLoader = function() {
 		});
 	}
 
-	/**
+	/* 
 	 * Retrieve the cached item. Returns null if the item does not exist.
 	 */
 	function getCached(cacheKey) {
