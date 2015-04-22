@@ -22,12 +22,8 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	var p = params || {};
 
-	// List of which properties to sync in object.userData
-	this.syncUserDataProps = p.syncUserDataProps || [];
-
-	// set object.visibile to false until initial position synced with server. 
-	// TODO: Make this work in Altspace. visible flag not yet supported.
-	this.hideUntilSync = p.hideUntilSync || false;
+	// console.log firebase events for debugging
+	this.TRACE = !!p.TRACE;
 
 	this.objects = [];	// in the order they were added
 	this.key2obj = {};	// key2obj[ key ] = object
@@ -49,7 +45,6 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.reloadWithNewURL = false;
 	this.roomCreated = false;
 
-	this.TRACE = false; // console.log firebase events, for debugging only
 
 	// type check
 	if ( p.syncUserDataProps && ! (p.syncUserDataProps instanceof Array)) {
@@ -79,9 +74,8 @@ FirebaseSync.prototype.addObject = function( object, key ) {
 		return ; // Can't think of a reason to re-add the same object.
 	}
 
-	if ( this.hideUntilSync ) {
-		object.visible = false;
-	}
+	// false until we get the first update callback for this object
+	object.userData.isSyncInitialized = false;
 
 	this.objects.push( object );
 	this.key2obj[ key ] = object;
@@ -398,9 +392,9 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 		if ( ! objectInitialized ) {
 
 			this.objectsInitialized.push( object );
-			if (this.hideUntilSync) {
-				object.visible = true;
-			}
+
+			// this local object now synchronized
+			object.userData.isSyncInitialized = true;
 
 			if ( this.TRACE ) console.log("INIT for " + key, objectData);
 		}
@@ -496,16 +490,11 @@ FirebaseSync.prototype._createObjectData = function( object ) {
 		"sentAt": Date.now()
 	};
 
-	for ( var i=0; i < this.syncUserDataProps.length; i++ ) {
-		var prop = this.syncUserDataProps[i];
-		if ( typeof object.userData[prop] !== "undefined" ) {
+	if ( object.userData.hasOwnProperty("syncData") ) {
 
-			if ( !objectData.userData ) {
-				objectData.userData = {};
-			}
-
-			objectData.userData[prop] = object.userData[prop];
-		}
+		// add syncData at top-level objectData, not inside userData.
+		var syncDataClone = JSON.parse( JSON.stringify( object.userData.syncData ));
+		objectData.syncData = syncDataClone;
 
 	}
 
@@ -529,29 +518,19 @@ FirebaseSync.prototype._sameObjectData = function( object, objectData ) {
 		object.scale.z !== objectData.scale.z )
 		return false;
 
-	for ( var i=0; i < this.syncUserDataProps.length; i++ ) {
+	if ( object.userData.hasOwnProperty("syncData") !== 
+		 objectData.hasOwnProperty("syncData"))
+		return false;
 
-		var prop = this.syncUserDataProps[i];
-		if ( typeof object.userData[prop] === "undefined" && objectData.userData &&
-			typeof objectData.userData[prop] !== "undefined" ) {
-
-			return false;
-		}
-		if ( (!objectData.userData ||
-			typeof objectData.userData[prop] === "undefined") && 
-			typeof object.userData[prop] !== "undefined" ) {
-
-			return false;
-		}
-
-		if ( typeof object.userData[prop] != "undefined" && 
-			object.userData[prop] !== objectData.userData[prop] ) {
-
-			return false;
-		}
+	if ( object.userData.hasOwnProperty("syncData") ) {
+		// objectData has syncData too since we just checked above.
+		// syncData is at top-level objectData, not inside userData.
+		if ( JSON.parse( JSON.stringify( object.userData.syncData )) !==
+		     JSON.parse( JSON.stringify( objectData.syncData )))
+		    return false;
 
 	}
-
+		 
 	return true;
 }
 
@@ -569,14 +548,11 @@ FirebaseSync.prototype._copyObjectData = function( object, objectData) {
 	object.scale.y = objectData.scale.y;
 	object.scale.z = objectData.scale.z;
 
-	for ( var i=0; i < this.syncUserDataProps.length; i++ ) {
+	if ( objectData.hasOwnProperty( "syncData" )) {
 
-		var prop = this.syncUserDataProps[i];
-		if ( objectData.userData &&
-			typeof objectData.userData[prop] !== "undefined" ) {
-
-			object.userData[prop] = objectData.userData[prop];
-		}
+		// copy top-level syncData into object.userData
+		var syncDataClone = JSON.parse( JSON.stringify( objectData.syncData ));
+		object.userData.syncData = syncDataClone;
 
 	}
 
@@ -602,45 +578,4 @@ FirebaseSync.prototype._firebaseError = function(errorObject) {
 
 	console.error("firebase error", errorObject);
 };
-
-
-/*
-	schema: root/appId/rooms/<unique-id> = {
-		roomName: "My Room",
-		roomId: 247,
-		createdAt: 1424724849003,
-		updatedAt: 1424724849003,
-		members: { 
-			<autogen-unique-id>: {
-				joinedAt: 1424724849003,
-				userId: "user45"
-			}
-			...
-		},
-		objects: {
-			<user-provided-key>: {
-				position: {x: 4, y: 0, z: 26 },
-				rotation: {x: 180, y: 180, z: 0 },
-				scale: {x: 2, y: 2, z: 2 },
-				senderId: "user45"
-			},
-			...
-		}
-	}
-
-	schema: root/appId/stats/latency/<unique-id> = {
-
-		receiverId: "user389",
-		roomId: "room869",
-		savedAt: 1424854776730,
-		samples: {
-			0: 72,
-			1: 71,
-			2: 86,
-			3: 72
-		},
-		average: 75
-	}
-
-*/
 

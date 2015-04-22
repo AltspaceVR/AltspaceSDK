@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Solar System Example</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="../lib/three.min.js"></script>
+	<script src="../src/AltOBJMTLLoader.js"></script>
+	<script src="../src/AltRenderer.js"></script>
+	<script src="../src/sync/FirebaseSync.js"></script>
+	<script src="../lib/MTLLoader.js"></script>
+	<script src="../lib/OBJMTLLoader.js"></script>
+	<script src="../lib/firebase.js"></script>
+
+	<style>
+		body {
+			font-family: Monospace;
+			color: #fff;
+			margin: 0px;
+			overflow: hidden;
+		}
+		#test-frame{
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin-top: -250px;
+			margin-left: -250px;
+			width: 500px;
+			height: 500px;
+			border-radius: 500px;
+			background-color: rgba(1, 0, 0, 0);
+			box-shadow: 0 0 8px 600px rgba(0, 0, 0, 1);
+		}
+		#planet-list{
+			font-size: 40px;
+			left: -300px;
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+	<div id="test-frame">
+		<ul id="planet-list">
+		</ul>
+	</div>
+</body>
+<script>
+
+var inAltspace = !!window.Alt;
+
+var scene, renderer;
+var camera;
+
+var planetInfo = [
+	// name, radius, distance, orbitalPeriod
+	['sun',	     30,   0,   1],
+	['mercury',	 2.4,  2,   0.2409],
+	['venus',    6,    3,   0.616],
+	['earth',    6.3,  4,   1],
+	['mars',     3.3,  5,   1.9],
+	['jupiter',	 14,   8,   12.0],
+	['saturn',	 12,   10,  29.5],
+	['uranus', 	 10,   12,  84],
+	['neptune',  8,    14,  165],
+];
+var loadsPending;
+
+var solarSystem = new THREE.Object3D();
+var radiusCoeff = 0.018;
+var distanceCoeff = 6.2;
+var velocityCoeff = 0.005;
+
+var planets = [];
+var planetsByName = {};
+var compactMode;
+//var selectedPlanetName = 'earth';
+
+var manager = new THREE.LoadingManager();
+var loader = new THREE.AltOBJMTLLoader( manager );
+
+var fbRoot = "https://altspace-apps.firebaseio.com";
+var appId = "solar-system";
+var firebaseSync = new FirebaseSync( fbRoot, appId );
+var appState;
+
+loadPlanets(); // MAIN
+
+function onModelsLoaded() {
+
+	init();
+	sync();
+	animate();
+
+}
+
+function loadPlanets() {
+
+	loadsPending = planetInfo.length;
+	for ( var i=0; i < planetInfo.length; i++ ) {
+
+		addPlanet( planetInfo[i] );	
+
+	}
+
+}
+
+function addPlanet(planetInfo) {
+
+	var name = planetInfo[0];
+	var radius = planetInfo[1];
+	var distance = planetInfo[2];
+	var orbitalPeriod =  planetInfo[3];
+
+	var planetElement = $("#planet-list").append('<li><span>' + name + '</span></li>')[0];
+	$(planetElement).click(function(el){
+		var selectedPlanetName = el.target.innerHTML;
+		var syncData = appState.userData.syncData;
+		syncData.selectedPlanetName = selectedPlanetName;
+		firebaseSync.saveObject( appState );
+	});
+
+	loader.load('models/SolarSystem/' + name + '.obj', 
+		         function ( planet ) {
+
+		planet.solarDistance = distance * distanceCoeff;
+		planet.position.y = 10;
+		planet.orbitalPosition = Math.random() * 3.14;
+		planet.orbitalVelocity = (1 / orbitalPeriod) * velocityCoeff;
+		planet.name = name;
+		planet.scale.x = radius * radiusCoeff;
+		planet.scale.y = radius * radiusCoeff;
+		planet.scale.z = radius * radiusCoeff;
+
+		planet.userData.originalScale = {};
+		planet.userData.originalScale.x = planet.scale.x;
+		planet.userData.originalScale.y = planet.scale.y;
+		planet.userData.originalScale.z = planet.scale.z;
+
+		solarSystem.add(planet);
+		planets.push(planet);
+		planetsByName[name] = planet;
+
+		if ( --loadsPending === 0 ) onModelsLoaded();
+
+	} );
+}
+
+function init() {
+
+	scene = new THREE.Scene(); 
+
+	if ( inAltspace ) {
+
+		renderer = new THREE.AltRenderer();
+
+	} else {
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		var aspect = window.innerWidth / window.innerHeight;
+		camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+		camera.position.z = 100; // stand back from origin
+		camera.position.y = 25;	// slightly above origin
+		camera.lookAt( scene.position );
+
+		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
+		var ambient = new THREE.AmbientLight( 0xffffff );
+		scene.add( ambient );
+
+	}
+
+	solarSystem.scale.x = 3;
+	solarSystem.scale.y = 3;
+	solarSystem.scale.z = 3;
+	scene.add(solarSystem);
+
+	window.addEventListener( 'resize', handleWindowResize, false );
+
+	handleWindowResize();
+
+}
+
+function handleWindowResize() {
+
+	compactMode = !inAltspace || window.innerDepth < 500;
+
+	if(compactMode){
+		document.getElementById('test-frame').style.visibility= 'visible';
+	} else {
+		document.getElementById('test-frame').style.visibility= 'hidden';
+		for(var i = 0, max = planets.length; i < max; i++){
+			var planet = planets[i];
+			planet.scale.x = planet.userData.originalScale.x;
+			planet.scale.y = planet.userData.originalScale.y;
+			planet.scale.z = planet.userData.originalScale.z;
+		}
+	}
+}
+
+function sync() {
+
+	// appState is Object3D, as FirebaseSync expects, but it's not an
+	// object in the scene and we only use appState.userData.syncData,
+	// which gets synced automatically for us.
+	appState = new THREE.Object3D();
+
+	appState.userData.syncData = {
+		selectedPlanetName: "earth", // default	
+	};
+
+	firebaseSync.addObject( appState, "appState" );
+	firebaseSync.connect();
+
+}
+
+function animate() {
+
+	var theta = 1;
+	for(var i = 0, max = planets.length; i < max; i++){
+		var planet = planets[i];
+
+
+		if(compactMode){
+
+			var syncData = appState.userData.syncData;
+
+			if( appState.userData.isSyncInitialized && 
+				planet === planetsByName[ syncData.selectedPlanetName ] ) {
+
+			 	planet.visible = true;
+
+				planet.position.x = 0;
+				planet.position.y = 0;
+				planet.position.z = 0;
+
+				var scale = inAltspace ? 1.8 : 0.4 ;
+
+				planet.scale.x = scale;
+				planet.scale.y = scale;
+				planet.scale.z = scale;
+
+			} else {
+
+			 	planet.visible = false;
+
+			 	if ( !inAltspace ) {
+					planet.scale.x = 0;
+					planet.scale.y = 0;
+					planet.scale.z = 0;
+			 	}
+			}
+
+		} else {
+
+			planet.orbitalPosition += planet.orbitalVelocity;
+			var r = planet.solarDistance;
+			var x = r*Math.sin(planet.orbitalPosition);
+			var z = r*Math.cos(planet.orbitalPosition);
+
+			planet.position.x = x;
+			planet.position.z = z;
+
+		}
+
+		planet.rotation.y += 0.001;
+	}
+
+	requestAnimationFrame( animate );
+	render();
+}
+
+function render() {
+
+	renderer.render( scene, camera );
+
+}
+
+</script>
+</html>
