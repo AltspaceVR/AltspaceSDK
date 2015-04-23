@@ -49,7 +49,7 @@ Open Altspace (for tips on windowed mode, see the [Workflow] page), and paste th
 
 You should now see a blank page, or any traditional HTML content you have added so far.
 
-**Step 2**:
+**Step 3**:
 Load one or more OBJ/MTL models using the [AltOBJMTLLoader]
 ```
 var cube;
@@ -65,7 +65,7 @@ loader.load("models/AltspaceCube/cube.obj", function ( loadedObject ) {
 ```
 The object is now loaded, but it will not appear until the scene is rendered.
 
-**Step 3**:
+**Step 4**:
 Render your scene using the [AltRender] in your animate loop.
 ```
 renderer = new THREE.AltRenderer(); // during scene initialization
@@ -74,7 +74,7 @@ renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 ```
 Any objects loaded by AltOBJMTLLoader and added to the Three.js scene are now imported (a.k.a. spawned) into the Altspace VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the Altspace environment.
 
-**Step 4**:
+**Step 5**:
 Implement your animations and app logic using [Three.js]
 ```
 // in animate loop
@@ -84,7 +84,7 @@ cube.rotation.y += 0.01;
 The AltRenderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
 
 
-**Step 5a**:
+**Step 6a**:
 Register objects for Altspce events with [CursorEvents]
 ```
 cursorEvents = new CursorEvents();
@@ -108,7 +108,7 @@ cursorEvents.update();
 ```
 Now the cube will apper to "jump" slightly up and down on Altspace cursor press and release.  It will also respond to correspond HTML5 mouse events in a traditional browser.
 
-**Step 5b**:
+**Step 6b**:
 Add interactive behavior with [Cursor Effect Plugins]
 ```
 var dragEffect = new DragPlaneEffect();
@@ -120,7 +120,7 @@ cursorEvents.addEffect( hoverEffect, cube );
 ```
 Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the Altspace developer community.
 
-**Step 6**:
+**Step 7**:
 Add muti-player networking with [FirebaseSync]
 ```
 var firebaseRootURL = "https://your-firebase-root.firebaseio.com/";
