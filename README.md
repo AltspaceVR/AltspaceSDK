@@ -43,6 +43,8 @@ Clone/download this repo and create your app HTML file.
 Your app HTML file should contain script tags pointing to the SDK files (and HTML/CSS, if you app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK.  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
 
 **Step 2**
+Open your project in Altspace.
+
 Setup [Prepros] and add your app's project directory. Click the *Live Preview* button and copy the link that opens.
 
 Open Altspace (for tips on windowed mode, see the [Workflow] page), and paste the prepros preview link into one of the Altspace browser windows.
