@@ -47,7 +47,7 @@ Open your project in Altspace.
 
 Setup [Prepros] and add your app's project directory. Click the *Live Preview* button and copy the link that opens.
 
-Open Altspace (for tips on windowed mode, see the [Workflow] page), and paste the prepros preview link into one of the Altspace browser windows.
+Open Altspace (for tips on windowed mode, see the [Workflow] page), and paste the Prepros preview link into one of the Altspace browser windows.
 
 You should now see a blank page, or any traditional HTML content you have added so far.
 
@@ -175,6 +175,7 @@ Or dive info the source code, organized as follows:
 [DragPlaneEffect]: src/cursor/DragPlaneEffect.js
 [FirebaseSync]: src/sync/FirebaseSync.js
 [Three.js]: http://https://github.com/mrdoob/three.js/
+[Workflow]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Workflow
 
 [examples/spinning-cube.html]: examples/spinning-cube.html
 [cube.obj]: examples/spinning_cube/cube.obj
