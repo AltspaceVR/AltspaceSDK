@@ -12,7 +12,7 @@ Altspace Web Apps are powered by a custom renderer that supports a subset of [Th
 
 Types of apps you can build:
 * Games (arcade-style, table-top, etc), interactive scenes, art & science sims, and much more.
-* Tech demos, computational art, data visualizaion, demoscene-style audio/visual experiences.
+* Tech demos, computational art, data visualization, demoscene-style audio/visual experiences.
 * Interfaces to popular websites and mobile apps, or original VR creations inspired by them.
 * Apps that *simulate real-world physical objects* tend to work best in Altspace, for example...
 * [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
@@ -40,7 +40,7 @@ Source: [examples/spinning-cube.html]
 **Step 1**
 Clone/download this repo and create your app HTML file.
 
-Your app HTML file should contain script tags pointing to the SDK files (and HTML/CSS, if you app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK.  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
+Your app HTML file should contain script tags pointing to the SDK files (and HTML/CSS, if your app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK.  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
 
 **Step 2**
 Open your project in Altspace.
@@ -87,7 +87,7 @@ The AltRenderer serializes key information about objects in your scene for use b
 
 
 **Step 6a**:
-Register objects for Altspce events with [CursorEvents]
+Register objects for Altspace events with [CursorEvents]
 ```
 cursorEvents = new CursorEvents();
 
@@ -108,7 +108,7 @@ cube.addEventListener( "holocursorup",  function( event ) {
 // in animate loop
 cursorEvents.update();
 ```
-Now the cube will apper to "jump" slightly up and down on Altspace cursor press and release.  It will also respond to correspond HTML5 mouse events in a traditional browser.
+Now the cube will appear to "jump" slightly up and down on Altspace cursor press and release.  It will also respond to corresponding HTML5 mouse events in a traditional browser.
 
 **Step 6b**:
 Add interactive behavior with [Cursor Effect Plugins]
@@ -137,7 +137,7 @@ firebaseSync.saveObject( cube );
 // or call firebaseSync.update() in your animate loop to save all objects,
 // but not recommended if objects change position or rotation every frame.
 ```
-The new object state is now saved to the [Firebase](http://firebase.com) cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it recieves broadcasts from other clients.
+The new object state is now saved to the [Firebase](http://firebase.com) cloud and broadcast to any clients connected to this room.  FirebaseSync will update your objects when it receives broadcasts from other clients.
 
 Now this basic app is complete! For details, see the source code: [examples/spinning-cube.html].
 
@@ -145,8 +145,8 @@ Now this basic app is complete! For details, see the source code: [examples/spin
 
 More documentation is available in the [AltspaceSDK Wiki], including Tutorials and Tips for Developers.  
 
-Or dive info the source code, organized as follows:
-* [src](src) - source code for this SDK; top-level files are requried by all Altspace web apps
+Or dive into the source code, organized as follows:
+* [src](src) - source code for this SDK; top-level files are required by all Altspace web apps
 * [src/cursor](src/cursor) - Extends the Cursor API to implement per-object event dispatch, etc.
 * [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
 * [src/helpers](src/helpers) - Convenience utilities for common tasks
