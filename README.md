@@ -168,14 +168,16 @@ Or dive into the source code, organized as follows:
 [Three.js Scene]: http://threejs.org/examples/#webgl_loader_scene "Scene with eclectic objects exported from Three.js then imported back."
 [Ocean Shader]: http://threejs.org/examples/#webgl_shaders_ocean "Sphere submerging into an ocean rendered with a custom WebGL shader."
 
-[AltOBJMTLLoader]: src/AltOBJMTLLoader.js
-[AltRender]: src/AltRenderer.js
-[CursorEvents]: src/cursor/CursorEvents.js
-[ColorHighlightEffect]: src/cursor/ColorHighlightEffect.js
-[DragPlaneEffect]: src/cursor/DragPlaneEffect.js
-[FirebaseSync]: src/sync/FirebaseSync.js
+[AltOBJMTLLoader]: https://github.com/AltspaceVR/AltspaceSDK/wiki/AltOBJMTLLoader
+[AltRender]: https://github.com/AltspaceVR/AltspaceSDK/wiki/AltRenderer
+[CursorEvents]: https://github.com/AltspaceVR/AltspaceSDK/wiki/CursorEvents
+[ColorHighlightEffect]: https://github.com/AltspaceVR/AltspaceSDK/wiki/ColorHighlightEffect
+[DragPlaneEffect]: https://github.com/AltspaceVR/AltspaceSDK/wiki/DragPlaneEffect
+[FirebaseSync]: https://github.com/AltspaceVR/AltspaceSDK/wiki/FirebaseSync
 [Three.js]: http://https://github.com/mrdoob/three.js/
 [Workflow]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Workflow
+[Cursor Effect Plugins]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Cursor-Effect-Plugins
+[Prepros]: https://prepros.io/
 
 [examples/spinning-cube.html]: examples/spinning-cube.html
 [cube.obj]: examples/spinning_cube/cube.obj
