@@ -82,7 +82,7 @@ Register objects for Altspce events with [CursorEvents]
 ```
 cursorEvents = new CursorEvents();
 
-// optionally map mouse events to cursor events outside of Altsapce
+// optionally map mouse events to cursor events outside of Altspace
 cursorEvents.enableMouseEvents( camera )
 
 cursorEvents.addObject( cube );
