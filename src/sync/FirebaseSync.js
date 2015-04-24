@@ -45,13 +45,6 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.reloadWithNewURL = false;
 	this.roomCreated = false;
 
-
-	// type check
-	if ( p.syncUserDataProps && ! (p.syncUserDataProps instanceof Array)) {
-		var errMsg = "Expected array for syncUserDataProps";
-		console.log(errMsg);
-		throw new Error(errMsg);
-	}
 };
 
 
