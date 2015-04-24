@@ -348,7 +348,12 @@ FirebaseSync.prototype._onObjectAdded = function( snapshot ) {
 		return ;
 	}
 
-	this._addObjectCallback( key );
+	// Give callback the (optional) user-defined syncData, originally stored in
+	// object.userData.syncData. We could include full snapshot.val() with full
+	// objectData including position, rotation, and scale (after converting back
+	// to Vector3s from x,y,z triples) but seems unnecessary since shouldn't be 
+	// needed to create the new object and will get synced immediately anyway. 
+	this._addObjectCallback( key, snapshot.val().syncData );
 
 };
 
@@ -371,7 +376,7 @@ FirebaseSync.prototype._onObjectRemoved = function( snapshot ) {
 		return ;
 	}
 
-	this._removeObjectCallback( key );
+	this._removeObjectCallback( key, snapshot.val().syncData );
 
 };
 

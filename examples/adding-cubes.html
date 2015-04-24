@@ -80,7 +80,9 @@ function onSyncReady() {
 	intervalId = setInterval( function() {
 		cubesCreated++;
 		var cubeKey = "cube-" + cubesCreated + "-" + firebaseSync.senderId;
-		addCube( cubeKey );
+		// TODO: Create at least one other type of object.
+		var syncData = { type: "cube" };
+		createCube( cubeKey, syncData );
 	}, 5000);
 
 	setTimeout( function() {
@@ -90,9 +92,12 @@ function onSyncReady() {
 	animate();
 }
 
-function addCube( key ) {
+function createCube( key, syncData ) {
 
 	var newCube = cube.clone();
+	if ( syncData ) {
+		newCube.userData.syncData = syncData;
+	}
 	cubeLookupByKey[ key ] = newCube;
 	newCube.name = key;
 
@@ -116,7 +121,15 @@ function addCube( key ) {
 
 }
 
-function removeCube( key ) {
+function addCube( key, syncData ) {
+
+	console.log("callback addCube " + key + " with syncData", syncData);
+	createCube( key, syncData );
+	
+}
+
+function removeCube( key, syncData ) {
+	console.log("callback removeCube " + key + " with syncData", syncData);
 
 	var oldCube = cubeLookupByKey[ key ];
 	scene.remove( oldCube );
@@ -185,8 +198,7 @@ function initSync() {
 
 	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
 	var appId = "adding-cubes";
-//	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
-	firebaseSync = new FirebaseSync( firebaseRootUrl, appId, { TRACE: false } ); // DEBUG
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
 
 	firebaseSync.setCallbacks( addCube, removeCube );
 	firebaseSync.connect( onSyncReady );
