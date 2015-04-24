@@ -37,13 +37,22 @@ THREE.AltRenderer = function ( parameters ) {
 	function serializeColorToCsv(color){
 		var colorCsv = '';
 		if(color)
-			colorCsv += '|' + color.r + '|' + color.g + '|' + color.b;
+		{
+			var buffer = new ArrayBuffer(12);
+
+			var floatArray = new Float32Array(buffer);
+
+			floatArray[0] = color.r;
+			floatArray[1] = color.g;
+			floatArray[2] = color.b;
+		}
+			
 		
-		return colorCsv;
+		return arrayBufferToBase64(buffer);
 	}
 
 	function serializeTransformToCsv(object3d){
-		var transform = '';
+		var transform = '|';
 
 		var worldPosition = new THREE.Vector3();
 		var worldRotation = new THREE.Quaternion();
@@ -51,11 +60,34 @@ THREE.AltRenderer = function ( parameters ) {
 
 		object3d.matrixWorld.decompose( worldPosition, worldRotation, worldScale );
 
-		transform += '|' + worldPosition.x + '|' + worldPosition.y + '|' + worldPosition.z;
-		transform += '|' + worldRotation.x + '|' + worldRotation.y + '|' + worldRotation.z + '|' + worldRotation.w;
-		transform += '|' + worldScale.x + '|' + worldScale.y + '|' + worldScale.z;
-		
+		var buffer = new ArrayBuffer(40);
+
+		var floatArray = new Float32Array(buffer);
+
+		floatArray[0] = worldPosition.x;
+		floatArray[1] = worldPosition.y;
+		floatArray[2] = worldPosition.z;
+		floatArray[3] = worldRotation.x;
+		floatArray[4] = worldRotation.y;
+		floatArray[5] = worldRotation.z;
+		floatArray[6] = worldRotation.w;
+		floatArray[7] = worldScale.x;
+		floatArray[8] = worldScale.y;
+		floatArray[9] = worldScale.z;
+
+		transform += arrayBufferToBase64(buffer);
+
 	 	return transform;
+	}
+
+	function arrayBufferToBase64( buffer ) {
+		var binary = '';
+		var bytes = new Uint8Array( buffer );
+		var len = bytes.byteLength;
+		for (var i = 0; i < len; i++) {
+			binary += String.fromCharCode( bytes[ i ] );
+		}
+		return window.btoa( binary );
 	}
 
 	function sendToAltspace(serializedScene){

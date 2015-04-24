@@ -67,7 +67,7 @@ var diceList = [
 // start off by loading .obj and .mtl files
 loadModels();
 
-function onModelsLoaded() {
+function onModelsLoaded(assets) {
 	console.log("Load took: " + (Date.now() - started) + " ms");
 
 	group = new THREE.Object3D();
@@ -80,7 +80,7 @@ function onModelsLoaded() {
 		for (var i = 0; i < 7; i++){
 			var y = -300;
 			for (var j = 0; j < 7; j++){
-				var model = MultiLoader.getCached(object[0] + id);
+				var model = assets[object[0] + id];
 				fixAmbient(model);
 				group.add(model);
 				model.scale.set(10,10,10);
@@ -120,15 +120,15 @@ function loadModels() {
 	diceList.forEach(function(object){
 		for (var i = 0; i < object[1]; i++){
 			fileList.push({
-				fileName: "models/AltspaceDice/" + object[0] + "_high.obj", 
-				cacheKey: object[0] + i
+				file: "models/AltspaceDice/" + object[0] + "_high.obj", 
+				key: object[0] + i
 			});
 		}
 	});
 
 	started = Date.now();
 	// MultiLoader.loadFilesInParallel(fileList, onModelsLoaded);
-	MultiLoader.loadFilesInSeries(fileList, onModelsLoaded);
+	MultiLoader.load(fileList, onModelsLoaded);
 
 }
 
