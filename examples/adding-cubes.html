@@ -1,5 +1,5 @@
 <!--
-	Example of how to get a Spinning Cube into Altspace.
+	Example of how to add and remove sychronized objects.
 
 	Author: Amber Roy
 	Copyright (c) 2015 Altspace VR
@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<title>Spinning Cube Example</title>
+		<title>Adding Cubes Example</title>
 
 		<!-- Required by AltOBJMTLLoader.js -->
 		<script src="../lib/three.min.js"></script>
@@ -47,8 +47,7 @@
 <body>
 <body>
 		<div id="info">
-				<a href="http://github.com/AltspaceVR/AltspaceSDK" 
-					 target="_blank">AltspaceSDK</a> - Spinning Cube
+				<a href="http://github.com/AltspaceVR/AltspaceSDK"target="_blank">AltspaceSDK</a> - Adding Cubes - CLICK to Delete
 		</div>
 </body>
 
@@ -59,8 +58,8 @@ var inAltspace = !!window.Alt;
 var scene, camera, renderer;
 var cursorEvents, firebaseSync;
 var cube;
-var sound;
-
+var cubeLookupByKey = {};
+var intervalId;
 
 // start off by loading .obj and .mtl files
 loadModels();
@@ -74,9 +73,55 @@ function onModelsLoaded() {
 
 function onSyncReady() {
 
-	initEvents();
-	animate();
+	cursorEvents = new CursorEvents();
+	cursorEvents.enableMouseEvents( camera );
 
+	var cubesCreated = 0;
+	intervalId = setInterval( function() {
+		cubesCreated++;
+		var cubeKey = "cube-" + cubesCreated + "-" + firebaseSync.senderId;
+		addCube( cubeKey );
+	}, 5000);
+
+	setTimeout( function() {
+		clearInterval( intervalId );
+	}, 50000);
+
+	animate();
+}
+
+function addCube( key ) {
+
+	var newCube = cube.clone();
+	cubeLookupByKey[ key ] = newCube;
+	newCube.name = key;
+
+	var offset = 100; 
+	newCube.position.x = Math.random() * offset - offset/2;  
+	newCube.position.y = Math.random() * offset - offset/2;  
+	newCube.position.z = Math.random() * offset - offset/2;  
+	newCube.rotation.x = Math.random() * Math.PI - Math.PI/2;  
+	newCube.rotation.y = Math.random() * Math.PI - Math.PI/2;  
+	newCube.rotation.z = Math.random() * Math.PI - Math.PI/2;  
+
+	scene.add( newCube );
+	firebaseSync.addObject( newCube, key );
+
+	cursorEvents.addObject( newCube );
+
+	newCube.addEventListener( "holocursordown", function( event ) {
+		firebaseSync.removeObject( this.name );	
+		scene.remove( this );
+	}.bind( newCube ));
+
+}
+
+function removeCube( key ) {
+
+	var oldCube = cubeLookupByKey[ key ];
+	scene.remove( oldCube );
+	firebaseSync.removeObject( key );
+	delete cubeLookupByKey[ key ];
 }
 
 function loadModels() {
@@ -115,8 +160,7 @@ function initScene() {
 	} else {
 
 		renderer = new THREE.WebGLRenderer();
-		renderer.setClearColor("#AAAAAA")
-;
+		renderer.setClearColor("#AAAAAA");
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		document.body.appendChild( renderer.domElement );
 
@@ -132,63 +176,24 @@ function initScene() {
 		scene.add( ambient );
 	}
 
-	// Don't forget to add loaded model into the scene.
-	scene.add(cube);
+	// Don't add cube to scene, just use it for cloning.
 
 }
 
-
-function initEvents() {
-
-	cursorEvents = new CursorEvents();
-	cursorEvents.enableMouseEvents( camera );
-
-	cursorEvents.addObject( cube );
-
-	cube.addEventListener( "holocursordown", function( event ) {
-		if (!sound) loadSoundEffect();
-		sound.play();
-		this.position.y += 2;
-		firebaseSync.saveObject( this );	
-	});
-
-	cube.addEventListener( "holocursorup",  function( event ) {
-		this.position.y -= 2;
-		firebaseSync.saveObject( this );	
-	});
-
-	// In addition to defining event listeners, you can apply pre-made effects
-	// or create your own effects that work with the CursorEvents framework.
-
-	var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
-	var hoverEffect = new ColorHoverEffect( { color: new THREE.Color(0, 1, 1) });
-	// hover listens for holocursorenter / holocursorleave for hover over / out
-
-	cursorEvents.addEffect( dragEffect, cube );
-	cursorEvents.addEffect( hoverEffect, cube );
-
-}
 
 function initSync() {
 
 	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
-	var appId = "spinning-cube";
-	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
+	var appId = "adding-cubes";
+//	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId, { TRACE: false } ); // DEBUG
 
-	firebaseSync.connect( function() {
-		firebaseSync.addObject( cube, "cube" );
-		onSyncReady();
-	});
+	firebaseSync.setCallbacks( addCube, removeCube );
+	firebaseSync.connect( onSyncReady );
 
-}
-
-function loadSoundEffect() {
-
-	// Load sound effect. Chromium doesn't support mp3 so include wav too.
-	var ext = (new Audio()).canPlayType('audio/mpeg') ? ".mp3" : ".wav";
-	sound = new Audio("sounds/drippy" + ext);	
 
 }
+
 
 function onWindowResize() {
 
@@ -207,9 +212,6 @@ function animate() {
 	requestAnimationFrame( animate );
 
 	cursorEvents.update();
-
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
 
 	renderer.render( scene, camera );
 

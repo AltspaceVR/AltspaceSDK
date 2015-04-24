@@ -8,8 +8,6 @@
  * Copyright (c) 2015 AltspaceVR
  */
 
-
-
 FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	console.log("Using firebase " + firebaseRootUrl);
@@ -18,7 +16,10 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.firebaseRoot = new Firebase(firebaseRootUrl);
 	this.appId = appId;
 
-	this.onConnectComplete;
+	// callbacks
+	this._onConnectComplete;
+	this._addObjectCallback;
+	this._removeObjectCallback;
 
 	var p = params || {};
 
@@ -37,7 +38,7 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	this.roomId;
 	this.roomKey;
-	this.roomURL;
+	this.roomUrl;
 	this.firebaseRoom;
 
 	this.latencySamples = [];
@@ -45,13 +46,6 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.reloadWithNewURL = false;
 	this.roomCreated = false;
 
-
-	// type check
-	if ( p.syncUserDataProps && ! (p.syncUserDataProps instanceof Array)) {
-		var errMsg = "Expected array for syncUserDataProps";
-		console.log(errMsg);
-		throw new Error(errMsg);
-	}
 };
 
 
@@ -61,7 +55,7 @@ FirebaseSync.prototype.addObject = function( object, key ) {
 		console.error("Object cannot be null.");
 		return ; // sanity check 
 	}
-	if (! key ) {
+	if (! key ) { 
 		console.error("Key cannot be null.");
 		return ; // sanity check 
 	}
@@ -81,26 +75,69 @@ FirebaseSync.prototype.addObject = function( object, key ) {
 	this.key2obj[ key ] = object;
 	this.uuid2key[ object.uuid ] = key;
 
-}
+	if ( !this.firebaseRoom ) {
+		var errMsg = "Must FirebaseSync.connect() before calling addObject.";
+		console.log(errMsg);
+		throw new Error(errMsg);
+		return ;
+	}
+
+	// Listen for initial position of this object; if none, triggers a callback
+	// with empty snapshot, indicating we should save this object's position.
+	this.firebaseRoom.child("objects").child(key).on("value",
+
+		function(snapshot) {
+			this._onPositionChange(snapshot);
+
+	}.bind( this ), this._firebaseCancel);
+
+};
+
+
+FirebaseSync.prototype.removeObject = function( key ) {
+
+	if (! key ) { 
+		console.error("Key cannot be null.");
+		return ; // sanity check 
+	}
+	if ( typeof key !== "string" ) {
+		console.error("Key must be a string.");
+		return ; // sanity check 
+	}
+	if ( !this.key2obj[ key ] ) {
+		console.error("Object not found for key ", key);
+		return ;
+	}
+
+	// Remove object from our internal bookkeeping.
+	var object = this.key2obj[ key ];
+	delete this.key2obj[ key ];
+	delete this.uuid2key[ object.uuid ];
+
+	var idx = this.objects.indexOf( object );
+	if ( idx !== -1 ) {
+		delete this.objects[ idx ];
+	}
+	idx = this.objectsInitialized.indexOf( object );
+	if ( idx !== -1 ) {
+		delete this.objectsInitialized[ idx ];
+	}
+
+	// Stop listening for changes to this object.
+	this.firebaseRoom.child("objects").child(key).off("value");
+	this.firebaseRoom.child("objects").child(key).remove();
+
+};
 
 
 FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 
-	this.onConnectComplete = onCompleteCallback;
+	this._onConnectComplete = onCompleteCallback;
 
 	// Handle these cases:
 	// (1) No roomId specified in URL: create room with random roomId and join it.
 	// (2) RoomId specified in URL, and room exists in DB: join it.
 	// (3) RoomId specified in URL, but room does not exists: create and join it. 
-
-	if ( this.objects.length === 0) {
-		console.error("Must FirebaseSync.add() objects before calling connect.");
-		// We can subscribe to all objects in the room, instead of specific object keys,
-		// but then cannot handle a position update for an object we don't have locally.
-		// Basically all clients need to know up front which objects are being synced.
-		// TODO: Allow creating objects added by other clients during the game.
-		return ;
-	}
 
 	// URI parsing from https://gist.github.com/jlong/2428561
 	// TODO: use better query parsing, maybe use jQuery.
@@ -127,7 +164,7 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 		console.log("No roomId specified in URL, generating one randomly.");
 		var randId = Math.round(Math.random() * 1000);
 		this.roomId = "room" + randId;
-		this.roomURL = document.URL + "?room=" + this.roomId;
+		this.roomUrl = document.URL + "?room=" + this.roomId;
 
 		this.reloadWithNewURL = true;
 		this.roomKey = this._createFirebaseRoom();
@@ -169,6 +206,21 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 			}.bind( this ), 500 );
 		}
 	}.bind( this ), 500 );
+
+};
+
+FirebaseSync.prototype.setCallbacks = function( addObjectCallback, removeObjectCallback ) {
+
+	if ( !addObjectCallback || ! removeObjectCallback ) {
+		console.error("setCallbacks expected 2 arguments");
+		return ; // sanity check
+	}
+
+	// User should call FirebaseSync.addObject in the addObjectCallback,
+	// and FirebaseSync.removeObject in the removeObjectCallback.
+
+	this._addObjectCallback = addObjectCallback;
+	this._removeObjectCallback = removeObjectCallback;
 
 };
 
@@ -216,7 +268,7 @@ FirebaseSync.prototype.getRoomKey = function() {
 
 			// TODO: Warn user if multiple rooms with same roomId.
 			this.roomKey = Object.keys(querySnapshot.val())[0];
-			this.roomURL = document.URL;
+			this.roomUrl = document.URL;
 			console.log("Got roomId from page URL " + document.URL);
 
 		}
@@ -253,40 +305,73 @@ FirebaseSync.prototype._startListeningRoom = function() {
 	};
 	this.firebaseRoom.child("members").push( memberData, this._firebaseComplete );
 
-	// Listen for changes to all objects added so far.
-	for ( var i=0; i < this.objects.length; i++ ) {
+	// Listen for new objects.
+	this.firebaseRoom.child("objects").on("child_added",
 
-		var object = this.objects[i];
-		var key = this.uuid2key[ object.uuid ];
-		if (! key ) {
-			console.error("Key not found for object", object);
-			return ; // Shouldn't happen, we remember keys for all added objects.
-		}
-		this.firebaseRoom.child("objects").child(key).on("value",
+		function(snapshot) {
+			this._onObjectAdded(snapshot);
 
-			function(snapshot) {
-				this._onPositionChange(snapshot);
+	}.bind( this ), this._firebaseCancel);
 
-		}.bind( this ), this._firebaseCancel);
+	// Listen for removed objects.
+	this.firebaseRoom.child("objects").on("child_removed",
+
+		function(snapshot) {
+			this._onObjectRemoved(snapshot);
+
+	}.bind( this ), this._firebaseCancel);
+
+	if ( this._onConnectComplete ) {
+
+		this._onConnectComplete();
 
 	}
 
-	if ( this.onConnectComplete ) {
 
-		var roomInfo = {
+};
 
-			thisUrl: this.roomURL,
-			appId: this.appId,
-			roomId: this.roomId,
-			senderId: this.senderId,
-			firebaseRoomKey: this.roomKey,
-			firebaseRootUrl: this.firebaseRoot.toString(),
-			firebaseRoomUrl: this.firebaseRoom.toString(),
+FirebaseSync.prototype._onObjectAdded = function( snapshot ) {
 
-		};
+	var key = snapshot.key();
 
-		this.onConnectComplete( roomInfo );
+	if ( this.key2obj[ key ] ) {
+		// Already added this object locally, no need to trigger callback.
+		return ;
 	}
+
+	if ( this.TRACE ) console.log("ADD object for " + key, snapshot.val() );
+
+	if ( !this._addObjectCallback ) {
+		var errMsg = "Cannot process new object; call setCallbacks first";
+		console.log(errMsg);
+		throw new Error(errMsg);
+		return ;
+	}
+
+	this._addObjectCallback( key );
+
+};
+
+FirebaseSync.prototype._onObjectRemoved = function( snapshot ) {
+
+	var key = snapshot.key();
+	var object = this.key2obj[ key ];
+
+	if ( !object ) {
+		// Already removed this object locally, no need to trigger callback
+		return ;
+	}
+
+	if ( this.TRACE ) console.log( "DEL object for " + key, object );
+
+	if ( !this._removeObjectCallback ) {
+		var errMsg = "Cannot process removed object; call setCallbacks first";
+		console.log(errMsg);
+		throw new Error(errMsg);
+		return ;
+	}
+
+	this._removeObjectCallback( key );
 
 };
 
@@ -358,15 +443,26 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 	var object = this.key2obj[key];
 	if ( !object ) {
 		// TODO: Support creating objects added by other players.
-		console.error("No object for key", key);
+		console.error("No object for key " + key, snapshot.val() );
 		return ; 
 	}
 
 	if (! snapshot.exists() ) {
-		// First game ever (or we cleared the database).
-		this.saveObject( object );
 
-		// above set will trigger this callback again
+		// Null snapshot means nothing there. Can happen for two reasons:
+		// (1) we are first to enter this room or (2) object was just deleted
+		// Distinguish between these two case using isSyncInitialized flag.
+		// (isSyncInitialized flags is local to this client; don't sync it)
+
+		if ( !object.userData.isSyncInitialized ) {
+
+			// First game ever (or we cleared the database).
+			// Calling save will trigger this callback again.
+			this.saveObject( object );
+
+		}
+		// if syncInitialized, do nothing, object was just deleted.
+
 		return;
 
 	}
