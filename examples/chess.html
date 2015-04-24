@@ -67,12 +67,10 @@ var chessPiecesWhite = [];
 var chessPiecesBlack = [];
 
 var sceneInfo = { // constants
-	boardSize: 200, // chess piece models are scaled to fit the board
+	// Original example was boardSize: 200, dragPlaneSize: 500
+	boardSize: 700, // chess piece models are scaled to fit the board
 	tableHeight: 0, // chess board is raised to be on top of table
-	dragPlaneSize: 500, // boundary for dragging pieces, should be larger than boardSize
-//	boardSize: 800, // chess piece models are scaled to fit the board
-//	tableHeight: 0, // chess board is raised to be on top of table
-//	dragPlaneSize: 2000, // boundary for dragging pieces, should be larger than boardSize
+	dragPlaneSize: 1000, // boundary for dragging pieces, should be larger than boardSize
 };
 
 var modelsInfo = { // constants
@@ -160,8 +158,8 @@ function initScene() {
 		1,
 		2000
 	);
-	camera.position.z = 200;
-	camera.position.y = 300;
+	camera.position.z = sceneInfo.boardSize;
+	camera.position.y = sceneInfo.boardSize + 100;
 
 	// done automatically if useOrbitControls is true
 	camera.lookAt(scene.position);
@@ -470,9 +468,9 @@ function initEvents() {
 
 	var params = {};	// optional parameters used to configure object effects
 	params.firebaseSync = firebaseSync;
+	params.dragPlane = dragPlane;
 
 	if ( showDragPoint ) {
-		params.dragPlane = dragPlane;
 		params.dragPointMarker = dragPointSphere;
 	}
 	var dragEffect = new DragPlaneEffect( params );
