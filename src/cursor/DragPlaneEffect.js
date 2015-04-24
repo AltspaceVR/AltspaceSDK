@@ -162,9 +162,14 @@ DragPlaneEffect.prototype._setRaycaster = function( lastEvent ) {
   if ( !lastEvent ) return ; // No cursor events yet.
 
   if ( !this.raycaster ) {
+    var params = this.dragPlane.geometry.parameters;
     this.raycaster = new THREE.Raycaster();
+
+    // Raycaster usually set from Three.js camera, but here assume near=1 and
+    // make "far" 20% bigger than dragplane (if smaller, raycast won't work).
     this.raycaster.near = 1;
-    this.raycaster.far = 1000; // arbitrary
+    this.raycaster.far = Math.max(params.width, params.depth) * 1.2;
+    console.log("far", this.raycaster.far);
   }
 
   var cursorRay = lastEvent.detail.cursorRay;
