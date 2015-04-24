@@ -79,8 +79,8 @@ function onSyncReady() {
 	var cubesCreated = 0;
 	intervalId = setInterval( function() {
 		cubesCreated++;
-		var cubeKey = "cube-" + cubesCreated + "-" + firebaseSync.senderId;
 		// TODO: Create at least one other type of object.
+		var cubeKey = "cube-" + firebaseSync.senderId + "-" + Date.now();
 		var syncData = { type: "cube" };
 		createCube( cubeKey, syncData );
 	}, 5000);
