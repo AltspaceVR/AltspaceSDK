@@ -1,0 +1,7 @@
+newmtl queen_1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+map_Kd queen.jpg
+Ni 1.00

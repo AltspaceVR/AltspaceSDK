@@ -1,0 +1,9 @@
+newmtl solid
+Kd 0.262745 0.262745 0.262745
+illum 0
+map_Kd 434343.png
+
+newmtl board
+Kd 1 1 1
+illum 0
+map_Kd board.jpg
