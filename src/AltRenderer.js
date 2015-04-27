@@ -17,25 +17,29 @@ THREE.AltRenderer = function ( parameters ) {
 		get : function(){console.log("AltRenderer.domElement not yet implemented"); return null}
 	});
 
-	function serializeSceneToCsv(scene){
+	function serializeScene(scene){
 		var serializedObjects = '';
 
-		function serializeObjectsToCsv(object3d){
+		function serializeObjects(object3d){
 			if('src' in object3d.userData){//Only pack objects that have src properties (for now, .obj files loaded by AltOBJMTLLoader)
-				serializedObjects += object3d.uuid + '|' + object3d.userData.src + serializeTransformToCsv(object3d) + serializeColorToCsv(object3d.userData.tintColor) + '\n';
+				serializedObjects += object3d.uuid + '|' +
+				object3d.userData.src + '|' +
+				serializeTransformToBase64(object3d) +
+				serializeColorToBase64(object3d.userData.tintColor) +
+				'\n';
 			}
 			for(var i = 0, max = object3d.children.length; i < max; i++){
-				serializeObjectsToCsv (object3d.children[i])
+				serializeObjects(object3d.children[i])
 			}
 		}
 
-		serializeObjectsToCsv(scene);
+		serializeObjects(scene);
 
 		return serializedObjects;
 	}
 
-	function serializeColorToCsv(color){
-		var colorCsv = '';
+	function serializeColorToBase64(color){
+		var colorString = '';
 		if(color)
 		{
 			var buffer = new ArrayBuffer(12);
@@ -45,14 +49,14 @@ THREE.AltRenderer = function ( parameters ) {
 			floatArray[0] = color.r;
 			floatArray[1] = color.g;
 			floatArray[2] = color.b;
+
+			colorString = arrayBufferToBase64(buffer); 
 		}
-			
-		
-		return arrayBufferToBase64(buffer);
+		return colorString;
 	}
 
-	function serializeTransformToCsv(object3d){
-		var transform = '|';
+	function serializeTransformToBase64(object3d){
+		var transform = '';
 
 		var worldPosition = new THREE.Vector3();
 		var worldRotation = new THREE.Quaternion();
@@ -101,7 +105,7 @@ THREE.AltRenderer = function ( parameters ) {
 	this.render = throttle(function ( scene ) {
 		if(this.inAltspace){
 			scene.updateMatrixWorld();
-			var serializedScene = serializeSceneToCsv(scene);
+			var serializedScene = serializeScene(scene);
 
 			if(serializedScene != lastSerializedScene)//Would be nice if we could find this out prior to serialization
 				sendToAltspace( serializedScene );
