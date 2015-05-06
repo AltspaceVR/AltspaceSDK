@@ -28,7 +28,7 @@ DragPlaneEffect = function ( params ) {
     // Default drag plane, for demo only! Normally it should be passed in,
     // with location and width/depth matching drag area of your scene.
     this.dragPlane = new THREE.Mesh( 
-      new THREE.BoxGeometry(500, 0.25, 500),
+      new THREE.BoxGeometry(1000, 0.25, 1000),
       new THREE.MeshBasicMaterial( { transparent: true, opacity: 0.25 })
     );
   }
