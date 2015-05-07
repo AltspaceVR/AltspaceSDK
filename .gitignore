@@ -2,4 +2,5 @@
 *.swp
 prepros.cfg
 README.html
+lib/README.html
 CHANGELOG.html

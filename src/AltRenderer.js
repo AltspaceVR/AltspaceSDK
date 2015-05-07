@@ -17,32 +17,45 @@ THREE.AltRenderer = function ( parameters ) {
 		get : function(){console.log("AltRenderer.domElement not yet implemented"); return null}
 	});
 
-	function serializeSceneToCsv(scene){
+	function serializeScene(scene){
 		var serializedObjects = '';
 
-		function serializeObjectsToCsv(object3d){
+		function serializeObjects(object3d){
 			if('src' in object3d.userData){//Only pack objects that have src properties (for now, .obj files loaded by AltOBJMTLLoader)
-				serializedObjects += object3d.uuid + '|' + object3d.userData.src + serializeTransformToCsv(object3d) + serializeColorToCsv(object3d.userData.tintColor) + '\n';
+				serializedObjects += object3d.uuid + '|' +
+				object3d.userData.src + '|' +
+				serializeTransformToBase64(object3d) +
+				serializeColorToBase64(object3d.userData.tintColor) +
+				'\n';
 			}
 			for(var i = 0, max = object3d.children.length; i < max; i++){
-				serializeObjectsToCsv (object3d.children[i])
+				serializeObjects(object3d.children[i])
 			}
 		}
 
-		serializeObjectsToCsv(scene);
+		serializeObjects(scene);
 
 		return serializedObjects;
 	}
 
-	function serializeColorToCsv(color){
-		var colorCsv = '';
+	function serializeColorToBase64(color){
+		var colorString = '';
 		if(color)
-			colorCsv += '|' + color.r + '|' + color.g + '|' + color.b;
-		
-		return colorCsv;
+		{
+			var buffer = new ArrayBuffer(12);
+
+			var floatArray = new Float32Array(buffer);
+
+			floatArray[0] = color.r;
+			floatArray[1] = color.g;
+			floatArray[2] = color.b;
+
+			colorString = arrayBufferToBase64(buffer); 
+		}
+		return colorString;
 	}
 
-	function serializeTransformToCsv(object3d){
+	function serializeTransformToBase64(object3d){
 		var transform = '';
 
 		var worldPosition = new THREE.Vector3();
@@ -51,11 +64,34 @@ THREE.AltRenderer = function ( parameters ) {
 
 		object3d.matrixWorld.decompose( worldPosition, worldRotation, worldScale );
 
-		transform += '|' + worldPosition.x + '|' + worldPosition.y + '|' + worldPosition.z;
-		transform += '|' + worldRotation.x + '|' + worldRotation.y + '|' + worldRotation.z + '|' + worldRotation.w;
-		transform += '|' + worldScale.x + '|' + worldScale.y + '|' + worldScale.z;
-		
+		var buffer = new ArrayBuffer(40);
+
+		var floatArray = new Float32Array(buffer);
+
+		floatArray[0] = worldPosition.x;
+		floatArray[1] = worldPosition.y;
+		floatArray[2] = worldPosition.z;
+		floatArray[3] = worldRotation.x;
+		floatArray[4] = worldRotation.y;
+		floatArray[5] = worldRotation.z;
+		floatArray[6] = worldRotation.w;
+		floatArray[7] = worldScale.x;
+		floatArray[8] = worldScale.y;
+		floatArray[9] = worldScale.z;
+
+		transform += arrayBufferToBase64(buffer);
+
 	 	return transform;
+	}
+
+	function arrayBufferToBase64( buffer ) {
+		var binary = '';
+		var bytes = new Uint8Array( buffer );
+		var len = bytes.byteLength;
+		for (var i = 0; i < len; i++) {
+			binary += String.fromCharCode( bytes[ i ] );
+		}
+		return window.btoa( binary );
 	}
 
 	function sendToAltspace(serializedScene){
@@ -69,7 +105,7 @@ THREE.AltRenderer = function ( parameters ) {
 	this.render = throttle(function ( scene ) {
 		if(this.inAltspace){
 			scene.updateMatrixWorld();
-			var serializedScene = serializeSceneToCsv(scene);
+			var serializedScene = serializeScene(scene);
 
 			if(serializedScene != lastSerializedScene)//Would be nice if we could find this out prior to serialization
 				sendToAltspace( serializedScene );

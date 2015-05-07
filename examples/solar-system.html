@@ -68,8 +68,8 @@ var planetInfo = [
 var loadsPending;
 
 var solarSystem = new THREE.Object3D();
-var radiusCoeff = 0.018;
-var distanceCoeff = 6.2;
+var radiusCoeff = 0.022;
+var distanceCoeff = 9;
 var velocityCoeff = 0.005;
 
 var planets = [];
@@ -237,7 +237,7 @@ function animate() {
 				planet.position.y = 0;
 				planet.position.z = 0;
 
-				var scale = inAltspace ? 1.8 : 0.4 ;
+				var scale = inAltspace ? 3.6 : 0.4 ;//We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
 
 				planet.scale.x = scale;
 				planet.scale.y = scale;
@@ -247,11 +247,9 @@ function animate() {
 
 			 	planet.visible = false;
 
-			 	if ( !inAltspace ) {
-					planet.scale.x = 0;
-					planet.scale.y = 0;
-					planet.scale.z = 0;
-			 	}
+				planet.scale.x = 0;
+				planet.scale.y = 0;
+				planet.scale.z = 0;
 			}
 
 		} else {
