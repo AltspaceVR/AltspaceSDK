@@ -116,7 +116,17 @@ function init() {
 		clearInterval(intervalID);
 
 		initModels();
-		initObjectSync(); // Call after all models are loaded.
+		firebaseSync.connect( function() {
+
+			// Add all pieces to network sync.
+			for (var i=0; i < chessPiecesWhite.length; i++) {
+
+				firebaseSync.addObject( chessPiecesWhite[i], chessPiecesWhite[i].name );
+				firebaseSync.addObject( chessPiecesBlack[i], chessPiecesBlack[i].name );
+
+			}
+
+		});
 		arrangePieces(modelScale); // TODO: Skip if room already created.
 		initEvents(); // Dont allow dragging until done arranging pieces.
 
@@ -450,19 +460,6 @@ function loadModels() {
 
 }
 
-function initObjectSync() {
-
-	// Add all pieces to network sync.
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
-		firebaseSync.addObject( chessPiecesWhite[i], chessPiecesWhite[i].name );
-		firebaseSync.addObject( chessPiecesBlack[i], chessPiecesBlack[i].name );
-
-	}
-
-	firebaseSync.connect();
-
-}
 
 function initEvents() {
 

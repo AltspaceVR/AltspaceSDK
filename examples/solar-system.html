@@ -212,8 +212,9 @@ function sync() {
 		selectedPlanetName: "earth", // default	
 	};
 
-	firebaseSync.addObject( appState, "appState" );
-	firebaseSync.connect();
+	firebaseSync.connect( function() {
+		firebaseSync.addObject( appState, "appState" );
+	});
 
 }
 

@@ -169,7 +169,6 @@ DragPlaneEffect.prototype._setRaycaster = function( lastEvent ) {
     // make "far" 20% bigger than dragplane (if smaller, raycast won't work).
     this.raycaster.near = 1;
     this.raycaster.far = Math.max(params.width, params.depth) * 1.2;
-    console.log("far", this.raycaster.far);
   }
 
   var cursorRay = lastEvent.detail.cursorRay;
