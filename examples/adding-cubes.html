@@ -93,6 +93,7 @@ function onSyncReady() {
 }
 
 function createCube( key, syncData ) {
+	console.log("createCube " + key + " with syncData", syncData);
 
 	var newCube = cube.clone();
 	if ( syncData ) {
@@ -115,23 +116,18 @@ function createCube( key, syncData ) {
 	cursorEvents.addObject( newCube );
 
 	newCube.addEventListener( "holocursordown", function( event ) {
-		firebaseSync.removeObject( this.name );	
-		scene.remove( this );
+	    deleteCube( this.name, this );	
+		console.log("removing local cube", this.name);
 	}.bind( newCube ));
 
 }
 
-function addCube( key, syncData ) {
 
-	console.log("callback addCube " + key + " with syncData", syncData);
-	createCube( key, syncData );
-	
-}
-
-function removeCube( key, syncData ) {
-	console.log("callback removeCube " + key + " with syncData", syncData);
+function deleteCube( key, syncData ) {
+	console.log("deleteCube " + key + " with syncData", syncData);
 
 	var oldCube = cubeLookupByKey[ key ];
+	if (!oldCube) console.error("Failed to find cube for key", key)
 	scene.remove( oldCube );
 	firebaseSync.removeObject( key );
 	delete cubeLookupByKey[ key ];
@@ -200,9 +196,7 @@ function initSync() {
 	var appId = "adding-cubes";
 	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
 
-	firebaseSync.setCallbacks( addCube, removeCube );
-	firebaseSync.connect( onSyncReady );
-
+	firebaseSync.connect( onSyncReady, createCube, deleteCube );
 
 }
 

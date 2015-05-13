@@ -17,7 +17,7 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.appId = appId;
 
 	// callbacks
-	this._onConnectComplete;
+	this._onConnctedCallback;
 	this._addObjectCallback;
 	this._removeObjectCallback;
 
@@ -104,24 +104,6 @@ FirebaseSync.prototype.removeObject = function( key ) {
 		console.error("Key must be a string.");
 		return ; // sanity check 
 	}
-	if ( !this.key2obj[ key ] ) {
-		console.error("Object not found for key ", key);
-		return ;
-	}
-
-	// Remove object from our internal bookkeeping.
-	var object = this.key2obj[ key ];
-	delete this.key2obj[ key ];
-	delete this.uuid2key[ object.uuid ];
-
-	var idx = this.objects.indexOf( object );
-	if ( idx !== -1 ) {
-		delete this.objects[ idx ];
-	}
-	idx = this.objectsInitialized.indexOf( object );
-	if ( idx !== -1 ) {
-		delete this.objectsInitialized[ idx ];
-	}
 
 	// Stop listening for changes to this object.
 	this.firebaseRoom.child("objects").child(key).off("value");
@@ -130,9 +112,21 @@ FirebaseSync.prototype.removeObject = function( key ) {
 };
 
 
-FirebaseSync.prototype.connect = function( onCompleteCallback ) {
+FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallback, removeObjectCallback ) {
 
-	this._onConnectComplete = onCompleteCallback;
+	// All three callbacks arguments are optional.
+	// User should call FirebaseSync.addObject in the addObjectCallback,
+	// and FirebaseSync.removeObject in the removeObjectCallback.
+
+	if ( addObjectCallback ) {
+		this._addObjectCallback = addObjectCallback;
+	} 
+	if ( removeObjectCallback ) {
+		this._removeObjectCallback = removeObjectCallback;
+	}
+	if ( onConnectedCallback ) {
+		this._onConnctedCallback = onConnectedCallback;
+	}
 
 	// Handle these cases:
 	// (1) No roomId specified in URL: create room with random roomId and join it.
@@ -206,21 +200,6 @@ FirebaseSync.prototype.connect = function( onCompleteCallback ) {
 			}.bind( this ), 500 );
 		}
 	}.bind( this ), 500 );
-
-};
-
-FirebaseSync.prototype.setCallbacks = function( addObjectCallback, removeObjectCallback ) {
-
-	if ( !addObjectCallback || ! removeObjectCallback ) {
-		console.error("setCallbacks expected 2 arguments");
-		return ; // sanity check
-	}
-
-	// User should call FirebaseSync.addObject in the addObjectCallback,
-	// and FirebaseSync.removeObject in the removeObjectCallback.
-
-	this._addObjectCallback = addObjectCallback;
-	this._removeObjectCallback = removeObjectCallback;
 
 };
 
@@ -321,9 +300,9 @@ FirebaseSync.prototype._startListeningRoom = function() {
 
 	}.bind( this ), this._firebaseCancel);
 
-	if ( this._onConnectComplete ) {
+	if ( this._onConnctedCallback ) {
 
-		this._onConnectComplete();
+		this._onConnctedCallback();
 
 	}
 
@@ -342,7 +321,7 @@ FirebaseSync.prototype._onObjectAdded = function( snapshot ) {
 	if ( this.TRACE ) console.log("ADD object for " + key, snapshot.val() );
 
 	if ( !this._addObjectCallback ) {
-		var errMsg = "Cannot process new object; call setCallbacks first";
+		var errMsg = "Cannot process new object; addObjectCallback missing, try passing as arg to FirebaseSync.connect";
 		console.log(errMsg);
 		throw new Error(errMsg);
 		return ;
@@ -363,14 +342,33 @@ FirebaseSync.prototype._onObjectRemoved = function( snapshot ) {
 	var object = this.key2obj[ key ];
 
 	if ( !object ) {
-		// Already removed this object locally, no need to trigger callback
+		// Already removed this object locally, no need to trigger callback.
 		return ;
 	}
 
 	if ( this.TRACE ) console.log( "DEL object for " + key, object );
 
+	if ( !this.key2obj[ key ] ) {
+		console.error("Object not found for key ", key);
+		return ;
+	}
+
+	// Remove object from our internal bookkeeping.
+	var object = this.key2obj[ key ];
+	delete this.key2obj[ key ];
+	delete this.uuid2key[ object.uuid ];
+
+	var idx = this.objects.indexOf( object );
+	if ( idx !== -1 ) {
+		delete this.objects[ idx ];
+	}
+	idx = this.objectsInitialized.indexOf( object );
+	if ( idx !== -1 ) {
+		delete this.objectsInitialized[ idx ];
+	}
+
 	if ( !this._removeObjectCallback ) {
-		var errMsg = "Cannot process removed object; call setCallbacks first";
+		var errMsg = "Cannot process removed object; removeObjectCallback missing try passing as arg to FirebaseSync.connect";
 		console.log(errMsg);
 		throw new Error(errMsg);
 		return ;
@@ -447,7 +445,6 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 	var key = snapshot.key();
 	var object = this.key2obj[key];
 	if ( !object ) {
-		// TODO: Support creating objects added by other players.
 		console.error("No object for key " + key, snapshot.val() );
 		return ; 
 	}
