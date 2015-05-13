@@ -128,10 +128,10 @@ Add muti-player networking with [FirebaseSync]
 var firebaseRootURL = "https://your-firebase-root.firebaseio.com/";
 var appId = "Your-App-Name";
 firebaseSync = new FirebaseSync( firebaseRootURL, appId );
-firebaseSync.connect( function() {
-	// Callback envoked when connected, can now add objects to be synced.
-	firebaseSync.addObject( cube, "cube" ); // object and unique id
-});
+firebaseSync.connect( onConnected );
+...
+// after connected (e.g. in onConnected callback)
+firebaseSync.addObject( cube, "cube" ); // object and unique id
 ..
 // after changing position.y of cube above
 firebaseSync.saveObject( cube );
