@@ -7,7 +7,6 @@
  */
 
 DragPlaneEffect = function ( params ) {
-	// TODO: Allow both single-click-drag and click-hold-drag.
 
 	this.hoverObject;
 	this.dragObject;
@@ -19,8 +18,11 @@ DragPlaneEffect = function ( params ) {
 
   var p = params || {};
 
-  // Save object as drag position changes; initFirebase must be already called.
+  // Save object as drag position changes.
   this.firebaseSync = p.firebaseSync || null;
+
+  // Disable orbit controls during a drag (non-Altspace only). 
+  this.orbitControls = p.orbitControls || null;
 
   this.dragPlane = p.dragPlane || null;
 
@@ -39,11 +41,20 @@ DragPlaneEffect = function ( params ) {
 
 };
 
+DragPlaneEffect.prototype.holocursordown = function( object, event ) {
+
+  this.dragStart( object, event );
+
+}
 
 DragPlaneEffect.prototype.holocursorup = function( object, event ) {
 
-  // Clicking object will start or end drag.
-  this.dragObject ? this.dragEnd( object, event ) : this.dragStart( object, event );
+  this.dragEnd( object, event );
+
+  // To use click-release to start drag, move, then click-release to end drag,
+  // ignore holocursordown and toggle between start/end drag here as follows:
+  // this.dragObject ? this.dragEnd( object, event ) : this.dragStart( object, event );
+  // We could add this as option set in constructor params if desired.
 
 }
 
@@ -60,6 +71,10 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
   var intersectionPoint = intersects[0].point;
 
   if ( this.dragObject ) {
+
+    if ( this.orbitControls ) {
+      this.orbitControls.enabled = false;
+    }
 
     // Raise/lower the drag plane to match the drag start point.
     this.dragPlane.position.y = intersectionPoint.y;
@@ -83,7 +98,10 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
 
 DragPlaneEffect.prototype.dragEnd = function( object, event ) {
-    //console.log("dragEnd");
+
+    if ( this.orbitControls ) {
+      this.orbitControls.enabled = true;
+    }
 
     this.dragObject = null;
 
@@ -169,7 +187,6 @@ DragPlaneEffect.prototype._setRaycaster = function( lastEvent ) {
     // make "far" 20% bigger than dragplane (if smaller, raycast won't work).
     this.raycaster.near = 1;
     this.raycaster.far = Math.max(params.width, params.depth) * 1.2;
-    console.log("far", this.raycaster.far);
   }
 
   var cursorRay = lastEvent.detail.cursorRay;

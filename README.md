@@ -120,7 +120,7 @@ var hoverEffect = new ColorHoverEffect( blueGreen );
 cursorEvents.addEffect( dragEffect, cube );
 cursorEvents.addEffect( hoverEffect, cube );
 ```
-Now the cube is draggable (click once to start drag, click again to release) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the Altspace developer community.
+Now the cube is draggable (using left mouse click) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the Altspace developer community.
 
 **Step 7**:
 Add muti-player networking with [FirebaseSync]
