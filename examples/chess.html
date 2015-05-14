@@ -467,9 +467,9 @@ function initEvents() {
 	params.firebaseSync = firebaseSync;
 	params.dragPlane = dragPlane;
 
-	if ( showDragPoint ) {
-		params.dragPointMarker = dragPointSphere;
-	}
+	if ( showDragPoint ) params.dragPointMarker = dragPointSphere;
+	if ( useOrbitControls ) params.orbitControls = orbitControls;
+
 	var dragEffect = new DragPlaneEffect( params );
 
 	var redTint = new THREE.Color(0.8, 0.2, 0.2);
