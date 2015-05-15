@@ -2,7 +2,7 @@
  * FirebaseSync synchronizes objects between multiple clients using Firebase DB.
  * Automatically creates a new room, if room not specified in URL query string.
  * Syncs object position, rotation, and scale (must be THREE.Object3D instance).
- * Optionally syncs object.userData properties given in syncUserDataProps param. 
+ * Also syncs any properties in object.userData.syncData.
  *
  * Author: Amber Roy
  * Copyright (c) 2015 AltspaceVR
@@ -30,6 +30,9 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.key2obj = {};	// key2obj[ key ] = object
 	this.uuid2key = {};	// uuid2key[ object.uuid ] = key
 	this.objectsInitialized = [];
+
+	// Objects added before calling connect get synced on connect.
+	this.pendingObjects = [];
 
 	this.lastObjectData = {}; // uuid to last objectData synced
 
@@ -75,21 +78,16 @@ FirebaseSync.prototype.addObject = function( object, key ) {
 	this.key2obj[ key ] = object;
 	this.uuid2key[ object.uuid ] = key;
 
-	if ( !this.firebaseRoom ) {
-		var errMsg = "Must FirebaseSync.connect() before calling addObject.";
-		console.log(errMsg);
-		throw new Error(errMsg);
-		return ;
+	if ( this.firebaseRoom ) {
+
+		this._subscribeObject( object, key );
+
+	} else {
+
+		// Subscribe to this object when connection is complete.
+		this.pendingObjects.push( object );
+
 	}
-
-	// Listen for initial position of this object; if none, triggers a callback
-	// with empty snapshot, indicating we should save this object's position.
-	this.firebaseRoom.child("objects").child(key).on("value",
-
-		function(snapshot) {
-			this._onPositionChange(snapshot);
-
-	}.bind( this ), this._firebaseCancel);
 
 };
 
@@ -257,6 +255,33 @@ FirebaseSync.prototype.getRoomKey = function() {
 };
 
 
+FirebaseSync.prototype._subscribeObject = function( object, key ) {
+
+	// Listen for initial position of this object; if none, triggers a callback
+	// with empty snapshot, indicating we should save this object's position.
+	this.firebaseRoom.child("objects").child(key).on("value",
+
+		function(snapshot) {
+			this._onPositionChange(snapshot);
+
+	}.bind( this ), this._firebaseCancel);
+
+};
+
+
+FirebaseSync.prototype._subscribePendingObjects = function() {
+
+	for (var i=0; i < this.pendingObjects.length; i++ ) {
+
+		var object = this.pendingObjects[i];
+	    var key = this.uuid2key[ object.uuid ];
+		this._subscribeObject( object, key );
+
+	}
+
+};
+
+
 FirebaseSync.prototype._startListeningRoom = function() {
 
 	if ( !this.roomKey || this.roomKey === -1 ) {
@@ -283,6 +308,13 @@ FirebaseSync.prototype._startListeningRoom = function() {
 		joinedAt: Firebase.ServerValue.TIMESTAMP,
 	};
 	this.firebaseRoom.child("members").push( memberData, this._firebaseComplete );
+
+	// Subscribe to any objects added before calling connect.
+	if ( this.pendingObjects.length > 0 ) {
+
+		this._subscribePendingObjects();
+
+	}
 
 	// Listen for new objects.
 	this.firebaseRoom.child("objects").on("child_added",
