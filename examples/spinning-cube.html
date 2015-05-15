@@ -106,7 +106,7 @@ function initScene() {
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
-		var scale = new THREE.Vector3( 2, 2, 2);
+		var scale = new THREE.Vector3( 10, 10, 10);
 		cube.scale.copy( scale );
 		// or cube.scale.set( scale.x, scale.y, scale.z)
 		// note cube.scale = scale won't work, same for cube.position
@@ -175,10 +175,8 @@ function initSync() {
 	var appId = "spinning-cube";
 	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
 
-	firebaseSync.connect( function() {
-		firebaseSync.addObject( cube, "cube" );
-		onSyncReady();
-	});
+	firebaseSync.addObject( cube, "cube" );
+	firebaseSync.connect( onSyncReady );
 
 }
 
