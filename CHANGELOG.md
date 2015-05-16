@@ -3,7 +3,7 @@ Listing of Bug Fixes, Features, Performance Improvements, and Breaking Changes f
 ## v0.1.1 (2015-05-15)
 
 ## Features
-# **FirebaseSync**: now supports adding and deleting synced objects while the app is running. 
+* **FirebaseSync**: now supports adding and deleting synced objects while the app is running. 
 
 ## v0.1.0 (2015-04-20)
 First version of the SDK deployed to [sdk.altvr.com] (http://sdk.altvr.com/src/AltRenderer.js)
