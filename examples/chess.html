@@ -112,6 +112,17 @@ function onModelsLoaded() {
 		}, 50);
 	}
 
+	if ( inAltspace ) {
+		if ( window.innerDepth < 400 ) {
+			// in flat enclosure
+			scene.rotation.x = (Math.PI / 180) * 45;
+		} else {
+			// in thick display
+			// TODO: Put chess board on the bottom of the enclosure.
+			//scene.position.y = -1 * ( window.innerHeight / 2 );
+		}
+	}
+
 	firebaseSync.connect( onSyncReady );
 
 }
@@ -328,7 +339,6 @@ function arrangePieces(modelScale) {
 
 	var whitePawnRow = -width + boardSize/2 - width/2;
 	var whiteRankRow = boardSize/2 - width/2;
-http://altvr.staging.wpengine.com/blog/
 	var offsetX = - boardSize/2 + width/2;
 
 	for (var i=0; i < chessPiecesWhite.length; i++) {
