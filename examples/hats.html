@@ -90,8 +90,6 @@ if (inAltspace) {
 	window.addEventListener("AltContentLoaded", function(event) { 
 		loadModels();
 	});
-} else {
-	loadModels();
 }
 
 function loadModels() {
@@ -115,28 +113,9 @@ function initScene() {
 
 	scene = new THREE.Scene();
 
-	if ( inAltspace ) {
-
-		renderer = new THREE.AltRenderer();
-		// hide any elements on webpage
-		document.getElementById("info").style.visibility = "hidden";
-	} else {
-
-		renderer = new THREE.WebGLRenderer();
-		renderer.setClearColor("#AAAAAA");
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		document.body.appendChild( renderer.domElement );
-
-		var aspect = window.innerWidth / window.innerHeight;
-		camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
-		camera.position.z = 100; // stand back from origin
-		camera.position.y = 25;	// slightly above origin
-		camera.lookAt( scene.position );
-
-		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
-		var ambient = new THREE.AmbientLight( 0xffffff );
-		scene.add( ambient );
-	}
+	renderer = new THREE.AltRenderer();
+	// hide any elements on webpage
+	document.getElementById("info").style.visibility = "hidden";
 
 	var x = -modelList.length / 2 * 200;
 	modelList.forEach(function(name) {
