@@ -84,7 +84,8 @@ FirebaseSync.prototype.addObject = function( object, key ) {
 
 	} else {
 
-		// Subscribe to this object when connection is complete.
+		// Any objects added before connect() get added to pendingObjects,
+		// subscribe to them once we get out firebaseRoom initialized.
 		this.pendingObjects.push( object );
 
 	}
@@ -271,6 +272,7 @@ FirebaseSync.prototype._subscribeObject = function( object, key ) {
 
 FirebaseSync.prototype._subscribePendingObjects = function() {
 
+	console.log("Syncing initial state of " + this.pendingObjects.length + " objects...")
 	for (var i=0; i < this.pendingObjects.length; i++ ) {
 
 		var object = this.pendingObjects[i];
@@ -332,7 +334,7 @@ FirebaseSync.prototype._startListeningRoom = function() {
 
 	}.bind( this ), this._firebaseCancel);
 
-	if ( this._onConnctedCallback ) {
+	if ( this._onConnctedCallback && this.pendingObjects.length === 0 ) {
 
 		this._onConnctedCallback();
 
@@ -527,6 +529,27 @@ FirebaseSync.prototype._onPositionChange = function(snapshot) {
 			object.userData.isSyncInitialized = true;
 
 			if ( this.TRACE ) console.log("INIT for " + key, objectData);
+
+			var idx = this.pendingObjects.indexOf( object );
+
+			if ( idx !== -1 ) {
+
+				this.pendingObjects.splice( idx, 1 );
+
+				if ( this.pendingObjects.length === 0 ) {
+
+					console.log("Done syncing initial object data");
+
+					if ( this._onConnctedCallback ) {
+
+						this._onConnctedCallback();
+
+					}
+
+				}
+
+			}
+
 		}
 
 	}
