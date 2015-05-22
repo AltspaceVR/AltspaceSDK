@@ -113,13 +113,14 @@ function onModelsLoaded() {
 	}
 
 	if ( inAltspace ) {
+		console.log("window.innerDepth: " + window.innerDepth);
 		if ( window.innerDepth < 400 ) {
 			// in flat enclosure
 			scene.rotation.x = (Math.PI / 180) * 45;
 		} else {
 			// in thick display
-			// TODO: Put chess board on the bottom of the enclosure.
-			//scene.position.y = -1 * ( window.innerHeight / 2 );
+			// Put chess board on the bottom of the enclosure.
+			scene.position.y = -1 * ( window.innerHeight / 2 );
 		}
 	}
 
