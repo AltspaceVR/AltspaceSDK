@@ -10,7 +10,7 @@
 		<title>Adding Cubes Example</title>
 
 		<!-- Required by AltOBJMTLLoader.js -->
-		<script src="../lib/three.min.js"></script>
+        <script src="../lib/three.js"></script>
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/firebase.js"></script>
@@ -61,6 +61,9 @@ var cube;
 var cubeLookupByKey = {};
 var intervalId;
 
+var gameStats = new THREE.Object3D();
+gameStats.name = "gameStats";
+
 // start off by loading .obj and .mtl files
 loadModels();
 
@@ -75,6 +78,16 @@ function onSyncReady() {
 
 	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
+
+	if ( typeof gameStats.userData.syncData === "undefined" ) {
+		gameStats.userData.syncData = {};
+		gameStats.userData.syncData.plays = 0;
+	}
+	gameStats.userData.syncData.plays += 1;
+	firebaseSync.saveObject( gameStats );
+
+	// TODO: Display game stats instead of just logging to console.
+	console.log("Game Stats:", gameStats.userData.syncData);
 
 	var cubesCreated = 0;
 	intervalId = setInterval( function() {
@@ -196,6 +209,7 @@ function initSync() {
 	var appId = "adding-cubes";
 	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
 
+	firebaseSync.addObject( gameStats, gameStats.name );
 	firebaseSync.connect( onSyncReady, createCube, deleteCube );
 
 }

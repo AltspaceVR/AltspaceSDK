@@ -124,15 +124,15 @@ function onModelsLoaded() {
 		}
 	}
 
+	initModels();
+	arrangePieces(modelScale); // TODO: Skip if room already created.
+
 	firebaseSync.connect( onSyncReady );
 
 }
 
 function onSyncReady() {
 
-	initModels();
-
-	arrangePieces(modelScale); // TODO: Skip if room already created.
 	initEvents(); // Dont allow dragging until done arranging pieces.
 
 	// Hack to get the AltRender to refresh the scene, otherwise in a new room,
