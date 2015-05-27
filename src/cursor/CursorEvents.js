@@ -201,7 +201,7 @@ CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail )
 
     this._holoCursorDispatch( mockCursorEvent );
 
-}
+};
 
 CursorEvents.prototype._createEventDetail = function( event ) {
 
@@ -246,7 +246,7 @@ CursorEvents.prototype._dispatchEffects = function( object, event ) {
 
     if ( effect[ event.type ]) {
 
-      var effectCallback = effect[ event.type ].bind( effect );
+      effectCallback = effect[ event.type ].bind( effect );
       effectCallback( object, event );
     }
   }
