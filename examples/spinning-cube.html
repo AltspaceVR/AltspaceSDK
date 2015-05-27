@@ -84,7 +84,7 @@ function loadModels() {
 	var loader = new THREE.AltOBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = "models/AltspaceCube/cube.obj";
+	var filename = "models/Primitives/cube.obj";
 	loader.load(filename, function ( loadedObject ) {
 
 		console.log("Loaded object from " + filename, loadedObject);
@@ -106,7 +106,7 @@ function initScene() {
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
-		var scale = new THREE.Vector3( 10, 10, 10);
+		var scale = new THREE.Vector3( 100, 100, 100);
 		cube.scale.copy( scale );
 		// or cube.scale.set( scale.x, scale.y, scale.z)
 		// note cube.scale = scale won't work, same for cube.position
