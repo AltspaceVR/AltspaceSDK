@@ -27,7 +27,7 @@ CursorEvents = function( params ) {
 
 	this.inAltspace = !!window.Alt;
 
-	if ( inAltspace ) {
+	if ( this.inAltspace ) {
 
 		var dispatcher = this._holoCursorDispatch.bind( this ); 
 
