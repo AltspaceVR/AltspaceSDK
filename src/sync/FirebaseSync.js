@@ -23,6 +23,9 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	var p = params || {};
 
+	// passed to Firebase.authWithCustomToken
+    this.authToken = p.authToken || null;
+
 	// console.log firebase events for debugging
 	this.TRACE = !!p.TRACE;
 
@@ -126,6 +129,19 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 	if ( onConnectedCallback ) {
 		this._onConnctedCallback = onConnectedCallback;
 	}
+
+	// Optional custom authentication token
+	if ( this.authToken ) {
+		this.firebaseRoot.authWithCustomToken( this.authToken, function( error, authData) {
+			if ( error ) {
+				throw new Error("Authentication failed, authData:", authData);
+			} else {
+				if ( this.TRACE ) {
+					console.log("Authenticated sucessfully with payload:", authData);
+				}
+			}
+		});
+	}	
 
 	// Handle these cases:
 	// (1) No roomId specified in URL: create room with random roomId and join it.
