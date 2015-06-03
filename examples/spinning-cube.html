@@ -173,27 +173,12 @@ function initSync() {
 	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
 	var appId = "spinning-cube";
 
-	var request = new XMLHttpRequest();
-    request.open("GET", "./tokens/spinning-cube-token.txt", true);
+	var params = { authTokenPath: "./tokens/spinning-cube-token.txt" };
 
-    request.onreadystatechange = function() {
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId, params );
 
-    	if ( request.readyState !== 4) return;
-
-		var token = request.responseText;
-		if ( request.status !== 200 ) {
-			throw new Error("Failed to load the token file.");
-		}
-
-		var params = { authToken: token };
-		firebaseSync = new FirebaseSync( firebaseRootUrl, appId, params );
-
-		firebaseSync.addObject( cube, "cube" );
-		firebaseSync.connect( onSyncReady );
-
-	}
-
-	request.send(null)
+	firebaseSync.addObject( cube, "cube" );
+	firebaseSync.connect( onSyncReady );
 
 }
 

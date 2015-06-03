@@ -25,6 +25,10 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	// passed to Firebase.authWithCustomToken
     this.authToken = p.authToken || null;
+    this.authTokenPath = p.authTokenPath || null;
+	if ( this.authTokenPath ) { 
+		this.authToken = this._readTokenFromUrl( this.authTokenPath );
+	}
 
 	// console.log firebase events for debugging
 	this.TRACE = !!p.TRACE;
@@ -268,6 +272,32 @@ FirebaseSync.prototype.getRoomKey = function() {
 		}
 
 	}.bind ( this ), this._firebaseError );
+
+};
+
+
+FirebaseSync.prototype._readTokenFromUrl = function( url ) {
+
+	var request = new XMLHttpRequest();
+
+	// Set asychronous to "true" to avoid console warnings, but we assume
+	// token is local and read quickly, before connect() is called.
+	// Would need further testing to support token files on remote servers.
+
+    request.open("GET", url, true);
+
+    request.onreadystatechange = function() {
+
+    	if ( request.readyState !== 4) return;
+
+		this.authToken = request.responseText;
+		if ( request.status !== 200 ) {
+			throw new Error("Failed to load the token file.");
+		}
+
+	}
+
+	request.send(null)
 
 };
 
