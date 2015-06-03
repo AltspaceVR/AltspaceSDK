@@ -10,7 +10,7 @@
 		<title>Spinning Cube Example</title>
 
 		<!-- Required by AltOBJMTLLoader.js -->
-		<script src="../lib/three.min.js"></script>
+		<script src="../lib/three.js"></script>
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/firebase.js"></script>
@@ -84,7 +84,7 @@ function loadModels() {
 	var loader = new THREE.AltOBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = "models/Primitives/cube.obj";
+	var filename = inAltspace ? "models/Primitives/cube.obj" : "models/AltspaceCube/cube.obj";
 	loader.load(filename, function ( loadedObject ) {
 
 		console.log("Loaded object from " + filename, loadedObject);
@@ -125,7 +125,6 @@ function initScene() {
 		camera.position.z = 100; // stand back from origin
 		camera.position.y = 25;	// slightly above origin
 		camera.lookAt( scene.position );
-
 
 		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
 		var ambient = new THREE.AmbientLight( 0xffffff );
@@ -173,10 +172,28 @@ function initSync() {
 
 	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
 	var appId = "spinning-cube";
-	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
 
-	firebaseSync.addObject( cube, "cube" );
-	firebaseSync.connect( onSyncReady );
+	var request = new XMLHttpRequest();
+    request.open("GET", "./tokens/spinning-cube-token.txt", true);
+
+    request.onreadystatechange = function() {
+
+    	if ( request.readyState !== 4) return;
+
+		var token = request.responseText;
+		if ( request.status !== 200 ) {
+			throw new Error("Failed to load the token file.");
+		}
+
+		var params = { authToken: token };
+		firebaseSync = new FirebaseSync( firebaseRootUrl, appId, params );
+
+		firebaseSync.addObject( cube, "cube" );
+		firebaseSync.connect( onSyncReady );
+
+	}
+
+	request.send(null)
 
 }
 
