@@ -207,7 +207,8 @@ function initSync() {
 
 	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
 	var appId = "adding-cubes";
-	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
+	var params = { authTokenPath: "./tokens/adding-cubes-token.txt"}
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId, params );
 
 	firebaseSync.addObject( gameStats, gameStats.name );
 	firebaseSync.connect( onSyncReady, createCube, deleteCube );

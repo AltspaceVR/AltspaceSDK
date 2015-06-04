@@ -23,15 +23,16 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	var p = params || {};
 
+	// console.log firebase events for debugging
+	this.TRACE = !!p.TRACE;
+
 	// passed to Firebase.authWithCustomToken
     this.authToken = p.authToken || null;
     this.authTokenPath = p.authTokenPath || null;
 	if ( this.authTokenPath ) { 
+		if ( this.TRACE ) console.log("Reading token from "+ this.authTokenPath);
 		this.authToken = this._readTokenFromUrl( this.authTokenPath );
 	}
-
-	// console.log firebase events for debugging
-	this.TRACE = !!p.TRACE;
 
 	this.objects = [];	// in the order they were added
 	this.key2obj = {};	// key2obj[ key ] = object
@@ -144,7 +145,7 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 					console.log("Authenticated sucessfully with payload:", authData);
 				}
 			}
-		});
+		}.bind( this ));
 	}	
 
 	// Handle these cases:
@@ -291,11 +292,11 @@ FirebaseSync.prototype._readTokenFromUrl = function( url ) {
     	if ( request.readyState !== 4) return;
 
 		this.authToken = request.responseText;
-		if ( request.status !== 200 ) {
+		if ( request.status !== 200 || this.authToken === null ) {
 			throw new Error("Failed to load the token file.");
 		}
 
-	}
+	}.bind( this );
 
 	request.send(null)
 

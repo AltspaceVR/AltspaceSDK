@@ -82,7 +82,8 @@ var loader = new THREE.AltOBJMTLLoader( manager );
 
 var fbRoot = "https://altspace-apps.firebaseio.com";
 var appId = "solar-system";
-var firebaseSync = new FirebaseSync( fbRoot, appId );
+var params = { authTokenPath: "./tokens/solar-system-token.txt" };
+var firebaseSync = new FirebaseSync( fbRoot, appId, params );
 var appState;
 
 loadPlanets(); // MAIN

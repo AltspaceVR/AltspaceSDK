@@ -131,7 +131,8 @@ function initScene() {
 function initSync() {
 	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
 	var appId = "hats";
-	firebaseSync = new FirebaseSync( firebaseRootUrl, appId );
+	var params = { authTokenPath: "./tokens/hats-token.txt" }
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId, params );
 
 	firebaseSync.connect( function(){}, createHat, deleteHat );
 }
