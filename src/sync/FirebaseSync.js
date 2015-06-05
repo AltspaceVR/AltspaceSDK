@@ -135,7 +135,7 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 		this._onConnctedCallback = onConnectedCallback;
 	}
 
-	if ( this.authTokenPath && !this.authToken ) {
+	if ( this.authTokenPath || this.authToken ) {
 
 		// Wait until authorization token is read before proceeding.
 		var intervalId = setInterval( function() {
@@ -143,7 +143,7 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 			if ( this.authToken ) {
 
 				clearInterval( intervalId );
-				this._joinRoom();
+				this._authenticateWithToken();
 
 			}
 
@@ -158,24 +158,27 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 };
 
 
-FirebaseSync.prototype._joinRoom = function() {
+FirebaseSync.prototype._authenticateWithToken = function() {
 
 	// Optional custom authentication token
-	if ( this.authToken ) {
+	this.firebaseRoot.authWithCustomToken( this.authToken, function( error, authData) {
 
-		this.firebaseRoot.authWithCustomToken( this.authToken, function( error, authData) {
+		if ( this.TRACE ) {
+			console.log("Authentication payload:", authData);
+		}
+		if ( error ) {
+			throw new Error("Authentication failed: " + error.message);
+		}
 
-			if ( this.TRACE ) {
-				console.log("Authentication payload:", authData);
-			}
-			if ( error ) {
-				throw new Error("Authentication failed: " + error.message);
-			}
-			console.log("Authentication successful: ", authData.auth);
+		console.log("Authentication successful: ", authData.auth);
+		this._joinRoom();
 
-		}.bind( this ));
+	}.bind( this ));
 
-	}
+};
+
+
+FirebaseSync.prototype._joinRoom = function() {
 
 	// Handle these cases:
 	// (1) No roomId specified in URL: create room with random roomId and join it.
