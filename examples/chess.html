@@ -224,7 +224,8 @@ function initScene() {
 
 	var firebaseRootURL = "https://altspace-apps.firebaseio.com/";
 	var appID = "chess";
-	firebaseSync = new FirebaseSync( firebaseRootURL, appID );
+	var params = { authTokenPath: "./tokens/chess-token.txt" };
+	firebaseSync = new FirebaseSync( firebaseRootURL, appID, params );
 
 	//scene.add( new THREE.AxisHelper(100) );
 }

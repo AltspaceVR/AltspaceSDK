@@ -23,11 +23,16 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 
 	var p = params || {};
 
-	// passed to Firebase.authWithCustomToken
-    this.authToken = p.authToken || null;
-
 	// console.log firebase events for debugging
 	this.TRACE = !!p.TRACE;
+
+	// passed to Firebase.authWithCustomToken
+	this.authToken = p.authToken || null;
+	this.authTokenPath = p.authTokenPath || null;
+	if ( this.authTokenPath ) { 
+		if ( this.TRACE ) console.log("Reading token from "+ this.authTokenPath);
+		this.authToken = this._readTokenFromUrl( this.authTokenPath );
+	}
 
 	this.objects = [];	// in the order they were added
 	this.key2obj = {};	// key2obj[ key ] = object
@@ -130,18 +135,47 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 		this._onConnctedCallback = onConnectedCallback;
 	}
 
+	if ( this.authTokenPath && !this.authToken ) {
+
+		// Wait until authorization token is read before proceeding.
+		var intervalId = setInterval( function() {
+
+			if ( this.authToken ) {
+
+				clearInterval( intervalId );
+				this._joinRoom();
+
+			}
+
+		}.bind( this ), 100);
+
+	} else { 
+
+		this._joinRoom();
+
+	}
+
+};
+
+
+FirebaseSync.prototype._joinRoom = function() {
+
 	// Optional custom authentication token
 	if ( this.authToken ) {
+
 		this.firebaseRoot.authWithCustomToken( this.authToken, function( error, authData) {
-			if ( error ) {
-				throw new Error("Authentication failed, authData:", authData);
-			} else {
-				if ( this.TRACE ) {
-					console.log("Authenticated sucessfully with payload:", authData);
-				}
+
+			if ( this.TRACE ) {
+				console.log("Authentication payload:", authData);
 			}
-		});
-	}	
+			if ( error ) {
+				throw new Error("Authentication failed: " + error.message);
+			}
+			console.log("Authentication successful: ", authData.auth);
+
+		}.bind( this ));
+
+	}
 
 	// Handle these cases:
 	// (1) No roomId specified in URL: create room with random roomId and join it.
@@ -268,6 +302,31 @@ FirebaseSync.prototype.getRoomKey = function() {
 		}
 
 	}.bind ( this ), this._firebaseError );
+
+};
+
+
+FirebaseSync.prototype._readTokenFromUrl = function( url ) {
+
+	var request = new XMLHttpRequest();
+
+	// Setting asychronous "false" below gives console warnings, so synchronize
+	// using setInterval above to ensure token is read before accessing Firebase.
+    request.open("GET", url, true);
+
+    request.onreadystatechange = function() {
+
+    	if ( request.readyState !== 4) return;
+
+		this.authToken = request.responseText;
+		if ( request.status !== 200 || this.authToken === null ) {
+			throw new Error("Failed to load the token file.");
+		}
+		if ( this.TRACE ) console.log("Got token:", this.authToken);
+
+	}.bind( this );
+
+	request.send(null)
 
 };
 
