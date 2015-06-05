@@ -1,4 +1,4 @@
-Listing of Features, Performance Improvements, Bug Fixes, and Breaking Changes for each version. Version numbers follow the [Semantic Versioning Spec](http://semver.org) (SemVer).
+Listing of Features, Performance Improvements, Bug Fixes, and Breaking Changes for each version. Version numbers follow the [Semantic Versioning Spec](http://semver.org) (SemVer).  Current version is hard-coded in AltRenderer.js and is logged to the Javascript console.
 
 ### Version 0.1.2 (2015-06-05)
 * **FirebaseSync**: constructor parameters now accepts optional Firebase custom authentication token.
