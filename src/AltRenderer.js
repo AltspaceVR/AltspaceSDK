@@ -5,6 +5,17 @@
  * Copyright (c) 2015 AltspaceVR
  */
 
+ALT_SDK_VERSION = function() {
+
+	// Execute this immediately, not when AltRenderer is created, so we log
+	// semver even when not running in Altspace and using the THREE.WebGLRender.
+	// Follows the Semantic Versioning Spec (SemVer) 2.0.0 http://semver.org
+
+	this.SDK_VERSION = "0.1.2";
+	console.log( 'AltspaceSDK version ' + this.SDK_VERSION );
+
+}();  
+
 THREE.AltRenderer = function ( parameters ) {
 
 	console.log( 'THREE.AltRenderer', THREE.REVISION );
