@@ -1,5 +1,9 @@
 Listing of Bug Fixes, Features, Performance Improvements, and Breaking Changes for each version. Version numbers are "unofficial" and may change in the future.
 
+## v0.1.2 (2015-06-05)
+* **FirebaseSync**: constructor parameters now accepts optional Firebase custom authentication token.
+* **FontAwesome**: FontAwesome and primitives added to `examples/models`
+
 ## v0.1.1 (2015-05-15)
 * **FirebaseSync**: now supports adding and deleting synced objects while the app is running. 
 
