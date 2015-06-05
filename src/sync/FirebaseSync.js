@@ -27,8 +27,8 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.TRACE = !!p.TRACE;
 
 	// passed to Firebase.authWithCustomToken
-    this.authToken = p.authToken || null;
-    this.authTokenPath = p.authTokenPath || null;
+	this.authToken = p.authToken || null;
+	this.authTokenPath = p.authTokenPath || null;
 	if ( this.authTokenPath ) { 
 		if ( this.TRACE ) console.log("Reading token from "+ this.authTokenPath);
 		this.authToken = this._readTokenFromUrl( this.authTokenPath );
@@ -135,18 +135,47 @@ FirebaseSync.prototype.connect = function( onConnectedCallback, addObjectCallbac
 		this._onConnctedCallback = onConnectedCallback;
 	}
 
+	if ( this.authTokenPath && !this.authToken ) {
+
+		// Wait until authorization token is read before proceeding.
+		var intervalId = setInterval( function() {
+
+			if ( this.authToken ) {
+
+				clearInterval( intervalId );
+				this._joinRoom();
+
+			}
+
+		}.bind( this ), 100);
+
+	} else { 
+
+		this._joinRoom();
+
+	}
+
+};
+
+
+FirebaseSync.prototype._joinRoom = function() {
+
 	// Optional custom authentication token
 	if ( this.authToken ) {
+
 		this.firebaseRoot.authWithCustomToken( this.authToken, function( error, authData) {
-			if ( error ) {
-				throw new Error("Authentication failed, authData:", authData);
-			} else {
-				if ( this.TRACE ) {
-					console.log("Authenticated sucessfully with payload:", authData);
-				}
+
+			if ( this.TRACE ) {
+				console.log("Authentication payload:", authData);
 			}
+			if ( error ) {
+				throw new Error("Authentication failed: " + error.message);
+			}
+			console.log("Authentication successful: ", authData.auth);
+
 		}.bind( this ));
-	}	
+
+	}
 
 	// Handle these cases:
 	// (1) No roomId specified in URL: create room with random roomId and join it.
@@ -281,10 +310,8 @@ FirebaseSync.prototype._readTokenFromUrl = function( url ) {
 
 	var request = new XMLHttpRequest();
 
-	// Set asychronous to "true" to avoid console warnings, but we assume
-	// token is local and read quickly, before connect() is called.
-	// Would need further testing to support token files on remote servers.
-
+	// Setting asychronous "false" below gives console warnings, so synchronize
+	// using setInterval above to ensure token is read before accessing Firebase.
     request.open("GET", url, true);
 
     request.onreadystatechange = function() {
@@ -295,6 +322,7 @@ FirebaseSync.prototype._readTokenFromUrl = function( url ) {
 		if ( request.status !== 200 || this.authToken === null ) {
 			throw new Error("Failed to load the token file.");
 		}
+		if ( this.TRACE ) console.log("Got token:", this.authToken);
 
 	}.bind( this );
 
