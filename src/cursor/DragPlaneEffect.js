@@ -18,6 +18,8 @@ DragPlaneEffect = function ( params ) {
 
   var p = params || {};
 
+  this.TRACE = p.TRACE || null;
+
   // Save object as drag position changes.
   this.firebaseSync = p.firebaseSync || null;
 
@@ -25,14 +27,22 @@ DragPlaneEffect = function ( params ) {
   this.orbitControls = p.orbitControls || null;
 
   this.dragPlane = p.dragPlane || null;
+  this.dragPlaneWidth = p.dragPlaneWidth || null;
+  this.dragPlaneHeight = p.dragPlaneHeight || null;
+  this.dragPlaneDepth = p.dragPlaneDepth || null;
 
   if ( !this.dragPlane ) {
     // Default drag plane, for demo only! Normally it should be passed in,
     // with location and width/depth matching drag area of your scene.
     this.dragPlane = new THREE.Mesh( 
-      new THREE.BoxGeometry(1000, 0.25, 1000),
+      new THREE.BoxGeometry(
+        this.dragPlaneWidth  || 10000,
+        this.dragPlaneHeight || 0.25,
+        this.dragPlaneDepth  || 10000
+      ),
       new THREE.MeshBasicMaterial( { transparent: true, opacity: 0.25 })
     );
+
   }
 
   // Mark the intersection point when an object is dragged and on hoverOver.
@@ -43,11 +53,15 @@ DragPlaneEffect = function ( params ) {
 
 DragPlaneEffect.prototype.holocursordown = function( object, event ) {
 
+  if ( this.TRACE ) console.log("Starting drag", object);
+
   this.dragStart( object, event );
 
 }
 
 DragPlaneEffect.prototype.holocursorup = function( object, event ) {
+
+  if ( this.TRACE ) console.log("Ending drag", object);
 
   this.dragEnd( object, event );
 

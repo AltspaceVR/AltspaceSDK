@@ -61,9 +61,22 @@ var cursorEvents, firebaseSync;
 var cube;
 var sound;
 
+var mainCount = 0;
 
-// start off by loading .obj and .mtl files
-loadModels();
+function main() {
+
+	// Currently there is a bug where AltContentLoaded gets called repeatedly.
+	mainCount++;
+	if ( mainCount > 1 ) {
+		//console.error(mainEventName + " called " + mainCount + " times, ignoring.")
+		if ( mainCount === 2 ) console.error("AltContentLoaded called multiple times");
+		return;
+	}
+
+	// start off by loading .obj and .mtl files
+	loadModels();
+
+}
 
 function onModelsLoaded() {
 
@@ -84,7 +97,7 @@ function loadModels() {
 	var loader = new THREE.AltOBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = inAltspace ? "models/Primitives/cube.obj" : "models/AltspaceCube/cube.obj";
+	var filename = "models/AltspaceCube/cube.obj";
 	loader.load(filename, function ( loadedObject ) {
 
 		console.log("Loaded object from " + filename, loadedObject);
@@ -100,17 +113,25 @@ function initScene() {
 
 	scene = new THREE.Scene();
 
+	// TODO: Set size/scale of cube base off pixelToMeterRatio
+	var scale = new THREE.Vector3( 7, 7, 7);
+	cube.scale.copy( scale );
+	// or cube.scale.set( scale.x, scale.y, scale.z)
+	// note cube.scale = scale won't work, same for cube.position
+
+	var cubeBoundingBox = new THREE.Box3().setFromObject( cube );
+	var cubeHeight = Math.abs( cubeBoundingBox.max.y - cubeBoundingBox.min.y );
+	cube.position.y += 1.5 * cubeHeight; // off the ground
+	console.log("cubeHeight", cubeHeight);
+
 	if ( inAltspace ) {
 
 		renderer = new THREE.AltRenderer();
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
-		var scale = new THREE.Vector3( 100, 100, 100);
-		cube.scale.copy( scale );
-		// or cube.scale.set( scale.x, scale.y, scale.z)
-		// note cube.scale = scale won't work, same for cube.position
-		cube.position.y = 25; // off the ground
+		// Place the cube at the bottom of the enclosure.
+		scene.position.y = ( -1 * window.innerHeight / 2 );
 
 	} else {
 
@@ -122,8 +143,8 @@ function initScene() {
 
 		var aspect = window.innerWidth / window.innerHeight;
 		camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
-		camera.position.z = 100; // stand back from origin
-		camera.position.y = 25;	// slightly above origin
+		camera.position.z = 10 * cubeHeight; // stand back from origin
+		camera.position.y = 500;
 		camera.lookAt( scene.position );
 
 		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
@@ -159,7 +180,14 @@ function initEvents() {
 	// In addition to defining event listeners, you can apply pre-made effects
 	// or create your own effects that work with the CursorEvents framework.
 
-	var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
+	//var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
+	var dragParams = { 
+		firebaseSync: firebaseSync,
+		dragPlaneWidth: window.innerWidth * 0.8,
+		dragPlaneDepth: ( window.innerDepth || camera.far ) * 0.8,
+		TRACE: true,
+	};
+	var dragEffect = new DragPlaneEffect( dragParams );
 	var hoverEffect = new ColorHoverEffect( { color: new THREE.Color(0, 1, 1) });
 	// hover listens for holocursorenter / holocursorleave for hover over / out
 
@@ -215,7 +243,8 @@ function animate() {
 
 }
 
-
+var mainEventName = inAltspace ? "AltContentLoaded" : "DOMContentLoaded";
+window.addEventListener( mainEventName, main);
 
 </script>
 </body>
