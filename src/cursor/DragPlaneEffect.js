@@ -9,7 +9,8 @@
 DragPlaneEffect = function ( params ) {
 
 	this.hoverObject;
-	this.dragObject;
+  this.dragObject;
+  this.dragObjectWidth;
 
 	this.dragOffset = new THREE.Vector3();
 
@@ -53,15 +54,11 @@ DragPlaneEffect = function ( params ) {
 
 DragPlaneEffect.prototype.holocursordown = function( object, event ) {
 
-  if ( this.TRACE ) console.log("Starting drag", object);
-
   this.dragStart( object, event );
 
 }
 
 DragPlaneEffect.prototype.holocursorup = function( object, event ) {
-
-  if ( this.TRACE ) console.log("Ending drag", object);
 
   this.dragEnd( object, event );
 
@@ -75,7 +72,14 @@ DragPlaneEffect.prototype.holocursorup = function( object, event ) {
 
 DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
+  if ( this.TRACE ) console.log("Starting drag", object);
+
   this.dragObject = object;
+
+  var boudingBox = new THREE.Box3().setFromObject( cube );
+  this.dragObjectWidth = Math.abs( boudingBox.max.x - boudingBox.min.x );
+
+  if ( this.TRACE ) console.log( "dragObject width: " + this.dragObjectWidth );
 
   var intersects = this.raycaster.intersectObject( object, true );
   if ( intersects.length === 0) {
@@ -83,6 +87,7 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
     return ; // something went wrong
   }
   var intersectionPoint = intersects[0].point;
+  if ( this.TRACE ) console.log( "Intersection point:", intersectionPoint );
 
   if ( this.dragObject ) {
 
@@ -92,6 +97,7 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
     // Raise/lower the drag plane to match the drag start point.
     this.dragPlane.position.y = intersectionPoint.y;
+    if ( this.TRACE ) console.log( "Moving dragPlane.position.y to " + intersectionPoint.y );
 
     // Force update, otherwise old position of dragPlane is used when raycaster
     // computes drag point later, and objects appear to "jump" when selected.
@@ -112,6 +118,8 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
 
 DragPlaneEffect.prototype.dragEnd = function( object, event ) {
+
+    if ( this.TRACE ) console.log("Ending drag", object);
 
     if ( this.orbitControls ) {
       this.orbitControls.enabled = true;
@@ -138,6 +146,7 @@ DragPlaneEffect.prototype.update = function( effectsState ) {
   var intersects = this.raycaster.intersectObject( this.dragPlane );
 
   if (intersects.length === 0) {
+    if ( this.TRACE ) console.log( "Ray no longer intersection dragplane", this.raycaster, this.dragPlane);
     this.dragEnd();
     return effectsState ;
   }
@@ -161,9 +170,7 @@ DragPlaneEffect.prototype.update = function( effectsState ) {
   // Prevents object from getting moved outside the bounding volume in Altspace.
   // Account for object width, otherwise objects end up halfway off the dragPlane.
   var params = this.dragPlane.geometry.parameters;
-
-  // TODO: Correctly assign object width based on object bounding box.
-  var objectWidth = 25;
+  var objectWidth = this.dragObjectWidth;
 
   if (dragPoint.x - objectWidth/2 < this.dragPlane.position.x - params.width/2) {
     newPosition.x = this.dragPlane.position.x - params.width/2 + objectWidth/2;

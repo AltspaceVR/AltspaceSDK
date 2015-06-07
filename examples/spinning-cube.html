@@ -121,7 +121,7 @@ function initScene() {
 
 	var cubeBoundingBox = new THREE.Box3().setFromObject( cube );
 	var cubeHeight = Math.abs( cubeBoundingBox.max.y - cubeBoundingBox.min.y );
-	cube.position.y += 1.5 * cubeHeight; // off the ground
+	cube.position.y += cubeHeight / 2; // off the ground
 	console.log("cubeHeight", cubeHeight);
 
 	if ( inAltspace ) {
@@ -160,7 +160,8 @@ function initScene() {
 
 function initEvents() {
 
-	cursorEvents = new CursorEvents();
+	//cursorEvents = new CursorEvents(); // XXX
+	cursorEvents = new CursorEvents( { TRACE: true }); // XXX
 	cursorEvents.enableMouseEvents( camera );
 
 	cursorEvents.addObject( cube );
@@ -183,8 +184,8 @@ function initEvents() {
 	//var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
 	var dragParams = { 
 		firebaseSync: firebaseSync,
-		dragPlaneWidth: window.innerWidth * 0.8,
-		dragPlaneDepth: ( window.innerDepth || camera.far ) * 0.8,
+		dragPlaneWidth: window.innerWidth,
+		dragPlaneDepth: ( window.innerDepth || camera.far ),
 		TRACE: true,
 	};
 	var dragEffect = new DragPlaneEffect( dragParams );
@@ -236,7 +237,6 @@ function animate() {
 
 	cursorEvents.update();
 
-	cube.rotation.x += 0.01;
 	cube.rotation.y += 0.01;
 
 	renderer.render( scene, camera );
