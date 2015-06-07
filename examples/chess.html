@@ -97,20 +97,17 @@ var showDragPlane = !inAltspace && false;
 var showDragPoint = !inAltspace && false;
 
 
-// MAIN
-initScene();
-loadModels();
+function main() {
+
+	if ( AltContentLoaded ) return ; // bug where event is triggered repeatedly
+	AltContentLoaded = true;
+
+	initScene();
+	loadModels();
+
+}
 
 function onModelsLoaded() {
-
-	if ( inAltspace && !AltContentLoaded ) {
-		console.log("Waiting for Altspace content...")
-		var intervalID = setInterval( function() {
-			if ( AltContentLoaded ) {
-				clearInterval( intervalID)
-			}
-		}, 50);
-	}
 
 	if ( inAltspace ) {
 		console.log("window.innerDepth: " + window.innerDepth);
@@ -185,7 +182,6 @@ function initScene() {
 
 	// dragPlane should not be bigger than our bounding box, if it is then
 	// objects will disappear when they are moved outside of the box.
-	// In Altspace, display volume is 5 meters.
 	var dragPlaneSize = sceneInfo.dragPlaneSize;
 	var dragPlaneGeo = new THREE.BoxGeometry( dragPlaneSize, 0.25, dragPlaneSize );
 	var dragPlaneMat = new THREE.MeshBasicMaterial({
@@ -196,10 +192,7 @@ function initScene() {
 	});
 	dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
 	dragPlane.name = "drag plane";
-
-	// Add dragPlane to scene, since we need it for raycasting.
-	// No need to add to Altspace since it is not visible.
-	scene.add( dragPlane );
+	// Do not add dragPlane to scene, since we move it around for raycsting.
 
 	// For debugging only, to visualize the raycast intersection point.
 	if ( showDragPoint ) {
@@ -531,10 +524,8 @@ function animate() {
 
 }
 
-window.addEventListener("AltContentLoaded", function() {
-	AltContentLoaded = true;
-	console.log("Altspace content loaded");
-} );
+var mainEventName = inAltspace ? "AltContentLoaded" : "DOMContentLoaded";
+window.addEventListener( mainEventName, main);
 
 
 </script>

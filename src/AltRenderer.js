@@ -9,7 +9,7 @@ THREE.AltRenderer = function ( parameters ) {
 
 	console.log( 'THREE.AltRenderer', THREE.REVISION );
 
-	this.SDK_VERSION = "0.1.2";
+	this.SDK_VERSION = "0.3.1";
 	console.log( 'AltspaceSDK version ' + this.SDK_VERSION );
 
 	this.inAltspace = !!window.engine;

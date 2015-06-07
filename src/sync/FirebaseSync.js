@@ -30,8 +30,7 @@ FirebaseSync = function(firebaseRootUrl, appId, params) {
 	this.authToken = p.authToken || null;
 	this.authTokenPath = p.authTokenPath || null;
 	if ( this.authTokenPath ) { 
-		if ( this.TRACE ) console.log("Reading token from "+ this.authTokenPath);
-		this.authToken = this._readTokenFromUrl( this.authTokenPath );
+		this.authToken = this._requestReadToken( this.authTokenPath );
 	}
 
 	this.objects = [];	// in the order they were added
@@ -309,12 +308,19 @@ FirebaseSync.prototype.getRoomKey = function() {
 };
 
 
-FirebaseSync.prototype._readTokenFromUrl = function( url ) {
+FirebaseSync.prototype._requestReadToken = function( path ) {
 
-	var request = new XMLHttpRequest();
+	// Get basename by removing last item (filename) from path.
+    var rootDir = window.location.pathname.split("/").slice(0,-1).join("/");
+
+    // Append path to URL of the root directory.
+    var url = window.location.origin + rootDir + "/" + path;
+
+	if ( this.TRACE ) console.log("Reading token from "+ url);
 
 	// Setting asychronous "false" below gives console warnings, so synchronize
 	// using setInterval above to ensure token is read before accessing Firebase.
+	var request = new XMLHttpRequest();
     request.open("GET", url, true);
 
     request.onreadystatechange = function() {

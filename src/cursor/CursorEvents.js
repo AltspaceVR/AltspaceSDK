@@ -12,10 +12,13 @@
 
 CursorEvents = function( params ) {
 
-	this.p = params || {};
+	var p = params || {};
+
+	// Debugging log
+	this.TRACE = p.TRACE;
 
 	// Dispatch events without a target to this object.
-	this.defaultTarget = this.p.defaultTarget || null;
+	this.defaultTarget = p.defaultTarget || null;
 
 
 	this.objectLookup = {};  // objectLookup[ object.uuid ] = object
@@ -141,8 +144,11 @@ CursorEvents.prototype.addObject = function( object ) {
 
 CursorEvents.prototype._holoCursorDispatch = function( event ) {
 
+
 	var detail = this._createEventDetail( event );
 	var objectEvent = new CustomEvent( event.type, { detail: detail });
+
+	if ( this.TRACE ) console.log(event.type, detail);
 
 	// Use uuid to map from Altspace object to its corresponding ThreeJS object.
 	// Currently cursor events fire on all objects, even non-interactive ones,
@@ -178,6 +184,8 @@ CursorEvents.prototype._holoCursorDispatch = function( event ) {
 };
 
 CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail ) {
+
+	if ( this.TRACE ) console.log("objectControls " + eventDetail.name, eventDetail);
 
 	var eventNameMapping = {
 		"hoverOver" : "holocursorenter",
