@@ -97,20 +97,17 @@ var showDragPlane = !inAltspace && false;
 var showDragPoint = !inAltspace && false;
 
 
-// MAIN
-initScene();
-loadModels();
+function main() {
+
+	if ( AltContentLoaded ) return ; // bug where event is triggered repeatedly
+	AltContentLoaded = true;
+
+	initScene();
+	loadModels();
+
+}
 
 function onModelsLoaded() {
-
-	if ( inAltspace && !AltContentLoaded ) {
-		console.log("Waiting for Altspace content...")
-		var intervalID = setInterval( function() {
-			if ( AltContentLoaded ) {
-				clearInterval( intervalID)
-			}
-		}, 50);
-	}
 
 	if ( inAltspace ) {
 		console.log("window.innerDepth: " + window.innerDepth);
@@ -531,10 +528,8 @@ function animate() {
 
 }
 
-window.addEventListener("AltContentLoaded", function() {
-	AltContentLoaded = true;
-	console.log("Altspace content loaded");
-} );
+var mainEventName = inAltspace ? "AltContentLoaded" : "DOMContentLoaded";
+window.addEventListener( mainEventName, main);
 
 
 </script>

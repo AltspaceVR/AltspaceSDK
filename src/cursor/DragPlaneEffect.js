@@ -76,7 +76,7 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
   this.dragObject = object;
 
-  var boudingBox = new THREE.Box3().setFromObject( cube );
+  var boudingBox = new THREE.Box3().setFromObject( this.dragObject );
   this.dragObjectWidth = Math.abs( boudingBox.max.x - boudingBox.min.x );
 
   if ( this.TRACE ) console.log( "dragObject width: " + this.dragObjectWidth );
