@@ -314,7 +314,7 @@ FirebaseSync.prototype._requestReadToken = function( path ) {
     var rootDir = window.location.pathname.split("/").slice(0,-1).join("/");
 
     // Append path to URL of the root directory.
-    var url = [window.location.origin, rootDir, path].join("/");
+    var url = window.location.origin + rootDir + "/" + path;
 
 	if ( this.TRACE ) console.log("Reading token from "+ url);
 
