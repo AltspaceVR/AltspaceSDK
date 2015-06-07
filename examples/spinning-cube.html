@@ -59,6 +59,7 @@ var inAltspace = !!window.Alt;
 var scene, camera, renderer;
 var cursorEvents, firebaseSync;
 var cube;
+var cubeHeight;
 var sound;
 
 var mainCount = 0;
@@ -120,7 +121,7 @@ function initScene() {
 	// note cube.scale = scale won't work, same for cube.position
 
 	var cubeBoundingBox = new THREE.Box3().setFromObject( cube );
-	var cubeHeight = Math.abs( cubeBoundingBox.max.y - cubeBoundingBox.min.y );
+	cubeHeight = Math.abs( cubeBoundingBox.max.y - cubeBoundingBox.min.y );
 	cube.position.y += cubeHeight / 2; // off the ground
 	console.log("cubeHeight", cubeHeight);
 
@@ -160,8 +161,7 @@ function initScene() {
 
 function initEvents() {
 
-	//cursorEvents = new CursorEvents(); // XXX
-	cursorEvents = new CursorEvents( { TRACE: true }); // XXX
+	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
 
 	cursorEvents.addObject( cube );
@@ -169,26 +169,12 @@ function initEvents() {
 	cube.addEventListener( "holocursordown", function( event ) {
 		if (!sound) loadSoundEffect();
 		sound.play();
-		this.position.y += 2;
-		firebaseSync.saveObject( this );	
-	});
-
-	cube.addEventListener( "holocursorup",  function( event ) {
-		this.position.y -= 2;
-		firebaseSync.saveObject( this );	
 	});
 
 	// In addition to defining event listeners, you can apply pre-made effects
 	// or create your own effects that work with the CursorEvents framework.
 
-	//var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
-	var dragParams = { 
-		firebaseSync: firebaseSync,
-		dragPlaneWidth: window.innerWidth,
-		dragPlaneDepth: ( window.innerDepth || camera.far ),
-		TRACE: true,
-	};
-	var dragEffect = new DragPlaneEffect( dragParams );
+	var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
 	var hoverEffect = new ColorHoverEffect( { color: new THREE.Color(0, 1, 1) });
 	// hover listens for holocursorenter / holocursorleave for hover over / out
 

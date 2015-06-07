@@ -182,7 +182,6 @@ function initScene() {
 
 	// dragPlane should not be bigger than our bounding box, if it is then
 	// objects will disappear when they are moved outside of the box.
-	// In Altspace, display volume is 5 meters.
 	var dragPlaneSize = sceneInfo.dragPlaneSize;
 	var dragPlaneGeo = new THREE.BoxGeometry( dragPlaneSize, 0.25, dragPlaneSize );
 	var dragPlaneMat = new THREE.MeshBasicMaterial({
@@ -193,10 +192,7 @@ function initScene() {
 	});
 	dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
 	dragPlane.name = "drag plane";
-
-	// Add dragPlane to scene, since we need it for raycasting.
-	// No need to add to Altspace since it is not visible.
-	scene.add( dragPlane );
+	// Do not add dragPlane to scene, since we move it around for raycsting.
 
 	// For debugging only, to visualize the raycast intersection point.
 	if ( showDragPoint ) {

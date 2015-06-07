@@ -28,19 +28,13 @@ DragPlaneEffect = function ( params ) {
   this.orbitControls = p.orbitControls || null;
 
   this.dragPlane = p.dragPlane || null;
-  this.dragPlaneWidth = p.dragPlaneWidth || null;
-  this.dragPlaneHeight = p.dragPlaneHeight || null;
-  this.dragPlaneDepth = p.dragPlaneDepth || null;
 
   if ( !this.dragPlane ) {
     // Default drag plane, for demo only! Normally it should be passed in,
     // with location and width/depth matching drag area of your scene.
+    // Do not add dragPlane to the scene, or raycasting doesn't work properly.
     this.dragPlane = new THREE.Mesh( 
-      new THREE.BoxGeometry(
-        this.dragPlaneWidth  || 10000,
-        this.dragPlaneHeight || 0.25,
-        this.dragPlaneDepth  || 10000
-      ),
+      new THREE.BoxGeometry( window.innerWidth, 0.25, window.innerDepth || 2000 ),
       new THREE.MeshBasicMaterial( { transparent: true, opacity: 0.25 })
     );
 
@@ -97,11 +91,11 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
     // Raise/lower the drag plane to match the drag start point.
     this.dragPlane.position.y = intersectionPoint.y;
-    if ( this.TRACE ) console.log( "Moving dragPlane.position.y to " + intersectionPoint.y );
 
     // Force update, otherwise old position of dragPlane is used when raycaster
     // computes drag point later, and objects appear to "jump" when selected.
     this.dragPlane.updateMatrixWorld();
+    if ( this.TRACE ) console.log( "Moving dragPlane.position.y to " + intersectionPoint.y );
 
     // Remember difference between center of object and drag point.
     var objectCenterPoint = this.dragObject.position.clone();
