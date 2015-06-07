@@ -66,10 +66,9 @@ var mainCount = 0;
 
 function main() {
 
-	// Currently there is a bug where AltContentLoaded gets called repeatedly.
+	// TODO: remove this once bug where AltContentLoaded getting called repeatedly is fixed.
 	mainCount++;
 	if ( mainCount > 1 ) {
-		//console.error(mainEventName + " called " + mainCount + " times, ignoring.")
 		if ( mainCount === 2 ) console.error("AltContentLoaded called multiple times");
 		return;
 	}

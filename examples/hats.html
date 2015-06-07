@@ -65,6 +65,7 @@ var users = {};
 var avatarLookupByUserId = {};
 var userIdToPlaceholder = {};
 var localUserId;
+var isAltContentLoaded = false;
 
 var gameState;
 
@@ -88,6 +89,8 @@ if (inAltspace) {
 	});
 
 	window.addEventListener("AltContentLoaded", function(event) { 
+		if ( isAltContentLoaded ) return;
+		isAltContentLoaded = true;
 		loadModels();
 	});
 }
