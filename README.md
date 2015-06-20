@@ -6,6 +6,7 @@ The Altspace SDK is in beta and actively under development. **It is critically i
 
 Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltRender (for example) can be linked from http://sdk.altvr.com/src/AltRenderer.js
 
+
 ## Scope of Current SDK
 
 Altspace Web Apps are powered by a custom renderer that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
@@ -145,6 +146,10 @@ Now this basic app is complete! For details, see the source code: [examples/spin
 
 More documentation is available in the [AltspaceSDK Wiki], including Tutorials and Tips for Developers.  
 
+Videos
+* [Live Coding Tutorial]
+* [AltspaceVR looking for SDK Collaborators]
+
 Or dive into the source code, organized as follows:
 * [src](src) - source code for this SDK; top-level files are required by all Altspace web apps
 * [src/cursor](src/cursor) - Extends the Cursor API to implement per-object event dispatch, etc.
@@ -183,5 +188,7 @@ Or dive into the source code, organized as follows:
 [cube.obj]: examples/spinning_cube/cube.obj
 [cube.mtl]: examples/spinning_cube/cube.mtl
 
+[Live Coding Tutorial]: https://www.youtube.com/watch?v=R47GvXmvmec
+[AltspaceVR looking for SDK Collaborators](https://www.youtube.com/watch?v=dk8i5or4PJI
 
 
