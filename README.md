@@ -189,6 +189,6 @@ Or dive into the source code, organized as follows:
 [cube.mtl]: examples/spinning_cube/cube.mtl
 
 [Live Coding Tutorial]: https://www.youtube.com/watch?v=R47GvXmvmec
-[AltspaceVR looking for SDK Collaborators](https://www.youtube.com/watch?v=dk8i5or4PJI
+[AltspaceVR looking for SDK Collaborators]: https://www.youtube.com/watch?v=dk8i5or4PJI
 
 
