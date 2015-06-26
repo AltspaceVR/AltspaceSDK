@@ -7,10 +7,46 @@ THREE.AltSceneExporter = function () {
 			getGeometries(obj.children[i], geometries);
 		}
 	};
-	var serializeGeometries = function (output, geometries) {
+	var serializeGeometries = function (scene, output) {
+		var geometries = {};
+		getGeometries(scene, geometries);
 		for (var j = 0, l = output.geometries.length; j < l; j++) {
 			output.geometries[j].data = THREE.Geometry.prototype.toJSON.call(
 				geometries[output.geometries[j].uuid].clone()).data;
+		}
+	};
+
+	var getMaterials = function (obj, materials) {
+		if (obj.material) {
+			materials[obj.material.uuid] = obj.material;
+		}
+		if (!obj.children) { return; }
+		for (var i = 0, l = obj.children.length; i < l; i ++) {
+			getMaterials(obj.children[i], materials);
+		}
+	};
+	var getDataUri = function (image) {
+		var canvas = document.createElement('canvas');
+		canvas.width = image.width;
+		canvas.height = image.height;
+		var context = canvas.getContext('2d');
+		context.drawImage(image, 0, 0, image.width, image.height);
+		return canvas.toDataURL('image/png');
+	};
+	var serializeMaterials = function (scene, output) {
+		var materials = {};
+		getMaterials(scene, materials);
+		for (var j = 0, l = output.materials.length; j < l; j++) {
+			var material = materials[output.materials[j].uuid];
+			if (material.map) {
+				if (material.map.sourceFile && !material.map.image) {
+					output.materials[j].loaded = false;
+				}
+				else {
+					output.materials[j].loaded = true;
+					output.materials[j].textureDataUri = getDataUri(material.map.image);
+				}
+			}
 		}
 	};
 
@@ -53,9 +89,8 @@ THREE.AltSceneExporter = function () {
 
 	this.parse = function (scene) {
 		var output = scene.toJSON();
-		var geometries = {};
-		getGeometries(scene, geometries);
-		serializeGeometries(output, geometries);
+		serializeGeometries(scene, output);
+		serializeMaterials(scene, output);
 		serializeTransforms(output.object, scene);
 		return output;
 	};
