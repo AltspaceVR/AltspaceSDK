@@ -7,45 +7,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Adding Cubes Example</title>
+		<title>Adding Cubes Example</title>
 
-	<script src="../lib/three.js"></script>
-	<script src="../lib/firebase.js"></script>
+		<!-- Required by AltOBJMTLLoader.js -->
+        <script src="../lib/three.js"></script>
+		<script src="../lib/MTLLoader.js"></script>
+		<script src="../lib/OBJMTLLoader.js"></script>
+		<script src="../lib/firebase.js"></script>
 
-	<script src="../src/AltSceneExporter.js"></script>
-	<script src="../src/AltRenderer.js"></script>
-	<script src="../src/cursor/CursorEvents.js"></script>
-	<script src="../src/cursor/AltObjectControls.js"></script>
-	<script src="../src/sync/FirebaseSync.js"></script>
+		<script src="../src/AltOBJMTLLoader.js"></script>
+		<script src="../src/AltRenderer.js"></script>
+		<script src="../src/cursor/CursorEvents.js"></script>
+		<script src="../src/cursor/AltObjectControls.js"></script>
+		<script src="../src/sync/FirebaseSync.js"></script>
 
-	<script src="../src/cursor/ColorHoverEffect.js"></script>
-	<script src="../src/cursor/DragPlaneEffect.js"></script>
+		<script src="../src/cursor/ColorHoverEffect.js"></script>
+		<script src="../src/cursor/DragPlaneEffect.js"></script>
 
-	<style>
-		body {
-			background-color: rgba(0, 0, 0, 0);
-			margin: 0px;
-			overflow: hidden;
+		<style>
+			body {
+				background-color: rgba(0, 0, 0, 0);
+				margin: 0px;
+				overflow: hidden;
 
-			color: #FFFFFF;
-			font-family: Monospace;
-			font-size: 18px;
-			text-align: center;
-		}
-		#info {
-			position: absolute;
-			top: 0px;
-			width: 100%;
-			padding: 10px;
-		}
-	</style>
+				color: #FFFFFF;
+				font-family: Monospace;
+				font-size: 18px;
+				text-align: center;
+			}
+			#info {
+				position: absolute;
+				top: 0px;
+				width: 100%;
+				padding: 10px;
+			}
+		</style>
 
 </head>
 <body>
 <body>
-	<div id="info">
-		<a href="http://github.com/AltspaceVR/AltspaceSDK"target="_blank">AltspaceSDK</a> - Adding Cubes - CLICK to Delete
-	</div>
+		<div id="info">
+				<a href="http://github.com/AltspaceVR/AltspaceSDK"target="_blank">AltspaceSDK</a> - Adding Cubes - CLICK to Delete
+		</div>
 </body>
 
 <script>
@@ -61,8 +64,15 @@ var intervalId;
 var gameStats = new THREE.Object3D();
 gameStats.name = "gameStats";
 
-initScene();
-initSync();
+// start off by loading .obj and .mtl files
+loadModels();
+
+function onModelsLoaded() {
+
+	initScene();
+	initSync();
+
+}
 
 function onSyncReady() {
 
@@ -119,7 +129,7 @@ function createCube( key, syncData ) {
 	cursorEvents.addObject( newCube );
 
 	newCube.addEventListener( "holocursordown", function( event ) {
-		deleteCube( this.name, this );	
+	    deleteCube( this.name, this );	
 		console.log("removing local cube", this.name);
 	}.bind( newCube ));
 
@@ -136,15 +146,26 @@ function deleteCube( key, syncData ) {
 	delete cubeLookupByKey[ key ];
 }
 
+function loadModels() {
+
+	var loader = new THREE.AltOBJMTLLoader();
+
+	// loader assumes .mtl file has same basename as .obj file
+	var filename = "models/AltspaceCube/cube.obj";
+	loader.load(filename, function ( loadedObject ) {
+
+		console.log("Loaded object from " + filename, loadedObject);
+		cube = loadedObject;
+		onModelsLoaded();
+		
+	});
+
+	// NO CODE HERE unless you want it to run before models finish loading.
+}
+
 function initScene() {
 
 	scene = new THREE.Scene();
-
-	cube = new THREE.Mesh(
-		new THREE.BoxGeometry(5, 5, 5),
-		new THREE.MeshBasicMaterial({color: 'red'})
-	);
-	scene.add(cube);
 
 	if ( inAltspace ) {
 
@@ -152,8 +173,10 @@ function initScene() {
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
-		var scale = new THREE.Vector3(20, 20, 20);
+		var scale = new THREE.Vector3( 2, 2, 2);
 		cube.scale.copy( scale );
+		// or cube.scale.set( scale.x, scale.y, scale.z)
+		// note cube.scale = scale won't work, same for cube.position
 		cube.position.y = 25; // off the ground
 
 	} else {
@@ -169,9 +192,13 @@ function initScene() {
 		camera.position.y = 25;	// slightly above origin
 		camera.lookAt( scene.position );
 
+
+		// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
 		var ambient = new THREE.AmbientLight( 0xffffff );
 		scene.add( ambient );
 	}
+
+	// Don't add cube to scene, just use it for cloning.
 
 }
 
