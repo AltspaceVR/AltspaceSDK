@@ -8,6 +8,7 @@ THREE.AltSceneExporter = function () {
 		}
 	};
 	var serializeGeometries = function (scene, output) {
+		if (!output.geometries) { return; }
 		var geometries = {};
 		getGeometries(scene, geometries);
 		for (var j = 0, l = output.geometries.length; j < l; j++) {
@@ -34,6 +35,7 @@ THREE.AltSceneExporter = function () {
 		return canvas.toDataURL('image/png');
 	};
 	var serializeMaterials = function (scene, output) {
+		if (!output.materials) { return; }
 		var materials = {};
 		getMaterials(scene, materials);
 		for (var j = 0, l = output.materials.length; j < l; j++) {
@@ -60,22 +62,25 @@ THREE.AltSceneExporter = function () {
 	};
 
 	var serializeTransforms = function (output, obj) {
+		var objPos = obj.getWorldPosition();
+		var objQuat = obj.getWorldQuaternion();
+		var objScale = obj.getWorldScale();
 		output.transform = {
 			position: {
-				x: obj.position.x,
-				y: obj.position.y,
-				z: obj.position.z
+				x: objPos.x,
+				y: objPos.y,
+				z: objPos.z
 			},
 			rotation: {
-				x: obj.quaternion.x,
-				y: obj.quaternion.y,
-				z: obj.quaternion.z,
-				w: obj.quaternion.w
+				x: objQuat.x,
+				y: objQuat.y,
+				z: objQuat.z,
+				w: objQuat.w
 			},
 			scale: {
-				x: obj.scale.x,
-				y: obj.scale.y,
-				z: obj.scale.z
+				x: objScale.x,
+				y: objScale.y,
+				z: objScale.z
 			}
 		};
 		if (output.children) {
