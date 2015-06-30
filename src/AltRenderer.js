@@ -116,7 +116,7 @@ THREE.AltRenderer = function ( parameters ) {
 			scene.updateMatrixWorld();
 			var serializedScene;
 			if (exporter) {
-				// TODO: Either diff the scene or avoid exporting the entire
+				// TODOBP: Either diff the scene or avoid exporting the entire
 				// thing on each render call.
 				serializedScene = JSON.stringify(exporter.parse(scene));
 			}
