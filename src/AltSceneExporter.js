@@ -61,7 +61,7 @@ THREE.AltSceneExporter = function () {
 		}
 	};
 
-	var serializeTransforms = function (output, obj) {
+	var serializeTransforms = function (obj, output) {
 		var objPos = obj.getWorldPosition();
 		var objQuat = obj.getWorldQuaternion();
 		var objScale = obj.getWorldScale();
@@ -96,7 +96,7 @@ THREE.AltSceneExporter = function () {
 		var output = scene.toJSON();
 		serializeGeometries(scene, output);
 		serializeMaterials(scene, output);
-		serializeTransforms(output.object, scene);
+		serializeTransforms(scene, output.object);
 		return output;
 	};
 };
