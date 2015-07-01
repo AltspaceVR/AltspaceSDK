@@ -13,7 +13,7 @@ THREE.AltSceneExporter = function () {
 		getGeometries(scene, geometries);
 		for (var j = 0, l = output.geometries.length; j < l; j++) {
 			output.geometries[j].data = THREE.Geometry.prototype.toJSON.call(
-				geometries[output.geometries[j].uuid].clone()).data;
+				geometries[output.geometries[j].uuid]).data;
 		}
 	};
 
