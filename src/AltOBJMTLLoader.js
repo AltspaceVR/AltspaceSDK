@@ -20,16 +20,14 @@ THREE.AltOBJMTLLoader.prototype = {
 	cache: {},
 
 	load: function ( objUrl, onLoad, onProgress, onError) {
+
+		var cache = this.cache;
+
 		function relativeToAbsolutePath(href) {
 			var link = document.createElement("a");
 			link.href = href;
 			return (link.protocol+"//"+link.host+link.pathname+link.search+link.hash);
 		}
-		objUrl = relativeToAbsolutePath(objUrl);
-		var mtlUrl = objUrl.slice(0, objUrl.length - 3) + 'mtl';
-		var loader;
-
-		var cache = this.cache;
 
 		function loadInAltspace(){
 			var options = {};
@@ -47,10 +45,14 @@ THREE.AltOBJMTLLoader.prototype = {
 			onLoad(object);
 		}
 
+		objUrl = relativeToAbsolutePath(objUrl);
+
+		var mtlUrl = objUrl.slice(0, objUrl.length - 3) + 'mtl';
+
 		if (cache.hasOwnProperty(objUrl)){
 			innerOnLoad(cache[objUrl].clone());
 		} else {
-			loader = new THREE.OBJMTLLoader( this.manager ); //It's important that we have the manager call it's callbacks if this is ever disabled 
+			var loader = new THREE.OBJMTLLoader( this.manager ); //It's important that we have the manager call it's callbacks if this is ever disabled 
 			loader.load(objUrl, mtlUrl, innerOnLoad.bind(this), onProgress, onError);
 		}
 
