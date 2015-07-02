@@ -17,10 +17,7 @@ THREE.AltRenderer = function ( parameters ) {
 	var lastSerializedScene;
 
 	Object.defineProperty(this, "domElement", {
-		get : function(){
-			console.log("AltRenderer.domElement not yet implemented");
-			return null;
-		}
+		get : function(){console.log("AltRenderer.domElement not yet implemented"); return null}
 	});
 
 	function serializeScene(scene){
@@ -35,7 +32,7 @@ THREE.AltRenderer = function ( parameters ) {
 				'\n';
 			}
 			for(var i = 0, max = object3d.children.length; i < max; i++){
-				serializeObjects(object3d.children[i]);
+				serializeObjects(object3d.children[i])
 			}
 		}
 
@@ -56,7 +53,7 @@ THREE.AltRenderer = function ( parameters ) {
 			floatArray[1] = color.g;
 			floatArray[2] = color.b;
 
-			colorString = arrayBufferToBase64(buffer);
+			colorString = arrayBufferToBase64(buffer); 
 		}
 		return colorString;
 	}
@@ -87,7 +84,7 @@ THREE.AltRenderer = function ( parameters ) {
 
 		transform += arrayBufferToBase64(buffer);
 
-		return transform;
+	 	return transform;
 	}
 
 	function arrayBufferToBase64( buffer ) {
@@ -109,10 +106,9 @@ THREE.AltRenderer = function ( parameters ) {
 	}
 
 	this.render = throttle(function ( scene ) {
-		if(this.inAltspace ){
+		if(this.inAltspace){
 			scene.updateMatrixWorld();
-			var serializedScene;
-			serializedScene = serializeScene(scene);
+			var serializedScene = serializeScene(scene);
 
 			if(serializedScene != lastSerializedScene)//Would be nice if we could find this out prior to serialization
 				sendToAltspace( serializedScene );
