@@ -15,9 +15,6 @@ THREE.AltRenderer = function ( parameters ) {
 	this.inAltspace = !!window.engine;
 
 	var lastSerializedScene;
-	if (THREE.AltSceneExporter) {
-		var exporter = new THREE.AltSceneExporter();
-	}
 
 	Object.defineProperty(this, "domElement", {
 		get : function(){
@@ -115,14 +112,7 @@ THREE.AltRenderer = function ( parameters ) {
 		if(this.inAltspace ){
 			scene.updateMatrixWorld();
 			var serializedScene;
-			if (exporter) {
-				// TODOBP: Either diff the scene or avoid exporting the entire
-				// thing on each render call.
-				serializedScene = JSON.stringify(exporter.parse(scene));
-			}
-			else {
-				serializedScene = serializeScene(scene);
-			}
+			serializedScene = serializeScene(scene);
 
 			if(serializedScene != lastSerializedScene)//Would be nice if we could find this out prior to serialization
 				sendToAltspace( serializedScene );

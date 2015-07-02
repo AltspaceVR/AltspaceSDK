@@ -29,13 +29,6 @@ THREE.AltOBJMTLLoader.prototype = {
 		var mtlUrl = objUrl.slice(0, objUrl.length - 3) + 'mtl';
 		var loader;
 
-		if (THREE.AltSceneExporter) {
-			loader = new THREE.OBJMTLLoader( this.manager );
-			loader.load(objUrl, mtlUrl, onLoad, onProgress, onError);
-			// Bypass Unity's OBJ loader since we're using the new exporter/renderer.
-			return;
-		}
-
 		var cache = this.cache;
 
 		function loadInAltspace(){
