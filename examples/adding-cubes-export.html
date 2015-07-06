@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<title>Adding Cubes Example</title>
+		<title>Adding Cubes Export Example</title>
 
 		<!-- Required by AltOBJMTLLoader.js -->
         <script src="../lib/three.js"></script>
@@ -15,7 +15,6 @@
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/firebase.js"></script>
 
-		<script src="../src/AltOBJMTLLoader.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
 		<script src="../src/sync/FirebaseSync.js"></script>
@@ -125,9 +124,9 @@ function createCube( key, syncData ) {
 	scene.add( newCube );
 	firebaseSync.addObject( newCube, key );
 
-	cursorEvents.addObject( newCube );
+	cursorEvents.addObject( newCube.children[0] );
 
-	newCube.addEventListener( "holocursordown", function( event ) {
+	newCube.children[0].addEventListener( "holocursordown", function( event ) {
 	    deleteCube( this.name, this );	
 		console.log("removing local cube", this.name);
 	}.bind( newCube ));
@@ -147,13 +146,14 @@ function deleteCube( key, syncData ) {
 
 function loadModels() {
 
-	var loader = new THREE.AltOBJMTLLoader();
+	var loader = new THREE.OBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = "models/AltspaceCube/cube.obj";
-	loader.load(filename, function ( loadedObject ) {
+	var objFilename = "models/AltspaceCube/cube.obj";
+	var mtlFilename = "models/AltspaceCube/cube.mtl";
+	loader.load(objFilename, mtlFilename, function ( loadedObject ) {
 
-		console.log("Loaded object from " + filename, loadedObject);
+		console.log("Loaded object from " + objFilename, loadedObject);
 		cube = loadedObject;
 		onModelsLoaded();
 		
@@ -168,7 +168,7 @@ function initScene() {
 
 	if ( inAltspace ) {
 
-		renderer = altspace.getThreeJSRenderer();
+		renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
