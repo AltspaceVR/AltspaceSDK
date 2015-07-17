@@ -162,7 +162,7 @@ function initEvents() {
 	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
 
-	cursorEvents.addObject( cube.children[0] );
+	cursorEvents.addObject( cube );
 
 	cube.addEventListener( "holocursordown", function( event ) {
 		if (!sound) loadSoundEffect();
@@ -177,7 +177,7 @@ function initEvents() {
 	// hover listens for holocursorenter / holocursorleave for hover over / out
 
 	cursorEvents.addEffect( dragEffect, cube );
-	cursorEvents.addEffect( hoverEffect, cube.children[0] );
+	cursorEvents.addEffect( hoverEffect, cube );
 
 }
 

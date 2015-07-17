@@ -63,6 +63,13 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
     object.userData.tintColor = this.tintColor;
     object.position.x += 0.001; // hack to force AltRender to redraw scene
 
+    // workaround since deep-tint which isn't working with new renderer
+    object.traverse( function(child) {
+
+      child.userData.tintColor = this.tintColor;
+
+    }.bind( this ));
+
   } else {
 
     object.traverse( function(child) { // TODO: Is traverse still needed?
@@ -90,6 +97,13 @@ ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
     object.userData.tintColor = object.userData.origTintColor;
     object.position.x += 0.001; // hack to force AltRender to redraw scene
+
+    // workaround since deep-tint isn't working with new renderer
+    object.traverse( function(child) {
+
+      child.userData.tintColor = object.userData.origTintColor;
+
+    });
 
   } else {
 

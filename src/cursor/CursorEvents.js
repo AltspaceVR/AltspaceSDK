@@ -23,6 +23,8 @@ CursorEvents = function( params ) {
 
 	this.objectLookup = {};  // objectLookup[ object.uuid ] = object
 
+	this.childMeshToObject = {};  // childMeshToObject[ child.uuid ] = object 
+
 	// Cursor Effects
 	this.objectEffects = {};  // objectEffects[ object.uuid ] = [ effect1, effect2, ... ]
 	this.effects = [];  // flat list of all effects
@@ -137,10 +139,23 @@ CursorEvents.prototype.addObject = function( object ) {
     if ( this.objectControls ) {
     	this.objectControls.add( object );
     }
+
+    if ( this.inAltspace ) {
+
+	    // workaround for events fired on child mesh instead of top-level object
+	    object.traverse( function( child ) {
+
+			if ( child instanceof THREE.Mesh ) {
+				this.childMeshToObject[ child.uuid ] = object;
+			}
+
+	    }.bind(this));
+
+    }
+
   }
 
 };
-
 
 CursorEvents.prototype._holoCursorDispatch = function( event ) {
 
@@ -156,13 +171,23 @@ CursorEvents.prototype._holoCursorDispatch = function( event ) {
 
 	if ( objectEvent.detail.targetUuid ) {
 
-		var targetObject = this.objectLookup[ objectEvent.detail.targetUuid ];
+		var targetUuid = objectEvent.detail.targetUuid;
+		var targetObject = this.objectLookup[ targetUuid ];
+
+		if ( !targetObject && this.inAltspace ) {
+		    // workaround for events fired on child mesh instead of top-level object
+			targetObject = this.childMeshToObject[ targetUuid ];
+		}
+
 		if ( targetObject ) {
 
 			targetObject.dispatchEvent( objectEvent );
 
 			this._dispatchEffects( targetObject, objectEvent );
 
+		} else {
+			// This shouldn't happen.
+			console.warn("CursorEvents failed to find target object for uuid ", targetUuid);
 		}
 
 	} else {
