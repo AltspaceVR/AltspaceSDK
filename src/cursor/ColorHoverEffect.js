@@ -10,111 +10,125 @@ ColorHoverEffect = function ( params ) {
 
 	this.hoverObject;
  
-  var p = params || {};
+	var p = params || {};
 
-  if ( p.color && ! (p.color instanceof THREE.Color )) {
-    console.error("Color should be instance of THREE.Color", p.color);
-    return ; // valid color required
-  }
+	if ( p.color && ! (p.color instanceof THREE.Color )) {
+		console.error("Color should be instance of THREE.Color", p.color);
+		return ; // valid color required
+	}
 
-  this.color = p.color || new THREE.Color(1, 1, 0); // yellow-ish
-  this.tintColor = { r: this.color.r, g: this.color.g, b: this.color.b };
+	this.color = p.color || new THREE.Color(1, 1, 0); // yellow-ish
+	this.tintColor = { r: this.color.r, g: this.color.g, b: this.color.b };
 
-  this.dragObject;
+	this.dragObject;
 
 };
 
 
 ColorHoverEffect.prototype.holocursorenter = function( object ) {
 
-  if ( this.dragObject ) return ; // ignore hover events during drag
+	if ( this.dragObject ) return ; // ignore hover events during drag
 
-  if ( this.hoverObject ) {
-    this.unhoverEffect( this.hoverObject );
-  }
+	if ( this.hoverObject ) {
+		this.unhoverEffect( this.hoverObject );
+	}
 
-  this.hoverEffect( object );
+	this.hoverEffect( object );
 
 };
 
 
 ColorHoverEffect.prototype.holocursorleave = function( object ) {
 
-  if ( this.dragObject ) return ; // ignore hover events during drag
+	if ( this.dragObject ) return ; // ignore hover events during drag
 
-  if ( this.hoverObject === object ) {
-    this.unhoverEffect( object );
-  }
+	if ( this.hoverObject === object ) {
+		this.unhoverEffect( object );
+	}
 
 };
 
 
 ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
-  this.hoverObject = object;
+	this.hoverObject = object;
 
-  // Reddish tint color
-  if ( inAltspace ) {
+	// Reddish tint color
+	if ( inAltspace ) {
 
-    if (! object.userData.origTintColor ) {
-      object.userData.origTintColor = object.userData.tintColor;
-    }
+		if (! object.userData.origTintColor ) {
+			object.userData.origTintColor = object.userData.tintColor;
+		}
 
-    object.userData.tintColor = this.tintColor;
-    object.position.x += 0.001; // hack to force AltRender to redraw scene
+		object.userData.tintColor = this.tintColor;
+		object.position.x += 0.001; // hack to force AltRender to redraw scene
 
-  } else {
+		// workaround since deep-tint which isn't working with new renderer
+		object.traverse( function(child) {
 
-    object.traverse( function(child) { // TODO: Is traverse still needed?
-      if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
+			child.userData.tintColor = this.tintColor;
 
-        if (! child.userData.origAmbientColor ) {
-          child.userData.origAmbientColor = child.material.ambient;
-        }
+		}.bind( this ));
 
-        child.material.ambient = this.color;
+	} else {
 
-      }
-    }.bind( this )); 
+		object.traverse( function(child) { // TODO: Is traverse still needed?
+			if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
 
-  }
+				if (! child.userData.origAmbientColor ) {
+					child.userData.origAmbientColor = child.material.ambient;
+				}
+
+				child.material.ambient = this.color;
+
+			}
+		}.bind( this )); 
+
+	}
 
 };
 
 
 ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
-  this.hoverObject = null;
+	this.hoverObject = null;
 
-  if ( inAltspace ) {
+	if ( inAltspace ) {
 
-    object.userData.tintColor = object.userData.origTintColor;
-    object.position.x += 0.001; // hack to force AltRender to redraw scene
+		object.userData.tintColor = object.userData.origTintColor;
+		object.position.x += 0.001; // hack to force AltRender to redraw scene
 
-  } else {
+		// workaround since deep-tint isn't working with new renderer
+		object.traverse( function(child) {
 
-    object.traverse( function(child) {
+			child.userData.tintColor = object.userData.origTintColor;
 
-      if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
-        if (child.userData.origAmbientColor) {
-          child.material.ambient = child.userData.origAmbientColor;
-        } else {
-          console.error("Cannot clear hover effect", child);
-        }
-      }
+		});
 
-    }); 
+	} else {
 
-  }
+		object.traverse( function(child) {
+
+			if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
+				if (child.userData.origAmbientColor) {
+					child.material.ambient = child.userData.origAmbientColor;
+				} else {
+					console.error("Cannot clear hover effect", child);
+				}
+			}
+
+		}); 
+
+	}
 };
 
 
 ColorHoverEffect.prototype.update = function( effectsState ) {
 
-  // Remember if a drag is in progress.
-  this.dragObject = effectsState.dragObject;
+	// Remember if a drag is in progress.
+	this.dragObject = effectsState.dragObject;
 
-  // No need to update the effectsState, so return nothing.
+	// No need to update the effectsState, so return nothing.
 
 };
 

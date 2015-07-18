@@ -23,6 +23,8 @@ CursorEvents = function( params ) {
 
 	this.objectLookup = {};  // objectLookup[ object.uuid ] = object
 
+	this.childMeshToObject = {};  // childMeshToObject[ child.uuid ] = object 
+
 	// Cursor Effects
 	this.objectEffects = {};  // objectEffects[ object.uuid ] = [ effect1, effect2, ... ]
 	this.effects = [];  // flat list of all effects
@@ -123,24 +125,37 @@ CursorEvents.prototype.update = function() {
 };
 
 CursorEvents.prototype.addObject = function( object ) {
-  // TODO: Corresponding removeEffect method.
+	// TODO: Corresponding removeEffect method.
 
-  if ( !object ) {
-    console.error("CursorEvents.addObject expected one argument");
-    return ; // sanity check
-  }
+	if ( !object ) {
+		console.error("CursorEvents.addObject expected one argument");
+		return ; // sanity check
+	}
 
-  if ( !this.objectLookup[ object.uuid ] ) {
+	if ( !this.objectLookup[ object.uuid ] ) {
 
-    this.objectLookup[ object.uuid ] = object;
+		this.objectLookup[ object.uuid ] = object;
 
-    if ( this.objectControls ) {
-    	this.objectControls.add( object );
-    }
-  }
+		if ( this.objectControls ) {
+			this.objectControls.add( object );
+		}
+
+		if ( this.inAltspace ) {
+
+			// workaround for events fired on child mesh instead of top-level object
+			object.traverse( function( child ) {
+
+				if ( child instanceof THREE.Mesh ) {
+					this.childMeshToObject[ child.uuid ] = object;
+				}
+
+			}.bind(this));
+
+		}
+
+	}
 
 };
-
 
 CursorEvents.prototype._holoCursorDispatch = function( event ) {
 
@@ -156,13 +171,23 @@ CursorEvents.prototype._holoCursorDispatch = function( event ) {
 
 	if ( objectEvent.detail.targetUuid ) {
 
-		var targetObject = this.objectLookup[ objectEvent.detail.targetUuid ];
+		var targetUuid = objectEvent.detail.targetUuid;
+		var targetObject = this.objectLookup[ targetUuid ];
+
+		if ( !targetObject && this.inAltspace ) {
+			// workaround for events fired on child mesh instead of top-level object
+			targetObject = this.childMeshToObject[ targetUuid ];
+		}
+
 		if ( targetObject ) {
 
 			targetObject.dispatchEvent( objectEvent );
 
 			this._dispatchEffects( targetObject, objectEvent );
 
+		} else {
+			// This shouldn't happen.
+			console.warn("CursorEvents failed to find target object for uuid ", targetUuid);
 		}
 
 	} else {
@@ -207,7 +232,7 @@ CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail )
 		cursorRay: eventDetail.raycaster.ray,
 	};
 
-    this._holoCursorDispatch( mockCursorEvent );
+	this._holoCursorDispatch( mockCursorEvent );
 
 };
 
@@ -240,51 +265,51 @@ CursorEvents.prototype._createEventDetail = function( event ) {
 
 CursorEvents.prototype._dispatchEffects = function( object, event ) {
 
-  // Save most recent event, for effects that track cursorRay (like drag).
-  this.effectsState.lastEvent = event;
+	// Save most recent event, for effects that track cursorRay (like drag).
+	this.effectsState.lastEvent = event;
 
-  // No object (e.g. move event with no defaultTarget) or no effects for object.
-  if ( !object || !this.objectEffects[ object.uuid ] ) return ;
+	// No object (e.g. move event with no defaultTarget) or no effects for object.
+	if ( !object || !this.objectEffects[ object.uuid ] ) return ;
 
-  var effects = this.objectEffects[ object.uuid ];
-  for ( var i=0; i < effects.length; i++) {
+	var effects = this.objectEffects[ object.uuid ];
+	for ( var i=0; i < effects.length; i++) {
 
-    var effect = effects[ i ];
-    var effectCallback = null;
+		var effect = effects[ i ];
+		var effectCallback = null;
 
-    if ( effect[ event.type ]) {
+		if ( effect[ event.type ]) {
 
-      effectCallback = effect[ event.type ].bind( effect );
-      effectCallback( object, event );
-    }
-  }
+			effectCallback = effect[ event.type ].bind( effect );
+			effectCallback( object, event );
+		}
+	}
 
 };
 
 
 CursorEvents.prototype._updateEffects = function() {
 
-  // Call update( this.effectState ) on all effects that define it.
-  // Optional return value is the new effect state, useful for effects
-  // that need to share state between them. Note we are chaining updates,
-  // so an effect that depends on state managed by other events should
-  // be added after them.
+	// Call update( this.effectState ) on all effects that define it.
+	// Optional return value is the new effect state, useful for effects
+	// that need to share state between them. Note we are chaining updates,
+	// so an effect that depends on state managed by other events should
+	// be added after them.
 
-  for (var i=0; i < this.effects.length; i++) {
+	for (var i=0; i < this.effects.length; i++) {
 
-    var effect = this.effects[i];
-    if ( effect.update ) {
+		var effect = this.effects[i];
+		if ( effect.update ) {
 
-      var newEffectsState = effect.update( this.effectsState );
-      if ( newEffectsState ) {
+			var newEffectsState = effect.update( this.effectsState );
+			if ( newEffectsState ) {
 
-        this.effectsState = newEffectsState;
+				this.effectsState = newEffectsState;
 
-      }
+			}
 
-    }
-    
-  }
+		}
+
+	}
 
 };
 
