@@ -163,7 +163,7 @@ function initEvents() {
 
 	cursorEvents.addObject( cube );
 
-	cube.addEventListener( "holocursordown", function( event ) {
+	cube.addEventListener( "cursordown", function( event ) {
 		if (!sound) loadSoundEffect();
 		sound.play();
 	});

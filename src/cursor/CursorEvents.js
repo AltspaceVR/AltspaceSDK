@@ -34,14 +34,21 @@ CursorEvents = function( params ) {
 
 	if ( this.inAltspace ) {
 
-		var dispatcher = this._holoCursorDispatch.bind( this ); 
+		var dispatcher = this._cursorEventDispatch.bind( this ); 
 
-		// Cursor Events from Altspace
+		// TEMP until we decommission "holo" prefix
 		window.addEventListener("holocursormove", dispatcher);
 		window.addEventListener("holocursordown", dispatcher);
 		window.addEventListener("holocursorup", dispatcher);
 		window.addEventListener("holocursorenter", dispatcher);
 		window.addEventListener("holocursorleave", dispatcher);
+
+		// Cursor Events from Altspace
+		window.addEventListener("cursormove", dispatcher);
+		window.addEventListener("cursordown", dispatcher);
+		window.addEventListener("cursorup", dispatcher);
+		window.addEventListener("cursorenter", dispatcher);
+		window.addEventListener("cursorleave", dispatcher);
 
 	}
 
@@ -157,7 +164,7 @@ CursorEvents.prototype.addObject = function( object ) {
 
 };
 
-CursorEvents.prototype._holoCursorDispatch = function( event ) {
+CursorEvents.prototype._cursorEventDispatch = function( event ) {
 
 
 	var detail = this._createEventDetail( event );
@@ -213,17 +220,25 @@ CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail )
 	if ( this.TRACE ) console.log("objectControls " + eventDetail.name, eventDetail);
 
 	var eventNameMapping = {
+		// TEMP until we decommission "holo" prefix
 		"hoverOver" : "holocursorenter",
 		"hoverOut" : "holocursorleave",
 		"select" : "holocursordown",
 		"deselect" : "holocursorup",
 		"move" : "holocursormove",
+
+		"hoverOver" : "cursorenter",
+		"hoverOut" : "cursorleave",
+		"select" : "cursordown",
+		"deselect" : "cursorup",
+		"move" : "cursormove",
 	};
 
 	var eventName = eventNameMapping[ eventDetail.name ];
+
 	if ( !eventName ) {
 		console.error("AltObjectControls event name unrecognized", eventName);
-		return ; // Cannot map event to holocursor event.
+		return ; // Cannot map event to cursor event.
 	}
 
 	var mockCursorEvent = {
@@ -232,7 +247,7 @@ CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail )
 		cursorRay: eventDetail.raycaster.ray,
 	};
 
-	this._holoCursorDispatch( mockCursorEvent );
+	this._cursorEventDispatch( mockCursorEvent );
 
 };
 
@@ -281,6 +296,16 @@ CursorEvents.prototype._dispatchEffects = function( object, event ) {
 
 			effectCallback = effect[ event.type ].bind( effect );
 			effectCallback( object, event );
+
+		} else {
+
+			// TEMP: support old event names, for now.
+			if ( effect[ "holo" + event.type ]) {
+
+				effectCallback = effect[ "holo" + event.type ].bind( effect );
+				effectCallback( object, event );
+			}
+
 		}
 	}
 
