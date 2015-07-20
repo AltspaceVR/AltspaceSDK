@@ -1,5 +1,8 @@
 Listing of Features, Performance Improvements, Bug Fixes, and Breaking Changes for each version. Version numbers follow the [Semantic Versioning Spec](http://semver.org) (SemVer).  The current version is hard-coded in AltRenderer.SDK_VERSION.
 
+### Version 0.3.2 (2015-07-20)
+* **CursorEvents**: Fixed to work with new renderer (which is part of Altspace client). 
+
 ### Version 0.3.1 (2015-06-07)
 * **DragPlaneEffect**: Fixed to have better default dragPlane and use bounding box to detect when object near edge.
 * **FirebaseSync**: Fixed converting the relative token path to full URL.
