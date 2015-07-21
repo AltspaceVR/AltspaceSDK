@@ -56,7 +56,7 @@
 <script>
 
 
-var inAltspace = !!window.Alt;
+var inAltspace = window.hasOwnProperty('altspace');
 
 var scene, camera, renderer;
 var firebaseSync;
@@ -116,7 +116,7 @@ function initScene() {
 
 	scene = new THREE.Scene();
 
-	renderer = new THREE.AltRenderer();
+	renderer = altspace.getThreeJSRenderer();
 	// hide any elements on webpage
 	document.getElementById("info").style.visibility = "hidden";
 
@@ -151,15 +151,15 @@ function initEvents() {
 			var model = cachedModels[hatType];
 			cursorEvents.addObject( model );
 
-			model.addEventListener( "holocursorenter",  function( event ) {
+			model.addEventListener( "cursorenter",  function( event ) {
 				model.position.y = 10;
 			});
 
-			model.addEventListener( "holocursorleave",  function( event ) {
+			model.addEventListener( "cursorleave",  function( event ) {
 				model.position.y = 0;
 			});
 
-			model.addEventListener( "holocursordown",  function( event ) {
+			model.addEventListener( "cursordown",  function( event ) {
 				syncHatForLocalUser(localUserId, hatType);
 			});
 		});

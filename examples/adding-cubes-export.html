@@ -126,7 +126,7 @@ function createCube( key, syncData ) {
 
 	cursorEvents.addObject( newCube.children[0] );
 
-	newCube.children[0].addEventListener( "holocursordown", function( event ) {
+	newCube.children[0].addEventListener( "cursordown", function( event ) {
 	    deleteCube( this.name, this );	
 		console.log("removing local cube", this.name);
 	}.bind( newCube ));

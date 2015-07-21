@@ -134,7 +134,7 @@ function initControls() {
 	cube.userData.prevMousePosition = new THREE.Vector3();
 	cube.userData.selectY = 0;
 
-	cube.addEventListener( "holocursormove", function( event ) {
+	cube.addEventListener( "cursormove", function( event ) {
 
 		// Move event not associated with a particular object, but dispatched
 		// to cube since we set it as defaultTarget for ObjectCursorEvents.
