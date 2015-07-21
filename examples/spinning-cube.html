@@ -173,7 +173,7 @@ function initEvents() {
 
 	var dragEffect = new DragPlaneEffect( { firebaseSync: firebaseSync });
 	var hoverEffect = new ColorHoverEffect( { color: new THREE.Color(0, 1, 1) });
-	// hover listens for holocursorenter / holocursorleave for hover over / out
+	// hover listens for cursorenter / cursorleave for hover over / out
 
 	cursorEvents.addEffect( dragEffect, cube );
 	cursorEvents.addEffect( hoverEffect, cube );
