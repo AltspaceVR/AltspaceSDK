@@ -9,13 +9,12 @@
 <head>
 		<title>Adding Cubes Example</title>
 
-		<!-- Required by AltOBJMTLLoader.js -->
         <script src="../lib/three.js"></script>
+		<!-- Required by OBJMTLLoader.js -->
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/firebase.js"></script>
 
-		<script src="../src/AltOBJMTLLoader.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
 		<script src="../src/sync/FirebaseSync.js"></script>
@@ -75,7 +74,7 @@ function onModelsLoaded() {
 
 function onSyncReady() {
 
-	cursorEvents = new CursorEvents();
+	cursorEvents = new CursorEvents( scene );
 	cursorEvents.enableMouseEvents( camera );
 
 	if ( typeof gameStats.userData.syncData === "undefined" ) {
@@ -147,13 +146,14 @@ function deleteCube( key, syncData ) {
 
 function loadModels() {
 
-	var loader = new THREE.AltOBJMTLLoader();
+	var loader = new THREE.OBJMTLLoader();
 
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = "models/AltspaceCube/cube.obj";
-	loader.load(filename, function ( loadedObject ) {
+	var objFilename = "models/AltspaceCube/cube.obj";
+	var mtlFilename = "models/AltspaceCube/cube.mtl";
+	loader.load(objFilename, mtlFilename, function ( loadedObject ) {
 
-		console.log("Loaded object from " + filename, loadedObject);
+		console.log("Loaded object from " + objFilename, loadedObject);
 		cube = loadedObject;
 		onModelsLoaded();
 		
@@ -168,7 +168,7 @@ function initScene() {
 
 	if ( inAltspace ) {
 
-		renderer = altspace.getThreeJSRenderer();
+		renderer = altspace.getThreeJSRenderer({ version: "0.2.0" });
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
