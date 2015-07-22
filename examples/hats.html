@@ -107,7 +107,14 @@ function onModelsLoaded(models) {
 function initScene() {
 
 	scene = new THREE.Scene();
+
+	// TODO Before moving to new 0.2.0 renderer, need to fix issue:
+	// - Straw hat material not rendering properly, appears as white
+	//   (replacing with another material or different hat would be fine too)
+	// - Performance: 1-2 second delay for app to respond to cursor events.
+	// - In Avatars.js, replace  window.Alt.Avatars.getAvatars with new API.
 	renderer = altspace.getThreeJSRenderer();
+
 	// hide any elements on webpage
 	document.getElementById("info").style.visibility = "hidden";
 
@@ -132,7 +139,7 @@ function initSync() {
 }
 
 function initEvents() {
-	cursorEvents = new CursorEvents( scene );
+	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
 
 	scene.addEventListener("altuserenter", function( object ) {
