@@ -80,14 +80,6 @@ var myPixelToMeterRatio = 285.714294;
 
 if (inAltspace) {
 
-	window.addEventListener("altuserenter", function( object ) {
-		console.log(object.userId + " has entered the space.");
-	});
-
-	window.addEventListener("altuserleave", function( object ) {
-		console.log(object.userId + " has exited the space.");
-	});
-
 	window.addEventListener("AltContentLoaded", function(event) { 
 		if ( isAltContentLoaded ) return;
 		isAltContentLoaded = true;
@@ -107,15 +99,14 @@ function onModelsLoaded(models) {
 	cachedModels = models;
 
 	initScene();
+	initEvents();
 	animate();
 	avatars = new Avatars();
-	initEvents();
 }
 
 function initScene() {
 
 	scene = new THREE.Scene();
-
 	renderer = altspace.getThreeJSRenderer();
 	// hide any elements on webpage
 	document.getElementById("info").style.visibility = "hidden";
@@ -141,8 +132,16 @@ function initSync() {
 }
 
 function initEvents() {
-	cursorEvents = new CursorEvents();
+	cursorEvents = new CursorEvents( scene );
 	cursorEvents.enableMouseEvents( camera );
+
+	scene.addEventListener("altuserenter", function( object ) {
+		console.log(object.userId + " has entered the space.");
+	});
+
+	scene.addEventListener("altuserleave", function( object ) {
+		console.log(object.userId + " has exited the space.");
+	});
 
 	window.Alt.Users.getLocalUser().then(function(user) {
 		localUserId = user.userId;
@@ -168,12 +167,12 @@ function initEvents() {
 		
 	});
 
-	window.addEventListener("altuserenter", function( object ) {
+	scene.addEventListener("altuserenter", function( object ) {
 		users[object.userId] = {displayName: object.displayName, isLocal: object.isLocal};
 		console.log(object.userId + " has entered the space.");
 	});
 
-	window.addEventListener("altuserleave", function( object ) {
+	scene.addEventListener("altuserleave", function( object ) {
 		delete users[object.userId];
 		console.log(object.userId + " has exited the space.");
 

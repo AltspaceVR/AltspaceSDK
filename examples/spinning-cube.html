@@ -158,15 +158,23 @@ function initScene() {
 
 function initEvents() {
 
-	cursorEvents = new CursorEvents();
+	cursorEvents = new CursorEvents( scene );
 	cursorEvents.enableMouseEvents( camera );
 
 	cursorEvents.addObject( cube );
 
-	cube.addEventListener( "cursordown", function( event ) {
+	var playSound = function( event ) {
 		if (!sound) loadSoundEffect();
 		sound.play();
-	});
+		console.log("playSound"); // For debugging, in case sound is muted.
+	};
+
+	if ( inAltspace ) {
+		// TEMP until we implement bubbling, currently event fired on child mesh.
+		cube.children[0].addEventListener( "cursordown", playSound );
+	} else {
+		cube.addEventListener( "cursordown", playSound );
+	}
 
 	// In addition to defining event listeners, you can apply pre-made effects
 	// or create your own effects that work with the CursorEvents framework.
