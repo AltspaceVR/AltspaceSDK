@@ -135,7 +135,7 @@ function initScene() {
 
 	} else {
 
-		renderer = new THREE.WebGLRenderer();
+		renderer = new THREE.WebGLRenderer( { antialias: true });
 		renderer.setClearColor("#AAAAAA");
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		document.body.appendChild( renderer.domElement );
@@ -154,11 +154,8 @@ function initScene() {
 
 	// TEST: add 2nd cube using Threejs primitives
 	console.log("Left cube is loaded by OBJMTLLoader, right cube2 is Three.js primivite.");
-	var texture = THREE.ImageUtils.loadTexture(
-		"models/AltspaceCube/altspace-logo.jpg",
-		null
-	 );	
-	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	var materialCreator = new THREE.MTLLoader.MaterialCreator();
+	var texture = materialCreator.loadTexture("models/AltspaceCube/altspace-logo.jpg");
 	var cubeHeight2 = 10;
 	cube2 = new THREE.Mesh(
 		new THREE.BoxGeometry( cubeHeight2, cubeHeight2, cubeHeight2 ),
