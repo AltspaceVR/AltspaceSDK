@@ -13,9 +13,9 @@ var MultiLoader = function() {
 	/**
 	 * Loads models and caches them.
 	 */
-	function loadModel(file, cache, cb) {
+	function loadModel(file, cache, options, cb) {
 
-		var loader = new THREE.AltOBJMTLLoader();
+		var loader = new THREE.AltOBJMTLLoader(undefined, options);
 		loader.load(file, function ( loadedObject ) {
 			cache[file] = loadedObject;
 			cb();
@@ -27,7 +27,7 @@ var MultiLoader = function() {
 	 * Expects fileList to be in format {file: "path/to/file.obj", key: "some_identifier"}
 	 * It will call the cb with the loaded assets when completed.
 	 */
-	function load(fileList, cb) {
+	function load(fileList, cb, options) {
 
 		var filesToLoad = [];
 
@@ -42,7 +42,7 @@ var MultiLoader = function() {
 		});
 
 		uniqueFileList.forEach(function(file) {
-			filesToLoad.push(async.apply(loadModel, file, cache));
+			filesToLoad.push(async.apply(loadModel, file, cache, options));
 		});
 
 		async.parallel(filesToLoad, function() {
