@@ -1,0 +1,141 @@
+<!--
+	Example of how to get a Spinning Cube into Altspace.
+
+	Author: Amber Roy
+	Copyright (c) 2015 Altspace VR
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<title>Spinning Cube Example</title>
+
+		<!-- Required by AltOBJMTLLoader.js -->
+		<script src="../lib/three.js"></script>
+		<script src="../lib/MTLLoader.js"></script>
+		<script src="../lib/OBJMTLLoader.js"></script>
+		<script src="../lib/firebase.js"></script>
+
+		<script src="../src/AltOBJMTLLoader.js"></script>
+		<script src="../src/AltRenderer.js"></script>
+		<script src="../src/cursor/CursorEvents.js"></script>
+		<script src="../src/cursor/AltObjectControls.js"></script>
+		<script src="../src/sync/FirebaseSync.js"></script>
+
+		<script src="../src/cursor/ColorHoverEffect.js"></script>
+		<script src="../src/cursor/DragPlaneEffect.js"></script>
+
+		<style>
+			body {
+				background-color: rgba(0, 0, 0, 0);
+				margin: 0px;
+				overflow: hidden;
+
+				color: #FFFFFF;
+				font-family: Monospace;
+				font-size: 18px;
+				text-align: center;
+			}
+			#info {
+				position: absolute;
+				top: 0px;
+				width: 100%;
+				padding: 10px;
+			}
+		</style>
+
+</head>
+<body>
+<body>
+		<div id="info">
+				<a href="http://github.com/AltspaceVR/AltspaceSDK" 
+					 target="_blank">AltspaceSDK</a> - Spinning Cube
+		</div>
+</body>
+
+<script>
+
+var scene, camera, renderer;
+var cube;
+
+function onModelsLoaded() {
+
+	initScene();
+	initHands();
+    animate();
+}
+
+function loadModels() {
+	var loader = new THREE.AltOBJMTLLoader();
+	var filename = "models/AltspaceCube/cube.obj";
+	loader.load(filename, function ( loadedObject ) {
+		console.log("Loaded object from " + filename, loadedObject);
+		cube = loadedObject;
+		onModelsLoaded();
+	});
+}
+
+function initScene() {
+	scene = new THREE.Scene();
+	renderer = altspace.getThreeJSRenderer();
+	document.getElementById("info").style.visibility = "hidden";
+}
+
+function initHands() {
+    altspace.getThreeJSTrackingSkeleton().then(function (skeleton) {
+        scene.add(skeleton);
+
+        for (var i = 0; i < skeleton.children.length; i++) {
+            var piece = cube.clone();
+            skeleton.children[i].add(piece);
+            piece.position.x = 0;
+            piece.position.y = 0;
+            piece.position.z = 0;
+            piece.rotation.x = 0;
+            piece.rotation.y = 0;
+            piece.rotation.z = 0;
+            piece.scale.x = 2;
+            piece.scale.y = 2;
+            piece.scale.z = 2;
+
+            var zpiece = piece.clone();
+            zpiece.position.z = 10;
+            zpiece.scale.x = 0.5;
+            zpiece.scale.y = 0.5;
+            zpiece.scale.z = 0.5;
+            zpiece.userData.tintColor = { r: 0, g: 0, b: 1 };
+
+            var xpiece = piece.clone();
+            xpiece.position.x = 10;
+            xpiece.scale.x = 0.5;
+            xpiece.scale.y = 0.5;
+            xpiece.scale.z = 0.5;
+            xpiece.userData.tintColor = { r: 1, g: 0, b: 0 };
+
+            var ypiece = piece.clone();
+            ypiece.position.y = 10;
+            ypiece.scale.x = 0.5;
+            ypiece.scale.y = 0.5;
+            ypiece.scale.z = 0.5;
+            ypiece.userData.tintColor = { r: 0, g: 1, b: 0 };
+
+            piece.add(xpiece);
+            piece.add(ypiece);
+            piece.add(zpiece);
+        }
+    });
+}
+
+
+function animate() {
+	requestAnimationFrame( animate );
+	renderer.render( scene, camera );
+}
+
+loadModels();
+
+</script>
+</body>
+</html>
+
+
+
