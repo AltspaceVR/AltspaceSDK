@@ -10,7 +10,22 @@
  * Copyright (c) 2015 AltspaceVR
  */
 
-CursorEvents = function( params ) {
+CursorEvents = function( scene, params ) {
+
+	// Passing the scene to this constructor tells this class to expect new cursor events.
+	// Otherwise, expect the old events, with "holo" prefix.
+
+	if ( !scene || ! scene instanceof THREE.Scene ) {
+		// Workaround for older version where events attached to window instead of scene.
+		console.log("CursorEvents using old event format");
+		params = scene;
+		scene = null;
+		this.oldEventFormat = true;
+	} else {
+		this.oldEventFormat = false;
+	}
+
+	this.scene = scene;
 
 	var p = params || {};
 
@@ -34,14 +49,26 @@ CursorEvents = function( params ) {
 
 	if ( this.inAltspace ) {
 
-		var dispatcher = this._holoCursorDispatch.bind( this ); 
+		var dispatcher = this._cursorEventDispatch.bind( this ); 
 
 		// Cursor Events from Altspace
-		window.addEventListener("holocursormove", dispatcher);
-		window.addEventListener("holocursordown", dispatcher);
-		window.addEventListener("holocursorup", dispatcher);
-		window.addEventListener("holocursorenter", dispatcher);
-		window.addEventListener("holocursorleave", dispatcher);
+		if ( this.oldEventFormat ) {
+
+			// TEMP until we decommission "holo" prefix
+			window.addEventListener("holocursormove", dispatcher);
+			window.addEventListener("holocursordown", dispatcher);
+			window.addEventListener("holocursorup", dispatcher);
+			window.addEventListener("holocursorenter", dispatcher);
+			window.addEventListener("holocursorleave", dispatcher);
+
+		} else {
+
+			// For now "cursormove" is the only one fired on scene but not on object.
+			// We should also fire "cursorup" on scene to handle the case where cursor
+			// moves/drags off object before being released.
+			this.scene.addEventListener("cursormove", dispatcher);
+
+		}
 
 	}
 
@@ -134,6 +161,19 @@ CursorEvents.prototype.addObject = function( object ) {
 
 	if ( !this.objectLookup[ object.uuid ] ) {
 
+		if ( !this.oldEventFormat ) {
+
+			// New object, attach listeners. Attach to child[0], since currently
+			// events are fired against it (the THREE.Mesh).
+			var dispatcher = this._cursorEventDispatch.bind( this ); 
+			object.children[0].addEventListener("cursordown", dispatcher);
+			object.children[0].addEventListener("cursorup", dispatcher);
+			object.children[0].addEventListener("cursorenter", dispatcher);
+			object.children[0].addEventListener("cursorleave", dispatcher);
+
+		}
+
+		// Add uuid to lookup table.
 		this.objectLookup[ object.uuid ] = object;
 
 		if ( this.objectControls ) {
@@ -157,8 +197,7 @@ CursorEvents.prototype.addObject = function( object ) {
 
 };
 
-CursorEvents.prototype._holoCursorDispatch = function( event ) {
-
+CursorEvents.prototype._cursorEventDispatch = function( event ) {
 
 	var detail = this._createEventDetail( event );
 	var objectEvent = new CustomEvent( event.type, { detail: detail });
@@ -169,9 +208,9 @@ CursorEvents.prototype._holoCursorDispatch = function( event ) {
 	// Currently cursor events fire on all objects, even non-interactive ones,
 	// so only dispatch events on objects that have been added to objectControls.
 
-	if ( objectEvent.detail.targetUuid ) {
+	var targetUuid = objectEvent.detail.targetUuid;
+	if ( targetUuid ) {
 
-		var targetUuid = objectEvent.detail.targetUuid;
 		var targetObject = this.objectLookup[ targetUuid ];
 
 		if ( !targetObject && this.inAltspace ) {
@@ -186,13 +225,14 @@ CursorEvents.prototype._holoCursorDispatch = function( event ) {
 			this._dispatchEffects( targetObject, objectEvent );
 
 		} else {
-			// This shouldn't happen.
-			console.warn("CursorEvents failed to find target object for uuid ", targetUuid);
+			// This can happen if there are objects in the scene that have not been
+			// added to CursorEvents, since they are not interactive, like Chess board.
+			if ( this.TRACE ) console.log("No target object for uuid ", targetUuid);
 		}
 
 	} else {
 
-		// For events not associated with a uuid, dispatch on defaultTarget.
+		// For events not associated with an object, dispatch on defaultTarget.
 		// Currently only one is "holocursormove"
 		if ( this.defaultTarget ) {
 
@@ -212,18 +252,34 @@ CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail )
 
 	if ( this.TRACE ) console.log("objectControls " + eventDetail.name, eventDetail);
 
-	var eventNameMapping = {
-		"hoverOver" : "holocursorenter",
-		"hoverOut" : "holocursorleave",
-		"select" : "holocursordown",
-		"deselect" : "holocursorup",
-		"move" : "holocursormove",
-	};
+	var eventNameMapping;
+	if ( this.oldEventFormat ) {
+
+		eventNameMapping = {
+			// TEMP until we decommission "holo" prefix
+			"hoverOver" : "holocursorenter",
+			"hoverOut" : "holocursorleave",
+			"select" : "holocursordown",
+			"deselect" : "holocursorup",
+			"move" : "holocursormove",
+		};
+
+	} else {
+
+		eventNameMapping = {
+			"hoverOver" : "cursorenter",
+			"hoverOut" : "cursorleave",
+			"select" : "cursordown",
+			"deselect" : "cursorup",
+			"move" : "cursormove",
+		};
+
+	}
 
 	var eventName = eventNameMapping[ eventDetail.name ];
-	if ( !eventName ) {
-		console.error("AltObjectControls event name unrecognized", eventName);
-		return ; // Cannot map event to holocursor event.
+
+	if ( !eventName ) {console.error("AltObjectControls event name unrecognized", eventName);
+		return ; // Cannot map event to cursor event.
 	}
 
 	var mockCursorEvent = {
@@ -232,7 +288,7 @@ CursorEvents.prototype._objectControlsDispatch = function( object, eventDetail )
 		cursorRay: eventDetail.raycaster.ray,
 	};
 
-	this._holoCursorDispatch( mockCursorEvent );
+	this._cursorEventDispatch( mockCursorEvent );
 
 };
 
@@ -254,8 +310,28 @@ CursorEvents.prototype._createEventDetail = function( event ) {
 
 	// All custom event data should go in the detail object.
 	// TODO: Fix original event generated by Altspace.
+
+	var targetUuid;
+	if ( !this.inAltspace || this.oldEventFormat ) {
+
+		// TEMP: support old event format: event.targetUuid,
+		// which is also what we emulate when running outside Altspace.
+		targetUuid = event.targetUuid;
+
+	} else {
+
+		targetUuid = event.target.uuid;
+		if ( targetUuid === this.scene.uuid ) {
+
+			// If event fired on scene, clear uuid which we expect to refer to an object.
+			targetUuid = null;
+
+		}
+
+	}
+
 	var detail = {
-		targetUuid: event.targetUuid,
+		targetUuid: targetUuid,
 		cursorRay: cursorRay,
 	};
 
@@ -281,6 +357,16 @@ CursorEvents.prototype._dispatchEffects = function( object, event ) {
 
 			effectCallback = effect[ event.type ].bind( effect );
 			effectCallback( object, event );
+
+		} else {
+
+			// TEMP: support old event names, for now.
+			if ( effect[ "holo" + event.type ]) {
+
+				effectCallback = effect[ "holo" + event.type ].bind( effect );
+				effectCallback( object, event );
+			}
+
 		}
 	}
 

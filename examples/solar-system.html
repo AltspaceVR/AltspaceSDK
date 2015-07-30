@@ -48,7 +48,7 @@
 </body>
 <script>
 
-var inAltspace = !!window.Alt;
+var inAltspace = window.hasOwnProperty("altspace");
 
 var scene, renderer;
 var camera;
@@ -122,8 +122,7 @@ function addPlanet(planetInfo) {
 		firebaseSync.saveObject( appState );
 	});
 
-	loader.load('models/SolarSystem/' + name + '.obj', 
-		         function ( planet ) {
+	loader.load('models/SolarSystem/' + name + '.obj', function ( planet ) {
 
 		planet.solarDistance = distance * distanceCoeff;
 		planet.position.y = 10;
@@ -154,7 +153,7 @@ function init() {
 
 	if ( inAltspace ) {
 
-		renderer = new THREE.AltRenderer();
+		renderer = altspace.getThreeJSRenderer();
 
 	} else {
 

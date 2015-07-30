@@ -9,14 +9,10 @@
 <head>
 		<title>Follow Cursor Example</title>
 
-		<!-- Required by AltOBJMTLLoader.js -->
-		<script src="../lib/three.min.js"></script>
+		<script src="../lib/three.js"></script>
+		<!-- Required by OBJMTLLoader.js -->
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/MTLLoader.js"></script>
-
-		<!-- Altspace SDK -->
-		<script src="../src/AltOBJMTLLoader.js"></script>
-		<script src="../src/AltRenderer.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
 
@@ -50,7 +46,7 @@
 
 <script>
 
-var inAltspace = !!window.Alt;
+var inAltspace = window.hasOwnProperty("altspace");
 
 var scene, camera, renderer;
 var cursorEvents;
@@ -71,13 +67,14 @@ function onModelsLoaded() {
 
 function loadModels() {
 
-	var loader = new THREE.AltOBJMTLLoader();
+	var loader = new THREE.OBJMTLLoader();
 	
 	// loader assumes .mtl file has same basename as .obj file
-	var filename = "models/AltspaceCube/cube.obj";
-	loader.load(filename, function ( loadedObject ) {
+	var objFilename = "models/AltspaceCube/cube.obj";
+	var mtlFilename = "models/AltspaceCube/cube.mtl";
+	loader.load(objFilename, mtlFilename, function ( loadedObject ) {
 
-		console.log("Loaded object from " + filename, loadedObject);
+		console.log("Loaded object from " + objFilename, loadedObject);
 		cube = loadedObject;
 		onModelsLoaded();
 
@@ -91,7 +88,8 @@ function initScene() {
 
 	if ( inAltspace ) {
 
-		renderer = new THREE.AltRenderer();
+		renderer = altspace.getThreeJSRenderer( { version: "0.2.0" });
+
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 
@@ -128,13 +126,13 @@ function initScene() {
 function initControls() {
 
 	var params = { defaultTarget: cube };
-	cursorEvents = new CursorEvents( params );
+	cursorEvents = new CursorEvents( scene, params );
 	cursorEvents.enableMouseEvents( camera );
 
 	cube.userData.prevMousePosition = new THREE.Vector3();
 	cube.userData.selectY = 0;
 
-	cube.addEventListener( "holocursormove", function( event ) {
+	cube.addEventListener( "cursormove", function( event ) {
 
 		// Move event not associated with a particular object, but dispatched
 		// to cube since we set it as defaultTarget for ObjectCursorEvents.
