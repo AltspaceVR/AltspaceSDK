@@ -4,7 +4,7 @@ This SDK will enable you to use Javascript to create interactive, multi-user web
 
 The Altspace SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.**
 
-Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltRender (for example) can be linked from http://sdk.altvr.com/src/AltRenderer.js
+Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltOBJMTLLoader (for example) can be linked from http://sdk.altvr.com/src/AltOBJMTLLoader.js
 
 
 ## Scope of Current SDK
@@ -69,9 +69,9 @@ loader.load("models/AltspaceCube/cube.obj", function ( loadedObject ) {
 The object is now loaded, but it will not appear until the scene is rendered.
 
 **Step 4**:
-Render your scene using the [AltRender] in your animate loop.
+Render your scene using the AltspaceVR three.js renderer in your animate loop.
 ```
-renderer = new THREE.AltRenderer(); // during scene initialization
+renderer = altspace.getThreeJSRenderer(); // during scene initialization
 ...
 renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 ```
@@ -84,7 +84,7 @@ Implement your animations and app logic using [Three.js]
 cube.rotation.x += 0.01;
 cube.rotation.y += 0.01;
 ```
-The AltRenderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
+The Altspace ThreeJS renderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
 
 
 **Step 6a**:
@@ -97,11 +97,11 @@ cursorEvents.enableMouseEvents( camera )
 
 cursorEvents.addObject( cube );
 
-cube.addEventListener( "holocursordown", function( event ) {
+cube.addEventListener( "cursordown", function( event ) {
 	this.position.y += 2;
 });
 
-cube.addEventListener( "holocursorup",  function( event ) {
+cube.addEventListener( "cursorup",  function( event ) {
 	this.position.y -= 2;
 });
 
