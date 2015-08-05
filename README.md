@@ -6,7 +6,7 @@ The Altspace SDK is in beta and actively under development. **It is critically i
 
 Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltOBJMTLLoader (for example) can be linked from http://sdk.altvr.com/src/AltOBJMTLLoader.js
 
-> **Heads up that some of this documentation and a few of the examples are currently out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object.
+> **Heads up that some of this documentation and a few of the examples are currently out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. Support for arbitrary three.js geometry is also on its way soon!
 
 >**The full list of availible API functions are as follows**:
 * `altspace.getThreeJSRenderer()`  
