@@ -17,7 +17,7 @@ Consequently, it is also good practice to source the SDK directly from our CDN, 
  returns a promise that will fufill with information about the local user
 * `altspace.getEnclosure().then(callback)`  
  returns a promise that will fufill with a description of the enclosure
-* `<mesh in the scene>.addEventListener('cursorup' / 'cursordown', callback);`  
+* `mesh.addEventListener('cursorup' / 'cursordown', callback);`  
  listen for cursor events on a specific object.
 * `scene.addEventListner('cursormove', callback)`  
  listen for cursor move events
