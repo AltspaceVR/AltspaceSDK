@@ -2,7 +2,7 @@
 
 This SDK will enable you to use [three.js] to create holographic, multi-user web apps for virtual reality. When running inside AltspaceVR they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
-The AltspaceVR SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
+This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
 
 > **Heads up that some of this documentation and a few of the examples are currently out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. Support for arbitrary three.js geometry is also on its way soon!
 
