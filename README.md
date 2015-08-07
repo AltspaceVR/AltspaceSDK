@@ -37,7 +37,7 @@ Currently supported:
 
 Not currently supported:
 * Lighting, custom shaders, screen space effects.
-* [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
+* Examples: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
 
 Habits of Successful AltspaceVR Web Apps:
 * Use Object3D ttransforms (position, rotation, scale) for animation rather than skinned meshes.
