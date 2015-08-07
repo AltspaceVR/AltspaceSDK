@@ -12,7 +12,22 @@ This SDK is in pre-release beta and actively under development. **It is critical
 
 Start by following our [Setup Guide]
 
-## Three.js Features
+## AltspaceVR APIs
+**The full list of availible API functions are as follows**:
+* `altspace.getThreeJSRenderer()`  
+ returns a renderer that can be used to render three.js scenes as holographic objects
+* `altspace.getThreeJSTrackingSkeleton().then(callback)`  
+ returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR
+* `altspace.getUser().then(callback)`  
+ returns a promise that will fufill with information about the local user
+* `altspace.getEnclosure().then(callback)`  
+ returns a promise that will fufill with a description of the enclosure
+* `mesh.addEventListener('cursorup' / 'cursordown', callback);`  
+ listen for cursor events on a specific object.
+* `scene.addEventListner('cursormove', callback)`  
+ listen for cursor move events
+
+## Three.js Feature Support
 
 Currently supported:
 * Object3D transformation and hierarchy
@@ -29,21 +44,6 @@ Habits of Successful AltspaceVR Web Apps:
 * Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
 * Limit the number of objects per scene and polygons per object.
 * Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
-
-## AltspaceVR APIs
-**The full list of availible API functions are as follows**:
-* `altspace.getThreeJSRenderer()`  
- returns a renderer that can be used to render three.js scenes as holographic objects
-* `altspace.getThreeJSTrackingSkeleton().then(callback)`  
- returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR
-* `altspace.getUser().then(callback)`  
- returns a promise that will fufill with information about the local user
-* `altspace.getEnclosure().then(callback)`  
- returns a promise that will fufill with a description of the enclosure
-* `mesh.addEventListener('cursorup' / 'cursordown', callback);`  
- listen for cursor events on a specific object.
-* `scene.addEventListner('cursormove', callback)`  
- listen for cursor move events
 
 ## Learning More
 
