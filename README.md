@@ -51,7 +51,7 @@ Habits of Successful AltspaceVR Web Apps:
 
 ## Getting Started
 
-Follow our [Setup Guide]
+Start by follow our [Setup Guide]
 
 ## Learning More
 
@@ -74,6 +74,8 @@ Or dive into the source code, organized as follows:
 [Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [Developer Answers]: http://answers.altvr.com
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
+
+[Setup Guide]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Setup-Guide
 
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."
