@@ -29,17 +29,17 @@ Start by following our [Setup Guide]
 
 ## Three.js Feature Support
 
-Currently supported:
+**Currently supported:**
 * Object3D transformation and hierarchy
 * MeshBasicMaterial map and color properties
 * Most Geometry
 * Examples: [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
-Not currently supported:
+**Not currently supported:**
 * Lighting, custom shaders, screen space effects.
 * Examples: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
 
-Habits of Successful AltspaceVR Web Apps:
+**Habits of Successful AltspaceVR Web Apps:**
 * Use Object3D ttransforms (position, rotation, scale) for animation rather than skinned meshes.
 * Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
 * Limit the number of objects per scene and polygons per object.
