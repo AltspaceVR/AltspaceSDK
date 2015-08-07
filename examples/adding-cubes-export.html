@@ -7,10 +7,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<title>Adding Cubes Example</title>
+		<title>Adding Cubes Export Example</title>
 
+		<!-- Required by AltOBJMTLLoader.js -->
         <script src="../lib/three.js"></script>
-		<!-- Required by OBJMTLLoader.js -->
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/firebase.js"></script>
@@ -74,7 +74,7 @@ function onModelsLoaded() {
 
 function onSyncReady() {
 
-	cursorEvents = new CursorEvents( scene );
+	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
 
 	if ( typeof gameStats.userData.syncData === "undefined" ) {
@@ -124,9 +124,9 @@ function createCube( key, syncData ) {
 	scene.add( newCube );
 	firebaseSync.addObject( newCube, key );
 
-	cursorEvents.addObject( newCube );
+	cursorEvents.addObject( newCube.children[0] );
 
-	newCube.addEventListener( "cursordown", function( event ) {
+	newCube.children[0].addEventListener( "cursordown", function( event ) {
 	    deleteCube( this.name, this );	
 		console.log("removing local cube", this.name);
 	}.bind( newCube ));
@@ -168,7 +168,7 @@ function initScene() {
 
 	if ( inAltspace ) {
 
-		renderer = altspace.getThreeJSRenderer({ version: "0.2.0" });
+		renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
 		// hide any elements on webpage
 		document.getElementById("info").style.visibility = "hidden";
 

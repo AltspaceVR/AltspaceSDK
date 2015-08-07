@@ -4,8 +4,24 @@ This SDK will enable you to use Javascript to create interactive, multi-user web
 
 The Altspace SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.**
 
-Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltRender (for example) can be linked from http://sdk.altvr.com/src/AltRenderer.js
+Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltOBJMTLLoader (for example) can be linked from http://sdk.altvr.com/src/AltOBJMTLLoader.js
 
+> **Heads up that some of this documentation and a few of the examples are currently out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. Support for arbitrary three.js geometry is also on its way soon!
+
+>**The full list of availible API functions are as follows**:
+* `altspace.getThreeJSRenderer()`  
+ returns a renderer that can be used to render three.js scenes as holographic objects
+* `altspace.getThreeJSTrackingSkeleton().then(callback)`  
+ returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR
+* `altspace.getUser().then(callback)`  
+ returns a promise that will fufill with information about the local user
+* `altspace.getEnclosure().then(callback)`  
+ returns a promise that will fufill with a description of the enclosure
+* `mesh.addEventListener('cursorup' / 'cursordown', callback);`  
+ listen for cursor events on a specific object.
+* `scene.addEventListner('cursormove', callback)`  
+ listen for cursor move events
+ 
 
 ## Scope of Current SDK
 
@@ -69,9 +85,9 @@ loader.load("models/AltspaceCube/cube.obj", function ( loadedObject ) {
 The object is now loaded, but it will not appear until the scene is rendered.
 
 **Step 4**:
-Render your scene using the [AltRender] in your animate loop.
+Render your scene using the AltspaceVR three.js renderer in your animate loop.
 ```
-renderer = new THREE.AltRenderer(); // during scene initialization
+renderer = altspace.getThreeJSRenderer(); // during scene initialization
 ...
 renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 ```
@@ -84,7 +100,7 @@ Implement your animations and app logic using [Three.js]
 cube.rotation.x += 0.01;
 cube.rotation.y += 0.01;
 ```
-The AltRenderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
+The Altspace ThreeJS renderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
 
 
 **Step 6a**:
@@ -97,11 +113,11 @@ cursorEvents.enableMouseEvents( camera )
 
 cursorEvents.addObject( cube );
 
-cube.addEventListener( "holocursordown", function( event ) {
+cube.addEventListener( "cursordown", function( event ) {
 	this.position.y += 2;
 });
 
-cube.addEventListener( "holocursorup",  function( event ) {
+cube.addEventListener( "cursorup",  function( event ) {
 	this.position.y -= 2;
 });
 

@@ -56,7 +56,7 @@
 <script>
 
 
-var inAltspace = !!window.Alt;
+var inAltspace = window.hasOwnProperty('altspace');
 
 var scene, camera, renderer;
 var firebaseSync;
@@ -80,14 +80,6 @@ var myPixelToMeterRatio = 285.714294;
 
 if (inAltspace) {
 
-	window.addEventListener("altuserenter", function( object ) {
-		console.log(object.userId + " has entered the space.");
-	});
-
-	window.addEventListener("altuserleave", function( object ) {
-		console.log(object.userId + " has exited the space.");
-	});
-
 	window.addEventListener("AltContentLoaded", function(event) { 
 		if ( isAltContentLoaded ) return;
 		isAltContentLoaded = true;
@@ -107,16 +99,22 @@ function onModelsLoaded(models) {
 	cachedModels = models;
 
 	initScene();
+	initEvents();
 	animate();
 	avatars = new Avatars();
-	initEvents();
 }
 
 function initScene() {
 
 	scene = new THREE.Scene();
 
-	renderer = new THREE.AltRenderer();
+	// TODO Before moving to new 0.2.0 renderer, need to fix issue:
+	// - Straw hat material not rendering properly, appears as white
+	//   (replacing with another material or different hat would be fine too)
+	// - Performance: 1-2 second delay for app to respond to cursor events.
+	// - In Avatars.js, replace  window.Alt.Avatars.getAvatars with new API.
+	renderer = altspace.getThreeJSRenderer();
+
 	// hide any elements on webpage
 	document.getElementById("info").style.visibility = "hidden";
 
@@ -144,6 +142,14 @@ function initEvents() {
 	cursorEvents = new CursorEvents();
 	cursorEvents.enableMouseEvents( camera );
 
+	scene.addEventListener("altuserenter", function( object ) {
+		console.log(object.userId + " has entered the space.");
+	});
+
+	scene.addEventListener("altuserleave", function( object ) {
+		console.log(object.userId + " has exited the space.");
+	});
+
 	window.Alt.Users.getLocalUser().then(function(user) {
 		localUserId = user.userId;
 
@@ -151,15 +157,15 @@ function initEvents() {
 			var model = cachedModels[hatType];
 			cursorEvents.addObject( model );
 
-			model.addEventListener( "holocursorenter",  function( event ) {
+			model.addEventListener( "cursorenter",  function( event ) {
 				model.position.y = 10;
 			});
 
-			model.addEventListener( "holocursorleave",  function( event ) {
+			model.addEventListener( "cursorleave",  function( event ) {
 				model.position.y = 0;
 			});
 
-			model.addEventListener( "holocursordown",  function( event ) {
+			model.addEventListener( "cursordown",  function( event ) {
 				syncHatForLocalUser(localUserId, hatType);
 			});
 		});
@@ -168,12 +174,12 @@ function initEvents() {
 		
 	});
 
-	window.addEventListener("altuserenter", function( object ) {
+	scene.addEventListener("altuserenter", function( object ) {
 		users[object.userId] = {displayName: object.displayName, isLocal: object.isLocal};
 		console.log(object.userId + " has entered the space.");
 	});
 
-	window.addEventListener("altuserleave", function( object ) {
+	scene.addEventListener("altuserleave", function( object ) {
 		delete users[object.userId];
 		console.log(object.userId + " has exited the space.");
 
