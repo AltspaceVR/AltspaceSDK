@@ -7,8 +7,31 @@ Three.js is an open-source, render-agnostic 3D engine written in Javascript. It 
 This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
 
 > **Heads up that some of this documentation and a few of the examples are currently out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. Support for arbitrary three.js geometry is also on its way soon!
+ 
+## Getting Started
 
->**The full list of availible API functions are as follows**:
+Start by following our [Setup Guide]
+
+## Three.js Features
+
+Currently supported:
+* Object3D transformation and hierarchy
+* MeshBasicMaterial map and color properties
+* Most Geometry
+* Examples: [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
+
+Not currently supported:
+* Lighting, custom shaders, screen space effects.
+* [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
+
+Habits of Successful AltspaceVR Web Apps:
+* Use Object3D ttransforms (position, rotation, scale) for animation rather than skinned meshes.
+* Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
+* Limit the number of objects per scene and polygons per object.
+* Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
+
+## AltspaceVR APIs
+**The full list of availible API functions are as follows**:
 * `altspace.getThreeJSRenderer()`  
  returns a renderer that can be used to render three.js scenes as holographic objects
 * `altspace.getThreeJSTrackingSkeleton().then(callback)`  
@@ -21,34 +44,6 @@ This SDK is in pre-release beta and actively under development. **It is critical
  listen for cursor events on a specific object.
 * `scene.addEventListner('cursormove', callback)`  
  listen for cursor move events
- 
-
-## Current Supported Features
-
-AltspaceVR Web Apps are powered by a custom renderer that supports a subset of [three.js]. 
-
-Types of Apps:
-* Games (arcade-style, table-top, etc), interactive scenes, art & science sims, and much more.
-* Tech demos, computational art, data visualization, demoscene-style audio/visual experiences.
-* Interfaces to popular websites and mobile apps, or original VR creations inspired by them.
-* Apps that *simulate real-world physical objects* tend to work best in Altspace, for example...
-* [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
-
-Not currently supported:
-* Collisions with avatars (app objects behave like *holograms*; avatars cannot climb onto them)
-* Dynamic text, dynamic or animated textures, CSS 3D, Dat.gui or other UI widgets/elements.
-* Point clouds, custom shaders, dynamic/modified meshes or materials, screen space effects.
-* [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
-
-Habits of Successful AltspaceVR Web Apps:
-* Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
-* Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
-* Limit the number of objects per scene and polygons per object.
-* Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
-
-## Getting Started
-
-Start by following our [Setup Guide]
 
 ## Learning More
 
