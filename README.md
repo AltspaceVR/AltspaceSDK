@@ -31,8 +31,8 @@ Start by following our [Setup Guide]
 
 **Currently supported:**
 * Object3D transformation and hierarchy
+* Most Geometries
 * MeshBasicMaterial map and color properties
-* Most Geometry
 * Examples: [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
 **Not currently supported:**
@@ -40,7 +40,7 @@ Start by following our [Setup Guide]
 * Examples: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
 
 **Habits of Successful AltspaceVR Web Apps:**
-* Use Object3D ttransforms (position, rotation, scale) for animation rather than skinned meshes.
+* Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
 * Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
 * Limit the number of objects per scene and polygons per object.
 * Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
