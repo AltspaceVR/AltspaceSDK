@@ -52,7 +52,7 @@ Habits of Successful AltspaceVR Web Apps:
 
 ## Learning More
 
-More documentation is available in the [AltspaceSDK Wiki], including Tutorials and Tips for Developers.  
+More documentation is available in the [Wiki], including Tutorials and Tips for Developers.  
 
 Videos
 * [Live Coding Tutorial]
