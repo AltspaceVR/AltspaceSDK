@@ -51,6 +51,7 @@ Habits of Successful AltspaceVR Web Apps:
 
 ## Getting Started
 
+Follow our [Setup Guide]
 
 ## Learning More
 
