@@ -1,4 +1,4 @@
-# AltspaceVR Web App SDK
+# AltspaceVR Web SDK
 
 This SDK will enable you to use Javascript to create interactive, multi-user web apps with 3D content that is rendered by the AltspaceVR web browser.  Your app will be running inside the AltspaceVR virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that AltspaceVR will support in the future.
 
