@@ -73,12 +73,14 @@ function onModelsLoaded(assets) {
 
 	var x = -300;
 
-	diceList.forEach(function(object){
+	var gridSize = 7;
+
+	diceList.slice(0, gridSize).forEach(function(object){
 		var z = -300;
 		var id = 0;
-		for (var i = 0; i < 7; i++){
+		for (var i = 0; i < gridSize; i++){
 			var y = -300;
-			for (var j = 0; j < 7; j++){
+			for (var j = 0; j < gridSize; j++){
 				var model = assets[object[0] + id];
 				fixAmbient(model);
 				group.add(model);
@@ -126,7 +128,7 @@ function loadModels() {
 	});
 
 	started = Date.now();
-	MultiLoader.load(fileList, onModelsLoaded);
+	MultiLoader.load(fileList, onModelsLoaded, {bypassAltspace: true});
 
 }
 

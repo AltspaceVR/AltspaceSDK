@@ -6,9 +6,11 @@
  * Copyright (c) 2015 AltspaceVR
  */
 
-THREE.AltOBJMTLLoader = function ( manager ) {
+THREE.AltOBJMTLLoader = function (manager, options) {
 
-	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+	this.options = options;
+	this.manager = (
+		(manager !== undefined) ? manager : THREE.DefaultLoadingManager);
 
 	this.inAltspace = !!window.engine;
 };
@@ -26,7 +28,9 @@ THREE.AltOBJMTLLoader.prototype = {
 		function relativeToAbsolutePath(href) {
 			var link = document.createElement("a");
 			link.href = href;
-			return (link.protocol+"//"+link.host+link.pathname+link.search+link.hash);
+			return (
+				link.protocol+"//"+link.host+link.pathname+
+				link.search+link.hash);
 		}
 
 		function loadInAltspace(){
@@ -37,13 +41,19 @@ THREE.AltOBJMTLLoader.prototype = {
 			window.engine.call("LoadObj", options);
 		}
 
-		function innerOnLoad(object){
+		var innerOnLoad = function (object){
 			object.userData.src = objUrl;
 			if (!cache.hasOwnProperty(objUrl)){
 				cache[objUrl] = object;
 			}
+			for (var i = 0; i < object.children.length; i++) {
+				var child = object.children[i];
+				if (child instanceof THREE.Mesh) {
+					child.geometry.needsUpdate = true;
+				}
+			}
 			onLoad(object);
-		}
+		}.bind(this)
 
 		objUrl = relativeToAbsolutePath(objUrl);
 
@@ -52,11 +62,14 @@ THREE.AltOBJMTLLoader.prototype = {
 		if (cache.hasOwnProperty(objUrl)){
 			innerOnLoad(cache[objUrl].clone());
 		} else {
-			var loader = new THREE.OBJMTLLoader( this.manager ); //It's important that we have the manager call it's callbacks if this is ever disabled 
-			loader.load(objUrl, mtlUrl, innerOnLoad.bind(this), onProgress, onError);
+			// It's important that we have the manager call it's callbacks 
+			// if this is ever disabled 
+			var loader = new THREE.OBJMTLLoader( this.manager ); 
+			loader.load(objUrl, mtlUrl, innerOnLoad, onProgress, onError);
 		}
 
-		if(this.inAltspace)
+		if(this.inAltspace && !this.options.bypassAltspace) {
 			loadInAltspace();
+		}
 	},
 };
