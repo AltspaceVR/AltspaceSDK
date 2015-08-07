@@ -1,6 +1,6 @@
 # AltspaceVR Web SDK
 
-This SDK will enable you to use [three.js] to create holographic, multi-user web apps for virtual reality. When running inside the AltspaceVR can be experienced with consumer VR hardware including the Oculus Rift DK2.
+This SDK will enable you to use [three.js] to create holographic, multi-user web apps for virtual reality. When running inside AltspaceVR they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
 The AltspaceVR SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
 
