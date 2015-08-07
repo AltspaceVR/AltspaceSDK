@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Hello World</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
+<script src="fonts/helvetiker_regular.typeface.js"></script>
+</head>
+<body>
+<script>
+
+text = "Hello World";
+
+//Setup
+scene = new THREE.Scene();
+
+//Rendering
+renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+
+function animate() {
+	requestAnimationFrame(animate);
+	renderer.render(scene);
+	//mesh.rotation.x += 0.05;
+}
+animate();
+
+//Text
+geometry = new THREE.TextGeometry(text);
+material = new THREE.MeshBasicMaterial({color:'green'});
+mesh = new THREE.Mesh(geometry, material);
+mesh.position.x = -400;
+mesh.scale.z = 0.3;
+mesh.scale.multiplyScalar(1);
+mesh.rotation.y = Math.PI;
+scene.add(mesh);
+
+</script>
+</body>
+</html>
