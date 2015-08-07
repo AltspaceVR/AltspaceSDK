@@ -2,7 +2,7 @@
 
 This SDK can be used with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside AltspaceVR they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
-This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
+This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
 
 > **Heads up that some of this documentation and a few of the examples are currently out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. Support for arbitrary three.js geometry is also on its way soon!
 
@@ -68,7 +68,7 @@ Or dive into the source code, organized as follows:
 
 [three.js]: http://threejs.org/
 
-[AltspaceSDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
+[Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [Developer Answers]: http://answers.altvr.com
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 
@@ -82,21 +82,6 @@ Or dive into the source code, organized as follows:
 [Point Cloud]: http://threejs.org/examples/#webgl_particles_dynamic "People made of particles that fall to the ground then reconstruct."
 [Three.js Scene]: http://threejs.org/examples/#webgl_loader_scene "Scene with eclectic objects exported from Three.js then imported back."
 [Ocean Shader]: http://threejs.org/examples/#webgl_shaders_ocean "Sphere submerging into an ocean rendered with a custom WebGL shader."
-
-[AltOBJMTLLoader]: https://github.com/AltspaceVR/AltspaceSDK/wiki/AltOBJMTLLoader
-[AltRender]: https://github.com/AltspaceVR/AltspaceSDK/wiki/AltRenderer
-[CursorEvents]: https://github.com/AltspaceVR/AltspaceSDK/wiki/CursorEvents
-[ColorHighlightEffect]: https://github.com/AltspaceVR/AltspaceSDK/wiki/ColorHighlightEffect
-[DragPlaneEffect]: https://github.com/AltspaceVR/AltspaceSDK/wiki/DragPlaneEffect
-[FirebaseSync]: https://github.com/AltspaceVR/AltspaceSDK/wiki/FirebaseSync
-[Three.js]: http://https://github.com/mrdoob/three.js/
-[Workflow]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Workflow
-[Cursor Effect Plugins]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Cursor-Effect-Plugins
-[Prepros]: https://prepros.io/
-
-[examples/spinning-cube.html]: examples/spinning-cube.html
-[cube.obj]: examples/spinning_cube/cube.obj
-[cube.mtl]: examples/spinning_cube/cube.mtl
 
 [Live Coding Tutorial]: https://www.youtube.com/watch?v=R47GvXmvmec
 [AltspaceVR looking for SDK Collaborators]: https://www.youtube.com/watch?v=dk8i5or4PJI
