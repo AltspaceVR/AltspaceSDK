@@ -1,8 +1,8 @@
-# Altspace Web App SDK
+# AltspaceVR Web App SDK
 
-This SDK will enable you to use Javascript to create interactive, multi-user web apps with 3D content that is rendered by the Altspace web browser.  Your app will be running inside the Altspace virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that Altspace will support in the future.
+This SDK will enable you to use Javascript to create interactive, multi-user web apps with 3D content that is rendered by the AltspaceVR web browser.  Your app will be running inside the AltspaceVR virtual reality environment, experienced with the Oculus Rift DK2 and other advanced VR hardware that AltspaceVR will support in the future.
 
-The Altspace SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.**
+The AltspaceVR SDK is in beta and actively under development. **It is critically important to stay up to date by reading the [AltspaceSDK Wiki], the [Known Issues] page, and the [GitHub Issues] page.**
 
 Consequently, it is also good practice to source the SDK directly from our CDN, or pull from this repo on a consistent basis. The file structure is mirrored in our sdk subdomain so that AltOBJMTLLoader (for example) can be linked from http://sdk.altvr.com/src/AltOBJMTLLoader.js
 
@@ -25,7 +25,7 @@ Consequently, it is also good practice to source the SDK directly from our CDN, 
 
 ## Scope of Current SDK
 
-Altspace Web Apps are powered by a custom renderer that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
+AltspaceVR Web Apps are powered by a custom renderer that supports a subset of [Three.js]. Three.js is a render-agnostic 3D engine written in Javascript. It is used to construct much of the WebGL or CSS 3D you see on the web.
 
 Types of apps you can build:
 * Games (arcade-style, table-top, etc), interactive scenes, art & science sims, and much more.
@@ -41,17 +41,17 @@ Not currently supported:
 * Point clouds, custom shaders, dynamic/modified meshes or materials, screen space effects.
 * [Hemisphere Light] - [Material Reflection] - [Point Cloud] - [Three.js Scene] - [Ocean Shader]
 
-Habits of Successful Altspace Web Apps:
+Habits of Successful AltspaceVR Web Apps:
 * Use models loaded from OBJ/MTL files, not Three.js geometry.
 * Use Object3D transforms (position, rotation, scale) for animation.
-* Use input via Altspace cursor events, not traditional keyboard.
+* Use input via AltspaceVR cursor events, not traditional keyboard.
 * Limit the number of objects per scene and polygons per object.
 * Do not use lights (other than ambient light rendered by Altspace).
 * Do not change object geometries or materials (except tint color).
 
 ## Getting Started
 
-Let's create an interactive, multi-player Altspace Web App.  
+Let's create an interactive, multi-player AltspaceVR Web App.  
 Source: [examples/spinning-cube.html]
 
 **Step 1**
@@ -60,11 +60,11 @@ Clone/download this repo and create your app HTML file.
 Your app HTML file should contain script tags pointing to the SDK files (and HTML/CSS, if your app supports running in a tranditional browser).  Next, let's add Javascript that uses standard Three.js commands along with new functions from our SDK.  For larger apps, you could separate your Javascript into multiple JS files; the SDK does not impose any particular file or directory structure.  
 
 **Step 2**
-Open your project in Altspace.
+Open your project in AltspaceVR.
 
 Setup [Prepros] and add your app's project directory. Click the *Live Preview* button and copy the link that opens.
 
-Open Altspace (for tips on windowed mode, see the [Workflow] page), and paste the Prepros preview link into one of the Altspace browser windows.
+Open AltspaceVR (for tips on windowed mode, see the [Workflow] page), and paste the Prepros preview link into one of the AltspaceVR browser windows.
 
 You should now see a blank page, or any traditional HTML content you have added so far.
 
@@ -91,7 +91,7 @@ renderer = altspace.getThreeJSRenderer(); // during scene initialization
 ...
 renderer.render( scene ); // in animation loop (via requestAnimationFrame)
 ```
-Any objects loaded by AltOBJMTLLoader and added to the Three.js scene are now imported (a.k.a. spawned) into the Altspace VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the Altspace environment.
+Any objects loaded by AltOBJMTLLoader and added to the Three.js scene are now imported (a.k.a. spawned) into the AltspaceVR VR environment!  They remain there until you remove them from the scene.  Optionally, you can also create a WebGLRenderer, to use when your app is running outside of the AltspaceVR environment.
 
 **Step 5**:
 Implement your animations and app logic using [Three.js]
@@ -100,11 +100,11 @@ Implement your animations and app logic using [Three.js]
 cube.rotation.x += 0.01;
 cube.rotation.y += 0.01;
 ```
-The Altspace ThreeJS renderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the Altspace environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in Altspace. **Hologram** refers to the in-Altspace 3D object controlled by an Altspace Web App.
+The AltspaceVR ThreeJS renderer serializes key information about objects in your scene for use by the game engine (Unity 3D) rendering the AltspaceVR environment. Thus changes to the transform (position, rotation, scale) of the above cube are mirrored by the cube hologram in AltspaceVR. **Hologram** refers to the in-AltspaceVR 3D object controlled by an AltspaceVR Web App.
 
 
 **Step 6a**:
-Register objects for Altspace events with [CursorEvents]
+Register objects for AltspaceVR events with [CursorEvents]
 ```
 cursorEvents = new CursorEvents();
 
@@ -125,7 +125,7 @@ cube.addEventListener( "cursorup",  function( event ) {
 // in animate loop
 cursorEvents.update();
 ```
-Now the cube will appear to "jump" slightly up and down on Altspace cursor press and release.  It will also respond to corresponding HTML5 mouse events in a traditional browser.
+Now the cube will appear to "jump" slightly up and down on AltspaceVR cursor press and release.  It will also respond to corresponding HTML5 mouse events in a traditional browser.
 
 **Step 6b**:
 Add interactive behavior with [Cursor Effect Plugins]
@@ -137,7 +137,7 @@ var hoverEffect = new ColorHoverEffect( blueGreen );
 cursorEvents.addEffect( dragEffect, cube );
 cursorEvents.addEffect( hoverEffect, cube );
 ```
-Now the cube is draggable (using left mouse click) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the Altspace developer community.
+Now the cube is draggable (using left mouse click) and it will also change color when the cursor hovers over it. In addition to using plugins included with this SDK, you can create your own, for use in your apps or to share with the AltspaceVR developer community.
 
 **Step 7**:
 Add muti-player networking with [FirebaseSync]
@@ -167,7 +167,7 @@ Videos
 * [AltspaceVR looking for SDK Collaborators]
 
 Or dive into the source code, organized as follows:
-* [src](src) - source code for this SDK; top-level files are required by all Altspace web apps
+* [src](src) - source code for this SDK; top-level files are required by all AltspaceVR web apps
 * [src/cursor](src/cursor) - Extends the Cursor API to implement per-object event dispatch, etc.
 * [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
 * [src/helpers](src/helpers) - Convenience utilities for common tasks
