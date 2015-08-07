@@ -28,7 +28,9 @@ Start by following our [Setup Guide]
 ###Input
 
 ####Cursor
->Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that signifigantly concave objects (buckets, etc) will block items inside them from being clicked on.
+
+>Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that signifigantly concave objects (buckets, etc) will block contained objects from being clicked on.
+
 * `mesh.addEventListener('cursorup' / 'cursordown', callback);`  
  listen for cursor events on a specific object.
 * `scene.addEventListner('cursormove', callback)`  
