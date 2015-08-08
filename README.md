@@ -15,19 +15,25 @@ This SDK is in pre-release beta and actively under development. **It is critical
 Start by following our [Setup Guide]
 
 ## AltspaceVR APIs
-**The full list of availible API functions are as follows**:
+
+###Holographic Rendering
+
 * `altspace.getThreeJSRenderer()`  
  returns a renderer that can be used to render three.js scenes as holographic objects
-* `altspace.getThreeJSTrackingSkeleton().then(callback)`  
- returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR
-* `altspace.getUser().then(callback)`  
- returns a promise that will fufill with information about the local user
+
+###Enclosure Properties
+
 * `altspace.getEnclosure().then(callback)`  
  returns a promise that will fufill with a description of the enclosure
 
-###Input
+###User Data
 
-####Cursor
+* `altspace.getUser().then(callback)`  
+ returns a promise that will fufill with information about the local user
+
+###Cursor Events
+
+The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners. 
 
 >Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that signifigantly concave objects (buckets, etc) will block contained objects from being clicked on.
 
@@ -35,6 +41,11 @@ Start by following our [Setup Guide]
  listen for cursor events on a specific object.
 * `scene.addEventListner('cursormove', callback)`  
  listen for cursor move events
+
+###Tracking Skeleton
+
+* `altspace.getThreeJSTrackingSkeleton().then(callback)`  
+ returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR
 
 ## Three.js Feature Support
 
