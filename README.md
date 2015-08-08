@@ -21,16 +21,6 @@ Start by following our [Setup Guide]
 * `altspace.getThreeJSRenderer()`  
  returns a renderer that can be used to render three.js scenes as holographic objects
 
-####Enclosure Properties
-
-* `altspace.getEnclosure().then(callback)`  
- returns a promise that will fufill with a description of the enclosure, including pixelsPerMeter which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.
-
-####User Data
-
-* `altspace.getUser().then(callback)`  
- returns a promise that will fufill with information about the local user
-
 ####Cursor Events
 
 The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners. 
@@ -41,6 +31,16 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
  listen for cursor events on a specific object.
 * `scene.addEventListner('cursormove', callback)`  
  listen for cursor move events
+
+####Enclosure Properties
+
+* `altspace.getEnclosure().then(callback)`  
+ returns a promise that will fufill with a description of the enclosure, including pixelsPerMeter which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.
+
+####User Data
+
+* `altspace.getUser().then(callback)`  
+ returns a promise that will fufill with information about the local user
 
 ####Tracking Skeleton
 
