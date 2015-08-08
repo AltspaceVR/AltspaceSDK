@@ -45,7 +45,7 @@ CursorEvents = function( scene, params ) {
 	this.effects = [];  // flat list of all effects
 	this.effectsState = {}; // built-in: copy of lastEvent, other values added by effects
 
-	this.inAltspace = !!window.Alt;
+	this.inAltspace = !!window.altspace;
 
 	if ( this.inAltspace ) {
 

@@ -7,8 +7,7 @@
  */
 
 THREE.AltOBJMTLLoader = function (manager, options) {
-
-	this.options = options;
+	this.options = options || {};
 	this.manager = (
 		(manager !== undefined) ? manager : THREE.DefaultLoadingManager);
 
