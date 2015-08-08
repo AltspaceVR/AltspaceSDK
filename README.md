@@ -21,7 +21,7 @@ Start by following our [Setup Guide]
 * `var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});`  
  returns a renderer that can be used to render three.js scenes as holographic objects
 
- > **Use {version:'0.2.0'} for the time being.** We may ask you to change this prior to launch. Version 1.0 will be delievered if you do no specify a version, but this will change at an arbitrary date. Version 1.0 can only be used with AltOBJMTLLoader and should not be used if at all possible.
+ > **Use {version:'0.2.0'} for the time being.** We may ask you to change this prior to launch. Version 1.0 will be delievered if you do not specify a version, but this will change to delivering the latest version at an arbitrary date. Version 1.0 can only be used with AltOBJMTLLoader and should not be used if at all possible.
 
 ####Cursor Events
 
