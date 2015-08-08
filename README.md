@@ -24,7 +24,7 @@ Start by following our [Setup Guide]
 ####Enclosure Properties
 
 * `altspace.getEnclosure().then(callback)`  
- returns a promise that will fufill with a description of the enclosure
+ returns a promise that will fufill with a description of the enclosure, including pixelsPerMeter which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.
 
 ####User Data
 
