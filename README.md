@@ -53,11 +53,11 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 * Object3D transformation and hierarchy
 * Most Geometries
 * MeshBasicMaterial map and color properties
-* Examples: [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
+* Examples that should work: [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
 **Not currently supported:**
 * Lighting, custom shaders, screen space effects.
-* Examples: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
+* Examples that won't work: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
 
 **Habits of Successful AltspaceVR Web Apps:**
 * Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
@@ -74,7 +74,6 @@ Videos
 * [AltspaceVR looking for SDK Collaborators]
 
 Or dive into the source code, organized as follows:
-* [src](src) - source code for this SDK; top-level files are required by all AltspaceVR web apps
 * [src/cursor](src/cursor) - Extends the Cursor API to allow for cursor effects
 * [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
 * [src/helpers](src/helpers) - Convenience utilities for common tasks
