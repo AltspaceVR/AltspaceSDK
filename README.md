@@ -75,7 +75,7 @@ Videos
 
 Or dive into the source code, organized as follows:
 * [src](src) - source code for this SDK; top-level files are required by all AltspaceVR web apps
-* [src/cursor](src/cursor) - Extends the Cursor API to implement per-object event dispatch, etc.
+* [src/cursor](src/cursor) - Extends the Cursor API to allow for cursor effects
 * [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
 * [src/helpers](src/helpers) - Convenience utilities for common tasks
 * [lib](lib) - third-party libraries used by the SDK
