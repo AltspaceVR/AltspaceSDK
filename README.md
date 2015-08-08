@@ -45,7 +45,7 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 ####Tracking Skeleton
 
 * `altspace.getThreeJSTrackingSkeleton().then(callback)`  
- returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR
+ returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children.
 
 ## Three.js Feature Support
 
