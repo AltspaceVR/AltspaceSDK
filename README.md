@@ -8,9 +8,7 @@ This repository contains the primary documentation for the SDK and related APIs,
 
 This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
 
-> **Heads up that some documentation and examples may be out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object.  
-AltOBJMTLLoader should not be used for any new apps.  
-CursorEvents needs to be refactored now that the normal cursor events can fire on individual objects. It should only be only be used if you intent on using one of the cursor effects.
+> **Heads up that some documentation and examples may be out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. AltOBJMTLLoader should not be used for any new apps. CursorEvents needs to be refactored now that the normal cursor events can fire on individual objects. It should only be only be used if you intent on using one of the cursor effects.
  
 ## Getting Started
 
