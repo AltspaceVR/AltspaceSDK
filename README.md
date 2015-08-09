@@ -12,7 +12,8 @@ This SDK is in pre-release beta and actively under development. **It is critical
  
 ## Getting Started
 
-**Start by following our [Setup Guide].** It has very useful things like links to the debuggger.
+**Start by following our [Setup Guide].**  
+It has very useful things like links to the debuggger.
 
 ## AltspaceVR APIs
 
