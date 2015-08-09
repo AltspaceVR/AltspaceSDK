@@ -12,9 +12,7 @@ This SDK is in pre-release beta and actively under development. **It is critical
  
 ## Getting Started
 
-Start by following our [Setup Guide]
-
-> **Useful things inside, highly recommended!**
+**Start by following our [Setup Guide]**
 
 ## AltspaceVR APIs
 
