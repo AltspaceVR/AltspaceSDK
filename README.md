@@ -14,6 +14,8 @@ This SDK is in pre-release beta and actively under development. **It is critical
 
 Start by following our [Setup Guide]
 
+> **Useful things inside, highly recommended!**
+
 ## AltspaceVR APIs
 
 ####Holographic Rendering
