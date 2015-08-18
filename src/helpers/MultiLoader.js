@@ -10,52 +10,78 @@
 
 var MultiLoader = function() {
 
-	/**
-	 * Loads models and caches them.
-	 */
-	function loadModel(file, cache, options, cb) {
+    var useThreeJSLoader = false;
 
-		var loader = new THREE.AltOBJMTLLoader(undefined, options);
-		loader.load(file, function ( loadedObject ) {
-			cache[file] = loadedObject;
-			cb();
-		});
-	}
+    /**
+     * Loads models and caches them.
+     */
+    function loadModel(file, cache, options, cb) {
 
-	/**
-	 * loads the assets as specified in the file list.
-	 * Expects fileList to be in format {file: "path/to/file.obj", key: "some_identifier"}
-	 * It will call the cb with the loaded assets when completed.
-	 */
-	function load(fileList, cb, options) {
+        var loader;
+        if (useThreeJSLoader) {
+            loader = new THREE.OBJMTLLoader();
+            loader.load(file, file.replace('.obj', '.mtl'), function(loadedObject) {
+                cache[file] = loadedObject;
+                cb();
+            });
+        }
+        else {
+            loader = new THREE.AltOBJMTLLoader(undefined, options);
+            loader.load(file, function ( loadedObject ) {
+                cache[file] = loadedObject;
+                cb();
+            });
+        }
+    }
 
-		var filesToLoad = [];
+    /**
+     * loads the assets as specified in the file list.
+     * Expects fileList to be in format {file: "path/to/file.obj", key: "some_identifier"}
+     * It will call the cb with the loaded assets when completed.
+     */
+    function load(fileList, cb, options) {
 
-		var cache = {};
+        var filesToLoad = [];
 
-		uniqueFileList = [];
+        var cache = {};
 
-		fileList.forEach(function(fileParams) {
-			if (uniqueFileList.indexOf(fileParams.file) == -1) {
-				uniqueFileList.push(fileParams.file);
-			}
-		});
+        uniqueFileList = [];
 
-		uniqueFileList.forEach(function(file) {
-			filesToLoad.push(async.apply(loadModel, file, cache, options));
-		});
+        fileList.forEach(function(fileParams) {
+            if (uniqueFileList.indexOf(fileParams.file) == -1) {
+                uniqueFileList.push(fileParams.file);
+            }
+        });
 
-		async.parallel(filesToLoad, function() {
-			var assets = {};
-			fileList.forEach(function(fileParams) {
-				assets[fileParams.key] = cache[fileParams.file].clone();
-			});
+        uniqueFileList.forEach(function(file) {
+            filesToLoad.push(async.apply(loadModel, file, cache, options));
+        });
 
-			cb(assets);
-		});
-	}
+        async.parallel(filesToLoad, function() {
+            var assets = {};
+            fileList.forEach(function(fileParams) {
+                assets[fileParams.key] = cache[fileParams.file].clone();
+            });
 
-	return {
-		load: load
-	};
+            cb(assets);
+        });
+    }
+
+    var retObj = {
+        load: load
+    };
+
+    /**
+     * Set 'useThreeJSLoader' to 'true' if using >= v0.2.0 of the SDK
+     */
+    Object.defineProperty(retObj, 'useThreeJSLoader', {
+        get: function(){
+            return useThreeJSLoader;
+        },
+        set: function (val) {
+            useThreeJSLoader = val;
+        }
+    });
+
+    return retObj;
 }();
