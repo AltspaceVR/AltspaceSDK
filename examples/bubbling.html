@@ -29,7 +29,6 @@
 	<body>
 		<div id="test-frame"></div>
         <script src="../lib/three.min.js"></script>
-        <script src="../src/AltOBJMTLLoader.js"></script>
         <script src="../lib/OBJMTLLoader.js"></script>
         <script src="../lib/MTLLoader.js"></script>
 
@@ -42,6 +41,7 @@
 
             function addEventListeners(object3d) {
                 object3d.addEventListener('cursordown', function (event) {
+                	console.dir(event.currentTarget);
                     event.currentTarget.userData.tintColor = { r: Math.random(), g: Math.random(), b: Math.random() };
                     event.stopPropagation();//This should still allow the scale to happen, but only on the target
                 });
@@ -71,7 +71,7 @@
             }
 
 			var manager = new THREE.LoadingManager();
-			var loader = new THREE.AltOBJMTLLoader( manager );
+			var loader = new THREE.OBJMTLLoader( manager );
 
 			init();
 
@@ -86,7 +86,7 @@
 					throw new Error(errorMsg);
 				}
 				
-				loader.load('models/SolarSystem/sun.obj', function (sun) {
+				loader.load('models/solar-system/sun.obj', 'models/AltspaceCube/sun.mtl', function (sun) {
 
 					sun.scale.x = 1;
 					sun.scale.y = 1;
@@ -130,7 +130,7 @@
 					    }
 					}
 
-				    renderer = altspace.getThreeJSRenderer();
+				    renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 
 					animate();
 				} );
