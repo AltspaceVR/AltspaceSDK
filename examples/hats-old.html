@@ -1,0 +1,261 @@
+<!--
+	Authors: Gavan Wilhite, Kevin Lee, Amber Roy
+	Copyright (c) 2015 Altspace VR
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<title>Hats</title>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/1.1.0/shim.min.js"></script>
+
+		<script src="http://sdk.altvr.com/libs/three.js/r71/three.min.js"></script>
+		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+
+		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+
+		<script src="../utilities/FirebaseSync.js"></script>
+
+		<style>
+			body {
+				background-color: rgba(0, 0, 0, 0);
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+
+</head>
+<body>
+<script>
+
+
+var inAltspace = window.hasOwnProperty('altspace');
+
+var scene, camera, renderer;
+var firebaseSync;
+
+var users = {};
+var avatarLookupByUserId = {};
+var userIdToPlaceholder = {};
+var localUserId;
+var isAltContentLoaded = false;
+
+var gameState;
+
+var avatars;
+
+var myHat;
+
+var modelList = ["hardhat", "tophat", "redhat", "strawhat", "wizardhat", "LavaHelmet"];
+var modelCache = {};
+
+var myPixelToMeterRatio = 285.714294;
+
+if (inAltspace) {
+
+	window.addEventListener("AltContentLoaded", function(event) { 
+		if ( isAltContentLoaded ) return;
+		isAltContentLoaded = true;
+		loadModels();
+	});
+}
+
+function loadModels() {
+	var fileList = [];
+	modelList.forEach(function(name) {
+		fileList.push({file: "models/AltspaceHats/" + name + ".obj", key: name});
+	});
+	MultiLoader.load(fileList, onModelsLoaded);
+}
+
+function onModelsLoaded(models) {
+	cachedModels = models;
+
+	initScene();
+	initEvents();
+	animate();
+	avatars = new Avatars();
+}
+
+function initScene() {
+
+	scene = new THREE.Scene();
+
+	// TODO Before moving to new 0.2.0 renderer, need to fix issue:
+	// - Straw hat material not rendering properly, appears as white
+	//   (replacing with another material or different hat would be fine too)
+	// - Performance: 1-2 second delay for app to respond to cursor events.
+	// - In Avatars.js, replace  window.Alt.Avatars.getAvatars with new API.
+	renderer = altspace.getThreeJSRenderer();
+
+	// hide any elements on webpage
+	document.getElementById("info").style.visibility = "hidden";
+
+	var x = -modelList.length / 2 * 200;
+	modelList.forEach(function(name) {
+		var model = cachedModels[name];
+		model.position.x = x;
+		var scale = 3.5 / myPixelToMeterRatio * window.pixelToMeterRatio;
+		model.scale.set(scale, scale, scale);
+		x += 200;
+		scene.add(model);
+	});
+}
+
+function initSync() {
+	var firebaseRootUrl = "https://altspace-apps.firebaseio.com/";
+	var appId = "hats";
+	var params = { authTokenPath: "./tokens/hats-token.txt" }
+	firebaseSync = new FirebaseSync( firebaseRootUrl, appId, params );
+
+	firebaseSync.connect( function(){}, createHat, deleteHat );
+}
+
+function initEvents() {
+	cursorEvents = new CursorEvents();
+	cursorEvents.enableMouseEvents( camera );
+
+	scene.addEventListener("altuserenter", function( object ) {
+		console.log(object.userId + " has entered the space.");
+	});
+
+	scene.addEventListener("altuserleave", function( object ) {
+		console.log(object.userId + " has exited the space.");
+	});
+
+	window.Alt.Users.getLocalUser().then(function(user) {
+		localUserId = user.userId;
+
+		modelList.forEach(function(hatType) {
+			var model = cachedModels[hatType];
+			cursorEvents.addObject( model );
+
+			model.addEventListener( "cursorenter",  function( event ) {
+				model.position.y = 10;
+			});
+
+			model.addEventListener( "cursorleave",  function( event ) {
+				model.position.y = 0;
+			});
+
+			model.addEventListener( "cursordown",  function( event ) {
+				syncHatForLocalUser(localUserId, hatType);
+			});
+		});
+
+		initSync();
+		
+	});
+
+	scene.addEventListener("altuserenter", function( object ) {
+		users[object.userId] = {displayName: object.displayName, isLocal: object.isLocal};
+		console.log(object.userId + " has entered the space.");
+	});
+
+	scene.addEventListener("altuserleave", function( object ) {
+		delete users[object.userId];
+		console.log(object.userId + " has exited the space.");
+
+		var placeholder = userIdToPlaceholder[object.userId];
+		if (placeholder) {
+			deleteHat(getHatId(object.userId, placeholder.userData.syncData.hatId), placeholder.userData.syncData);	
+		}
+	});
+}
+
+function getHatId(userId, hatType) {
+	return userId + "_" + hatType;
+}
+
+function syncHatForLocalUser(userId, hatType) {
+
+	var placeholder = userIdToPlaceholder[userId];
+
+	if (myHat) {
+		destroyHat(userId);
+		myHat = null;
+	}
+
+	if (!placeholder || hatType != placeholder.userData.syncData.hatType) {
+		createHat(getHatId(userId, hatType), {hatType: hatType, owner: userId});
+	}	
+	
+}
+
+function destroyHat(userId) {
+	var avatar = avatarLookupByUserId[userId];
+	var placeholder = userIdToPlaceholder[userId];
+		if (avatar) {
+			var hatType = placeholder.userData.syncData.hatType;
+			delete userIdToPlaceholder[userId];
+			scene.remove(avatar.body);
+			delete avatarLookupByUserId[userId];
+			firebaseSync.removeObject(getHatId(userId, hatType));
+		}
+}
+
+function createHat(hatId, syncData) {
+
+	var userId = syncData.owner;
+	if (!avatarLookupByUserId[userId]) {
+
+		var placeholder = new THREE.Object3D();
+		placeholder.userData.syncData = syncData;
+		firebaseSync.addObject(placeholder, hatId);
+
+		if (userId == localUserId) {
+			myHat = placeholder;
+		}
+
+		userIdToPlaceholder[userId] = placeholder;
+
+		var newHat = cachedModels[syncData.hatType].clone();
+
+		newHat.userData.syncData = syncData;
+
+		newHat.position.x = 0;
+		newHat.position.y = 20 / myPixelToMeterRatio * window.pixelToMeterRatio;
+		newHat.position.z = -15 / myPixelToMeterRatio * window.pixelToMeterRatio;
+
+		avatar = avatars.addUser(userId);
+		scene.add(avatar.body);
+		avatar.head.add(newHat);
+
+		avatarLookupByUserId[userId] = avatar;
+	}
+}
+
+function deleteHat(hatId, syncData) {
+	var userId = syncData.owner;
+	if (userId != localUserId) {
+		destroyHat(userId);
+	}
+}
+
+function onWindowResize() {
+
+	if ( inAltspace ) return ; // Resize not supported yet.
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+window.addEventListener( 'resize', onWindowResize, false );
+
+
+function animate() {
+	requestAnimationFrame( animate );
+	if (avatars) {
+		avatars.update();
+	}
+	renderer.render( scene, camera );
+}
+
+</script>
+</body>
+</html>
+
+
+
