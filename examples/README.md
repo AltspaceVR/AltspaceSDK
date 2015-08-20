@@ -1,15 +1,15 @@
-Finalized
+Finalized  
 
-Updated
+Updated  
 
-hello-hands
-hello-world
+- hello-hands (basic rendering, text)
+- hello-world (hand tracking)
 
-Needs Updates
+Needs Updates  
 
-bubbling
-chess
-hover-cursor
-hats
-solar-system
+- bubbles (cursor events, basic mesh loading) 
+- chess (multi-platform rendering, multi-platform cursor events, parallel mesh loading, basic firebase sync)
+- hover-cursor (cursor events while not over objects)
+- hats (head tracking, per-user firebase sync)
+- solar-system (hybrid rendering)
 
