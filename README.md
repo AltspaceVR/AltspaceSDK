@@ -4,7 +4,7 @@ This SDK can be used with [three.js] to create holographic, multi-user web apps 
 
 Three.js is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
 
-This repository contains the primary documentation for the SDK and related APIs, as well as examples and helper modules. As  all required APIs are already integrated into the client, you can build holographic three.js apps for AltspaceVR without using additional libraries from this repo (though many many can be very useful). 
+This repository contains the primary documentation for the SDK and related APIs, as well as examples and utilities. As all required APIs are already integrated into the client, you can build holographic three.js apps for AltspaceVR without using additional files from this repo (though many many can be very useful). 
 
 This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
 
