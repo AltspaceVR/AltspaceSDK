@@ -28,9 +28,9 @@
 	</head>
 	<body>
 		<div id="test-frame"></div>
-        <script src="../lib/three.min.js"></script>
-        <script src="../lib/OBJMTLLoader.js"></script>
-        <script src="../lib/MTLLoader.js"></script>
+	    <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+	    <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+	    <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 
 		<script>
 
@@ -77,7 +77,7 @@
 
 			function init() {
 
-				if (!altspace) {
+				if (!window.altspace) {
 					var errorMsg = "This experiment only works in Altspace";
 					var testFrame = document.getElementById('test-frame');
 					testFrame.innerHTML = errorMsg;
@@ -86,7 +86,7 @@
 					throw new Error(errorMsg);
 				}
 				
-				loader.load('models/solar-system/sun.obj', 'models/AltspaceCube/sun.mtl', function (sun) {
+				loader.load('models/solar-system/sun.obj', 'models/solar-system/sun.mtl', function (sun) {
 
 					sun.scale.x = 1;
 					sun.scale.y = 1;
