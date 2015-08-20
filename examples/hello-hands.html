@@ -3,32 +3,25 @@
 <head>
 <meta charset=utf-8>
 <title>Hello Hands</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
-<script src="fonts/helvetiker_regular.typeface.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/fonts/helvetiker_regular.typeface.js"></script>
 </head>
 <body>
 <script>
+if (!window.altspace) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 
-text = "HelloHands";//"AltspaceVR"
+var text = "HelloHands";//"AltspaceVR"
 
 //Setup
-scene = new THREE.Scene();
-
-//Rendering
-renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
-
-function animate() {
-	requestAnimationFrame(animate);
-	renderer.render(scene);
-}
-animate();
+var scene = new THREE.Scene();
+var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 
 //Letters
-letters = [];
+var letters = [];
 for(var i = 0, max = text.length; i < max; i++){
-	geometry = new THREE.TextGeometry(text.charAt(i));
-	material = new THREE.MeshBasicMaterial({color:'green'});
-	mesh = new THREE.Mesh(geometry, material);
+	var geometry = new THREE.TextGeometry(text.charAt(i));
+	var material = new THREE.MeshBasicMaterial({color:'green'});
+	var mesh = new THREE.Mesh(geometry, material);
 	mesh.scale.z = 0.3;
 	mesh.scale.multiplyScalar(0.3);
 	mesh.position.z = 30;
@@ -40,7 +33,7 @@ for(var i = 0, max = text.length; i < max; i++){
 
 //Skeleton
 altspace.getThreeJSTrackingSkeleton().then(function(args){
-	skeleton = args;
+	var skeleton = args;
 	scene.add(skeleton);
 
 	var i = 0;
@@ -55,6 +48,13 @@ altspace.getThreeJSTrackingSkeleton().then(function(args){
 	skeleton.getJoint('Ring', 	'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Little', 'Right', 	3).add(letters[i++]);
 });
+
+//Rendering
+function animate() {
+	requestAnimationFrame(animate);
+	renderer.render(scene);
+}
+animate();
 
 </script>
 </body>
