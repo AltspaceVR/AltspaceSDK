@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Spinning Cube</title>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/
+examples/js/loaders/MTLLoader.js"></script>
+</head>
+<body>
+<script>
+
+//Setup
+var renderer, camera, scale;
+var scene = new THREE.Scene();
+if ( window.altspace ) {
+	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+	scale = 200;
+} else {
+	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor('silver');
+	document.body.appendChild( renderer.domElement )
+
+	var aspect = window.innerWidth / window.innerHeight;
+	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000);
+	scale = 10;
+	camera.position.z = 5 * scale; // stand back from origin
+
+	window.addEventListener( 'resize', function() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+	}, false );
+}
+
+// Use MTLLoader for loadTexture, to ensure image is power of 2
+// else antialiasing won't work (this is a limitation of WebGL)
+var materialCreator = new THREE.MTLLoader.MaterialCreator();
+var texture = materialCreator.loadTexture('images/altspace-logo.jpg');
+
+//Cube
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshBasicMaterial({color:'cyan', map: texture});
+var mesh = new THREE.Mesh(geometry, material);
+mesh.scale.multiplyScalar(scale);
+scene.add(mesh);
+
+// Update & Rendering
+function animate() {
+	requestAnimationFrame(animate);
+	renderer.render(scene, camera);
+	mesh.rotation.y += 0.01;
+}
+animate();
+
+</script>
+</body>
+</html>

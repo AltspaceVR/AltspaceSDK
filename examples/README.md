@@ -7,6 +7,7 @@ Updated
 - hello-hands (basic rendering, text)
 - hello-world (hand tracking)
 - bubbles (cursor events, basic mesh loading) 
+- spinning-cube (dual-rendering, geometry)
 
 Needs Updates  
 
