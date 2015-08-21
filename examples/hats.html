@@ -46,17 +46,21 @@ var Hats = (function () {
 
 	var hats = {};
 
+	//The entry point for our app. Errors in Promises can sometimes be confusing to read, so we explicity catch and print them.
 	function init(){
 		load().catch(function(error){
 			console.error('Loading failed');
-			console.dir(error);
+			console.dir(error.stack);//Printing the stack seems to be the best way to log the error to the inspector.
 		}).then(start).catch(function(error){
 			console.error('Startup failed');
 			console.error(error.stack);
 		});
 	}
 
+	//Load returns a promise that will resolve when all loading functions have completed.
 	function load(){
+		//Promise.all creates a new promise that resolves when all its child promises resolve. It returns an array of all the values returned from the child promises.
+		//This is recomended when dealing with multiple asyncronous APIs, as we essentially get loading them all out of the way before starting our app.
 		return Promise.all([loadModels(), altspace.getUser(), altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure(), /*connect(),*/ ]).then(function(values){
         	localUser = values[1];
         	skeleton = values[2];
@@ -64,15 +68,20 @@ var Hats = (function () {
         });
 	}
 
+	//LoadModels returns a promise that will resolve when all models have been loaded and stored.
+	//This function is a pretty general, so feel free to copy it into your app and create other loadHat style functions.
 	function loadModels(){
+
+		//Changes the OBJMTL load function from a callback based API to a promise based one.
 		function loadObjMtl(objUrl, mtlUrl){
-			mtlUrl = mtlUrl || objUrl.slice(0, -4) + '.mtl';
+			mtlUrl = mtlUrl || objUrl.slice(0, -4) + '.mtl';//Allows you to pass in only the obj url and have the mtl url assumed from the filename.
 			return new Promise(function(resolve,reject){
-				var progress = function(){};
+				var progress = function(){};//Insert any per-file progress logic here.
 				objMtlLoader.load(objUrl, mtlUrl, resolve, progress, reject);
 			});
 		}
 
+		//Load and store a specific type of asset. This makes it easy assign an asset name to the loaded asset after loading completion.
 		function loadHat(name, objMtlName){
 			var baseUrl = 'models/hats/';
 			return loadObjMtl(baseUrl + objMtlName).then(function(value){
