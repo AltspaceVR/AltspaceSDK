@@ -38,11 +38,18 @@
 
 			var geometry, root;
 
+			function setTintColor (obj, tintColor) {
+			    obj.userData.tintColor = tintColor;
+			    for (var i = 0; i < obj.children.length; i++) {
+			        obj.children[i].userData.tintColor = tintColor;
+			    }
+			}
 
             function addEventListeners(object3d) {
                 object3d.addEventListener('cursordown', function (event) {
                 	console.dir(event.currentTarget);
-                    event.currentTarget.userData.tintColor = { r: Math.random(), g: Math.random(), b: Math.random() };
+                    var randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+                    setTintColor( event.currentTarget, randomColor);
                     event.stopPropagation();//This should still allow the scale to happen, but only on the target
                 });
 
