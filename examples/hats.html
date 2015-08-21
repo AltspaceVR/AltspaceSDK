@@ -9,12 +9,12 @@
 	<title>Hats</title>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/1.1.0/shim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+	<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
 	<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 	<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 	<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
-
-	<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
 	<script src="../utilities/FirebaseSync.js"></script>
 
@@ -39,10 +39,12 @@ var Hats = (function () {
 	var objMtlLoader = new THREE.OBJMTLLoader();
 
 	var localUser;
-	var localSkeleton;
+	var skeleton;
 	var enclosure;
 
-	var hats = new Map();
+	var centerEye;
+
+	var hats = {};
 
 	function init(){
 		load().catch(function(error){
@@ -57,7 +59,7 @@ var Hats = (function () {
 	function load(){
 		return Promise.all([loadModels(), altspace.getUser(), altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure(), /*connect(),*/ ]).then(function(values){
         	localUser = values[1];
-        	localSkeleton = values[2];
+        	skeleton = values[2];
         	enclosure = values[3];
         });
 	}
@@ -74,7 +76,7 @@ var Hats = (function () {
 		function loadHat(name, objMtlName){
 			var baseUrl = 'models/hats/';
 			return loadObjMtl(baseUrl + objMtlName).then(function(value){
-				hats.set(name, value)
+				hats[name] = value;
 			});
 		}
 
@@ -104,23 +106,37 @@ var Hats = (function () {
 	function start(){
 		console.log('start');
 		console.dir(localUser);
-		console.dir(localSkeleton);
+		console.dir(skeleton);
 		console.dir(enclosure);
 		console.dir(hats);
 
-		layout();
+    	scene.add(skeleton);//Important! Joints will not update otherwise.
+		centerEye = skeleton.getJoint('Eye');//'Center' is a default paramater
+
+		createHatMenu();
 
 		update();
 	}
 
-	function layout(){
-		var hatGap = 100;
+	function createHatMenu(){
+		var hatGap = 200;
 
-		var hatList = Array.from(hats);
+		var hatValues = _.values(hats);
 
-		for(var i = 0, max = hatList.length; i < max; i++){
-			console.dir(hatList[i]);
-			hatList[i].position.x = hatGap * i - hatGap * max / 2;
+		for(var i = 0, max = hatValues.length; i < max; i++){
+			var hat = hatValues[i].clone();
+			scene.add(hat);
+			hat.position.x = hatGap * i - hatGap * max / 2;
+
+			hat.addEventListener('cursorup', function(e){
+				if(localHat){
+					centerEye.remove(localHat);
+				}
+				localHat = hat.clone();//TODO store and clear
+				centerEye.add(localHat);
+			});
+			hat.scale.multiplyScalar(5);
+			//hat.scale.multiplyScalar(500 / enclosure.pixelsPerMeter);
 		}
 	}
 
@@ -132,6 +148,7 @@ var Hats = (function () {
 	init();
 
 	exports.scene = scene;
+	exports.hats = hats;
 	return exports;
 }());
 
