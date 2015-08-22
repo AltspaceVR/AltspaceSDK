@@ -1,10 +1,4 @@
-/*
- * ColorHoverEffect makes objects change color on hover.
- * Apply using CursorEfects.
- *
- * Author: Amber Roy
- * Copyright (c) 2015 AltspaceVR
- */
+// ColorHoverEffect makes objects change color on hover.
 
 ColorHoverEffect = function ( params ) {
 
@@ -25,7 +19,7 @@ ColorHoverEffect = function ( params ) {
 };
 
 
-ColorHoverEffect.prototype.holocursorenter = function( object ) {
+ColorHoverEffect.prototype.cursorenter = function( object ) {
 
 	if ( this.dragObject ) return ; // ignore hover events during drag
 
@@ -38,7 +32,7 @@ ColorHoverEffect.prototype.holocursorenter = function( object ) {
 };
 
 
-ColorHoverEffect.prototype.holocursorleave = function( object ) {
+ColorHoverEffect.prototype.cursorleave = function( object ) {
 
 	if ( this.dragObject ) return ; // ignore hover events during drag
 
@@ -54,7 +48,7 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 	this.hoverObject = object;
 
 	// Reddish tint color
-	if ( inAltspace ) {
+	//if ( inAltspace ) {
 
 		if (! object.userData.origTintColor ) {
 			object.userData.origTintColor = object.userData.tintColor;
@@ -70,22 +64,6 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
 		}.bind( this ));
 
-	} else {
-
-		object.traverse( function(child) { // TODO: Is traverse still needed?
-			if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
-
-				if (! child.userData.origAmbientColor ) {
-					child.userData.origAmbientColor = child.material.ambient;
-				}
-
-				child.material.ambient = this.color;
-
-			}
-		}.bind( this )); 
-
-	}
-
 };
 
 
@@ -93,33 +71,16 @@ ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
 	this.hoverObject = null;
 
-	if ( inAltspace ) {
+	object.userData.tintColor = object.userData.origTintColor;
+	object.position.x += 0.001; // hack to force AltRender to redraw scene
 
-		object.userData.tintColor = object.userData.origTintColor;
-		object.position.x += 0.001; // hack to force AltRender to redraw scene
+	// workaround since deep-tint isn't working with new renderer
+	object.traverse( function(child) {
 
-		// workaround since deep-tint isn't working with new renderer
-		object.traverse( function(child) {
+		child.userData.tintColor = object.userData.origTintColor;
 
-			child.userData.tintColor = object.userData.origTintColor;
+	});
 
-		});
-
-	} else {
-
-		object.traverse( function(child) {
-
-			if ( child.material && child.material instanceof THREE.MeshPhongMaterial) {
-				if (child.userData.origAmbientColor) {
-					child.material.ambient = child.userData.origAmbientColor;
-				} else {
-					console.error("Cannot clear hover effect", child);
-				}
-			}
-
-		}); 
-
-	}
 };
 
 

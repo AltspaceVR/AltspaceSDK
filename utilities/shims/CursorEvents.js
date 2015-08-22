@@ -1,7 +1,7 @@
 /*
- * NOTE: Used internally by CursorEvents; no need to instantiate manually! 
+ * NOTE: Used internally by CursorEffects; no need to instantiate manually! 
  *
- * AltObjectControls detects mouse events using the Three.js raycaster.
+ * CursorEvents detects mouse events using the Three.js raycaster.
  * This allows events to function similarly in and outside Altspace.
  * To activate: cursorEventsSingleton.enableMouseEvents( camera )
  *
@@ -13,10 +13,8 @@
  * Added delegate: optionally receives all events, instead of target object.
  * Added eventDetail: contains ray origin, direction, intersection point, etc. 
  *
- * Author: Amber Roy
- * Copyright (c) 2015 AltspaceVR
  */
-function AltObjectControls( eye , params ){
+function CursorEvents( eye , params ){
 
 	this.intersected;
 	this.selected;
@@ -76,7 +74,7 @@ function AltObjectControls( eye , params ){
 
 
 // You can think of _up and _down as mouseup and mouse down
-AltObjectControls.prototype._down = function(){
+CursorEvents.prototype._down = function(){
 
 	this.down();
 
@@ -88,11 +86,11 @@ AltObjectControls.prototype._down = function(){
 
 }
 
-AltObjectControls.prototype.down = function(){}
+CursorEvents.prototype.down = function(){}
 
 
 
-AltObjectControls.prototype._up = function(){
+CursorEvents.prototype._up = function(){
 
 	this.up();
 
@@ -104,10 +102,10 @@ AltObjectControls.prototype._up = function(){
 
 }
 
-AltObjectControls.prototype.up = function(){}
+CursorEvents.prototype.up = function(){}
 
 
-AltObjectControls.prototype._move = function(){
+CursorEvents.prototype._move = function(){
 	this.move();
 
 	if ( this.delegate ) {
@@ -118,10 +116,10 @@ AltObjectControls.prototype._move = function(){
 
 }
 
-AltObjectControls.prototype.move = function(){}
+CursorEvents.prototype.move = function(){}
 
 
-AltObjectControls.prototype._hoverOut = function( object ){
+CursorEvents.prototype._hoverOut = function( object ){
 
 	this.hoverOut();
 	
@@ -141,10 +139,10 @@ AltObjectControls.prototype._hoverOut = function( object ){
 
 };
 
-AltObjectControls.prototype.hoverOut = function(){};
+CursorEvents.prototype.hoverOut = function(){};
 
 
-AltObjectControls.prototype._hoverOver = function( object ){
+CursorEvents.prototype._hoverOver = function( object ){
  
 	this.hoverOver();
 	
@@ -164,10 +162,10 @@ AltObjectControls.prototype._hoverOver = function( object ){
 
 };
 
-AltObjectControls.prototype.hoverOver = function(){};
+CursorEvents.prototype.hoverOver = function(){};
 
 
-AltObjectControls.prototype._select = function( object ){
+CursorEvents.prototype._select = function( object ){
  
 	this.select();
 
@@ -187,11 +185,11 @@ AltObjectControls.prototype._select = function( object ){
 
 };
 
-AltObjectControls.prototype.select = function(){}
+CursorEvents.prototype.select = function(){}
 
 
 
-AltObjectControls.prototype._deselect = function( object ){
+CursorEvents.prototype._deselect = function( object ){
 
 	this.selected = undefined;
 
@@ -211,10 +209,10 @@ AltObjectControls.prototype._deselect = function( object ){
 
 };
 
-AltObjectControls.prototype.deselect = function(){}
+CursorEvents.prototype.deselect = function(){}
 
 
-AltObjectControls.prototype._eventDetail = function( eventName ){
+CursorEvents.prototype._eventDetail = function( eventName ){
 
 	var origin = this.raycaster.ray.origin;
 	var direction = this.raycaster.ray.direction;
@@ -247,13 +245,13 @@ AltObjectControls.prototype._eventDetail = function( eventName ){
 
 */
 
-AltObjectControls.prototype.add = function( object ){
+CursorEvents.prototype.add = function( object ){
 
 	this.objects.push( object );
 
 };
 
-AltObjectControls.prototype.remove = function( object ){
+CursorEvents.prototype.remove = function( object ){
 
 	for( var i = 0; i < this.objects.length; i++ ){
 
@@ -275,7 +273,7 @@ AltObjectControls.prototype.remove = function( object ){
 
 */
 
-AltObjectControls.prototype.update = function(){
+CursorEvents.prototype.update = function(){
 
 
 	if ( this.unprojectedMouse ) {
@@ -295,7 +293,7 @@ AltObjectControls.prototype.update = function(){
 
 };
 
-AltObjectControls.prototype._updateSelected = function(){
+CursorEvents.prototype._updateSelected = function(){
 
 	if( this.selected.update ){
 
@@ -305,12 +303,12 @@ AltObjectControls.prototype._updateSelected = function(){
 
 }
 
-AltObjectControls.prototype.updateSelected = function(){};
+CursorEvents.prototype.updateSelected = function(){};
 
 
 
 
-AltObjectControls.prototype.setRaycaster = function( position ){
+CursorEvents.prototype.setRaycaster = function( position ){
 
 	var origin = position;
 	var direction = origin.clone()
@@ -330,7 +328,7 @@ AltObjectControls.prototype.setRaycaster = function( position ){
 
 */
 
-AltObjectControls.prototype.checkForIntersections = function(){
+CursorEvents.prototype.checkForIntersections = function(){
 
 	var intersected = this.raycaster.intersectObjects( this.objects, this.recursive );
 
@@ -367,7 +365,7 @@ AltObjectControls.prototype.checkForIntersections = function(){
 
 };
 
-AltObjectControls.prototype.checkForUpDown = function( hand , oHand ){
+CursorEvents.prototype.checkForUpDown = function( hand , oHand ){
 
 	if( this.upDownEvent( this.selectionStrength , hand, oHand ) === true ){
 	
@@ -384,7 +382,7 @@ AltObjectControls.prototype.checkForUpDown = function( hand , oHand ){
 
 
 
-AltObjectControls.prototype.getIntersectionPoint = function( i ){
+CursorEvents.prototype.getIntersectionPoint = function( i ){
 
 	var intersected = this.raycaster.intersectObjects( this.objects, this.recursive );
  
@@ -392,7 +390,7 @@ AltObjectControls.prototype.getIntersectionPoint = function( i ){
 
 }
 
-AltObjectControls.prototype._findTopLevelAncestor = function( object ){
+CursorEvents.prototype._findTopLevelAncestor = function( object ){
 
 	// Traverse back up until we find the first ancestor that is a top-level
 	// object then return it (or null), since only top-level objects (which
@@ -423,7 +421,7 @@ AltObjectControls.prototype._findTopLevelAncestor = function( object ){
 
 */
 
-AltObjectControls.prototype._objectIntersected = function( intersected ){
+CursorEvents.prototype._objectIntersected = function( intersected ){
 
 	// Assigning out first intersected object
 	// so we don't get changes everytime we hit 
@@ -462,9 +460,9 @@ AltObjectControls.prototype._objectIntersected = function( intersected ){
 
 };
 
-AltObjectControls.prototype.objectIntersected = function(){}
+CursorEvents.prototype.objectIntersected = function(){}
 
-AltObjectControls.prototype._noObjectIntersected = function(){
+CursorEvents.prototype._noObjectIntersected = function(){
 
 	if( this.intersected ){
 
@@ -478,10 +476,10 @@ AltObjectControls.prototype._noObjectIntersected = function(){
 
 };
 
-AltObjectControls.prototype.noObjectIntersected = function(){}
+CursorEvents.prototype.noObjectIntersected = function(){}
 
 
-AltObjectControls.prototype.mouseMove = function(event){
+CursorEvents.prototype.mouseMove = function(event){
 
 	this.mouseMoved = true;
 
@@ -494,34 +492,34 @@ AltObjectControls.prototype.mouseMove = function(event){
 	this._move();
 }
 
-AltObjectControls.prototype.unprojectMouse = function(){
+CursorEvents.prototype.unprojectMouse = function(){
 	this.unprojectedMouse.copy( this.mouse );
 	this.unprojectedMouse.unproject( this.eye );
 
 }
 
-AltObjectControls.prototype.mouseDown = function( event ){
+CursorEvents.prototype.mouseDown = function( event ){
 	//this.mouseMove( event ); // remove to match Altspace
 	this._down();
 }
 
-AltObjectControls.prototype.mouseUp = function(){
+CursorEvents.prototype.mouseUp = function(){
 	//this.mouseMove( event ); // remove to match Altspace
 	this._up();
 }
 
 
-AltObjectControls.prototype.touchStart = function(event){
+CursorEvents.prototype.touchStart = function(event){
 	//this.touchMove( event ); // remove to match Altspace
 	this._down();
 }
 
-AltObjectControls.prototype.touchEnd = function(event){
+CursorEvents.prototype.touchEnd = function(event){
 	//this.touchMove( event ); // remove to match Altspace
 	this._up();
 }
 
-AltObjectControls.prototype.touchMove= function(event){
+CursorEvents.prototype.touchMove= function(event){
 
 	this.mouseMoved = true;
 

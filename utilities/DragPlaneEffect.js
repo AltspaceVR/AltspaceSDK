@@ -2,8 +2,6 @@
  * DragPlaneEffect implements drag-and-drop of objects.
  * Apply using CursorEffects.
  *
- * Author: Amber Roy
- * Copyright (c) 2015 AltspaceVR
  */
 
 DragPlaneEffect = function ( params ) {

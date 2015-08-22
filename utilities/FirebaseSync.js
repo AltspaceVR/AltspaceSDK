@@ -4,8 +4,6 @@
  * Syncs object position, rotation, and scale (must be THREE.Object3D instance).
  * Also syncs any properties in object.userData.syncData.
  *
- * Author: Amber Roy
- * Copyright (c) 2015 AltspaceVR
  */
 
 FirebaseSync = function(firebaseRootUrl, appId, params) {
