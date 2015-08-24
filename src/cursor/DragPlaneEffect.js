@@ -44,11 +44,25 @@ DragPlaneEffect = function ( params ) {
 	// Intended as a debugging aide. Mesh with SphereGeometry works well.
 	this.dragPointMarker = p.dragPointMarker || null;
 
+	// Listen for cursorup event on scene.
+	this.scene = p.scene || null;
+	if ( this.scene ) {
+		console.log("DragPlaneEffect listening for cursorup on scene.")
+		this.scene.addEventListener( "cursorup", this.scenecursorup );
+	}
+
 };
 
 DragPlaneEffect.prototype.holocursordown = function( object, event ) {
 
 	this.dragStart( object, event );
+
+}
+
+DragPlaneEffect.prototype.scenecursorup = function( event ) {
+
+	if ( this.TRACE ) console.log("Scene cursorup detected");
+	this.dragEnd( event.target, event );
 
 }
 
