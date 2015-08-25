@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Renderer Tests</title>
+		<meta charset="utf-8">
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="../lib/three.js"></script>
+
+		<script>
+
+			var scene, renderer;
+			var 
+				tintTexCube, colorTexCube, tintColorCube, 
+				animatedCube, colorCube, texturedCube;
+
+			init();
+			animate();
+
+			var textureMat;
+
+			function addTexturedCube () {
+				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
+
+				if (!textureMat) {
+					var texture = THREE.ImageUtils.loadTexture(
+						'textures/UV_Grid_Sm.jpg' );
+					textureMat = new THREE.MeshBasicMaterial( { map: texture } );
+				}
+
+				var tCube = new THREE.Mesh( geometry, textureMat );
+				// RIGHT
+				tCube.position.set(50, 0, 0);
+				scene.add( tCube );
+				return tCube;
+			}
+
+			function addColorCube () {
+				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
+				var cCube = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color: 'red'}) );
+				// LEFT
+				cCube.position.set(-50, 0, 0);
+				scene.add( cCube );
+				return cCube;
+			}
+
+			function init() {
+
+				console.log('init');
+				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+
+
+				scene = new THREE.Scene();
+				scene.position.set(0, -60, 0);
+				scene.scale.multiplyScalar(2);
+
+				// TOP
+				tintTexCube = addTexturedCube();
+				tintTexCube.position.set(0, 50, 0);
+				tintTexCube.userData.tintColor = {r: 1, g: 0, b: 0};
+
+				// BOTTOM
+				colorTexCube = addTexturedCube();
+				colorTexCube.position.set(0, -50, 0);
+				colorTexCube.material = colorTexCube.material.clone()
+				colorTexCube.material.color.setHSL(0.25, 1, 0.5);
+
+				// TOP LEFT
+				tintColorCube = addColorCube();
+				tintColorCube.position.set(-50, 50, 0);
+				tintColorCube.material.color = new THREE.Color('rgb(255, 128, 128)');
+				tintColorCube.userData.tintColor = {r: 1, g: 0, b: 0};
+
+				// CENTER
+				animatedCube = addTexturedCube();
+				animatedCube.position.set(0, 0, 0);
+
+			}
+
+			var lastTick = Date.now();
+			var tick = true;
+			var i = 0;
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				if (Date.now() - lastTick > 2000) {
+					if (tick) {
+						texturedCube = addTexturedCube();
+						scene.remove(colorCube);
+						tintColorCube.userData.tintColor = {r: 0, g: 1, b: 0};
+						tintTexCube.userData.tintColor = {r: 0, g: 1, b: 0};
+					}
+					else {
+						scene.remove(texturedCube);
+						colorCube = addColorCube();
+						tintColorCube.userData.tintColor = {r: 0, g: 0, b: 1};
+						tintTexCube.userData.tintColor = {r: 0, g: 0, b: 1};
+					}
+					tick = !tick;
+					lastTick = Date.now();
+				}
+
+				i += 0.01;
+				animatedCube.rotation.x = Math.sin(i);
+				animatedCube.rotation.y = Math.cos(i);
+				animatedCube.position.z = Math.sin(i) * 25;
+
+				renderer.render( scene );
+
+			}
+
+		</script>
+
+	</body>
+</html>
