@@ -12,13 +12,15 @@
 	</head>
 	<body>
 		<script src="../lib/three.js"></script>
+		<script src="../lib/MTLLoader.js"></script>
+		<script src="../lib/OBJMTLLoader.js"></script>
 
 		<script>
 
 			var scene, renderer;
 			var 
 				tintTexCube, colorTexCube, tintColorCube, 
-				animatedCube, colorCube, texturedCube;
+				animatedCube, colorCube, texturedCube, tintedObj;
 
 			init();
 			animate();
@@ -43,11 +45,20 @@
 
 			function addColorCube () {
 				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
-				var cCube = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color: 'red'}) );
+				var cCube = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'red'}) );
 				// LEFT
 				cCube.position.set(-50, 0, 0);
 				scene.add( cCube );
 				return cCube;
+			}
+			
+			function deepTint (obj, tintColor) {
+				obj.userData.tintColor = tintColor;
+				for (var i = 0; i < obj.children.length; i++) {
+					obj.children[i].userData.tintColor = tintColor;
+				}
 			}
 
 			function init() {
@@ -74,12 +85,26 @@
 				// TOP LEFT
 				tintColorCube = addColorCube();
 				tintColorCube.position.set(-50, 50, 0);
-				tintColorCube.material.color = new THREE.Color('rgb(255, 128, 128)');
+				tintColorCube.material.color = new THREE.Color('white');
 				tintColorCube.userData.tintColor = {r: 1, g: 0, b: 0};
 
 				// CENTER
 				animatedCube = addTexturedCube();
 				animatedCube.position.set(0, 0, 0);
+
+				var loader = new THREE.OBJMTLLoader();
+				var objFilename = "models/AltspaceCube/cube.obj";
+				var mtlFilename = "models/AltspaceCube/cube.mtl";
+				loader.load(
+					objFilename,
+					mtlFilename,
+						function ( loadedObject ) {
+						tintedObj = loadedObject;
+						tintedObj.scale.multiplyScalar(2.5);
+						tintedObj.position.set(-50, -50, 0);
+						scene.add(tintedObj);
+					}
+				);
 
 			}
 
@@ -94,14 +119,18 @@
 					if (tick) {
 						texturedCube = addTexturedCube();
 						scene.remove(colorCube);
-						tintColorCube.userData.tintColor = {r: 0, g: 1, b: 0};
-						tintTexCube.userData.tintColor = {r: 0, g: 1, b: 0};
+						var green = {r: 0, g: 1, b: 0};
+						tintColorCube.userData.tintColor = green;
+						tintTexCube.userData.tintColor = green;
+						deepTint(tintedObj, green);
 					}
 					else {
 						scene.remove(texturedCube);
 						colorCube = addColorCube();
-						tintColorCube.userData.tintColor = {r: 0, g: 0, b: 1};
-						tintTexCube.userData.tintColor = {r: 0, g: 0, b: 1};
+						var blue = {r: 0, g: 0, b: 1};
+						tintColorCube.userData.tintColor = blue;
+						tintTexCube.userData.tintColor = blue;
+						deepTint(tintedObj, blue);
 					}
 					tick = !tick;
 					lastTick = Date.now();
