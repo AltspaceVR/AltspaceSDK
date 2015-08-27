@@ -15,12 +15,16 @@
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
 
+		<!--<script src="../../UnityClient/js/src/AltRenderer.js"></script>
+		<script src="../../UnityClient/js/src/AltGeoMatSerializer.js"></script>-->
+
 		<script>
 
 			var scene, renderer;
 			var 
 				tintTexCube, colorTexCube, tintColorCube, 
-				animatedCube, colorCube, texturedCube, tintedObj;
+				animatedCube, colorCube, texturedCube, 
+				tintedObj, visibilityCube, matVisibilityCube;
 
 			init();
 			animate();
@@ -43,11 +47,12 @@
 				return tCube;
 			}
 
-			function addColorCube () {
+			function addColorCube (color) {
+				color = color || 'red';
 				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
 				var cCube = new THREE.Mesh(
 					geometry,
-					new THREE.MeshBasicMaterial({color: 'red'}) );
+					new THREE.MeshBasicMaterial({color: color}) );
 				// LEFT
 				cCube.position.set(-50, 0, 0);
 				scene.add( cCube );
@@ -83,14 +88,45 @@
 				colorTexCube.material.color.setHSL(0.25, 1, 0.5);
 
 				// TOP LEFT
-				tintColorCube = addColorCube();
+				tintColorCube = addColorCube('cyan');
 				tintColorCube.position.set(-50, 50, 0);
-				tintColorCube.material.color = new THREE.Color('white');
-				tintColorCube.userData.tintColor = {r: 1, g: 0, b: 0};
 
 				// CENTER
 				animatedCube = addTexturedCube();
 				animatedCube.position.set(0, 0, 0);
+
+				// TOP RIGHT
+				visibilityCube = addColorCube('blue');
+				visibilityCube.position.set(50, 50, 0);
+				var visInnerCube = addColorCube('blue');
+				visInnerCube.position.set(50, 50, 0);
+				visInnerCube.scale.multiplyScalar(0.5);
+				visInnerCube.addEventListener('cursordown', function () {
+					this.material.color.setHex(0xff0000);
+					this.material.needsUpdate = true;
+				});
+				visInnerCube.addEventListener('cursorup', function () {
+					this.material.color.setHex(0x00ff00);
+					this.material.needsUpdate = true;
+				});
+
+				// BOTTOM RIGHT
+				matVisibilityCube = addTexturedCube();
+				matVisibilityCube.material = matVisibilityCube.material.clone()
+				matVisibilityCube.name = 'matVisibilityCube';
+				matVisibilityCube.position.set(50, -50, 0);
+				var matVisInnerCube = addColorCube('blue');
+				matVisInnerCube.position.set(50, -50, 0);
+				matVisInnerCube.scale.multiplyScalar(0.5);
+				matVisInnerCube.addEventListener('cursordown', function () {
+					this.material.color.setHex(0xff0000);
+					this.material.needsUpdate = true;
+				});
+				matVisInnerCube.addEventListener('cursorup', function () {
+					this.material.color.setHex(0x00ff00);
+					this.material.needsUpdate = true;
+				});
+
 
 				var loader = new THREE.OBJMTLLoader();
 				var objFilename = "models/AltspaceCube/cube.obj";
@@ -98,7 +134,8 @@
 				loader.load(
 					objFilename,
 					mtlFilename,
-						function ( loadedObject ) {
+					function ( loadedObject ) {
+						// BOTTOM LEFT
 						tintedObj = loadedObject;
 						tintedObj.scale.multiplyScalar(2.5);
 						tintedObj.position.set(-50, -50, 0);
@@ -115,22 +152,30 @@
 
 				requestAnimationFrame( animate );
 
-				if (Date.now() - lastTick > 2000) {
+				if (Date.now() - lastTick > 1000) {
 					if (tick) {
 						texturedCube = addTexturedCube();
 						scene.remove(colorCube);
 						var green = {r: 0, g: 1, b: 0};
 						tintColorCube.userData.tintColor = green;
 						tintTexCube.userData.tintColor = green;
+						colorTexCube.material.color.setHex(0x00ff00);
 						deepTint(tintedObj, green);
+						visibilityCube.visible = true;
+						matVisibilityCube.material.visible = true;
+						matVisibilityCube.material.needsUpdate = true;
 					}
 					else {
 						scene.remove(texturedCube);
 						colorCube = addColorCube();
 						var blue = {r: 0, g: 0, b: 1};
-						tintColorCube.userData.tintColor = blue;
+						tintColorCube.userData.tintColor = undefined;
 						tintTexCube.userData.tintColor = blue;
+						colorTexCube.material.color.setHex(0x0000ff);
 						deepTint(tintedObj, blue);
+						visibilityCube.visible = false;
+						matVisibilityCube.material.visible = false;
+						matVisibilityCube.material.needsUpdate = true;
 					}
 					tick = !tick;
 					lastTick = Date.now();
