@@ -40,7 +40,7 @@ if ( window.altspace ) {
 // Use MTLLoader for loadTexture, to ensure image is power of 2
 // else antialiasing won't work (this is a limitation of WebGL)
 var materialCreator = new THREE.MTLLoader.MaterialCreator();
-var texture = materialCreator.loadTexture('images/altspace-logo.jpg');
+var texture = materialCreator.loadTexture('models/cube/altspace-logo.jpg');
 
 //Cube
 var geometry = new THREE.BoxGeometry(1, 1, 1);
