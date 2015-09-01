@@ -24,7 +24,7 @@ var texture = materialCreator.loadTexture('images/altspace-logo.jpg');
 
 //Cube
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshBasicMaterial({color:'cyan', map: texture});
+var material = new THREE.MeshBasicMaterial({color:'purple', map: texture});
 var mesh = new THREE.Mesh(geometry, material);
 mesh.scale.multiplyScalar(200);
 scene.add(mesh);

@@ -47,22 +47,12 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
 	this.hoverObject = object;
 
-	// Reddish tint color
-	//if ( inAltspace ) {
+	if ( object.userData.tintColor ) {
+		// Remember the previous tint color, if any.
+		object.userData.origTintColor = object.userData.tintColor;
+	}
 
-		if (! object.userData.origTintColor ) {
-			object.userData.origTintColor = object.userData.tintColor;
-		}
-
-		object.userData.tintColor = this.tintColor;
-		object.position.x += 0.001; // hack to force AltRender to redraw scene
-
-		// workaround since deep-tint which isn't working with new renderer
-		object.traverse( function(child) {
-
-			child.userData.tintColor = this.tintColor;
-
-		}.bind( this ));
+	this.deepTint( object, this.tintColor );
 
 };
 
@@ -71,15 +61,12 @@ ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
 	this.hoverObject = null;
 
-	object.userData.tintColor = object.userData.origTintColor;
-	object.position.x += 0.001; // hack to force AltRender to redraw scene
+	// Return to previous tint color. If none, origTintColor will be undefined
+	// and color will revert to the one used before the tint was applied.
+	this.deepTint( object, object.userData.origTintColor );
 
-	// workaround since deep-tint isn't working with new renderer
-	object.traverse( function(child) {
-
-		child.userData.tintColor = object.userData.origTintColor;
-
-	});
+	// Needed for new material color to be rendered.
+	if (object.material) object.material.needsUpdate = true;
 
 };
 
@@ -93,7 +80,11 @@ ColorHoverEffect.prototype.update = function( effectsState ) {
 
 };
 
-
-
-
+ColorHoverEffect.prototype.deepTint = function ( obj, tintColor ) {
+	console.log("deepTint setting tint", tintColor);
+	obj.userData.tintColor = tintColor;
+	for ( var i = 0; i < obj.children.length; i++ ) {
+		obj.children[i].userData.tintColor = tintColor;
+	}
+};
 
