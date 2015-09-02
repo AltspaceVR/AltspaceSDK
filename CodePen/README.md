@@ -1,7 +1,7 @@
 This directory contains files downloaded from the AltspaceVR CodePen.io account:
 http://codepen.io/team/altspacevr/
 
-To download:
+To download app source files from CodePen:
 - View: currently all our pens are private http://codepen.io/team/altspacevr/private/
 - Open: Click on the app preview tile to open in the CodePen editor
 - Export: Select "Export .zip" from the Share dialog box
