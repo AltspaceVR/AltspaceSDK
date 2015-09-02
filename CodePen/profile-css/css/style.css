@@ -1,0 +1,50 @@
+
+
+/*@font-face {
+    font-family: vag-thin;
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-thin.eot);
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-thin.eot?#iefix) format('embedded-opentype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-thin.woff2) format('woff2'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-thin.woff) format('woff'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-thin.ttf) format('truetype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-thin.svg#vag_rounded_lt_thinregular) format('svg')
+}
+
+@font-face {
+    font-family: vag-light;
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.eot);
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.eot?#iefix) format('embedded-opentype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.woff2) format('woff2'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.woff) format('woff'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.ttf) format('truetype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.svg#vag_rounded_lt_lightregular) format('svg')
+}
+
+@font-face {
+    font-family: vag-bold;
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.eot);
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.eot?#iefix) format('embedded-opentype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.woff2) format('woff2'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.woff) format('woff'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.ttf) format('truetype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.svg#vag_rounded_ltbold) format('svg')
+}
+
+@font-face {
+    font-family: vag-black;
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-black.eot);
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-black.eot?#iefix) format('embedded-opentype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-black.woff2) format('woff2'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-black.woff) format('woff'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-black.ttf) format('truetype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-black.svg#vag_rounded_lt_blackregular) format('svg')
+}
+
+@font-face {
+    font-family: vag-light-windows;
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light-hinted.ttf);
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light-hinted.woff) format('woff'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light-hinted.ttf) format('truetype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-light.svg#vag_rounded_lt_lightregular) format('svg');
+    font-weight: 400;
+    font-style: normal
+}
+
+@font-face {
+    font-family: vag-bold-windows;
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold-hinted.ttf);
+    src: url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold-hinted.woff) format('woff'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold-hinted.ttf) format('truetype'),url(http://altvr.wpengine.netdna-cdn.com/wp-content/themes/altspacevr/assets/css/fonts/vag-bold.svg#vag_rounded_lt_boldregular) format('svg');
+    font-weight: 400;
+    font-style: normal
+}*/
+
+body{
+  font-family: vag-bold,
+Helvetica,
+Helvetica,
+Arial,
+sans-serif !important;
+  font-color:rgb(1,0,0) !important;
+}
