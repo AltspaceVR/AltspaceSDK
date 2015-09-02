@@ -29,10 +29,16 @@ window.altspaceCodePen = (function(){
       document.write('<h1>' + name + '</h1>')
       if(!inVR){
         document.write('<h2>View in <a href="http://altvr.com"> AltspaceVR </a></h2>');
-        throw new Error("Not in VR mode. Stopping code execution.");//TODO: Test
+        var errorMsg = 'Not in VR mode. Stopping code execution.';
+        if (inTile){
+          console.log('ERROR: ' + errorMsg);//thrown error message not displayed in console when inTile, log it
+        }
+        throw new Error(errorMsg);
       }
       if(inTile){
-        throw new Error("VR mode does not support preview tiles. Stopping code execution.");
+        var errorMsg = 'VR mode does not support preview tiles. Stopping code execution.';
+        console.log('ERROR: ' + errorMsg);
+        throw new Error(errorMsg);
       } 
       return;
     }
