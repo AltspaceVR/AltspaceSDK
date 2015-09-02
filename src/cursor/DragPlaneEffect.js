@@ -48,7 +48,7 @@ DragPlaneEffect = function ( params ) {
 	this.scene = p.scene || null;
 	if ( this.scene ) {
 		console.log("DragPlaneEffect listening for cursorup on scene.")
-		this.scene.addEventListener( "cursorup", this.scenecursorup );
+		this.scene.addEventListener( "cursorup", this.scenecursorup.bind( this ));
 	}
 
 };
@@ -57,14 +57,14 @@ DragPlaneEffect.prototype.holocursordown = function( object, event ) {
 
 	this.dragStart( object, event );
 
-}
+};
 
 DragPlaneEffect.prototype.scenecursorup = function( event ) {
 
 	if ( this.TRACE ) console.log("Scene cursorup detected");
 	this.dragEnd( event.target, event );
 
-}
+};
 
 DragPlaneEffect.prototype.holocursorup = function( object, event ) {
 
@@ -75,7 +75,7 @@ DragPlaneEffect.prototype.holocursorup = function( object, event ) {
 	// this.dragObject ? this.dragEnd( object, event ) : this.dragStart( object, event );
 	// We could add this as option set in constructor params if desired.
 
-}
+};
 
 
 DragPlaneEffect.prototype.dragStart = function( object, event ) {
