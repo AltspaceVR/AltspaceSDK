@@ -11,9 +11,9 @@ window.altspaceCodePen = (function(){
   
   var name = 'VR CodePen';
   
-  var inTile = !!window.__cancelAnimationFrame;//TODO: This may have to move to altspace.js
+  var inTile = window.innerHeight === 300;//TODO: more reliable test for inTile
   var inVR = !!window.altspace;
-  
+
   function printDebugInfo(){
     console.log("In a tile: " + inTile);
     console.log("In VR: " + inVR);
