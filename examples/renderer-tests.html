@@ -11,16 +11,18 @@
 		</style>
 	</head>
 	<body>
-		<script src="../lib/three.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
+		<script src="../src/cursor/CursorEvents.js"></script>
+		<script src="../src/cursor/AltObjectControls.js"></script>
 
 		<!--<script src="../../UnityClient/js/src/AltRenderer.js"></script>
 		<script src="../../UnityClient/js/src/AltGeoMatSerializer.js"></script>-->
 
 		<script>
 
-			var scene, renderer;
+			var scene, renderer, camera, cursorEvents;
 			var 
 				tintTexCube, colorTexCube, tintColorCube, 
 				animatedCube, colorCube, texturedCube, 
@@ -67,14 +69,29 @@
 			}
 
 			function init() {
-
-				console.log('init');
-				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
-
-
 				scene = new THREE.Scene();
 				scene.position.set(0, -60, 0);
 				scene.scale.multiplyScalar(2);
+
+				if (window.altspace) {
+					renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+				}
+				else {
+					renderer = new THREE.WebGLRenderer();
+					renderer.setClearColor("#AAAAAA");
+					renderer.setSize( window.innerWidth, window.innerHeight );
+					document.body.appendChild( renderer.domElement );
+					renderer.setSize( window.innerWidth, window.innerHeight );
+					var aspect = window.innerWidth / window.innerHeight;
+					camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+					camera.position.z = 400;
+					camera.position.y = 50;
+					camera.lookAt( scene.position );
+					var ambient = new THREE.AmbientLight( 0xffffff );
+					scene.add( ambient );
+					cursorEvents = new CursorEvents( scene );
+					cursorEvents.enableMouseEvents( camera );
+				}
 
 				// TOP
 				tintTexCube = addTexturedCube();
@@ -103,12 +120,13 @@
 				visInnerCube.scale.multiplyScalar(0.5);
 				visInnerCube.addEventListener('cursordown', function () {
 					this.material.color.setHex(0xff0000);
-					this.material.needsUpdate = true;
 				});
 				visInnerCube.addEventListener('cursorup', function () {
 					this.material.color.setHex(0x00ff00);
-					this.material.needsUpdate = true;
 				});
+				if (!window.altspace) {
+					cursorEvents.addObject(visInnerCube);
+				}
 
 				// BOTTOM RIGHT
 				matVisibilityCube = addTexturedCube();
@@ -116,16 +134,17 @@
 				matVisibilityCube.name = 'matVisibilityCube';
 				matVisibilityCube.position.set(50, -50, 0);
 				var matVisInnerCube = addColorCube('blue');
-				matVisInnerCube.position.set(50, -50, 0);
+				matVisInnerCube.position.set(80, -50, 0);
 				matVisInnerCube.scale.multiplyScalar(0.5);
-				matVisInnerCube.addEventListener('cursordown', function () {
-					this.material.color.setHex(0xff0000);
-					this.material.needsUpdate = true;
+				matVisibilityCube.addEventListener('cursordown', function () {
+					matVisInnerCube.material.color.setHex(0xff0000);
 				});
-				matVisInnerCube.addEventListener('cursorup', function () {
-					this.material.color.setHex(0x00ff00);
-					this.material.needsUpdate = true;
+				matVisibilityCube.addEventListener('cursorup', function () {
+					matVisInnerCube.material.color.setHex(0x00ff00);
 				});
+				if (!window.altspace) {
+					cursorEvents.addObject(matVisibilityCube);
+				}
 
 
 				var loader = new THREE.OBJMTLLoader();
@@ -163,7 +182,6 @@
 						deepTint(tintedObj, green);
 						visibilityCube.visible = true;
 						matVisibilityCube.material.visible = true;
-						matVisibilityCube.material.needsUpdate = true;
 					}
 					else {
 						scene.remove(texturedCube);
@@ -175,7 +193,6 @@
 						deepTint(tintedObj, blue);
 						visibilityCube.visible = false;
 						matVisibilityCube.material.visible = false;
-						matVisibilityCube.material.needsUpdate = true;
 					}
 					tick = !tick;
 					lastTick = Date.now();
@@ -186,7 +203,11 @@
 				animatedCube.rotation.y = Math.cos(i);
 				animatedCube.position.z = Math.sin(i) * 25;
 
-				renderer.render( scene );
+				if (cursorEvents) { 
+					cursorEvents.update();
+				}
+
+				renderer.render( scene, camera );
 
 			}
 
