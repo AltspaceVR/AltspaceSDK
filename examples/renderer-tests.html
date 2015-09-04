@@ -11,25 +11,31 @@
 		</style>
 	</head>
 	<body>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
+		<script 
+			src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js">
+		</script>
+		<script src="../lib/OrbitControls.js"></script>
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
 
-		<!--<script src="../../UnityClient/js/src/AltRenderer.js"></script>
-		<script src="../../UnityClient/js/src/AltGeoMatSerializer.js"></script>-->
+		<!--
+		<script src="../../UnityClient/js/src/AltRenderer.js"></script>
+		<script src="../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		-->
 
-		<script>
+		<script 
+			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
+		</script>
+		<script type="text/babel">
 
-			var scene, renderer, camera, cursorEvents;
+			var scene, renderer, camera, cursorEvents, controls;
 			var 
 				tintTexCube, colorTexCube, tintColorCube, 
 				animatedCube, colorCube, texturedCube, 
 				tintedObj, visibilityCube, matVisibilityCube;
-
-			init();
-			animate();
+			var GREEN = {r: 0, g: 1, b: 0}, BLUE = {r: 0, g: 0, b: 1};
 
 			var textureMat;
 
@@ -39,7 +45,7 @@
 				if (!textureMat) {
 					var texture = THREE.ImageUtils.loadTexture(
 						'textures/UV_Grid_Sm.jpg' );
-					textureMat = new THREE.MeshBasicMaterial( { map: texture } );
+					textureMat = new THREE.MeshBasicMaterial({map: texture});
 				}
 
 				var tCube = new THREE.Mesh( geometry, textureMat );
@@ -68,6 +74,196 @@
 				}
 			}
 
+			var tests = [
+				{
+					name: 'tinted, textured cube',
+					enabled: true,
+					init: function () {
+						tintTexCube = addTexturedCube();
+						tintTexCube.position.set(0, 50, 0);
+						tintTexCube.userData.tintColor = {r: 1, g: 0, b: 0};
+					},
+					tick: function () {
+						tintTexCube.userData.tintColor = GREEN;
+					},
+					tock: function () {
+						tintTexCube.userData.tintColor = BLUE;
+					}
+				},
+				{
+					name: 'colored, textured cube',
+					enabled: true,
+					init: function () {
+						colorTexCube = addTexturedCube();
+						colorTexCube.position.set(0, -50, 0);
+						colorTexCube.material = colorTexCube.material.clone()
+						colorTexCube.material.color.setHSL(0.25, 1, 0.5);
+					},
+					tick: function () {
+						colorTexCube.material.color.setHex(0x00ff00);
+					},
+					tock: function () {
+						colorTexCube.material.color.setHex(0x0000ff);
+					}
+				},
+				{
+					name: 'tinted, colored cube',
+					description: '',
+					enabled: true,
+					init: function () {
+						tintColorCube = addColorCube('cyan');
+						tintColorCube.position.set(-50, 50, 0);
+					},
+					tick: function () {
+						tintColorCube.userData.tintColor = GREEN;
+					},
+					tock: function () {
+						tintColorCube.userData.tintColor = undefined;
+					}
+				},
+				{
+					name: 'animated cube',
+					description: '',
+					enabled: true,
+					init: function () {
+						animatedCube = addTexturedCube();
+						animatedCube.position.set(0, 0, 0);
+					},
+					tick: function () {
+					},
+					tock: function () {
+					},
+					update: function (elapsed) {
+						elapsed /= 1000;
+						animatedCube.rotation.x = Math.sin(elapsed);
+						animatedCube.rotation.y = Math.cos(elapsed);
+						animatedCube.position.z = Math.sin(elapsed) * 25;
+					}
+				},
+				{
+					name: 'object visibility',
+					description: '',
+					enabled: true,
+					init: function () {
+						visibilityCube = addColorCube('blue');
+						visibilityCube.position.set(50, 50, 0);
+						var visInnerCube = addColorCube('blue');
+						visInnerCube.position.set(50, 50, 0);
+						visInnerCube.scale.multiplyScalar(0.5);
+						visInnerCube.addEventListener(
+							'cursordown',
+							function () {
+								this.material.color.setHex(0xff0000);
+							}
+						);
+						visInnerCube.addEventListener(
+							'cursorup',
+							function () {
+								this.material.color.setHex(0x00ff00);
+							}
+						);
+						if (!window.altspace) {
+							// cursorEvents.addObject(visInnerCube);
+						}
+					},
+					tick: function () {
+						visibilityCube.visible = true;
+					},
+					tock: function () {
+						visibilityCube.visible = false;
+					}
+				},
+				{
+					name: 'material visibility',
+					description: '',
+					enabled: true,
+					init: function () {
+						matVisibilityCube = addTexturedCube();
+						matVisibilityCube.material = 
+							matVisibilityCube.material.clone()
+						matVisibilityCube.name = 'matVisibilityCube';
+						matVisibilityCube.position.set(50, -50, 0);
+						var matVisInnerCube = addColorCube('blue');
+						matVisInnerCube.position.set(80, -50, 0);
+						matVisInnerCube.scale.multiplyScalar(0.5);
+						matVisibilityCube.addEventListener(
+							'cursordown',
+							function () {
+								matVisInnerCube.material.color.setHex(0xff0000);
+							}
+						);
+						matVisibilityCube.addEventListener(
+							'cursorup', 
+							function () {
+								matVisInnerCube.material.color.setHex(0x00ff00);
+							}
+						);
+						if (!window.altspace) {
+							// cursorEvents.addObject(matVisibilityCube);
+						}
+					},
+					tick: function () {
+						matVisibilityCube.material.visible = true;
+					},
+					tock: function () {
+						matVisibilityCube.material.visible = false;
+					}
+				},
+				{
+					name: 'tinted OBJ',
+					description: '',
+					enabled: true,
+					init: function () {
+						var loader = new THREE.OBJMTLLoader();
+						var objFilename = "models/test/test.obj";
+						var mtlFilename = "models/test/test.mtl";
+						loader.load(
+							objFilename,
+							mtlFilename,
+							function ( loadedObject ) {
+								// BOTTOM LEFT
+								tintedObj = loadedObject;
+								tintedObj.scale.multiplyScalar(30);
+								tintedObj.position.set(-50, -50, 0);
+								scene.add(tintedObj);
+							}
+						);
+					},
+					tick: function () {
+						deepTint(tintedObj, GREEN);
+					},
+					tock: function () {
+						deepTint(tintedObj, BLUE);
+					}
+				},
+				{
+					name: 'adding/removing textured cube',
+					description: '',
+					enabled: true,
+					init: function () {
+					},
+					tick: function () {
+						texturedCube = addTexturedCube();
+					},
+					tock: function () {
+						scene.remove(texturedCube);
+					}
+				},
+				{
+					name: 'adding/removing colored cube',
+					description: '',
+					enabled: true,
+					init: function () {
+					},
+					tick: function () {
+						scene.remove(colorCube);
+					},
+					tock: function () {
+						colorCube = addColorCube();
+					}
+				}
+			];
+
 			function init() {
 				scene = new THREE.Scene();
 				scene.position.set(0, -60, 0);
@@ -89,129 +285,46 @@
 					camera.lookAt( scene.position );
 					var ambient = new THREE.AmbientLight( 0xffffff );
 					scene.add( ambient );
-					cursorEvents = new CursorEvents( scene );
-					cursorEvents.enableMouseEvents( camera );
+					controls = new THREE.OrbitControls(camera);
+					// cursorEvents = new CursorEvents( scene );
+					// cursorEvents.enableMouseEvents( camera );
 				}
 
-				// TOP
-				tintTexCube = addTexturedCube();
-				tintTexCube.position.set(0, 50, 0);
-				tintTexCube.userData.tintColor = {r: 1, g: 0, b: 0};
-
-				// BOTTOM
-				colorTexCube = addTexturedCube();
-				colorTexCube.position.set(0, -50, 0);
-				colorTexCube.material = colorTexCube.material.clone()
-				colorTexCube.material.color.setHSL(0.25, 1, 0.5);
-
-				// TOP LEFT
-				tintColorCube = addColorCube('cyan');
-				tintColorCube.position.set(-50, 50, 0);
-
-				// CENTER
-				animatedCube = addTexturedCube();
-				animatedCube.position.set(0, 0, 0);
-
-				// TOP RIGHT
-				visibilityCube = addColorCube('blue');
-				visibilityCube.position.set(50, 50, 0);
-				var visInnerCube = addColorCube('blue');
-				visInnerCube.position.set(50, 50, 0);
-				visInnerCube.scale.multiplyScalar(0.5);
-				visInnerCube.addEventListener('cursordown', function () {
-					this.material.color.setHex(0xff0000);
-				});
-				visInnerCube.addEventListener('cursorup', function () {
-					this.material.color.setHex(0x00ff00);
-				});
-				if (!window.altspace) {
-					cursorEvents.addObject(visInnerCube);
-				}
-
-				// BOTTOM RIGHT
-				matVisibilityCube = addTexturedCube();
-				matVisibilityCube.material = matVisibilityCube.material.clone()
-				matVisibilityCube.name = 'matVisibilityCube';
-				matVisibilityCube.position.set(50, -50, 0);
-				var matVisInnerCube = addColorCube('blue');
-				matVisInnerCube.position.set(80, -50, 0);
-				matVisInnerCube.scale.multiplyScalar(0.5);
-				matVisibilityCube.addEventListener('cursordown', function () {
-					matVisInnerCube.material.color.setHex(0xff0000);
-				});
-				matVisibilityCube.addEventListener('cursorup', function () {
-					matVisInnerCube.material.color.setHex(0x00ff00);
-				});
-				if (!window.altspace) {
-					cursorEvents.addObject(matVisibilityCube);
-				}
-
-
-				var loader = new THREE.OBJMTLLoader();
-				var objFilename = "models/AltspaceCube/cube.obj";
-				var mtlFilename = "models/AltspaceCube/cube.mtl";
-				loader.load(
-					objFilename,
-					mtlFilename,
-					function ( loadedObject ) {
-						// BOTTOM LEFT
-						tintedObj = loadedObject;
-						tintedObj.scale.multiplyScalar(2.5);
-						tintedObj.position.set(-50, -50, 0);
-						scene.add(tintedObj);
-					}
-				);
-
+				tests.
+					filter(test => test.enabled).
+					forEach(test => test.init());
 			}
 
 			var lastTick = Date.now();
 			var tick = true;
-			var i = 0;
-			function animate() {
-
-				requestAnimationFrame( animate );
+			function animate(elapsed) {
+				requestAnimationFrame(animate);
 
 				if (Date.now() - lastTick > 1000) {
 					if (tick) {
-						texturedCube = addTexturedCube();
-						scene.remove(colorCube);
-						var green = {r: 0, g: 1, b: 0};
-						tintColorCube.userData.tintColor = green;
-						tintTexCube.userData.tintColor = green;
-						colorTexCube.material.color.setHex(0x00ff00);
-						deepTint(tintedObj, green);
-						visibilityCube.visible = true;
-						matVisibilityCube.material.visible = true;
+						tests.forEach(test => test.tick());
 					}
 					else {
-						scene.remove(texturedCube);
-						colorCube = addColorCube();
-						var blue = {r: 0, g: 0, b: 1};
-						tintColorCube.userData.tintColor = undefined;
-						tintTexCube.userData.tintColor = blue;
-						colorTexCube.material.color.setHex(0x0000ff);
-						deepTint(tintedObj, blue);
-						visibilityCube.visible = false;
-						matVisibilityCube.material.visible = false;
+						tests.forEach(test => test.tock());
 					}
 					tick = !tick;
 					lastTick = Date.now();
 				}
 
-				i += 0.01;
-				animatedCube.rotation.x = Math.sin(i);
-				animatedCube.rotation.y = Math.cos(i);
-				animatedCube.position.z = Math.sin(i) * 25;
+				tests.
+					filter(test => test.update).
+					forEach(test => test.update(elapsed));
 
-				if (cursorEvents) { 
-					cursorEvents.update();
+				if (!window.altspace) { 
+					// cursorEvents.update();
+					controls.update();
 				}
 
 				renderer.render( scene, camera );
-
 			}
 
+			init();
+			animate(0);
 		</script>
-
 	</body>
 </html>
