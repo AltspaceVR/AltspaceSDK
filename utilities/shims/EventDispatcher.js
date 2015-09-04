@@ -1,5 +1,6 @@
-/**
- * @author mrdoob / http://mrdoob.com/
+/*
+ * EventDispatcher by mr. doob (http://mrdoob.com)
+ * Version 03/07/20015 from https://github.com/mrdoob/eventdispatcher.js
  */
 
 var EventDispatcher = function () {}
