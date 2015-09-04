@@ -1,7 +1,7 @@
 // Dispatch cursor events to effects registered with this class.
-CursorEffects = function( scene, params ) {
+CursorEffects = function( params ) {
 
-	this.scene = scene;
+	this.scene; // set when we add the first object
 
 	var p = params || {};
 
@@ -13,6 +13,12 @@ CursorEffects = function( scene, params ) {
 	this.effects = [];  // flat list of all effects
 	this.effectsState = {}; // built-in: copy of lastEvent, other values added by effects
 
+	var cursorEvents;	// shim used when outside of Altspace to dispatch cursor events
+	var inAltspace = !!window.altspace;
+	if ( !inAltspace ) {
+		var params = { TRACE: this.TRACE, recursive: true};
+		this.cursorEvents =  new CursorEvents( camera, params ); 
+	}
 };
 
 
@@ -21,6 +27,10 @@ CursorEffects.prototype.addEffect = function( effect, object ) {
 	if ( !object || !effect ) {
 		console.error("AddEffect requires a valid effect and object", effect, object );
 		return ; // sanity check
+	}
+
+	if ( this.effects.length === 0 ) {
+		this.scene = CursorEffects.getScene( object );
 	}
 
 	if ( !this.objectEffects[ object.uuid ] ) {
@@ -34,6 +44,11 @@ CursorEffects.prototype.addEffect = function( effect, object ) {
 		object.addEventListener("cursorup", dispatcher);
 		object.addEventListener("cursorenter", dispatcher);
 		object.addEventListener("cursorleave", dispatcher);
+		
+		if ( this.cursorEvents ) {
+			THREE.EventDispatcher.call( object );
+			this.cursorEvents.add( object );
+		}
 
 	}
 
@@ -69,7 +84,7 @@ CursorEffects.prototype._dispatchEffects = function( event ) {
 
 	var target = event.currentTarget;
 	if ( !target || !this.objectEffects[ target.uuid ] ) {
-		console.log("Unexpected target object for event", event);
+		console.error("Unexpected target object for event", event);
 	}
 
 	var effects = this.objectEffects[ target.uuid ];
@@ -90,7 +105,31 @@ CursorEffects.prototype._dispatchEffects = function( event ) {
 };
 
 
+// STATIC method
+CursorEffects.getScene = function( object ) {
+
+	// Find the parent scene for the given object
+	var parent = object.parent;
+	while ( parent ) {
+		if ( parent instanceof THREE.Scene ) {
+			break;
+		}
+		parent = object.parent;
+	}
+	if ( !parent ) {
+		console.error("Object must be a child of the scene", object);
+		return;
+	}
+	return parent;
+
+};
+
+
 CursorEffects.prototype.update = function() {
+
+	if ( this.cursorEvents ) {
+		this.cursorEvents.update();
+	}
 
 	// Call update( this.effectState ) on all effects that define it.
 	// Optional return value is the new effect state, useful for effects

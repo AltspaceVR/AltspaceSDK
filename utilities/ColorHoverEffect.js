@@ -11,8 +11,9 @@ ColorHoverEffect = function ( params ) {
 		return ; // valid color required
 	}
 
-	this.color = p.color || new THREE.Color(1, 1, 0); // yellow-ish
-	this.tintColor = { r: this.color.r, g: this.color.g, b: this.color.b };
+	this.inAltspace = !!window.altspace;
+
+	this.hoverColor = p.color || new THREE.Color(1, 1, 0); // yellow-ish
 
 	this.dragObject;
 
@@ -47,12 +48,7 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
 	this.hoverObject = object;
 
-	if ( object.userData.tintColor ) {
-		// Remember the previous tint color, if any.
-		object.userData.origTintColor = object.userData.tintColor;
-	}
-
-	this.deepTint( object, this.tintColor );
+	this.setHoverColor( object, this.hoverColor );
 
 };
 
@@ -61,12 +57,7 @@ ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
 	this.hoverObject = null;
 
-	// Return to previous tint color. If none, origTintColor will be undefined
-	// and color will revert to the one used before the tint was applied.
-	this.deepTint( object, object.userData.origTintColor );
-
-	// Needed for new material color to be rendered.
-	if (object.material) object.material.needsUpdate = true;
+	this.unsetHoverColor( object );
 
 };
 
@@ -80,11 +71,47 @@ ColorHoverEffect.prototype.update = function( effectsState ) {
 
 };
 
-ColorHoverEffect.prototype.deepTint = function ( obj, tintColor ) {
-	console.log("deepTint setting tint", tintColor);
-	obj.userData.tintColor = tintColor;
+
+ColorHoverEffect.prototype.setHoverColor = function ( obj, hoverColor ) {
+
+	if ( obj.material && obj.material.color ) {
+		obj.userData.origColor = obj.material.color;
+
+		obj.material.color = hoverColor;	
+
+		// Needed for new material color to be rendered in Altspace.
+		// TODO: remove when renderer fixed to handle this case.
+		if (obj.material) obj.material.needsUpdate = true;
+	} 
+
+	// recursively apply to children
 	for ( var i = 0; i < obj.children.length; i++ ) {
-		obj.children[i].userData.tintColor = tintColor;
+		this.setHoverColor( obj.children[i], hoverColor );
 	}
+
 };
+
+
+ColorHoverEffect.prototype.unsetHoverColor = function ( obj ) {
+
+	if ( obj.material && obj.material.color ) {
+		if ( !obj.userData.origColor ) {
+			console.error("Cannot unsetHoverColor, no userData.origColor for object", obj);
+			return;
+		}
+		obj.material.color = obj.userData.origColor;
+
+		// Needed for new material color to be rendered in Altspace.
+		// TODO: remove when renderer fixed to handle this case.
+		if (obj.material) obj.material.needsUpdate = true;
+	} 
+
+	// recursively apply to children
+	for ( var i = 0; i < obj.children.length; i++ ) {
+		this.unsetHoverColor( obj.children[i] );
+	}
+
+};
+
+
 

@@ -31,13 +31,15 @@ function CursorEvents( eye , params ){
 	var params = params || {};
 	var p = params;
 
+	this.TRACE = p.TRACE || false; // Log all events.
+
 	this.domElement = p.domElement || document;
 
 	// Recursively check descendants of objects in this.objects for intersections.
 	this.recursive = p.recursive || false;
 
-	// Call all events on this one object, not the intersected object.
-	this.delegate = p.delegate || null;
+	// Call all events on the scene, obtained by traversing up scene graph.
+	this.scene = CursorEffects.getScene( eye );
 
 	this.raycaster = new THREE.Raycaster();
 
@@ -61,158 +63,92 @@ function CursorEvents( eye , params ){
 
 	this.unprojectMouse();
 
+	EventDispatcher.prototype.apply( THREE.Object3D.prototype );
+	// TODO: same for scene
 }
 
 
 
+/* CURSOR EVENTS */
 
-/*
- 
-	 EVENTS
+CursorEvents.prototype.cursormove = function( event ){
 
-*/
+	if(this.TRACE) {console.log("CursorEvents shim: cursormove");}
 
-
-// You can think of _up and _down as mouseup and mouse down
-CursorEvents.prototype._down = function(){
-
-	this.down();
-
-	if( this.intersected ){
-	 
-		this._select( this.intersected );
-
-	}
+	// TODO: dispatch on scene
 
 }
 
-CursorEvents.prototype.down = function(){}
 
+CursorEvents.prototype.cursorleave = function( object ){
 
-
-CursorEvents.prototype._up = function(){
-
-	this.up();
-
-	if( this.selected ){
-
-		this._deselect( this.selected );
-
-	}
-
-}
-
-CursorEvents.prototype.up = function(){}
-
-
-CursorEvents.prototype._move = function(){
-	this.move();
-
-	if ( this.delegate ) {
-
-		this.delegate.move( null, this._eventDetail( "move" ) );
-
-	}
-
-}
-
-CursorEvents.prototype.move = function(){}
-
-
-CursorEvents.prototype._hoverOut = function( object ){
-
-	this.hoverOut();
+	if(this.TRACE) { console.log("CursorEvents shim: cursorleave", object); }
 	
 	this.objectHovered = false;
 	
-	if ( this.delegate ) {
+	var mockCursorEvent = this.mockCursorEvent( 'cursorleave', event, object );
+	object.dispatchEvent( mockCursorEvent );
 
-		this.delegate.hoverOut( object, this._eventDetail( "hoverOut" ) );
-		
-	} else {
-
-		if( object.hoverOut ){
-			object.hoverOut( this );
-		}
-
-	}
-
+	// TODO: dispatch on scene
 };
 
-CursorEvents.prototype.hoverOut = function(){};
 
-
-CursorEvents.prototype._hoverOver = function( object ){
+CursorEvents.prototype.cursorenter = function( object ){
  
-	this.hoverOver();
+	if(this.TRACE) {console.log("CursorEvents shim: cursorenter", object);}
 	
 	this.objectHovered = true;
 
-	if ( this.delegate ) {
+	var mockCursorEvent = this.mockCursorEvent( 'cursorenter', event, object );
+	object.dispatchEvent( mockCursorEvent );
 
-		this.delegate.hoverOver( object, this._eventDetail( "hoverOver" ) );
-		
-	} else {
-
-		if( object.hoverOver ){
-			object.hoverOver( this );
-		}
-
-	}
-
+	// TODO: dispatch on scene
 };
 
-CursorEvents.prototype.hoverOver = function(){};
 
+CursorEvents.prototype.cursordown = function( event, object ){
 
-CursorEvents.prototype._select = function( object ){
- 
-	this.select();
+	if(this.TRACE) {console.log("CursorEvents shim: cursordown", object);}
 
 	this.selected = object;
 
-	if ( this.delegate ) {
+	var mockCursorEvent = this.mockCursorEvent( 'cursordown', event, object );
+	object.dispatchEvent( mockCursorEvent );
 
-		this.delegate.select( object, this._eventDetail( "select" ) );
-		
-	} else {
-
-		if( object.select ){
-			object.select( this );
-		}
-
-	}
+	// TODO: dispatch on scene
 
 };
 
-CursorEvents.prototype.select = function(){}
 
+CursorEvents.prototype.cursorup = function( event, object ){
 
-
-CursorEvents.prototype._deselect = function( object ){
+	if(this.TRACE) {console.log("CursorEvents shim: cursorup", object);}
 
 	this.selected = undefined;
 
-	if ( this.delegate ) {
+	var mockCursorEvent = this.mockCursorEvent( 'cursorup', event, object );
+	object.dispatchEvent( mockCursorEvent );
 
-		this.delegate.deselect( object, this._eventDetail( "deselect") );
-		
-	} else {
+	// TODO: dispatch on scene
+};
 
-		if( object.deselect ){
-			object.deselect( this );
-		}
 
+CursorEvents.prototype.mockCursorEvent = function( eventName, event, object ) {
+
+	var mockCursorEvent = { 
+		type: eventName,
+		currentTarget: object, // target gets set by EventDispatcher
+		detail: this.eventDetail(eventName)
 	}
 
-	this.deselect();
+	return mockCursorEvent;
+
+	// TODO: combine this method with mockCursorEvent
 
 };
 
-CursorEvents.prototype.deselect = function(){}
 
-
-CursorEvents.prototype._eventDetail = function( eventName ){
+CursorEvents.prototype.eventDetail = function( eventName ){
 
 	var origin = this.raycaster.ray.origin;
 	var direction = this.raycaster.ray.direction;
@@ -239,13 +175,14 @@ CursorEvents.prototype._eventDetail = function( eventName ){
 
 
 
-/*
-
-	Changing what objects we are controlling
-
-*/
+/* OBJECTS */
 
 CursorEvents.prototype.add = function( object ){
+
+	// Find the parent scene for the first object added.
+	if ( this.objects.length === 0 ) {
+		CursorEffects.getScene( object );
+	}
 
 	this.objects.push( object );
 
@@ -267,11 +204,7 @@ CursorEvents.prototype.remove = function( object ){
 
 
 
-/*
- 
-	 Update Loop
-
-*/
+/* UPDATE LOOP */
 
 CursorEvents.prototype.update = function(){
 
@@ -285,7 +218,7 @@ CursorEvents.prototype.update = function(){
 
 		}else{
 
-			this._updateSelected( this.unprojectedMouse );
+			this.updateSelected( this.unprojectedMouse );
 
 		}
 
@@ -293,7 +226,7 @@ CursorEvents.prototype.update = function(){
 
 };
 
-CursorEvents.prototype._updateSelected = function(){
+CursorEvents.prototype.updateSelected = function(){
 
 	if( this.selected.update ){
 
@@ -322,11 +255,7 @@ CursorEvents.prototype.setRaycaster = function( position ){
 
 
 
-/*
- 
-	Checks
-
-*/
+/* CHECKS */
 
 CursorEvents.prototype.checkForIntersections = function(){
 
@@ -339,7 +268,7 @@ CursorEvents.prototype.checkForIntersections = function(){
 
 			if ( this.recursive ) {
 
-				var topLevelObj = this._findTopLevelAncestor( intersected[n].object );
+				var topLevelObj = this.findTopLevelAncestor( intersected[n].object );
 				if ( topLevelObj ) {
 
 					// Reset intersected.object, leave intersected.point etc. unchanged.
@@ -355,11 +284,11 @@ CursorEvents.prototype.checkForIntersections = function(){
 
 		}
 
-		this._objectIntersected( intersected );
+		this.objectIntersected( intersected );
 
 	}else{
 
-		this._noObjectIntersected();
+		this.noObjectIntersected();
 
 	}
 
@@ -369,11 +298,11 @@ CursorEvents.prototype.checkForUpDown = function( hand , oHand ){
 
 	if( this.upDownEvent( this.selectionStrength , hand, oHand ) === true ){
 	
-		this._down();
+		this.down();
 	
 	}else if( this.upDownEvent( this.selectionStrength, hand, oHand ) === false ){
 	
-		this._up();
+		this.up();
 	
 	}
 
@@ -390,7 +319,7 @@ CursorEvents.prototype.getIntersectionPoint = function( i ){
 
 }
 
-CursorEvents.prototype._findTopLevelAncestor = function( object ){
+CursorEvents.prototype.findTopLevelAncestor = function( object ){
 
 	// Traverse back up until we find the first ancestor that is a top-level
 	// object then return it (or null), since only top-level objects (which
@@ -415,13 +344,9 @@ CursorEvents.prototype._findTopLevelAncestor = function( object ){
 
 
 
-/*
- 
-	 Raycast Events
+/* RAYCAST EVENTS */
 
-*/
-
-CursorEvents.prototype._objectIntersected = function( intersected ){
+CursorEvents.prototype.objectIntersected = function( intersected ){
 
 	// Assigning out first intersected object
 	// so we don't get changes everytime we hit 
@@ -433,19 +358,19 @@ CursorEvents.prototype._objectIntersected = function( intersected ){
 		this.intersected = firstIntersection;
 		this.intersectionPoint = intersected[0].point;
 
-		this._hoverOver( this.intersected );
+		this.cursorenter( this.intersected );
 
 
 	}else{
 
 		if( this.intersected != firstIntersection ){
 
-			this._hoverOut( this.intersected );
+			this.cursorleave( this.intersected );
 
 			this.intersected = firstIntersection;
 			this.intersectionPoint = intersected[0].point;
 
-			this._hoverOver( this.intersected );
+			this.cursorenter( this.intersected );
 
 		} else {
 
@@ -456,30 +381,24 @@ CursorEvents.prototype._objectIntersected = function( intersected ){
 
 	}
 
-	this.objectIntersected();
-
 };
 
-CursorEvents.prototype.objectIntersected = function(){}
-
-CursorEvents.prototype._noObjectIntersected = function(){
+CursorEvents.prototype.noObjectIntersected = function(){
 
 	if( this.intersected ){
 
-		this._hoverOut( this.intersected );
+		this.cursorleave( this.intersected );
 		this.intersected = undefined;
 		this.intersectionPoint = undefined;
 
 	}
 
-	this.noObjectIntersected();
-
 };
 
-CursorEvents.prototype.noObjectIntersected = function(){}
 
+/* MOUSE EVENTS */
 
-CursorEvents.prototype.mouseMove = function(event){
+CursorEvents.prototype.mouseMove = function( event ){
 
 	this.mouseMoved = true;
 
@@ -489,7 +408,7 @@ CursorEvents.prototype.mouseMove = function(event){
 
 	this.unprojectMouse();
 
-	this._move();
+	this.cursormove(event);
 }
 
 CursorEvents.prototype.unprojectMouse = function(){
@@ -500,33 +419,22 @@ CursorEvents.prototype.unprojectMouse = function(){
 
 CursorEvents.prototype.mouseDown = function( event ){
 	//this.mouseMove( event ); // remove to match Altspace
-	this._down();
+
+	if( this.intersected ){
+	 
+		this.cursordown( event, this.intersected );
+
+	}
 }
 
-CursorEvents.prototype.mouseUp = function(){
+CursorEvents.prototype.mouseUp = function( event ){
 	//this.mouseMove( event ); // remove to match Altspace
-	this._up();
+
+	if( this.selected ){
+
+		this.cursorup( event, this.selected );
+
+	}
 }
 
 
-CursorEvents.prototype.touchStart = function(event){
-	//this.touchMove( event ); // remove to match Altspace
-	this._down();
-}
-
-CursorEvents.prototype.touchEnd = function(event){
-	//this.touchMove( event ); // remove to match Altspace
-	this._up();
-}
-
-CursorEvents.prototype.touchMove= function(event){
-
-	this.mouseMoved = true;
-
-	this.mouse.x = ( event.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
-	this.mouse.y = -( event.touches[ 0 ].pageY / window.innerHeight ) * 2 + 1;
-	this.mouse.z = 1;
-
-	this.unprojectMouse();
-	
-}
