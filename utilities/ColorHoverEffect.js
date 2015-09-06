@@ -46,6 +46,8 @@ ColorHoverEffect.prototype.cursorleave = function( object ) {
 
 ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
+	if ( this.ignoreHoverChange( object ) ) return;
+
 	this.hoverObject = object;
 
 	this.setHoverColor( object, this.hoverColor );
@@ -55,12 +57,30 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
 ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
+	if ( this.ignoreHoverChange( object ) ) return;
+
 	this.hoverObject = null;
 
 	this.unsetHoverColor( object );
 
 };
 
+
+ColorHoverEffect.prototype.ignoreHoverChange = function( object ) {
+
+	// TODO: remove once the renderer bug where materials change
+	// triggers re-rendering the object and cursor leave/enter events.
+	var now = Date.now();
+	var lastHoverChange = object.userData.lastHoverChange;
+	object.userData.lastHoverChange = now;
+	if ( lastHoverChange && now - lastHoverChange < 75 ) {
+		object.userData.lastHoverChange = now;
+		return true;
+	}
+
+	return false;
+
+};
 
 ColorHoverEffect.prototype.update = function( effectsState ) {
 
