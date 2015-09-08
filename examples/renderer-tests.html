@@ -39,6 +39,27 @@
 
 			var textureMat;
 
+			function addAxisSpheres(){
+				var geometry = new THREE.SphereGeometry( 5);
+				var x = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'red'}) );
+				var y = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'green'}) );
+				var z = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'blue'}) );
+
+				x.position.x = 150;
+				y.position.y = 150;
+				z.position.z = 150;
+
+				scene.add(x);
+				scene.add(y);
+				scene.add(z);
+			}
+
 			function addTexturedCube () {
 				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
 
@@ -289,6 +310,8 @@
 					// cursorEvents = new CursorEvents( scene );
 					// cursorEvents.enableMouseEvents( camera );
 				}
+
+				addAxisSpheres();
 
 				tests.
 					filter(test => test.enabled).
