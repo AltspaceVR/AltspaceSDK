@@ -6,19 +6,18 @@
 <html lang="en">
 <head>
 		<title>Chess</title>
-		<script src="../lib/firebase.js"></script>
-		<script src="../lib/three.min.js"></script>
-		<script src="../lib/OBJMTLLoader.js"></script>
-		<script src="../lib/MTLLoader.js"></script>
-		<script src="../lib/OrbitControls.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
-		<script src="../src/AltOBJMTLLoader.js"></script>
-		<script src="../src/cursor/CursorEvents.js"></script>
-		<script src="../src/cursor/AltObjectControls.js"></script>
-		<script src="../src/cursor/ColorHoverEffect.js"></script>
-		<script src="../src/cursor/DragPlaneEffect.js"></script>
-		<script src="../src/sync/FirebaseSync.js"></script>
-
+		<script src="../utilities/shims/CursorEvents.js"></script>
+		<script src="../utilities/shims/EventDispatcher.js"></script>
+		<script src="../utilities/CursorEffects.js"></script>
+		<script src="../utilities/ColorHoverEffect.js"></script>
+		<script src="../utilities/DragPlaneEffect.js"></script>
+		<script src="../utilities/FirebaseSync.js"></script>
 
 		<style>
 			body {
@@ -54,7 +53,7 @@ var modelsToLoad =	0;
 
 var scene, camera, renderer;
 var altObjectControls, orbitControls;
-var cursorEvents;
+var cursorEffects;
 var firebaseSync;
 var exporter, loader;
 var frameID;
@@ -82,7 +81,7 @@ var modelsInfo = { // constants
 	},
 	pieceWidth: 16,
 	board: { model: "board", width: 50, height: 1 },
-	directory: "models/ChessPieces",
+	directory: "models/chess",
 };
 
 var modelScale = sceneInfo.boardSize / 8 / modelsInfo.pieceWidth;
@@ -96,9 +95,6 @@ var showDragPoint = !inAltspace && false;
 
 function main() {
 
-	//if ( AltContentLoaded ) return ; // bug where event is triggered repeatedly
-	//AltContentLoaded = true;
-
 	initScene();
 	loadModels();
 
@@ -107,15 +103,10 @@ function main() {
 function onModelsLoaded() {
 
 	if ( inAltspace ) {
-		console.log("window.innerDepth: " + window.innerDepth);
-		if ( window.innerDepth < 400 ) {
-			// in flat enclosure
-			scene.rotation.x = (Math.PI / 180) * 45;
-		} else {
-			// in thick display
-			// Put chess board on the bottom of the enclosure.
-			scene.position.y = -1 * ( window.innerHeight / 2 );
-		}
+		// Put chess board on the bottom of the enclosure.
+		// TODO: Get height of enclosure dynamically.
+		var enclosureHeight = 1000;
+		scene.position.y = enclosureHeight / -2 ;
 	}
 
 	initModels();
@@ -129,7 +120,7 @@ function onSyncReady() {
 
 	initEvents(); // Dont allow dragging until done arranging pieces.
 
-	// Hack to get the AltRender to refresh the scene, otherwise in a new room,
+	// Hack to get the altspace renderer to refresh the scene, otherwise in a new room,
 	// black tintColor not rendered until a piece is moved or hovered.
 	if ( inAltspace ) {
 		chessPiecesWhite[0].position.x += 0.001;
@@ -145,7 +136,7 @@ function initScene() {
 
 	if ( inAltspace ) {
 
-	    renderer = altspace.getThreeJSRenderer();
+	    renderer = altspace.getThreeJSRenderer({ version: "0.2.0" });
 		infoDiv.style.visibility = "hidden";
 
 	} else {
@@ -175,7 +166,7 @@ function initScene() {
 	var ambient = new THREE.AmbientLight( 0xffffff );
 	scene.add( ambient );
 
-	loader = new THREE.AltOBJMTLLoader();
+	loader = new THREE.OBJMTLLoader();
 
 	// dragPlane should not be bigger than our bounding box, if it is then
 	// objects will disappear when they are moved outside of the box.
@@ -204,18 +195,17 @@ function initScene() {
 
 	// chess pieces might be comprised of multiple objects,
 	// so enable recursively checking descendants for intersection.
-	cursorEvents = new CursorEvents();
-	cursorEvents.enableMouseEvents( camera );
+	cursorEffects = new CursorEffects( scene );
+	cursorEffects.enableMouseEvents( camera );
 
 	if (useOrbitControls) {
 		orbitControls = new THREE.OrbitControls( camera, renderer.domElement );
 		orbitControls.damping = 0.2;
 	}
 
-	var firebaseRootURL = "https://altspace-apps.firebaseio.com/";
-	var appID = "chess";
-	var params = { authTokenPath: "./tokens/chess-token.txt" };
-	firebaseSync = new FirebaseSync( firebaseRootURL, appID, params );
+	var firebaseRootURL = "https://altspace-apps.firebaseio.com/apps/examples";
+	var appID = "http-chess"; // hack to meet our new firebase rules
+	firebaseSync = new FirebaseSync( firebaseRootURL, appID );
 
 	//scene.add( new THREE.AxisHelper(100) );
 }
@@ -253,36 +243,28 @@ function initModels() {
 			var whiteClone = chessPiecesWhite[i].clone();
 			var blackClone = chessPiecesBlack[i].clone();
 
-			// In Altspace we can use the tint color for hover effects.
-			// Outside Altspace, change material ambient color
-			// (note: changing diffuse color has no effect in MeshPhongMaterial)
-			// but must clone material so only 1 piece will change, not all of that type.
-			if ( inAltspace ) {
+			// Clone material so only 1 piece will change, not all of that type.
+			whiteClone.traverse( function(child) {
 
-				whiteClone.userData.tintColor = { r: 0.5, g: 0.5, b: 0.5 };
-				blackClone.userData.tintColor = { r: 0.1, g: 0.1, b: 0.1 };
-
-			} else {
-
-				whiteClone.traverse( function(child) {
-
-					if (child.material) {
-						child.material = child.material.clone();
+				if (child.material) {
+					child.material = child.material.clone();
+					if (child.material instanceof THREE.MeshPhongMaterial ) {
+						child.material.color.setRGB( 1, 1, 1 );
 					}
+				}
 
-				});
+			});
 
-				blackClone.traverse( function(child) {
+			blackClone.traverse( function(child) {
 
-					if (child.material) {
-						child.material = child.material.clone();
-						if (child.material instanceof THREE.MeshPhongMaterial ) {
-							child.material.ambient.setRGB( 0.2, 0.2, 0.2 );
-						}
+				if (child.material) {
+					child.material = child.material.clone();
+					if (child.material instanceof THREE.MeshPhongMaterial ) {
+						child.material.color.setRGB( 0.2, 0.2, 0.2 );
 					}
+				}
 
-				});
-			}
+			});
 
 			newWhite.push( whiteClone );
 			newBlack.push( blackClone );
@@ -414,9 +396,11 @@ function loadModels() {
 
 	var loadPiece = function(pieceType, fileBasename, index) {
 
-		var filename = path + fileBasename + ".obj";
+		loader.load(
+			path + fileBasename + ".obj",
+			path + fileBasename + ".mtl",
+			function( loadedObject ) {
 
-		loader.load(filename, function( loadedObject ) {
 			loadedObject.scale.set( modelScale, modelScale, modelScale );
 			loadedObject.userData.pieceType = pieceType;
 			loadedObject.userData.pieceColor = "white";
@@ -440,7 +424,10 @@ function loadModels() {
 	console.log("Loading " + modelsToLoad + " models...");
 
 	// Load board
-	loader.load(path + modelsInfo.board.model + ".obj", function( loadedObject ) {
+	loader.load(
+		path + modelsInfo.board.model + ".obj",
+		path + modelsInfo.board.model + ".mtl",
+		function( loadedObject ) {
 
 		modelsToLoad--;
 		loadedObject.name = "board";
@@ -464,30 +451,25 @@ function initEvents() {
 
 	var params = {};	// optional parameters used to configure object effects
 	params.firebaseSync = firebaseSync;
-	params.dragPlane = dragPlane;
 
 	if ( showDragPoint ) params.dragPointMarker = dragPointSphere;
 	if ( useOrbitControls ) params.orbitControls = orbitControls;
 
-	var dragEffect = new DragPlaneEffect( params );
+	var dragEffect = new DragPlaneEffect( dragPlane, params );
 
 	var redTint = new THREE.Color(0.8, 0.2, 0.2);
-	params = { color: redTint };
-	var hoverEffect = new ColorHoverEffect( params );
+	var hoverEffect = new ColorHoverEffect( redTint );
 
 	// Add all pieces to our drag-and-drop controls.
 	for (var i=0; i < chessPiecesWhite.length; i++) {
 
-		cursorEvents.addObject( chessPiecesWhite[i] );
-		cursorEvents.addObject( chessPiecesBlack[i] );
-
 		// Drag applied first, since hover effect needs to know when 
 		// object is being dragged, so that object stays highlighted.
-		cursorEvents.addEffect( dragEffect, chessPiecesWhite[i] );
-		cursorEvents.addEffect( dragEffect, chessPiecesBlack[i] );
+		cursorEffects.addEffect( dragEffect, chessPiecesWhite[i] );
+		cursorEffects.addEffect( dragEffect, chessPiecesBlack[i] );
 
-		cursorEvents.addEffect( hoverEffect, chessPiecesWhite[i] );
-		cursorEvents.addEffect( hoverEffect, chessPiecesBlack[i] );
+		cursorEffects.addEffect( hoverEffect, chessPiecesWhite[i] );
+		cursorEffects.addEffect( hoverEffect, chessPiecesBlack[i] );
 
 	}
 
@@ -512,8 +494,6 @@ function animate() {
 	// Not much here; changes in object position triggered by mouse/cursor events.
 
 	frameID = requestAnimationFrame( animate );
-
-	cursorEvents.update();
 
 	if (useOrbitControls) orbitControls.update();
 

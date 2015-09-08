@@ -93,6 +93,8 @@ ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
 ColorHoverEffect.prototype.ignoreHoverChange = function( object ) {
 
+	if ( !inAltspace ) return false;
+
 	// TODO: remove once the renderer bug where materials change
 	// triggers re-rendering the object and cursor leave/enter events.
 	var now = Date.now();
