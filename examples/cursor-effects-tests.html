@@ -2,7 +2,7 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Drag Cube</title>
+<title>Cursor Effects Tests</title>
 <script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="https://sdk.altvr.com/libs/three.js/r71/
 examples/js/loaders/MTLLoader.js"></script>
@@ -30,9 +30,7 @@ if ( inAltspace ) {
 	document.body.appendChild(renderer.domElement);
 	var aspect = window.innerWidth / window.innerHeight;
 	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000);
-	//camera.position.y = -300; // stand back from origin
 	camera.position.z = 1000; // stand back from origin
-	//camera.lookAt( scene.position );
 	scene.add(camera);
 	window.addEventListener('resize', function(event) {
 		camera.aspect = window.innerWidth / window.innerHeight;
@@ -79,6 +77,7 @@ scene.add( dragPlane );
 var dragEffect = new DragPlaneEffect(dragPlane);
 cursorEffects.addEffect(dragEffect, cube); // only middle cube is draggable
 
+// All cubes have hover effect; middle is yellow, others are pink.
 var hoverYellow = new ColorHoverEffect(new THREE.Color('yellow'));
 var hoverPink = new ColorHoverEffect(new THREE.Color('pink'));
 cursorEffects.addEffect(hoverYellow, cube);
@@ -89,7 +88,7 @@ cursorEffects.addEffect(hoverPink, cube3);
 function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
-	cube.rotation.y += 0.01;
+	cube.rotation.y += 0.01; // only middle cube spins
 }
 animate();
 
