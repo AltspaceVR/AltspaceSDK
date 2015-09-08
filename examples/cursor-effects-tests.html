@@ -6,9 +6,11 @@
 <script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="https://sdk.altvr.com/libs/three.js/r71/
 examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 <script src="../utilities/CursorEffects.js"></script>
 <script src="../utilities/ColorHoverEffect.js"></script>
 <script src="../utilities/DragPlaneEffect.js"></script>
+<script src="../utilities/FirebaseSync.js"></script>
 <script src="../utilities/shims/CursorEvents.js"></script>
 <script src="../utilities/shims/EventDispatcher.js"></script>
 
@@ -65,6 +67,12 @@ cube3.position.x -= 300; // left cube
 scene.add(cube2);
 scene.add(cube3);
 
+// Setup sync, prefix appId with 'http' to match new rules
+var firebaseExamples ="http://altspace-apps.firebaseio.com/apps/examples";
+var firebaseSync = new FirebaseSync(firebaseExamples, "http-cursor-effects-tests");
+firebaseSync.addObject( cube, "cube" );
+firebaseSync.connect();
+
 // Effects
 var cursorEffects = new CursorEffects(scene);
 cursorEffects.enableMouseEvents(camera);
@@ -74,7 +82,7 @@ var dragPlane = new THREE.Mesh(
 );
 dragPlane.position.y = -500;
 scene.add( dragPlane );
-var dragEffect = new DragPlaneEffect(dragPlane);
+var dragEffect = new DragPlaneEffect(dragPlane, { firebaseSync: firebaseSync });
 cursorEffects.addEffect(dragEffect, cube); // only middle cube is draggable
 
 // All cubes have hover effect; middle is yellow, others are pink.
