@@ -3,10 +3,6 @@
 <head>
 <meta charset=utf-8>
 <title>Spinning Cube</title>
-<!--<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>-->
-<!-- Minified version of three.js throws this error when attaching event listeners:
-	"Cannot set property target of #<Event> which has only a getter"  
--->
 <script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="https://sdk.altvr.com/libs/three.js/r71/
 examples/js/loaders/MTLLoader.js"></script>
@@ -53,7 +49,8 @@ mesh.scale.multiplyScalar(200);
 scene.add(mesh);
 
 // Effects
-var cursorEffects = new CursorEffects();
+var cursorEffects = new CursorEffects(scene);
+cursorEffects.enableMouseEvents(camera);
 var hoverEffect = new ColorHoverEffect({color: new THREE.Color('yellow')});
 cursorEffects.addEffect(hoverEffect, mesh);
 
@@ -61,15 +58,9 @@ cursorEffects.addEffect(hoverEffect, mesh);
 function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
-	cursorEffects.update();
 	mesh.rotation.y += 0.01;
 }
 animate();
-
-mesh.addEventListener('cursordown', function( event ) { 
-	console.log('app cursordown', event);
-});
-
 
 </script>
 </body>

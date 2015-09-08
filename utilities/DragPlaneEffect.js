@@ -4,7 +4,13 @@
  *
  */
 
-DragPlaneEffect = function ( params ) {
+DragPlaneEffect = function ( dragPlane, params ) {
+
+	if ( ! dragPlane instanceof THREE.Object3D ) {
+		console.error("dragPlane must be of type Object3D");
+		return;
+	}
+	this.dragPlane = dragPlane.clone(); // make copy that is NOT added to scene
 
 	this.hoverObject;
 	this.dragObject;
@@ -12,8 +18,7 @@ DragPlaneEffect = function ( params ) {
 
 	this.dragOffset = new THREE.Vector3();
 
-	// Needed to interect dragPlane and compute new position of dragObject.
-	this.raycaster;
+
 
 	var p = params || {};
 
@@ -25,39 +30,54 @@ DragPlaneEffect = function ( params ) {
 	// Disable orbit controls during a drag (non-Altspace only). 
 	this.orbitControls = p.orbitControls || null;
 
-	this.dragPlane = p.dragPlane || null;
-
-	if ( !this.dragPlane ) {
-		// Default drag plane, for demo only! Normally it should be passed in,
-		// with location and width/depth matching drag area of your scene.
-		// Do not add dragPlane to the scene, or raycasting doesn't work properly.
-		this.dragPlane = new THREE.Mesh( 
-			new THREE.BoxGeometry( window.innerWidth, 0.25, window.innerDepth || 2000 ),
-			new THREE.MeshBasicMaterial( { transparent: true, opacity: 0.25 })
-		);
-
-	}
-
 	// Mark the intersection point when an object is dragged and on hoverOver.
 	// Intended as a debugging aide. Mesh with SphereGeometry works well.
 	this.dragPointMarker = p.dragPointMarker || null;
 
+	this.rayOrigin = new THREE.Vector3();
+	this.rayDirection = new THREE.Vector3();
+
+	// Raycaster usually set from Three.js camera, but here assume near=1 and
+	// make "far" 20% bigger than dragplane (if smaller, raycast won't work).
+	this.raycaster = new THREE.Raycaster();
+	var geo = this.dragPlane.geometry.parameters;
+	this.raycaster.near = 1;
+	this.raycaster.far = Math.max(geo.width, geo.depth) * 1.2;
+
 };
 
-DragPlaneEffect.prototype.holocursordown = function( object, event ) {
+
+DragPlaneEffect.prototype.cursormoveScene = function( event ) {
+
+	// Update raycaster origin and direction whenever cursor moves,
+	// also update sphere center to match cursor origin.
+
+	this.rayOrigin.copy( event.ray.origin );
+	this.rayDirection.copy( event.ray.direction );
+
+	this.dragUpdate();
+
+};
+
+DragPlaneEffect.prototype.cursorupScene = function( event ) {
+
+	if ( this.dragObject ) {
+		this.dragEnd();
+	}
+
+};
+
+DragPlaneEffect.prototype.cursordown = function( object, event ) {
 
 	this.dragStart( object, event );
 
-}
+};
 
-DragPlaneEffect.prototype.holocursorup = function( object, event ) {
+DragPlaneEffect.prototype.cursorup = function( object, event ) {
 
-	this.dragEnd( object, event );
-
-	// To use click-release to start drag, move, then click-release to end drag,
-	// ignore holocursordown and toggle between start/end drag here as follows:
-	// this.dragObject ? this.dragEnd( object, event ) : this.dragStart( object, event );
-	// We could add this as option set in constructor params if desired.
+	if ( this.dragObject ) {
+		this.dragEnd();
+	}
 
 }
 
@@ -73,12 +93,12 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
 	if ( this.TRACE ) console.log( "dragObject width: " + this.dragObjectWidth );
 
-	var intersects = this.raycaster.intersectObject( object, true );
-	if ( intersects.length === 0) {
-		console.error("dragStart but no intersected object");
-		return ; // something went wrong
+	var intersectionPoint = event.point;
+	if ( !intersectionPoint ) {
+		console.error("drag start but no intersected object");
+		return;
 	}
-	var intersectionPoint = intersects[0].point;
+
 	if ( this.TRACE ) console.log( "Intersection point:", intersectionPoint );
 
 	if ( this.dragObject ) {
@@ -109,9 +129,9 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 };
 
 
-DragPlaneEffect.prototype.dragEnd = function( object, event ) {
+DragPlaneEffect.prototype.dragEnd = function() {
 
-		if ( this.TRACE ) console.log("Ending drag", object);
+		if ( this.TRACE ) console.log("Ending drag");
 
 		if ( this.orbitControls ) {
 			this.orbitControls.enabled = true;
@@ -125,22 +145,19 @@ DragPlaneEffect.prototype.dragEnd = function( object, event ) {
 };
 
 
-DragPlaneEffect.prototype.update = function( effectsState ) {
+DragPlaneEffect.prototype.dragUpdate = function() {
 	// based on http://threejs.org/examples/#webgl_interactive_draggablecubes
 	// but changed to constrain dragging to x-z ground plane, instead of x-y vertical plane.
 
-	effectsState.dragObject = this.dragObject;
+	if (!this.dragObject) return;  // No drag, we're done.
 
-	this._setRaycaster( effectsState.lastEvent );
-
-	if (!this.dragObject) return effectsState ;  // No drag, we're done.
-
+	this.raycaster.set( this.rayOrigin, this.rayDirection );
 	var intersects = this.raycaster.intersectObject( this.dragPlane );
 
 	if (intersects.length === 0) {
 		if ( this.TRACE ) console.log( "Ray no longer intersection dragplane", this.raycaster, this.dragPlane);
 		this.dragEnd();
-		return effectsState ;
+		return;
 	}
 
 	var dragPoint = intersects[0].point.clone();
@@ -184,29 +201,7 @@ DragPlaneEffect.prototype.update = function( effectsState ) {
 		this.firebaseSync.saveObject(this.dragObject);
 	}
 
-	return effectsState;
-};
-
-
-DragPlaneEffect.prototype._setRaycaster = function( lastEvent ) {
-
-	if ( !lastEvent ) return ; // No cursor events yet.
-
-	if ( !this.raycaster ) {
-		var params = this.dragPlane.geometry.parameters;
-		this.raycaster = new THREE.Raycaster();
-
-		// Raycaster usually set from Three.js camera, but here assume near=1 and
-		// make "far" 20% bigger than dragplane (if smaller, raycast won't work).
-		this.raycaster.near = 1;
-		this.raycaster.far = Math.max(params.width, params.depth) * 1.2;
-	}
-
-	var cursorRay = lastEvent.detail.cursorRay;
-	this.raycaster.set( cursorRay.origin, cursorRay.direction );
+	return;
 
 };
-
-
-
 

@@ -2,39 +2,43 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Spinning Cube</title>
-<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
+<title>Drag Cube</title>
+<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="https://sdk.altvr.com/libs/three.js/r71/
 examples/js/loaders/MTLLoader.js"></script>
 <script src="../utilities/CursorEffects.js"></script>
 <script src="../utilities/ColorHoverEffect.js"></script>
+<script src="../utilities/DragPlaneEffect.js"></script>
 <script src="../utilities/shims/CursorEvents.js"></script>
+<script src="../utilities/shims/EventDispatcher.js"></script>
+
+
 </head>
 <body>
 <script>
 
 //Setup
+var inAltspace = !!window.altspace;
 var renderer, camera, scale;
 var scene = new THREE.Scene();
-if ( window.altspace ) {
+if ( inAltspace ) {
 	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
-	scale = 200;
 } else {
 	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setClearColor("#AAAAAA");
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.setClearColor('silver');
-	document.body.appendChild( renderer.domElement )
-
+	document.body.appendChild(renderer.domElement);
 	var aspect = window.innerWidth / window.innerHeight;
 	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000);
-	scale = 10;
-	camera.position.z = 5 * scale; // stand back from origin
-
-	window.addEventListener( 'resize', function() {
+	//camera.position.y = -300; // stand back from origin
+	camera.position.z = 1000; // stand back from origin
+	//camera.lookAt( scene.position );
+	scene.add(camera);
+	window.addEventListener('resize', function(event) {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
-		renderer.setSize( window.innerWidth, window.innerHeight );
-	}, false );
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	});
 }
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
@@ -42,28 +46,50 @@ if ( window.altspace ) {
 var materialCreator = new THREE.MTLLoader.MaterialCreator();
 var texture = materialCreator.loadTexture('models/cube/altspace-logo.jpg');
 
-//Cube
+// Cube
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({color:'cyan', map: texture});
-var mesh = new THREE.Mesh(geometry, material);
-mesh.scale.multiplyScalar(scale);
-scene.add(mesh);
+var cube = new THREE.Mesh(geometry, material);
+cube.scale.multiplyScalar(100);
+cube.position.y = -450;
+scene.add(cube);
+if ( !inAltspace ) camera.lookAt( cube.position );
+
+// Must clone materials, else outside of Altspace material change affects all cubes.
+var cube2 = cube.clone();
+cube2.material = cube.material.clone();
+var cube3 = cube.clone();
+cube3.material = cube.material.clone();
+
+// Add additional cubes a bit closer to the camera.
+cube2.position.x += 300; // right cube
+cube3.position.x -= 300; // left cube
+scene.add(cube2);
+scene.add(cube3);
 
 // Effects
-//var cursorEffects = new CursorEffects(scene);
-var cursorEffects = new CursorEffects(scene, {TRACE: true});
-var hoverEffect = new ColorHoverEffect({color: new THREE.Color('yellow')});
-cursorEffects.addEffect(hoverEffect, mesh);
+var cursorEffects = new CursorEffects(scene);
+cursorEffects.enableMouseEvents(camera);
+var dragPlane = new THREE.Mesh( 
+	new THREE.BoxGeometry( 1000, 0.25, 1000 ),
+	new THREE.MeshBasicMaterial( { color: 'gray' })
+);
+dragPlane.position.y = -500;
+scene.add( dragPlane );
+var dragEffect = new DragPlaneEffect(dragPlane);
+cursorEffects.addEffect(dragEffect, cube); // only middle cube is draggable
 
+var hoverYellow = new ColorHoverEffect(new THREE.Color('yellow'));
+var hoverPink = new ColorHoverEffect(new THREE.Color('pink'));
+cursorEffects.addEffect(hoverYellow, cube);
+cursorEffects.addEffect(hoverPink, cube2);
+cursorEffects.addEffect(hoverPink, cube3);
 
 // Update & Rendering
 function animate() {
 	requestAnimationFrame(animate);
-
-	cursorEffects.update();
-	mesh.rotation.y += 0.01;
-
 	renderer.render(scene, camera);
+	cube.rotation.y += 0.01;
 }
 animate();
 

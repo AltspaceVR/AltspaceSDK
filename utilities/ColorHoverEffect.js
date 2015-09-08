@@ -1,8 +1,10 @@
 // ColorHoverEffect makes objects change color on hover.
 
-ColorHoverEffect = function ( params ) {
+ColorHoverEffect = function ( hoverColor, params ) {
 
+	this.hoverColor = hoverColor;
 	this.hoverObject;
+	this.cursordownObject;
  
 	var p = params || {};
 
@@ -11,9 +13,9 @@ ColorHoverEffect = function ( params ) {
 		return ; // valid color required
 	}
 
-	this.inAltspace = !!window.altspace;
+	this.TRACE = p.TRACE || null; 
 
-	this.hoverColor = p.color || new THREE.Color(1, 1, 0); // yellow-ish
+	this.inAltspace = !!window.altspace;
 
 	this.dragObject;
 
@@ -22,7 +24,13 @@ ColorHoverEffect = function ( params ) {
 
 ColorHoverEffect.prototype.cursorenter = function( object ) {
 
-	if ( this.dragObject ) return ; // ignore hover events during drag
+	// Ignore hover events if a different object is selected,
+	// for example during a drag we don't want to change highlight
+	if ( this.cursordownObject && this.cursordownObject !== object ) {
+		// TODO: Test this again in Altspace once renderer "blink" bug is fixed.
+		if ( this.TRACE ) console.log("Ignore hover, other object selected", this.cursordownObject);
+		return ;
+	} 
 
 	if ( this.hoverObject ) {
 		this.unhoverEffect( this.hoverObject );
@@ -43,6 +51,21 @@ ColorHoverEffect.prototype.cursorleave = function( object ) {
 
 };
 
+ColorHoverEffect.prototype.cursordown = function( object ) {
+
+	if ( this.TRACE ) console.log("setting cursordownObject", object);
+	this.cursordownObject = object;
+
+};
+
+
+ColorHoverEffect.prototype.cursorupScene = function( object ) {
+
+	if ( this.TRACE ) console.log("clearning cursordownObject", object);
+	this.cursordownObject = null;
+
+};
+
 
 ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
@@ -52,6 +75,7 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
 	this.setHoverColor( object, this.hoverColor );
 
+	if ( this.TRACE ) console.log("hoverEffect", object);
 };
 
 
@@ -63,6 +87,7 @@ ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
 	this.unsetHoverColor( object );
 
+	if ( this.TRACE ) console.log("unhoverEffect", object);
 };
 
 
@@ -79,15 +104,6 @@ ColorHoverEffect.prototype.ignoreHoverChange = function( object ) {
 	}
 
 	return false;
-
-};
-
-ColorHoverEffect.prototype.update = function( effectsState ) {
-
-	// Remember if a drag is in progress.
-	this.dragObject = effectsState.dragObject;
-
-	// No need to update the effectsState, so return nothing.
 
 };
 

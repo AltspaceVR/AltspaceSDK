@@ -5,11 +5,11 @@ Finalized
 Updated  
 
 - CursorEffects.js
-- ColorHoverEffect.js (examples/spinning-cube.html)
+- ColorHoverEffect.js
+- DragPlaneEffect.js
+- shims/CursorEvents.js
 
 Needs Updates  
 
-- DragPlaneEffect.js
 - FirebaseSync.js
-- shims/CursorEvents.js
 

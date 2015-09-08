@@ -8,20 +8,16 @@
  * Attribution: based on ObjectControls by cabbibo (http://cabbi.bo)
  * Version 3/17/2015 from https://github.com/cabbibo/ObjectControls
  * 
- * Modifications
- * Added intersectionPoint: where raycast meets the target object.
- * Added delegate: optionally receives all events, instead of target object.
- * Added eventDetail: contains ray origin, direction, intersection point, etc. 
- *
  */
-function CursorEvents( eye , params ){
+function CursorEvents( scene, camera, params ){
 
 	this.intersected;
 	this.selected;
 
 	this.intersectionPoint;
 
-	this.eye = eye;
+	this.scene = scene;
+	this.camera = camera;
 
 	this.mouse = new THREE.Vector3();
 	this.unprojectedMouse = new THREE.Vector3();
@@ -38,13 +34,13 @@ function CursorEvents( eye , params ){
 	// Recursively check descendants of objects in this.objects for intersections.
 	this.recursive = p.recursive || false;
 
-	// Call all events on the scene, obtained by traversing up scene graph.
-	this.scene = CursorEffects.getScene( eye );
+	// Call all events on the scene, as well as target objets.
+	this.scene = scene;
 
 	this.raycaster = new THREE.Raycaster();
 
-	this.raycaster.near = this.eye.near;
-	this.raycaster.far = this.eye.far;
+	this.raycaster.near = this.camera.near;
+	this.raycaster.far = this.camera.far;
 
 
 	var addListener = this.domElement.addEventListener;
@@ -62,6 +58,7 @@ function CursorEvents( eye , params ){
 	this.domElement.addEventListener( 'touchmove', cb3, false )
 
 	this.unprojectMouse();
+	this.updateRaycaster();
 
 	EventDispatcher.prototype.apply( THREE.Object3D.prototype );
 	// TODO: same for scene
@@ -75,7 +72,8 @@ CursorEvents.prototype.cursormove = function( event ){
 
 	if(this.TRACE) {console.log("CursorEvents shim: cursormove");}
 
-	// TODO: dispatch on scene
+	var mockCursorEventScene = this.mockCursorEvent( 'cursormove', event, this.scene );
+	scene.dispatchEvent( mockCursorEventScene );
 
 }
 
@@ -89,7 +87,8 @@ CursorEvents.prototype.cursorleave = function( object ){
 	var mockCursorEvent = this.mockCursorEvent( 'cursorleave', event, object );
 	object.dispatchEvent( mockCursorEvent );
 
-	// TODO: dispatch on scene
+	var mockCursorEventScene = this.mockCursorEvent( 'cursorleave', event, this.scene );
+	scene.dispatchEvent( mockCursorEventScene );
 };
 
 
@@ -102,7 +101,8 @@ CursorEvents.prototype.cursorenter = function( object ){
 	var mockCursorEvent = this.mockCursorEvent( 'cursorenter', event, object );
 	object.dispatchEvent( mockCursorEvent );
 
-	// TODO: dispatch on scene
+	var mockCursorEventScene = this.mockCursorEvent( 'cursorenter', event, this.scene );
+	scene.dispatchEvent( mockCursorEventScene );
 };
 
 
@@ -115,8 +115,8 @@ CursorEvents.prototype.cursordown = function( event, object ){
 	var mockCursorEvent = this.mockCursorEvent( 'cursordown', event, object );
 	object.dispatchEvent( mockCursorEvent );
 
-	// TODO: dispatch on scene
-
+	var mockCursorEventScene = this.mockCursorEvent( 'cursordown', event, this.scene );
+	scene.dispatchEvent( mockCursorEventScene );
 };
 
 
@@ -129,47 +129,44 @@ CursorEvents.prototype.cursorup = function( event, object ){
 	var mockCursorEvent = this.mockCursorEvent( 'cursorup', event, object );
 	object.dispatchEvent( mockCursorEvent );
 
-	// TODO: dispatch on scene
+	var mockCursorEventScene = this.mockCursorEvent( 'cursorup', event, this.scene );
+	scene.dispatchEvent( mockCursorEventScene );
+
 };
 
 
 CursorEvents.prototype.mockCursorEvent = function( eventName, event, object ) {
 
-	var mockCursorEvent = { 
-		type: eventName,
-		currentTarget: object, // target gets set by EventDispatcher
-		detail: this.eventDetail(eventName)
-	}
-
-	return mockCursorEvent;
-
-	// TODO: combine this method with mockCursorEvent
-
-};
-
-
-CursorEvents.prototype.eventDetail = function( eventName ){
+	// currentTarget: THREE.Scene or THREE.Object3D
+	// cursorRay: Object (obsolete)
+	// point: THREE.Vector3
+	// ray: THREE.Ray
+	// stopImmediatePropagation: function
+	// stopPropagation: function
+	// target: THREE.Mesh
+	// type: 'cursorenter'
 
 	var origin = this.raycaster.ray.origin;
 	var direction = this.raycaster.ray.direction;
 	var point =	this.intersectionPoint ? this.intersectionPoint.clone() : null;
 
-	var detail = {
+	var mockCursorEvent = { 
 
-		name: eventName,
-		raycaster: {
-			ray: {
-				origin: { x: origin.x, y: origin.y, z: origin.z },
-				direction: { x: direction.x, y: direction.y, z: direction.z },
-			},
-			near: this.raycaster.near,
-			far: this.raycaster.far,
+		currentTarget: object,
+		cursorRay: { // TODO: remove this once it's removed from Altspace event
+			origin: { x: origin.x, y: origin.y, z: origin.z },
+			direction: { x: direction.x, y: direction.y, z: direction.z },
 		},
-		intersectionPoint: point ? { x: point.x, y: point.y, z: point.z } : null,
+		point: point,
+		ray: {
+			origin: origin,
+			direction: direction,
+		},
+		// target gets set by EventDispatcher
+		type: eventName,
+	}
 
-	};
-
-	return detail;
+	return mockCursorEvent;
 
 }
 
@@ -178,11 +175,6 @@ CursorEvents.prototype.eventDetail = function( eventName ){
 /* OBJECTS */
 
 CursorEvents.prototype.add = function( object ){
-
-	// Find the parent scene for the first object added.
-	if ( this.objects.length === 0 ) {
-		CursorEffects.getScene( object );
-	}
 
 	this.objects.push( object );
 
@@ -206,7 +198,7 @@ CursorEvents.prototype.remove = function( object ){
 
 /* UPDATE LOOP */
 
-CursorEvents.prototype.update = function(){
+CursorEvents.prototype.updateRaycaster = function(){
 
 
 	if ( this.unprojectedMouse ) {
@@ -246,10 +238,10 @@ CursorEvents.prototype.setRaycaster = function( position ){
 	var origin = position;
 	var direction = origin.clone()
 
-	direction.sub( this.eye.position );
+	direction.sub( this.camera.position );
 	direction.normalize();
 
-	this.raycaster.set( this.eye.position, direction );
+	this.raycaster.set( this.camera.position, direction );
 
 }
 
@@ -407,13 +399,14 @@ CursorEvents.prototype.mouseMove = function( event ){
 	this.mouse.z = 1;
 
 	this.unprojectMouse();
+	this.updateRaycaster();
 
 	this.cursormove(event);
 }
 
 CursorEvents.prototype.unprojectMouse = function(){
 	this.unprojectedMouse.copy( this.mouse );
-	this.unprojectedMouse.unproject( this.eye );
+	this.unprojectedMouse.unproject( this.camera );
 
 }
 
