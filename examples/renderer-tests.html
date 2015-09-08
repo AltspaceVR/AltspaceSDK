@@ -80,6 +80,7 @@
 					enabled: true,
 					init: function () {
 						tintTexCube = addTexturedCube();
+						tintTexCube.name = 'tintTexCube';
 						tintTexCube.position.set(0, 50, 0);
 						tintTexCube.userData.tintColor = {r: 1, g: 0, b: 0};
 					},
@@ -95,6 +96,7 @@
 					enabled: true,
 					init: function () {
 						colorTexCube = addTexturedCube();
+						colorTexCube.name = 'colorTexCube';
 						colorTexCube.position.set(0, -50, 0);
 						colorTexCube.material = colorTexCube.material.clone()
 						colorTexCube.material.color.setHSL(0.25, 1, 0.5);
@@ -112,6 +114,7 @@
 					enabled: true,
 					init: function () {
 						tintColorCube = addColorCube('cyan');
+						tintColorCube.name = 'tintColorCube';
 						tintColorCube.position.set(-50, 50, 0);
 					},
 					tick: function () {
@@ -127,6 +130,7 @@
 					enabled: true,
 					init: function () {
 						animatedCube = addTexturedCube();
+						animatedCube.name = 'animatedCube';
 						animatedCube.position.set(0, 0, 0);
 					},
 					tick: function () {
@@ -146,8 +150,10 @@
 					enabled: true,
 					init: function () {
 						visibilityCube = addColorCube('blue');
+						visibilityCube.name = 'visibilityCube';
 						visibilityCube.position.set(50, 50, 0);
 						var visInnerCube = addColorCube('blue');
+						visInnerCube.name = 'visInnerCube';
 						visInnerCube.position.set(50, 50, 0);
 						visInnerCube.scale.multiplyScalar(0.5);
 						visInnerCube.addEventListener(
@@ -179,11 +185,13 @@
 					enabled: true,
 					init: function () {
 						matVisibilityCube = addTexturedCube();
+						matVisibilityCube.name = 'matVisibilityCube';
 						matVisibilityCube.material = 
 							matVisibilityCube.material.clone()
 						matVisibilityCube.name = 'matVisibilityCube';
 						matVisibilityCube.position.set(50, -50, 0);
 						var matVisInnerCube = addColorCube('blue');
+						matVisInnerCube.name = 'matVisInnerCube';
 						matVisInnerCube.position.set(80, -50, 0);
 						matVisInnerCube.scale.multiplyScalar(0.5);
 						matVisibilityCube.addEventListener(
@@ -223,6 +231,7 @@
 							function ( loadedObject ) {
 								// BOTTOM LEFT
 								tintedObj = loadedObject;
+								tintedObj.name = 'tintedObj';
 								tintedObj.scale.multiplyScalar(30);
 								tintedObj.position.set(-50, -50, 0);
 								scene.add(tintedObj);
@@ -244,6 +253,7 @@
 					},
 					tick: function () {
 						texturedCube = addTexturedCube();
+						texturedCube.name = 'texturedCube';
 					},
 					tock: function () {
 						scene.remove(texturedCube);
@@ -260,6 +270,7 @@
 					},
 					tock: function () {
 						colorCube = addColorCube();
+						colorCube.name = 'colorCube';
 					}
 				}
 			];
