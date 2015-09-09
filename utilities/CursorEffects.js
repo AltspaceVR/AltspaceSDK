@@ -12,8 +12,6 @@ CursorEffects = function( scene, params ) {
 	this.objectEffects = {};  // objectEffects[ object.uuid ] = [ effect1, effect2, ... ]
 	this.effects = [];  // flat list of all effects
 
-	var cursorEvents;	// shim used when outside of Altspace to dispatch cursor events
-
  	// Attach listeners to scene
 	var dispatcher = this._dispatchEffectsToScene.bind( this ); 
 	scene.addEventListener("cursordown", dispatcher);
@@ -21,20 +19,6 @@ CursorEffects = function( scene, params ) {
 	scene.addEventListener("cursorenter", dispatcher);
 	scene.addEventListener("cursorleave", dispatcher);
 	scene.addEventListener("cursormove", dispatcher);
-
-};
-
-CursorEffects.prototype.enableMouseEvents = function( camera ) {
-
-	var inAltspace = !!window.altspace;
-	if ( !inAltspace ) {
-		var params = { TRACE: this.TRACE, recursive: true};
-		this.cursorEvents =  new CursorEvents( this.scene, camera, params ); 
-		THREE.EventDispatcher.call( this.scene ); // register scene for events
-		console.log("Not in Altspace, listening for mouse events.");	
-	} else {
-		console.log("In Altspace, ignoring request to listening for mouse events.");
-	}
 
 };
 
@@ -58,11 +42,6 @@ CursorEffects.prototype.addEffect = function( effect, object ) {
 		object.addEventListener("cursorenter", dispatcher);
 		object.addEventListener("cursorleave", dispatcher);
 		
-		if ( this.cursorEvents ) {
-			THREE.EventDispatcher.call( object ); // register object for events
-			this.cursorEvents.add( object );
-		}
-
 	}
 
 	if ( this.effects.indexOf( effect ) === -1 ) {

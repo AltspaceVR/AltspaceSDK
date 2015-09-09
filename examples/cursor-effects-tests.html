@@ -12,7 +12,6 @@ examples/js/loaders/MTLLoader.js"></script>
 <script src="../utilities/DragPlaneEffect.js"></script>
 <script src="../utilities/FirebaseSync.js"></script>
 <script src="../utilities/shims/CursorEvents.js"></script>
-<script src="../utilities/shims/EventDispatcher.js"></script>
 
 
 </head>
@@ -21,7 +20,7 @@ examples/js/loaders/MTLLoader.js"></script>
 
 //Setup
 var inAltspace = !!window.altspace;
-var renderer, camera, scale;
+var renderer, camera, cursorEvents;
 var scene = new THREE.Scene();
 if ( inAltspace ) {
 	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
@@ -39,6 +38,7 @@ if ( inAltspace ) {
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 	});
+	cursorEvents = new CursorEvents( scene, camera );
 }
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
@@ -75,7 +75,6 @@ firebaseSync.connect();
 
 // Effects
 var cursorEffects = new CursorEffects(scene);
-cursorEffects.enableMouseEvents(camera);
 var dragPlane = new THREE.Mesh( 
 	new THREE.BoxGeometry( 1000, 0.25, 1000 ),
 	new THREE.MeshBasicMaterial( { color: 'gray' })

@@ -13,7 +13,6 @@
 		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
 		<script src="../utilities/shims/CursorEvents.js"></script>
-		<script src="../utilities/shims/EventDispatcher.js"></script>
 		<script src="../utilities/CursorEffects.js"></script>
 		<script src="../utilities/ColorHoverEffect.js"></script>
 		<script src="../utilities/DragPlaneEffect.js"></script>
@@ -53,7 +52,7 @@ var modelsToLoad =	0;
 
 var scene, camera, renderer;
 var altObjectControls, orbitControls;
-var cursorEffects;
+var cursorEffects, cursorEvents;
 var firebaseSync;
 var exporter, loader;
 var frameID;
@@ -193,10 +192,8 @@ function initScene() {
 		scene.add( dragPointSphere );
 	}
 
-	// chess pieces might be comprised of multiple objects,
-	// so enable recursively checking descendants for intersection.
 	cursorEffects = new CursorEffects( scene );
-	cursorEffects.enableMouseEvents( camera );
+	if ( !inAltspace ) cursorEvents = new CursorEvents( scene, camera );
 
 	if (useOrbitControls) {
 		orbitControls = new THREE.OrbitControls( camera, renderer.domElement );

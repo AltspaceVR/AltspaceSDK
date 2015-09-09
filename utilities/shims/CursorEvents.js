@@ -1,9 +1,7 @@
 /*
- * NOTE: Used internally by CursorEffects; no need to instantiate manually! 
- *
- * CursorEvents detects mouse events using the Three.js raycaster.
+ * CursorEvents detects mouse events using the Three.js raycaster,
+ * then dispatches an event the mimics Altspace cursor events.
  * This allows events to function similarly in and outside Altspace.
- * To activate: cursorEventsSingleton.enableMouseEvents( camera )
  *
  * Attribution: based on ObjectControls by cabbibo (http://cabbi.bo)
  * Version 3/17/2015 from https://github.com/cabbibo/ObjectControls
@@ -22,8 +20,6 @@ function CursorEvents( scene, camera, params ){
 	this.mouse = new THREE.Vector3();
 	this.unprojectedMouse = new THREE.Vector3();
 
-	this.objects = [];
-
 	var params = params || {};
 	var p = params;
 
@@ -32,7 +28,7 @@ function CursorEvents( scene, camera, params ){
 	this.domElement = p.domElement || document;
 
 	// Recursively check descendants of objects in this.objects for intersections.
-	this.recursive = p.recursive || false;
+	this.recursive = p.recursive || true;
 
 	// Call all events on the scene, as well as target objets.
 	this.scene = scene;
@@ -60,8 +56,6 @@ function CursorEvents( scene, camera, params ){
 	this.unprojectMouse();
 	this.updateRaycaster();
 
-	EventDispatcher.prototype.apply( THREE.Object3D.prototype );
-	// TODO: same for scene
 }
 
 
@@ -171,32 +165,7 @@ CursorEvents.prototype.mockCursorEvent = function( eventName, event, object ) {
 }
 
 
-
-/* OBJECTS */
-
-CursorEvents.prototype.add = function( object ){
-
-	this.objects.push( object );
-
-};
-
-CursorEvents.prototype.remove = function( object ){
-
-	for( var i = 0; i < this.objects.length; i++ ){
-
-		if( this.objects[i] == object ){
-	
-			this.objects.splice( i , 1 );
-
-		}
-
-	}
-
-};
-
-
-
-/* UPDATE LOOP */
+/* UPDATE */
 
 CursorEvents.prototype.updateRaycaster = function(){
 
@@ -208,29 +177,11 @@ CursorEvents.prototype.updateRaycaster = function(){
 
 			this.checkForIntersections();
 
-		}else{
-
-			this.updateSelected( this.unprojectedMouse );
-
 		}
 
 	}
 
 };
-
-CursorEvents.prototype.updateSelected = function(){
-
-	if( this.selected.update ){
-
-		this.selected.update( this );
-
-	}
-
-}
-
-CursorEvents.prototype.updateSelected = function(){};
-
-
 
 
 CursorEvents.prototype.setRaycaster = function( position ){
@@ -246,12 +197,12 @@ CursorEvents.prototype.setRaycaster = function( position ){
 }
 
 
-
 /* CHECKS */
 
 CursorEvents.prototype.checkForIntersections = function(){
 
-	var intersected = this.raycaster.intersectObjects( this.objects, this.recursive );
+	// TODO: Implement bubbling, don't assume scene top-level objects.
+	var intersected = this.raycaster.intersectObjects( this.scene.children, this.recursive );
 
 
 	if( intersected.length > 0 ){
@@ -305,7 +256,7 @@ CursorEvents.prototype.checkForUpDown = function( hand , oHand ){
 
 CursorEvents.prototype.getIntersectionPoint = function( i ){
 
-	var intersected = this.raycaster.intersectObjects( this.objects, this.recursive );
+	var intersected = this.raycaster.intersectObjects( this.scene.children, this.recursive );
  
 	return intersected[0].point.sub( i.position );
 
@@ -318,7 +269,7 @@ CursorEvents.prototype.findTopLevelAncestor = function( object ){
 	// were passed to objectControls.add) handle events, even if their child
 	// objects are the ones intersected.
 
-	while ( this.objects.indexOf(object) === -1) {
+	while ( this.scene.children.indexOf(object) === -1) {
 
 		if ( !object.parent ) {
 
