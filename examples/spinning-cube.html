@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Hello Cube</title>
+<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
+<script src="../utilities/shims/CursorEvents.js"></script>
+
+</head>
+<body>
+<script>
+// TODO: Replace relative links to CursorEvents.js and altspace-logo.jpg with CDN links.
+
+var ascp = altspace.utilities.codePen;
+ascp.setName("Hello Cube"); 
+var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
+var inAltspace = !!window.altspace.getThreeJSRenderer;
+
+// Setup
+var renderer, camera, cursorEvents;
+var scene = new THREE.Scene();
+if ( inAltspace ) {
+	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+} else {
+	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setClearColor("#AAAAAA");
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+	var aspect = window.innerWidth / window.innerHeight;
+	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000);
+	camera.position.z = 1000; // stand back from origin
+	scene.add(camera);
+	window.addEventListener('resize', function(event) {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	});
+	cursorEvents = new CursorEvents( scene, camera );
+}
+
+// Use MTLLoader for loadTexture, to ensure image is power of 2
+// else antialiasing won't work (this is a limitation of WebGL)
+var materialCreator = new THREE.MTLLoader.MaterialCreator();
+var texture = materialCreator.loadTexture('models/cube/altspace-logo.jpg');
+
+// Cube
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
+var cube = new THREE.Mesh(geometry, material);
+cube.scale.multiplyScalar(100);
+cube.position.y = -450;
+scene.add(cube);
+if ( !inAltspace ) camera.lookAt( cube.position );
+
+// Sync
+var params = inCodePen ? {instanceId: ascp.getPenId(), authorId: ascp.getAuthorId()} : null;
+var syncInstance = altspace.utilities.sync.getInstance(params);
+var syncColor = syncInstance.child('color');
+syncColor.on('value', function(snapshot){
+	var val = snapshot.val();
+	if ( val ) {
+		cube.material.color = new THREE.Color(val);
+	}
+});
+
+// Events
+cube.addEventListener('cursordown', function() {
+	syncColor.set(Please.make_color()[0]); // clicking on cube changes its color
+});
+
+// Update & Rendering
+function animate() {
+	cube.rotation.y += 0.01; // rotation is not synchronized
+	requestAnimationFrame(animate);
+	renderer.render(scene, camera);
+}
+animate();
+
+</script>
+</body>
+</html>
