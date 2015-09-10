@@ -43,6 +43,9 @@ if ( inAltspace ) {
 // Use MTLLoader for loadTexture, to ensure image is power of 2
 // else antialiasing won't work (this is a limitation of WebGL)
 var materialCreator = new THREE.MTLLoader.MaterialCreator();
+//materialCreator.crossOrigin = "anonymous";
+//var texture = materialCreator.loadTexture('https://sdk.altvr.com/examples/models/AltspaceCube/altspace-logo.jpg');
+// TODO: Host assets with Access-Control-Allow-Origin headers, for now use local.
 var texture = materialCreator.loadTexture('models/cube/altspace-logo.jpg');
 
 // Cube
