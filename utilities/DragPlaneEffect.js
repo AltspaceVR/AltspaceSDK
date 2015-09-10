@@ -94,6 +94,13 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 	if ( this.TRACE ) console.log( "dragObject width: " + this.dragObjectWidth );
 
 	var intersectionPoint = event.point;
+	if ( !!window.altspace ) {
+		// TODO: Figure out why event.point seems to be wrong in Altspace.
+		// For now, ignore it and assume center of object. If actual dragPoint
+		// is on the edge of object, it will appear to "jump" when drag starts.
+		intersectionPoint.copy(object.position);
+	}
+
 	if ( !intersectionPoint ) {
 		console.error("drag start but no intersected object");
 		return;
