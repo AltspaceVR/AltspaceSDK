@@ -17,6 +17,7 @@
 		<script src="../lib/OrbitControls.js"></script>
 		<script src="../lib/MTLLoader.js"></script>
 		<script src="../lib/OBJMTLLoader.js"></script>
+		<script src="../lib/stats.min.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
 
@@ -30,7 +31,7 @@
 		</script>
 		<script type="text/babel">
 
-			var scene, renderer, camera, cursorEvents, controls;
+			var scene, renderer, camera, cursorEvents, controls, stats;
 			var 
 				tintTexCube, colorTexCube, tintColorCube, 
 				animatedCube, colorCube, texturedCube, 
@@ -115,20 +116,35 @@
 					}
 				},
 				{
-					name: 'colored, textured cube',
+					name: 'colored, textured cube, performance',
 					enabled: true,
 					init: function () {
-						colorTexCube = addTexturedCube();
-						colorTexCube.name = 'colorTexCube';
-						colorTexCube.position.set(0, -50, 0);
-						colorTexCube.material = colorTexCube.material.clone()
-						colorTexCube.material.color.setHSL(0.25, 1, 0.5);
+						var numCubes = 50;
+						for (var i = 0; i < numCubes; i++) {
+							colorTexCube = addTexturedCube();
+							if (!this.material) {
+								this.material = colorTexCube.material.clone();
+							}
+							colorTexCube.scale.multiplyScalar(0.5);
+							colorTexCube.name = 'colorTexCube ' + i;
+							colorTexCube.material = this.material;
+							colorTexCube.position.set(
+								Math.sin(i / numCubes * Math.PI * 2) * 10,
+								-50 + Math.cos(i / numCubes * Math.PI * 2) * 10,
+								Math.sin(i / numCubes * Math.PI * 2) * 10);
+							colorTexCube.material.color.setHSL(0.25, 1, 0.5);
+						}
+						this.previousHue = 0.25;
 					},
-					tick: function () {
-						colorTexCube.material.color.setHex(0x00ff00);
-					},
-					tock: function () {
-						colorTexCube.material.color.setHex(0x0000ff);
+					tick: function () {},
+					tock: function () {},
+					update: function (elapsed) {
+						var newHue = elapsed / 10 % 100 / 100;
+						if (Math.abs(newHue - this.previousHue) > 0.05) {
+							this.material.color.setHSL(newHue, 1, 0.5);
+							this.material.needsUpdate = true;
+							this.previousHue = newHue;
+						}
 					}
 				},
 				{
@@ -298,6 +314,8 @@
 				}
 			];
 
+			// tests = tests.filter(test => /color.+tex/.test(test.name));
+
 			function init() {
 				scene = new THREE.Scene();
 				scene.position.set(0, -60, 0);
@@ -323,6 +341,11 @@
 					// cursorEvents = new CursorEvents( scene );
 					// cursorEvents.enableMouseEvents( camera );
 				}
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0';
+				document.body.appendChild(stats.domElement);
 
 				addAxisSpheres();
 
@@ -357,6 +380,7 @@
 				}
 
 				renderer.render( scene, camera );
+				stats.update();
 			}
 
 			init();
