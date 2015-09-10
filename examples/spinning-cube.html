@@ -6,7 +6,7 @@
 <script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="https://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="../utilities/shims/CursorEvents.js"></script>
+<script src="https://sdk.altvr.com/utilities/shims/CursorEvents.js"></script>
 
 </head>
 <body>
@@ -43,10 +43,9 @@ if ( inAltspace ) {
 // Use MTLLoader for loadTexture, to ensure image is power of 2
 // else antialiasing won't work (this is a limitation of WebGL)
 var materialCreator = new THREE.MTLLoader.MaterialCreator();
-//materialCreator.crossOrigin = "anonymous";
-//var texture = materialCreator.loadTexture('https://sdk.altvr.com/examples/models/AltspaceCube/altspace-logo.jpg');
-// TODO: Host assets with Access-Control-Allow-Origin headers, for now use local.
-var texture = materialCreator.loadTexture('models/cube/altspace-logo.jpg');
+materialCreator.crossOrigin = "anonymous";
+var url = 'https://sdk.altvr.com/examples/models/AltspaceCube/altspace-logo.jpg';
+var texture = materialCreator.loadTexture(url);
 
 // Cube
 var geometry = new THREE.BoxGeometry(1, 1, 1);
