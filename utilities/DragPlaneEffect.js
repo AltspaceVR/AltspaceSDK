@@ -49,9 +49,7 @@ DragPlaneEffect = function ( dragPlane, params ) {
 
 DragPlaneEffect.prototype.cursormoveScene = function( event ) {
 
-	// Update raycaster origin and direction whenever cursor moves,
-	// also update sphere center to match cursor origin.
-
+	// Update raycaster origin and direction whenever cursor moves.
 	this.rayOrigin.copy( event.ray.origin );
 	this.rayDirection.copy( event.ray.direction );
 
@@ -68,6 +66,10 @@ DragPlaneEffect.prototype.cursorupScene = function( event ) {
 };
 
 DragPlaneEffect.prototype.cursordown = function( object, event ) {
+
+	// Handle (rare) case where cursordown happens before any mousemove.
+	this.rayOrigin.copy( event.ray.origin );
+	this.rayDirection.copy( event.ray.direction );
 
 	this.dragStart( object, event );
 
@@ -93,12 +95,10 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 
 	if ( this.TRACE ) console.log( "dragObject width: " + this.dragObjectWidth );
 
-	var intersectionPoint = event.point;
-	if ( !!window.altspace ) {
-		// TODO: Figure out why event.point seems to be wrong in Altspace.
-		// For now, ignore it and assume center of object. If actual dragPoint
-		// is on the edge of object, it will appear to "jump" when drag starts.
-		intersectionPoint.copy(object.position);
+	var intersectionPoint = event.point.clone();
+	if ( !!window.altspace ) { // inAltspace
+		// TODO: Investigate if this bug in Altspace event or our mistake.
+		intersectionPoint.z *= -1; // invert z cordinate
 	}
 
 	if ( !intersectionPoint ) {
@@ -162,7 +162,7 @@ DragPlaneEffect.prototype.dragUpdate = function() {
 	var intersects = this.raycaster.intersectObject( this.dragPlane );
 
 	if (intersects.length === 0) {
-		if ( this.TRACE ) console.log( "Ray no longer intersection dragplane", this.raycaster, this.dragPlane);
+		if ( this.TRACE ) console.log( "Ray no longer intersects dragplane");
 		this.dragEnd();
 		return;
 	}
