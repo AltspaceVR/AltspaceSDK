@@ -35,12 +35,14 @@
 				tintTexCube, colorTexCube, tintColorCube, 
 				animatedCube, colorCube, texturedCube, 
 				tintedObj, visibilityCube, matVisibilityCube;
-			var GREEN = {r: 0, g: 1, b: 0}, BLUE = {r: 0, g: 0, b: 1};
+			var 
+				GREEN = {r: 0, g: 1, b: 0}, BLUE = {r: 0, g: 0, b: 1},
+				YELLOW = {r: 0, g: 1, b: 1}, MAGENTA = {r: 1, g: 0, b: 1}
 
 			var textureMat;
 
 			function addAxisSpheres(){
-				var geometry = new THREE.SphereGeometry( 5);
+				var geometry = new THREE.SphereGeometry(5);
 				var x = new THREE.Mesh(
 					geometry,
 					new THREE.MeshBasicMaterial({color: 'red'}) );
@@ -260,10 +262,10 @@
 						);
 					},
 					tick: function () {
-						deepTint(tintedObj, GREEN);
+						deepTint(tintedObj, YELLOW);
 					},
 					tock: function () {
-						deepTint(tintedObj, BLUE);
+						deepTint(tintedObj, MAGENTA);
 					}
 				},
 				{
