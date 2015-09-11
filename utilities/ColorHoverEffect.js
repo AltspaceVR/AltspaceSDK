@@ -1,5 +1,4 @@
-// ColorHoverEffect makes objects change color on hover.
-
+// Change color of an object when cursor hovers over it.
 ColorHoverEffect = function ( hoverColor, params ) {
 
 	this.hoverColor = hoverColor;

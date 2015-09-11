@@ -1,12 +1,6 @@
-/*
- * CursorEvents detects mouse events using the Three.js raycaster,
- * then dispatches an event the mimics Altspace cursor events.
- * This allows events to function similarly in and outside Altspace.
- *
- * Attribution: based on ObjectControls by cabbibo (http://cabbi.bo)
- * Version 3/17/2015 from https://github.com/cabbibo/ObjectControls
- * 
- */
+// Detects mouse events using the Three.js raycaster, then dispatches an event
+// that mimics Altspace cursor events. This allows events to function similarly
+// in and outside Altspace. Inspired by http://github.com/cabbibo/ObjectControls
 function CursorEvents( scene, camera, params ){
 
 	this.intersected;
@@ -353,7 +347,7 @@ CursorEvents.prototype.mouseMove = function( event ){
 	this.updateRaycaster();
 
 	this.cursormove(event);
-}
+};
 
 CursorEvents.prototype.unprojectMouse = function(){
 	this.unprojectedMouse.copy( this.mouse );
@@ -369,7 +363,7 @@ CursorEvents.prototype.mouseDown = function( event ){
 		this.cursordown( event, this.intersected );
 
 	}
-}
+};
 
 CursorEvents.prototype.mouseUp = function( event ){
 	//this.mouseMove( event ); // remove to match Altspace
@@ -379,6 +373,31 @@ CursorEvents.prototype.mouseUp = function( event ){
 		this.cursorup( event, this.selected );
 
 	}
-}
+};
+
+CursorEvents.prototype.initScene = function(renderer) {
+	// Might want to move this into a general helper utility.
+	// See also: http://threejs.org/docs/#Manual/Introduction/Creating_a_scene
+	var resizeRender = function() {
+		this.camera.aspect = window.innerWidth / window.innerHeight;
+		this.camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	};
+	document.body.style.margin = '0px';
+	document.body.style.overflow = 'hidden';
+	renderer.setClearColor("#AAAAAA");
+	var container = document.createElement( 'div' );
+	document.body.appendChild( container );
+	container.appendChild(renderer.domElement);
+	window.addEventListener('resize', resizeRender.bind(this));
+	resizeRender();
+	this.camera.fov = 45;
+	this.camera.near = 1;
+	this.camera.far = 2000;
+	this.scene.add(this.camera);
+	// Throw in a light since any loaded OBJ files use MeshPhongMaterial.
+	var light = new THREE.AmbientLight(0xffffff);
+	this.scene.add(light);
+};
 
 

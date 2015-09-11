@@ -1,3 +1,4 @@
+// Synchronize position/rotation of distributed Three.js objects using Firebase.
 window.ThreeBase = (function(){
 
 	var syncInstance;

@@ -6,12 +6,11 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.1.0/shims/CursorEvents.js"></script>
-
+<script src="http://sdk.altvr.com/utilities/0.2.0/shims/CursorEvents.js"></script>
 </head>
 <body>
+</body>
 <script>
-
 
 var ascp = altspace.utilities.codePen;
 ascp.setName("Hello Cube"); 
@@ -24,10 +23,10 @@ var scene = new THREE.Scene();
 if ( inAltspace ) {
 	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 } else {
-	renderer = new THREE.WebGLRenderer();
+	renderer = new THREE.WebGLRenderer({antialias: true});
 	camera = new THREE.PerspectiveCamera();
-	initScene( scene, renderer, camera );
-	cursorEvents = new CursorEvents( scene, camera );
+	cursorEvents = new CursorEvents(scene, camera);
+	cursorEvents.initScene(renderer);
 	camera.position.z = 500; // stand back from origin
 }
 
@@ -40,7 +39,8 @@ var texture = materialCreator.loadTexture(url);
 
 // Cube
 var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
+//var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
+var material = new THREE.MeshPhongMaterial({color:'#ffffff', map: texture});
 var cube = new THREE.Mesh(geometry, material);
 cube.scale.multiplyScalar(100);
 scene.add(cube);
@@ -53,7 +53,7 @@ syncColor.on('value', function(snapshot){
 	var val = snapshot.val();
 	if ( val ) {
 		cube.material.color = new THREE.Color(val);
-		// TODO: Remove when altspace renderer no longer requires this flag.
+		// Not strictly necessary, but seems to improve performance.
 		if ( inAltspace ) cube.material.needsUpdate = true;
 	}
 });
@@ -71,25 +71,5 @@ function animate() {
 }
 animate();
 
-
-function initScene( myScene, myRenderer, myCamera ) {
-	myRenderer.antialias = true;
-	myRenderer.setClearColor("#AAAAAA");
-	myRenderer.setSize(window.innerWidth, window.innerHeight);
-	document.body.appendChild(myRenderer.domElement);
-	myCamera.fov = 45;
-	myCamera.aspect = window.innerWidth / window.innerHeight;
-	myCamera.near = 1;
-	myCamera.far = 2000;
-	myCamera.updateProjectionMatrix();
-	myScene.add(myCamera);
-	window.addEventListener('resize', function(event) {
-		myCamera.aspect = window.innerWidth / window.innerHeight;
-		myCamera.updateProjectionMatrix();
-		myRenderer.setSize(window.innerWidth, window.innerHeight);
-	});
-}
-
 </script>
-</body>
 </html>

@@ -1,9 +1,4 @@
-/*
- * DragPlaneEffect implements drag-and-drop of objects.
- * Apply using CursorEffects.
- *
- */
-
+// Implement drag-and-drop of objects in a horizontal plane.
 DragPlaneEffect = function ( dragPlane, params ) {
 
 	if ( ! dragPlane instanceof THREE.Object3D ) {
