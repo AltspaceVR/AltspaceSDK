@@ -11,12 +11,10 @@
 		</style>
 	</head>
 	<body>
-		<script 
-			src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js">
-		</script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 		<script src="../lib/OrbitControls.js"></script>
-		<script src="../lib/MTLLoader.js"></script>
-		<script src="../lib/OBJMTLLoader.js"></script>
 		<script src="../lib/stats.min.js"></script>
 		<script src="../src/cursor/CursorEvents.js"></script>
 		<script src="../src/cursor/AltObjectControls.js"></script>
@@ -68,8 +66,8 @@
 
 				if (!textureMat) {
 					var texture = THREE.ImageUtils.loadTexture(
-						'textures/UV_Grid_Sm.jpg' );
-					textureMat = new THREE.MeshBasicMaterial({map: texture});
+						'images/UV_Grid_Sm.jpg' );
+					textureMat = new THREE.MeshBasicMaterial( { map: texture } );
 				}
 
 				var tCube = new THREE.Mesh( geometry, textureMat );

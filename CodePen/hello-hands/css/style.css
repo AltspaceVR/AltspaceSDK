@@ -1,0 +1,4 @@
+/* Clears the background so that it can be transparent in AltspaceVR*/
+background-color: rgba(0, 0, 0, 0);
+margin: 0px;
+overflow: hidden;

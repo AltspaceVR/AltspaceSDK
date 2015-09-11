@@ -1,44 +1,62 @@
+<!--
+	Example Chess Board with Draggable Pieces.
+
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Chess</title>
-<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
-<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+		<title>Chess (Old Version)</title>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
-<script src="http://sdk.altvr.com/utilities/0.2.0/CursorEffects.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/ColorHoverEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/DragPlaneEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/ThreeBase.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/shims/CursorEvents.js"></script>
+		<script src="../utilities/shims/CursorEvents.js"></script>
+		<script src="../utilities/CursorEffects.js"></script>
+		<script src="../utilities/ColorHoverEffect.js"></script>
+		<script src="../utilities/DragPlaneEffect.js"></script>
+		<script src="../utilities/FirebaseSync.js"></script>
+
+		<style>
+			body {
+				/* transparent background so the page doesn't show in Altspace */
+				background-color: rgba(1, 0, 0, 0);
+				color: #000;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				margin: 10px;
+				position: absolute;
+				color: #FFFFFF;
+			}
+		</style>
+
 </head>
 <body>
+<body>
+	<div id="info">
+			<a href="http://github.com/AltspaceVR/alt-three.js" 
+				 target="_blank">alt-three.js</a> - Chess Board
+	</div>
+</body>
+</body>
+
 <script>
 
-var ascp = altspace.utilities.codePen;
-ascp.setName("Chess"); 
-var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
-var inAltspace = window.altspace && window.altspace.inClient;
-
-var syncParams = inCodePen ? {
-	instanceId: ascp.getPenId(),
-	authorId: ascp.getAuthorId()
-} : null;
-var syncInstance = altspace.utilities.sync.getInstance(syncParams);
-var threeBase = window.ThreeBase;
-threeBase.init(syncInstance);
-
+var inAltspace = window.hasOwnProperty('altspace');
+var AltContentLoaded = false;
 
 var modelsToLoad =	0;
 
 var scene, camera, renderer;
 var altObjectControls, orbitControls;
 var cursorEffects, cursorEvents;
+var firebaseSync;
 var exporter, loader;
 var frameID;
+var infoDiv =	document.getElementById("info");
 
 var board, dragPlane;
 var chessPiecesWhite = [];
@@ -62,7 +80,7 @@ var modelsInfo = { // constants
 	},
 	pieceWidth: 16,
 	board: { model: "board", width: 50, height: 1 },
-	directory: "https://sdk.altvr.com/examples/models/share/chess",
+	directory: "models/chess",
 };
 
 var modelScale = sceneInfo.boardSize / 8 / modelsInfo.pieceWidth;
@@ -92,7 +110,14 @@ function onModelsLoaded() {
 
 	initModels();
 	arrangePieces(modelScale); // TODO: Skip if room already created.
-	initEvents(); // TODO: Dont allow dragging until done arranging pieces.
+
+	firebaseSync.connect( onSyncReady );
+
+}
+
+function onSyncReady() {
+
+	initEvents(); // Dont allow dragging until done arranging pieces.
 
 	// Hack to get the altspace renderer to refresh the scene, otherwise in a new room,
 	// black tintColor not rendered until a piece is moved or hovered.
@@ -111,6 +136,7 @@ function initScene() {
 	if ( inAltspace ) {
 
 	    renderer = altspace.getThreeJSRenderer({ version: "0.2.0" });
+		infoDiv.style.visibility = "hidden";
 
 	} else {
 
@@ -140,7 +166,6 @@ function initScene() {
 	scene.add( ambient );
 
 	loader = new THREE.OBJMTLLoader();
-	loader.crossOrigin = "anonymous";
 
 	// dragPlane should not be bigger than our bounding box, if it is then
 	// objects will disappear when they are moved outside of the box.
@@ -176,8 +201,8 @@ function initScene() {
 	}
 
 	var firebaseRootURL = "https://altspace-apps.firebaseio.com/apps/examples";
-	var appID = "http-chess"; // hack to meet our new firebase rules
-	//firebaseSync = new FirebaseSync( firebaseRootURL, appID ); // NO-SYNC
+	var appID = "http-chess-old"; // hack to meet our new firebase rules
+	firebaseSync = new FirebaseSync( firebaseRootURL, appID );
 
 	//scene.add( new THREE.AxisHelper(100) );
 }
@@ -268,8 +293,8 @@ function initModels() {
 		scene.add(objBlack);
 
 		// Add all pieces to network sync.
-		threeBase.add( objWhite, objWhite.name );
-		threeBase.add( objBlack, objBlack.name );
+		firebaseSync.addObject( objWhite, objWhite.name );
+		firebaseSync.addObject( objBlack, objBlack.name );
 
 	}
 
@@ -422,6 +447,7 @@ function loadModels() {
 function initEvents() {
 
 	var params = {};	// optional parameters used to configure object effects
+	params.firebaseSync = firebaseSync;
 
 	if ( showDragPoint ) params.dragPointMarker = dragPointSphere;
 	if ( useOrbitControls ) params.orbitControls = orbitControls;
@@ -461,14 +487,12 @@ window.addEventListener( 'resize', onWindowResize, false );
 
 // ----------------------------------------------------------------------------
 
-
 function animate() {
 	// Not much here; changes in object position triggered by mouse/cursor events.
 
 	frameID = requestAnimationFrame( animate );
 
 	if (useOrbitControls) orbitControls.update();
-	threeBase.update();
 
     renderer.render( scene, camera );
 
