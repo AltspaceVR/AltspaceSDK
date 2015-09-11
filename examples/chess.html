@@ -1,24 +1,19 @@
-<!--
-	Example Chess Board with Draggable Pieces.
-
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<title>Chess</title>
-		<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
-		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
-		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
-		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
-		<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-		<script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+<title>Chess</title>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
+<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
+<script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
-		<script src="http://sdk.altvr.com/utilities/CursorEffects.js"></script>
-		<script src="http://sdk.altvr.com/utilities/ColorHoverEffect.js"></script>
-		<script src="http://sdk.altvr.com/utilities/DragPlaneEffect.js"></script>
-		<script src="http://sdk.altvr.com/utilities/shims/CursorEvents.js"></script>
-		<script src="../utilities/ThreeBase.js"></script>
-		<!-- TODO: Upload ThreeBase to our CDN -->
+<script src="http://sdk.altvr.com/utilities/0.1.0/CursorEffects.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.1.0/ColorHoverEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.1.0/DragPlaneEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.1.0/ThreeBase.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.1.0/shims/CursorEvents.js"></script>
 </head>
 <body>
 <script>
@@ -34,7 +29,7 @@ var syncParams = inCodePen ? {
 } : null;
 var syncInstance = altspace.utilities.sync.getInstance(syncParams);
 var threeBase = window.ThreeBase;
-threeBase.init(syncInstance, {TRACE: true});
+threeBase.init(syncInstance);
 
 
 var modelsToLoad =	0;
