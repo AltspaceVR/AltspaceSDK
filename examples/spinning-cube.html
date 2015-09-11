@@ -2,7 +2,7 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Hello Cube</title>
+<title>Spinning Cube</title>
 <script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="https://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
@@ -11,12 +11,12 @@
 </head>
 <body>
 <script>
-// TODO: Replace relative links to CursorEvents.js and altspace-logo.jpg with CDN links.
+
 
 var ascp = altspace.utilities.codePen;
 ascp.setName("Hello Cube"); 
 var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
-var inAltspace = !!window.altspace.getThreeJSRenderer;
+var inAltspace = window.altspace && window.altspace.inClient;
 
 // Setup
 var renderer, camera, cursorEvents;
@@ -24,20 +24,11 @@ var scene = new THREE.Scene();
 if ( inAltspace ) {
 	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 } else {
-	renderer = new THREE.WebGLRenderer({antialias: true});
-	renderer.setClearColor("#AAAAAA");
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	document.body.appendChild(renderer.domElement);
-	var aspect = window.innerWidth / window.innerHeight;
-	camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000);
-	camera.position.z = 500; // stand back from origin
-	scene.add(camera);
-	window.addEventListener('resize', function(event) {
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
-		renderer.setSize(window.innerWidth, window.innerHeight);
-	});
+	renderer = new THREE.WebGLRenderer();
+	camera = new THREE.PerspectiveCamera();
+	initScene( scene, renderer, camera );
 	cursorEvents = new CursorEvents( scene, camera );
+	camera.position.z = 500; // stand back from origin
 }
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
@@ -63,6 +54,8 @@ syncColor.on('value', function(snapshot){
 	var val = snapshot.val();
 	if ( val ) {
 		cube.material.color = new THREE.Color(val);
+		// TODO: Remove when altspace renderer no longer requires this flag.
+		if ( inAltspace ) cube.material.needsUpdate = true;
 	}
 });
 
@@ -78,6 +71,24 @@ function animate() {
 	renderer.render(scene, camera);
 }
 animate();
+
+
+function initScene( myScene, myRenderer, myCamera ) {
+	myRenderer.antialias = true;
+	myRenderer.setClearColor("#AAAAAA");
+	myRenderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(myRenderer.domElement);
+	myCamera.fov = 45;
+	myCamera.aspect = window.innerWidth / window.innerHeight;
+	myCamera.near = 1;
+	myCamera.far = 2000;
+	myScene.add(myCamera);
+	window.addEventListener('resize', function(event) {
+		myCamera.aspect = window.innerWidth / window.innerHeight;
+		myCamera.updateProjectionMatrix();
+		myRenderer.setSize(window.innerWidth, window.innerHeight);
+	});
+}
 
 </script>
 </body>
