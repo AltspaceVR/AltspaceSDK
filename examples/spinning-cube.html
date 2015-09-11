@@ -43,7 +43,6 @@ var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 var cube = new THREE.Mesh(geometry, material);
 cube.scale.multiplyScalar(100);
-if (inAltspace) cube.position.y = -450; // set on ground
 scene.add(cube);
 
 // Sync
@@ -82,6 +81,7 @@ function initScene( myScene, myRenderer, myCamera ) {
 	myCamera.aspect = window.innerWidth / window.innerHeight;
 	myCamera.near = 1;
 	myCamera.far = 2000;
+	myCamera.updateProjectionMatrix();
 	myScene.add(myCamera);
 	window.addEventListener('resize', function(event) {
 		myCamera.aspect = window.innerWidth / window.innerHeight;
