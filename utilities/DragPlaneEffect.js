@@ -18,7 +18,7 @@ DragPlaneEffect = function ( dragPlane, params ) {
 
 	this.dragOffset = new THREE.Vector3();
 
-
+	this.inAltspace = window.altspace && window.altspace.inClient;
 
 	var p = params || {};
 
@@ -96,7 +96,7 @@ DragPlaneEffect.prototype.dragStart = function( object, event ) {
 	if ( this.TRACE ) console.log( "dragObject width: " + this.dragObjectWidth );
 
 	var intersectionPoint = event.point.clone();
-	if ( !!window.altspace ) { // inAltspace
+	if (this.inAltspace) {
 		// TODO: Investigate if this bug in Altspace event or our mistake.
 		intersectionPoint.z *= -1; // invert z cordinate
 	}

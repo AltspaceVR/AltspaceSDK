@@ -15,10 +15,6 @@ ColorHoverEffect = function ( hoverColor, params ) {
 
 	this.TRACE = p.TRACE || null; 
 
-	this.inAltspace = !!window.altspace;
-
-	this.dragObject;
-
 };
 
 
@@ -27,7 +23,6 @@ ColorHoverEffect.prototype.cursorenter = function( object ) {
 	// Ignore hover events if a different object is selected,
 	// for example during a drag we don't want to change highlight
 	if ( this.cursordownObject && this.cursordownObject !== object ) {
-		// TODO: Test this again in Altspace once renderer "blink" bug is fixed.
 		if ( this.TRACE ) console.log("Ignore hover, other object selected", this.cursordownObject);
 		return ;
 	} 
@@ -42,8 +37,6 @@ ColorHoverEffect.prototype.cursorenter = function( object ) {
 
 
 ColorHoverEffect.prototype.cursorleave = function( object ) {
-
-	if ( this.dragObject ) return ; // ignore hover events during drag
 
 	if ( this.hoverObject === object ) {
 		this.unhoverEffect( object );
@@ -69,8 +62,6 @@ ColorHoverEffect.prototype.cursorupScene = function( object ) {
 
 ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
-	if ( this.ignoreHoverChange( object ) ) return;
-
 	this.hoverObject = object;
 
 	this.setHoverColor( object, this.hoverColor );
@@ -81,32 +72,11 @@ ColorHoverEffect.prototype.hoverEffect = function( object ) {
 
 ColorHoverEffect.prototype.unhoverEffect = function( object ) {
 
-	if ( this.ignoreHoverChange( object ) ) return;
-
 	this.hoverObject = null;
 
 	this.unsetHoverColor( object );
 
 	if ( this.TRACE ) console.log("unhoverEffect", object);
-};
-
-
-ColorHoverEffect.prototype.ignoreHoverChange = function( object ) {
-
-	if ( !inAltspace ) return false;
-
-	// TODO: remove once the renderer bug where materials change
-	// triggers re-rendering the object and cursor leave/enter events.
-	var now = Date.now();
-	var lastHoverChange = object.userData.lastHoverChange;
-	object.userData.lastHoverChange = now;
-	if ( lastHoverChange && now - lastHoverChange < 75 ) {
-		object.userData.lastHoverChange = now;
-		return true;
-	}
-
-	return false;
-
 };
 
 
@@ -117,8 +87,7 @@ ColorHoverEffect.prototype.setHoverColor = function ( obj, hoverColor ) {
 
 		obj.material.color = hoverColor;	
 
-		// Needed for new material color to be rendered in Altspace.
-		// TODO: remove when renderer fixed to handle this case.
+		// Not strictly needed but seems to make updating faster in Altspace.
 		if (obj.material) obj.material.needsUpdate = true;
 	} 
 
@@ -139,8 +108,7 @@ ColorHoverEffect.prototype.unsetHoverColor = function ( obj ) {
 		}
 		obj.material.color = obj.userData.origColor;
 
-		// Needed for new material color to be rendered in Altspace.
-		// TODO: remove when renderer fixed to handle this case.
+		// Not strictly needed but seems to make updating faster in Altspace.
 		if (obj.material) obj.material.needsUpdate = true;
 	} 
 
