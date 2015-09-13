@@ -23,7 +23,6 @@ ascp.setName('Chess');
 var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
 var inAltspace = window.altspace && window.altspace.inClient;
 var cursorEffects = altspace.utilities.CursorEffects;
-var useOrbitControls = !inAltspace;
 
 var syncParams = inCodePen ? {
 	instanceId: ascp.getPenId(),
@@ -61,6 +60,7 @@ var modelsInfo = {//constants
 	directory: 'https://sdk.altvr.com/examples/models/share/chess',
 };
 var modelScale = sceneInfo.boardSize / 8 / modelsInfo.pieceWidth;
+var useOrbitControls = !inAltspace && false;//for debugging
 
 function main(){
 	initScene();
