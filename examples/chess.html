@@ -9,11 +9,11 @@
 <script src='http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js'></script>
 <script src='http://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
 
-<script src='http://sdk.altvr.com/utilities/0.3.0/CursorEffects.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.0/ColorHoverEffect.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.0/DragPlaneEffect.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.0/ThreeBase.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.0/shims/CursorEvents.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.1/CursorEffects.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.1/ColorHoverEffect.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.1/DragPlaneEffect.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.1/ThreeBase.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.1/shims/CursorEvents.js'></script>
 </head>
 <body>
 <script>
@@ -297,9 +297,11 @@ function loadModels(){
 function initEvents(){
 	var params = {};	//optional parameters used to configure object effects
 	if (useOrbitControls) params.orbitControls = orbitControls;
-	var dragEffect = new DragPlaneEffect(dragPlane, params);
+	var dragEffect = new altspace.utilities.DragPlaneEffect();
+	dragEffect.init(dragPlane, params);
 	var redTint = new THREE.Color(0.8, 0.2, 0.2);
-	var hoverEffect = new ColorHoverEffect(redTint);
+	var hoverEffect = new altspace.utilities.ColorHoverEffect();
+	hoverEffect.init(redTint);
 	//Add all pieces to our drag-and-drop controls.
 	for (var i=0; i < chessPiecesWhite.length; i++){
 		cursorEffects.add(dragEffect, chessPiecesWhite[i]);
