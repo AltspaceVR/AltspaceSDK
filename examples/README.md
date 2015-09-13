@@ -1,6 +1,9 @@
 Finalized  
 
-- 
+- hello-hands (basic rendering, text)
+- hello-world (hand tracking)
+- spinning-cube (cursor effects, geometry)
+- chess (multi-platform rendering, multi-platform cursor events, basic firebase sync)
 
 Updated  
 
@@ -8,7 +11,7 @@ Updated
 - hello-world (hand tracking)
 - bubbles (cursor events, basic mesh loading) 
 - spinning-cube (cursor effects, geometry)
-- chess (multi-platform rendering, multi-platform cursor events, parallel mesh loading, basic firebase sync)
+- chess (multi-platform rendering, multi-platform cursor events, basic firebase sync)
 
 Needs Updates  
 
