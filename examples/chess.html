@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
 <title>Chess</title>
-<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
-<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/build/three.min.js'></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js'></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js'></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js'></script>
+<script src='http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js'></script>
+<script src='http://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
 
-<script src="http://sdk.altvr.com/utilities/0.2.0/CursorEffects.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/ColorHoverEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/DragPlaneEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/ThreeBase.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.2.0/shims/CursorEvents.js"></script>
+<script src='http://sdk.altvr.com/utilities/0.3.0/CursorEffects.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.0/ColorHoverEffect.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.0/DragPlaneEffect.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.0/ThreeBase.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.0/shims/CursorEvents.js'></script>
 </head>
 <body>
 <script>
 
 var ascp = altspace.utilities.codePen;
-ascp.setName("Chess"); 
+ascp.setName('Chess'); 
 var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
 var inAltspace = window.altspace && window.altspace.inClient;
+var cursorEffects = altspace.utilities.CursorEffects;
+var useOrbitControls = !inAltspace;
 
 var syncParams = inCodePen ? {
 	instanceId: ascp.getPenId(),
@@ -31,451 +33,299 @@ var syncInstance = altspace.utilities.sync.getInstance(syncParams);
 var threeBase = window.ThreeBase;
 threeBase.init(syncInstance);
 
-
 var modelsToLoad =	0;
-
 var scene, camera, renderer;
 var altObjectControls, orbitControls;
-var cursorEffects, cursorEvents;
 var exporter, loader;
 var frameID;
-
 var board, dragPlane;
 var chessPiecesWhite = [];
 var chessPiecesBlack = [];
-
-var sceneInfo = { // constants
-	// Original example was boardSize: 200, dragPlaneSize: 500
-	boardSize: 700, // chess piece models are scaled to fit the board
-	tableHeight: 0, // chess board is raised to be on top of table
-	dragPlaneSize: 1000, // boundary for dragging pieces, should be larger than boardSize
+var sceneInfo = {//constants
+	//Original example was boardSize: 200, dragPlaneSize: 500
+	boardSize: 700,//chess piece models are scaled to fit the board
+	tableHeight: 0,//chess board is raised to be on top of table
+	dragPlaneSize: 1000,//boundary for dragging pieces, should be larger than boardSize
 };
-
-var modelsInfo = { // constants
+var modelsInfo = {//constants
 	pieces: {
-		king:	 { model: "king",	 count: 1 },
-		queen:	{ model: "queen",	count: 1 },
-		bishop: { model: "bishop", count: 2 },
-		knight: { model: "knight", count: 2 },
-		rook:	 { model: "rook",	 count: 2 },
-		pawn:	 { model: "pawn",	 count: 8 }
+		king: {model: 'king', count: 1},
+		queen: {model: 'queen', count: 1},
+		bishop: {model: 'bishop', count: 2},
+		knight: {model: 'knight', count: 2},
+		rook: {model: 'rook', count: 2},
+		pawn: {model: 'pawn', count: 8}
 	},
 	pieceWidth: 16,
-	board: { model: "board", width: 50, height: 1 },
-	directory: "https://sdk.altvr.com/examples/models/share/chess",
+	board: {model: 'board', width: 50, height: 1},
+	directory: 'https://sdk.altvr.com/examples/models/share/chess',
 };
-
 var modelScale = sceneInfo.boardSize / 8 / modelsInfo.pieceWidth;
 
-// Debugging options; keep turned off in committed code.
-var dragPointSphere;
-var useOrbitControls = !inAltspace;
-var showDragPlane = !inAltspace && false;
-var showDragPoint = !inAltspace && false;
-
-
-function main() {
-
+function main(){
 	initScene();
 	loadModels();
-
 }
 
-function onModelsLoaded() {
-
-	if ( inAltspace ) {
-		// Put chess board on the bottom of the enclosure.
-		// TODO: Get height of enclosure dynamically.
+function onModelsLoaded(){
+	if (inAltspace){
+		//Put chess board on the bottom of the enclosure.
+		//TODO: Get height of enclosure dynamically.
 		var enclosureHeight = 1000;
 		scene.position.y = enclosureHeight / -2 ;
 	}
-
 	initModels();
-	arrangePieces(modelScale); // TODO: Skip if room already created.
-	initEvents(); // TODO: Dont allow dragging until done arranging pieces.
-
-	// Hack to get the altspace renderer to refresh the scene, otherwise in a new room,
-	// black tintColor not rendered until a piece is moved or hovered.
-	if ( inAltspace ) {
+	arrangePieces(modelScale);
+	initEvents();//TODO: Dont allow dragging until done arranging pieces.
+	//Hack to get the altspace renderer to refresh the scene, otherwise in a new room,
+	//black tintColor not rendered until a piece is moved or hovered.
+	if (inAltspace){
 		chessPiecesWhite[0].position.x += 0.001;
-		setTimeout( function() { chessPiecesWhite[0].position.x -= 1; }, 100);
+		setTimeout(function(){chessPiecesWhite[0].position.x -= 1;}, 100);
 	}
-
-	animate(); // kick off the rendering loop
-
+	animate();//kick off the rendering loop
 }
 
-
-function initScene() {
-
-	if ( inAltspace ) {
-
-	    renderer = altspace.getThreeJSRenderer({ version: "0.2.0" });
-
-	} else {
-
-		renderer = new THREE.WebGLRenderer();
-		renderer.setClearColor( "#333333" );
-		renderer.setSize( window.innerWidth, window.innerHeight);
-		document.body.appendChild( renderer.domElement );
-				
-	}
-
+function initScene(){
 	scene = new THREE.Scene();
-
-	camera = new THREE.PerspectiveCamera(
-		45,
-		window.innerWidth / window.innerHeight,
-		1,
-		2000
-	);
-	camera.position.z = sceneInfo.boardSize;
-	camera.position.y = sceneInfo.boardSize + 100;
-
-	// done automatically if useOrbitControls is true
-	camera.lookAt(scene.position);
-
-	// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
-	var ambient = new THREE.AmbientLight( 0xffffff );
-	scene.add( ambient );
-
+	if (inAltspace){
+	    renderer = altspace.getThreeJSRenderer();
+	} else {
+		renderer = new THREE.WebGLRenderer({antialias: true});
+		camera = new THREE.PerspectiveCamera();
+		altspace.utilities.CursorEvents.init(scene, camera);
+		altspace.utilities.CursorEvents.initScene(renderer);
+		renderer.setClearColor('#333333');
+		camera.position.z = sceneInfo.boardSize;
+		camera.position.y = sceneInfo.boardSize + 100;
+		camera.lookAt(scene.position);//done automatically if useOrbitControls is true
+	}
 	loader = new THREE.OBJMTLLoader();
-	loader.crossOrigin = "anonymous";
-
-	// dragPlane should not be bigger than our bounding box, if it is then
-	// objects will disappear when they are moved outside of the box.
+	loader.crossOrigin = 'anonymous';
+	//dragPlane should not be bigger than our bounding box, if it is then
+	//objects will disappear when they are moved outside of the box.
 	var dragPlaneSize = sceneInfo.dragPlaneSize;
-	var dragPlaneGeo = new THREE.BoxGeometry( dragPlaneSize, 0.25, dragPlaneSize );
+	var dragPlaneGeo = new THREE.BoxGeometry(dragPlaneSize, 0.25, dragPlaneSize);
 	var dragPlaneMat = new THREE.MeshBasicMaterial({
 		color: 0xFFFFFF, 
 		opacity: 0.25,
 		transparent: true,
-		visible: showDragPlane
 	});
 	dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
-	dragPlane.name = "drag plane";
-	// Do not add dragPlane to scene, since we move it around for raycsting.
-
-	// For debugging only, to visualize the raycast intersection point.
-	if ( showDragPoint ) {
-		dragPointSphere = new THREE.Mesh( 
-			new THREE.SphereGeometry(1),
-			new THREE.MeshBasicMaterial({
-				color: "yellow",
-			})
-		);
-		scene.add( dragPointSphere );
-	}
-
-	cursorEffects = new CursorEffects( scene );
-	if ( !inAltspace ) cursorEvents = new CursorEvents( scene, camera );
-
-	if (useOrbitControls) {
-		orbitControls = new THREE.OrbitControls( camera, renderer.domElement );
+	dragPlane.name = 'drag plane';
+	cursorEffects.init(scene);
+	if (useOrbitControls){
+		orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
 		orbitControls.damping = 0.2;
 	}
-
-	var firebaseRootURL = "https://altspace-apps.firebaseio.com/apps/examples";
-	var appID = "http-chess"; // hack to meet our new firebase rules
-	//firebaseSync = new FirebaseSync( firebaseRootURL, appID ); // NO-SYNC
-
-	//scene.add( new THREE.AxisHelper(100) );
+	var firebaseRootURL = 'https://altspace-apps.firebaseio.com/apps/examples';
+	var appID = 'http-chess';//hack to meet our new firebase rules
+	//scene.add(new THREE.AxisHelper(100));//for debugging
 }
 
-
-function initModels() {
-
-	var setPieceName = function(piece) {
-		// e.g. "rook-2-white"
+function initModels(){
+	var setPieceName = function(piece){
+		//e.g. 'rook-2-white'
 		piece.name =
-			piece.userData.pieceType + "-"+
-			piece.userData.pieceNum + "-" +
+			piece.userData.pieceType + '-'+
+			piece.userData.pieceNum + '-' +
 			piece.userData.pieceColor;
 
 	}
-
-	// Make the board model same size as our boardSize constant.
+	//Make the board model same size as our boardSize constant.
 	var boardSize = sceneInfo.boardSize;
 	var boardScale = boardSize / modelsInfo.board.width;
-	board.scale.set( boardScale, boardScale, boardScale );
+	board.scale.set(boardScale, boardScale, boardScale);
 	board.position.y = sceneInfo.tableHeight + (modelsInfo.board.height * boardScale / 2); 
-
 	var newWhite = [];
 	var newBlack = [];
 	var newHover = [];
 	var names = Object.keys(modelsInfo.pieces);
-
-	for (var i=0; i < names.length; i++) {
-
-		for (var j=0; j < modelsInfo.pieces[ names[i] ].count; j++) {
-
+	for (var i=0; i < names.length; i++){
+		for (var j=0; j < modelsInfo.pieces[ names[i] ].count; j++){
 			chessPiecesWhite[i].userData.pieceNum = j+1;
 			chessPiecesBlack[i].userData.pieceNum = j+1;
-
 			var whiteClone = chessPiecesWhite[i].clone();
 			var blackClone = chessPiecesBlack[i].clone();
-
-			// Clone material so only 1 piece will change, not all of that type.
-			whiteClone.traverse( function(child) {
-
-				if (child.material) {
+			//Clone material so only 1 piece will change, not all of that type.
+			whiteClone.traverse(function(child){
+				if (child.material){
 					child.material = child.material.clone();
-					if (child.material instanceof THREE.MeshPhongMaterial ) {
-						child.material.color.setRGB( 1, 1, 1 );
+					if (child.material instanceof THREE.MeshPhongMaterial){
+						child.material.color.setRGB(1, 1, 1);
 					}
 				}
 
 			});
-
-			blackClone.traverse( function(child) {
-
-				if (child.material) {
+			blackClone.traverse(function(child){
+				if (child.material){
 					child.material = child.material.clone();
-					if (child.material instanceof THREE.MeshPhongMaterial ) {
-						child.material.color.setRGB( 0.2, 0.2, 0.2 );
+					if (child.material instanceof THREE.MeshPhongMaterial){
+						child.material.color.setRGB(0.2, 0.2, 0.2);
 					}
 				}
 
 			});
-
-			newWhite.push( whiteClone );
-			newBlack.push( blackClone );
-
+			newWhite.push(whiteClone);
+			newBlack.push(blackClone);
 		}
 	}
-
 	chessPiecesWhite = newWhite;
 	chessPiecesBlack = newBlack;
 	chessPiecesWhiteHover = newHover;
-
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
+	for (var i=0; i < chessPiecesWhite.length; i++){
 		var objWhite = chessPiecesWhite[i];
 		var objBlack = chessPiecesBlack[i];
-
-		// Dont set name of hover objects for now since dont save them to DB.
+		//Dont set name of hover objects for now since dont save them to DB.
 		setPieceName(objWhite);
 		setPieceName(objBlack);
-
-		objWhite.scale.set( modelScale, modelScale, modelScale );
-		objBlack.scale.set( modelScale, modelScale, modelScale );
-
-		// Put pieces on top of the board.
+		objWhite.scale.set(modelScale, modelScale, modelScale);
+		objBlack.scale.set(modelScale, modelScale, modelScale);
+		//Put pieces on top of the board.
 		objWhite.position.y += board.position.y + (modelsInfo.board.height * boardScale / 2);
 		objBlack.position.y += board.position.y + (modelsInfo.board.height * boardScale / 2);
-
 		scene.add(objWhite);
 		scene.add(objBlack);
-
-		// Add all pieces to network sync.
-		threeBase.add( objWhite, objWhite.name );
-		threeBase.add( objBlack, objBlack.name );
-
+		//Add all pieces to network sync.
+		threeBase.add(objWhite, objWhite.name);
+		threeBase.add(objBlack, objBlack.name);
 	}
-
 }
 
 
-function arrangePieces(modelScale) {
-
+function arrangePieces(modelScale){
 	scene.add(board);
-
 	var boardSize = sceneInfo.boardSize;
 	var width = modelsInfo.pieceWidth * modelScale;
-
 	var whitePawnRow = -width + boardSize/2 - width/2;
 	var whiteRankRow = boardSize/2 - width/2;
 	var offsetX = - boardSize/2 + width/2;
-
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
+	for (var i=0; i < chessPiecesWhite.length; i++){
 		var objWhite = chessPiecesWhite[i];
-
 		objWhite.position.z = whiteRankRow;
-
-		switch( objWhite.userData.pieceType ) {
-
-			case "king":
+		switch(objWhite.userData.pieceType){
+			case 'king':
 				objWhite.position.x = (3 * width) + offsetX;
 				break;
-				
-			case "queen":
+			case 'queen':
 				objWhite.position.x = (4 * width) + offsetX;
 				break;
-				
-			case "bishop":
+			case 'bishop':
 				objWhite.position.x = (2 * width) + offsetX;
 				i++;
 				objWhite = chessPiecesWhite[i];
 				objWhite.position.x = (5 * width) + offsetX;
 				objWhite.position.z = whiteRankRow;
 				break;
-				
-			case "knight":
+			case 'knight':
 				objWhite.position.x = (1 * width) + offsetX;
 				i++;
 				objWhite = chessPiecesWhite[i];
 				objWhite.position.x = (6 * width) + offsetX;
 				objWhite.position.z = whiteRankRow;
 				break;
-				
-			case "rook":
+			case 'rook':
 				objWhite.position.x = (0 * width) + offsetX;
 				i++;
 				objWhite = chessPiecesWhite[i];
 				objWhite.position.x = (7 * width) + offsetX;
 				objWhite.position.z = whiteRankRow;
 				break;
-				
-			case "pawn":
-				for (var j=0; j < 8; j++) {
+			case 'pawn':
+				for (var j=0; j < 8; j++){
 					objWhite = chessPiecesWhite[i];
 					objWhite.position.x = (j * width) + offsetX;
 					objWhite.position.z = whitePawnRow;
 					i++;
 				}
 				break;
-				
 			default:
-				console.error( "Unexpected piece type", objWhite.userData.pieceType );	
-
+				console.error('Unexpected piece type', objWhite.userData.pieceType);	
 		}
-
 	}
-
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
+	for (var i=0; i < chessPiecesWhite.length; i++){
 		var objWhite = chessPiecesWhite[i];
 		var objBlack = chessPiecesBlack[i];
-
-		objBlack.position.copy( objWhite.position );
-
-		if (objBlack.userData.pieceType === "pawn") {
+		objBlack.position.copy(objWhite.position);
+		if (objBlack.userData.pieceType === 'pawn'){
 			objBlack.position.z -= boardSize - width * 3;
 		} else {
 			objBlack.position.z -= boardSize - width;
 		}
-
 	}
-
 }
 
-
-function loadModels() {
-	// Load chess pieces and add them to the scene.
-
-	var path = modelsInfo.directory + "/";
-
-	var loadPiece = function(pieceType, fileBasename, index) {
-
+function loadModels(){
+	//Load chess pieces and add them to the scene.
+	var path = modelsInfo.directory + '/';
+	var loadPiece = function(pieceType, fileBasename, index){
 		loader.load(
-			path + fileBasename + ".obj",
-			path + fileBasename + ".mtl",
-			function( loadedObject ) {
-
-			loadedObject.scale.set( modelScale, modelScale, modelScale );
+			path + fileBasename + '.obj',
+			path + fileBasename + '.mtl',
+			function(loadedObject){
+			loadedObject.scale.set(modelScale, modelScale, modelScale);
 			loadedObject.userData.pieceType = pieceType;
-			loadedObject.userData.pieceColor = "white";
+			loadedObject.userData.pieceColor = 'white';
 			chessPiecesWhite[index] = loadedObject;
-
 			var loadedObjectClone = loadedObject.clone();
-			loadedObjectClone.userData.pieceColor = "black";
+			loadedObjectClone.userData.pieceColor = 'black';
 			chessPiecesBlack[index] = loadedObjectClone;
-			// Set the black color later.
-
+			//Set the black color later.
 			modelsToLoad--;
-			if ( modelsToLoad === 0 ) onModelsLoaded();
+			if (modelsToLoad === 0) onModelsLoaded();
 		});
-
 	};
-
-	// NOTE change this number if you add more models!
+	//NOTE change this number if you add more models!
 	var names = Object.keys(modelsInfo.pieces);
 	modelsToLoad = names.length + 1;
-
-	console.log("Loading " + modelsToLoad + " models...");
-
-	// Load board
+	console.log('Loading ' + modelsToLoad + ' models...');
 	loader.load(
-		path + modelsInfo.board.model + ".obj",
-		path + modelsInfo.board.model + ".mtl",
-		function( loadedObject ) {
-
+		path + modelsInfo.board.model + '.obj',
+		path + modelsInfo.board.model + '.mtl',
+		function(loadedObject){
 		modelsToLoad--;
-		loadedObject.name = "board";
+		loadedObject.name = 'board';
 		board = loadedObject;
-
 	});
-
-	// Load pieces
-	for (var i=0; i < names.length; i++) {
-
+	for (var i=0; i < names.length; i++){
 		var name = names[i];
 		var fileBasename = modelsInfo.pieces[name].model;
 		loadPiece(name, fileBasename, i);
-		
 	}
-
 }
 
-
-function initEvents() {
-
-	var params = {};	// optional parameters used to configure object effects
-
-	if ( showDragPoint ) params.dragPointMarker = dragPointSphere;
-	if ( useOrbitControls ) params.orbitControls = orbitControls;
-
-	var dragEffect = new DragPlaneEffect( dragPlane, params );
-
+function initEvents(){
+	var params = {};	//optional parameters used to configure object effects
+	if (useOrbitControls) params.orbitControls = orbitControls;
+	var dragEffect = new DragPlaneEffect(dragPlane, params);
 	var redTint = new THREE.Color(0.8, 0.2, 0.2);
-	var hoverEffect = new ColorHoverEffect( redTint );
-
-	// Add all pieces to our drag-and-drop controls.
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
-		// Drag applied first, since hover effect needs to know when 
-		// object is being dragged, so that object stays highlighted.
-		cursorEffects.addEffect( dragEffect, chessPiecesWhite[i] );
-		cursorEffects.addEffect( dragEffect, chessPiecesBlack[i] );
-
-		cursorEffects.addEffect( hoverEffect, chessPiecesWhite[i] );
-		cursorEffects.addEffect( hoverEffect, chessPiecesBlack[i] );
-
+	var hoverEffect = new ColorHoverEffect(redTint);
+	//Add all pieces to our drag-and-drop controls.
+	for (var i=0; i < chessPiecesWhite.length; i++){
+		cursorEffects.add(dragEffect, chessPiecesWhite[i]);
+		cursorEffects.add(dragEffect, chessPiecesBlack[i]);
+		cursorEffects.add(hoverEffect, chessPiecesWhite[i]);
+		cursorEffects.add(hoverEffect, chessPiecesBlack[i]);
 	}
-
 }
 
-
-function onWindowResize() {
-
-	if ( inAltspace ) return ; // We dont handle Altspace resize yet.
-
+function onWindowResize(){
+	if (inAltspace) return ;//We dont handle Altspace resize yet.
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
-
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize(window.innerWidth, window.innerHeight);
 
 }
-window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener('resize', onWindowResize, false);
 
-// ----------------------------------------------------------------------------
-
-
-function animate() {
-	// Not much here; changes in object position triggered by mouse/cursor events.
-
-	frameID = requestAnimationFrame( animate );
-
+function animate(){
+	frameID = requestAnimationFrame(animate);
 	if (useOrbitControls) orbitControls.update();
 	threeBase.update();
-
-    renderer.render( scene, camera );
-
+    renderer.render(scene, camera);
 }
 
 main();
-
 
 </script>
 </body>

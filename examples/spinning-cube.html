@@ -21,14 +21,10 @@ var inAltspace = window.altspace && window.altspace.inClient;
 var renderer, camera, cursorEvents;
 var scene = new THREE.Scene();
 if (inAltspace) {
-	renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+	renderer = altspace.getThreeJSRenderer();
 } else {
 	renderer = new THREE.WebGLRenderer({antialias: true});
 	camera = new THREE.PerspectiveCamera();
-	/* XXX
-	cursorEvents = new CursorEvents(scene, camera);
-	cursorEvents.initScene(renderer);
-	*/
 	altspace.utilities.CursorEvents.init(scene, camera);
 	altspace.utilities.CursorEvents.initScene(renderer);
 	camera.position.z = 500; // stand back from origin
