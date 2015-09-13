@@ -31,15 +31,7 @@ window.altspace.utilities.CursorEffects = (function(){
     if (effects.indexOf(effect) === -1){
       effects.push(effect);
     }
-    if (object){
-      objectEffects[object.uuid].push(effect);
-    } else {
-      // If no object given, add this effect for all objects.
-      var uuids = Object.keys(objectEffects);
-      for (var i=0; i < uuids.length; i++){
-        objectEffects[uuids[i]].push(effect); 
-      }
-    }
+    objectEffects[object.uuid].push(effect);
   }
 
   function dispatchEffectsToScene (event){
