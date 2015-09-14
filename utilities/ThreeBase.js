@@ -1,5 +1,5 @@
 //Synchronize position/rotation of distributed Three.js objects using Firebase.
-window.ThreeBase = (function(){
+altspace.utilities.ThreeBase = (function(){
 
 	var syncInstance;
 	var TRACE;
