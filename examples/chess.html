@@ -265,6 +265,12 @@ ChessBoard = (function(){
 		var pawnRow = -width + boardSize/2 - width/2;
 		var rankRow = boardSize/2 - width/2;
 		var offsetX = - boardSize/2 + width/2;
+		var secondPiece = function(i, widthOffset){
+			var w = 7 - widthOffset;
+			object = whitePieces[i];
+			object.position.x = (w * width) + offsetX;
+			object.position.z = rankRow;
+		};
 		for (var i=0; i < whitePieces.length; i++){
 			var object = whitePieces[i];
 			object.position.z = rankRow;
@@ -277,31 +283,21 @@ ChessBoard = (function(){
 					break;
 				case 'bishop':
 					object.position.x = (2 * width) + offsetX;
-					i++;
-					object = whitePieces[i];
-					object.position.x = (5 * width) + offsetX;
-					object.position.z = rankRow;
+					secondPiece(++i, 2);
 					break;
 				case 'knight':
 					object.position.x = (1 * width) + offsetX;
-					i++;
-					object = whitePieces[i];
-					object.position.x = (6 * width) + offsetX;
-					object.position.z = rankRow;
+					secondPiece(++i, 1);
 					break;
 				case 'rook':
 					object.position.x = (0 * width) + offsetX;
-					i++;
-					object = whitePieces[i];
-					object.position.x = (7 * width) + offsetX;
-					object.position.z = rankRow;
+					secondPiece(++i, 0);
 					break;
 				case 'pawn':
 					for (var j=0; j < 8; j++){
-						object = whitePieces[i];
+						object = whitePieces[i++];
 						object.position.x = (j * width) + offsetX;
 						object.position.z = pawnRow;
-						i++;
 					}
 					break;
 				default:
