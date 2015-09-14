@@ -1,32 +1,26 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-<meta charset=utf-8>
-<title>Hello Hands</title>
-<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
-<script src="https://sdk.altvr.com/libs/three.js/r71/examples/fonts/helvetiker_regular.typeface.js"></script>
-</head>
-<body>
-<script>
-if (!window.altspace) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+//Boilerplate
+var ascp = altspace.utilities.codePen;
+ascp.setName("Hello Hands"); 
+ascp.ensureInVR();
 
-var text = "HelloHands";//"AltspaceVR"
+var text = "HelloHands";
 
-//Setup
+//Setup 
 var scene = new THREE.Scene();
 var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 
 //Letters
 var letters = [];
-for(var i = 0, max = text.length; i < max; i++){
+for(var i = 0; i < text.length; i++){
 	var geometry = new THREE.TextGeometry(text.charAt(i));
 	var material = new THREE.MeshBasicMaterial({color:'green'});
 	var mesh = new THREE.Mesh(geometry, material);
 	mesh.scale.z = 0.3;
 	mesh.scale.multiplyScalar(0.3);
 	mesh.position.z = 30;
-	mesh.position.x = 8;
+	mesh.position.x = 12;
 	mesh.rotation.x = Math.PI / 2;
+	mesh.rotation.y = Math.PI;
 	scene.add(mesh);
 	letters.push(mesh);
 }
@@ -35,13 +29,14 @@ for(var i = 0, max = text.length; i < max; i++){
 altspace.getThreeJSTrackingSkeleton().then(function(args){
 	var skeleton = args;
 	scene.add(skeleton);
-
 	var i = 0;
 	skeleton.getJoint('Little', 'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Ring', 	'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Middle', 'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Index', 	'Left', 	3).add(letters[i++]);
+	letters[i].rotation.y -= Math.PI / 3;
 	skeleton.getJoint('Thumb', 	'Left', 	3).add(letters[i++]);
+	letters[i].rotation.y += Math.PI / 3;
 	skeleton.getJoint('Thumb', 	'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Index', 	'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Middle', 'Right', 	3).add(letters[i++]);
@@ -55,7 +50,3 @@ function animate() {
 	renderer.render(scene);
 }
 animate();
-
-</script>
-</body>
-</html>

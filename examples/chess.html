@@ -1,530 +1,331 @@
-<!--
-	Example Chess Board with Draggable Pieces.
-
-	Authors: Amber Roy
-	Copyright (c) 2015 Altspace VR
--->
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-		<title>Chess</title>
-		<script src="../lib/firebase.js"></script>
-		<script src="../lib/three.min.js"></script>
-		<script src="../lib/OBJMTLLoader.js"></script>
-		<script src="../lib/MTLLoader.js"></script>
-		<script src="../lib/OrbitControls.js"></script>
+<title>Chess</title>
+<script src='http://sdk.altvr.com/libs/three.js/r71/build/three.min.js'></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js'></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js'></script>
+<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js'></script>
+<script src='http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js'></script>
+<script src='http://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
 
-		<script src="../src/AltOBJMTLLoader.js"></script>
-		<script src="../src/cursor/CursorEvents.js"></script>
-		<script src="../src/cursor/AltObjectControls.js"></script>
-		<script src="../src/cursor/ColorHoverEffect.js"></script>
-		<script src="../src/cursor/DragPlaneEffect.js"></script>
-		<script src="../src/sync/FirebaseSync.js"></script>
-
-
-		<style>
-			body {
-				/* transparent background so the page doesn't show in Altspace */
-				background-color: rgba(1, 0, 0, 0);
-				color: #000;
-				margin: 0px;
-				overflow: hidden;
-			}
-			#info {
-				margin: 10px;
-				position: absolute;
-				color: #FFFFFF;
-			}
-		</style>
+<script src='http://sdk.altvr.com/utilities/0.3.2/CursorEffects.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.2/ColorHoverEffect.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.2/DragPlaneEffect.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.2/ThreeBase.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.2/MultiLoader.js'></script>
+<script src='http://sdk.altvr.com/utilities/0.3.2/shims/CursorEvents.js'></script>
 
 </head>
 <body>
-<body>
-	<div id="info">
-			<a href="http://github.com/AltspaceVR/alt-three.js" 
-				 target="_blank">alt-three.js</a> - Chess Board
-	</div>
-</body>
-</body>
-
 <script>
 
-var inAltspace = window.hasOwnProperty('altspace');
-var AltContentLoaded = false;
+ChessApp = (function(){
+	//Chess Board with draggable pieces and multiplayer sychronization.
+	var scene, camera, renderer;
+	var threeBase;
+	var inAltspace = window.altspace && window.altspace.inClient;
 
-var modelsToLoad =	0;
-
-var scene, camera, renderer;
-var altObjectControls, orbitControls;
-var cursorEvents;
-var firebaseSync;
-var exporter, loader;
-var frameID;
-var infoDiv =	document.getElementById("info");
-
-var board, dragPlane;
-var chessPiecesWhite = [];
-var chessPiecesBlack = [];
-
-var sceneInfo = { // constants
-	// Original example was boardSize: 200, dragPlaneSize: 500
-	boardSize: 700, // chess piece models are scaled to fit the board
-	tableHeight: 0, // chess board is raised to be on top of table
-	dragPlaneSize: 1000, // boundary for dragging pieces, should be larger than boardSize
-};
-
-var modelsInfo = { // constants
-	pieces: {
-		king:	 { model: "king",	 count: 1 },
-		queen:	{ model: "queen",	count: 1 },
-		bishop: { model: "bishop", count: 2 },
-		knight: { model: "knight", count: 2 },
-		rook:	 { model: "rook",	 count: 2 },
-		pawn:	 { model: "pawn",	 count: 8 }
-	},
-	pieceWidth: 16,
-	board: { model: "board", width: 50, height: 1 },
-	directory: "models/ChessPieces",
-};
-
-var modelScale = sceneInfo.boardSize / 8 / modelsInfo.pieceWidth;
-
-// Debugging options; keep turned off in committed code.
-var dragPointSphere;
-var useOrbitControls = !inAltspace;
-var showDragPlane = !inAltspace && false;
-var showDragPoint = !inAltspace && false;
-
-
-function main() {
-
-	//if ( AltContentLoaded ) return ; // bug where event is triggered repeatedly
-	//AltContentLoaded = true;
-
-	initScene();
-	loadModels();
-
-}
-
-function onModelsLoaded() {
-
-	if ( inAltspace ) {
-		console.log("window.innerDepth: " + window.innerDepth);
-		if ( window.innerDepth < 400 ) {
-			// in flat enclosure
-			scene.rotation.x = (Math.PI / 180) * 45;
-		} else {
-			// in thick display
-			// Put chess board on the bottom of the enclosure.
-			scene.position.y = -1 * ( window.innerHeight / 2 );
+	function main(){
+		//Entry point into the app, kicks off the rendering loop.
+		initThreeBase();
+		initScene();
+		if (inAltspace){
+			var enclosureHeight = 1000;//TODO: Get height of enclosure dynamically.
+			scene.position.y = enclosureHeight / -2 ;//Lower board onto floor/table.
 		}
-	}
-
-	initModels();
-	arrangePieces(modelScale); // TODO: Skip if room already created.
-
-	firebaseSync.connect( onSyncReady );
-
-}
-
-function onSyncReady() {
-
-	initEvents(); // Dont allow dragging until done arranging pieces.
-
-	// Hack to get the AltRender to refresh the scene, otherwise in a new room,
-	// black tintColor not rendered until a piece is moved or hovered.
-	if ( inAltspace ) {
-		chessPiecesWhite[0].position.x += 0.001;
-		setTimeout( function() { chessPiecesWhite[0].position.x -= 1; }, 100);
-	}
-
-	animate(); // kick off the rendering loop
-
-}
-
-
-function initScene() {
-
-	if ( inAltspace ) {
-
-	    renderer = altspace.getThreeJSRenderer();
-		infoDiv.style.visibility = "hidden";
-
-	} else {
-
-		renderer = new THREE.WebGLRenderer();
-		renderer.setClearColor( "#333333" );
-		renderer.setSize( window.innerWidth, window.innerHeight);
-		document.body.appendChild( renderer.domElement );
-				
-	}
-
-	scene = new THREE.Scene();
-
-	camera = new THREE.PerspectiveCamera(
-		45,
-		window.innerWidth / window.innerHeight,
-		1,
-		2000
-	);
-	camera.position.z = sceneInfo.boardSize;
-	camera.position.y = sceneInfo.boardSize + 100;
-
-	// done automatically if useOrbitControls is true
-	camera.lookAt(scene.position);
-
-	// OBJMTLLoader always uses PhongMaterial, so we need light in scene.
-	var ambient = new THREE.AmbientLight( 0xffffff );
-	scene.add( ambient );
-
-	loader = new THREE.AltOBJMTLLoader();
-
-	// dragPlane should not be bigger than our bounding box, if it is then
-	// objects will disappear when they are moved outside of the box.
-	var dragPlaneSize = sceneInfo.dragPlaneSize;
-	var dragPlaneGeo = new THREE.BoxGeometry( dragPlaneSize, 0.25, dragPlaneSize );
-	var dragPlaneMat = new THREE.MeshBasicMaterial({
-		color: 0xFFFFFF, 
-		opacity: 0.25,
-		transparent: true,
-		visible: showDragPlane
-	});
-	dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
-	dragPlane.name = "drag plane";
-	// Do not add dragPlane to scene, since we move it around for raycsting.
-
-	// For debugging only, to visualize the raycast intersection point.
-	if ( showDragPoint ) {
-		dragPointSphere = new THREE.Mesh( 
-			new THREE.SphereGeometry(1),
-			new THREE.MeshBasicMaterial({
-				color: "yellow",
-			})
-		);
-		scene.add( dragPointSphere );
-	}
-
-	// chess pieces might be comprised of multiple objects,
-	// so enable recursively checking descendants for intersection.
-	cursorEvents = new CursorEvents();
-	cursorEvents.enableMouseEvents( camera );
-
-	if (useOrbitControls) {
-		orbitControls = new THREE.OrbitControls( camera, renderer.domElement );
-		orbitControls.damping = 0.2;
-	}
-
-	var firebaseRootURL = "https://altspace-apps.firebaseio.com/";
-	var appID = "chess";
-	var params = { authTokenPath: "./tokens/chess-token.txt" };
-	firebaseSync = new FirebaseSync( firebaseRootURL, appID, params );
-
-	//scene.add( new THREE.AxisHelper(100) );
-}
-
-
-function initModels() {
-
-	var setPieceName = function(piece) {
-		// e.g. "rook-2-white"
-		piece.name =
-			piece.userData.pieceType + "-"+
-			piece.userData.pieceNum + "-" +
-			piece.userData.pieceColor;
-
-	}
-
-	// Make the board model same size as our boardSize constant.
-	var boardSize = sceneInfo.boardSize;
-	var boardScale = boardSize / modelsInfo.board.width;
-	board.scale.set( boardScale, boardScale, boardScale );
-	board.position.y = sceneInfo.tableHeight + (modelsInfo.board.height * boardScale / 2); 
-
-	var newWhite = [];
-	var newBlack = [];
-	var newHover = [];
-	var names = Object.keys(modelsInfo.pieces);
-
-	for (var i=0; i < names.length; i++) {
-
-		for (var j=0; j < modelsInfo.pieces[ names[i] ].count; j++) {
-
-			chessPiecesWhite[i].userData.pieceNum = j+1;
-			chessPiecesBlack[i].userData.pieceNum = j+1;
-
-			var whiteClone = chessPiecesWhite[i].clone();
-			var blackClone = chessPiecesBlack[i].clone();
-
-			// In Altspace we can use the tint color for hover effects.
-			// Outside Altspace, change material ambient color
-			// (note: changing diffuse color has no effect in MeshPhongMaterial)
-			// but must clone material so only 1 piece will change, not all of that type.
-			if ( inAltspace ) {
-
-				whiteClone.userData.tintColor = { r: 0.5, g: 0.5, b: 0.5 };
-				blackClone.userData.tintColor = { r: 0.1, g: 0.1, b: 0.1 };
-
-			} else {
-
-				whiteClone.traverse( function(child) {
-
-					if (child.material) {
-						child.material = child.material.clone();
-					}
-
-				});
-
-				blackClone.traverse( function(child) {
-
-					if (child.material) {
-						child.material = child.material.clone();
-						if (child.material instanceof THREE.MeshPhongMaterial ) {
-							child.material.ambient.setRGB( 0.2, 0.2, 0.2 );
-						}
-					}
-
-				});
-			}
-
-			newWhite.push( whiteClone );
-			newBlack.push( blackClone );
-
-		}
-	}
-
-	chessPiecesWhite = newWhite;
-	chessPiecesBlack = newBlack;
-	chessPiecesWhiteHover = newHover;
-
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
-		var objWhite = chessPiecesWhite[i];
-		var objBlack = chessPiecesBlack[i];
-
-		// Dont set name of hover objects for now since dont save them to DB.
-		setPieceName(objWhite);
-		setPieceName(objBlack);
-
-		objWhite.scale.set( modelScale, modelScale, modelScale );
-		objBlack.scale.set( modelScale, modelScale, modelScale );
-
-		// Put pieces on top of the board.
-		objWhite.position.y += board.position.y + (modelsInfo.board.height * boardScale / 2);
-		objBlack.position.y += board.position.y + (modelsInfo.board.height * boardScale / 2);
-
-		scene.add(objWhite);
-		scene.add(objBlack);
-
-		// Add all pieces to network sync.
-		firebaseSync.addObject( objWhite, objWhite.name );
-		firebaseSync.addObject( objBlack, objBlack.name );
-
-	}
-
-}
-
-
-function arrangePieces(modelScale) {
-
-	scene.add(board);
-
-	var boardSize = sceneInfo.boardSize;
-	var width = modelsInfo.pieceWidth * modelScale;
-
-	var whitePawnRow = -width + boardSize/2 - width/2;
-	var whiteRankRow = boardSize/2 - width/2;
-	var offsetX = - boardSize/2 + width/2;
-
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
-		var objWhite = chessPiecesWhite[i];
-
-		objWhite.position.z = whiteRankRow;
-
-		switch( objWhite.userData.pieceType ) {
-
-			case "king":
-				objWhite.position.x = (3 * width) + offsetX;
-				break;
-				
-			case "queen":
-				objWhite.position.x = (4 * width) + offsetX;
-				break;
-				
-			case "bishop":
-				objWhite.position.x = (2 * width) + offsetX;
-				i++;
-				objWhite = chessPiecesWhite[i];
-				objWhite.position.x = (5 * width) + offsetX;
-				objWhite.position.z = whiteRankRow;
-				break;
-				
-			case "knight":
-				objWhite.position.x = (1 * width) + offsetX;
-				i++;
-				objWhite = chessPiecesWhite[i];
-				objWhite.position.x = (6 * width) + offsetX;
-				objWhite.position.z = whiteRankRow;
-				break;
-				
-			case "rook":
-				objWhite.position.x = (0 * width) + offsetX;
-				i++;
-				objWhite = chessPiecesWhite[i];
-				objWhite.position.x = (7 * width) + offsetX;
-				objWhite.position.z = whiteRankRow;
-				break;
-				
-			case "pawn":
-				for (var j=0; j < 8; j++) {
-					objWhite = chessPiecesWhite[i];
-					objWhite.position.x = (j * width) + offsetX;
-					objWhite.position.z = whitePawnRow;
-					i++;
-				}
-				break;
-				
-			default:
-				console.error( "Unexpected piece type", objWhite.userData.pieceType );	
-
-		}
-
-	}
-
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
-		var objWhite = chessPiecesWhite[i];
-		var objBlack = chessPiecesBlack[i];
-
-		objBlack.position.copy( objWhite.position );
-
-		if (objBlack.userData.pieceType === "pawn") {
-			objBlack.position.z -= boardSize - width * 3;
-		} else {
-			objBlack.position.z -= boardSize - width;
-		}
-
-	}
-
-}
-
-
-function loadModels() {
-	// Load chess pieces and add them to the scene.
-
-	var path = modelsInfo.directory + "/";
-
-	var loadPiece = function(pieceType, fileBasename, index) {
-
-		var filename = path + fileBasename + ".obj";
-
-		loader.load(filename, function( loadedObject ) {
-			loadedObject.scale.set( modelScale, modelScale, modelScale );
-			loadedObject.userData.pieceType = pieceType;
-			loadedObject.userData.pieceColor = "white";
-			chessPiecesWhite[index] = loadedObject;
-
-			var loadedObjectClone = loadedObject.clone();
-			loadedObjectClone.userData.pieceColor = "black";
-			chessPiecesBlack[index] = loadedObjectClone;
-			// Set the black color later.
-
-			modelsToLoad--;
-			if ( modelsToLoad === 0 ) onModelsLoaded();
+		ChessBoard.init(scene, threeBase, function(){//onComplete//XXX
+			console.log('Chess Board initialized');
+			animate();
 		});
+	}//end main
 
+	function initThreeBase(){
+		//ThreeBase synchronizes the game objects across multiple clients.
+		var ascp = altspace.utilities.codePen;
+		ascp.setName('Chess'); 
+		var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
+		var syncParams = inCodePen ? {
+			instanceId: ascp.getPenId(),
+			authorId: ascp.getAuthorId()
+		} : null;
+		var syncInstance = altspace.utilities.sync.getInstance(syncParams);
+		threeBase = altspace.utilities.ThreeBase;
+		threeBase.init(syncInstance);
+	}//end initThreeBase
+
+	function initScene(){
+		//This app works both in Altspace and in a traditional browser.
+		scene = new THREE.Scene();
+		if (inAltspace){
+		    renderer = altspace.getThreeJSRenderer();
+		} else {
+			renderer = new THREE.WebGLRenderer({antialias: true});
+			camera = new THREE.PerspectiveCamera();
+			altspace.utilities.CursorEvents.init(scene, camera);
+			altspace.utilities.CursorEvents.initScene(renderer);
+			camera.position.z = ChessBoard.BOARD_SIZE;
+			camera.position.y = ChessBoard.BOARD_SIZE + 100;
+			camera.lookAt(scene.position);
+		}
+	}//end initScene
+
+	function animate(){
+		requestAnimationFrame(animate);
+		threeBase.update();
+	  renderer.render(scene, camera);
+	}//end animate
+
+	return {
+		main: main,
 	};
 
-	// NOTE change this number if you add more models!
-	var names = Object.keys(modelsInfo.pieces);
-	modelsToLoad = names.length + 1;
+}());//end ChessApp
 
-	console.log("Loading " + modelsToLoad + " models...");
+ChessBoard = (function(){
+	//Logic for 'responsive' chess board, which sizes itself based on boardSize.
+	//Pieces are placed in their initial positions when first loaded, but then
+	//can be dragged without restriction (no checking if the move is legal). 
+	var scene; 
+	var board;
+	var whitePieces = [];
+	var blackPieces = [];
+	var threeBase;
 
-	// Load board
-	loader.load(path + modelsInfo.board.model + ".obj", function( loadedObject ) {
-
-		modelsToLoad--;
-		loadedObject.name = "board";
-		board = loadedObject;
-
+	var CONFIG = Object.freeze({//constants
+		boardSize: 700,//chess piece models are scaled to fit the board
+		tableHeight: 0,//chess board is raised to be on top of table
+		dragPlaneSize: 1000,//boundary for dragging pieces, should be larger than boardSize
+		pieces: {
+			king: {modelFile: 'king', count: 1},
+			queen: {modelFile: 'queen', count: 1},
+			bishop: {modelFile: 'bishop', count: 2},
+			knight: {modelFile: 'knight', count: 2},
+			rook: {modelFile: 'rook', count: 2},
+			pawn: {modelFile: 'pawn', count: 8}
+		},
+		pieceWidth: 16,
+		board: {modelFile: 'board', width: 50, height: 1},
+		directory: 'https://sdk.altvr.com/examples/models/share/chess',
 	});
+	var modelScale = CONFIG.boardSize / 8 / CONFIG.pieceWidth;
+	var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
-	// Load pieces
-	for (var i=0; i < names.length; i++) {
+		function init(myScene, myThreeBase, onComplete){
+		//Models will take a couple seconds to download, so callback when done.
+		if(!myScene || !myThreeBase || !onComplete ||
+		  !myScene instanceof THREE.Scene ||
+			!myThreeBase  instanceof THREE.Scene ||
+			typeof(onComplete) !== 'function'){
+			throw new Error('ChessBoard init called with incorrect arguments');
+		}
+		scene = myScene;
+		threeBase = myThreeBase;
+		loadModels(function(){//onComplete
+			initBoard();
+			arrangePieces();
+			scene.add(board);
+			for(var i=0; i < whitePieces.length; i++){
+				var white = whitePieces[i];
+				var black = blackPieces[i];
+				threeBase.add(white, white.name);
+				threeBase.add(black, black.name);
+				scene.add(white);
+				scene.add(black);
+			}
+			initEffects();
+			onComplete();
+		});
+	}//end init
 
-		var name = names[i];
-		var fileBasename = modelsInfo.pieces[name].model;
-		loadPiece(name, fileBasename, i);
-		
-	}
+	function loadModels(onComplete){
+		//Load only 7 different models, then clone and color as necessary. 
+		console.log('Downloading chess models...');
+		var multiLoader = altspace.utilities.MultiLoader;
+		if(!multiLoader){
+			throw new Error('MultiLoader module is not available');
+		}
+		multiLoader.init({
+			crossOrigin: 'anonymous',
+			baseUrl: CONFIG.directory,
+		});
+		var req = new multiLoader.LoadRequest();
+		var names = Object.keys(CONFIG.pieces);
+		for (var i=0; i < names.length; i++){
+			var file = CONFIG.pieces[names[i]].modelFile;
+			req.objUrls.push(file+'.obj');
+			req.mtlUrls.push(file+'.mtl');
+		}
+		var boardFile = CONFIG.board.modelFile;
+		req.objUrls.push(boardFile+'.obj');
+		req.mtlUrls.push(boardFile+'.mtl');
+		multiLoader.load(req, function(){//onComplete
+			if(req.error) {
+				throw new Error(req.error);
+			}
+			for(var i=0; i < req.objects.length; i++) {
+				var object = req.objects[i];
+				if(i+1 === req.objects.length) {//board is last object
+					object.name = 'board';
+					board = object;
+					continue;
+				}
+				object.scale.set(modelScale, modelScale, modelScale);
+				object.userData.pieceType = names[i];
+				object.userData.pieceColor = 'white';
+				whitePieces[i] = object;
+				var objectClone = object.clone();
+				objectClone.userData.pieceColor = 'black';
+				blackPieces[i] = objectClone;
+				//Set the black color later.
+			}
+			onComplete();
+		});
+	}//end loadModels
 
-}
+	function initEffects(){
+		var cursorEffects = altspace.utilities.CursorEffects;
+		cursorEffects.init(scene);
+		//DragPlane should not be bigger than our bounding box, if it is then
+		//objects will disappear when they are moved outside of the box.
+		var dragPlaneSize = CONFIG.dragPlaneSize;
+		var dragPlaneGeo = new THREE.BoxGeometry(dragPlaneSize, 0.25, dragPlaneSize);
+		var dragPlaneMat = new THREE.MeshBasicMaterial({
+			color: 0xFFFFFF, 
+			opacity: 0.25,
+			transparent: true,
+		});
+		dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
+		dragPlane.name = 'drag plane';
+		var dragEffect = new altspace.utilities.DragPlaneEffect();
+		dragEffect.init(dragPlane);
+		var redTint = new THREE.Color(0.8, 0.2, 0.2);
+		var hoverEffect = new altspace.utilities.ColorHoverEffect();
+		hoverEffect.init(redTint);
+		for (var i=0; i < whitePieces.length; i++){
+			//Add all pieces to our drag-and-drop controls.
+			cursorEffects.add(dragEffect, whitePieces[i]);
+			cursorEffects.add(dragEffect, blackPieces[i]);
+			cursorEffects.add(hoverEffect, whitePieces[i]);
+			cursorEffects.add(hoverEffect, blackPieces[i]);
+		}
+	}//end initEffects
+
+	function initBoard(){
+		//Make the board model same size as our boardSize constant.
+		board.scale.set(boardScale, boardScale, boardScale);
+		board.position.y = CONFIG.tableHeight + (CONFIG.board.height * boardScale / 2); 
+		var whiteTint = new THREE.Color(1, 1, 1);
+		var blackTint = new THREE.Color(0.2, 0.2, 0.2);
+		whitePieces = cloneModels(whitePieces, whiteTint);
+		blackPieces = cloneModels(blackPieces, blackTint);
+	}//end initBoard
+
+	function cloneModels(pieces, color){
+		//Duplicate models so we have a full chess set.
+		var newPieces = [];
+		var names = Object.keys(CONFIG.pieces);
+		for (var i=0; i < names.length; i++){
+			for (var j=0; j < CONFIG.pieces[ names[i] ].count; j++){
+				pieces[i].userData.pieceNum = j+1;
+				var pieceClone = pieces[i].clone();
+				var deepColor = function(obj, color){
+					if (obj.material){
+						//Clone material so only 1 piece will change, not all of that type.
+						obj.material = obj.material.clone();
+						obj.material.color = color;
+					}
+					for(var i=0; i< obj.children.length; i++){
+						deepColor(obj.children[i], color);
+					}
+				}
+				deepColor(pieceClone, color);
+				newPieces.push(pieceClone);
+			}
+		}
+		for (var i=0; i < newPieces.length; i++){
+			var object = newPieces[i];
+			object.scale.set(modelScale, modelScale, modelScale);
+			object.name = //e.g. 'rook-2-white'
+				object.userData.pieceType + '-'+
+				object.userData.pieceNum + '-' +
+				object.userData.pieceColor;
+			//Put pieces on top of the board.
+			var boardWidth = CONFIG.board.height * boardScale / 2;
+			object.position.y += board.position.y + boardWidth;
+		}
+		return newPieces;
+
+	}//end cloneModels
+
+	function arrangePieces(){
+		//Algorithm for determining initial position of pieces.
+		var boardSize = CONFIG.boardSize;
+		var width = CONFIG.pieceWidth * modelScale;
+		var pawnRow = -width + boardSize/2 - width/2;
+		var rankRow = boardSize/2 - width/2;
+		var offsetX = - boardSize/2 + width/2;
+		var secondPiece = function(i, widthOffset){
+			var w = 7 - widthOffset;
+			object = whitePieces[i];
+			object.position.x = (w * width) + offsetX;
+			object.position.z = rankRow;
+		};
+		for (var i=0; i < whitePieces.length; i++){
+			var object = whitePieces[i];
+			object.position.z = rankRow;
+			switch(object.userData.pieceType){
+				case 'king':
+					object.position.x = (3 * width) + offsetX;
+					break;
+				case 'queen':
+					object.position.x = (4 * width) + offsetX;
+					break;
+				case 'bishop':
+					object.position.x = (2 * width) + offsetX;
+					secondPiece(++i, 2);
+					break;
+				case 'knight':
+					object.position.x = (1 * width) + offsetX;
+					secondPiece(++i, 1);
+					break;
+				case 'rook':
+					object.position.x = (0 * width) + offsetX;
+					secondPiece(++i, 0);
+					break;
+				case 'pawn':
+					for (var j=0; j < 8; j++){
+						object = whitePieces[i++];
+						object.position.x = (j * width) + offsetX;
+						object.position.z = pawnRow;
+					}
+					break;
+				default:
+					console.error('Unexpected piece type', object.userData.pieceType);	
+			}
+		}
+		//Black pieces mirror position of white ones.
+		for (var i=0; i < whitePieces.length; i++){
+			var white = whitePieces[i];
+			var black = blackPieces[i];
+			black.position.copy(white.position);
+			if (black.userData.pieceType === 'pawn'){
+				black.position.z -= boardSize - width * 3;
+			} else {
+				black.position.z -= boardSize - width;
+			}
+		}
+	}//end arrangePieces
+
+	return {
+		BOARD_SIZE: CONFIG.boardSize, 
+		init: init,
+	};
+
+}());//end ChessBoard
 
 
-function initEvents() {
-
-	var params = {};	// optional parameters used to configure object effects
-	params.firebaseSync = firebaseSync;
-	params.dragPlane = dragPlane;
-
-	if ( showDragPoint ) params.dragPointMarker = dragPointSphere;
-	if ( useOrbitControls ) params.orbitControls = orbitControls;
-
-	var dragEffect = new DragPlaneEffect( params );
-
-	var redTint = new THREE.Color(0.8, 0.2, 0.2);
-	params = { color: redTint };
-	var hoverEffect = new ColorHoverEffect( params );
-
-	// Add all pieces to our drag-and-drop controls.
-	for (var i=0; i < chessPiecesWhite.length; i++) {
-
-		cursorEvents.addObject( chessPiecesWhite[i] );
-		cursorEvents.addObject( chessPiecesBlack[i] );
-
-		// Drag applied first, since hover effect needs to know when 
-		// object is being dragged, so that object stays highlighted.
-		cursorEvents.addEffect( dragEffect, chessPiecesWhite[i] );
-		cursorEvents.addEffect( dragEffect, chessPiecesBlack[i] );
-
-		cursorEvents.addEffect( hoverEffect, chessPiecesWhite[i] );
-		cursorEvents.addEffect( hoverEffect, chessPiecesBlack[i] );
-
-	}
-
-}
-
-
-function onWindowResize() {
-
-	if ( inAltspace ) return ; // We dont handle Altspace resize yet.
-
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
-window.addEventListener( 'resize', onWindowResize, false );
-
-// ----------------------------------------------------------------------------
-
-function animate() {
-	// Not much here; changes in object position triggered by mouse/cursor events.
-
-	frameID = requestAnimationFrame( animate );
-
-	cursorEvents.update();
-
-	if (useOrbitControls) orbitControls.update();
-
-    renderer.render( scene, camera );
-
-}
-
-main();
-
+ChessApp.main();
 
 </script>
 </body>

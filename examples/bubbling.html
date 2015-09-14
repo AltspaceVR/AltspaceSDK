@@ -28,10 +28,9 @@
 	</head>
 	<body>
 		<div id="test-frame"></div>
-        <script src="../lib/three.min.js"></script>
-        <script src="../lib/OBJMTLLoader.js"></script>
-        <script src="../lib/MTLLoader.js"></script>
-        <script src="../src/AltOBJMTLLoader.js"></script>
+	    <script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+	    <script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+	    <script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 
 		<script>
 
@@ -39,10 +38,18 @@
 
 			var geometry, root;
 
+			function setTintColor (obj, tintColor) {
+			    obj.userData.tintColor = tintColor;
+			    for (var i = 0; i < obj.children.length; i++) {
+			        obj.children[i].userData.tintColor = tintColor;
+			    }
+			}
 
             function addEventListeners(object3d) {
                 object3d.addEventListener('cursordown', function (event) {
-                    event.currentTarget.userData.tintColor = { r: Math.random(), g: Math.random(), b: Math.random() };
+                	console.dir(event.currentTarget);
+                    var randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+                    setTintColor( event.currentTarget, randomColor);
                     event.stopPropagation();//This should still allow the scale to happen, but only on the target
                 });
 
@@ -71,13 +78,13 @@
             }
 
 			var manager = new THREE.LoadingManager();
-			var loader = new THREE.AltOBJMTLLoader( manager );
+			var loader = new THREE.OBJMTLLoader( manager );
 
 			init();
 
 			function init() {
 
-				if (!altspace) {
+				if (!window.altspace) {
 					var errorMsg = "This experiment only works in Altspace";
 					var testFrame = document.getElementById('test-frame');
 					testFrame.innerHTML = errorMsg;
@@ -86,7 +93,7 @@
 					throw new Error(errorMsg);
 				}
 				
-				loader.load('models/SolarSystem/sun.obj', function (sun) {
+				loader.load('models/solar-system/sun.obj', 'models/solar-system/sun.mtl', function (sun) {
 
 					sun.scale.x = 1;
 					sun.scale.y = 1;
@@ -130,7 +137,7 @@
 					    }
 					}
 
-				    renderer = altspace.getThreeJSRenderer();
+				    renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 
 					animate();
 				} );
