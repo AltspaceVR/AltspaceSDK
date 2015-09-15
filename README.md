@@ -7,22 +7,17 @@ Three.js is an open-source, render-agnostic 3D engine written in Javascript. It 
 This repository contains the primary documentation for the SDK and related APIs, as well as examples and utilities. As all required APIs are already integrated into the client, you can build holographic three.js apps for AltspaceVR without using additional files from this repo (though many many can be very useful). 
 
 This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
-
-> **Heads up that some documentation and examples may be out of date.** AltRenderer has been depreciated, and altspace.getThreeJSRenderer() should be used instead. The version 0.2.0 of the renderer should be explicitly requested (even if some of the examples do not). All window.Alt calls have been depreciated and replaced with calls on window.altspace, and all supported AltspaceVR APIs now exist only on this object. AltOBJMTLLoader should not be used for any new apps. CursorEvents needs to be refactored now that the normal cursor events can fire on individual objects. It should only be only be used if you intent on using one of the cursor effects.
  
 ## Getting Started
 
-**Start by following our [Setup Guide].**  
-It has very useful things like links to the debuggger.
+**[Get Started]**  
 
 ## AltspaceVR APIs
 
 ####Holographic Rendering
 
-* `var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});`  
+* `var renderer = altspace.getThreeJSRenderer();`  
  returns a renderer that can be used to render three.js scenes as holographic objects
-
- > **Use {version:'0.2.0'} for the time being.** We may ask you to change this prior to launch. Version 0.1.0 will be delievered if you do not specify a version, but this will change to delivering the latest version at an arbitrary date. Version 0.1.0 can only be used with AltOBJMTLLoader (not arbitrary geometry) and should not be used if at all possible.
 
 ####Cursor Events
 
@@ -31,7 +26,9 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 >Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that signifigantly concave objects (buckets, etc) will block contained objects from being clicked on.
 
 * `mesh.addEventListener('cursorup' / 'cursordown', callback);`  
- listen for cursor events on a specific object.
+ listen for cursor events on a specific mesh.  
+
+  >These events will bubble up the three.js hierarchy. `stopPropagation` and `stopImmediatePropagation` are supported and work similarly to DOM events
 * `scene.addEventListner('cursormove', callback)`  
  listen for cursor move events
 
@@ -70,26 +67,20 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 
 ## Learning More
 
-More documentation is available in the [Wiki], including Tutorials and Tips for Developers.  
+More documentation is available in the [Wiki] and project ideas, resources, showcase submission, and more can be found at our [Developer Portal] 
 
 Videos
 * [Live Coding Tutorial]
 * [AltspaceVR looking for SDK Collaborators]
-
-Or dive into the source code, organized as follows:
-* [src/cursor](src/cursor) - Extends the Cursor API to allow for cursor effects
-* [src/sync](src/sync) - Synchronizes object transforms (position, rotation) between clients.
-* [src/helpers](src/helpers) - Convenience utilities for common tasks
-* [lib](lib) - third-party libraries used by the SDK
-* [examples](examples) - sample web apps demonstrating various features
 
 [three.js]: http://threejs.org/
 
 [Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [Developer Answers]: http://answers.altvr.com
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
+[Developer Portal]: http://developer.altvr.com
 
-[Setup Guide]: https://github.com/AltspaceVR/AltspaceSDK/wiki/Setup-Guide
+[Get Started]: https://developer.altvr.com/get-started/
 
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."
