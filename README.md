@@ -18,7 +18,7 @@ altspace.js should be included whenever you use the SDK. It contains core utilit
 
 Many APIs are present in the client without loading altspace.js, but please still include it, as this may change in the future.  
 
-The version baked into altspace.js informs the client what SDK version you would like to use. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of altspace.js we will try to return legacy behavior appropriate to your version of altspace.js. Versioning will follow (SEMVER)[http://semver.org/] as closely as possible.
+The version baked into altspace.js informs the client what SDK version you would like to use. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of altspace.js we will try to return legacy behavior appropriate to your version of altspace.js. Versioning will follow [SEMVER](http://semver.org/) as closely as possible.
 
 To include the latest version, simply add this script tag to your project:
 
