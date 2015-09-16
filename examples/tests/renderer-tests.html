@@ -18,11 +18,6 @@
 		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/libs/stats.min.js"></script>
 		<script src="https://sdk.altvr.com/utilities/0.2.0/shims/CursorEvents.js"></script>
 
-		<!--
-		<script src="../../UnityClient/js/src/AltRenderer.js"></script>
-		<script src="../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
-		-->
-
 		<script 
 			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
 		</script>
@@ -259,8 +254,8 @@
 					enabled: true,
 					init: function () {
 						var loader = new THREE.OBJMTLLoader();
-						var objFilename = "models/test/test.obj";
-						var mtlFilename = "models/test/test.mtl";
+						var objFilename = "../models/test/test.obj";
+						var mtlFilename = "../models/test/test.mtl";
 						loader.load(
 							objFilename,
 							mtlFilename,
