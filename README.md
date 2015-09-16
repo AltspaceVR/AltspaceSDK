@@ -20,7 +20,7 @@ Many APIs are present in the client without loading altspace.js, but please stil
 
 The version baked into altspace.js informs the client what SDK version you would like to use. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of altspace.js we will try to return legacy behavior appropriate to your version of altspace.js. Versioning will follow [SEMVER](http://semver.org/) as closely as possible.
 
-To include the latest version, simply add this script tag to your project:
+To always use the latest version (convienient, but note that breaking changes may happen), simply add this script tag to your project:
 
 `<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>`
 
