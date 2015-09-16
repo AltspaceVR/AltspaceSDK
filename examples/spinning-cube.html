@@ -6,31 +6,24 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.0/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.1/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.1/shims/dualRenderer.js"></script>
+
 </head>
 <body>
 </body>
 <script>
 
-console.log("Using local utilities")
+console.log("Using local utilities");
 
 var ascp = altspace.utilities.codePen;
 ascp.setName('Hello Cube'); 
 var inCodePen = !!location.href.match('codepen.io/');
-var inAltspace = window.altspace && window.altspace.inClient;
 
 // Setup
-var renderer, camera, cursorEvents;
-var scene = new THREE.Scene();
-if (inAltspace) {
-	renderer = altspace.getThreeJSRenderer();
-} else {
-	renderer = new THREE.WebGLRenderer({antialias: true});
-	camera = new THREE.PerspectiveCamera();
-	altspace.utilities.cursor.init(scene, camera);
-	altspace.utilities.cursor.initScene(renderer);
-	camera.position.z = 500; // stand back from origin
-}
+var dualRenderer = altspace.utilities.dualRenderer;
+dualRenderer.init();
+dualRenderer.getCamera().position.z = 500; // stand back from origin
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
 // else antialiasing won't work (this is a limitation of WebGL)
@@ -44,7 +37,7 @@ var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 var cube = new THREE.Mesh(geometry, material);
 cube.scale.multiplyScalar(100);
-scene.add(cube);
+dualRenderer.getScene().add(cube);
 
 // Sync
 var params = inCodePen ? {instanceId: ascp.getPenId(), authorId: ascp.getAuthorId()} : null;
@@ -54,8 +47,6 @@ syncColor.on('value', function(snapshot){
 	var val = snapshot.val();
 	if (val) {
 		cube.material.color = new THREE.Color(val);
-		// Not strictly necessary, but seems to improve performance.
-		if (inAltspace) cube.material.needsUpdate = true;
 	}
 });
 
@@ -68,7 +59,7 @@ cube.addEventListener('cursordown', function() {
 function animate() {
 	cube.rotation.y += 0.01; // rotation is not synchronized
 	requestAnimationFrame(animate);
-	renderer.render(scene, camera);
+	dualRenderer.render();
 }
 animate();
 
