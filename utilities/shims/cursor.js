@@ -184,34 +184,8 @@ window.altspace.utilities.cursor = (function(){//TODO: move to utilities.shims.c
     intersection.object = newTarget;
   }
 
-  function initScene(renderer){
-    // Might want to move into a general helper utility.
-    // See also: http://threejs.org/docs/#Manual/Introduction/Creating_a_scene
-    var resizeRender = function(){
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    document.body.style.margin = '0px';
-    document.body.style.overflow = 'hidden';
-    renderer.setClearColor("#AAAAAA");
-    var container = document.createElement('div');
-    document.body.appendChild(container);
-    container.appendChild(renderer.domElement);
-    window.addEventListener('resize', resizeRender);
-    resizeRender();
-    camera.fov = 45;
-    camera.near = 1;
-    camera.far = 2000;
-    scene.add(camera);
-    // Throw in a light since any loaded OBJ files use MeshPhongMaterial.
-    var light = new THREE.AmbientLight(0xffffff);
-    scene.add(light);
-  }
-
   return {
     init: init,
-    initScene: initScene,
   };
 
 }());
