@@ -1,8 +1,9 @@
 //Boilerplate
-altspaceCodePen.setName('Hello Hands');
-altspaceCodePen.ensureInVR();
+var ascp = altspace.utilities.codePen;
+ascp.setName("Hello Hands"); 
+ascp.ensureInVR();
 
-var text = "HelloHands";//"AltspaceVR"
+var text = "HelloHands";
 
 //Setup 
 var scene = new THREE.Scene();
@@ -10,15 +11,16 @@ var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 
 //Letters
 var letters = [];
-for(var i = 0, max = text.length; i < max; i++){
+for(var i = 0; i < text.length; i++){
 	var geometry = new THREE.TextGeometry(text.charAt(i));
 	var material = new THREE.MeshBasicMaterial({color:'green'});
 	var mesh = new THREE.Mesh(geometry, material);
 	mesh.scale.z = 0.3;
 	mesh.scale.multiplyScalar(0.3);
 	mesh.position.z = 30;
-	mesh.position.x = 8;
+	mesh.position.x = 12;
 	mesh.rotation.x = Math.PI / 2;
+	mesh.rotation.y = Math.PI;
 	scene.add(mesh);
 	letters.push(mesh);
 }
@@ -32,7 +34,9 @@ altspace.getThreeJSTrackingSkeleton().then(function(args){
 	skeleton.getJoint('Ring', 	'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Middle', 'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Index', 	'Left', 	3).add(letters[i++]);
+	letters[i].rotation.y -= Math.PI / 3;
 	skeleton.getJoint('Thumb', 	'Left', 	3).add(letters[i++]);
+	letters[i].rotation.y += Math.PI / 3;
 	skeleton.getJoint('Thumb', 	'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Index', 	'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Middle', 'Right', 	3).add(letters[i++]);

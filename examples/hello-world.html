@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html lang=en>
-<head>
-<meta charset=utf-8>
-<title>Hello World</title>
-<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
-<script src="https://sdk.altvr.com/libs/three.js/r71/examples/fonts/helvetiker_regular.typeface.js"></script>
-</head>
-<body>
-<script>
-if (!window.altspace) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+	<head>
+		<meta charset=utf-8>
+		<title>Hello World</title>
+		<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/fonts/helvetiker_regular.typeface.js"></script>
+	</head>
+	<body>
+		<script>
+		if (!window.altspace) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 
-var text = "Hello World";
+		var text = "Hello World";
 
-//Setup
-var scene = new THREE.Scene();
-var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+		//Setup
+		var scene = new THREE.Scene();
+		var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
 
-//Text
-var geometry = new THREE.TextGeometry(text);
-var material = new THREE.MeshBasicMaterial({color:'green'});
-var mesh = new THREE.Mesh(geometry, material);
-mesh.position.x = -400;
-mesh.scale.z = 0.3;
-mesh.scale.multiplyScalar(1);
-mesh.rotation.y = Math.PI;
-scene.add(mesh);
+		//Text
+		var geometry = new THREE.TextGeometry(text);
+		var material = new THREE.MeshBasicMaterial({color:'green'});
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.position.x = -400;
+		mesh.scale.z = 0.3;
+		mesh.scale.multiplyScalar(1);
+		mesh.rotation.y = Math.PI;
+		scene.add(mesh);
 
-//Rendering
-function animate() {
-	requestAnimationFrame(animate);
-	renderer.render(scene);
-	//mesh.rotation.x += 0.05;
-}
-animate();
+		//Update & Rendering
+		function animate() {
+			requestAnimationFrame(animate);
+			renderer.render(scene);
+			//mesh.rotation.x += 0.05;
+		}
+		animate();
 
-</script>
-</body>
+		</script>
+	</body>
 </html>
+
+
+
