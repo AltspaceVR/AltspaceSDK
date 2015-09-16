@@ -1,7 +1,6 @@
-//Detects mouse events using the Three.js raycaster, then dispatches an event
-//that mimics Altspace cursor events. This allows events to function similarly
-//in and outside Altspace. Inspired by http://github.com/cabbibo/ObjectControls
-window.altspace.utilities.shims.cursor = (function(){
+//Detects mouse move/up/down events, raycasts to find intersected objects, then
+//dispatches cursor move/up/down/enter/leave events that mimics Altspace events.
+window.altspace.utilities.cursor = (function(){//TODO: move to utilities.shims.cursor
 
   var scene;
   var camera;
