@@ -11,10 +11,8 @@ This repository contains the primary documentation for the SDK and related APIs,
 The SDK is in beta and actively under development. **Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**  
 
 ######Join the [Developer Portal](http://developer.altvr.com) to be kept up to date on changes, events, and ongoing projects.
- 
-## Getting Started
 
-**[Get Started]**  
+######Get started by watching our [Tutorial Series]
 
 ## altspace.js
 
@@ -104,7 +102,7 @@ Videos
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
 
-[Get Started]: https://developer.altvr.com/get-started/
+[Tutorial Series]: https://developer.altvr.com/get-started/
 
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."
