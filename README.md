@@ -69,6 +69,10 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 * Limit the number of objects per scene and polygons per object.
 * Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
 
+## Utilities
+
+See the README.md in the [utilities directory](https://github.com/AltspaceVR/AltspaceSDK/utilities)
+
 ## Learning More
 
 More documentation is available in the [Wiki] and project ideas, resources, showcase submission, and more can be found at our [Developer Portal] 
