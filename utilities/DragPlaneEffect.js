@@ -8,7 +8,6 @@ window.altspace.utilities.DragPlaneEffect = function(){
   var raycaster = new THREE.Raycaster();
   var rayOrigin = new THREE.Vector3();
   var rayDirection = new THREE.Vector3();
-  var inAltspace = window.altspace && window.altspace.inClient;
 
   // for debugging
   var orbitControls;
@@ -68,7 +67,7 @@ window.altspace.utilities.DragPlaneEffect = function(){
     var boudingBox = new THREE.Box3().setFromObject(dragObject);
     dragObjectWidth = Math.abs(boudingBox.max.x - boudingBox.min.x);
     var intersectionPoint = event.point.clone();
-    if (inAltspace){
+    if (!event.isShimEvent){
       //TODO: Investigate if bug in Altspace event or our mistake.
       intersectionPoint.z *= -1;//invert z cordinate
     }

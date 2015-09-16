@@ -6,7 +6,7 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.3.2/shims/CursorEvents.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/shims/CursorEvents.js"></script>
 </head>
 <body>
 </body>
@@ -14,7 +14,7 @@
 
 var ascp = altspace.utilities.codePen;
 ascp.setName('Hello Cube'); 
-var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
+var inCodePen = !!location.href.match('codepen.io/');
 var inAltspace = window.altspace && window.altspace.inClient;
 
 // Setup

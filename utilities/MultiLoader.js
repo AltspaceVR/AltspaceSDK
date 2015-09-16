@@ -65,7 +65,8 @@ altspace.utilities.MultiLoader = (function(){
             onComplete();
           }
         }, onProgress, function(){//onError 
-          req.error = 'Error loading file: '+xhr.target.responseURL;
+          var url = xhr.target.responseURL || '';
+          req.error = 'Error loading file '+url;
         });
       };
       loadModel(req, i);
@@ -73,7 +74,8 @@ altspace.utilities.MultiLoader = (function(){
   }
 
   function onProgress(xhr){
-    if (xhr.lengthComputable) {
+    if (xhr.lengthComputable && xhr.target.responseURL) {
+      //Skip progress log if no xhr url, meaning it's a local file.
       var percentComplete = xhr.loaded / xhr.total * 100;
       var filename = xhr.target.responseURL.split('/').pop();
       if (TRACE) console.log('...'+filename+' '+Math.round(percentComplete,2)+'% downloaded');

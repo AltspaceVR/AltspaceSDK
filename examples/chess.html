@@ -2,19 +2,19 @@
 <html lang='en'>
 <head>
 <title>Chess</title>
-<script src='http://sdk.altvr.com/libs/three.js/r71/build/three.min.js'></script>
-<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js'></script>
-<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js'></script>
-<script src='http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js'></script>
-<script src='http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js'></script>
-<script src='http://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
+<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
+<script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
-<script src='http://sdk.altvr.com/utilities/0.3.2/CursorEffects.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.2/ColorHoverEffect.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.2/DragPlaneEffect.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.2/ThreeBase.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.2/MultiLoader.js'></script>
-<script src='http://sdk.altvr.com/utilities/0.3.2/shims/CursorEvents.js'></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/CursorEffects.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/ColorHoverEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/DragPlaneEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/ThreeBase.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/MultiLoader.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.4.0/shims/CursorEvents.js"></script>
 
 </head>
 <body>
@@ -22,19 +22,20 @@
 
 ChessApp = (function(){
 	//Chess Board with draggable pieces and multiplayer sychronization.
+	var ascp = altspace.utilities.codePen;
+	var inAltspace = !!(window.altspace && window.altspace.inClient);
+	var inCodePen = !!location.href.match('codepen.io/');
+	var useAltRenderer = inAltspace && (!inCodePen || window.innerHeight >= 750);
+
 	var scene, camera, renderer;
 	var threeBase;
-	var inAltspace = window.altspace && window.altspace.inClient;
 
 	function main(){
 		//Entry point into the app, kicks off the rendering loop.
+		ascp.setName('Chess'); 
 		initThreeBase();
 		initScene();
-		if (inAltspace){
-			var enclosureHeight = 1000;//TODO: Get height of enclosure dynamically.
-			scene.position.y = enclosureHeight / -2 ;//Lower board onto floor/table.
-		}
-		ChessBoard.init(scene, threeBase, function(){//onComplete//XXX
+		ChessBoard.init(scene, threeBase, function(){//onComplete
 			console.log('Chess Board initialized');
 			animate();
 		});
@@ -42,9 +43,6 @@ ChessApp = (function(){
 
 	function initThreeBase(){
 		//ThreeBase synchronizes the game objects across multiple clients.
-		var ascp = altspace.utilities.codePen;
-		ascp.setName('Chess'); 
-		var inCodePen = !!ascp.getPenId().match(/[0-9][a-f].*/);
 		var syncParams = inCodePen ? {
 			instanceId: ascp.getPenId(),
 			authorId: ascp.getAuthorId()
@@ -57,8 +55,11 @@ ChessApp = (function(){
 	function initScene(){
 		//This app works both in Altspace and in a traditional browser.
 		scene = new THREE.Scene();
-		if (inAltspace){
-		    renderer = altspace.getThreeJSRenderer();
+		if (useAltRenderer){
+	    renderer = altspace.getThreeJSRenderer();
+			//TODO: Remove hardcoded enclosure height once promises work in iframes.
+			var enclosureHeight = 1024;
+			scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
 		} else {
 			renderer = new THREE.WebGLRenderer({antialias: true});
 			camera = new THREE.PerspectiveCamera();
