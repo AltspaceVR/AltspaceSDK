@@ -20,8 +20,6 @@
 <body>
 <script>
 
-console.log("Using local copies of some utilities");
-
 ChessApp = (function(){
 	//Chess Board with draggable pieces and multiplayer sychronization.
 	var ascp = altspace.utilities.codePen;
@@ -59,15 +57,17 @@ ChessApp = (function(){
 		//This app works both in Altspace and in a traditional browser.
 		dualRenderer = altspace.utilities.dualRenderer;
 		dualRenderer.init({useAltRenderer: useAltRenderer});
+		var scene = dualRenderer.getScene();
 		if (useAltRenderer){
 			//TODO: Remove hardcoded enclosure height once promises work in iframes.
 			var enclosureHeight = 1024;
 			scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
+		} else {
+			var camera = dualRenderer.getCamera();
+			camera.position.z = ChessBoard.BOARD_SIZE;
+			camera.position.y = ChessBoard.BOARD_SIZE + 100;
+			camera.lookAt(scene.position);
 		}
-		var camera = dualRenderer.getCamera();
-		camera.position.z = ChessBoard.BOARD_SIZE;
-		camera.position.y = ChessBoard.BOARD_SIZE + 100;
-		camera.lookAt(dualRenderer.getScene().position);
 	}//end initScene
 
 	function animate(){

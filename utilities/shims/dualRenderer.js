@@ -12,13 +12,7 @@ altspace.utilities.dualRenderer = (function(){
   var lightColor;
   var TRACE;
 
-  var mockCamera = {
-    postion: new THREE.Vector3(),
-    lookAt: function() {},
-  }
-
   function init(myParams){
-    console.log('init myParams', myParams);
     var p = myParams || {};
     //auto-detect if running in Altspace, unless useAltRenderer given in params.
     useAltRenderer = p.useAltRenderer || !!(window.altspace && window.altspace.inClient);
@@ -31,7 +25,8 @@ altspace.utilities.dualRenderer = (function(){
 
     if (useAltRenderer) {
       renderer = altspace.getThreeJSRenderer();
-      camera = mockCamera;//ignore common references to camera
+      camera = null;
+      ambientLight = null;
     } else {
       renderer = new THREE.WebGLRenderer({antialias: antialias});
       camera = new THREE.PerspectiveCamera();

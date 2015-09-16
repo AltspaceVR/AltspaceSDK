@@ -6,24 +6,21 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/shims/dualRenderer.js"></script>
+
+<script src="http://localhost:8000/utilities/shims/cursor.js"></script>
+<script src="http://localhost:8000/utilities/shims/dualRenderer.js"></script>
 
 </head>
 <body>
 </body>
 <script>
 
-console.log("Using local utilities");
-
-var ascp = altspace.utilities.codePen;
-ascp.setName('Hello Cube'); 
-var inCodePen = !!location.href.match('codepen.io/');
-
 // Setup
 var dualRenderer = altspace.utilities.dualRenderer;
 dualRenderer.init();
-dualRenderer.getCamera().position.z = 500; // stand back from origin
+if (dualRenderer.getCamera()) {//no camera if in Altspace
+	dualRenderer.getCamera().position.z = 500; // stand back from origin
+}
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
 // else antialiasing won't work (this is a limitation of WebGL)
@@ -40,7 +37,13 @@ cube.scale.multiplyScalar(100);
 dualRenderer.getScene().add(cube);
 
 // Sync
-var params = inCodePen ? {instanceId: ascp.getPenId(), authorId: ascp.getAuthorId()} : null;
+var ascp = altspace.utilities.codePen;
+ascp.setName('Hello Cube'); 
+var inCodePen = !!location.href.match('codepen.io/');
+var params = inCodePen ? {
+	instanceId: ascp.getPenId(),
+	authorId: ascp.getAuthorId()
+} : null;
 var syncInstance = altspace.utilities.sync.getInstance(params);
 var syncColor = syncInstance.child('color');
 syncColor.on('value', function(snapshot){
