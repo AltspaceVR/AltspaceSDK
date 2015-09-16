@@ -38,7 +38,7 @@ window.altspace.utilities.shims.cursor = (function(){
       return;//no object under cursor
     }
     var object = intersected;
-    if(TRACE){console.log("cursor shim: cursordown", object);}
+    if(TRACE){console.log("CursorEvents shim: cursordown", object);}
     selected = object;
     var cursorEvent = mockCursorEvent('cursordown', event, object);
     object.dispatchEvent(cursorEvent);
@@ -51,27 +51,27 @@ window.altspace.utilities.shims.cursor = (function(){
       return;//no object previously selected
     }
     var object = selected;
-    if(TRACE){console.log("cursor shim: cursorup", object);}
+    if(TRACE){console.log("CursorEvents shim: cursorup", object);}
     object.dispatchEvent(mockCursorEvent('cursorup', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorup', event, scene));
     selected = undefined;
   }
 
   function cursormove(event){
-    if(TRACE){console.log("cursor shim: cursormove");}
+    if(TRACE){console.log("CursorEvents shim: cursormove");}
     scene.dispatchEvent(mockCursorEvent('cursormove', event, scene));
   }
 
   function cursorleave(object){
     var object = intersected;
-    if(TRACE){ console.log("cursor shim: cursorleave", object); }
+    if(TRACE){ console.log("CursorEvents shim: cursorleave", object); }
     object.dispatchEvent(mockCursorEvent('cursorleave', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorleave', event, scene));
   }
 
   function cursorenter(object){
     var object = intersected;
-    if(TRACE){console.log("cursor shim: cursorenter", object);}
+    if(TRACE){console.log("CursorEvents shim: cursorenter", object);}
     object.dispatchEvent(mockCursorEvent('cursorenter', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorenter', event, scene));
   }

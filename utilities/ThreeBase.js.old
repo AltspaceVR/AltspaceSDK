@@ -1,5 +1,5 @@
 //Synchronize position/rotation of distributed Three.js objects using Firebase.
-altspace.utilities.ThreeBase = (function(){
+altspace.utilities.threebase = (function(){
 
 	var syncInstance;
 	var TRACE;
@@ -15,9 +15,10 @@ altspace.utilities.ThreeBase = (function(){
 		TRACE = p.TRACE || false;
 	}
 
-	function add(object3d, key, params){
-		validateAdd(object3d, key);
-		if (TRACE) console.log('ThreeBase: adding object ' + key, object3d)
+	function add(object3d, params){
+		validateAdd(object3d, params);
+		var key = object3d.name;
+		if (TRACE) console.log('threebase: adding object ' + key, object3d)
 		objectInfo = {
 			object: object3d,
 			key: key,
@@ -34,7 +35,7 @@ altspace.utilities.ThreeBase = (function(){
 			var objectInfo = objectInfoForKey[key];
 			if (data){
 				validateData(key, data);
-				if (TRACE) console.log('ThreeBase: SYNC data for ' + key, data);
+				if (TRACE) console.log('threebase: SYNC data for ' + key, data);
 				var target = objectInfoForKey[key].object;
 				if (data.position){
 					target.position.set(data.position.x, data.position.y, data.position.z);
@@ -71,10 +72,10 @@ altspace.utilities.ThreeBase = (function(){
 		if (dataDiffers(objectInfo.lastSaveData, data)){
 			objectInfo.lastSaveData = data;
 			objectInfo.lastSaveAt = Date.now();
-			if (TRACE) console.log('ThreeBase: SAVE data for ' + key, data);
+			if (TRACE) console.log('threebase: SAVE data for ' + key, data);
 			syncInstance.child(key).set(data, function(error){
 				if (error){
-					console.error('ThreeBase: SAVE failed', error);
+					console.error('threebase: SAVE failed', error);
 				}
 			});
 		}
@@ -119,36 +120,37 @@ altspace.utilities.ThreeBase = (function(){
 
 	//LOTS of validation, since errors in callbacks are really hard to track down.
 
-	function validateAdd(object3d, key, params){
+	function validateAdd(object3d, params){
+		var key = object3d.name;
 		if (!syncInstance){
-			die('ThreeBase: must init() before adding objects');
+			die('threebase: must init() before adding objects');
 		}
 		if (!object3d instanceof THREE.Object3D){
-			die('ThreeBase: cannot add, not a THREE.Object3d', object3d);
+			die('threebase: cannot add, not a THREE.Object3d', object3d);
 		}
 		if (!key){
-			die('ThreeBase: must specify unique key for object', object3d);
+			die('threebase: object.name must be set to a unique key for object', object3d);
 		}
 		if (objectInfoForKey[key]){
-			die('ThreeBase: key '+ key +' already in use for another object');
+			die('threebase: key (object.name) '+ key +' already in use for another object');
 		}
 		if (params){
 		    if (typeof(params) !== 'object'){
-				die('ThreeBase: params passed to add is not an object', params);
+				die('threebase: params passed to add is not an object', params);
 			}
 			if (params.position && typeof(params.position) !== 'boolean'){
-				die('ThreeBase: params[\'position\'] is not a boolean', params.position);
+				die('threebase: params[\'position\'] is not a boolean', params.position);
 			}
 			if (params.rotation && typeof(params.rotation) !== 'boolean'){
-				die('ThreeBase: params[\'rotation\'] is not a boolean', params.rotation);
+				die('threebase: params[\'rotation\'] is not a boolean', params.rotation);
 			}
 			if (params.autoSyncEvery){
 				var ase = params.autoSyncEvery;
 				if (typeof(ase) !== 'number'){
-					die('ThreeBase: params[\'autoSyncEvery\'] is not a number', ase);
+					die('threebase: params[\'autoSyncEvery\'] is not a number', ase);
 				}
 				if (ase < 0 ){
-					die('ThreeBase: params[\'autoSyncEvery\'] cannot be negative', ase);
+					die('threebase: params[\'autoSyncEvery\'] cannot be negative', ase);
 				}
 			}
 		}
@@ -156,10 +158,10 @@ altspace.utilities.ThreeBase = (function(){
 
 	function validateSave(object3d){
 		if (!object3d instanceof THREE.Object3D){
-			die('ThreeBase: cannot save, not a THREE.Object3d', object3d);
+			die('threebase: cannot save, not a THREE.Object3d', object3d);
 		}
 		if (!keyForLocalUuid[object3d.uuid]){
-			die('ThreeBase: cannot save, object not yet added locally', object3d);
+			die('threebase: cannot save, object not yet added locally', object3d);
 		}
 	}
 
@@ -167,19 +169,19 @@ altspace.utilities.ThreeBase = (function(){
 		var position = data.position;
 		var rotation = data.rotation;
 		if (typeof(key) !== 'string'){
-			die('ThreeBase: data[\'key\'] is not a string', key);
+			die('threebase: data[\'key\'] is not a string', key);
 		} 
 		if (!objectInfoForKey[key]){
-			die('ThreeBase: no object found for data[\'key\']', key);
+			die('threebase: no object found for data[\'key\']', key);
 		}
 		if (position){
 			if (position.x === undefined || position.y === undefined || position.z === undefined){
-				die('ThreeBase: data[\'position\'] is not an x,y,z triple', position);
+				die('threebase: data[\'position\'] is not an x,y,z triple', position);
 			} 
 		}
 		if (rotation){
 			if (rotation.x === undefined || rotation.y === undefined || rotation.z === undefined){
-				die('ThreeBase: data[\'rotation\'] is not an x,y,z triple', rotation);
+				die('threebase: data[\'rotation\'] is not an x,y,z triple', rotation);
 			} 
 		} 
 	}

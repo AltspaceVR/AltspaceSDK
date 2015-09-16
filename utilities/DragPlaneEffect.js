@@ -8,22 +8,27 @@ window.altspace.utilities.DragPlaneEffect = function(){
   var raycaster = new THREE.Raycaster();
   var rayOrigin = new THREE.Vector3();
   var rayDirection = new THREE.Vector3();
+  var objects = [];
+  var scene;
 
   // for debugging
-  var orbitControls;
   var dragPointMarker;
   var TRACE;
 
-  function init(myDragPlane, params){
+  function init(myScene, myDragPlane, params){
+    if (! myScene instanceof THREE.Scene){
+      console.error('scene must be of type THREE.Scene');
+      return;
+    }
     if (! myDragPlane instanceof THREE.Object3D){
       console.error('dragPlane must be of type Object3D');
       return;
     }
+    scene = myScene;
     dragPlane = myDragPlane.clone();//make copy that is NOT added to scene
 
     var p = params || {};
     TRACE = p.TRACE || null;
-    orbitControls = p.orbitControls || null; //Disable during a drag (non-Altspace only).
     //Mark the intersection point when an object is dragged and on hoverOver.
     //Intended as a debugging aide. Mesh with SphereGeometry works well.
     dragPointMarker = p.dragPointMarker || null;
@@ -33,6 +38,18 @@ window.altspace.utilities.DragPlaneEffect = function(){
     var geo = dragPlane.geometry.parameters;
     raycaster.near = 1;
     raycaster.far = Math.max(geo.width, geo.depth) * 1.2;
+  }
+
+  function add(object){
+    if (!object || !object instanceof THREE.Object3D){
+      throw new Error("DragPlaneEffect: add requires a valid object", object);
+    }
+    if (objects.indexOf(object) !== -1) return; 
+    objects.push(object);
+    scene.addEventListener("cursormove", cursormoveScene);
+    scene.addEventListener("cursorup", cursorupScene);
+    object.addEventListener("cursorup", cursorup);
+    object.addEventListener("cursordown", cursordown);
   }
 
   function cursormoveScene(event){
@@ -48,14 +65,16 @@ window.altspace.utilities.DragPlaneEffect = function(){
     }
   }
 
-  function cursordown(object, event){
+  function cursordown(event){
+    var object = event.currentTarget;
     //Handle (rare) case where cursordown happens before any mousemove.
     rayOrigin.copy(event.ray.origin);
     rayDirection.copy(event.ray.direction);
     dragStart(object, event);
   }
 
-  function cursorup(object, event){
+  function cursorup(event){
+    var object = event.currentTarget;
     if (dragObject){
       dragEnd();
     }
@@ -80,9 +99,6 @@ window.altspace.utilities.DragPlaneEffect = function(){
       console.error('dragStart called, but object not selected');
       return;
     }
-    if (orbitControls){
-      orbitControls.enabled = false;
-    }
     //Raise/lower the drag plane to match the drag start point.
     dragPlane.position.y = intersectionPoint.y;
     //Force update, otherwise old position of dragPlane is used when raycaster
@@ -97,9 +113,6 @@ window.altspace.utilities.DragPlaneEffect = function(){
 
   function dragEnd(){
       if (TRACE) console.log('Ending drag');
-      if (orbitControls){
-        orbitControls.enabled = true;
-      }
       dragObject = null;
       //Return dragPlane to ground-level. Not strictly needed since we'll reset
       //on new drag, but looks better if the dragPlane is visible, e.g. for debugging.
@@ -151,10 +164,7 @@ window.altspace.utilities.DragPlaneEffect = function(){
 
   return {
     init: init,
-    cursordown: cursordown,
-    cursorup: cursorup,
-    cursorupScene: cursorupScene,
-    cursormoveScene: cursormoveScene,
+    add: add,
   };
 
 };
