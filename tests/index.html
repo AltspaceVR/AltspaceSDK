@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>AltspaceVR Web SDK Tests</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./lib/mocha.css" />
+  </head>
+  <body style="background-color: white">
+    <div id="mocha"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
+    <script src="./lib/mocha.js"></script>
+    <script src="./lib/chai.js"></script>
+    <script src="./lib/chai-as-promised.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="./src/main.js"></script>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>
