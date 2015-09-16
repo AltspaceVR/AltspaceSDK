@@ -1,4 +1,6 @@
 //Creates a simple scene and renders using AltRender or THREE.WebGLRenderer.
+altspace.utilities = altspace.utilities || {};
+altspace.utilities.shims = altspace.utilities.shims || {};
 altspace.utilities.dualRenderer = (function(){
 
   var scene;
