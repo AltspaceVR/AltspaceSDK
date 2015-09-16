@@ -1,12 +1,14 @@
 # AltspaceVR SDK
 
+**Latest Version: v0.2.4 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog)**
+
 This SDK can be used with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside AltspaceVR they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
 Three.js is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
 
-This repository contains the primary documentation for the SDK and related APIs, as well as examples and utilities. As all required APIs are already integrated into the client, you can build holographic three.js apps for AltspaceVR without using additional files from this repo (though many many can be very useful). 
+This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.
 
-This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
+The SDK is in beta and actively under development. **Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page. Sign up at [developer.altvr.com](http://developer.altvr.com) to be kept up to date on changes, events, and ongoing projects.**
  
 ## Getting Started
 
@@ -14,7 +16,19 @@ This SDK is in pre-release beta and actively under development. **It is critical
 
 ## altspace.js
 
-TODO
+altspace.js should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.  
+
+Many APIs are present in the client without loading altspace.js, but please still include it, as this may change in the future.  
+
+The version baked into altspace.js informs the client what SDK version you would like to use. This means that if we make any breaking internal changes to things like rendering or events, and you are using an older version of altspace.js we will try to return legacy behavior appropriate to your version of altspace.js. Versioning will follow (SEMVER)[http://semver.org/] as closely as possible.
+
+To include the latest version, simply add this script tag to your project:
+
+`<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>`
+
+or to include a specific version add:
+
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.2.4/altspace.min.js"></script>`
 
 ## API Documentation
 
