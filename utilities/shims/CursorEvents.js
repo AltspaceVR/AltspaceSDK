@@ -117,6 +117,7 @@ window.altspace.utilities.CursorEvents = (function(){
         direction: direction,
       },
       type: eventName,
+      isShimEvent: true,//for workarounds related to quirks in Altspace events
     }
     return mockCursorEvent;
   }
