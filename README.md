@@ -10,9 +10,7 @@ This repository contains the primary documentation for the SDK and related APIs,
 
 The SDK is in beta and actively under development. **Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**  
 
-######Join the [Developer Portal](http://developer.altvr.com) to be kept up to date on changes, events, and ongoing projects.
-
-######Get started by watching our [Tutorial Series]
+######Join the [Developer Portal](http://developer.altvr.com) to be kept up to date on changes, events, and ongoing projects, and get started by watching our [Tutorial Series].
 
 ## altspace.js
 
