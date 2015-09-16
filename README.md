@@ -12,7 +12,11 @@ This SDK is in pre-release beta and actively under development. **It is critical
 
 **[Get Started]**  
 
-## AltspaceVR APIs
+## altspace.js
+
+TODO
+
+## API Documentation
 
 ####Holographic Rendering
 
