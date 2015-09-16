@@ -91,9 +91,6 @@ See the README.md in the [utilities directory](https://github.com/AltspaceVR/Alt
 
 More documentation is available in the [Wiki] and project ideas, resources, showcase submission, and more can be found at our [Developer Portal] 
 
-Videos
-* [Live Coding Tutorial]
-* [AltspaceVR looking for SDK Collaborators]
 
 [three.js]: http://threejs.org/
 
