@@ -28,7 +28,9 @@ or to include a specific version add:
 
 `<script src="http://sdk.altvr.com/libs/altspace.js/0.2.4/altspace.min.js"></script>`
 
-## API Documentation
+## API Documentation  
+
+> Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
 
 ####Holographic Rendering
 
