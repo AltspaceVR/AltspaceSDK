@@ -9,12 +9,12 @@
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
 <script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
-<script src="http://sdk.altvr.com/utilities/0.5.1/ColorHoverEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/DragPlaneEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/threebase.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/multiloader.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/shims/dualRenderer.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/ColorHoverEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/DragPlaneEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/threebase.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/multiloader.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
 
 </head>
 <body>
@@ -25,8 +25,9 @@ ChessApp = (function(){
 	var ascp = altspace.utilities.codePen;
 	var inAltspace = !!(window.altspace && window.altspace.inClient);
 	var inCodePen = !!location.href.match('codepen.io/');
-	var useAltRenderer = inAltspace && (!inCodePen || window.innerHeight >= 750);
+	var forceWebGL = inAltspace && (inCodePen && window.innerHeight < 750);
 
+	var scene = new THREE.Scene();
 	var dualRenderer;
 	var threebase;
 
@@ -35,7 +36,7 @@ ChessApp = (function(){
 		ascp.setName('Chess'); 
 		initThreebase();
 		initScene();
-		ChessBoard.init(dualRenderer.getScene(), threebase, function(){//onComplete
+		ChessBoard.init(scene, threebase, function(){//onComplete
 			console.log('Chess Board initialized');
 			animate();
 		});
@@ -55,15 +56,16 @@ ChessApp = (function(){
 	function initScene(){
 
 		//This app works both in Altspace and in a traditional browser.
-		dualRenderer = altspace.utilities.dualRenderer;
-		dualRenderer.init({useAltRenderer: useAltRenderer});
-		var scene = dualRenderer.getScene();
-		if (useAltRenderer){
+		dualRenderer = altspace.utilities.shims.dualRenderer;
+		dualRenderer.init(scene, {forceWebGL: forceWebGL});
+		if (dualRenderer.inAltMode){
 			//TODO: Remove hardcoded enclosure height once promises work in iframes.
 			var enclosureHeight = 1024;
 			scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
 		} else {
-			var camera = dualRenderer.getCamera();
+			var camera = dualRenderer.camera;
+      altspace.utilities.shims.cursor.init(scene, camera);
+			var camera = dualRenderer.camera;
 			camera.position.z = ChessBoard.BOARD_SIZE;
 			camera.position.y = ChessBoard.BOARD_SIZE + 100;
 			camera.lookAt(scene.position);

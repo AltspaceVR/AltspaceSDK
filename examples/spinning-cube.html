@@ -7,8 +7,8 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
 
-<script src="http://sdk.altvr.com/utilities/0.5.1/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.1/shims/dualRenderer.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
 
 </head>
 <body>
@@ -16,10 +16,12 @@
 <script>
 
 // Setup
-var dualRenderer = altspace.utilities.dualRenderer;
-dualRenderer.init();
-if (dualRenderer.getCamera()) {//no camera if in Altspace
-	dualRenderer.getCamera().position.z = 500; // stand back from origin
+var scene = new THREE.Scene();
+var dualRenderer = altspace.utilities.shims.dualRenderer;
+dualRenderer.init(scene);
+if (!dualRenderer.inAltMode) {//no camera if in Altspace
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
+	dualRenderer.camera.position.z = 500; // stand back from origin
 }
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
@@ -34,7 +36,7 @@ var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 var cube = new THREE.Mesh(geometry, material);
 cube.scale.multiplyScalar(100);
-dualRenderer.getScene().add(cube);
+scene.add(cube);
 
 // Sync
 var ascp = altspace.utilities.codePen;

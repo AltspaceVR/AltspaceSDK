@@ -1,38 +1,40 @@
 //Creates a simple scene and renders using AltRender or THREE.WebGLRenderer.
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
-altspace.utilities.dualRenderer = (function(){
+altspace.utilities.shims.dualRenderer = (function(){
 
   var scene;
   var camera;
   var ambientLight;
   var renderer;
-  var useAltRenderer;
+  var inAltMode;
 
   var antialias;
   var clearColor;
   var lightColor;
   var TRACE;
 
-  function init(myParams){
+  function init(myScene, myParams){
+    if (!myScene || !myScene instanceof THREE.Scene){
+      throw new Error('dualRender: init requires THREE.Scene argument.')
+    } 
+    scene = myScene;
     var p = myParams || {};
-    //auto-detect if running in Altspace, unless useAltRenderer given in params.
-    useAltRenderer = p.useAltRenderer || !!(window.altspace && window.altspace.inClient);
+    //auto-detect if running in Altspace, unless 'forceWebGL' given in params.
+    inAltMode = !p.forceWebGL && window.altspace && window.altspace.inClient;
+
     antialias = p.antialias || true;
     clearColor = p.clearColor || new THREE.Color('silver');
     lightColor = p.clearColor || new THREE.Color('white');
     TRACE = p.TRACE || false;
 
-    scene = new THREE.Scene();
-
-    if (useAltRenderer) {
+    if (inAltMode) {
       renderer = altspace.getThreeJSRenderer();
       camera = null;
       ambientLight = null;
     } else {
       renderer = new THREE.WebGLRenderer({antialias: antialias});
       camera = new THREE.PerspectiveCamera();
-      altspace.utilities.cursor.init(scene, camera);
 
       // See also: http://threejs.org/docs/#Manual/Introduction/Creating_a_scene
       var resizeRender = function(){
@@ -42,7 +44,6 @@ altspace.utilities.dualRenderer = (function(){
       };
       document.body.style.margin = '0px';
       document.body.style.overflow = 'hidden';
-      //renderer.setClearColor("#AAAAAA");
       renderer.setClearColor(clearColor);
       var container = document.createElement('div');
       document.body.appendChild(container);
@@ -61,23 +62,24 @@ altspace.utilities.dualRenderer = (function(){
   }
 
   function render() {
-    if (useAltRenderer) {
+    if (inAltMode) {
       renderer.render(scene);
     } else {
       renderer.render(scene, camera);
     }
   }
 
-  return {
+  var exports = {
     init: init,
     render: render,
-
-    getScene: function() { return scene; },
-    getCamera: function() { return camera; },
-    getAmbientLight: function() { return ambientLight; },
-    getRenderer: function() { return renderer; },
-    getUseAltRenderer: function() { return useAltRenderer; },
   };
+
+  Object.defineProperty(exports, 'camera', { get: function(){return camera} });
+  Object.defineProperty(exports, 'ambientLight', { get: function(){return ambientLight} });
+  Object.defineProperty(exports, 'renderer', { get: function(){return renderer} });
+  Object.defineProperty(exports, 'inAltMode', { get: function(){return inAltMode} });
+
+  return exports;
 
 }());
 

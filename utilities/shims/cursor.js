@@ -2,7 +2,7 @@
 //dispatches cursor move/up/down/enter/leave events that mimics Altspace events.
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
-altspace.utilities.cursor = (function(){//TODO: move to utilities.shims.cursor
+altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cursor
 
   var scene;
   var camera;
@@ -16,6 +16,12 @@ altspace.utilities.cursor = (function(){//TODO: move to utilities.shims.cursor
   var raycaster = new THREE.Raycaster();
 
   function init(myScene, myCamera, myParams){
+    if (!myScene || !myScene instanceof THREE.Scene) {
+      throw new Error('cursor shim: init requires THREE.Scene argument');
+    }
+    if (!myCamera || !myCamera instanceof THREE.Camera) {
+      throw new Error('cursor shim: init requires THREE.Camera argument');
+    }
     scene = myScene;
     camera = myCamera;
     raycaster.near = camera.near;
@@ -39,7 +45,7 @@ altspace.utilities.cursor = (function(){//TODO: move to utilities.shims.cursor
       return;//no object under cursor
     }
     var object = intersected;
-    if(TRACE){console.log("CursorEvents shim: cursordown", object);}
+    if(TRACE){console.log("cursor shim: cursordown", object);}
     selected = object;
     var cursorEvent = mockCursorEvent('cursordown', event, object);
     object.dispatchEvent(cursorEvent);
@@ -52,27 +58,27 @@ altspace.utilities.cursor = (function(){//TODO: move to utilities.shims.cursor
       return;//no object previously selected
     }
     var object = selected;
-    if(TRACE){console.log("CursorEvents shim: cursorup", object);}
+    if(TRACE){console.log("cursor shim: cursorup", object);}
     object.dispatchEvent(mockCursorEvent('cursorup', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorup', event, scene));
     selected = undefined;
   }
 
   function cursormove(event){
-    if(TRACE){console.log("CursorEvents shim: cursormove");}
+    if(TRACE){console.log("cursor shim: cursormove");}
     scene.dispatchEvent(mockCursorEvent('cursormove', event, scene));
   }
 
   function cursorleave(object){
     var object = intersected;
-    if(TRACE){ console.log("CursorEvents shim: cursorleave", object); }
+    if(TRACE){ console.log("cursor shim: cursorleave", object); }
     object.dispatchEvent(mockCursorEvent('cursorleave', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorleave', event, scene));
   }
 
   function cursorenter(object){
     var object = intersected;
-    if(TRACE){console.log("CursorEvents shim: cursorenter", object);}
+    if(TRACE){console.log("cursor shim: cursorenter", object);}
     object.dispatchEvent(mockCursorEvent('cursorenter', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorenter', event, scene));
   }
