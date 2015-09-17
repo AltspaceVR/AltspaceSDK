@@ -37,6 +37,7 @@ or to include a specific version add:
 
 * `var renderer = altspace.getThreeJSRenderer();`  
  returns a renderer that can be used to render three.js scenes as holographic objects
+  > Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)
 
 ####Cursor Events
 
@@ -54,7 +55,7 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 ####Enclosure Properties
 
 * `altspace.getEnclosure().then(callback)`  
- returns a promise that will fufill with a description of the enclosure, including its size and `pixelsPerMeter` which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure. 3D Objects are limited to the size of the enclosure and disappear if they move out of those limits.
+ returns a promise that will fufill with a description of the enclosure, including its size and `pixelsPerMeter` which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.  
 
 ####User Data
 
