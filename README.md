@@ -9,7 +9,7 @@ The AltspaceVR SDK can be used together with [three.js] to create holographic, m
 This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.
 
 The SDK is in beta and actively under development. 
-######Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.  
+######Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page. We also have a number of examples in [CodePen](http://codepen.io/team/altspacevr/public/) that can be edited live in VR.  
 
 **The best way to begin working with the SDK is to follow our [Getting Started](https://developer.altvr.com/get-started/) guide!**
 
