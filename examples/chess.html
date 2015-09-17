@@ -59,13 +59,14 @@ ChessApp = (function(){
 		dualRenderer = altspace.utilities.shims.dualRenderer;
 		dualRenderer.init(scene);
 		if (dualRenderer.inAltMode){
-			//TODO: Remove hardcoded enclosure height once promises work in iframes.
-			if (inCodePenEditor) {
-				scene.scale.multiplyScalar(0.5);
-			} else {
-				var enclosureHeight = 1024;
-				scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
-			}
+			altspace.getEnclosure().then(function(e){
+				if (inCodePenEditor && e.innerDepth < 500) {
+          scene.position.y = e.innerHeight / -2 + 175;
+          scene.scale.multiplyScalar(0.75);//in personal browser, downsize objects
+				} else {
+					scene.position.y = e.innerHeight / -2 ;//Lower board onto botton of enclosure.
+				}
+			});
 		} else {
 			var camera = dualRenderer.camera;
       altspace.utilities.shims.cursor.init(scene, camera);
