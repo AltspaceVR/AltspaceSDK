@@ -5,7 +5,6 @@ There are two types of utilities, bundled utilities and unbundled utilities.
 This folder contains unbundled utilities that are under active development and may change independently of the SDK version number.  
 
 ## Bundled Utilities
-There are a number of utilities that ship with altspace.js
 
 ###CodePen
 `altspace.utilities.codePen`  
@@ -47,3 +46,4 @@ Refer to the (Firebase API documentation)[https://www.firebase.com/docs/web/api/
 
 ## Unbundled Utilities
 
+Documentation Coming Soon
