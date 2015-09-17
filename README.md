@@ -67,7 +67,7 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 
 ## Utilities
 
-See the README.md in the [utilities directory](https://github.com/AltspaceVR/AltspaceSDK/tree/master/utilities)  
+See the documentation in the [utilities directory](https://github.com/AltspaceVR/AltspaceSDK/tree/master/utilities)  
 
 ## Three.js Feature Support
 
