@@ -11,7 +11,7 @@ This folder contains unbundled utilities that are under active development and m
 
 The Sync utility is currently based on Firebase. It provides a quick way to syncronize apps (even when they are running outside of AltspaceVR). During the SDK beta, please consider all data stored with the sync utility to be ephemeral (it may be cleared or clobbered at any time). You do not need a Firebase account to use the Sync utility  
 
-Refer to the (Firebase API documentation)[https://www.firebase.com/docs/web/api/] when working with the sync instance.
+Refer to the [Firebase API documentation](https://www.firebase.com/docs/web/api/) when working with the sync instance.
 
 - `getInstance`  
   returns a firebase, just as if you had called new Firebase()  
