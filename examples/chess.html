@@ -25,7 +25,7 @@ ChessApp = (function(){
 	var ascp = altspace.utilities.codePen;
 	var inAltspace = !!(window.altspace && window.altspace.inClient);
 	var inCodePen = !!location.href.match('codepen.io/');
-	var forceWebGL = inAltspace && (inCodePen && window.innerHeight < 750);
+	var inCodePenEditor = inAltspace && (inCodePen && window.innerHeight < 750);
 
 	var scene = new THREE.Scene();
 	var dualRenderer;
@@ -57,11 +57,15 @@ ChessApp = (function(){
 
 		//This app works both in Altspace and in a traditional browser.
 		dualRenderer = altspace.utilities.shims.dualRenderer;
-		dualRenderer.init(scene, {forceWebGL: forceWebGL});
+		dualRenderer.init(scene);
 		if (dualRenderer.inAltMode){
 			//TODO: Remove hardcoded enclosure height once promises work in iframes.
-			var enclosureHeight = 1024;
-			scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
+			if (inCodePenEditor) {
+				scene.scale.multiplyScalar(0.5);
+			} else {
+				var enclosureHeight = 1024;
+				scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
+			}
 		} else {
 			var camera = dualRenderer.camera;
       altspace.utilities.shims.cursor.init(scene, camera);

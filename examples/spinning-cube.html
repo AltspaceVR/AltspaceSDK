@@ -38,7 +38,7 @@ var texture = materialCreator.loadTexture(url);
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 var cube = new THREE.Mesh(geometry, material);
-cube.scale.multiplyScalar(100);
+cube.scale.multiplyScalar(CUBE_SCALE);
 scene.add(cube);
 
 //Sync

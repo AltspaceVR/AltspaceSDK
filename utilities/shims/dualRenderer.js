@@ -20,8 +20,9 @@ altspace.utilities.shims.dualRenderer = (function(){
     } 
     scene = myScene;
     var p = myParams || {};
+    var forceWebGL = p.forceWebGL || false;
     //auto-detect if running in Altspace, unless 'forceWebGL' given in params.
-    inAltMode = !p.forceWebGL && window.altspace && window.altspace.inClient;
+    inAltMode = !forceWebGL && window.altspace && window.altspace.inClient;
 
     antialias = p.antialias || true;
     clearColor = p.clearColor || new THREE.Color('silver');
