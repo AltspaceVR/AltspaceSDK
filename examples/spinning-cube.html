@@ -6,7 +6,6 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-
 <script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
 <script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
 
@@ -15,30 +14,34 @@
 </body>
 <script>
 
+var CUBE_SCALE = 200;
+//can change above value in live-coding, 10-500 works well
+
 // Setup
+var ascp = altspace.utilities.codePen;
 var scene = new THREE.Scene();
 var dualRenderer = altspace.utilities.shims.dualRenderer;
 dualRenderer.init(scene);
 if (!dualRenderer.inAltMode) {//no camera if in Altspace
-  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
-	dualRenderer.camera.position.z = 500; // stand back from origin
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera, {TRACE: true});
+	dualRenderer.camera.position.z = 500;//stand back from origin
 }
 
-// Use MTLLoader for loadTexture, to ensure image is power of 2
-// else antialiasing won't work (this is a limitation of WebGL)
+//Use MTLLoader for loadTexture, to ensure image is power of 2
+//else antialiasing won't work (this is a limitation of WebGL)
 var materialCreator = new THREE.MTLLoader.MaterialCreator();
 materialCreator.crossOrigin = 'anonymous';
 var url = 'https://sdk.altvr.com/examples/models/share/cube/altspace-logo.jpg';
 var texture = materialCreator.loadTexture(url);
 
-// Cube
+//Cube
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 var cube = new THREE.Mesh(geometry, material);
 cube.scale.multiplyScalar(100);
 scene.add(cube);
 
-// Sync
+//Sync
 var ascp = altspace.utilities.codePen;
 ascp.setName('Hello Cube'); 
 var inCodePen = !!location.href.match('codepen.io/');
@@ -50,19 +53,22 @@ var syncInstance = altspace.utilities.sync.getInstance(params);
 var syncColor = syncInstance.child('color');
 syncColor.on('value', function(snapshot){
 	var val = snapshot.val();
+	console.log('got color change', val);
 	if (val) {
 		cube.material.color = new THREE.Color(val);
+		cube.material.needsUpdate = true;//currently required in Altspace
 	}
 });
 
-// Events
+//Events
 cube.addEventListener('cursordown', function() {
-	syncColor.set(Please.make_color()[0]); // clicking on cube changes its color
+	console.log('cursordown');
+	syncColor.set(Please.make_color()[0]);//clicking on cube changes its color
 });
 
-// Update & Rendering
+//Update & Rendering
 function animate() {
-	cube.rotation.y += 0.01; // rotation is not synchronized
+	cube.rotation.y += 0.01;//rotation is not synchronized
 	requestAnimationFrame(animate);
 	dualRenderer.render();
 }

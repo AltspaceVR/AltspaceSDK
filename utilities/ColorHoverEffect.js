@@ -84,8 +84,7 @@ altspace.utilities.ColorHoverEffect = function(){
     if (obj.material && obj.material.color){
       obj.userData.origColor = obj.material.color;
       obj.material.color = hoverColor;  
-      //Not strictly needed but seems to make updating faster in Altspace.
-      if (obj.material) obj.material.needsUpdate = true;
+      if (obj.material) obj.material.needsUpdate = true;//required in Altspace
     } 
     for (var i = 0; i < obj.children.length; i++){
       setHoverColor(obj.children[i], hoverColor);//recursively apply to children

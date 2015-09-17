@@ -65,7 +65,6 @@ ChessApp = (function(){
 		} else {
 			var camera = dualRenderer.camera;
       altspace.utilities.shims.cursor.init(scene, camera);
-			var camera = dualRenderer.camera;
 			camera.position.z = ChessBoard.BOARD_SIZE;
 			camera.position.y = ChessBoard.BOARD_SIZE + 100;
 			camera.lookAt(scene.position);
