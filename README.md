@@ -54,7 +54,7 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 ####Enclosure Properties
 
 * `altspace.getEnclosure().then(callback)`  
- returns a promise that will fufill with a description of the enclosure, including pixelsPerMeter which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.
+ returns a promise that will fufill with a description of the enclosure, including its size and `pixelsPerMeter` which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure. 3D Objects are limited to the size of the enclosure and disappear if they move out of those limits.
 
 ####User Data
 
