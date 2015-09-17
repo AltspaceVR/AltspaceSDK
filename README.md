@@ -36,7 +36,8 @@ or to include a specific version add:
 ####Holographic Rendering
 
 * `var renderer = altspace.getThreeJSRenderer();`  
- returns a renderer that can be used to render three.js scenes as holographic objects
+ returns a renderer that can be used to render three.js scenes as holographic objects  
+
   > Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)
 
 ####Cursor Events
