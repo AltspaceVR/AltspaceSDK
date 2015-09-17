@@ -1,28 +1,50 @@
 //Change color of an object when cursor hovers over it.
-window.altspace.utilities.ColorHoverEffect = function(){
+altspace.utilities = altspace.utilities || {};
+altspace.utilities.ColorHoverEffect = function(){
 
   var hoverColor;
   var hoverObject;
   var cursordownObject;
+  var objects = [];
+  var scene;
   var TRACE;
 
-  function init(myHoverColor, params){
-    hoverColor = myHoverColor;
+  function init(myScene, myHoverColor, params){
     if (myHoverColor && ! (myHoverColor instanceof THREE.Color)){
       throw new Error('Color should be instance of THREE.Color', p.color);
     }
+    if (! myScene instanceof THREE.Scene){
+      console.error('scene must be of type THREE.Scene');
+      return;
+    }
+    hoverColor = myHoverColor;
+    scene = myScene;
     var p = params || {};
     TRACE = p.TRACE || null; 
   }
 
-  function cursordown(object){
+  function add(object){
+    if (!object || !object instanceof THREE.Object3D){
+      throw new Error("DragPlaneEffect: add requires a valid object", object);
+    }
+    if (objects.indexOf(object) !== -1) return;
+    objects.push(object);
+    object.addEventListener("cursordown", cursordown);
+    object.addEventListener("cursorenter", cursorenter);
+    object.addEventListener("cursorleave", cursorleave);
+    scene.addEventListener("cursorup", cursorupScene);
+  }
+
+  function cursordown(event){
+    var object = event.currentTarget;
     if (TRACE) console.log('setting cursordownObject', object);
     cursordownObject = object;
   }
 
-  function cursorenter(object){
+  function cursorenter(event){
     //Ignore hover events if a different object is selected,
     //for example during a drag we don't want to change highlight
+    var object = event.currentTarget;
     if (cursordownObject && cursordownObject !== object){
       if (TRACE) console.log('Ignore hover, other object selected', cursordownObject);
       return;
@@ -33,13 +55,14 @@ window.altspace.utilities.ColorHoverEffect = function(){
     hoverEffect(object);
   }
 
-  function cursorleave(object){
+  function cursorleave(event){
+    var object = event.currentTarget;
     if (hoverObject === object){
       unhoverEffect(object);
     }
   }
 
-  function cursorupScene(object){
+  function cursorupScene(event){
     if (TRACE) console.log('clearning cursordownObject', object);
     cursordownObject = null;
 
@@ -83,12 +106,9 @@ window.altspace.utilities.ColorHoverEffect = function(){
     }
   }
 
-    return {
+  return {
     init: init,
-    cursordown: cursordown,
-    cursorenter: cursorenter,
-    cursorleave: cursorleave,
-    cursorupScene: cursorupScene,
+    add: add,
   };
 
 };

@@ -7,4 +7,4 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd earthWClouds.jpg
-bump earth_normal_map.tif
+bump earth_normal_map.tif -bm 1

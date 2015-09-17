@@ -6,28 +6,22 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.4.0/shims/CursorEvents.js"></script>
+
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
+
 </head>
 <body>
 </body>
 <script>
 
-var ascp = altspace.utilities.codePen;
-ascp.setName('Hello Cube'); 
-var inCodePen = !!location.href.match('codepen.io/');
-var inAltspace = window.altspace && window.altspace.inClient;
-
 // Setup
-var renderer, camera, cursorEvents;
 var scene = new THREE.Scene();
-if (inAltspace) {
-	renderer = altspace.getThreeJSRenderer();
-} else {
-	renderer = new THREE.WebGLRenderer({antialias: true});
-	camera = new THREE.PerspectiveCamera();
-	altspace.utilities.CursorEvents.init(scene, camera);
-	altspace.utilities.CursorEvents.initScene(renderer);
-	camera.position.z = 500; // stand back from origin
+var dualRenderer = altspace.utilities.shims.dualRenderer;
+dualRenderer.init(scene);
+if (!dualRenderer.inAltMode) {//no camera if in Altspace
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
+	dualRenderer.camera.position.z = 500; // stand back from origin
 }
 
 // Use MTLLoader for loadTexture, to ensure image is power of 2
@@ -45,15 +39,19 @@ cube.scale.multiplyScalar(100);
 scene.add(cube);
 
 // Sync
-var params = inCodePen ? {instanceId: ascp.getPenId(), authorId: ascp.getAuthorId()} : null;
+var ascp = altspace.utilities.codePen;
+ascp.setName('Hello Cube'); 
+var inCodePen = !!location.href.match('codepen.io/');
+var params = inCodePen ? {
+	instanceId: ascp.getPenId(),
+	authorId: ascp.getAuthorId()
+} : null;
 var syncInstance = altspace.utilities.sync.getInstance(params);
 var syncColor = syncInstance.child('color');
 syncColor.on('value', function(snapshot){
 	var val = snapshot.val();
 	if (val) {
 		cube.material.color = new THREE.Color(val);
-		// Not strictly necessary, but seems to improve performance.
-		if (inAltspace) cube.material.needsUpdate = true;
 	}
 });
 
@@ -66,7 +64,7 @@ cube.addEventListener('cursordown', function() {
 function animate() {
 	cube.rotation.y += 0.01; // rotation is not synchronized
 	requestAnimationFrame(animate);
-	renderer.render(scene, camera);
+	dualRenderer.render();
 }
 animate();
 

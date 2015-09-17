@@ -1,7 +1,8 @@
-//Detects mouse events using the Three.js raycaster, then dispatches an event
-//that mimics Altspace cursor events. This allows events to function similarly
-//in and outside Altspace. Inspired by http://github.com/cabbibo/ObjectControls
-window.altspace.utilities.CursorEvents = (function(){
+//Detects mouse move/up/down events, raycasts to find intersected objects, then
+//dispatches cursor move/up/down/enter/leave events that mimics Altspace events.
+altspace.utilities = altspace.utilities || {};
+altspace.utilities.shims = altspace.utilities.shims || {};
+altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cursor
 
   var scene;
   var camera;
@@ -15,6 +16,12 @@ window.altspace.utilities.CursorEvents = (function(){
   var raycaster = new THREE.Raycaster();
 
   function init(myScene, myCamera, myParams){
+    if (!myScene || !myScene instanceof THREE.Scene) {
+      throw new Error('cursor shim: init requires THREE.Scene argument');
+    }
+    if (!myCamera || !myCamera instanceof THREE.Camera) {
+      throw new Error('cursor shim: init requires THREE.Camera argument');
+    }
     scene = myScene;
     camera = myCamera;
     raycaster.near = camera.near;
@@ -38,7 +45,7 @@ window.altspace.utilities.CursorEvents = (function(){
       return;//no object under cursor
     }
     var object = intersected;
-    if(TRACE){console.log("CursorEvents shim: cursordown", object);}
+    if(TRACE){console.log("cursor shim: cursordown", object);}
     selected = object;
     var cursorEvent = mockCursorEvent('cursordown', event, object);
     object.dispatchEvent(cursorEvent);
@@ -51,27 +58,27 @@ window.altspace.utilities.CursorEvents = (function(){
       return;//no object previously selected
     }
     var object = selected;
-    if(TRACE){console.log("CursorEvents shim: cursorup", object);}
+    if(TRACE){console.log("cursor shim: cursorup", object);}
     object.dispatchEvent(mockCursorEvent('cursorup', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorup', event, scene));
     selected = undefined;
   }
 
   function cursormove(event){
-    if(TRACE){console.log("CursorEvents shim: cursormove");}
+    if(TRACE){console.log("cursor shim: cursormove");}
     scene.dispatchEvent(mockCursorEvent('cursormove', event, scene));
   }
 
   function cursorleave(object){
     var object = intersected;
-    if(TRACE){ console.log("CursorEvents shim: cursorleave", object); }
+    if(TRACE){ console.log("cursor shim: cursorleave", object); }
     object.dispatchEvent(mockCursorEvent('cursorleave', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorleave', event, scene));
   }
 
   function cursorenter(object){
     var object = intersected;
-    if(TRACE){console.log("CursorEvents shim: cursorenter", object);}
+    if(TRACE){console.log("cursor shim: cursorenter", object);}
     object.dispatchEvent(mockCursorEvent('cursorenter', event, object));
     scene.dispatchEvent(mockCursorEvent('cursorenter', event, scene));
   }
@@ -185,34 +192,8 @@ window.altspace.utilities.CursorEvents = (function(){
     intersection.object = newTarget;
   }
 
-  function initScene(renderer){
-    // Might want to move into a general helper utility.
-    // See also: http://threejs.org/docs/#Manual/Introduction/Creating_a_scene
-    var resizeRender = function(){
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    document.body.style.margin = '0px';
-    document.body.style.overflow = 'hidden';
-    renderer.setClearColor("#AAAAAA");
-    var container = document.createElement('div');
-    document.body.appendChild(container);
-    container.appendChild(renderer.domElement);
-    window.addEventListener('resize', resizeRender);
-    resizeRender();
-    camera.fov = 45;
-    camera.near = 1;
-    camera.far = 2000;
-    scene.add(camera);
-    // Throw in a light since any loaded OBJ files use MeshPhongMaterial.
-    var light = new THREE.AmbientLight(0xffffff);
-    scene.add(light);
-  }
-
   return {
     init: init,
-    initScene: initScene,
   };
 
 }());
