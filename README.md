@@ -1,5 +1,6 @@
 # AltspaceVR SDK
-[![Slack Status](https://slack.yourdomain.com/badge.svg)](https://yourdomain.com)
+[![Slack Status](https://slack.altspacevr-slackin.herokuapp.com/badge.svg)](https://yourdomain.com)  
+
 **Latest Version: v0.2.3 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog)**
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.
