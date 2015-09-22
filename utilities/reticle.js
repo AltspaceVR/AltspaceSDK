@@ -1,15 +1,11 @@
-//Show crosshair when cursor hovers over an object.
-//Alternatively, the crosshairs can follow the cursor.
+//Show target reticle that follows the cursor.
 altspace.utilities = altspace.utilities || {};
-altspace.utilities.TargetEffect = function(){
+altspace.utilities.reticle = (function(){
 
-	var crosshair;
-	var objects = [];
+	var object;
 	var scene;
-	var hoverObject = null;
 
-	var followCursor;//boolean
-	var followDistance;//integer
+	var distance;
 	var cursorRay = new THREE.Ray();
 
   var lineLength, lineWidth, lineDepth;
@@ -18,69 +14,39 @@ altspace.utilities.TargetEffect = function(){
 
 	function init(myScene, params){
 		if (!myScene || !myScene instanceof THREE.Scene){
-			throw new Error('TargetEffect: init expects a Scene argument');
+			throw new Error('reticle: init expects a Scene argument');
 		}
 		scene = myScene;
 		var p = params || {};
-		followCursor = p.followCursor || false;
-		followDistance = p.followDistance || 15;
+		distance = p.distance || 15;
 		lineLength = p.lineLength || 2.5;
 		lineWidth = p.lineWidth|| 1.25;
 		lineDepth = p.lineDepth || lineWidth/2;
 		color = p.color || '#FFFF00';//yellow
 		radius = p.radius || lineWidth;
-		showDot = p.showDot || followCursor;
+		showDot = p.showDot || true;
 		dotRadius = p.dotRadius || lineWidth;
 		dotColor = p.dotColor || color;
 
-		crosshair = p.crosshair || makeCrosshair();
-		crosshair.visible = false;
-		scene.add(crosshair);
-		if (followCursor) {
-			scene.addEventListener('cursormove', cursormoveFollow);
-		}
-	}
-
-	function add(object){
-		if (!object || !object instanceof THREE.Object3D){
-			throw new Error('TargetEffect: add expects an Object3D argument');
-		}
-		objects.push(object);
-		object.addEventListener('cursorenter', cursorenter);
-		object.addEventListener('cursorleave', cursorleave);
+		object = p.object || makeCrosshair();
+		object.visible = false;
+		scene.add(object);
 		scene.addEventListener('cursormove', cursormove);
 	}
 
-	function cursorenter(event){
-		hoverObject = event.currentTarget;
-		crosshair.position.copy(hoverObject.position);
-		crosshair.visible = true;
-	}
-
-	function cursorleave(event){
-		crosshair.visible = false;
-		hoverObject = null;
-	}
-
 	function cursormove(event){
-		if (hoverObject){//Handle case where the object is moving.
-			crosshair.position.copy(hoverObject.position);
-		}
-	}
-
-	function cursormoveFollow(event){
-		if (!crosshair.visible) {//we don't know cursor position until it moves
-			crosshair.visible = true;
+		if (!object.visible) {//we don't know cursor position until it moves
+			object.visible = true;
 		}
 		cursorRay.origin = event.ray.origin;
 		cursorRay.direction = event.ray.direction;
 		var newDirection = cursorRay.direction.clone();
-		newDirection.multiplyScalar(followDistance);
+		newDirection.multiplyScalar(distance);
 		var newPosition = new THREE.Vector3();
 		newPosition.copy(cursorRay.origin);
 		newPosition.add(newDirection);
-		crosshair.position.copy(newPosition);
-		crosshair.lookAt(cursorRay.origin);
+		object.position.copy(newPosition);
+		object.lookAt(cursorRay.origin);
 	}
 
 
@@ -131,13 +97,12 @@ altspace.utilities.TargetEffect = function(){
 	}
 
 	var exports = {
-		init: init,
-		add: add,
+		init: init
 	}
 
-	Object.defineProperty(exports, 'crosshair', {get: function(){return crosshair}});
+	Object.defineProperty(exports, 'object', {get: function(){return object}});
 	Object.defineProperty(exports, 'cursorRay', {get: function(){return cursorRay}});
 
 	return exports;
 
-};
+}());

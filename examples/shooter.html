@@ -5,15 +5,16 @@
 <title>Shooter Example</title>
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.3/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.3/shims/dualRenderer.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.3/TargetEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.4/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.4/shims/dualRenderer.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.4/reticle.js"></script>
 
 </head>
 <body>
 </body>
 <script>
-//Example using TargetEffect to make target reticle follow the cursor.
+//Click to shooot! Target reticle follows the cursor, captures all clicks.
+//Must be inside the Altspace enclosure for reticle to appear.
 
 //Setup
 var ascp = altspace.utilities.codePen;
@@ -28,11 +29,9 @@ if (!dualRenderer.inAltMode) {//no camera if in Altspace
 	SCALE = 0.2;//scale down otherwise target rectile looks huge
 }
 
-//targetEffect to follow the cursor
-var targetEffect = new altspace.utilities.TargetEffect();
-targetEffect.init(scene, {followCursor: true});
-var crosshair = targetEffect.crosshair;
-crosshair.scale.multiplyScalar(SCALE);
+altspace.utilities.reticle.init(scene);
+var reticle = altspace.utilities.reticle.object;
+reticle.scale.multiplyScalar(SCALE);
 
 var makeSlug = function(){
 	return new THREE.Mesh(
@@ -40,14 +39,16 @@ var makeSlug = function(){
 		new THREE.MeshBasicMaterial({color: Please.make_color()[0]})
 	);
 }
+var ammo = 10;
 var inFlight = [];
-crosshair.addEventListener('cursordown', function(){
+reticle.addEventListener('cursordown', function(){
 	//In Altsapce cursordown/cursorup only fire when cursor is over a hologram,
-	//so putting the crosshair object under cursor captures all down/up events.
+	//so putting the reticle object under cursor captures all down/up events.
 	var s = makeSlug();
 	s.scale.multiplyScalar(SCALE);
-	s.position.copy(crosshair.position);
-	s.userData.direction = targetEffect.cursorRay.direction.clone();
+	s.position.copy(reticle.position);
+	cursorRay = altspace.utilities.reticle.cursorRay;
+	s.userData.direction = cursorRay.direction.clone();
 	inFlight.push(s);
 	scene.add(s);
 });
