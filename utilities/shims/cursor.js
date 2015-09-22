@@ -15,7 +15,7 @@ altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cu
   var unprojectedMouse = new THREE.Vector3();
   var raycaster = new THREE.Raycaster();
 
-  function init(myScene, myCamera, myParams){
+  function init(myScene, myCamera, params){
     if (!myScene || !myScene instanceof THREE.Scene) {
       throw new Error('cursor shim: init requires THREE.Scene argument');
     }
@@ -27,8 +27,7 @@ altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cu
     raycaster.near = camera.near;
     raycaster.far = camera.far;
 
-    var params = params || {};
-    var p = params;
+    var p = params || {};
     TRACE = p.TRACE || false;//log all events.
     domElement = p.domElement || document;//attach listeners here
     recursive = p.recursive || true;//check descenants for intersections
