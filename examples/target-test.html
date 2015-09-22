@@ -2,54 +2,75 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Crosshair Example</title>
+<title>Shooter Example</title>
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<!--<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>-->
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
-
-<script src="http://localhost:8000/utilities/shims/cursor.js"></script>
-<script src="http://localhost:8000/utilities/TargetEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.3/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.3/shims/dualRenderer.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.3/TargetEffect.js"></script>
 
 </head>
 <body>
 </body>
 <script>
+//Example using TargetEffect to make target reticle follow the cursor.
 
 //Setup
 var ascp = altspace.utilities.codePen;
 var scene = new THREE.Scene();
 var dualRenderer = altspace.utilities.shims.dualRenderer;
+var BOUNDS  = 500;//dimensions of enclosure
+var SCALE = 1;
 dualRenderer.init(scene);
 if (!dualRenderer.inAltMode) {//no camera if in Altspace
   altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
-	dualRenderer.camera.position.z = 500;//stand back from origin
-}
-
-//Add objects in random positions
-var TARGETS = 10;
-var BOUNDS = 500;	 
-var target = new THREE.Mesh(
-	new THREE.SphereGeometry(25, 20, 20),
-	new THREE.MeshBasicMaterial({color: 'blue'})
-);
-var rand = function(){ return Math.random() * BOUNDS * 2 - BOUNDS; };
-for (var i=0; i < TARGETS; i++){
-	var t = target.clone();
-	t.position.set(rand(), rand(), rand());
-	scene.add(t);
+	dualRenderer.camera.position.z = BOUNDS;//stand back from origin
+	SCALE = 0.2;//scale down otherwise target rectile looks huge
 }
 
 //targetEffect to follow the cursor
-var targetCursor = new altspace.utilities.TargetEffect();
-targetCursor.init(scene, {
-	followCursor: true, followDistance: 50, color: 'red', showDot:true,
-	lineLength: 1, lineWidth: 0.5,
-});
+var targetEffect = new altspace.utilities.TargetEffect();
+targetEffect.init(scene, {followCursor: true});
+var crosshair = targetEffect.crosshair;
+crosshair.scale.multiplyScalar(SCALE);
 
+var makeSlug = function(){
+	return new THREE.Mesh(
+		new THREE.SphereGeometry(10, 20, 20),
+		new THREE.MeshBasicMaterial({color: Please.make_color()[0]})
+	);
+}
+var inFlight = [];
+crosshair.addEventListener('cursordown', function(){
+	//In Altsapce cursordown/cursorup only fire when cursor is over a hologram,
+	//so putting the crosshair object under cursor captures all down/up events.
+	var s = makeSlug();
+	s.scale.multiplyScalar(SCALE);
+	s.position.copy(crosshair.position);
+	s.userData.direction = targetEffect.cursorRay.direction.clone();
+	inFlight.push(s);
+	scene.add(s);
+});
 
 //Update & Rendering
 function animate() {
+	var i=0;
+	while(i < inFlight.length){
+		var s = inFlight[i];
+		if (Math.abs(s.position.x) > BOUNDS ||
+			  Math.abs(s.position.y) > BOUNDS ||
+			  Math.abs(s.position.z) > BOUNDS){
+			scene.remove(s);
+			inFlight.splice(i, 1);	
+			continue;
+		}
+		var newPosition = s.position.clone();
+		var direction = s.userData.direction.clone();
+		direction.multiplyScalar(2);
+		newPosition.add(direction);	
+		s.position.copy(newPosition);
+		i++;
+	}
 	requestAnimationFrame(animate);
 	dualRenderer.render();
 }

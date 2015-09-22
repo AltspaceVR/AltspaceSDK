@@ -23,13 +23,13 @@ altspace.utilities.TargetEffect = function(){
 		scene = myScene;
 		var p = params || {};
 		followCursor = p.followCursor || false;
-		followDistance = p.followDistance || 50;
+		followDistance = p.followDistance || 15;
 		lineLength = p.lineLength || 2.5;
-		lineWidth = p.lineWidth|| 1;
+		lineWidth = p.lineWidth|| 1.25;
 		lineDepth = p.lineDepth || lineWidth/2;
 		color = p.color || '#FFFF00';//yellow
 		radius = p.radius || lineWidth;
-		showDot = p.showDot || false;
+		showDot = p.showDot || followCursor;
 		dotRadius = p.dotRadius || lineWidth;
 		dotColor = p.dotColor || color;
 
@@ -80,18 +80,15 @@ altspace.utilities.TargetEffect = function(){
 		newPosition.copy(cursorRay.origin);
 		newPosition.add(newDirection);
 		crosshair.position.copy(newPosition);
+		crosshair.lookAt(cursorRay.origin);
 	}
 
 
 	function makeCrosshair(){
 		var geometry, numFaces;
 	  geometry = new THREE.BoxGeometry(lineWidth, lineLength, lineDepth);
-	  numFaces = 6;
-	  var materialArray = [];
 	  var material = new THREE.MeshBasicMaterial({color: color});
-	  for (var i=0; i < numFaces; i++) {materialArray.push(material); }
-	  var faceMaterial = new THREE.MeshFaceMaterial(materialArray);
-	  var lineDown =  new THREE.Mesh(geometry, faceMaterial);
+	  var lineDown =  new THREE.Mesh(geometry, material);
 	  var lineUp = lineDown.clone();
 	  var lineRight = lineDown.clone();
 	  var lineLeft = lineDown.clone();
@@ -102,14 +99,18 @@ altspace.utilities.TargetEffect = function(){
 	  lineUp.rotation.z = Math.PI;
 	  lineLeft.rotation.z = - Math.PI / 2;
 	  lineRight.rotation.z = Math.PI / 2;
-	  var toMerge = [ lineDown, lineUp, lineLeft, lineRight ];
-	  if (showDot) {
+	  var group = new THREE.Group();
+	  if (showDot) {//add center dot first, if there is one
 		  var mat = new THREE.MeshBasicMaterial({color: dotColor});
 			var geo =  new THREE.SphereGeometry(dotRadius, 20, 20);
 	  	var dotMesh = new THREE.Mesh(geo, mat);
-	  	toMerge.push(dotMesh);
+		  group.add(dotMesh);
 	  }
-	  return mergeGeo(toMerge);
+	  group.add(lineDown);
+	  group.add(lineUp);
+	  group.add(lineLeft);
+	  group.add(lineRight);
+	  return group;
 	}
 
   function mergeGeo(meshArray) {
