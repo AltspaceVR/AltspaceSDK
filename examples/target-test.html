@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Crosshair Example</title>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
+<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
+<!--<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>-->
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
+
+<script src="http://localhost:8000/utilities/shims/cursor.js"></script>
+<script src="http://localhost:8000/utilities/TargetEffect.js"></script>
+
+</head>
+<body>
+</body>
+<script>
+
+//Setup
+var ascp = altspace.utilities.codePen;
+var scene = new THREE.Scene();
+var dualRenderer = altspace.utilities.shims.dualRenderer;
+dualRenderer.init(scene);
+if (!dualRenderer.inAltMode) {//no camera if in Altspace
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
+	dualRenderer.camera.position.z = 500;//stand back from origin
+}
+
+//Add objects in random positions
+var TARGETS = 10;
+var BOUNDS = 500;	 
+var target = new THREE.Mesh(
+	new THREE.SphereGeometry(25, 20, 20),
+	new THREE.MeshBasicMaterial({color: 'blue'})
+);
+var rand = function(){ return Math.random() * BOUNDS * 2 - BOUNDS; };
+for (var i=0; i < TARGETS; i++){
+	var t = target.clone();
+	t.position.set(rand(), rand(), rand());
+	scene.add(t);
+}
+
+//targetEffect to follow the cursor
+var targetCursor = new altspace.utilities.TargetEffect();
+targetCursor.init(scene, {
+	followCursor: true, followDistance: 50, color: 'red', showDot:true,
+	lineLength: 1, lineWidth: 0.5,
+});
+
+
+//Update & Rendering
+function animate() {
+	requestAnimationFrame(animate);
+	dualRenderer.render();
+}
+animate();
+
+</script>
+</html>
