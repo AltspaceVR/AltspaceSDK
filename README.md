@@ -1,5 +1,5 @@
 # AltspaceVR SDK
-[![Slack Status](https://slack.altspacevr-slackin.herokuapp.com/badge.svg)](http://altspacevr-slackin.herokuapp.com)  
+[![Slack Status](https://altspacevr-slackin.herokuapp.com/badge.svg)](http://altspacevr-slackin.herokuapp.com)  
 
 **Latest Version: v0.2.3 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog)**
 
