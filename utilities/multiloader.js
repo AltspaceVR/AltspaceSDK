@@ -1,5 +1,6 @@
 //Asynchronous loading of models using THREE.OBJMTLLoader
-altspace.utilities.MultiLoader = (function(){
+altspace.utilities = altspace.utilities || {};
+altspace.utilities.multiloader = (function(){
 
   var loader;
   var TRACE;

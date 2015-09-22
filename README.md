@@ -1,23 +1,44 @@
 # AltspaceVR SDK
 
-This SDK can be used with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside AltspaceVR they can be experienced with consumer VR hardware including the Oculus Rift DK2.
+**Latest Version: v0.2.3 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog)**
 
-Three.js is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
+The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
-This repository contains the primary documentation for the SDK and related APIs, as well as examples and utilities. As all required APIs are already integrated into the client, you can build holographic three.js apps for AltspaceVR without using additional files from this repo (though many many can be very useful). 
+[Three.js](http://threejs.org/) is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
 
-This SDK is in pre-release beta and actively under development. **It is critically important to stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page.**
- 
-## Getting Started
+This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.
 
-**[Get Started]**  
+The SDK is in beta and actively under development. 
+######Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page. We also have a number of examples in [CodePen](http://codepen.io/team/altspacevr/public/) that can be edited live in VR.  
 
-## AltspaceVR APIs
+**The best way to begin working with the SDK is to follow our [Getting Started](https://developer.altvr.com/get-started/) guide!**
+
+## altspace.js
+
+`altspace.js` should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.  
+
+Many APIs are present in the client without loading `altspace.js`, but please still include it, as this may change in the future.  
+
+**The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.** This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js` we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible.
+
+To always use the latest version, simply add this script tag to your project:
+
+`<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>`
+
+or to include a specific version add:
+
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.2.3/altspace.min.js"></script>`
+
+## API Documentation  
+
+> Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
 
 ####Holographic Rendering
 
 * `var renderer = altspace.getThreeJSRenderer();`  
- returns a renderer that can be used to render three.js scenes as holographic objects
+ returns a renderer that can be used to render three.js scenes as holographic objects  
+
+  > Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)
 
 ####Cursor Events
 
@@ -35,7 +56,7 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 ####Enclosure Properties
 
 * `altspace.getEnclosure().then(callback)`  
- returns a promise that will fufill with a description of the enclosure, including pixelsPerMeter which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.
+ returns a promise that will fufill with a description of the enclosure, including its size and `pixelsPerMeter` which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.  
 
 ####User Data
 
@@ -46,6 +67,10 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 
 * `altspace.getThreeJSTrackingSkeleton().then(callback)`  
  returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. **Make sure to add the skeleton to your scene after receiving it**
+
+## Utilities
+
+See the documentation in the [utilities directory](https://github.com/AltspaceVR/AltspaceSDK/tree/master/utilities)  
 
 ## Three.js Feature Support
 
@@ -63,15 +88,12 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 * Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
 * Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
 * Limit the number of objects per scene and polygons per object.
-* Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
+* Bake ambient occlusion and other lighting into your models. All models currently render as unlit.  
 
 ## Learning More
 
 More documentation is available in the [Wiki] and project ideas, resources, showcase submission, and more can be found at our [Developer Portal] 
 
-Videos
-* [Live Coding Tutorial]
-* [AltspaceVR looking for SDK Collaborators]
 
 [three.js]: http://threejs.org/
 
@@ -80,7 +102,7 @@ Videos
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
 
-[Get Started]: https://developer.altvr.com/get-started/
+[Tutorial Series]: https://developer.altvr.com/get-started/
 
 [Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
 [Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."

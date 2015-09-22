@@ -9,12 +9,12 @@
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
 <script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
 
-<script src="http://sdk.altvr.com/utilities/0.4.0/CursorEffects.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.4.0/ColorHoverEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.4.0/DragPlaneEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.4.0/ThreeBase.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.4.0/MultiLoader.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.4.0/shims/CursorEvents.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/ColorHoverEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/DragPlaneEffect.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/threebase.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/multiloader.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
 
 </head>
 <body>
@@ -25,46 +25,51 @@ ChessApp = (function(){
 	var ascp = altspace.utilities.codePen;
 	var inAltspace = !!(window.altspace && window.altspace.inClient);
 	var inCodePen = !!location.href.match('codepen.io/');
-	var useAltRenderer = inAltspace && (!inCodePen || window.innerHeight >= 750);
+	var inCodePenEditor = inAltspace && (inCodePen && window.innerHeight < 750);
 
-	var scene, camera, renderer;
-	var threeBase;
+	var scene = new THREE.Scene();
+	var dualRenderer;
+	var threebase;
 
 	function main(){
 		//Entry point into the app, kicks off the rendering loop.
 		ascp.setName('Chess'); 
-		initThreeBase();
+		initThreebase();
 		initScene();
-		ChessBoard.init(scene, threeBase, function(){//onComplete
+		ChessBoard.init(scene, threebase, function(){//onComplete
 			console.log('Chess Board initialized');
 			animate();
 		});
 	}//end main
 
-	function initThreeBase(){
-		//ThreeBase synchronizes the game objects across multiple clients.
+	function initThreebase(){
+		//threebase synchronizes the game objects across multiple clients.
 		var syncParams = inCodePen ? {
 			instanceId: ascp.getPenId(),
 			authorId: ascp.getAuthorId()
 		} : null;
 		var syncInstance = altspace.utilities.sync.getInstance(syncParams);
-		threeBase = altspace.utilities.ThreeBase;
-		threeBase.init(syncInstance);
-	}//end initThreeBase
+		threebase = altspace.utilities.threebase;
+		threebase.init(syncInstance);
+	}//end initThreebase
 
 	function initScene(){
+
 		//This app works both in Altspace and in a traditional browser.
-		scene = new THREE.Scene();
-		if (useAltRenderer){
-	    renderer = altspace.getThreeJSRenderer();
-			//TODO: Remove hardcoded enclosure height once promises work in iframes.
-			var enclosureHeight = 1024;
-			scene.position.y = enclosureHeight / -2 ;//Lower board onto botton of enclosure.
+		dualRenderer = altspace.utilities.shims.dualRenderer;
+		dualRenderer.init(scene);
+		if (dualRenderer.inAltMode){
+			altspace.getEnclosure().then(function(e){
+				if (inCodePenEditor && e.innerDepth < 500) {
+          scene.position.y = e.innerHeight / -2 + 175;
+          scene.scale.multiplyScalar(0.75);//in personal browser, downsize objects
+				} else {
+					scene.position.y = e.innerHeight / -2 ;//Lower board onto botton of enclosure.
+				}
+			});
 		} else {
-			renderer = new THREE.WebGLRenderer({antialias: true});
-			camera = new THREE.PerspectiveCamera();
-			altspace.utilities.CursorEvents.init(scene, camera);
-			altspace.utilities.CursorEvents.initScene(renderer);
+			var camera = dualRenderer.camera;
+      altspace.utilities.shims.cursor.init(scene, camera);
 			camera.position.z = ChessBoard.BOARD_SIZE;
 			camera.position.y = ChessBoard.BOARD_SIZE + 100;
 			camera.lookAt(scene.position);
@@ -73,8 +78,8 @@ ChessApp = (function(){
 
 	function animate(){
 		requestAnimationFrame(animate);
-		threeBase.update();
-	  renderer.render(scene, camera);
+		threebase.update();
+	  dualRenderer.render();
 	}//end animate
 
 	return {
@@ -91,7 +96,7 @@ ChessBoard = (function(){
 	var board;
 	var whitePieces = [];
 	var blackPieces = [];
-	var threeBase;
+	var threebase;
 
 	var CONFIG = Object.freeze({//constants
 		boardSize: 700,//chess piece models are scaled to fit the board
@@ -112,16 +117,16 @@ ChessBoard = (function(){
 	var modelScale = CONFIG.boardSize / 8 / CONFIG.pieceWidth;
 	var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
-		function init(myScene, myThreeBase, onComplete){
+		function init(myScene, myThreebase, onComplete){
 		//Models will take a couple seconds to download, so callback when done.
-		if(!myScene || !myThreeBase || !onComplete ||
+		if(!myScene || !myThreebase || !onComplete ||
 		  !myScene instanceof THREE.Scene ||
-			!myThreeBase  instanceof THREE.Scene ||
+			!myThreebase  instanceof THREE.Scene ||
 			typeof(onComplete) !== 'function'){
 			throw new Error('ChessBoard init called with incorrect arguments');
 		}
 		scene = myScene;
-		threeBase = myThreeBase;
+		threebase = myThreebase;
 		loadModels(function(){//onComplete
 			initBoard();
 			arrangePieces();
@@ -129,8 +134,8 @@ ChessBoard = (function(){
 			for(var i=0; i < whitePieces.length; i++){
 				var white = whitePieces[i];
 				var black = blackPieces[i];
-				threeBase.add(white, white.name);
-				threeBase.add(black, black.name);
+				threebase.add(white);
+				threebase.add(black);
 				scene.add(white);
 				scene.add(black);
 			}
@@ -142,15 +147,12 @@ ChessBoard = (function(){
 	function loadModels(onComplete){
 		//Load only 7 different models, then clone and color as necessary. 
 		console.log('Downloading chess models...');
-		var multiLoader = altspace.utilities.MultiLoader;
-		if(!multiLoader){
-			throw new Error('MultiLoader module is not available');
-		}
-		multiLoader.init({
+		var multiloader = altspace.utilities.multiloader;
+		multiloader.init({
 			crossOrigin: 'anonymous',
 			baseUrl: CONFIG.directory,
 		});
-		var req = new multiLoader.LoadRequest();
+		var req = new multiloader.LoadRequest();
 		var names = Object.keys(CONFIG.pieces);
 		for (var i=0; i < names.length; i++){
 			var file = CONFIG.pieces[names[i]].modelFile;
@@ -160,7 +162,7 @@ ChessBoard = (function(){
 		var boardFile = CONFIG.board.modelFile;
 		req.objUrls.push(boardFile+'.obj');
 		req.mtlUrls.push(boardFile+'.mtl');
-		multiLoader.load(req, function(){//onComplete
+		multiloader.load(req, function(){//onComplete
 			if(req.error) {
 				throw new Error(req.error);
 			}
@@ -185,8 +187,6 @@ ChessBoard = (function(){
 	}//end loadModels
 
 	function initEffects(){
-		var cursorEffects = altspace.utilities.CursorEffects;
-		cursorEffects.init(scene);
 		//DragPlane should not be bigger than our bounding box, if it is then
 		//objects will disappear when they are moved outside of the box.
 		var dragPlaneSize = CONFIG.dragPlaneSize;
@@ -199,16 +199,16 @@ ChessBoard = (function(){
 		dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
 		dragPlane.name = 'drag plane';
 		var dragEffect = new altspace.utilities.DragPlaneEffect();
-		dragEffect.init(dragPlane);
+		dragEffect.init(scene, dragPlane);
 		var redTint = new THREE.Color(0.8, 0.2, 0.2);
 		var hoverEffect = new altspace.utilities.ColorHoverEffect();
-		hoverEffect.init(redTint);
+		hoverEffect.init(scene, redTint);
 		for (var i=0; i < whitePieces.length; i++){
 			//Add all pieces to our drag-and-drop controls.
-			cursorEffects.add(dragEffect, whitePieces[i]);
-			cursorEffects.add(dragEffect, blackPieces[i]);
-			cursorEffects.add(hoverEffect, whitePieces[i]);
-			cursorEffects.add(hoverEffect, blackPieces[i]);
+			dragEffect.add(whitePieces[i]);
+			dragEffect.add(blackPieces[i]);
+			hoverEffect.add(whitePieces[i]);
+			hoverEffect.add(blackPieces[i]);
 		}
 	}//end initEffects
 
