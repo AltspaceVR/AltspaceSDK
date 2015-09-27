@@ -14,19 +14,19 @@ altspace.utilities.shims.cursor = (function () {
 
     function init(_scene, _camera, _params) {
         if (!_scene || !_scene instanceof THREE.Scene) {
-            throw new Error('cursor shim: init requires THREE.Scene argument');
+            throw new TypeError('Requires THREE.Scene argument');
         }
         if (!_camera || !_camera instanceof THREE.Camera) {
-            throw new Error('cursor shim: init requires THREE.Camera argument');
+            throw new TypeError('Requires THREE.Camera argument');
         }
         scene = _scene;
         camera = _camera;
 
         _params = _params || {};
 
-        document.addEventListener('mousedown', mouseDown, false)
-        document.addEventListener('mouseup', mouseUp, false)
-        document.addEventListener('mousemove', mouseMove, false)
+        window.addEventListener('mousedown', mouseDown, false)
+        window.addEventListener('mouseup', mouseUp, false)
+        window.addEventListener('mousemove', mouseMove, false)
     }
 
     function mouseDown(event) {
@@ -39,29 +39,35 @@ altspace.utilities.shims.cursor = (function () {
 
     function mouseUp(event) {
         var intersection = findIntersection(event);
-        if (!intersection || !intersection.point) return;
 
         var cursorEvent = createCursorEvent('cursorup', intersection);
-        intersection.object.dispatchEvent(cursorEvent);
+
+        if (intersection) {
+            intersection.object.dispatchEvent(cursorEvent);
+        } else {
+            scene.dispatchEvent(cursorEvent);
+        }
     }
 
     function mouseMove(event) {
         var intersection = findIntersection(event);
-        if (!intersection || !intersection.point) return;
 
-        var cursorEvent = createCursorEvent('cursormove', intersection);
+        var cursorEvent = createCursorEvent('cursormove', intersection);//TODO improve and don't fire only on scene
         scene.dispatchEvent(cursorEvent);
 
-        if (overObject != intersection.object) {
+        var object = intersection ? intersection.object : null;
+        if (overObject != object) {
             if (overObject) {
                 cursorEvent = createCursorEvent('cursorleave', intersection);
-                intersection.object.dispatchEvent(cursorEvent);
+                overObject.dispatchEvent(cursorEvent);
             }
 
-            cursorEvent = createCursorEvent('cursorenter', intersection);
-            intersection.object.dispatchEvent(cursorEvent);
+            if (object) {
+                cursorEvent = createCursorEvent('cursorenter', intersection);
+                object.dispatchEvent(cursorEvent);
+            }
 
-            overObject = intersection.object;
+            overObject = object;
         }
     }
 
@@ -69,12 +75,12 @@ altspace.utilities.shims.cursor = (function () {
         return {
             type: type,
             bubbles: true,
-            target: intersection.object,
+            target: intersection ? intersection.object : null,
             ray: {
                 origin: raycaster.ray.origin.clone(),
                 direction: raycaster.ray.direction.clone()
             },
-            point: intersection.point.clone()
+            point: intersection ? intersection.point.clone() : null
         }
     }
 
