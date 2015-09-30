@@ -23,7 +23,7 @@ var scene = new THREE.Scene();
 var dualRenderer = altspace.utilities.shims.dualRenderer;
 dualRenderer.init(scene);
 if (!dualRenderer.inAltMode) {//no camera if in Altspace
-  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera, {TRACE: true});
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
 	dualRenderer.camera.position.z = 500;//stand back from origin
 }
 
