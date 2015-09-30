@@ -1,5 +1,6 @@
 //Detects mouse move/up/down events, raycasts to find intersected objects, then
 //dispatches cursor move/up/down/enter/leave events that mimics Altspace events.
+altspace = altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
 altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cursor
