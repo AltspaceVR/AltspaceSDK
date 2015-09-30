@@ -13,6 +13,8 @@ The SDK is in beta and actively under development.
 
 **The best way to begin working with the SDK is to follow our [Getting Started](https://developer.altvr.com/get-started/) guide!**
 
+[![Slack Status](https://altspacevr-slackin.herokuapp.com/badge.svg)](http://altspacevr-slackin.herokuapp.com)  
+
 ## altspace.js
 
 `altspace.js` should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.  
