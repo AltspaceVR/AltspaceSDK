@@ -1,5 +1,5 @@
 //Synchronize position/rotation of distributed Three.js objects using Firebase.
-altspace = altspace || {};
+altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.threebase = (function(){
 
