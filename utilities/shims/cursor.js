@@ -27,7 +27,7 @@ altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cu
     raycaster.near = camera.near;
     raycaster.far = camera.far;
 
-    var params = params || {};
+    var params = myParams || {};
     var p = params;
     TRACE = p.TRACE || false;//log all events.
     domElement = p.domElement || document;//attach listeners here

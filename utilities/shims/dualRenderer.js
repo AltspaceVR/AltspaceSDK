@@ -24,9 +24,11 @@ altspace.utilities.shims.dualRenderer = (function(){
     //auto-detect if running in Altspace, unless 'forceWebGL' given in params.
     inAltMode = !forceWebGL && window.altspace && window.altspace.inClient;
 
+    var addAmbientLight = !!p.addAmbientLight;
     antialias = p.antialias || true;
     clearColor = p.clearColor || new THREE.Color('silver');
     lightColor = p.clearColor || new THREE.Color('white');
+    camera = p.camera || null;
     TRACE = p.TRACE || false;
 
     if (inAltMode) {
@@ -34,31 +36,33 @@ altspace.utilities.shims.dualRenderer = (function(){
       camera = null;
       ambientLight = null;
     } else {
-      renderer = new THREE.WebGLRenderer({antialias: antialias});
-      camera = new THREE.PerspectiveCamera();
-
       // See also: http://threejs.org/docs/#Manual/Introduction/Creating_a_scene
+      document.body.style.margin = '0px';
+      document.body.style.overflow = 'hidden';
+      var container = document.createElement('div');
+      document.body.appendChild(container);
+      renderer = new THREE.WebGLRenderer({antialias: antialias});
+      renderer.setClearColor(clearColor);
+      container.appendChild(renderer.domElement);
       var resizeRender = function(){
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       };
-      document.body.style.margin = '0px';
-      document.body.style.overflow = 'hidden';
-      renderer.setClearColor(clearColor);
-      var container = document.createElement('div');
-      document.body.appendChild(container);
-      container.appendChild(renderer.domElement);
       window.addEventListener('resize', resizeRender);
+      if (!camera){
+        camera = new THREE.PerspectiveCamera();
+        camera.fov = 60;
+        camera.near = 1;
+        camera.far = 2000;
+      }
       resizeRender();
-      camera.fov = 45;
-      camera.near = 1;
-      camera.far = 2000;
       scene.add(camera);
-      // Throw in a light since any loaded OBJ files use MeshPhongMaterial.
-      //ambientLight = new THREE.AmbientLight(0xffffff);
-      ambientLight = new THREE.AmbientLight(lightColor);
-      scene.add(ambientLight);
+      if (addAmbientLight){
+        // Throw in a default light since any loaded OBJ files use MeshPhongMaterial.
+        ambientLight = new THREE.AmbientLight(lightColor);
+        scene.add(ambientLight);
+      }
     }
   }
 
@@ -75,8 +79,8 @@ altspace.utilities.shims.dualRenderer = (function(){
     render: render,
   };
 
-  Object.defineProperty(exports, 'camera', { get: function(){return camera} });
-  Object.defineProperty(exports, 'ambientLight', { get: function(){return ambientLight} });
+  Object.defineProperty(exports, 'camera', {get: function(){return camera}});
+  Object.defineProperty(exports, 'ambientLight', {get: function(){return ambientLight}});
   Object.defineProperty(exports, 'renderer', { get: function(){return renderer} });
   Object.defineProperty(exports, 'inAltMode', { get: function(){return inAltMode} });
 
