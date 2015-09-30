@@ -6,8 +6,8 @@
 <script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.5/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.5/shims/dualRenderer.js"></script>
 
 </head>
 <body>
@@ -23,7 +23,7 @@ var scene = new THREE.Scene();
 var dualRenderer = altspace.utilities.shims.dualRenderer;
 dualRenderer.init(scene);
 if (!dualRenderer.inAltMode) {//no camera if in Altspace
-  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera, {TRACE: true});
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
 	dualRenderer.camera.position.z = 500;//stand back from origin
 }
 
@@ -53,7 +53,6 @@ var syncInstance = altspace.utilities.sync.getInstance(params);
 var syncColor = syncInstance.child('color');
 syncColor.on('value', function(snapshot){
 	var val = snapshot.val();
-	console.log('got color change', val);
 	if (val) {
 		cube.material.color = new THREE.Color(val);
 		cube.material.needsUpdate = true;//currently required in Altspace
@@ -62,7 +61,6 @@ syncColor.on('value', function(snapshot){
 
 //Events
 cube.addEventListener('cursordown', function() {
-	console.log('cursordown');
 	syncColor.set(Please.make_color()[0]);//clicking on cube changes its color
 });
 
