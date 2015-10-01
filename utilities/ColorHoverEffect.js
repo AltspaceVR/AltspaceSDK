@@ -1,4 +1,5 @@
 //Change color of an object when cursor hovers over it.
+altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.ColorHoverEffect = function(){
 
