@@ -13,8 +13,10 @@
 <script>
 
 //Load scene created with Unity Three.js JSON Exporter 
-//in Asset store: https://www.assetstore.unity3d.com/en/#!/content/40550
 //scene is RollerBall from Standard Assets Example Project
+//in Asset store: https://www.assetstore.unity3d.com/en/#!/content/40550
+//Bug Workaround: manually remove trailing comma in "userData": {"type":"Script",}
+//TODO: Support lightmaps in AltRenderer as lights not imported to Altspace.
 var scene = new THREE.Scene();
 var loader = new THREE.ObjectLoader();
 var url = './models/rollerball/rollerball-scene.json';
@@ -38,10 +40,12 @@ function loadSceneGraph(obj){
   controls = new THREE.OrbitControls( camera );
   controls.damping = 0.2;
   if (dualRenderer.inAltMode){
+    //scale to fit enclosure
     scene.position.y -= 1024/2;
-    scene.scale.multiplyScalar(10);    
+    scene.scale.multiplyScalar(15);    
   } else {
-    camera.position.set(0, 50, 50);//custom camera positon for RollerBall scene
+    //reset camera positon
+    camera.position.set(0, 50, 50);
     camera.lookAt(scene.position);
   }
   animate();
