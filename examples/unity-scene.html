@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Unity Scene Example</title>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.6/shims/dualRenderer.js"></script>
+
+</head>
+<body>
+</body>
+<script>
+
+//Load scene created with Unity Three.js JSON Exporter 
+//in Asset store: https://www.assetstore.unity3d.com/en/#!/content/40550
+//scene is RollerBall from Standard Assets Example Project
+var scene = new THREE.Scene();
+var loader = new THREE.ObjectLoader();
+var url = './models/rollerball/rollerball-scene.json';
+var dualRenderer = altspace.utilities.shims.dualRenderer;
+var camera;
+loader.load(url, loadSceneGraph);
+
+function loadSceneGraph(obj){
+  scene.add(obj);
+  obj.traverse( function(child){
+    if (child instanceof THREE.Camera){
+      camera = child;
+      camera.near = Number(camera.near);//NOTE must convert string to number
+      camera.far = Number(camera.far);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    }
+  });
+  //Now that we have the camera, setup renderer and orbit controls.
+  dualRenderer.init(scene, {camera: camera, addAmbientLight: false});
+  controls = new THREE.OrbitControls( camera );
+  controls.damping = 0.2;
+  if (dualRenderer.inAltMode){
+    scene.position.y -= 1024/2;
+    scene.scale.multiplyScalar(10);    
+  } else {
+    camera.position.set(0, 50, 50);//custom camera positon for RollerBall scene
+    camera.lookAt(scene.position);
+  }
+  animate();
+}
+
+//Update & Rendering
+function animate() {
+	requestAnimationFrame(animate);
+	dualRenderer.render();
+}
+
+</script>
+</html>
