@@ -1,5 +1,5 @@
 //Implement drag-and-drop of objects in a horizontal plane.
-altspace = altspace || {};
+altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.DragPlaneEffect = function(){
   var dragPlane;
