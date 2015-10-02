@@ -25,7 +25,7 @@ gulp.task('watch', ['altspace_js'], function () {
 
 gulp.task('altspace_js', function () {
     var cwd = './';
-    var version = JSON.parse(fs.readFileSync(cwd + '/version.json')).version;
+    var version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
     console.log('version');
     console.log(version);
 
