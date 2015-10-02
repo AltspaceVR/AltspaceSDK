@@ -23,7 +23,7 @@ altspace.utilities.shims.cursor = (function () {
         scene = _scene;
         camera = _camera;
 
-        _params = _params || {};
+        p = _params || {};
 
         window.addEventListener('mousedown', mouseDown, false)
         window.addEventListener('mouseup', mouseUp, false)
@@ -31,6 +31,7 @@ altspace.utilities.shims.cursor = (function () {
     }
 
     function mouseDown(event) {
+
         var intersection = findIntersection(event);
         if (!intersection || !intersection.point) return;
 
@@ -86,14 +87,15 @@ altspace.utilities.shims.cursor = (function () {
     }
 
     function findIntersection(mouseEvent) {
-        var mouse = {
-            x: (event.clientX / window.innerWidth) * 2 - 1,
-            y: -(event.clientY / window.innerHeight) * 2 + 1
-        }
+        var mouse = new THREE.Vector2();
+        mouse.x = (mouseEvent.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(mouseEvent.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
 
-        return raycaster.intersectObjects(scene.children, true)[0];
+        var intersections = raycaster.intersectObjects(scene.children, true);
+        return intersections.length > 0 ? intersections[0] : null;
+
     };
 
     return {
