@@ -2,9 +2,10 @@
 
     if (!THREE) return;
 
+    if (window.altspace && window.altspace.inAltspace) return;
+
     THREE.EventDispatcher.prototype.dispatchEvent = dispatchEvent;
-    THREE.Object3D.prototype.dispatchEvent = dispatchEvent; //TODO: Figure out why this is necessary
-    THREE.Scene.prototype.dispatchEvent = dispatchEvent;//TODO: Figure out why this is necessary
+    THREE.Object3D.prototype.dispatchEvent = dispatchEvent;
 
 	function dispatchEvent( event ) {
 

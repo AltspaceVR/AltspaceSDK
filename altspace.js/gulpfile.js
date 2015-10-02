@@ -42,6 +42,8 @@ gulp.task('altspace_js', function () {
             './src/utilities/simulation.js',
 
             './src/utilities/shims/behaviors.js',
+            './src/utilities/shims/cursor.js',
+            './src/utilities/shims/bubbling.js',
 
             './src/utilities/behaviors/Bob.js',
             './src/utilities/behaviors/ButtonStateStyle.js',

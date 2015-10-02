@@ -22,7 +22,6 @@ window.altspace.utilities.behaviors.Sync = function (base, config) {
         if (config.position) {
             data.child('position').on('value', function (snapshot) {//TODO: cache position child
                 var value = snapshot.val();
-                console.log(value);
                 object3d.position.set(value.x, value.y, value.z);
             });
         }
