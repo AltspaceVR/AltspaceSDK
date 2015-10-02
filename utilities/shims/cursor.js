@@ -3,199 +3,104 @@
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
-altspace.utilities.shims.cursor = (function(){//TODO: move to utilities.shims.cursor
 
-  var scene;
-  var camera;
-  var intersected;
-  var selected;
-  var intersectionPoint;
-  var TRACE;
+altspace.utilities.shims.cursor = (function () {
+    //TODO: Support non-full window apps
 
-  var mouse = new THREE.Vector3();
-  var unprojectedMouse = new THREE.Vector3();
-  var raycaster = new THREE.Raycaster();
+    var scene;
+    var camera;
+    var overObject;
 
-  function init(myScene, myCamera, myParams){
-    if (!myScene || !myScene instanceof THREE.Scene) {
-      throw new Error('cursor shim: init requires THREE.Scene argument');
-    }
-    if (!myCamera || !myCamera instanceof THREE.Camera) {
-      throw new Error('cursor shim: init requires THREE.Camera argument');
-    }
-    scene = myScene;
-    camera = myCamera;
-    raycaster.near = camera.near;
-    raycaster.far = camera.far;
+    var raycaster = new THREE.Raycaster();
 
-    var params = myParams || {};
-    var p = params;
-    TRACE = p.TRACE || false;//log all events.
-    domElement = p.domElement || document;//attach listeners here
-    recursive = p.recursive || true;//check descenants for intersections
-
-    unprojectMouse();
-    updateRaycaster();
-    domElement.addEventListener('mousedown', cursordown, false)
-    domElement.addEventListener('mouseup'  , cursorup, false)
-    domElement.addEventListener('mousemove', mouseMove, false)
-  }
-
-  function cursordown(event){
-    if(!intersected){
-      return;//no object under cursor
-    }
-    var object = intersected;
-    if(TRACE){console.log("cursor shim: cursordown", object);}
-    selected = object;
-    var cursorEvent = mockCursorEvent('cursordown', event, object);
-    object.dispatchEvent(cursorEvent);
-    var mockCursorEventScene = mockCursorEvent('cursordown', event, scene);
-    scene.dispatchEvent(mockCursorEventScene);
-  }
-
-  function cursorup(event){
-    if(!selected){
-      return;//no object previously selected
-    }
-    var object = selected;
-    if(TRACE){console.log("cursor shim: cursorup", object);}
-    object.dispatchEvent(mockCursorEvent('cursorup', event, object));
-    scene.dispatchEvent(mockCursorEvent('cursorup', event, scene));
-    selected = undefined;
-  }
-
-  function cursormove(event){
-    if(TRACE){console.log("cursor shim: cursormove");}
-    scene.dispatchEvent(mockCursorEvent('cursormove', event, scene));
-  }
-
-  function cursorleave(object){
-    var object = intersected;
-    if(TRACE){ console.log("cursor shim: cursorleave", object); }
-    object.dispatchEvent(mockCursorEvent('cursorleave', event, object));
-    scene.dispatchEvent(mockCursorEvent('cursorleave', event, scene));
-  }
-
-  function cursorenter(object){
-    var object = intersected;
-    if(TRACE){console.log("cursor shim: cursorenter", object);}
-    object.dispatchEvent(mockCursorEvent('cursorenter', event, object));
-    scene.dispatchEvent(mockCursorEvent('cursorenter', event, scene));
-  }
-
-  function mouseMove(event){
-    mouseMoved = true;
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    mouse.z = 1;
-    unprojectMouse();
-    updateRaycaster();
-    cursormove(event);
-  };
-
-  function unprojectMouse(){
-    unprojectedMouse.copy(mouse);
-    unprojectedMouse.unproject(camera);
-
-  }
-
-  function mockCursorEvent(eventName, event, object){
-    //currentTarget: THREE.Scene or THREE.Object3D
-    //cursorRay: Object (obsolete)
-    //point: THREE.Vector3
-    //ray: THREE.Ray
-    //stopImmediatePropagation: function
-    //stopPropagation: function
-    //target: THREE.Mesh
-    //type: 'cursorenter'
-    var origin = raycaster.ray.origin;
-    var direction = raycaster.ray.direction;
-    var point =  intersectionPoint ? intersectionPoint.clone() : null;
-    var mockCursorEvent = { 
-      //target gets set by EventDispatcher
-      currentTarget: object,
-      cursorRay: {//TODO: remove once it's removed from Altspace event
-        origin: { x: origin.x, y: origin.y, z: origin.z },
-        direction: { x: direction.x, y: direction.y, z: direction.z },
-      },
-      point: point,
-      ray: {
-        origin: origin,
-        direction: direction,
-      },
-      type: eventName,
-      isShimEvent: true,//for workarounds related to quirks in Altspace events
-    }
-    return mockCursorEvent;
-  }
-
-  function updateRaycaster(){
-    if (unprojectedMouse){
-      setRaycaster(unprojectedMouse);
-      if(!selected){
-        checkForIntersections();
-      }
-    }
-  };
-
-  function setRaycaster(position){
-    var origin = position;
-    var direction = origin.clone()
-    direction.sub(camera.position);
-    direction.normalize();
-    raycaster.set(camera.position, direction);
-  }
-
-  function checkForIntersections(){
-    //TODO: Implement bubbling, don't assume scene top-level objects.
-    var intersections = raycaster.intersectObjects(scene.children, recursive);
-    if(intersections.length > 0){
-      //Use first intersection so we don't get changes when we hit a new face.
-      mockBubble(intersections[0]);//TODO: Implement real event bubbling.
-      var firstIntersection = intersections[0].object;
-      if(!intersected){
-        intersected = firstIntersection;
-        intersectionPoint = intersections[0].point;
-        cursorenter(intersected);
-      }else{
-        if(intersected != firstIntersection){
-          cursorleave(intersected);
-          intersected = firstIntersection;
-          intersectionPoint = intersections[0].point;
-          cursorenter(intersected);
-        } else {
-          //Same object intersected, just update intersection point.
-          intersectionPoint = intersections[0].point;
+    function init(_scene, _camera, _params) {
+        if (!_scene || !_scene instanceof THREE.Scene) {
+            throw new TypeError('Requires THREE.Scene argument');
         }
-      }
-    }else{
-      //No intersections, clear any existing ones.
-      if(intersected){
-        cursorleave(intersected);
-        intersected = undefined;
-        intersectionPoint = undefined;
-      }
-    }
-  }
+        if (!_camera || !_camera instanceof THREE.Camera) {
+            throw new TypeError('Requires THREE.Camera argument');
+        }
+        scene = _scene;
+        camera = _camera;
 
-  function mockBubble(intersection){
-    //Bubble up to descendant that is child of scene.
-    var newTarget = intersection.object;
-    while (scene.children.indexOf(newTarget) === -1){
-      if (!newTarget.parent) {
-        console.error('Intersected object is not descendant of scene', newTarget);
-        return;
-      }        
-      newTarget = newTarget.parent;
-    }
-    //Reset intersected.object, leave intersected.point etc. unchanged. 
-    intersection.object = newTarget;
-  }
+        p = _params || {};
 
-  return {
-    init: init,
-  };
+        window.addEventListener('mousedown', mouseDown, false)
+        window.addEventListener('mouseup', mouseUp, false)
+        window.addEventListener('mousemove', mouseMove, false)
+    }
+
+    function mouseDown(event) {
+
+        var intersection = findIntersection(event);
+        if (!intersection || !intersection.point) return;
+
+        var cursorEvent = createCursorEvent('cursordown', intersection);
+        intersection.object.dispatchEvent(cursorEvent);
+    }
+
+    function mouseUp(event) {
+        var intersection = findIntersection(event);
+
+        var cursorEvent = createCursorEvent('cursorup', intersection);
+
+        if (intersection) {
+            intersection.object.dispatchEvent(cursorEvent);
+        } else {
+            scene.dispatchEvent(cursorEvent);
+        }
+    }
+
+    function mouseMove(event) {
+        var intersection = findIntersection(event);
+
+        var cursorEvent = createCursorEvent('cursormove', intersection);//TODO improve and don't fire only on scene
+        scene.dispatchEvent(cursorEvent);
+
+        var object = intersection ? intersection.object : null;
+        if (overObject != object) {
+            if (overObject) {
+                cursorEvent = createCursorEvent('cursorleave', intersection);
+                overObject.dispatchEvent(cursorEvent);
+            }
+
+            if (object) {
+                cursorEvent = createCursorEvent('cursorenter', intersection);
+                object.dispatchEvent(cursorEvent);
+            }
+
+            overObject = object;
+        }
+    }
+
+    function createCursorEvent(type, intersection) {
+        return {
+            type: type,
+            bubbles: true,
+            target: intersection ? intersection.object : null,
+            ray: {
+                origin: raycaster.ray.origin.clone(),
+                direction: raycaster.ray.direction.clone()
+            },
+            point: intersection ? intersection.point.clone() : null
+        }
+    }
+
+    function findIntersection(mouseEvent) {
+        var mouse = new THREE.Vector2();
+        mouse.x = (mouseEvent.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(mouseEvent.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        var intersections = raycaster.intersectObjects(scene.children, true);
+        return intersections.length > 0 ? intersections[0] : null;
+
+    };
+
+    return {
+        init: init,
+    };
 
 }());
 
