@@ -11,9 +11,10 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
-    replace = require('gulp-replace');
+    replace = require('gulp-replace'),
+    sourcemaps = require('gulp-sourcemaps');
 
-gulp.task('default', function() {
+gulp.task('default', function () {
     return gulp.start('altspace_js');
 });
 
@@ -55,11 +56,13 @@ gulp.task('altspace_js', function () {
         './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
+        .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
         .pipe(uglify())
         .on('error', function (e) {
             console.log(e);
         })
+        .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest('./bin/latest', { cwd: cwd }))
         .pipe(gulp.dest('./bin/' + version + '/', { cwd: cwd }))
         .pipe(print());
