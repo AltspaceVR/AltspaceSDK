@@ -14,7 +14,7 @@ altspace.utilities.Simulation = function (config) {
 
     function loop() {
         window.requestAnimationFrame(loop);
-        scene.updateBehaviors();
+        scene.updateAllBehaviors();
         renderer.render(scene, camera);
     }
 

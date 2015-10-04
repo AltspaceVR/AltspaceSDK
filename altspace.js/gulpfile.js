@@ -12,6 +12,7 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
+    jshint = require('gulp-jshint'),
     sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('default', function () {
@@ -50,12 +51,15 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/ButtonStateStyle.js',
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/Spin.js',
-            './src/utilities/behaviors/Sync.js',
+            './src/utilities/behaviors/SceneSync.js',
+            './src/utilities/behaviors/Object3DSync.js',
     ], { cwd: cwd }),
     gulp.src(
         './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
+        //.pipe(jshint())
+        //.pipe(jshint.reporter('default'))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
         .pipe(uglify())

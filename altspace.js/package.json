@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "devDependencies": {
     "gulp-concat": "^2.6.0",
+    "gulp-jshint": "^1.11.2",
     "gulp-print": "^2.0.1",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",

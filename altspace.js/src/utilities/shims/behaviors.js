@@ -2,7 +2,7 @@
  * @author gavanwilhite / http://gavanwilhite.com
  */
 
-THREE.Scene.prototype.updateBehaviors = function () {
+THREE.Scene.prototype.updateAllBehaviors = function () {
 
     var now = performance.now();
     var lastNow = this.__lastNow || now;
@@ -12,10 +12,8 @@ THREE.Scene.prototype.updateBehaviors = function () {
     var self = this;
     this.traverse(function (object3d) {
 
-        if (object3d === self) return;
-
         if (object3d.__behaviorList) {
-            object3d.updateBehaviors(deltaTime);
+            object3d.updateBehaviors(deltaTime, this);
         }
 
     });
@@ -38,9 +36,19 @@ THREE.Object3D.prototype.addBehaviors = function()
 
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
+    //TODO: fire remove
     var i = array.indexOf(behavior);
     if (i != -1) {
         this.__behaviorList.splice(i, 1);
+    }
+}
+
+THREE.Object3D.prototype.getBehaviorByType = function(type) {
+    if (!this.__behaviorList) return;
+
+    for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+        if (this.__behaviorList[i].type === type)
+            return this.__behaviorList[i];
     }
 }
 
