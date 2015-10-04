@@ -48,15 +48,11 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             return;
         }
 
-        register(key, syncBehavior);
-        syncBehavior.asExisting(snapshot.ref());
+        syncBehaviors.push(syncBehavior);
+        syncBehavior.link(snapshot.ref());
 
         //syncBehavior.receive(snapshot);//To prevent clobbering synced object with factory conditions. Will pull key for syncKey
     });
-
-    function register(key, syncBehavior) {
-        syncBehaviors[key] = syncBehavior;
-    }
 
     function sendAll() {
         for (var i = 0, max = syncBehaviors.length; i < max; i++) {
@@ -65,17 +61,20 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     }
 
     function awake(o) {
-        setInterval(sendAll, 50);
+        //setInterval(sendAll, 50); //TODO: Evaluate general feasibility of auto
     }
 
+    function instantiate(template, initData) {
+        sceneBase.push({ template: template, initData: initData });
+    }
 
-    var exports = { awake: awake, register: register, type: 'SceneSync' };
+    var exports = { awake: awake, instantiate: instantiate, type: 'SceneSync' };
     Object.defineProperty(exports, 'sceneBase', {
-        get: function () { return sceneBase }
+        get: function () { return sceneBase; }
     });
     Object.defineProperty(exports, 'skipNextAdd', {
-        get: function () { return skipNextAdd },
-        set: function (value) { skipNextAdd = value }
+        get: function () { return skipNextAdd; },
+        set: function (value) { skipNextAdd = value; }
     });
     return exports;
-}
+};

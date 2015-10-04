@@ -19,4 +19,4 @@ altspace.utilities.behaviors.Spin = function (config) {
     }
 
     return { awake: awake, update: update };
-}
+};

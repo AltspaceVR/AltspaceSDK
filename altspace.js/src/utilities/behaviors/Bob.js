@@ -28,4 +28,4 @@ altspace.utilities.behaviors.Bob = function (config) {
     }
 
     return { awake: awake, update: update };
-}
+};

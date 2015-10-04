@@ -34,4 +34,4 @@ altspace.utilities.behaviors.ButtonStateStyle = function (config) {
     }
 
     return { awake: awake };
-}
+};

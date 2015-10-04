@@ -37,7 +37,7 @@ altspace.utilities.behaviors.Drag = function (config) {
     var raycaster = new THREE.Raycaster();
     raycaster.linePrecision = 3;
 
-    if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72')
+    if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72');
 
     function awake(o) {
         object3d = o;
@@ -45,7 +45,7 @@ altspace.utilities.behaviors.Drag = function (config) {
             scene = ancestor;
         });
         if (scene.type !== 'Scene') {
-            console.error('Drag behavior can only run on object3ds in a scene')
+            console.error('Drag behavior can only run on object3ds in a scene');
         }
         makeIntersector();
         scene.add(intersector);//TODO: see if I can remove it from the scene. Might not req 72.
@@ -150,6 +150,9 @@ altspace.utilities.behaviors.Drag = function (config) {
           config.y ? targetLocalPosition.y : object3d.position.y,
           config.z ? targetLocalPosition.z : object3d.position.z
         );
+
+        var sync = object3d.getBehaviorByType('Object3DSync');//TODO: REMOVE AND FIX
+        if(sync) sync.send();
     }
 
     function stopDrag() {
@@ -162,4 +165,4 @@ altspace.utilities.behaviors.Drag = function (config) {
     }
 
     return { awake: awake, start: start };
-}
+};
