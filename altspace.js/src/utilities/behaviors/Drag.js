@@ -4,6 +4,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 //idea: API for symbolic camera from altspace? altspace.getThreeJSCenterCamera();
 //idea: offset (drag from bottom of piece). Workaround if you reparent
+
+//TODO: GSAP Draggable
 altspace.utilities.behaviors.Drag = function (config) {
     //space: view, local, world, sphere
     //gridSnap, cursorSnap
@@ -151,8 +153,8 @@ altspace.utilities.behaviors.Drag = function (config) {
           config.z ? targetLocalPosition.z : object3d.position.z
         );
 
-        var sync = object3d.getBehaviorByType('Object3DSync');//TODO: REMOVE AND FIX
-        if(sync) sync.send();
+        var sync = object3d.getBehaviorByType('Object3DSync');//TODO: Figure out better way of doing this
+        if(sync) sync.enqueueSend();
     }
 
     function stopDrag() {

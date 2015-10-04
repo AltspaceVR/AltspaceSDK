@@ -36,6 +36,7 @@ gulp.task('altspace_js', function () {
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
             './lib/firebase.js',
+            //'./lib/TweenLite.min.js',
 
             './src/shim-core.js',
 
