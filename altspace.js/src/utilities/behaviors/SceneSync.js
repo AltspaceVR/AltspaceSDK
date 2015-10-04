@@ -55,6 +55,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         setInterval(autoSendAll, autoSendRateMS);
     }
 
+    //TODO: see if we can return the instantiated object since I think the callback happens syncronously with push
     function instantiate(template, initData) {
         sceneBase.push({ template: template, initData: initData });
     }
