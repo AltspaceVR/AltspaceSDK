@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="utilities.ColorHoverEffect.html">ColorHoverEffect</a><ul class='methods'><li data-type='method'><a href="utilities.ColorHoverEffect.html#add">add</a></li><li data-type='method'><a href="utilities.ColorHoverEffect.html#init">init</a></li></ul></li><li><a href="utilities.DragPlaneEffect.html">DragPlaneEffect</a><ul class='methods'><li data-type='method'><a href="utilities.DragPlaneEffect.html#add">add</a></li><li data-type='method'><a href="utilities.DragPlaneEffect.html#init">init</a></li></ul></li><li><a href="multiloader.LoadRequest.html">LoadRequest</a><ul class='methods'><li data-type='method'><a href="multiloader.LoadRequest.html#error">error</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#mtlUrls">mtlUrls</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objects">objects</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objectsLoaded">objectsLoaded</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objUrls">objUrls</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="multiloader.html">altspace/utilities/multiloader</a><ul class='methods'><li data-type='method'><a href="multiloader.html#init">init</a></li><li data-type='method'><a href="multiloader.html#load">load</a></li></ul></li><li><a href="bubbling.html">altspace/utilities/shims/bubbling</a></li><li><a href="cursor.html">altspace/utilities/shims/cursor</a><ul class='methods'><li data-type='method'><a href="cursor.html#init">init</a></li></ul></li><li><a href="dualRenderer.html">altspace/utilities/shims/dualRenderer</a><ul class='methods'><li data-type='method'><a href="dualRenderer.html#ambientLight">ambientLight</a></li><li data-type='method'><a href="dualRenderer.html#camera">camera</a></li><li data-type='method'><a href="dualRenderer.html#inAltMode">inAltMode</a></li><li data-type='method'><a href="dualRenderer.html#renderer">renderer</a></li><li data-type='method'><a href="dualRenderer.html#init">init</a></li><li data-type='method'><a href="dualRenderer.html#render">render</a></li></ul></li><li><a href="threebase.html">altspace/utilities/threebase</a><ul class='methods'><li data-type='method'><a href="threebase.html#add">add</a></li><li data-type='method'><a href="threebase.html#init">init</a></li><li data-type='method'><a href="threebase.html#save">save</a></li><li data-type='method'><a href="threebase.html#update">update</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1 id="altspacevr-sdk">AltspaceVR SDK</h1>
+<p><strong>Latest Version: v0.2.3 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog">See Changes</a></strong></p>
+<p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">three.js</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="http://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift DK2.</p>
+<p><a href="http://threejs.org/">Three.js</a> is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.</p>
+<p>This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.</p>
+<p>The SDK is in beta and actively under development. </p>
+<p>######Please stay up to date by reading the <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">Wiki</a>, the <a href="http://answers.altvr.com">Developer Answers</a> page, and the <a href="https://github.com/AltspaceVR/AltspaceSDK/issues">GitHub Issues</a> page. We also have a number of examples in <a href="http://codepen.io/team/altspacevr/public/">CodePen</a> that can be edited live in VR.  </p>
+<p><strong>The best way to begin working with the SDK is to follow our <a href="https://developer.altvr.com/get-started/">Getting Started</a> guide!</strong></p>
+<p><a href="http://altspacevr-slackin.herokuapp.com"><img src="https://altspacevr-slackin.herokuapp.com/badge.svg" alt="Slack Status"></a>  </p>
+<h2 id="altspace-js">altspace.js</h2>
+<p><code>altspace.js</code> should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.  </p>
+<p>Many APIs are present in the client without loading <code>altspace.js</code>, but please still include it, as this may change in the future.  </p>
+<p><strong>The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.</strong> This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of <code>altspace.js</code> we will try to return legacy behavior appropriate to your version of <code>altspace.js</code>. Versioning will follow <a href="http://semver.org/">SEMVER</a> as closely as possible.</p>
+<p>To always use the latest version, simply add this script tag to your project:</p>
+<p><code>&lt;script src=&quot;http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p>or to include a specific version add:</p>
+<p><code>&lt;script src=&quot;http://sdk.altvr.com/libs/altspace.js/0.2.3/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<h2 id="api-documentation">API Documentation</h2>
+<blockquote>
+<p>Note that many of our APIs make use of Promises. Learn about how they work over at <a href="http://www.html5rocks.com/en/tutorials/es6/promises/">HTML5 Rocks</a></p>
+</blockquote>
+<p>####Holographic Rendering</p>
+<ul>
+<li><p><code>var renderer = altspace.getThreeJSRenderer();</code><br>returns a renderer that can be used to render three.js scenes as holographic objects  </p>
+<blockquote>
+<p>Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)</p>
+</blockquote>
+</li>
+</ul>
+<p>####Cursor Events</p>
+<p>The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners. </p>
+<blockquote>
+<p>Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that signifigantly concave objects (buckets, etc) will block contained objects from being clicked on.</p>
+</blockquote>
+<ul>
+<li><p><code>mesh.addEventListener(&#39;cursorup&#39; / &#39;cursordown&#39;, callback);</code><br>listen for cursor events on a specific mesh.  </p>
+<blockquote>
+<p>These events will bubble up the three.js hierarchy. <code>stopPropagation</code> and <code>stopImmediatePropagation</code> are supported and work similarly to DOM events</p>
+</blockquote>
+</li>
+<li><code>scene.addEventListner(&#39;cursormove&#39;, callback)</code><br>listen for cursor move events</li>
+</ul>
+<p>####Enclosure Properties</p>
+<ul>
+<li><code>altspace.getEnclosure().then(callback)</code><br>returns a promise that will fufill with a description of the enclosure, including its size and <code>pixelsPerMeter</code> which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.  </li>
+</ul>
+<p>####User Data</p>
+<ul>
+<li><code>altspace.getUser().then(callback)</code><br>returns a promise that will fufill with information about the local user</li>
+</ul>
+<p>####Tracking Skeleton</p>
+<ul>
+<li><code>altspace.getThreeJSTrackingSkeleton().then(callback)</code><br>returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object&#39;s transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. <strong>Make sure to add the skeleton to your scene after receiving it</strong></li>
+</ul>
+<h2 id="utilities">Utilities</h2>
+<p>See the documentation in the <a href="https://github.com/AltspaceVR/AltspaceSDK/tree/master/utilities">utilities directory</a>  </p>
+<h2 id="three-js-feature-support">Three.js Feature Support</h2>
+<p><strong>Currently supported:</strong></p>
+<ul>
+<li>Object3D transformation and hierarchy</li>
+<li>Most Geometries</li>
+<li>MeshBasicMaterial map and color properties</li>
+<li>Examples that should work: <a href="http://threejs.org/examples/#webgl_interactive_draggablecubes" title="Click-and-drag to move objects around.">Draggable Cubes</a> - <a href="http://threejs.org/examples/#webgl_interactive_voxelpainter" title="Interactively add objects to the world.">Voxel Painter</a> - <a href="http://chandlerprall.github.io/Physijs/examples/collisions.html" title="Gravity/collision simulation using Physijs plugin.">Falling Cubes</a> - <a href="http://threejs.org/examples/canvas_geometry_birds.html" title="Objects simulating the Boid flocking algorithm.">Flocking Birds</a> - <a href="http://threejs.org/examples/#webgl_loader_obj_mtl" title="Load objects from OBJ/MTL files from Blender.">OBJ/MTL Import</a></li>
+</ul>
+<p><strong>Not currently supported:</strong></p>
+<ul>
+<li>Lighting, custom shaders, screen space effects.</li>
+<li>Examples that won&#39;t work: <a href="http://threejs.org/examples/#webgl_lights_hemisphere" title="Flying bird, with a dynamic shadow and toggleable lighting.">Hemisphere Light</a> - <a href="http://threejs.org/examples/#webgl_materials_cars_camaro" title="Car with a reflective material that can change color.">Material Reflection</a> - <a href="http://threejs.org/examples/#webgl_shaders_ocean" title="Sphere submerging into an ocean rendered with a custom WebGL shader.">Ocean Shader</a></li>
+</ul>
+<p><strong>Habits of Successful AltspaceVR Web Apps:</strong></p>
+<ul>
+<li>Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.</li>
+<li>Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.</li>
+<li>Limit the number of objects per scene and polygons per object.</li>
+<li>Bake ambient occlusion and other lighting into your models. All models currently render as unlit.  </li>
+</ul>
+<h2 id="learning-more">Learning More</h2>
+<p>More documentation is available in the <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">Wiki</a> and project ideas, resources, showcase submission, and more can be found at our <a href="http://developer.altvr.com">Developer Portal</a> </p>
+</article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Oct 05 2015 04:07:53 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

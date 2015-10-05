@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DragPlaneEffect.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="utilities.ColorHoverEffect.html">ColorHoverEffect</a><ul class='methods'><li data-type='method'><a href="utilities.ColorHoverEffect.html#add">add</a></li><li data-type='method'><a href="utilities.ColorHoverEffect.html#init">init</a></li></ul></li><li><a href="utilities.DragPlaneEffect.html">DragPlaneEffect</a><ul class='methods'><li data-type='method'><a href="utilities.DragPlaneEffect.html#add">add</a></li><li data-type='method'><a href="utilities.DragPlaneEffect.html#init">init</a></li></ul></li><li><a href="multiloader.LoadRequest.html">LoadRequest</a><ul class='methods'><li data-type='method'><a href="multiloader.LoadRequest.html#error">error</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#mtlUrls">mtlUrls</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objects">objects</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objectsLoaded">objectsLoaded</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objUrls">objUrls</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="multiloader.html">altspace/utilities/multiloader</a><ul class='methods'><li data-type='method'><a href="multiloader.html#init">init</a></li><li data-type='method'><a href="multiloader.html#load">load</a></li></ul></li><li><a href="bubbling.html">altspace/utilities/shims/bubbling</a></li><li><a href="cursor.html">altspace/utilities/shims/cursor</a><ul class='methods'><li data-type='method'><a href="cursor.html#init">init</a></li></ul></li><li><a href="dualRenderer.html">altspace/utilities/shims/dualRenderer</a><ul class='methods'><li data-type='method'><a href="dualRenderer.html#ambientLight">ambientLight</a></li><li data-type='method'><a href="dualRenderer.html#camera">camera</a></li><li data-type='method'><a href="dualRenderer.html#inAltMode">inAltMode</a></li><li data-type='method'><a href="dualRenderer.html#renderer">renderer</a></li><li data-type='method'><a href="dualRenderer.html#init">init</a></li><li data-type='method'><a href="dualRenderer.html#render">render</a></li></ul></li><li><a href="threebase.html">altspace/utilities/threebase</a><ul class='methods'><li data-type='method'><a href="threebase.html#add">add</a></li><li data-type='method'><a href="threebase.html#init">init</a></li><li data-type='method'><a href="threebase.html#save">save</a></li><li data-type='method'><a href="threebase.html#update">update</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">DragPlaneEffect.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Implement drag-and-drop of objects in a horizontal plane.
+ * @class altspace/utilities.DragPlaneEffect
+ */
+altspace = window.altspace || {};
+altspace.utilities = altspace.utilities || {};
+altspace.utilities.DragPlaneEffect = function(){
+  var dragPlane;
+  var hoverObject;
+  var dragObject;
+  var dragObjectWidth;
+  var dragOffset = new THREE.Vector3();
+  var raycaster = new THREE.Raycaster();
+  var rayOrigin = new THREE.Vector3();
+  var rayDirection = new THREE.Vector3();
+  var objects = [];
+  var scene;
+
+  // for debugging
+  var dragPointMarker;
+  var TRACE;
+
+  function init(myScene, myDragPlane, params){
+    if (! myScene instanceof THREE.Scene){
+      console.error('scene must be of type THREE.Scene');
+      return;
+    }
+    if (! myDragPlane instanceof THREE.Object3D){
+      console.error('dragPlane must be of type Object3D');
+      return;
+    }
+    scene = myScene;
+    dragPlane = myDragPlane.clone();//make copy that is NOT added to scene
+
+    var p = params || {};
+    TRACE = p.TRACE || null;
+    //Mark the intersection point when an object is dragged and on hoverOver.
+    //Intended as a debugging aide. Mesh with SphereGeometry works well.
+    dragPointMarker = p.dragPointMarker || null;
+
+    //Raycaster usually set from Three.js camera, but here assume near=1 and
+    //make 'far' 20% bigger than dragplane (if smaller, raycast won't work).
+    var geo = dragPlane.geometry.parameters;
+    raycaster.near = 1;
+    raycaster.far = Math.max(geo.width, geo.depth) * 1.2;
+  }
+
+  function add(object){
+    if (!object || !object instanceof THREE.Object3D){
+      throw new Error("DragPlaneEffect: add requires a valid object", object);
+    }
+    if (objects.indexOf(object) !== -1) return; 
+    objects.push(object);
+    scene.addEventListener("cursormove", cursormoveScene);
+    scene.addEventListener("cursorup", cursorupScene);
+    object.addEventListener("cursorup", cursorup);
+    object.addEventListener("cursordown", cursordown);
+  }
+
+  function cursormoveScene(event){
+    //Update raycaster origin and direction whenever cursor moves.
+    rayOrigin.copy(event.ray.origin);
+    rayDirection.copy(event.ray.direction);
+    dragUpdate();
+  }
+
+  function cursorupScene(event){
+    if (dragObject){
+      dragEnd();
+    }
+  }
+
+  function cursordown(event){
+    var object = event.currentTarget;
+    //Handle (rare) case where cursordown happens before any mousemove.
+    rayOrigin.copy(event.ray.origin);
+    rayDirection.copy(event.ray.direction);
+    dragStart(object, event);
+  }
+
+  function cursorup(event){
+    var object = event.currentTarget;
+    if (dragObject){
+      dragEnd();
+    }
+  }
+
+  function dragStart(object, event){
+    if (TRACE) console.log('Starting drag', object);
+    dragObject = object;
+    var boudingBox = new THREE.Box3().setFromObject(dragObject);
+    dragObjectWidth = Math.abs(boudingBox.max.x - boudingBox.min.x);
+    var intersectionPoint = event.point.clone();
+    if (window.altspace &amp;&amp; altspace.inClient){
+      //TODO: Investigate if bug in Altspace event or our mistake.
+      intersectionPoint.z *= -1;//invert z cordinate
+    }
+    if (!intersectionPoint){
+      console.error('drag start but no intersected object');
+      return;
+    }
+    if (TRACE) console.log('Intersection point:', intersectionPoint);
+    if ( !dragObject ) {
+      console.error('dragStart called, but object not selected');
+      return;
+    }
+    //Raise/lower the drag plane to match the drag start point.
+    dragPlane.position.y = intersectionPoint.y;
+    //Force update, otherwise old position of dragPlane is used when raycaster
+    //computes drag point later, and objects appear to 'jump' when selected.
+    dragPlane.updateMatrixWorld();
+    if (TRACE) console.log('Moving dragPlane.position.y to ' + intersectionPoint.y);
+    //Remember difference between center of object and drag point.
+    var objectCenterPoint = dragObject.position.clone();
+    objectCenterPoint.y = dragPlane.position.y;
+    dragOffset.copy(intersectionPoint).sub(objectCenterPoint);
+  }
+
+  function dragEnd(){
+      if (TRACE) console.log('Ending drag');
+      dragObject = null;
+      //Return dragPlane to ground-level. Not strictly needed since we'll reset
+      //on new drag, but looks better if the dragPlane is visible, e.g. for debugging.
+      dragPlane.position.y = 0;
+  }
+
+  function dragUpdate(){
+    //based on http://threejs.org/examples/#webgl_interactive_draggablecubes
+    //but changed to drag in x-z ground plane, instead of x-y vertical plane.
+    if (!dragObject) return;  //No drag, we're done.
+    raycaster.set(rayOrigin, rayDirection);
+    var intersects = raycaster.intersectObject(dragPlane);
+    if (intersects.length === 0){
+      if (TRACE) console.log('Ray no longer intersects dragplane');
+      dragEnd();
+      return;
+    }
+    var dragPoint = intersects[0].point.clone();
+    if (dragPointMarker){
+      dragPointMarker.position.copy(dragPoint);
+    }
+    //Update object position to where raycaster intersects dragPlane (minus offset).
+    var newPosition = new THREE.Vector3();
+    newPosition.copy(dragPoint).sub(dragOffset);
+    //But maintain the original y position of the object.
+    newPosition.y = dragObject.position.y;
+    //Constrain new position to the width and depth of the dragPlane.
+    //Prevents object from getting moved outside the bounding volume in Altspace.
+    //Account for object width, otherwise objects end up halfway off the dragPlane.
+    var params = dragPlane.geometry.parameters;
+    var objectWidth = dragObjectWidth;
+    if (dragPoint.x - objectWidth/2 &lt; dragPlane.position.x - params.width/2){
+      newPosition.x = dragPlane.position.x - params.width/2 + objectWidth/2;
+    }
+    if (dragPoint.x + objectWidth/2 > dragPlane.position.x + params.width/2){
+      newPosition.x = dragPlane.position.x + params.width/2 - objectWidth/2;
+    }
+    if (dragPoint.z - objectWidth/2 &lt; dragPlane.position.z - params.depth/2){
+      newPosition.z = dragPlane.position.z - params.depth/2 + objectWidth/2;
+    }
+    if (dragPoint.z + objectWidth/2 > dragPlane.position.z + params.depth/2){
+      newPosition.z = dragPlane.position.z + params.depth/2 - objectWidth/2;
+    }
+    dragObject.position.copy(newPosition);
+    return;
+  }
+
+  return {
+    /**
+     * Initialize the DragPlaneEffect instance.
+     * @instance
+     * @method
+     * @param {THREE.Scene} scene
+     * @param {THREE.Mesh} dragPlane A mesh with a Plane geometry which 
+     *  represents the drag plane.
+     * @param {Object} [params] Optional parameters.
+     * @param {THREE.Object3D} [params.dragPointMarker=false] An object which
+     *  should follow the cursor on the plane. E.g. a spherical mesh.
+     *  Useful for debugging
+     * @param {Boolean} [params.TRACE=false] Log debug messages.
+     * @memberof altspace/utilities.DragPlaneEffect
+     */
+    init: init,
+    /**
+     * Add an object which should be constrained to the drag plane.
+     * @instance
+     * @method
+     * @param {THREE.Object3D} object
+     * @memberof altspace/utilities.DragPlaneEffect
+     */
+    add: add,
+  };
+
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Oct 05 2015 04:07:53 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
