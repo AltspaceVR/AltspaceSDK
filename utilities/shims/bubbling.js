@@ -1,3 +1,20 @@
+/**
+ * Adds event bubbling to Three.js' events system.
+ * Just include this module, no further instantiation or function call 
+ * is required.
+ *
+ * @example
+ * var parent = new THREE.Object3D();
+ * parent.addEventListener('custom', function () {
+ *     console.log('received custom event');
+ * });
+ * var child = new THREE.Object3D();
+ * parent.add(child);
+ * child.dispatchEvent({type: 'custom'});
+ * // Console log shows 'received custom event'
+ *
+ * @exports altspace/utilities/shims/bubbling
+ */
 ( function() {
 
     if (!THREE) return;

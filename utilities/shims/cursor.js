@@ -1,9 +1,13 @@
-//Detects mouse move/up/down events, raycasts to find intersected objects, then
-//dispatches cursor move/up/down/enter/leave events that mimics Altspace events.
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
 
+/**
+ * Detects mouse move/up/down events, raycasts to find intersected objects, 
+ * then dispatches cursor move/up/down/enter/leave events that mimics 
+ * Altspace events.
+ * @exports altspace/utilities/shims/cursor
+ */
 altspace.utilities.shims.cursor = (function () {
     //TODO: Support non-full window apps
 
@@ -99,6 +103,13 @@ altspace.utilities.shims.cursor = (function () {
     };
 
     return {
+        /**
+         * Initializes the cursor module 
+         * @static
+         * @function
+         * @param {THREE.Scene} scene
+         * @param {THREE.Camera} camera - Camera used for raycasting.
+         */
         init: init,
     };
 

@@ -1,4 +1,7 @@
-//Implement drag-and-drop of objects in a horizontal plane.
+/**
+ * Implement drag-and-drop of objects in a horizontal plane.
+ * @class altspace/utilities.DragPlaneEffect
+ */
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.DragPlaneEffect = function(){
@@ -163,7 +166,28 @@ altspace.utilities.DragPlaneEffect = function(){
   }
 
   return {
+    /**
+     * Initialize the DragPlaneEffect instance.
+     * @instance
+     * @method
+     * @param {THREE.Scene} scene
+     * @param {THREE.Mesh} dragPlane A mesh with a Plane geometry which 
+     *  represents the drag plane.
+     * @param {Object} [params] Optional parameters.
+     * @param {THREE.Object3D} [params.dragPointMarker=false] An object which
+     *  should follow the cursor on the plane. E.g. a spherical mesh.
+     *  Useful for debugging
+     * @param {Boolean} [params.TRACE=false] Log debug messages.
+     * @memberof altspace/utilities.DragPlaneEffect
+     */
     init: init,
+    /**
+     * Add an object which should be constrained to the drag plane.
+     * @instance
+     * @method
+     * @param {THREE.Object3D} object
+     * @memberof altspace/utilities.DragPlaneEffect
+     */
     add: add,
   };
 

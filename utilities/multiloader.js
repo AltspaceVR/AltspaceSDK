@@ -1,4 +1,7 @@
-//Asynchronous loading of models using THREE.OBJMTLLoader
+/**
+ * Asynchronous loading of models using THREE.OBJMTLLoader
+ * @module altspace/utilities/multiloader
+ */
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.multiloader = (function(){
@@ -8,20 +11,58 @@ altspace.utilities.multiloader = (function(){
   var baseUrl = '';
   var crossOrigin = '';//assigned to THREE.MTLLoader.crossOrigin
 
+  /**
+   * Represents a request containing OBJ and MTL files that you want the 
+   * multiloader to load. The LoadRequest instance is populated with the 
+   * resulting objects.
+   * @name LoadRequest
+   * @class LoadRequest
+   * @memberof module:altspace/utilities/multiloader
+   */
   function LoadRequest(){
-    //To create loadRequst: new MultiLoader.LoadRequest()
-
-    var objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
-    var mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
-    var objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
-    var error;//String indicating loading error with at least one file.
-    var objectsLoaded = 0;//Used internally to determine when loading complete.
+    var objUrls = [];
+    var mtlUrls = [];
+    var objects = [];
+    var error;
+    var objectsLoaded = 0;
 
     return {
+      /**
+       * Paths to model geometry files, in Wavefront OBJ format.
+       * @instance
+       * @type String[]
+       * @memberof module:altspace/utilities/multiloader.LoadRequest
+       */
       objUrls: objUrls,
+      /**
+       * Paths to model materials files, in Wavefront MTL format.
+       * @instance
+       * @type String[]
+       * @memberof module:altspace/utilities/multiloader.LoadRequest
+       */
       mtlUrls: mtlUrls,
+      /**
+       * Objects resulting from the load request. 
+       * i.e. objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
+       * @instance
+       * @type THREE.Object3D[]
+       * @memberof module:altspace/utilities/multiloader.LoadRequest
+       */
       objects: objects,
+      /**
+       * Error message indicating an error while loading at least one of the
+       * requested files.
+       * @instance
+       * @type String
+       * @memberof module:altspace/utilities/multiloader.LoadRequest
+       */
       error: error,
+      /**
+       * Used internally to determine when loading complete.
+       * @instance
+       * @type Number
+       * @memberof module:altspace/utilities/multiloader.LoadRequest
+       */
       objectsLoaded: objectsLoaded
     };
 
@@ -85,7 +126,26 @@ altspace.utilities.multiloader = (function(){
   }
 
   return {
+    /**
+     * Initialize the multiloader module
+     * @static
+     * @method
+     * @param {Object} [params] Optional parameters.
+     * @param {String} [params.crossOrigin=''] 
+     * @param {String} [params.baseUrl=''] 
+     * @param {Boolean} [params.TRACE=false] Log debug messages.
+     */
     init: init,
+    /**
+     * Load the given LoadRequest and call the callback when ready.
+     * @static
+     * @method
+     * @param {LoadRequest} loadRequest An instance of LoadRequest with the obj
+     *  and mtl files that you want to load.
+     * @param {Function} onComplete called when all the OBJs have been 
+     *  loaded. The loadRequest instance will now contain the objects you 
+     *  requested.
+     */
     load: load,
     LoadRequest: LoadRequest,
   };

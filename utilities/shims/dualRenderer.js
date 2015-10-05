@@ -1,4 +1,8 @@
-//Creates a simple scene and renders using AltRender or THREE.WebGLRenderer.
+/**
+ * Creates a simple scene and renders using AltRender or THREE.WebGLRenderer.
+ * @module altspace/utilities/shims/dualRenderer
+ */
+
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
@@ -76,13 +80,61 @@ altspace.utilities.shims.dualRenderer = (function(){
   }
 
   var exports = {
+    /**
+     * Initializes the cursor module.
+     * @method
+     * @param {THREE.Scene} scene
+     * @param {Object} [params] Optional parameters.
+     * @param {Boolean} [params.forceWebGL=false] Force dualRenderer to use the 
+     *  WebGL renderer.
+     * @param {Boolean} [params.antialias=true]
+     * @param {THREE.Color} [params.clearColor='silver']
+     * @param {THREE.Color} [params.lightColor='white'] Color of the 
+     *  AmbientLight in the WebGL scene.
+     * @param {THREE.Camera} [params.camera=null] The camera you want to use
+     *  for the WebGL scene.
+     * @param {THREE.Light} [params.ambientLight=null] A light that you want to
+     *  add to the WebGL scene.
+     */
     init: init,
+
+    /**
+     * Render the scene.
+     * @method
+     */
     render: render,
   };
 
+  /**
+   * The camera being used by the WebGL renderer.
+   * @readonly
+   * @member {Three.Camera} camera
+   * @memberof module:altspace/utilities/shims/dualRenderer
+   */
   Object.defineProperty(exports, 'camera', {get: function(){return camera}});
+
+  /**
+   * The light added to the WebGL scene.
+   * @readonly
+   * @member {THREE.Light} ambientLight
+   * @memberof module:altspace/utilities/shims/dualRenderer
+   */
   Object.defineProperty(exports, 'ambientLight', {get: function(){return ambientLight}});
+
+  /**
+   * The renderer being used.
+   * @readonly
+   * @member {(THREE.WebGLRenderer|AltRenderer)} renderer
+   * @memberof module:altspace/utilities/shims/dualRenderer
+   */
   Object.defineProperty(exports, 'renderer', {get: function(){return renderer}});
+
+  /**
+   * Is the dualRenderer using the AltRenderer.
+   * @readonly
+   * @member {Boolean} inAltMode
+   * @memberof module:altspace/utilities/shims/dualRenderer
+   */
   Object.defineProperty(exports, 'inAltMode', {get: function(){return inAltMode}});
 
   return exports;

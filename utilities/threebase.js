@@ -1,4 +1,7 @@
-//Synchronize position/rotation of distributed Three.js objects using Firebase.
+/**
+ * Synchronize position/rotation of distributed Three.js objects using Firebase.
+ * @module altspace/utilities/threebase
+ */
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.threebase = (function(){
@@ -193,9 +196,43 @@ altspace.utilities.threebase = (function(){
 	}
 
 	return {
+    /**
+     * Initialize the threebase module
+     * @static
+     * @method
+     * @param {Firebase} syncInstance Firebase sync instance. Typically 
+     *  obtained from altspace.utilities.sync.getInstance()
+     * @param {Object} [params] Optional parameters.
+     * @param {Boolean} [params.TRACE=false] Log debug messages.
+     */
 		init: init,
+    /**
+     * Add an object to be synced.
+     * @static
+     * @method
+     * @param {THREE.Object3D} object The object to be synced. The object must
+     *  have a unique name.
+     * @param {Object} [params] Optional parameters.
+     * @param {Boolean} [params.position=true] Sync the object's position.
+     * @param {Boolean} [params.rotation=true] Sync the object's rotation.
+     * @param {Number} [params.autoSyncEvery=100] Number of milliseconds 
+     *  to wait between syncs.
+     */
 		add: add,
+    /**
+     * Manually save an object's state
+     * @static
+     * @method
+     * @param {THREE.Object3D} object The object to be saved. The object must
+     *  be added to threebase first.
+     */
 		save: save,
+    /**
+     * Update the state of the synced objects. Typically called in the render
+     * loop.
+     * @static
+     * @method
+     */
 		update: update,
 	};
 

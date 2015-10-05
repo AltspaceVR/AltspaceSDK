@@ -1,4 +1,7 @@
-//Change color of an object when cursor hovers over it.
+/**
+ * Change color of an object when cursor hovers over it.
+ * @class altspace/utilities.ColorHoverEffect
+ */
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.ColorHoverEffect = function(){
@@ -107,7 +110,24 @@ altspace.utilities.ColorHoverEffect = function(){
   }
 
   return {
+    /**
+     * Initializes the ColorHoverEffect instance.
+     * @instance
+     * @method
+     * @param {THREE.Scene} scene
+     * @param {THREE.Color} hoverColor
+     * @param {Object} [params] Optional parameters.
+     * @param {Boolean} [params.TRACE=false] Log debug messages.
+     * @memberof altspace/utilities.ColorHoverEffect
+     */
     init: init,
+    /**
+     * Apply the effect to an object.
+     * @instance
+     * @method
+     * @param {THREE.Object3D} object
+     * @memberof altspace/utilities.ColorHoverEffect
+     */
     add: add,
   };
 
