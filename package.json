@@ -1,0 +1,9 @@
+{
+  "name": "altspace",
+  "version": "0.3.0",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jsdoc": "^0.1.5",
+    "minami": "^1.1.1"
+  }
+}
