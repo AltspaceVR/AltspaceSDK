@@ -1,5 +1,5 @@
 //Creates a simple scene and renders using AltRender or THREE.WebGLRenderer.
-altspace = altspace || {};
+altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
 altspace.utilities.shims.dualRenderer = (function(){
@@ -25,11 +25,11 @@ altspace.utilities.shims.dualRenderer = (function(){
     //auto-detect if running in Altspace, unless 'forceWebGL' given in params.
     inAltMode = !forceWebGL && window.altspace && window.altspace.inClient;
 
-    var addAmbientLight = !!p.addAmbientLight;
     antialias = p.antialias || true;
     clearColor = p.clearColor || new THREE.Color('silver');
     lightColor = p.clearColor || new THREE.Color('white');
     camera = p.camera || null;
+    ambientLight = p.ambientLight || null;
     TRACE = p.TRACE || false;
 
     if (inAltMode) {
@@ -59,11 +59,11 @@ altspace.utilities.shims.dualRenderer = (function(){
       }
       resizeRender();
       scene.add(camera);
-      if (addAmbientLight){
+      if (!ambientLight){
         // Throw in a default light since any loaded OBJ files use MeshPhongMaterial.
         ambientLight = new THREE.AmbientLight(lightColor);
-        scene.add(ambientLight);
       }
+      scene.add(ambientLight);
     }
   }
 
