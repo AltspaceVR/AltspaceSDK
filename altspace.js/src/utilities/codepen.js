@@ -5,9 +5,9 @@
     var Url = window.Url;
 
     var name = 'VR CodePen';
-
-    var inTile = window.innerHeight === 300;//TODO: more reliable test for inTile
+    var inTile = !!window.__cancelAnimationFrame;
     var inVR = !!window.altspace.inClient;
+    var inCodePen = !!location.href.match('codepen.io/');
 
     function printDebugInfo() {
         console.log("In a tile: " + inTile);
@@ -91,6 +91,7 @@
     return {
         inTile: inTile,
         inVR: inVR,
+        inCodePen: inCodePen,
         ensureInVR: ensureInVR,
         setName: setName,
         getPenId: getPenId,

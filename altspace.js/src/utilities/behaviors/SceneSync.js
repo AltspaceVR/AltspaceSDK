@@ -22,22 +22,22 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         var data = snapshot.val();
         var key = snapshot.key();
 
-        var factory = factories[data.template];//TODO: reevaluate template name
+        var factory = factories[data.factoryName];//TODO: reevaluate factoryName name
 
         if (!factory) {
-            console.warn('No factory found for template: ' + data.template);
+            console.warn('No factory found for factoryName: ' + data.factoryName);
             return;
         }
 
         var object3d = factory(data.initData);
         if (!object3d) {
-            console.error(data.template + ' factory must return an Object3D');
+            console.error(data.factoryName + ' factory must return an Object3D');
             return;
         }
 
         var syncBehavior = object3d.getBehaviorByType('Object3DSync');
         if (!syncBehavior) {
-            console.error(data.template + ' factory must return an Object3D with an Object3DSync behavior');
+            console.error(data.factoryName + ' factory must return an Object3D with an Object3DSync behavior');
             return;
         }
 
@@ -56,8 +56,8 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     }
 
     //TODO: see if we can return the instantiated object since I think the callback happens syncronously with push
-    function instantiate(template, initData) {
-        sceneBase.push({ template: template, initData: initData });
+    function instantiate(factoryName, initData) {
+        sceneBase.push({ factoryName: factoryName, initData: initData });
     }
 
     var exports = { awake: awake, instantiate: instantiate, type: 'SceneSync' };
