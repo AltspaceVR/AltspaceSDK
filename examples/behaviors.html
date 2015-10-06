@@ -17,7 +17,7 @@ var sim = alt.Simulation();
 var inCodePen = alt.codePen.inCodePen;
 var instanceBase = alt.sync.getInstance({
   	authorId: inCodePen ? alt.codePen.getAuthorId() : null,
-  	instanceId: inCodePen ? alt.codePen.getPenId : null
+  	instanceId: inCodePen ? alt.codePen.getPenId() : null
 });
 
 function CreateCube(width, height, depth){
