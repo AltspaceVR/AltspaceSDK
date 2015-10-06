@@ -88,7 +88,7 @@ altspace.utilities.DragPlaneEffect = function(){
     var boudingBox = new THREE.Box3().setFromObject(dragObject);
     dragObjectWidth = Math.abs(boudingBox.max.x - boudingBox.min.x);
     var intersectionPoint = event.point.clone();
-    if (!event.isShimEvent){
+    if (window.altspace && altspace.inClient){
       //TODO: Investigate if bug in Altspace event or our mistake.
       intersectionPoint.z *= -1;//invert z cordinate
     }
@@ -134,9 +134,7 @@ altspace.utilities.DragPlaneEffect = function(){
     }
     var dragPoint = intersects[0].point.clone();
     if (dragPointMarker){
-      dragPointMarker.position.x = dragPoint.x;
-      dragPointMarker.position.y = dragPoint.y;
-      dragPointMarker.position.z = dragPoint.z;
+      dragPointMarker.position.copy(dragPoint);
     }
     //Update object position to where raycaster intersects dragPlane (minus offset).
     var newPosition = new THREE.Vector3();
