@@ -57,14 +57,7 @@ var CubeFactory = (function(){
   }
 
   function destroy(object3d){
-    console.log('CubeFactory destroying block');//XXX
-    var intervalId = setInterval(function(){
-      object3d.scale.multiplyScalar(0.75);
-    }, 50);
-    setTimeout(function(){
-      clearInterval(intervalId);
-      sim.scene.remove(object3d);
-    }, 500);
+    sim.scene.remove(object3d);
   };
 
   var exports = {
@@ -96,7 +89,6 @@ sim.scene.addBehavior(sceneSync);
 document.addEventListener('dblclick', function(){
   if (CubeFactory.overObject){
     //destroy this block
-    console.log('behaviors.html: destroying block', CubeFactory.overObject);//XXX
     sceneSync.destroy(CubeFactory.overObject);
   } else {
     //create block of random size at origin

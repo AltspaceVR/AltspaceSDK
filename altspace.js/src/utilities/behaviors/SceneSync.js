@@ -57,7 +57,29 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         syncBehavior.link(snapshot.ref());
     });
 
-    //AJR TODO: add child_removed handler
+    sceneBase.on('child_removed', function (snapshot) {
+        var key = snapshot.key();
+        var object3d = objectForKey[key];
+        if (!object3d){
+            console.warn('Failed to find object matching deleted key', key);
+            return;
+        }
+        //call the factory.destroy, which will typically remove from scene
+        //TODO: iterate through object's behaviors and call destroy on each one
+        var factory = factoryForUuid[object3d.uuid];
+        if (!factory) {
+            console.warn('No factory found for object being destroyed', object3d);
+            return;
+        }
+        if (factory.destroy) {//implementing destroy is optional
+            factory.destroy(object3d);
+        }
+        //remove from our local bookkeeping
+        delete objectForKey[key];
+        delete keyForObject[object3d];
+        delete factoryForUuid[object3d.uuid];
+    });
+
 
     function autoSendAll() {
         for (var i = 0, max = syncBehaviors.length; i < max; i++) {
@@ -78,15 +100,6 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     }
 
     function destroy(object3d) {
-        console.log('SceneSync: destroying block', object3d);//XXX
-        var factory = factoryForUuid[object3d.uuid];
-        if (!factory) {
-            console.warn('No factory found for object being destroyed', object3d);
-            return;
-        }
-        if (factory.destroy) {//implementing destroy is optional
-            factory.destroy(object3d);
-        }
         var key = keyForObject[object3d]
         sceneBase.child(key).off();//detach all callbacks
         sceneBase.child(key).remove(function(error){
