@@ -26,7 +26,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         positionBase = base.child('position');
         rotationBase = base.child('rotation');
         scaleBase = base.child('scale');
-        syncDataBase = base.Child('syncData');
+        syncDataBase = base.child('syncData');
     }
 
     //TODO: lerp
