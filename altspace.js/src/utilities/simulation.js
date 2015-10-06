@@ -29,7 +29,7 @@ altspace.utilities.Simulation = function (config) {
         }
 
         function setupWebGL() {
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({antialias: true});
             camera = new THREE.PerspectiveCamera();
             camera.position.z = 500;
 
