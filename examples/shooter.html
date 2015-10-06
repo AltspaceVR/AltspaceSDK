@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Shooter Example</title>
+<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
+<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.4/shims/cursor.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.4/shims/dualRenderer.js"></script>
+<script src="http://sdk.altvr.com/utilities/0.5.4/reticle.js"></script>
+
+</head>
+<body>
+</body>
+<script>
+//Click to shooot! Target reticle follows the cursor, captures all clicks.
+//Must be inside the Altspace enclosure for reticle to appear.
+
+//Setup
+var ascp = altspace.utilities.codePen;
+var scene = new THREE.Scene();
+var dualRenderer = altspace.utilities.shims.dualRenderer;
+var BOUNDS  = 500;//dimensions of enclosure
+var SCALE = 1;
+dualRenderer.init(scene);
+if (!dualRenderer.inAltMode) {//no camera if in Altspace
+  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
+	dualRenderer.camera.position.z = BOUNDS;//stand back from origin
+	SCALE = 0.2;//scale down otherwise target rectile looks huge
+}
+
+altspace.utilities.reticle.init(scene);
+var reticle = altspace.utilities.reticle.object;
+reticle.scale.multiplyScalar(SCALE);
+
+var makeSlug = function(){
+	return new THREE.Mesh(
+		new THREE.SphereGeometry(10, 20, 20),
+		new THREE.MeshBasicMaterial({color: Please.make_color()[0]})
+	);
+}
+var ammo = 10;
+var inFlight = [];
+reticle.addEventListener('cursordown', function(){
+	//In Altsapce cursordown/cursorup only fire when cursor is over a hologram,
+	//so putting the reticle object under cursor captures all down/up events.
+	var s = makeSlug();
+	s.scale.multiplyScalar(SCALE);
+	s.position.copy(reticle.position);
+	cursorRay = altspace.utilities.reticle.cursorRay;
+	s.userData.direction = cursorRay.direction.clone();
+	inFlight.push(s);
+	scene.add(s);
+});
+
+//Update & Rendering
+function animate() {
+	var i=0;
+	while(i < inFlight.length){
+		var s = inFlight[i];
+		if (Math.abs(s.position.x) > BOUNDS ||
+			  Math.abs(s.position.y) > BOUNDS ||
+			  Math.abs(s.position.z) > BOUNDS){
+			scene.remove(s);
+			inFlight.splice(i, 1);	
+			continue;
+		}
+		var newPosition = s.position.clone();
+		var direction = s.userData.direction.clone();
+		direction.multiplyScalar(2);
+		newPosition.add(direction);	
+		s.position.copy(newPosition);
+		i++;
+	}
+	requestAnimationFrame(animate);
+	dualRenderer.render();
+}
+animate();
+
+</script>
+</html>
