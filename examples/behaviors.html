@@ -20,31 +20,64 @@ var instanceBase = alt.sync.getInstance({
   	instanceId: inCodePen ? alt.codePen.getPenId() : null
 });
 
-function CreateCube(width, height, depth){
-  
-  var cube = new THREE.Mesh(
-    new THREE.BoxGeometry(width, height, depth),
-    new THREE.MeshBasicMaterial({color:'#EB5B40'})
-  );
-  cube.addBehaviors(
-    alt.Bob({shouldMove:false}),
-    alt.Spin({speed:0.002}),
-    alt.ButtonStateStyle(),
-    alt.Drag({x:true, z:true}),
-    alt.Object3DSync({
-      position: true
-    })
-  );
-  cube.position.y = -100;
-  
-  return cube;
-}
 
-function CreateSyncedCube(initData) {
-    var c = CreateCube(initData.width, initData.height, initData.depth);
-    sim.scene.add(c);
-    return c;
-}
+var CubeFactory = (function(){
+
+  var overObject = null;//cursor is over one of the cubes
+
+  function create(initData) {
+    var width = initData.width;
+    var height = initData.height;
+    var depth = initData.depth;
+  
+    var cube = new THREE.Mesh(
+      new THREE.BoxGeometry(width, height, depth),
+      new THREE.MeshBasicMaterial({color:'#EB5B40'})
+    );
+    cube.addBehaviors(
+      alt.Bob({shouldMove:false}),
+      alt.Spin({speed:0.002}),
+      alt.ButtonStateStyle(),
+      alt.Drag({x:true, z:true}),
+      alt.Object3DSync({
+        position: true
+      })
+    );
+    cube.position.y = -100;
+
+    cube.addEventListener('cursorenter', function(event){
+      overObject = event.currentTarget;
+    });
+    cube.addEventListener('cursorleave', function(event){
+      if (overObject === event.currentTarget) {overObject = null;}
+    });
+    sim.scene.add(cube);
+    
+    return cube;
+  }
+
+  function destroy(object3d){
+    console.log('CubeFactory destroying block');//XXX
+    var intervalId = setInterval(function(){
+      object3d.scale.multiplyScalar(0.75);
+    }, 50);
+    setTimeout(function(){
+      clearInterval(intervalId);
+      sim.scene.remove(object3d);
+    }, 500);
+  };
+
+  var exports = {
+    create: create,
+    destroy: destroy
+  };
+  Object.defineProperty(exports, 'overObject', {
+    get: function() { return overObject; }
+  });
+
+  return exports;
+
+}());
 
 function ready(shouldInitialize){//TODO: firstInInstance ?
   if(shouldInitialize){
@@ -54,15 +87,22 @@ function ready(shouldInitialize){//TODO: firstInInstance ?
 
 var sceneSync = alt.SceneSync(instanceBase, {
   factories: {
-    'Cube': CreateSyncedCube
+    'Cube': CubeFactory
   },
   ready: ready
 });
 sim.scene.addBehavior(sceneSync);
 
 document.addEventListener('dblclick', function(){
+  if (CubeFactory.overObject){
+    //destroy this block
+    console.log('behaviors.html: destroying block', CubeFactory.overObject);//XXX
+    sceneSync.destroy(CubeFactory.overObject);
+  } else {
+    //create block of random size at origin
     function randInt(min, max){return Math.random() * (max - min) + min;}
     sceneSync.instantiate('Cube', {width: randInt(20, 100), height: randInt(20, 100), depth: randInt(20, 100)});
+  }
 })
                
 </script>

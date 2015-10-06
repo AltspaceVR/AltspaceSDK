@@ -10,6 +10,10 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
 
     var syncBehaviors = [];
 
+    var objectForKey = {};
+    var keyForObject = {};
+    var factoryForUuid = {};
+
     instanceBase.child('initialized').once('value', function (snapshot) {
         var shouldInitialize = !snapshot.val();
         snapshot.ref().set(true);
@@ -19,21 +23,29 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     });
 
     sceneBase.on('child_added', function (snapshot) {
+
         var data = snapshot.val();
         var key = snapshot.key();
 
-        var factory = factories[data.factoryName];//TODO: reevaluate factoryName name
+        var factory = factories[data.factoryName];
 
         if (!factory) {
             console.warn('No factory found for factoryName: ' + data.factoryName);
             return;
         }
-
-        var object3d = factory(data.initData);
-        if (!object3d) {
-            console.error(data.factoryName + ' factory must return an Object3D');
+        if (!factory.create) {
+            console.warn('No factory.create() found for factoryName: ' + data.factoryName);
             return;
         }
+
+        var object3d = factory.create(data.initData);
+        if (!object3d) {
+            console.error(data.factoryName + '.create must return an Object3D');
+            return;
+        }
+        objectForKey[key] = object3d;
+        keyForObject[object3d] = key;
+        factoryForUuid[object3d.uuid] = factory;
 
         var syncBehavior = object3d.getBehaviorByType('Object3DSync');
         if (!syncBehavior) {
@@ -45,6 +57,8 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         syncBehavior.link(snapshot.ref());
     });
 
+    //AJR TODO: add child_removed handler
+
     function autoSendAll() {
         for (var i = 0, max = syncBehaviors.length; i < max; i++) {
             syncBehaviors[i].autoSend();
@@ -55,12 +69,37 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         setInterval(autoSendAll, autoSendRateMS);
     }
 
-    //TODO: see if we can return the instantiated object since I think the callback happens syncronously with push
     function instantiate(factoryName, initData) {
-        sceneBase.push({ factoryName: factoryName, initData: initData });
+        var objectBase = sceneBase.push({factoryName: factoryName, initData: initData},
+            function(error){if (error) throw Error('Failed to save to Firebase', error)}
+        );
+        //instantiation done, local child_added callback happens syncronously with push
+        return objectForKey[objectBase.key()];
     }
 
-    var exports = { awake: awake, instantiate: instantiate, type: 'SceneSync' };
+    function destroy(object3d) {
+        console.log('SceneSync: destroying block', object3d);//XXX
+        var factory = factoryForUuid[object3d.uuid];
+        if (!factory) {
+            console.warn('No factory found for object being destroyed', object3d);
+            return;
+        }
+        if (factory.destroy) {//implementing destroy is optional
+            factory.destroy(object3d);
+        }
+        var key = keyForObject[object3d]
+        sceneBase.child(key).off();//detach all callbacks
+        sceneBase.child(key).remove(function(error){
+            if (error) console.warn('Failed to remove from Firebase', error);
+        });
+    }
+
+    var exports = {
+        awake: awake,
+        instantiate: instantiate,
+        destroy: destroy,
+        type: 'SceneSync'
+    };
     Object.defineProperty(exports, 'autoSendRateMS', {
         get: function() { return autoSendRateMS; }
     });
