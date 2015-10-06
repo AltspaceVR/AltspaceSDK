@@ -11,8 +11,9 @@
 		</style>
 	</head>
 	<body>
+		<button id="move">toggle in/out of enclosure</button>
+		<button id="debug">log debug info</button>
 		<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
-
 		<script 
 			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
 		</script>
@@ -63,6 +64,19 @@
 			}
 
 			animate(0);
+
+			var $ = document.querySelector.bind(document);
+			$('#debug').addEventListener('click', function () {
+				altspace.getThreeJSDebugInfo().then(
+					console.table.bind(console));
+			});
+			var currentPosition = 0;
+			$('#move').addEventListener('click', function () {
+				currentPosition = currentPosition === 0 ? 2000 : 0;
+				visibleCube.position.set(-50, currentPosition, 0);
+				invisibleCube.position.set(0, currentPosition, 0);
+				invisibleMatCube.position.set(50, currentPosition, 0);
+			});
 		</script>
 	</body>
 </html>

@@ -16,14 +16,13 @@
 		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
 		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/libs/stats.min.js"></script>
-		<script src="https://sdk.altvr.com/utilities/0.2.0/shims/CursorEvents.js"></script>
 
 		<script 
 			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
 		</script>
 		<script type="text/babel">
 
-			var scene, renderer, camera, cursorEvents, controls, stats;
+			var scene, renderer, camera, controls, stats;
 			var 
 				tintTexCube, colorTexCube, tintColorCube, 
 				animatedCube, colorCube, texturedCube, 
@@ -31,8 +30,8 @@
 			var 
 				GREEN = {r: 0, g: 1, b: 0}, BLUE = {r: 0, g: 0, b: 1},
 				YELLOW = {r: 0, g: 1, b: 1}, MAGENTA = {r: 1, g: 0, b: 1}
-
 			var textureMat;
+			var objLoaded = false;
 
 			function addAxisSpheres(){
 				var geometry = new THREE.SphereGeometry(5);
@@ -199,9 +198,6 @@
 								this.material.color.setHex(0x00ff00);
 							}
 						);
-						if (!window.altspace) {
-							// cursorEvents.addObject(visInnerCube);
-						}
 					},
 					tick: function () {
 						visibilityCube.visible = true;
@@ -237,9 +233,6 @@
 								matVisInnerCube.material.color.setHex(0x00ff00);
 							}
 						);
-						if (!window.altspace) {
-							// cursorEvents.addObject(matVisibilityCube);
-						}
 					},
 					tick: function () {
 						matVisibilityCube.material.visible = true;
@@ -266,6 +259,7 @@
 								tintedObj.scale.multiplyScalar(30);
 								tintedObj.position.set(-50, -50, 0);
 								scene.add(tintedObj);
+								objLoaded = true;
 							}
 						);
 					},
@@ -306,10 +300,10 @@
 				}
 			];
 
-			// tests = tests.filter(test => /color.+tex/.test(test.name));
+			// tests = tests.filter(test => 'adding/removing colored cube' === test.name);
 
 			function init() {
-				scene = new THREE.Scene();
+				window.scene = scene = new THREE.Scene();
 				scene.position.set(0, -60, 0);
 				scene.scale.multiplyScalar(2);
 
@@ -330,8 +324,6 @@
 					var ambient = new THREE.AmbientLight( 0xffffff );
 					scene.add( ambient );
 					controls = new THREE.OrbitControls(camera);
-					// cursorEvents = new CursorEvents( scene );
-					// cursorEvents.enableMouseEvents( camera );
 				}
 
 				stats = new Stats();
@@ -348,6 +340,7 @@
 
 			var lastTick = Date.now();
 			var tick = true;
+			var debugInfoShown = false;
 			function animate(elapsed) {
 				requestAnimationFrame(animate);
 
@@ -367,11 +360,18 @@
 					forEach(test => test.update(elapsed));
 
 				if (!window.altspace) { 
-					// cursorEvents.update();
 					controls.update();
 				}
 
 				renderer.render( scene, camera );
+
+				if (objLoaded && !debugInfoShown) {
+					altspace.getThreeJSDebugInfo().then(function (debugInfo) {
+						console.table(debugInfo);
+					});
+					debugInfoShown = true;
+				}
+
 				stats.update();
 			}
 
