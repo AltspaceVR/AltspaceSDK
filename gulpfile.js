@@ -68,7 +68,8 @@ gulp.task('altspace_js', function () {
             console.log(e);
         })
         .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest('./dist/latest', { cwd: cwd }))
-        .pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
+        .pipe(gulp.dest('./dist/', { cwd: cwd }))
+        //.pipe(gulp.dest('./dist/latest', { cwd: cwd }))
+        //.pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
         .pipe(print());
 });
