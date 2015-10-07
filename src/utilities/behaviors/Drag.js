@@ -54,10 +54,6 @@ altspace.utilities.behaviors.Drag = function (config) {
     }
 
     function makeIntersector() {
-        if (intersector && intersector.parent) {
-            intersector.parent.remove(intersector);
-            //TODO dispose
-        }
         var extent = 10000;
         var plane = new THREE.PlaneGeometry(extent, extent);
 

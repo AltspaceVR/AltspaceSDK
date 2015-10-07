@@ -33,5 +33,12 @@ altspace.utilities.behaviors.ButtonStateStyle = function (config) {
         object3d.addEventListener('cursordown', cursorDown);
     }
 
-    return { awake: awake };
+    function dispose() {
+        object3d.removeEventListener('cursorenter', cursorEnter);
+        object3d.removeEventListener('cursorleave', cursorLeave);
+        object3d.removeEventListener('cursorup', cursorUp);
+        object3d.removeEventListener('cursordown', cursorDown);
+    }
+
+    return { awake: awake, dispose: dispose, type: 'ButtonStateStyle' };
 };

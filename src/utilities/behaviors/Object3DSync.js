@@ -8,7 +8,6 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     if (config.rotation === undefined) config.rotation = true;
     if (config.scale === undefined) config.scale = true;
     if (config.syncData === undefined) config.syncData = true;*/
-    var throttleMS = 50;
     var object3d;
     var base;
     var key;
