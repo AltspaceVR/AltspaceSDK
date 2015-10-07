@@ -1,73 +1,103 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset=utf-8>
 <title>Behaviors Example</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
-<script src="../dist/latest/altspace.min.js"></script>
+<script /src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
+<script src="http://localhost:8000/altspace.js/bin/latest/altspace.min.js"></script>
 
 </head>
 <body>
-    <script>
-
-        (function () { var a = window.altspace; (function (ss, t) { for (var i in ss) { for (var j in ss[i]) { t[j] = ss[i][j]; } }; })([a, a.utilities, a.utilities.behaviors, a.utilities.shims], window.alt = {}) })();
-
-        var sim = alt.Simulation();
-        var inCodePen = alt.codePen.inCodePen;
-        var instanceBase = alt.sync.getInstance({
-            authorId: inCodePen ? alt.codePen.getAuthorId() : null,
-            instanceId: inCodePen ? alt.codePen.getPenId() : null
-        });
-
-        function CreateCube(width, height, depth) {
-
-            var cube = new THREE.Mesh(
-              new THREE.BoxGeometry(width, height, depth),
-              new THREE.MeshBasicMaterial({ color: '#EB5B40' })
-            );
-            cube.addBehaviors(
-              alt.Bob({ shouldMove: false }),
-              alt.Spin({ speed: 0.002 }),
-              alt.ButtonStateStyle(),
-              alt.Drag({ x: true, z: true }),
-              alt.Object3DSync({
-                  position: true
-              })
-            );
-            cube.position.y = -100;
-
-            return cube;
-        }
-
-        function CreateSyncedCube(initData) {
-            var c = CreateCube(initData.width, initData.height, initData.depth);
-            sim.scene.add(c);
-            return c;
-        }
-
-        function ready(shouldInitialize) {//TODO: firstInInstance ?
-            if (shouldInitialize) {
-                console.log('should init');
-                sceneSync.instantiate('Cube', { width: 100, height: 50, depth: 100 });
-            }
-        }
-
-        var sceneSync = alt.SceneSync(instanceBase, {
-            factories: {
-                'Cube': CreateSyncedCube
-            },
-            ready: ready
-        });
-        sim.scene.addBehavior(sceneSync);
-
-        document.addEventListener('dblclick', function() {
-            function randInt(min, max) { return Math.random() * (max - min) + min; }
-
-            sceneSync.instantiate('Cube', { width: randInt(20, 100), height: randInt(20, 100), depth: randInt(20, 100) });
-        });
-
-    </script>
 </body>
+<script>
+
+(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
+
+var sim = alt.Simulation();
+var inCodePen = alt.codePen.inCodePen;
+var instanceBase = alt.sync.getInstance({
+  	authorId: inCodePen ? alt.codePen.getAuthorId() : null,
+  	instanceId: inCodePen ? alt.codePen.getPenId() : null
+});
+
+
+var CubeFactory = (function(){
+
+  var overObject = null;//cursor is over one of the cubes
+
+  function create(initData) {
+    var width = initData.width;
+    var height = initData.height;
+    var depth = initData.depth;
+  
+    var cube = new THREE.Mesh(
+      new THREE.BoxGeometry(width, height, depth),
+      new THREE.MeshBasicMaterial({color:'#EB5B40'})
+    );
+    cube.addBehaviors(
+      alt.Bob({shouldMove:false}),
+      alt.Spin({speed:0.002}),
+      alt.ButtonStateStyle(),
+      alt.Drag({x:true, z:true}),
+      alt.Object3DSync({
+        position: true
+      })
+    );
+    cube.position.y = -100;
+
+    cube.addEventListener('cursorenter', function(event){
+      overObject = event.currentTarget;
+    });
+    cube.addEventListener('cursorleave', function(event){
+      if (overObject === event.currentTarget) {overObject = null;}
+    });
+    sim.scene.add(cube);
+    
+    return cube;
+  }
+
+  function destroy(object3d){
+    sim.scene.remove(object3d);
+  };
+
+  var exports = {
+    create: create,
+    destroy: destroy
+  };
+  Object.defineProperty(exports, 'overObject', {
+    get: function() { return overObject; }
+  });
+
+  return exports;
+
+}());
+
+function ready(shouldInitialize){//TODO: firstInInstance ?
+  if(shouldInitialize){
+    sceneSync.instantiate('Cube', {width: 100, height: 50, depth: 100});
+  }
+}
+
+var sceneSync = alt.SceneSync(instanceBase, {
+  factories: {
+    'Cube': CubeFactory
+  },
+  ready: ready
+});
+sim.scene.addBehavior(sceneSync);
+
+document.addEventListener('dblclick', function(){
+  if (CubeFactory.overObject){
+    //destroy this block
+    sceneSync.destroy(CubeFactory.overObject);
+  } else {
+    //create block of random size at origin
+    function randInt(min, max){return Math.random() * (max - min) + min;}
+    sceneSync.instantiate('Cube', {width: randInt(20, 100), height: randInt(20, 100), depth: randInt(20, 100)});
+  }
+})
+               
+</script>
 </html>
                
                
