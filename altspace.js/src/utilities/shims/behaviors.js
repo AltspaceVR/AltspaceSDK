@@ -9,7 +9,6 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 
     var deltaTime = now - lastNow;
 
-    var self = this;
     this.traverse(function (object3d) {
 
         if (object3d.__behaviorList) {
@@ -22,10 +21,10 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 
 }
 
-THREE.Object3D.prototype.addBehavior = function(behavior)
+THREE.Object3D.prototype.addBehavior = function()
 {
     this.__behaviorList = this.__behaviorList || [];
-    this.__behaviorList.push(behavior);
+    Array.prototype.push.apply(this.__behaviorList, arguments);
 }
 
 THREE.Object3D.prototype.addBehaviors = function()
@@ -36,15 +35,42 @@ THREE.Object3D.prototype.addBehaviors = function()
 
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
-    //TODO: fire remove
-    var i = array.indexOf(behavior);
-    if (i != -1) {
+    var i = this.__behaviorList.indexOf(behavior);
+    if (i !== -1) {
         this.__behaviorList.splice(i, 1);
+        try {
+
+            if (behavior.dispose) behavior.dispose.call(behavior, this);
+
+        } catch (e) {
+
+            (console.error || console.log).call(console, e.stack || e);
+
+        }
+    }
+}
+
+THREE.Object3D.prototype.removeAllBehaviors = function ()
+{
+    if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+
+    for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+        var behavior = this.__behaviorList[i];
+
+        try {
+
+            if (behavior.dispose) behavior.dispose.call(behavior, this);
+
+        } catch (e) {
+
+            (console.error || console.log).call(console, e.stack || e);
+
+        }
     }
 }
 
 THREE.Object3D.prototype.getBehaviorByType = function(type) {
-    if (!this.__behaviorList) return;
+    if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
 
     for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
         if (this.__behaviorList[i].type === type)
@@ -54,7 +80,7 @@ THREE.Object3D.prototype.getBehaviorByType = function(type) {
 
 THREE.Object3D.prototype.updateBehaviors = function(deltaTime) {
 
-    if (!this.__behaviorList.length === 0) return;
+    if (!this.__behaviorList || this.__behaviorList.length === 0) return;
 
     var toInit = [];
     var toUpdate = this.__behaviorList.slice(); // prevent mutation of the behavior list during this loop
