@@ -38,12 +38,14 @@ altspace.utilities.Simulation = function (config) {
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             };
-            document.body.style.margin = '0px';
-            document.body.style.overflow = 'hidden';
-            renderer.setClearColor('#035F72');
-            var container = document.createElement('div');
-            document.body.appendChild(container);
-            container.appendChild(renderer.domElement);
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.body.style.margin = '0px';
+                document.body.style.overflow = 'hidden';
+                renderer.setClearColor('#035F72');
+                var container = document.createElement('div');
+                document.body.appendChild(container);
+                container.appendChild(renderer.domElement);
+            });
             window.addEventListener('resize', resizeRender);
             resizeRender();
             camera.fov = 45;
