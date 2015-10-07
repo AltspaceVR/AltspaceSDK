@@ -1,5 +1,7 @@
 altspace.utilities.sync = (function() {
     
+    var instance;
+
     function dashEscapeFirebaseKey(keyName) {
         return encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-')
     }
@@ -7,6 +9,17 @@ altspace.utilities.sync = (function() {
     function getCanonicalUrl() {
         var canonicalElement = document.querySelector('link[rel=canonical]');
         return canonicalElement ? canonicalElement.href : window.location.href;
+    }
+
+    function authenticate(callback){//TODO: Promise
+        var ref = instance || getInstance(params);
+        ref.authAnonymously(function(error, authData) {
+          if (error) {
+            console.error("Authetication Failed!", error);
+          } else {
+            callback(authData);
+          }
+        }, {remember: 'sessionOnly'});
     }
 
     function getInstance(params) {
@@ -33,8 +46,9 @@ altspace.utilities.sync = (function() {
             url.query['altspace-sync-instance'] = instanceId;
             window.location.href = url.toString();
         }
+        instance = firebaseInstance;
         return firebaseInstance;
     }
 
-    return { getInstance: getInstance };
+    return { getInstance: getInstance, authenticate: authenticate };
 }());
