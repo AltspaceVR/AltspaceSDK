@@ -1,10 +1,4 @@
 Utility Documentation
-====
-There are two types of utilities, bundled utilities and unbundled utilities.  
-
-This folder contains unbundled utilities that are under active development and may change independently of the SDK version number.  
-
-## Bundled Utilities
 
 ###Sync
 `altspace.utilities.sync`  
@@ -43,7 +37,3 @@ Refer to the [Firebase API documentation](https://www.firebase.com/docs/web/api/
 
 - `inVR`  
   If the pen is being executed in AltspaceVR  
-
-## Unbundled Utilities
-
-Documentation Coming Soon
