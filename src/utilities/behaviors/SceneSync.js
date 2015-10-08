@@ -5,6 +5,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) {
     var sceneBase = instanceBase.child('scene');
     var factories = config.factories || {};
+    var disposals = config.disposals || {};
 
     var autoSendRateMS = 100;
 
@@ -12,7 +13,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
 
     var objectForKey = {};
     var keyForUuid = {};
-    var factoryForUuid = {};
+    var factoryNameForUuid = {};
 
     instanceBase.child('initialized').once('value', function (snapshot) {
         var shouldInitialize = !snapshot.val();
@@ -33,19 +34,15 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             console.warn('No factory found for factoryName: ' + data.factoryName);
             return;
         }
-        if (!factory.create) {
-            console.warn('No factory.create() found for factoryName: ' + data.factoryName);
-            return;
-        }
 
-        var object3d = factory.create(data.initData);
+        var object3d = factory(data.initData);
         if (!object3d) {
             console.error(data.factoryName + '.create must return an Object3D');
             return;
         }
         objectForKey[key] = object3d;
         keyForUuid[object3d.uuid] = key;
-        factoryForUuid[object3d.uuid] = factory;
+        factoryNameForUuid[object3d.uuid] = data.factoryName;
 
         var syncBehavior = object3d.getBehaviorByType('Object3DSync');
         if (!syncBehavior) {
@@ -66,18 +63,19 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         }
         //call the factory.destroy, which will typically remove from scene
         //TODO: iterate through object's behaviors and call destroy on each one
-        var factory = factoryForUuid[object3d.uuid];
-        if (!factory) {
-            console.warn('No factory found for object being destroyed', object3d);
+        var factoryName = factoryNameForUuid[object3d.uuid];
+        if (!factoryName) {
+            console.warn('No factoryName found for object being destroyed', object3d);
             return;
         }
-        if (factory.destroy) {//implementing destroy is optional
-            factory.destroy(object3d);
+        if (disposals[factoryName]){//implementing disposal is optional
+            var disposal = disposals[factoryName];
+            disposal(object3d);
         }
         //remove from our local bookkeeping
         delete objectForKey[key];
         delete keyForUuid[object3d.uuid];
-        delete factoryForUuid[object3d.uuid];
+        delete factoryNameForUuid[object3d.uuid];
     });
 
 
