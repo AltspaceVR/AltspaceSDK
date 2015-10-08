@@ -61,8 +61,6 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             console.warn('Failed to find object matching deleted key', key);
             return;
         }
-        //call the factory.destroy, which will typically remove from scene
-        //TODO: iterate through object's behaviors and call destroy on each one
         var factoryName = factoryNameForUuid[object3d.uuid];
         if (!factoryName) {
             console.warn('No factoryName found for object being destroyed', object3d);
@@ -76,6 +74,8 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         delete objectForKey[key];
         delete keyForUuid[object3d.uuid];
         delete factoryNameForUuid[object3d.uuid];
+
+        object3d.removeAllBehaviors();//removes this SceneSync behavior too
     });
 
 
