@@ -9,11 +9,13 @@
   <body style="background-color: white">
     <div id="mocha"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
+    <script src="../dist/altspace.min.js"></script>
     <script src="./lib/mocha.js"></script>
     <script src="./lib/chai.js"></script>
     <script src="./lib/chai-as-promised.js"></script>
     <script>mocha.setup('bdd')</script>
     <script src="./src/main.js"></script>
+    <script src="./src/layout.js"></script>
     <script>
       mocha.run();
     </script>

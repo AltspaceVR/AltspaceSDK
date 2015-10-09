@@ -8,6 +8,8 @@ var gulp = require('gulp'),
     path = require('path'),
     print = require('gulp-print'),
     concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
+    babel = require('gulp-babel'),
     uglify = require('gulp-uglify'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
@@ -23,6 +25,7 @@ gulp.task('watch', ['altspace_js'], function () {
     gulp.watch('./version.json', ['altspace_js']);
     gulp.watch('./src/**/*.js', ['altspace_js']);
     gulp.watch('./lib/**/*.js', ['altspace_js']);
+    gulp.watch('./tests/**/*.js', ['altspace_js']);
 });
 
 gulp.task('altspace_js', function () {
@@ -30,6 +33,13 @@ gulp.task('altspace_js', function () {
     var version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
     console.log('version');
     console.log(version);
+
+    gulp.src([
+		'./tests/src/layout.es6.js'
+	])
+	.pipe(babel())
+	.pipe(rename('layout.js'))
+	.pipe(gulp.dest('./tests/src/'));
 
     return orderedMerge([
     gulp.src([
@@ -55,6 +65,9 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/Spin.js',
     ], { cwd: cwd }),
+    gulp.src([
+		'./src/utilities/behaviors/Layout.es6.js'
+	], { cwd: cwd }).pipe(babel()),
     gulp.src(
         './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))

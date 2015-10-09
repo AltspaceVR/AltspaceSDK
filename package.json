@@ -2,9 +2,11 @@
   "name": "altspace",
   "version": "0.3.0",
   "devDependencies": {
+    "gulp-babel": "^5.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-jshint": "^1.11.2",
     "gulp-print": "^2.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.4.1",
