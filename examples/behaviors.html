@@ -54,10 +54,6 @@ function createCube(initData) {
   return cube;
 }
 
-function destroyCube(object3d){
-  sim.scene.remove(object3d);
-};
-
 function ready(shouldInitialize){//TODO: firstInInstance ?
   if(shouldInitialize){
     sceneSync.instantiate('Cube', {width: 100, height: 50, depth: 100});
@@ -67,9 +63,6 @@ function ready(shouldInitialize){//TODO: firstInInstance ?
 var sceneSync = alt.SceneSync(instanceBase, {
   factories: {
     'Cube': createCube
-  },
-  disposals: {
-    'Cube': destroyCube
   },
   ready: ready
 });

@@ -13,7 +13,6 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
 
     var objectForKey = {};
     var keyForUuid = {};
-    var factoryNameForUuid = {};
 
     instanceBase.child('initialized').once('value', function (snapshot) {
         var shouldInitialize = !snapshot.val();
@@ -35,14 +34,13 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             return;
         }
 
-        var object3d = factory(data.initData);
+        var object3d = factory(data.initData, data.factoryName);
         if (!object3d) {
             console.error(data.factoryName + '.create must return an Object3D');
             return;
         }
         objectForKey[key] = object3d;
         keyForUuid[object3d.uuid] = key;
-        factoryNameForUuid[object3d.uuid] = data.factoryName;
 
         var syncBehavior = object3d.getBehaviorByType('Object3DSync');
         if (!syncBehavior) {
@@ -55,13 +53,14 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     });
 
     sceneBase.on('child_removed', function (snapshot) {
+        var data = snapshot.val();
         var key = snapshot.key();
         var object3d = objectForKey[key];
         if (!object3d){
             console.warn('Failed to find object matching deleted key', key);
             return;
         }
-        var factoryName = factoryNameForUuid[object3d.uuid];
+        var factoryName = data.factoryName;
         if (!factoryName) {
             console.warn('No factoryName found for object being destroyed', object3d);
             return;
@@ -73,9 +72,12 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         //remove from our local bookkeeping
         delete objectForKey[key];
         delete keyForUuid[object3d.uuid];
-        delete factoryNameForUuid[object3d.uuid];
 
         object3d.removeAllBehaviors();//removes this SceneSync behavior too
+
+        if (object3d.parent){
+            object3d.parent.remove(object3d);
+        }
     });
 
 
@@ -103,10 +105,10 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             console.warn('Failed to find key matching deleted object3d', object3d);
             return;
         }
-        sceneBase.child(key).off();//detach all callbacks
         sceneBase.child(key).remove(function(error){
             if (error) console.warn('Failed to remove from Firebase', error);
         });
+        sceneBase.child(key).off();//detach all callbacks
     }
 
     var exports = {
