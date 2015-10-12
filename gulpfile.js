@@ -4,16 +4,24 @@
  **/
 
 var gulp = require('gulp'),
+
     fs = require('fs'),
     path = require('path'),
+
     print = require('gulp-print'),
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
     babel = require('gulp-babel'),
+
+    babelify = require('babelify'),
+    vsource = require('vinyl-source-stream'),
+    vbuffer = require('vinyl-buffer'),
+
     uglify = require('gulp-uglify'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
+
     jshint = require('gulp-jshint'),
     sourcemaps = require('gulp-sourcemaps');
 
@@ -23,6 +31,7 @@ gulp.task('default', function () {
 
 gulp.task('watch', ['altspace_js'], function () {
     gulp.watch('./version.json', ['altspace_js']);
+    gulp.watch('./examples/**/*.js', ['altspace_js']);
     gulp.watch('./src/**/*.js', ['altspace_js']);
     gulp.watch('./lib/**/*.js', ['altspace_js']);
     gulp.watch('./tests/**/*.js', ['altspace_js']);
@@ -35,48 +44,56 @@ gulp.task('altspace_js', function () {
     console.log(version);
 
     gulp.src([
-		'./tests/src/layout.es6.js'
+		'./**/*.es6.js'
 	])
-	.pipe(babel())
-	.pipe(rename('layout.js'))
-	.pipe(gulp.dest('./tests/src/'));
+	.pipe(babel({optional: ['runtime']}))
+	.pipe(rename(function (path) {
+		path.basename = path.basename.replace('.es6', '');
+	}))
+	.pipe(gulp.dest('./'));
+
+	browserify(
+		'./src/utilities/behaviors/Layout.js',
+	)
+	.bundle()
+	.pipe(source('Layout.js'))
+	.pipe(buffer())
+	.pipe(gulp.dest('./tmp/'));
 
     return orderedMerge([
-    gulp.src([
-            './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
-            './lib/url.js',
-            './lib/firebase.js',
-            //'./lib/TweenLite.min.js',
+		gulp.src([
+			'./lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
+			'./lib/url.js',
+			'./lib/firebase.js',
+			//'./lib/TweenLite.min.js',
 
-            './src/shim-core.js',
+			'./src/shim-core.js',
 
-            './src/utilities/sync.js',
-            './src/utilities/codepen.js',
-            './src/utilities/simulation.js',
+			'./src/utilities/sync.js',
+			'./src/utilities/codepen.js',
+			'./src/utilities/simulation.js',
 
-            './src/utilities/shims/behaviors.js',
-            './src/utilities/shims/cursor.js',
-            './src/utilities/shims/bubbling.js',
+			'./src/utilities/shims/behaviors.js',
+			'./src/utilities/shims/cursor.js',
+			'./src/utilities/shims/bubbling.js',
 
-            './src/utilities/behaviors/SceneSync.js',
-            './src/utilities/behaviors/Object3DSync.js',
-            './src/utilities/behaviors/Bob.js',
-            './src/utilities/behaviors/ButtonStateStyle.js',
-            './src/utilities/behaviors/Drag.js',
-            './src/utilities/behaviors/Spin.js',
-    ], { cwd: cwd }),
-    gulp.src([
-		'./src/utilities/behaviors/Layout.es6.js'
-	], { cwd: cwd }).pipe(babel()),
-    gulp.src(
-        './src/version.js', { cwd: cwd })
-            .pipe(replace("VERSION", "'" + version + "'"))
+			'./src/utilities/behaviors/SceneSync.js',
+			'./src/utilities/behaviors/Object3DSync.js',
+			'./src/utilities/behaviors/Bob.js',
+			'./src/utilities/behaviors/ButtonStateStyle.js',
+			'./src/utilities/behaviors/Drag.js',
+			'./src/utilities/behaviors/Spin.js',
+			'./tmp/Layout.js',
+		], { cwd: cwd }),
+		gulp.src(
+			'./src/version.js', { cwd: cwd })
+			.pipe(replace("VERSION", "'" + version + "'"))
     ])
         //.pipe(jshint())
         //.pipe(jshint.reporter('default'))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
-        .pipe(uglify())
+        //.pipe(uglify())
         .on('error', function (e) {
             console.log(e);
         })
