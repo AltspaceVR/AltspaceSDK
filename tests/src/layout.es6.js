@@ -1,14 +1,14 @@
 'use strict';
 (function () {
-	var expect = chai.expect;
+	let expect = chai.expect;
 	describe('layout', function () {
-		var behaviors = altspace.utilities.behaviors;
-		var scene,
+		let behaviors = altspace.utilities.behaviors;
+		let scene,
 			cube,
 			container,
 			log = [];
-		var originalLog = console.log.bind(console);
-		var originalError = console.error.bind(console);
+		let originalLog = console.log.bind(console);
+		let originalError = console.error.bind(console);
 		beforeEach(function () {
 			log = [];
 			window.console.log = (...args) => {
@@ -27,7 +27,7 @@
 
 			if (!altspace.getEnclosure) {
 				altspace.getEnclosure = function () {
-					var mockPromise = {
+					let mockPromise = {
 						then: function (callback) {
 							setTimeout(() => callback({
 								innerHeight: 1024,
@@ -83,7 +83,7 @@
 			cube.rotation.z = Math.PI / 4;
 			cube.addBehavior(new behaviors.Layout({my: {x: 'max'}, at: {x: 'max'}}));
 			scene.updateAllBehaviors();
-			var cubeDiagonal = Math.sqrt(Math.pow(0.5, 2) + Math.pow(0.5, 2));
+			let cubeDiagonal = Math.sqrt(Math.pow(0.5, 2) + Math.pow(0.5, 2));
 			expect(cube.position.x).to.be.closeTo(5 - cubeDiagonal, 0.00001);
 		});
 		it('should be able position object in all axes', function () {

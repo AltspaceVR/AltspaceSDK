@@ -1,8 +1,9 @@
 require('babel/polyfill');
-var
+let
 	containerMax = Symbol('containerMax'),
 	containerMin = Symbol('containerMin'),
 	object3D = Symbol('object3D'),
+	boundingBox = Symbol('boundingBox'),
 	origMatrix = Symbol('origMatrix'),
 	origMatrixAutoUpdate = Symbol('origMatrixAutoUpdate'),
 	parent = Symbol('parent');
@@ -14,12 +15,13 @@ class Layout {
 		this.at = at;
 	}
 
+	// TODO-BP Ideally these would be private methods.
 	getAxisSettings (axis, axisValue, min, max) {
 		axisValue = axisValue || 'center';
 		axisValue = /(\w+)([-+].+)?/.exec(axisValue);
-		var position = axisValue[1];
-		var offsetSetting = axisValue[2];
-		var offset = parseFloat(offsetSetting) || 0;
+		let position = axisValue[1];
+		let offsetSetting = axisValue[2];
+		let offset = parseFloat(offsetSetting) || 0;
 		if (offsetSetting && offsetSetting.endsWith('%')) {
 			offset = offset / 100 * (max[axis] - min[axis]);
 		}
@@ -30,10 +32,9 @@ class Layout {
 	}
 
 	getAnchorOffset (axis, axisValue) {
-		var boundingBox = new THREE.Box3().setFromObject(this[object3D]);
-		var max = boundingBox.max;
-		var min = boundingBox.min;
-		var {position, offset} = this.getAxisSettings(
+		let max = this[boundingBox].max;
+		let min = this[boundingBox].min;
+		let {position, offset} = this.getAxisSettings(
 			axis, axisValue, min, max);
 		if (position === 'max') {
 			return -max[axis] + offset
@@ -52,9 +53,9 @@ class Layout {
 	};
 	doLayout () {
 		Array.from('xyz').forEach((axis) => {
-			var {position, offset} = this.getAxisSettings(
+			let {position, offset} = this.getAxisSettings(
 				axis, this.at[axis], this[containerMin], this[containerMax]);
-			var anchorOffset = this.getAnchorOffset(axis, this.my[axis]);
+			let anchorOffset = this.getAnchorOffset(axis, this.my[axis]);
 			if (position === 'max') {
 				this[object3D].position[axis] = this[containerMax][axis] + offset + anchorOffset;
 			}
@@ -81,15 +82,17 @@ class Layout {
 
 	awake (_object3D) {
 		this[object3D] = _object3D;
+		this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
 
 		if (this[object3D].parent instanceof THREE.Scene) {
+			// TODO Listen for resize events on the enclosure
 			altspace.getEnclosure().then((enclosure) => {
-				var 
+				let 
 					hw = enclosure.innerWidth / 2,
 					hh = enclosure.innerHeight / 2,
 					hd = enclosure.innerDepth / 2;
 				this[containerMax] = new THREE.Vector3(hw, hh, hd);
-				this[containerMin] = this[containerMax].clone().multiplyScalar(-1);
+				this[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
 				this.doLayout();
 			});
 		}
@@ -103,7 +106,7 @@ class Layout {
 			// Reset the parent matrix so that we can get the original bounding box.
 			this[parent].matrixAutoUpdate = false;
 			this[parent].matrix.identity();
-			var parentBoundingBox = new THREE.Box3().setFromObject(this[parent]);
+			let parentBoundingBox = new THREE.Box3().setFromObject(this[parent]);
 			this[containerMax] = this[parent].worldToLocal(parentBoundingBox.max);
 			this[containerMin] = this[parent].worldToLocal(parentBoundingBox.min);
 			this.doLayout();

@@ -3,9 +3,9 @@
 	var expect = chai.expect;
 	describe('layout', function () {
 		var behaviors = altspace.utilities.behaviors;
-		var scene,
-		    cube,
-		    container,
+		var scene = undefined,
+		    cube = undefined,
+		    container = undefined,
 		    log = [];
 		var originalLog = console.log.bind(console);
 		var originalError = console.error.bind(console);
