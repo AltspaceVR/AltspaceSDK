@@ -4,8 +4,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) {
     var sceneBase = instanceBase.child('scene');
-    var factories = config.factories || {};
-    var disposals = config.disposals || {};
+    var instantiators = config.instantiators || {};
+    var destructors = config.destructors || {};
 
     var autoSendRateMS = 100;
 
@@ -27,16 +27,16 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         var data = snapshot.val();
         var key = snapshot.key();
 
-        var factory = factories[data.factoryName];
+        var instantiator = instantiators[data.syncType];
 
-        if (!factory) {
-            console.warn('No factory found for factoryName: ' + data.factoryName);
+        if (!instantiator) {
+            console.warn('No instantiator found for syncType: ' + data.syncType);
             return;
         }
 
-        var object3d = factory(data.initData, data.factoryName);
+        var object3d = instantiator(data.initData, data.syncType);
         if (!object3d) {
-            console.error(data.factoryName + '.create must return an Object3D');
+            console.error(data.syncType + '.create must return an Object3D');
             return;
         }
         objectForKey[key] = object3d;
@@ -44,7 +44,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
 
         var syncBehavior = object3d.getBehaviorByType('Object3DSync');
         if (!syncBehavior) {
-            console.error(data.factoryName + ' factory must return an Object3D with an Object3DSync behavior');
+            console.error(data.syncType + ' instantiator must return an Object3D with an Object3DSync behavior');
             return;
         }
 
@@ -60,13 +60,13 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             console.warn('Failed to find object matching deleted key', key);
             return;
         }
-        var factoryName = data.factoryName;
-        if (!factoryName) {
-            console.warn('No factoryName found for object being destroyed', object3d);
+        var syncType = data.syncType;
+        if (!syncType) {
+            console.warn('No syncType found for object being destroyed', object3d);
             return;
         }
-        if (disposals[factoryName]){//implementing disposal is optional
-            var disposal = disposals[factoryName];
+        if (destructors[syncType]){//implementing disposal is optional
+            var disposal = destructors[syncType];
             disposal(object3d);
         }
         //remove from our local bookkeeping
@@ -91,10 +91,19 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         setInterval(autoSendAll, autoSendRateMS);
     }
 
-    function instantiate(factoryName, initData) {
-        var objectBase = sceneBase.push({factoryName: factoryName, initData: initData},
+    function instantiate(syncType, initData, destroyOnDisconnect) {
+        console.log('type of 3rd arg', typeof(destroyOndisconnect));
+        var t = typeof(destroyOnDisconnect);
+        if (t !== 'undefined' && t !== 'boolean'){
+            console.warn('optional instantiate arg "destroyOnDisconnect" must be a boolean');
+            return;
+        }
+        var objectBase = sceneBase.push({syncType: syncType, initData: initData},
             function(error){if (error) throw Error('Failed to save to Firebase', error)}
         );
+        if (destroyOnDisconnect){
+            objectBase.onDisconnect().remove();//send remvoe_child to remote clients
+        }
         //instantiation done, local child_added callback happens syncronously with push
         return objectForKey[objectBase.key()];
     }

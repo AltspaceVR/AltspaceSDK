@@ -61,7 +61,7 @@ function ready(shouldInitialize){//TODO: firstInInstance ?
 }
 
 var sceneSync = alt.SceneSync(instanceBase, {
-  factories: {
+  instantiators: {
     'Cube': createCube
   },
   ready: ready
@@ -75,7 +75,13 @@ document.addEventListener('dblclick', function(){
   } else {
     //create block of random size at origin
     function randInt(min, max){return Math.random() * (max - min) + min;}
-    sceneSync.instantiate('Cube', {width: randInt(20, 100), height: randInt(20, 100), depth: randInt(20, 100)});
+    var initData = {
+      width: randInt(20, 100),
+      height: randInt(20, 100),
+      depth: randInt(20, 100)
+    };
+    //destroyOnDisconntect=true so blocks we create are removed when we leave
+    sceneSync.instantiate('Cube', initData, true);
   }
 })
                
