@@ -12,6 +12,7 @@ require('babel/polyfill');
 var containerMax = _Symbol('containerMax'),
     containerMin = _Symbol('containerMin'),
     object3D = _Symbol('object3D'),
+    boundingBox = _Symbol('boundingBox'),
     origMatrix = _Symbol('origMatrix'),
     origMatrixAutoUpdate = _Symbol('origMatrixAutoUpdate'),
     parent = _Symbol('parent');
@@ -27,6 +28,8 @@ var Layout = (function () {
 		this.my = my;
 		this.at = at;
 	}
+
+	// TODO-BP Ideally these would be private methods.
 
 	_createClass(Layout, [{
 		key: 'getAxisSettings',
@@ -47,9 +50,8 @@ var Layout = (function () {
 	}, {
 		key: 'getAnchorOffset',
 		value: function getAnchorOffset(axis, axisValue) {
-			var boundingBox = new THREE.Box3().setFromObject(this[object3D]);
-			var max = boundingBox.max;
-			var min = boundingBox.min;
+			var max = this[boundingBox].max;
+			var min = this[boundingBox].min;
 
 			var _getAxisSettings = this.getAxisSettings(axis, axisValue, min, max);
 
@@ -102,14 +104,16 @@ var Layout = (function () {
 			var _this2 = this;
 
 			this[object3D] = _object3D;
+			this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
 
 			if (this[object3D].parent instanceof THREE.Scene) {
+				// TODO Listen for resize events on the enclosure
 				altspace.getEnclosure().then(function (enclosure) {
 					var hw = enclosure.innerWidth / 2,
 					    hh = enclosure.innerHeight / 2,
 					    hd = enclosure.innerDepth / 2;
 					_this2[containerMax] = new THREE.Vector3(hw, hh, hd);
-					_this2[containerMin] = _this2[containerMax].clone().multiplyScalar(-1);
+					_this2[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
 					_this2.doLayout();
 				});
 			} else {
