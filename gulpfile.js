@@ -13,9 +13,9 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     babel = require('gulp-babel'),
 
-    babelify = require('babelify'),
     vsource = require('vinyl-source-stream'),
     vbuffer = require('vinyl-buffer'),
+    browserify = require('browserify'),
 
     uglify = require('gulp-uglify'),
     merge = require('merge-stream'),
@@ -44,56 +44,53 @@ gulp.task('altspace_js', function () {
     console.log(version);
 
     gulp.src([
-		'./**/*.es6.js'
-	])
-	.pipe(babel({optional: ['runtime']}))
-	.pipe(rename(function (path) {
-		path.basename = path.basename.replace('.es6', '');
-	}))
-	.pipe(gulp.dest('./'));
-
-	browserify(
-		'./src/utilities/behaviors/Layout.js',
-	)
-	.bundle()
-	.pipe(source('Layout.js'))
-	.pipe(buffer())
-	.pipe(gulp.dest('./tmp/'));
+        './**/*.es6.js'
+    ])
+        .pipe(babel({optional: ['runtime']}))
+        .pipe(rename(function (path) {
+            path.basename = path.basename.replace('.es6', '');
+        }))
+        .pipe(gulp.dest('./'));
 
     return orderedMerge([
-		gulp.src([
-			'./lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
-			'./lib/url.js',
-			'./lib/firebase.js',
-			//'./lib/TweenLite.min.js',
+        gulp.src([
+            './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
+            './lib/url.js',
+            './lib/firebase.js',
+            //'./lib/TweenLite.min.js',
 
-			'./src/shim-core.js',
+            './src/shim-core.js',
 
-			'./src/utilities/sync.js',
-			'./src/utilities/codepen.js',
-			'./src/utilities/simulation.js',
+            './src/utilities/sync.js',
+            './src/utilities/codepen.js',
+            './src/utilities/simulation.js',
 
-			'./src/utilities/shims/behaviors.js',
-			'./src/utilities/shims/cursor.js',
-			'./src/utilities/shims/bubbling.js',
+            './src/utilities/shims/behaviors.js',
+            './src/utilities/shims/cursor.js',
+            './src/utilities/shims/bubbling.js',
 
-			'./src/utilities/behaviors/SceneSync.js',
-			'./src/utilities/behaviors/Object3DSync.js',
-			'./src/utilities/behaviors/Bob.js',
-			'./src/utilities/behaviors/ButtonStateStyle.js',
-			'./src/utilities/behaviors/Drag.js',
-			'./src/utilities/behaviors/Spin.js',
-			'./tmp/Layout.js',
-		], { cwd: cwd }),
-		gulp.src(
-			'./src/version.js', { cwd: cwd })
-			.pipe(replace("VERSION", "'" + version + "'"))
+            './src/utilities/behaviors/SceneSync.js',
+            './src/utilities/behaviors/Object3DSync.js',
+            './src/utilities/behaviors/Bob.js',
+            './src/utilities/behaviors/ButtonStateStyle.js',
+            './src/utilities/behaviors/Drag.js',
+            './src/utilities/behaviors/Spin.js',
+        ], { cwd: cwd }),
+        browserify(
+            './src/utilities/behaviors/Layout.js'
+        )
+            .bundle()
+            .pipe(vsource('Layout.js'))
+            .pipe(vbuffer()),
+        gulp.src(
+            './src/version.js', { cwd: cwd })
+            .pipe(replace("VERSION", "'" + version + "'"))
     ])
         //.pipe(jshint())
         //.pipe(jshint.reporter('default'))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
-        //.pipe(uglify())
+        .pipe(uglify())
         .on('error', function (e) {
             console.log(e);
         })

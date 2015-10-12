@@ -1,3 +1,4 @@
+require('babel/polyfill');
 var
 	containerMax = Symbol('containerMax'),
 	containerMin = Symbol('containerMin'),
@@ -61,7 +62,7 @@ class Layout {
 				this[object3D].position[axis] = this[containerMin][axis] + offset + anchorOffset;
 			}
 			else if (position === 'center') {
-				this[object3D].position[axis] = offset;
+				this[object3D].position[axis] = offset + anchorOffset;
 			}
 			else {
 				throw new Error(
@@ -110,7 +111,7 @@ class Layout {
 	}
 }
 
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+if (!window.altspace) { window.altspace = {}; }
+if (!window.altspace.utilities) { window.altspace.utilities = {}; }
+if (!window.altspace.utilities.behaviors) { window.altspace.utilities.behaviors = {}; }
 window.altspace.utilities.behaviors.Layout = Layout;

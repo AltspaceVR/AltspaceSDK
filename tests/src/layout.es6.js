@@ -25,18 +25,20 @@
 			container.add(cube);
 			scene.add(container);
 
-			altspace.getEnclosure = function () {
-				var mockPromise = {
-					then: function (callback) {
-						callback({
-							innerHeight: 1024,
-							innerWidth: 1024,
-							innerDepth: 1024
-						});
-					}
+			if (!altspace.getEnclosure) {
+				altspace.getEnclosure = function () {
+					var mockPromise = {
+						then: function (callback) {
+							setTimeout(() => callback({
+								innerHeight: 1024,
+								innerWidth: 1024,
+								innerDepth: 1024
+							}), 0);
+						}
+					};
+					return mockPromise;
 				};
-				return mockPromise;
-			};
+			}
 		});
 		it('should be able position object to the max', function () {
 			cube.addBehavior(new behaviors.Layout({at: { y: 'max' }}));
@@ -69,10 +71,13 @@
 			scene.updateAllBehaviors();
 			expect(cube.position.x).to.equal(4.5);
 		});
-		it('should be able position to enclosure', function () {
+		it('should be able position to enclosure', function (done) {
 			container.addBehavior(new behaviors.Layout({my: {x: 'max'}, at: {x: 'max'}}));
 			scene.updateAllBehaviors();
-			expect(container.position.x).to.equal(507);
+			altspace.getEnclosure().then(() => {
+				expect(container.position.x).to.equal(507);
+				done();
+			});
 		});
 		it('should be able set anchor with rotation', function () {
 			cube.rotation.z = Math.PI / 4;
