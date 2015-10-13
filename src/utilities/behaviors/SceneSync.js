@@ -92,12 +92,6 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     }
 
     function instantiate(syncType, initData, destroyOnDisconnect) {
-        console.log('type of 3rd arg', typeof(destroyOndisconnect));
-        var t = typeof(destroyOnDisconnect);
-        if (t !== 'undefined' && t !== 'boolean'){
-            console.warn('optional instantiate arg "destroyOnDisconnect" must be a boolean');
-            return;
-        }
         var objectBase = sceneBase.push({syncType: syncType, initData: initData},
             function(error){if (error) throw Error('Failed to save to Firebase', error)}
         );
