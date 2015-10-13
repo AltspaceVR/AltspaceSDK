@@ -62,6 +62,12 @@
 			scene.updateAllBehaviors();
 			expect(cube.position.y).to.equal(0);
 		});
+		it('should be able position object when outside parent\'s bounding box', function () {
+			cube.position.y = 20;
+			cube.addBehavior(new behaviors.Layout({ at: { y: 'max' } }));
+			scene.updateAllBehaviors();
+			expect(cube.position.y).to.equal(5);
+		});
 		it('should be able position with pixel offset', function () {
 			cube.addBehavior(new behaviors.Layout({ at: { x: 'min+1' } }));
 			scene.updateAllBehaviors();
@@ -73,12 +79,14 @@
 			expect(cube.position.x).to.equal(-2.5);
 		});
 		it('should be able set anchor', function () {
-			cube.addBehavior(new behaviors.Layout({ my: { x: 'max' }, at: { x: 'max' } }));
+			cube.addBehavior(new behaviors.Layout({
+				my: { x: 'max' }, at: { x: 'max' } }));
 			scene.updateAllBehaviors();
 			expect(cube.position.x).to.equal(4.5);
 		});
 		it('should be able position to enclosure', function (done) {
-			container.addBehavior(new behaviors.Layout({ my: { x: 'max' }, at: { x: 'max' } }));
+			container.addBehavior(new behaviors.Layout({
+				my: { x: 'max' }, at: { x: 'max' } }));
 			scene.updateAllBehaviors();
 			altspace.getEnclosure().then(function () {
 				expect(container.position.x).to.equal(507);
@@ -87,14 +95,16 @@
 		});
 		it('should be able set anchor with rotation', function () {
 			cube.rotation.z = Math.PI / 4;
-			cube.addBehavior(new behaviors.Layout({ my: { x: 'max' }, at: { x: 'max' } }));
+			cube.addBehavior(new behaviors.Layout({
+				my: { x: 'max' }, at: { x: 'max' } }));
 			scene.updateAllBehaviors();
 			var cubeDiagonal = Math.sqrt(Math.pow(0.5, 2) + Math.pow(0.5, 2));
 			expect(cube.position.x).to.be.closeTo(5 - cubeDiagonal, 0.00001);
 		});
 		it('should be able position object in all axes', function () {
 			cube.position.y = 5;
-			cube.addBehavior(new behaviors.Layout({ at: { x: 'max', y: 'min', z: 'max' } }));
+			cube.addBehavior(new behaviors.Layout({
+				at: { x: 'max', y: 'min', z: 'max' } }));
 			scene.updateAllBehaviors();
 			expect(cube.position.x).to.equal(5);
 			expect(cube.position.y).to.equal(-5);

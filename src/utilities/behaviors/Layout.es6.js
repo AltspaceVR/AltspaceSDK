@@ -106,9 +106,14 @@ class Layout {
 			// Reset the parent matrix so that we can get the original bounding box.
 			this[parent].matrixAutoUpdate = false;
 			this[parent].matrix.identity();
-			let parentBoundingBox = new THREE.Box3().setFromObject(this[parent]);
-			this[containerMax] = this[parent].worldToLocal(parentBoundingBox.max);
-			this[containerMin] = this[parent].worldToLocal(parentBoundingBox.min);
+			let parentGeo = this[parent].geometry;
+			if (!parentGeo) {
+				throw new Error('Parent must have geometry.');
+			}
+			parentGeo.computeBoundingBox();
+			let parentBoundingBox = parentGeo.boundingBox;
+			this[containerMax] = parentBoundingBox.max;
+			this[containerMin] = parentBoundingBox.min;
 			this.doLayout();
 		}
 	}
