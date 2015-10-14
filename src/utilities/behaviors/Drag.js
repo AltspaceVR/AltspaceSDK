@@ -6,6 +6,11 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 //idea: offset (drag from bottom of piece). Workaround if you reparent
 
 //TODO: GSAP Draggable
+/**
+ * A behavior that makes an object draggable along a plane.
+ * @class altspace/utilities/behaviors.Drag
+ * @param {Object} [config] Optional parameters.
+ */
 altspace.utilities.behaviors.Drag = function (config) {
     //space: view, local, world, sphere
     //gridSnap, cursorSnap

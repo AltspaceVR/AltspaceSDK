@@ -22,6 +22,7 @@ var gulp = require('gulp'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
 
+	jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
     sourcemaps = require('gulp-sourcemaps');
 
@@ -107,4 +108,20 @@ gulp.task('altspace_js', function () {
         //.pipe(gulp.dest('./dist/latest', { cwd: cwd }))
         //.pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
         .pipe(print());
+});
+
+var docfiles = [
+	'utilities/**/*.js',
+	'README.md'
+];
+
+gulp.task('watch', ['doc'], function () {
+	return gulp.watch(docfiles, {verbose: true}, ['doc']);
+});
+
+gulp.task('doc', function () {
+	return gulp.src(docfiles)
+		.pipe(jsdoc('./doc', {
+			path: path.resolve('node_modules/minami')
+		}));
 });

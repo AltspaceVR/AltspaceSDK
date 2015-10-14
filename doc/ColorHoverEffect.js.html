@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ColorHoverEffect.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="utilities.ColorHoverEffect.html">ColorHoverEffect</a><ul class='methods'><li data-type='method'><a href="utilities.ColorHoverEffect.html#add">add</a></li><li data-type='method'><a href="utilities.ColorHoverEffect.html#init">init</a></li></ul></li><li><a href="utilities.DragPlaneEffect.html">DragPlaneEffect</a><ul class='methods'><li data-type='method'><a href="utilities.DragPlaneEffect.html#add">add</a></li><li data-type='method'><a href="utilities.DragPlaneEffect.html#init">init</a></li></ul></li><li><a href="multiloader.LoadRequest.html">LoadRequest</a><ul class='methods'><li data-type='method'><a href="multiloader.LoadRequest.html#error">error</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#mtlUrls">mtlUrls</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objects">objects</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objectsLoaded">objectsLoaded</a></li><li data-type='method'><a href="multiloader.LoadRequest.html#objUrls">objUrls</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="multiloader.html">altspace/utilities/multiloader</a><ul class='methods'><li data-type='method'><a href="multiloader.html#init">init</a></li><li data-type='method'><a href="multiloader.html#load">load</a></li></ul></li><li><a href="bubbling.html">altspace/utilities/shims/bubbling</a></li><li><a href="cursor.html">altspace/utilities/shims/cursor</a><ul class='methods'><li data-type='method'><a href="cursor.html#init">init</a></li></ul></li><li><a href="dualRenderer.html">altspace/utilities/shims/dualRenderer</a><ul class='methods'><li data-type='method'><a href="dualRenderer.html#ambientLight">ambientLight</a></li><li data-type='method'><a href="dualRenderer.html#camera">camera</a></li><li data-type='method'><a href="dualRenderer.html#inAltMode">inAltMode</a></li><li data-type='method'><a href="dualRenderer.html#renderer">renderer</a></li><li data-type='method'><a href="dualRenderer.html#init">init</a></li><li data-type='method'><a href="dualRenderer.html#render">render</a></li></ul></li><li><a href="threebase.html">altspace/utilities/threebase</a><ul class='methods'><li data-type='method'><a href="threebase.html#add">add</a></li><li data-type='method'><a href="threebase.html#init">init</a></li><li data-type='method'><a href="threebase.html#save">save</a></li><li data-type='method'><a href="threebase.html#update">update</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">ColorHoverEffect.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Change color of an object when cursor hovers over it.
+ * @class altspace/utilities.ColorHoverEffect
+ */
+altspace = window.altspace || {};
+altspace.utilities = altspace.utilities || {};
+altspace.utilities.ColorHoverEffect = function(){
+
+  var hoverColor;
+  var hoverObject;
+  var cursordownObject;
+  var objects = [];
+  var scene;
+  var TRACE;
+
+  function init(myScene, myHoverColor, params){
+    if (myHoverColor &amp;&amp; ! (myHoverColor instanceof THREE.Color)){
+      throw new Error('Color should be instance of THREE.Color', p.color);
+    }
+    if (! myScene instanceof THREE.Scene){
+      console.error('scene must be of type THREE.Scene');
+      return;
+    }
+    hoverColor = myHoverColor;
+    scene = myScene;
+    var p = params || {};
+    TRACE = p.TRACE || null; 
+  }
+
+  function add(object){
+    if (!object || !object instanceof THREE.Object3D){
+      throw new Error("DragPlaneEffect: add requires a valid object", object);
+    }
+    if (objects.indexOf(object) !== -1) return;
+    objects.push(object);
+    object.addEventListener("cursordown", cursordown);
+    object.addEventListener("cursorenter", cursorenter);
+    object.addEventListener("cursorleave", cursorleave);
+    scene.addEventListener("cursorup", cursorupScene);
+  }
+
+  function cursordown(event){
+    var object = event.currentTarget;
+    if (TRACE) console.log('setting cursordownObject', object);
+    cursordownObject = object;
+  }
+
+  function cursorenter(event){
+    //Ignore hover events if a different object is selected,
+    //for example during a drag we don't want to change highlight
+    var object = event.currentTarget;
+    if (cursordownObject &amp;&amp; cursordownObject !== object){
+      if (TRACE) console.log('Ignore hover, other object selected', cursordownObject);
+      return;
+    } 
+    if (hoverObject){
+      unhoverEffect(hoverObject);
+    }
+    hoverEffect(object);
+  }
+
+  function cursorleave(event){
+    var object = event.currentTarget;
+    if (hoverObject === object){
+      unhoverEffect(object);
+    }
+  }
+
+  function cursorupScene(event){
+    if (TRACE) console.log('clearning cursordownObject', object);
+    cursordownObject = null;
+
+  }
+
+  function hoverEffect(object){
+    hoverObject = object;
+    setHoverColor(object, hoverColor);
+    if (TRACE) console.log('hoverEffect', object);
+  }
+
+  function unhoverEffect(object){
+    hoverObject = null;
+    unsetHoverColor(object);
+    if (TRACE) console.log('unhoverEffect', object);
+  }
+
+  function setHoverColor(obj, hoverColor){
+    if (obj.material &amp;&amp; obj.material.color){
+      obj.userData.origColor = obj.material.color;
+      obj.material.color = hoverColor;  
+      if (obj.material) obj.material.needsUpdate = true;//required in Altspace
+    } 
+    for (var i = 0; i &lt; obj.children.length; i++){
+      setHoverColor(obj.children[i], hoverColor);//recursively apply to children
+    }
+  }
+
+  function unsetHoverColor(obj){
+    if (obj.material &amp;&amp; obj.material.color){
+      if (!obj.userData.origColor){
+        console.error('Cannot unsetHoverColor, no userData.origColor for object', obj);
+        return;
+      }
+      obj.material.color = obj.userData.origColor;
+      if (obj.material) obj.material.needsUpdate = true;
+    } 
+    for (var i = 0; i &lt; obj.children.length; i++){
+      unsetHoverColor(obj.children[i]);
+    }
+  }
+
+  return {
+    /**
+     * Initializes the ColorHoverEffect instance.
+     * @instance
+     * @method
+     * @param {THREE.Scene} scene
+     * @param {THREE.Color} hoverColor
+     * @param {Object} [params] Optional parameters.
+     * @param {Boolean} [params.TRACE=false] Log debug messages.
+     * @memberof altspace/utilities.ColorHoverEffect
+     */
+    init: init,
+    /**
+     * Apply the effect to an object.
+     * @instance
+     * @method
+     * @param {THREE.Object3D} object
+     * @memberof altspace/utilities.ColorHoverEffect
+     */
+    add: add,
+  };
+
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Oct 05 2015 04:07:53 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

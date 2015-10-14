@@ -1,6 +1,11 @@
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 
+/**
+ * @class altspace/utilities.Simulation
+ * @param {Object} [config] Optional parameters.
+ * @param {Boolean} [config.auto=true] Automatically start the render loop.
+ */
 altspace.utilities.Simulation = function (config) {
     config = config || {};
     if (config.auto === undefined) config.auto = true;
@@ -72,11 +77,25 @@ altspace.utilities.Simulation = function (config) {
             return scene;
         }
     })
+
+    /**
+     * The renderer being used.
+     * @readonly
+     * @member {(THREE.WebGLRenderer|AltRenderer)} renderer
+     * @memberof module:altspace/utilities/shims/dualRenderer
+     */
     Object.defineProperty(exports, 'renderer', {
         get: function () {
             return renderer;
         }
     })
+
+    /**
+     * The camera being used by the WebGL renderer.
+     * @readonly
+     * @member {Three.Camera} camera
+     * @memberof module:altspace/utilities/shims/dualRenderer
+     */
     Object.defineProperty(exports, 'camera', {
         get: function () {
             return camera;

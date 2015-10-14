@@ -2,6 +2,16 @@ window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
+/**
+ * A behavior that changes the color of an object when the cursor interacts with it.
+ * @class altspace/utilities/behaviors.ButtonStateStyle
+ * @param {Object} [config] Optional parameters.
+ * @param {THREE.Color} [config.originalColor] Base material color.
+ * @param {Number} [config.overBrightness=1.5] Material brightness when cursor
+ *	is over button.
+ * @param {Number} [config.downBrightness=0.5] Material brightness when cursor
+ *	is clicked.
+ */
 altspace.utilities.behaviors.ButtonStateStyle = function (config) {
     var object3d;
     var scene;
