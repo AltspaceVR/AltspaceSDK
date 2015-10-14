@@ -77,10 +77,10 @@ function createCube(initData) {
     alt.Bob({shouldMove:false}),
     alt.Spin({speed:0.002}),
     alt.ButtonStateStyle(),
-    alt.Drag({x:true, z:true}),
     alt.Object3DSync({
       position: true
     })
+    //TODO: add Drag when we have right-click or other event besides cursordown
   );
   cube.position.set(x, y, z);
   cube.position.y = -100;
