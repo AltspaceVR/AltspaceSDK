@@ -4,14 +4,24 @@
  **/
 
 var gulp = require('gulp'),
+
     fs = require('fs'),
     path = require('path'),
+
     print = require('gulp-print'),
     concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
+    babel = require('gulp-babel'),
+
+    vsource = require('vinyl-source-stream'),
+    vbuffer = require('vinyl-buffer'),
+    browserify = require('browserify'),
+
     uglify = require('gulp-uglify'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
+
     jshint = require('gulp-jshint'),
     sourcemaps = require('gulp-sourcemaps');
 
@@ -21,8 +31,10 @@ gulp.task('default', function () {
 
 gulp.task('watch', ['altspace_js'], function () {
     gulp.watch('./version.json', ['altspace_js']);
+    gulp.watch('./examples/**/*.js', ['altspace_js']);
     gulp.watch('./src/**/*.js', ['altspace_js']);
     gulp.watch('./lib/**/*.js', ['altspace_js']);
+    gulp.watch('./tests/**/*.js', ['altspace_js']);
 });
 
 gulp.task('altspace_js', function () {
@@ -31,8 +43,25 @@ gulp.task('altspace_js', function () {
     console.log('version');
     console.log(version);
 
-    return orderedMerge([
     gulp.src([
+        './**/*.es6.js'
+    ])
+        .pipe(babel({optional: ['runtime']}))
+        .pipe(rename(function (path) {
+            path.basename = path.basename.replace('.es6', '');
+        }))
+        .pipe(gulp.dest('./'));
+
+	browserify(
+		'./examples/living-room/living-room.js'
+	)
+		.bundle()
+		.pipe(vsource('living-room-main.js'))
+		.pipe(vbuffer())
+		.pipe(gulp.dest('./examples/living-room/'));
+
+    return orderedMerge([
+        gulp.src([
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
             './lib/firebase.js',
@@ -54,9 +83,15 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/ButtonStateStyle.js',
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/Spin.js',
-    ], { cwd: cwd }),
-    gulp.src(
-        './src/version.js', { cwd: cwd })
+        ], { cwd: cwd }),
+        browserify(
+            './src/utilities/behaviors/Layout.js'
+        )
+            .bundle()
+            .pipe(vsource('Layout.js'))
+            .pipe(vbuffer()),
+        gulp.src(
+            './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
         //.pipe(jshint())
