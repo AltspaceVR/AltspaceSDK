@@ -3,74 +3,69 @@
 <head>
 <meta charset=utf-8>
 <title>Spinning Cube</title>
-<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.5/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.5/shims/dualRenderer.js"></script>
-
 </head>
 <body>
 </body>
 <script>
 
-var CUBE_SCALE = 200;
+var CUBE_SCALE = 150;
 //can change above value in live-coding, 10-500 works well
 
+(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
+
 // Setup
-var ascp = altspace.utilities.codePen;
-var scene = new THREE.Scene();
-var dualRenderer = altspace.utilities.shims.dualRenderer;
-dualRenderer.init(scene);
-if (!dualRenderer.inAltMode) {//no camera if in Altspace
-  altspace.utilities.shims.cursor.init(scene, dualRenderer.camera);
-	dualRenderer.camera.position.z = 500;//stand back from origin
+var sim = alt.Simulation();
+var inCodePen = alt.codePen.inCodePen;
+var instanceBase = alt.sync.getInstance({
+  	authorId: inCodePen ? alt.codePen.getAuthorId() : null,
+  	instanceId: inCodePen ? alt.codePen.getPenId() : null
+});
+var sceneSync = alt.SceneSync(instanceBase, {
+  instantiators: {'Cube': createCube },
+  ready: ready
+});
+sim.scene.addBehavior(sceneSync);
+
+function createCube() {
+	console.log('createCube');//XXX
+	//Use MTLLoader for loadTexture, to ensure image is power of 2
+	//else antialiasing won't work (this is a limitation of WebGL)
+	var materialCreator = new THREE.MTLLoader.MaterialCreator();
+	materialCreator.crossOrigin = 'anonymous';
+	var url = 'https://sdk.altvr.com/examples/models/share/cube/altspace-logo.jpg';
+	var texture = materialCreator.loadTexture(url);
+	var geometry = new THREE.BoxGeometry(1, 1, 1);
+	var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
+	var cube = new THREE.Mesh(geometry, material);
+	cube.scale.multiplyScalar(CUBE_SCALE);
+	cube.addBehaviors(
+		alt.Object3DSync(),
+		alt.Spin({speed: 0.0005})
+	);
+
+	var syncColor = instanceBase.child('color');
+	syncColor.on('value', function(snapshot){
+		var val = snapshot.val();
+		if (val) {
+			cube.material.color = new THREE.Color(val);
+			cube.material.needsUpdate = true;//currently required in Altspace
+		}
+	});
+	cube.addEventListener('cursordown', function() {
+		syncColor.set(Please.make_color()[0]);//clicking on cube changes its color
+	});
+	sim.scene.add(cube);
+	return cube;
 }
 
-//Use MTLLoader for loadTexture, to ensure image is power of 2
-//else antialiasing won't work (this is a limitation of WebGL)
-var materialCreator = new THREE.MTLLoader.MaterialCreator();
-materialCreator.crossOrigin = 'anonymous';
-var url = 'https://sdk.altvr.com/examples/models/share/cube/altspace-logo.jpg';
-var texture = materialCreator.loadTexture(url);
-
-//Cube
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
-var cube = new THREE.Mesh(geometry, material);
-cube.scale.multiplyScalar(CUBE_SCALE);
-scene.add(cube);
-
-//Sync
-var ascp = altspace.utilities.codePen;
-ascp.setName('Hello Cube'); 
-var inCodePen = !!location.href.match('codepen.io/');
-var params = inCodePen ? {
-	instanceId: ascp.getPenId(),
-	authorId: ascp.getAuthorId()
-} : null;
-var syncInstance = altspace.utilities.sync.getInstance(params);
-var syncColor = syncInstance.child('color');
-syncColor.on('value', function(snapshot){
-	var val = snapshot.val();
-	if (val) {
-		cube.material.color = new THREE.Color(val);
-		cube.material.needsUpdate = true;//currently required in Altspace
+function ready(firstInstance) {
+	if (firstInstance) {
+		sceneSync.instantiate('Cube');
 	}
-});
-
-//Events
-cube.addEventListener('cursordown', function() {
-	syncColor.set(Please.make_color()[0]);//clicking on cube changes its color
-});
-
-//Update & Rendering
-function animate() {
-	cube.rotation.y += 0.01;//rotation is not synchronized
-	requestAnimationFrame(animate);
-	dualRenderer.render();
 }
-animate();
 
 </script>
 </html>

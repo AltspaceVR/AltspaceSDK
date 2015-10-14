@@ -4,6 +4,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) {
     var sceneBase = instanceBase.child('scene');
+
+    config = config || {};
     var instantiators = config.instantiators || {};
     var destructors = config.destructors || {};
 
@@ -92,6 +94,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     }
 
     function instantiate(syncType, initData, destroyOnDisconnect) {
+        initData = initData || {};
         var objectBase = sceneBase.push({syncType: syncType, initData: initData},
             function(error){if (error) throw Error('Failed to save to Firebase', error)}
         );
