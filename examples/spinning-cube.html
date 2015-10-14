@@ -30,7 +30,6 @@ var sceneSync = alt.SceneSync(instanceBase, {
 sim.scene.addBehavior(sceneSync);
 
 function createCube() {
-	console.log('createCube');//XXX
 	//Use MTLLoader for loadTexture, to ensure image is power of 2
 	//else antialiasing won't work (this is a limitation of WebGL)
 	var materialCreator = new THREE.MTLLoader.MaterialCreator();
