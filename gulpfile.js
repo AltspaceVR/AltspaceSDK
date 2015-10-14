@@ -52,6 +52,14 @@ gulp.task('altspace_js', function () {
         }))
         .pipe(gulp.dest('./'));
 
+	browserify(
+		'./examples/living-room/living-room.js'
+	)
+		.bundle()
+		.pipe(vsource('living-room-main.js'))
+		.pipe(vbuffer())
+		.pipe(gulp.dest('./examples/living-room/'));
+
     return orderedMerge([
         gulp.src([
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js

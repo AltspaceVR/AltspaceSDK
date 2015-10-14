@@ -6,6 +6,8 @@ var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default
 
 var _Symbol = require('babel-runtime/core-js/symbol')['default'];
 
+var _Map = require('babel-runtime/core-js/map')['default'];
+
 var _Array$from = require('babel-runtime/core-js/array/from')['default'];
 
 require('babel/polyfill');
@@ -15,7 +17,9 @@ var containerMax = _Symbol('containerMax'),
     boundingBox = _Symbol('boundingBox'),
     origMatrix = _Symbol('origMatrix'),
     origMatrixAutoUpdate = _Symbol('origMatrixAutoUpdate'),
-    parent = _Symbol('parent');
+    parent = _Symbol('parent'),
+    enclosure = _Symbol('enclosure'),
+    origParentBoundingBoxes = new _Map();
 
 var Layout = (function () {
 	function Layout(_ref) {
@@ -41,6 +45,10 @@ var Layout = (function () {
 			var offset = parseFloat(offsetSetting) || 0;
 			if (offsetSetting && offsetSetting.endsWith('%')) {
 				offset = offset / 100 * (max[axis] - min[axis]);
+			} else if (offsetSetting && offsetSetting.endsWith('m')) {
+				console.log(offset, this[enclosure]);
+				offset = offset * this[enclosure].pixelsPerMeter;
+				console.log(offset);
 			}
 			return {
 				position: position,
@@ -106,36 +114,46 @@ var Layout = (function () {
 			this[object3D] = _object3D;
 			this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
 
-			if (this[object3D].parent instanceof THREE.Scene) {
-				// TODO Listen for resize events on the enclosure
-				altspace.getEnclosure().then(function (enclosure) {
-					var hw = enclosure.innerWidth / 2,
-					    hh = enclosure.innerHeight / 2,
-					    hd = enclosure.innerDepth / 2;
+			// TODO Listen for resize events on the enclosure
+			altspace.getEnclosure().then(function (_enclosure) {
+				_this2[enclosure] = _enclosure;
+				if (_this2[object3D].parent instanceof THREE.Scene) {
+					var hw = _this2[enclosure].innerWidth / 2,
+					    hh = _this2[enclosure].innerHeight / 2,
+					    hd = _this2[enclosure].innerDepth / 2;
 					_this2[containerMax] = new THREE.Vector3(hw, hh, hd);
 					_this2[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
 					_this2.doLayout();
-				});
-			} else {
-				this[parent] = this[object3D].parent;
+				} else {
+					var objWorldScale = _this2[object3D].getWorldScale();
+					_this2[boundingBox].min.divide(objWorldScale);
+					_this2[boundingBox].max.divide(objWorldScale);
 
-				this[origMatrix] = this[parent].matrix.clone();
-				this[origMatrixAutoUpdate] = this[parent].matrixAutoUpdate;
+					_this2[parent] = _this2[object3D].parent;
 
-				// We want to use the un-transormed anchor of the parent.
-				// Reset the parent matrix so that we can get the original bounding box.
-				this[parent].matrixAutoUpdate = false;
-				this[parent].matrix.identity();
-				var parentGeo = this[parent].geometry;
-				if (!parentGeo) {
-					throw new Error('Parent must have geometry.');
+					_this2[origMatrix] = _this2[parent].matrix.clone();
+					_this2[origMatrixAutoUpdate] = _this2[parent].matrixAutoUpdate;
+
+					// We want to use the un-transormed anchor of the parent.
+					// Reset the parent matrix so that we can get the original bounding box.
+					_this2[parent].matrixAutoUpdate = false;
+					_this2[parent].matrix.identity();
+
+					var parentBoundingBox = undefined;
+					if (origParentBoundingBoxes.has(_this2[parent].uuid)) {
+						parentBoundingBox = origParentBoundingBoxes.get(_this2[parent].uuid);
+					} else {
+						_this2[parent].remove(_this2[object3D]);
+						parentBoundingBox = new THREE.Box3().setFromObject(_this2[parent]);
+						_this2[parent].add(_this2[object3D]);
+						origParentBoundingBoxes.set(_this2[parent].uuid, parentBoundingBox);
+					}
+
+					_this2[containerMax] = parentBoundingBox.max;
+					_this2[containerMin] = parentBoundingBox.min;
+					_this2.doLayout();
 				}
-				parentGeo.computeBoundingBox();
-				var parentBoundingBox = parentGeo.boundingBox;
-				this[containerMax] = parentBoundingBox.max;
-				this[containerMin] = parentBoundingBox.min;
-				this.doLayout();
-			}
+			});
 		}
 	}]);
 

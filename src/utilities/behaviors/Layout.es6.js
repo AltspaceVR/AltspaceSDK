@@ -6,7 +6,9 @@ let
 	boundingBox = Symbol('boundingBox'),
 	origMatrix = Symbol('origMatrix'),
 	origMatrixAutoUpdate = Symbol('origMatrixAutoUpdate'),
-	parent = Symbol('parent');
+	parent = Symbol('parent'),
+	enclosure = Symbol('enclosure'),
+	origParentBoundingBoxes = new Map();
 
 class Layout {
 
@@ -24,6 +26,11 @@ class Layout {
 		let offset = parseFloat(offsetSetting) || 0;
 		if (offsetSetting && offsetSetting.endsWith('%')) {
 			offset = offset / 100 * (max[axis] - min[axis]);
+		}
+		else if (offsetSetting && offsetSetting.endsWith('m')) {
+			console.log(offset, this[enclosure]);
+			offset = offset * this[enclosure].pixelsPerMeter;
+			console.log(offset);
 		}
 		return {
 			position,
@@ -50,7 +57,8 @@ class Layout {
 				`${axisValue} is an invalid layout position for ${axis}`
 			);
 		}
-	};
+	}
+
 	doLayout () {
 		Array.from('xyz').forEach((axis) => {
 			let {position, offset} = this.getAxisSettings(
@@ -84,38 +92,49 @@ class Layout {
 		this[object3D] = _object3D;
 		this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
 
-		if (this[object3D].parent instanceof THREE.Scene) {
-			// TODO Listen for resize events on the enclosure
-			altspace.getEnclosure().then((enclosure) => {
-				let 
-					hw = enclosure.innerWidth / 2,
-					hh = enclosure.innerHeight / 2,
-					hd = enclosure.innerDepth / 2;
-				this[containerMax] = new THREE.Vector3(hw, hh, hd);
-				this[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
-				this.doLayout();
-			});
-		}
-		else {
-			this[parent] = this[object3D].parent;
-
-			this[origMatrix] = this[parent].matrix.clone();
-			this[origMatrixAutoUpdate] = this[parent].matrixAutoUpdate;
-
-			// We want to use the un-transormed anchor of the parent.
-			// Reset the parent matrix so that we can get the original bounding box.
-			this[parent].matrixAutoUpdate = false;
-			this[parent].matrix.identity();
-			let parentGeo = this[parent].geometry;
-			if (!parentGeo) {
-				throw new Error('Parent must have geometry.');
+		// TODO Listen for resize events on the enclosure
+		altspace.getEnclosure().then((_enclosure) => {
+			this[enclosure] = _enclosure;
+			if (this[object3D].parent instanceof THREE.Scene) {
+					let 
+						hw = this[enclosure].innerWidth / 2,
+						hh = this[enclosure].innerHeight / 2,
+						hd = this[enclosure].innerDepth / 2;
+					this[containerMax] = new THREE.Vector3(hw, hh, hd);
+					this[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
+					this.doLayout();
 			}
-			parentGeo.computeBoundingBox();
-			let parentBoundingBox = parentGeo.boundingBox;
-			this[containerMax] = parentBoundingBox.max;
-			this[containerMin] = parentBoundingBox.min;
-			this.doLayout();
-		}
+			else {
+				let objWorldScale = this[object3D].getWorldScale();
+				this[boundingBox].min.divide(objWorldScale);
+				this[boundingBox].max.divide(objWorldScale);
+
+				this[parent] = this[object3D].parent;
+
+				this[origMatrix] = this[parent].matrix.clone();
+				this[origMatrixAutoUpdate] = this[parent].matrixAutoUpdate;
+
+				// We want to use the un-transormed anchor of the parent.
+				// Reset the parent matrix so that we can get the original bounding box.
+				this[parent].matrixAutoUpdate = false;
+				this[parent].matrix.identity();
+
+				let parentBoundingBox;
+				if (origParentBoundingBoxes.has(this[parent].uuid)) {
+					parentBoundingBox = origParentBoundingBoxes.get(this[parent].uuid);
+				}
+				else {
+					this[parent].remove(this[object3D]);
+					parentBoundingBox = new THREE.Box3().setFromObject(this[parent]);
+					this[parent].add(this[object3D]);
+					origParentBoundingBoxes.set(this[parent].uuid, parentBoundingBox);
+				}
+
+				this[containerMax] = parentBoundingBox.max;
+				this[containerMin] = parentBoundingBox.min;
+				this.doLayout();
+			}
+		});
 	}
 }
 
