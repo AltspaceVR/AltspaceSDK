@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Renderer Tests</title>
+		<meta charset="utf-8">
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/build/three.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://sdk.altvr.com/libs/three.js/r71/examples/js/libs/stats.min.js"></script>
+
+		<script 
+			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
+		</script>
+		<script type="text/babel">
+
+			var scene, renderer, camera, controls, stats;
+			var 
+				tintTexCube, colorTexCube, tintColorCube, 
+				animatedCube, colorCube, texturedCube, 
+				tintedObj, visibilityCube, matVisibilityCube;
+			var 
+				GREEN = {r: 0, g: 1, b: 0}, BLUE = {r: 0, g: 0, b: 1},
+				YELLOW = {r: 0, g: 1, b: 1}, MAGENTA = {r: 1, g: 0, b: 1}
+			var textureMat;
+			var objLoaded = false;
+
+			function addAxisSpheres(){
+				var geometry = new THREE.SphereGeometry(5);
+				var x = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'red'}) );
+				var y = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'green'}) );
+				var z = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: 'blue'}) );
+
+				x.position.x = 150;
+				y.position.y = 150;
+				z.position.z = 150;
+
+				scene.add(x);
+				scene.add(y);
+				scene.add(z);
+			}
+
+			function addTexturedCube () {
+				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
+
+				if (!textureMat) {
+					var texture = THREE.ImageUtils.loadTexture(
+						'../images/UV_Grid_Sm.jpg' );
+					textureMat = new THREE.MeshBasicMaterial( { map: texture } );
+				}
+
+				var tCube = new THREE.Mesh( geometry, textureMat );
+				// RIGHT
+				tCube.position.set(50, 0, 0);
+				scene.add( tCube );
+				return tCube;
+			}
+
+			function addColorCube (color) {
+				color = color || 'red';
+				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
+				var cCube = new THREE.Mesh(
+					geometry,
+					new THREE.MeshBasicMaterial({color: color}) );
+				// LEFT
+				cCube.position.set(-50, 0, 0);
+				scene.add( cCube );
+				return cCube;
+			}
+			
+			function deepTint (obj, tintColor) {
+				obj.userData.tintColor = tintColor;
+				for (var i = 0; i < obj.children.length; i++) {
+					obj.children[i].userData.tintColor = tintColor;
+				}
+			}
+
+			var tests = [
+				{
+					name: 'tinted, textured cube',
+					enabled: true,
+					init: function () {
+						tintTexCube = addTexturedCube();
+						tintTexCube.name = 'tintTexCube';
+						tintTexCube.position.set(0, 50, 0);
+						tintTexCube.userData.tintColor = {r: 1, g: 0, b: 0};
+					},
+					tick: function () {
+						tintTexCube.userData.tintColor = GREEN;
+					},
+					tock: function () {
+						tintTexCube.userData.tintColor = BLUE;
+					}
+				},
+				{
+					name: 'colored, textured cube, performance',
+					enabled: true,
+					init: function () {
+						var numCubes = 50;
+						for (var i = 0; i < numCubes; i++) {
+							colorTexCube = addTexturedCube();
+							if (!this.material) {
+								this.material = colorTexCube.material.clone();
+							}
+							colorTexCube.scale.multiplyScalar(0.5);
+							colorTexCube.name = 'colorTexCube ' + i;
+							colorTexCube.material = this.material;
+							colorTexCube.position.set(
+								Math.sin(i / numCubes * Math.PI * 2) * 10,
+								-50 + Math.cos(i / numCubes * Math.PI * 2) * 10,
+								Math.sin(i / numCubes * Math.PI * 2) * 10);
+							colorTexCube.material.color.setHSL(0.25, 1, 0.5);
+						}
+						this.previousHue = 0.25;
+					},
+					tick: function () {},
+					tock: function () {},
+					update: function (elapsed) {
+						var newHue = elapsed / 10 % 100 / 100;
+						if (Math.abs(newHue - this.previousHue) > 0.05) {
+							this.material.color.setHSL(newHue, 1, 0.5);
+							this.material.needsUpdate = true;
+							this.previousHue = newHue;
+						}
+					}
+				},
+				{
+					name: 'tinted, colored cube',
+					description: '',
+					enabled: true,
+					init: function () {
+						tintColorCube = addColorCube('cyan');
+						tintColorCube.name = 'tintColorCube';
+						tintColorCube.position.set(-50, 50, 0);
+					},
+					tick: function () {
+						tintColorCube.userData.tintColor = GREEN;
+					},
+					tock: function () {
+						tintColorCube.userData.tintColor = undefined;
+					}
+				},
+				{
+					name: 'animated cube',
+					description: '',
+					enabled: true,
+					init: function () {
+						animatedCube = addTexturedCube();
+						animatedCube.name = 'animatedCube';
+						animatedCube.position.set(0, 0, 0);
+					},
+					tick: function () {
+					},
+					tock: function () {
+					},
+					update: function (elapsed) {
+						elapsed /= 1000;
+						animatedCube.rotation.x = Math.sin(elapsed);
+						animatedCube.rotation.y = Math.cos(elapsed);
+						animatedCube.position.z = Math.sin(elapsed) * 25;
+					}
+				},
+				{
+					name: 'object visibility',
+					description: '',
+					enabled: true,
+					init: function () {
+						visibilityCube = addColorCube('blue');
+						visibilityCube.name = 'visibilityCube';
+						visibilityCube.position.set(50, 50, 0);
+						var visInnerCube = addColorCube('blue');
+						visInnerCube.name = 'visInnerCube';
+						visInnerCube.position.set(50, 50, 0);
+						visInnerCube.scale.multiplyScalar(0.5);
+						visInnerCube.addEventListener(
+							'cursordown',
+							function () {
+								this.material.color.setHex(0xff0000);
+							}
+						);
+						visInnerCube.addEventListener(
+							'cursorup',
+							function () {
+								this.material.color.setHex(0x00ff00);
+							}
+						);
+					},
+					tick: function () {
+						visibilityCube.visible = true;
+					},
+					tock: function () {
+						visibilityCube.visible = false;
+					}
+				},
+				{
+					name: 'material visibility',
+					description: '',
+					enabled: true,
+					init: function () {
+						matVisibilityCube = addTexturedCube();
+						matVisibilityCube.name = 'matVisibilityCube';
+						matVisibilityCube.material = 
+							matVisibilityCube.material.clone()
+						matVisibilityCube.name = 'matVisibilityCube';
+						matVisibilityCube.position.set(50, -50, 0);
+						var matVisInnerCube = addColorCube('blue');
+						matVisInnerCube.name = 'matVisInnerCube';
+						matVisInnerCube.position.set(80, -50, 0);
+						matVisInnerCube.scale.multiplyScalar(0.5);
+						matVisibilityCube.addEventListener(
+							'cursordown',
+							function () {
+								matVisInnerCube.material.color.setHex(0xff0000);
+							}
+						);
+						matVisibilityCube.addEventListener(
+							'cursorup', 
+							function () {
+								matVisInnerCube.material.color.setHex(0x00ff00);
+							}
+						);
+					},
+					tick: function () {
+						matVisibilityCube.material.visible = true;
+					},
+					tock: function () {
+						matVisibilityCube.material.visible = false;
+					}
+				},
+				{
+					name: 'tinted OBJ',
+					description: '',
+					enabled: true,
+					init: function () {
+						var loader = new THREE.OBJMTLLoader();
+						var objFilename = "../models/test/test.obj";
+						var mtlFilename = "../models/test/test.mtl";
+						loader.load(
+							objFilename,
+							mtlFilename,
+							function ( loadedObject ) {
+								// BOTTOM LEFT
+								tintedObj = loadedObject;
+								tintedObj.name = 'tintedObj';
+								tintedObj.scale.multiplyScalar(30);
+								tintedObj.position.set(-50, -50, 0);
+								scene.add(tintedObj);
+								objLoaded = true;
+							}
+						);
+					},
+					tick: function () {
+						deepTint(tintedObj, YELLOW);
+					},
+					tock: function () {
+						deepTint(tintedObj, MAGENTA);
+					}
+				},
+				{
+					name: 'adding/removing textured cube',
+					description: '',
+					enabled: true,
+					init: function () {
+					},
+					tick: function () {
+						texturedCube = addTexturedCube();
+						texturedCube.name = 'texturedCube';
+					},
+					tock: function () {
+						scene.remove(texturedCube);
+					}
+				},
+				{
+					name: 'adding/removing colored cube',
+					description: '',
+					enabled: true,
+					init: function () {
+					},
+					tick: function () {
+						scene.remove(colorCube);
+					},
+					tock: function () {
+						colorCube = addColorCube();
+						colorCube.name = 'colorCube';
+					}
+				}
+			];
+
+			// tests = tests.filter(test => 'adding/removing colored cube' === test.name);
+
+			function init() {
+				window.scene = scene = new THREE.Scene();
+				scene.position.set(0, -60, 0);
+				scene.scale.multiplyScalar(2);
+
+				if (window.altspace) {
+					renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+				}
+				else {
+					renderer = new THREE.WebGLRenderer();
+					renderer.setClearColor("#AAAAAA");
+					renderer.setSize( window.innerWidth, window.innerHeight );
+					document.body.appendChild( renderer.domElement );
+					renderer.setSize( window.innerWidth, window.innerHeight );
+					var aspect = window.innerWidth / window.innerHeight;
+					camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+					camera.position.z = 400;
+					camera.position.y = 50;
+					camera.lookAt( scene.position );
+					var ambient = new THREE.AmbientLight( 0xffffff );
+					scene.add( ambient );
+					controls = new THREE.OrbitControls(camera);
+				}
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0';
+				document.body.appendChild(stats.domElement);
+
+				addAxisSpheres();
+
+				tests.
+					filter(test => test.enabled).
+					forEach(test => test.init());
+			}
+
+			var lastTick = Date.now();
+			var tick = true;
+			var debugInfoShown = false;
+			function animate(elapsed) {
+				requestAnimationFrame(animate);
+
+				if (Date.now() - lastTick > 1000) {
+					if (tick) {
+						tests.forEach(test => test.tick());
+					}
+					else {
+						tests.forEach(test => test.tock());
+					}
+					tick = !tick;
+					lastTick = Date.now();
+				}
+
+				tests.
+					filter(test => test.update).
+					forEach(test => test.update(elapsed));
+
+				if (!window.altspace) { 
+					controls.update();
+				}
+
+				renderer.render( scene, camera );
+
+				if (objLoaded && !debugInfoShown) {
+					altspace.getThreeJSDebugInfo().then(function (debugInfo) {
+						console.table(debugInfo);
+					});
+					debugInfoShown = true;
+				}
+
+				stats.update();
+			}
+
+			init();
+			animate(0);
+		</script>
+	</body>
+</html>
