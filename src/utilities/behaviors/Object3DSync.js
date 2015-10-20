@@ -55,7 +55,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             syncDataBase.on('value', function (snapshot) {
                 var value = snapshot.val();
                 if (!value) return;
-                object3d.userData.syncData.set(value);
+                object3d.userData.syncData = value;
             });
         }
     }
