@@ -248,6 +248,10 @@ footer {
   font-family: Consolas, Monaco, 'Andale Mono', monospace
 }
 
+h4.name {
+  border-bottom: 1px solid grey;
+}
+
 .details {
   margin-top: 14px;
   border-left: 2px solid #DDD;
