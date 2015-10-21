@@ -1,12 +1,11 @@
 altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
-
 /**
  * Detects mouse move/up/down events, raycasts to find intersected objects, 
  * then dispatches cursor move/up/down/enter/leave events that mimics 
  * Altspace events.
- * @exports altspace/utilities/shims/cursor
+ * @module altspace/utilities/shims/cursor
  */
 altspace.utilities.shims.cursor = (function () {
     //TODO: Support non-full window apps
@@ -17,6 +16,14 @@ altspace.utilities.shims.cursor = (function () {
 
     var raycaster = new THREE.Raycaster();
 
+    /**
+     * Initializes the cursor module 
+     * @static
+     * @method init
+     * @param {THREE.Scene} scene
+     * @param {THREE.Camera} camera - Camera used for raycasting.
+     * @memberof module:altspace/utilities/shims/cursor
+     */
     function init(_scene, _camera, _params) {
         if (!_scene || !_scene instanceof THREE.Scene) {
             throw new TypeError('Requires THREE.Scene argument');
@@ -103,13 +110,6 @@ altspace.utilities.shims.cursor = (function () {
     };
 
     return {
-        /**
-         * Initializes the cursor module 
-         * @static
-         * @function
-         * @param {THREE.Scene} scene
-         * @param {THREE.Camera} camera - Camera used for raycasting.
-         */
         init: init,
     };
 

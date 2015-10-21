@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>altspace/utilities/shims/cursor - Documentation</title>
+    <title>Layout - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">altspace/utilities/shims/cursor</h1>
+    <h1 class="page-title">Layout</h1>
     
 
     
@@ -40,8 +40,11 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="behaviors.html">altspace/utilities/behaviors</a>.</span>
         
-            
+        Layout
+        </h2>
         
     
 </header>
@@ -50,110 +53,25 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Detects mouse move/up/down events, raycasts to find intersected objects, 
-then dispatches cursor move/up/down/enter/leave events that mimics 
-Altspace events.</p></div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
 
     
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="init"><span class="type-signature">(static) </span>init<span class="signature">(scene, camera)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Layout"><span class="type-signature"></span>new Layout<span class="signature">(config)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Initializes the cursor module</p>
+    <p>The Layout behavior allows you to position objects easily. You can 
+position an object relative to its parent (either the Scene or a 
+another object) by using a position specifier for each of the axes.
+The position specifier can be one of 'min', 'center' or 'max'. The default
+specifier is 'center'. You can also add a modifier to the position in pixels
+('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can 
+choose the location of the anchor on the object you are trying to position 
+by using the 'my' parameter.
+You must specify at least one axis on the 'at' parameter.</p>
 </div>
 
 
@@ -189,13 +107,13 @@ Altspace events.</p></div>
 
         <tr>
             
-                <td class="name"><code>scene</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="THREE.Scene.html">THREE.Scene</a></span>
+<span class="param-type">Object</span>
 
 
             
@@ -205,30 +123,101 @@ Altspace events.</p></div>
 
             
 
-            <td class="description last"></td>
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>at</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An object containing the axes and position 
+ specifiers. At least one axis must be specificed. E.g. <code>{x: 'min', y: 'max-5%'}</code></p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>camera</code></td>
+                <td class="name"><code>my</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">THREE.Camera</span>
+<span class="param-type">Object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>Camera used for raycasting.</p></td>
+            <td class="description last"><p>An object containing the axes and position
+ specifiers for the layout anchor.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -289,8 +278,31 @@ Altspace events.</p></div>
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Position the top of the cube at 1.5 meters above the bottom of its parent.
+cube.addBehavior(new altpsace.utilities.behaviors.Layout({
+	   my: {y: 'max'}, 
+	   at: {y: 'min+1.5m'}
+});</code></pre>
 
-        
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
     
 
     

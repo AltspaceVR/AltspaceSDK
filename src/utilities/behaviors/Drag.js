@@ -8,8 +8,13 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 //TODO: GSAP Draggable
 /**
  * A behavior that makes an object draggable along a plane.
- * @class altspace/utilities/behaviors.Drag
- * @param {Object} [config] Optional parameters.
+ * @class Drag
+ * @param {Object} [config] Specify the axes along which the object can be 
+ *  dragged.
+ *  E.g. To constraint th object to an XY plane: `{x: true, y: true}`  
+ *  Each axis can also be an object specifying the minimum and maximum limits
+ *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
+ * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.Drag = function (config) {
     //space: view, local, world, sphere

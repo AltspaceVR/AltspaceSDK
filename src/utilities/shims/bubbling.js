@@ -1,7 +1,6 @@
 /**
- * Adds event bubbling to Three.js' events system.
- * Just include this module, no further instantiation or function call 
- * is required.
+ * The Altspace SDK adds event bubbling to Three.js' events system.
+ * Simply include the SDK in your app to take advantage of this feature.
  *
  * @example
  * var parent = new THREE.Object3D();
@@ -13,7 +12,7 @@
  * child.dispatchEvent({type: 'custom'});
  * // Console log shows 'received custom event'
  *
- * @exports altspace/utilities/shims/bubbling
+ * @module altspace/utilities/shims/bubbling
  */
 ( function() {
 

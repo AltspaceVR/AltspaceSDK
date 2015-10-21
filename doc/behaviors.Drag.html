@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>altspace/utilities/shims/cursor - Documentation</title>
+    <title>Drag - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">altspace/utilities/shims/cursor</h1>
+    <h1 class="page-title">Drag</h1>
     
 
     
@@ -40,8 +40,11 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="behaviors.html">altspace/utilities/behaviors</a>.</span>
         
-            
+        Drag
+        </h2>
         
     
 </header>
@@ -50,110 +53,17 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Detects mouse move/up/down events, raycasts to find intersected objects, 
-then dispatches cursor move/up/down/enter/leave events that mimics 
-Altspace events.</p></div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
 
     
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="init"><span class="type-signature">(static) </span>init<span class="signature">(scene, camera)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Drag"><span class="type-signature"></span>new Drag<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Initializes the cursor module</p>
+    <p>A behavior that makes an object draggable along a plane.</p>
 </div>
 
 
@@ -177,6 +87,8 @@ Altspace events.</p></div>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -189,46 +101,36 @@ Altspace events.</p></div>
 
         <tr>
             
-                <td class="name"><code>scene</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="THREE.Scene.html">THREE.Scene</a></span>
+<span class="param-type">Object</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>camera</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">THREE.Camera</span>
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
 
             
-            </td>
 
-            
-
-            
-
-            <td class="description last"><p>Camera used for raycasting.</p></td>
+            <td class="description last"><p>Specify the axes along which the object can be 
+ dragged.
+ E.g. To constraint th object to an XY plane: <code>{x: true, y: true}</code><br> Each axis can also be an object specifying the minimum and maximum limits
+ of the constraint. E.g. <code>{x: {min: -10, max: 20}, y: true}</code></p></td>
         </tr>
 
     
@@ -290,7 +192,21 @@ Altspace events.</p></div>
 
 
 
-        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
     
 
     

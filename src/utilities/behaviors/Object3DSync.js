@@ -2,6 +2,23 @@ window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
+/**
+ * The Object3DSync behavior syncs an object's tranforms and data
+ *
+ * @class Object3DSync
+ * @param {Object} [config]
+ * @param {Boolean} [config.position=false] Whether object's position should
+ *  be synced
+ * @param {Boolean} [config.rotation=false] Whether object's rotation should
+ *  be synced
+ * @param {Boolean} [config.scale=false] Whether object's scale should
+ *  be synced
+ * @param {Boolean} [config.syncData=false] Whether object's syncData should
+ *  be synced
+ * @param {Boolean} [config.auto=false] Whether the object should be synced 
+ *  automatically
+ * @memberof module:altspace/utilities/behaviors
+ **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
     config = config || {};
     /*if (config.position === undefined) config.position = true;
