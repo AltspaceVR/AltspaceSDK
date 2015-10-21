@@ -52,8 +52,8 @@
 <p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">three.js</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="http://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift DK2.</p>
 <p><a href="http://threejs.org/">Three.js</a> is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.</p>
 <p>This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.</p>
-<p>The SDK is in beta and actively under development. </p>
-<p>######Please stay up to date by reading the <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">Wiki</a>, the <a href="http://answers.altvr.com">Developer Answers</a> page, and the <a href="https://github.com/AltspaceVR/AltspaceSDK/issues">GitHub Issues</a> page. We also have a number of examples in <a href="http://codepen.io/team/altspacevr/public/">CodePen</a> that can be edited live in VR.  </p>
+<p>The SDK is in beta and actively under development.   </p>
+<p><strong><em>Please stay up to date by reading the <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">Wiki</a>, the <a href="http://answers.altvr.com">Developer Answers</a> page, and the <a href="https://github.com/AltspaceVR/AltspaceSDK/issues">GitHub Issues</a> page. We also have a number of examples in <a href="http://codepen.io/team/altspacevr/public/">CodePen</a> that can be edited live in VR.</em></strong></p>
 <p><strong>The best way to begin working with the SDK is to follow our <a href="https://developer.altvr.com/get-started/">Getting Started</a> guide!</strong></p>
 <p><a href="http://altspacevr-slackin.herokuapp.com"><img src="https://altspacevr-slackin.herokuapp.com/badge.svg" alt="Slack Status"></a>  </p>
 <h2 id="altspace-js">altspace.js</h2>
@@ -65,10 +65,11 @@
 <p>or to include a specific version add:</p>
 <p><code>&lt;script src=&quot;http://sdk.altvr.com/libs/altspace.js/0.2.3/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <h2 id="api-documentation">API Documentation</h2>
+<p>Here&#39;s a quick overview of the main features of our API. See the <a href="http://altspacevr.github.io/AltspaceSDK/doc">API Reference</a> documentation for complete details, including helpful utilities.</p>
 <blockquote>
 <p>Note that many of our APIs make use of Promises. Learn about how they work over at <a href="http://www.html5rocks.com/en/tutorials/es6/promises/">HTML5 Rocks</a></p>
 </blockquote>
-<p>####Holographic Rendering</p>
+<h4 id="holographic-rendering">Holographic Rendering</h4>
 <ul>
 <li><p><code>var renderer = altspace.getThreeJSRenderer();</code><br>returns a renderer that can be used to render three.js scenes as holographic objects  </p>
 <blockquote>
@@ -76,7 +77,7 @@
 </blockquote>
 </li>
 </ul>
-<p>####Cursor Events</p>
+<h4 id="cursor-events">Cursor Events</h4>
 <p>The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners. </p>
 <blockquote>
 <p>Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that signifigantly concave objects (buckets, etc) will block contained objects from being clicked on.</p>
@@ -89,20 +90,18 @@
 </li>
 <li><code>scene.addEventListner(&#39;cursormove&#39;, callback)</code><br>listen for cursor move events</li>
 </ul>
-<p>####Enclosure Properties</p>
+<h4 id="enclosure-properties">Enclosure Properties</h4>
 <ul>
 <li><code>altspace.getEnclosure().then(callback)</code><br>returns a promise that will fufill with a description of the enclosure, including its size and <code>pixelsPerMeter</code> which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.  </li>
 </ul>
-<p>####User Data</p>
+<h4 id="user-data">User Data</h4>
 <ul>
 <li><code>altspace.getUser().then(callback)</code><br>returns a promise that will fufill with information about the local user</li>
 </ul>
-<p>####Tracking Skeleton</p>
+<h4 id="tracking-skeleton">Tracking Skeleton</h4>
 <ul>
 <li><code>altspace.getThreeJSTrackingSkeleton().then(callback)</code><br>returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object&#39;s transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. <strong>Make sure to add the skeleton to your scene after receiving it</strong></li>
 </ul>
-<h2 id="utilities">Utilities</h2>
-<p>See the documentation in the <a href="https://github.com/AltspaceVR/AltspaceSDK/tree/master/utilities">utilities directory</a>  </p>
 <h2 id="three-js-feature-support">Three.js Feature Support</h2>
 <p><strong>Currently supported:</strong></p>
 <ul>
@@ -138,7 +137,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Oct 21 2015 16:03:20 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Oct 21 2015 16:28:35 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
