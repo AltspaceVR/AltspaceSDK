@@ -119,7 +119,13 @@ gulp.task('altspace_js', function () {
 });
 
 gulp.task('doc', ['altspace_js'], function () {
-	var argv = yargs.argv
+	var argv = yargs.option(
+		'clientjs',
+		{
+			describe: 'Path to the directory containing altspace-client.js',
+			demand: true
+		}
+	).argv
 	if (argv.clientjs) {
 		docfiles.push(argv.clientjs + '/*.js');
 	}
