@@ -1,3 +1,15 @@
+/**
+ * The Sync utility is currently based on Firebase. It provides a quick way 
+ * to syncronize apps between users (even when they are running outside of 
+ * AltspaceVR). 
+ * During the SDK beta, please consider all data stored with the sync 
+ * utility to be ephemeral (it may be cleared or clobbered at any time). 
+ * You do not need a Firebase account to use the Sync utility.
+ *
+ * Refer to the [Firebase API documentation](https://www.firebase.com/docs/web/api/)
+ * when working with the sync instance.
+ * @module altspace/utilities/sync
+ */
 altspace.utilities.sync = (function() {
     
     var instance;
@@ -22,6 +34,26 @@ altspace.utilities.sync = (function() {
         }, {remember: 'sessionOnly'});
     }
 
+    /**
+     * Returns a firebase instance, just as if you had called new Firebase()  
+     * @method getInstance
+     * @param {Object} params
+     * @param {String} params.appId An identifier for your app.
+     * @param {String} [params.instanceId] An id for a particular instance of
+     *  your app.
+     * @param {String} [params.authorId] An identifier for the author of the
+     *  app.
+     * @return {Firebase}
+     * @memberof module:altspace/utilities/sync
+     * @example
+     *  var syncInstance = altspace.utilities.sync.getInstance({
+     *      // All sync instances with the same instance id will share 
+     *      // properties. 
+     *      instanceId: yourInstanceId, 
+     *      // This helps to prevent collisions.
+     *      authorId: yourAuthorId  
+     *  });
+     */
     function getInstance(params) {
         var canonicalUrl = getCanonicalUrl();
         var url = new Url();

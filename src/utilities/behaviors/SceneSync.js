@@ -2,9 +2,28 @@ window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
+/**
+ * The SceneSync behavior manages the synchronization of an entire scene.
+ *
+ * @class SceneSync
+ * @param {Firebase} syncInstance
+ * @param {Object} [config]
+ * @param {Object} [config.instantiators] A dictionary of instantiation 
+ *  callbacks by syncType. Instantiators are called when an object should be
+ *  added to the scene. Instantiators are passed an initialization
+ *  data object and the syncType. They should return an object with an 
+ *  Object3DSync behavior.
+ * @param {Object} [config.destructors] A dictionary of destruction 
+ *  callbacks by syncType. Destructors are called when an object should be 
+ *  removed from the scene.
+ * @param {Function} [config.ready] A callback that is called after 
+ *  synchronization is initialized. The callback is passed a boolean that 
+ *  is true if this is the first callback that has ever been called across
+ *  it synced instances.
+ * @memberof module:altspace/utilities/behaviors
+ **/
 window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) {
     var sceneBase = instanceBase.child('scene');
-
     config = config || {};
     var instantiators = config.instantiators || {};
     var destructors = config.destructors || {};
@@ -93,6 +112,16 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         setInterval(autoSendAll, autoSendRateMS);
     }
 
+    /**
+     * Instantiate an object by syncType.
+     * @method instantiate
+     * @param {String} syncType Type of object to instantiate.
+     * @param {Object} initData An object containing initialization data, passed
+     *  to the instantiator.
+     * @param {Boolean} destroyOnDisconnect If the object should be destroyed
+     *  across all synced instance when the instantiating instance disconnects.
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
     function instantiate(syncType, initData, destroyOnDisconnect) {
         initData = initData || {};
         var objectBase = sceneBase.push({syncType: syncType, initData: initData},
@@ -105,6 +134,13 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         return objectForKey[objectBase.key()];
     }
 
+
+    /**
+     * Destroy a synced object across instances.
+     * @method destroy
+     * @param {Object} object3d The object to destroy.
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
     function destroy(object3d) {
         var key = keyForUuid[object3d.uuid]
         if (!key){

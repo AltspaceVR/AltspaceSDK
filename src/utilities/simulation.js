@@ -1,6 +1,21 @@
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 
+/**
+ * @module altspace/utilities
+ */
+
+/**
+ * Simluation is a helper class that lets you quickly setup an AltspaceVR
+ * app. It creates a basic scene for you and starts the render and behavior loop.
+ *
+ * It also automatically uses the WebGL renderer when running in a 
+ * desktop browser and emulates cursor events with mouse clicks.
+ * @class Simulation
+ * @param {Object} [config] Optional parameters.
+ * @param {Boolean} [config.auto=true] Automatically start the render loop.
+ * @memberof module:altspace/utilities
+ */
 altspace.utilities.Simulation = function (config) {
     config = config || {};
     if (config.auto === undefined) config.auto = true;
@@ -67,16 +82,40 @@ altspace.utilities.Simulation = function (config) {
 
     if (config.auto) window.requestAnimationFrame(loop);
 
+
+    /**
+     * The simulation scene.
+     * @readonly
+     * @instance
+     * @member {THREE.Scene} scene
+     * @memberof module:altspace/utilities.Simulation
+     */
     Object.defineProperty(exports, 'scene', {
         get: function () {
             return scene;
         }
     })
+
+    /**
+     * The renderer being used.
+     * @readonly
+     * @instance
+     * @member {(THREE.WebGLRenderer|AltRenderer)} renderer
+     * @memberof module:altspace/utilities.Simulation
+     */
     Object.defineProperty(exports, 'renderer', {
         get: function () {
             return renderer;
         }
     })
+
+    /**
+     * The camera being used by the WebGL renderer.
+     * @readonly
+     * @instance
+     * @member {Three.Camera} camera
+     * @memberof module:altspace/utilities.Simulation
+     */
     Object.defineProperty(exports, 'camera', {
         get: function () {
             return camera;

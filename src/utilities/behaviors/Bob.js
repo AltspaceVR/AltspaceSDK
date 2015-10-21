@@ -1,7 +1,21 @@
+/**
+ * @module altspace/utilities/behaviors
+ */
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
+/**
+ * The Bob behavior adds a bobbing animation to an object
+ *
+ * @class Bob
+ * @param {Object} [config]
+ * @param {Boolean} [config.shouldRotate=true] Whether the animation should include
+ *  rotation.
+ * @param {Boolean} [config.shouldMove=true] Whether the animation should
+ *  include movement.
+ * @memberof module:altspace/utilities/behaviors
+ **/
 altspace.utilities.behaviors.Bob = function (config) {
     var object3d;
 

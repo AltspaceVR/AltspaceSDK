@@ -1,4 +1,8 @@
- altspace.utilities.codePen = (function () {
+/**
+ * Utilities to help build AltspaceVR apps on CodePen.io.
+ * @module altspace/utilities/codePen
+ */
+altspace.utilities.codePen = (function () {
     var exports = {};
 
     var Please = window.Please;
@@ -14,6 +18,12 @@
         console.log("In VR: " + inVR);
     }
 
+	/**
+	 * Will stop code exection and post a message informing the user to 
+	 * open the example in VR  
+	 * @method ensureInVR
+	 * @memberof module:altspace/utilities/codePen
+	 */
     function ensureInVR() {
         if (inTile || !inVR) //inTile && inAltspace
         {
@@ -63,6 +73,12 @@
         }
     }
 
+	/**
+	 * Sets the name to be used by ensureInVR()  
+	 * @method setName
+	 * @param {String} name
+	 * @memberof module:altspace/utilities/codePen
+	 */
     function setName(n) {//TODO: A better method for this would be awesome
         name = n;
     }
@@ -73,6 +89,13 @@
         return new Url(fullUrl);
     }
 
+
+	/**
+	 * Returns the pen ID, useful for setting the sync instanceId.
+	 * @method getPenId
+	 * @return {String}
+	 * @memberof module:altspace/utilities/codePen
+	 */
     function getPenId() {
         var url = getParsedUrl();
         var splitPath = url.path.split('/');
@@ -80,6 +103,12 @@
         return id;
     }
 
+	/**
+	 * Returns the pen author ID, useful for setting the sync authorId.
+	 * @method getAuthorId
+	 * @return {String}
+	 * @memberof module:altspace/utilities/codePen
+	 */
     function getAuthorId() {
         var url = getParsedUrl();
         var splitPath = url.path.split('/');

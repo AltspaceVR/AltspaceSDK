@@ -5,6 +5,7 @@
 
 var gulp = require('gulp'),
 
+    yargs = require('yargs'),
     fs = require('fs'),
     path = require('path'),
 
@@ -22,6 +23,7 @@ var gulp = require('gulp'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
 
+    jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
     sourcemaps = require('gulp-sourcemaps');
 
@@ -29,12 +31,19 @@ gulp.task('default', function () {
     return gulp.start('altspace_js');
 });
 
-gulp.task('watch', ['altspace_js'], function () {
+var docfiles = [
+    'src/utilities/**/*.js',
+    '!src/utilities/**/*.es6.js',
+    'README.md'
+];
+
+gulp.task('watch', ['altspace_js', 'doc'], function () {
     gulp.watch('./version.json', ['altspace_js']);
     gulp.watch('./examples/**/*.js', ['altspace_js']);
     gulp.watch('./src/**/*.js', ['altspace_js']);
     gulp.watch('./lib/**/*.js', ['altspace_js']);
     gulp.watch('./tests/**/*.js', ['altspace_js']);
+    gulp.watch(docfiles, {verbose: true}, ['doc']);
 });
 
 gulp.task('altspace_js', function () {
@@ -52,13 +61,13 @@ gulp.task('altspace_js', function () {
         }))
         .pipe(gulp.dest('./'));
 
-	browserify(
-		'./examples/living-room/living-room.js'
-	)
-		.bundle()
-		.pipe(vsource('living-room-main.js'))
-		.pipe(vbuffer())
-		.pipe(gulp.dest('./examples/living-room/'));
+    browserify(
+        './examples/living-room/living-room.js'
+    )
+        .bundle()
+        .pipe(vsource('living-room-main.js'))
+        .pipe(vbuffer())
+        .pipe(gulp.dest('./examples/living-room/'));
 
     return orderedMerge([
         gulp.src([
@@ -107,4 +116,26 @@ gulp.task('altspace_js', function () {
         //.pipe(gulp.dest('./dist/latest', { cwd: cwd }))
         //.pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
         .pipe(print());
+});
+
+gulp.task('doc', ['altspace_js'], function () {
+    var argv = yargs.option(
+        'clientjs',
+        {
+            describe: 'Path to the directory containing altspace-client.js',
+            demand: true
+        }
+    ).argv
+    if (argv.clientjs) {
+        docfiles.push(argv.clientjs + '/*.js');
+    }
+    return gulp.src(docfiles)
+        .pipe(jsdoc('./doc', {
+            path: path.resolve('node_modules/minami'),
+            default: {
+                outputSourceFiles: false
+            }
+        }, {
+            plugins: ['plugins/markdown']
+        }));
 });

@@ -8,8 +8,9 @@ The AltspaceVR SDK can be used together with [three.js] to create holographic, m
 
 This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.
 
-The SDK is in beta and actively under development. 
-######Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page. We also have a number of examples in [CodePen](http://codepen.io/team/altspacevr/public/) that can be edited live in VR.  
+The SDK is in beta and actively under development.   
+
+***Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page. We also have a number of examples in [CodePen](http://codepen.io/team/altspacevr/public/) that can be edited live in VR.***
 
 **The best way to begin working with the SDK is to follow our [Getting Started](https://developer.altvr.com/get-started/) guide!**
 
@@ -33,16 +34,18 @@ or to include a specific version add:
 
 ## API Documentation  
 
+Here's a quick overview of the main features of our API. See the [API Reference](http://altspacevr.github.io/AltspaceSDK/doc) documentation for complete details, including helpful utilities.
+
 > Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
 
-####Holographic Rendering
+#### Holographic Rendering
 
 * `var renderer = altspace.getThreeJSRenderer();`  
  returns a renderer that can be used to render three.js scenes as holographic objects  
 
   > Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)
 
-####Cursor Events
+#### Cursor Events
 
 The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners. 
 
@@ -55,24 +58,20 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 * `scene.addEventListner('cursormove', callback)`  
  listen for cursor move events
 
-####Enclosure Properties
+#### Enclosure Properties
 
 * `altspace.getEnclosure().then(callback)`  
  returns a promise that will fufill with a description of the enclosure, including its size and `pixelsPerMeter` which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.  
 
-####User Data
+#### User Data
 
 * `altspace.getUser().then(callback)`  
  returns a promise that will fufill with information about the local user
 
-####Tracking Skeleton
+#### Tracking Skeleton
 
 * `altspace.getThreeJSTrackingSkeleton().then(callback)`  
  returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. **Make sure to add the skeleton to your scene after receiving it**
-
-## Utilities
-
-See the documentation in the [utilities directory](https://github.com/AltspaceVR/AltspaceSDK/tree/master/utilities)  
 
 ## Three.js Feature Support
 
