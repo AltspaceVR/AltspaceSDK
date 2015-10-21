@@ -61,7 +61,6 @@ var Layout = (function () {
 		_classCallCheck(this, Layout);
 
 		this.my = my;
-		this.far = my;
 		this.at = at;
 	}
 

@@ -44,7 +44,6 @@ class Layout {
 
 	constructor ({ my = {}, at }) {
 		this.my = my;
-		this.far = my;
 		this.at = at;
 	}
 
