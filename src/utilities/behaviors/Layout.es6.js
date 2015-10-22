@@ -1,6 +1,6 @@
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+if (!window.altspace) { window.altspace = {}; }
+if (!window.altspace.utilities) { window.altspace.utilities = {}; }
+if (!window.altspace.utilities.behaviors) { window.altspace.utilities.behaviors = {}; }
 
 require('babel/polyfill');
 let

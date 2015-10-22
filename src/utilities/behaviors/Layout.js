@@ -10,9 +10,15 @@ var _Map = require('babel-runtime/core-js/map')['default'];
 
 var _Array$from = require('babel-runtime/core-js/array/from')['default'];
 
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+if (!window.altspace) {
+	window.altspace = {};
+}
+if (!window.altspace.utilities) {
+	window.altspace.utilities = {};
+}
+if (!window.altspace.utilities.behaviors) {
+	window.altspace.utilities.behaviors = {};
+}
 
 require('babel/polyfill');
 var containerMax = _Symbol('containerMax'),
