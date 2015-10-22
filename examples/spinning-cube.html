@@ -43,7 +43,7 @@ function createCube() {
 	cube.addBehaviors(
 		alt.Object3DSync({syncData: true}),
 		alt.Spin({speed: 0.0005}),
-		alt.ChangeColor({onEvent: 'cursordown'})
+		ChangeColor()
 	);
 
 	sim.scene.add(cube);
@@ -55,6 +55,32 @@ function ready(firstInstance) {
 		sceneSync.instantiate('Cube');
 	}
 }
+
+ChangeColor = function () {//define a custom behavior
+
+  var object3d;
+  var lastColor;
+
+  function awake(o) {
+    object3d = o;
+		object3d.addEventListener('cursordown', function() {
+			object3d.userData.syncData.color = Please.make_color()[0];//random cololr
+			var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
+      if (sync) sync.enqueueSend();
+		});
+  }
+
+  function update(deltaTime) {
+  	if (object3d.userData.syncData.color !== lastColor) {
+  		lastColor = object3d.userData.syncData.color;
+			object3d.material.color = new THREE.Color(object3d.userData.syncData.color);
+			object3d.material.needsUpdate = true;//currently required in Altspace
+  	}
+  }
+
+  return { awake: awake, update: update };
+
+};
 
 </script>
 </html>

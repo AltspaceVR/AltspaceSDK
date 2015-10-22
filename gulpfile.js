@@ -83,7 +83,6 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/ButtonStateStyle.js',
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/Spin.js',
-            './src/utilities/behaviors/ChangeColor.js',
         ], { cwd: cwd }),
         browserify(
             './src/utilities/behaviors/Layout.js'
