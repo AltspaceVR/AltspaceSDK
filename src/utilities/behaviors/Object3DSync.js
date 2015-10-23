@@ -3,7 +3,7 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The Object3DSync behavior syncs an object's tranforms and data
+ * The Object3DSync behavior syncs an object's transform and data
  *
  * @class Object3DSync
  * @param {Object} [config]
@@ -16,7 +16,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @param {Boolean} [config.syncData=false] Whether object's syncData should
  *  be synced
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
- *  automatically
+ *  automatically. Not currently recommended.
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
@@ -77,6 +77,14 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         }
     }
 
+
+    /**
+     * Enqueue a sync for the next SceneSync update.
+     * 
+     * This is to be used whenever you update a property and are not using auto. If multiple users could potentially move an object, this is preferred vs using auto.
+     * @method enqueueSend
+     * @memberof module:altspace/utilities/behaviors.Object3DSync
+     */
     function enqueueSend() {
         sendEnqueued = true;
     }

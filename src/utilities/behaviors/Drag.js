@@ -14,6 +14,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  E.g. To constraint th object to an XY plane: `{x: true, y: true}`  
  *  Each axis can also be an object specifying the minimum and maximum limits
  *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
+ *  Currently you must specify exactly two axis
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.Drag = function (config) {

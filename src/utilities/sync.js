@@ -5,6 +5,7 @@
  * During the SDK beta, please consider all data stored with the sync 
  * utility to be ephemeral (it may be cleared or clobbered at any time). 
  * You do not need a Firebase account to use the Sync utility.
+ * 
  *
  * Refer to the [Firebase API documentation](https://www.firebase.com/docs/web/api/)
  * when working with the sync instance.
@@ -36,6 +37,8 @@ altspace.utilities.sync = (function() {
 
     /**
      * Returns a firebase instance, just as if you had called new Firebase()  
+     *
+     * By using syncInstance.parent() you can store cross-instance data like high scores. Likewise you can store persistent user data at syncInstance.parent().child([userId).
      * @method getInstance
      * @param {Object} params
      * @param {String} params.appId An identifier for your app.

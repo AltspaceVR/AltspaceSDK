@@ -1,6 +1,8 @@
 /**
  * The Altspace SDK adds event bubbling to Three.js' events system.
- * Simply include the SDK in your app to take advantage of this feature.
+ * Simply include the SDK in your app and add a bubbling property to your event to take advantage of this feature.
+ * 
+ * AltspaceVR cursor events always make use of this bubbling shim.
  *
  * @example
  * var parent = new THREE.Object3D();
@@ -9,7 +11,7 @@
  * });
  * var child = new THREE.Object3D();
  * parent.add(child);
- * child.dispatchEvent({type: 'custom'});
+ * child.dispatchEvent({type: 'custom', bubbles: true});
  * // Console log shows 'received custom event'
  *
  * @module altspace/utilities/shims/bubbling
