@@ -10,7 +10,7 @@ The AltspaceVR SDK can be used together with [three.js] to create holographic, m
 
 **[Getting Started] - If you're new to the SDK, start here!**  
 **[API Reference] - Reference for built in API functions, utilities, and more**  
-**[Developer Portal] - Tutorials, projects, initiative program, and Showcase submission**  
+**[Developer Portal] - Tutorials, projects, initiative program, and app submission**  
 **[Developer Answers] - Questions and answers about the SDK**  
 **[CodePen] - Examples that can be edited live in AltspaceVR**  
 **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
