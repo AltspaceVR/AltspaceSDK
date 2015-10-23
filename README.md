@@ -34,9 +34,9 @@ or to include a specific version add:
 
 ## API Overview  
 
-**See the [API Reference](http://altspacevr.github.io/AltspaceSDK/doc) for full details and a complete list of APIs and utilities.**
+**See the [API Reference](http://altspacevr.github.io/AltspaceSDK/doc) for full details and a complete list of APIs and utilities.**  
 
-Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
+> Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
 
 #### Holographic Rendering
 
