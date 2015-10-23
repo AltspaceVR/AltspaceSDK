@@ -41,21 +41,11 @@ function createCube() {
 	var cube = new THREE.Mesh(geometry, material);
 	cube.scale.multiplyScalar(CUBE_SCALE);
 	cube.addBehaviors(
-		alt.Object3DSync(),
-		alt.Spin({speed: 0.0005})
+		alt.Object3DSync({syncData: true}),
+		alt.Spin({speed: 0.0005}),
+		ChangeColor()
 	);
 
-	var syncColor = instanceBase.child('color');
-	syncColor.on('value', function(snapshot){
-		var val = snapshot.val();
-		if (val) {
-			cube.material.color = new THREE.Color(val);
-			cube.material.needsUpdate = true;//currently required in Altspace
-		}
-	});
-	cube.addEventListener('cursordown', function() {
-		syncColor.set(Please.make_color()[0]);//clicking on cube changes its color
-	});
 	sim.scene.add(cube);
 	return cube;
 }
@@ -65,6 +55,32 @@ function ready(firstInstance) {
 		sceneSync.instantiate('Cube');
 	}
 }
+
+ChangeColor = function () {//define a custom behavior
+
+  var object3d;
+  var lastColor;
+
+  function awake(o) {
+    object3d = o;
+		object3d.addEventListener('cursordown', function() {
+			object3d.userData.syncData.color = Please.make_color()[0];//random cololr
+			var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
+      if (sync) sync.enqueueSend();
+		});
+  }
+
+  function update(deltaTime) {
+  	if (object3d.userData.syncData.color !== lastColor) {
+  		lastColor = object3d.userData.syncData.color;
+			object3d.material.color = new THREE.Color(object3d.userData.syncData.color);
+			object3d.material.needsUpdate = true;//currently required in Altspace
+  	}
+  }
+
+  return { awake: awake, update: update };
+
+};
 
 </script>
 </html>

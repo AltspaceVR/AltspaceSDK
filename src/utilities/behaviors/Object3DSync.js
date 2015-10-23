@@ -69,6 +69,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             });
         }
         if (config.syncData) {
+            if (!object3d.userData.syncData) {//init here so app can assume it exists
+                object3d.userData.syncData = {};
+            }
             syncDataBase.on('value', function (snapshot) {
                 var value = snapshot.val();
                 if (!value) return;
