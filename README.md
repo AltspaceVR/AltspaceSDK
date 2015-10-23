@@ -1,14 +1,13 @@
 # AltspaceVR SDK
 
-**Latest Version: v0.3.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog)**
+**Latest Version: v0.3.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/wiki/Changelog)**  
+> The SDK is in beta and actively under development.  
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
 [Three.js](http://threejs.org/) is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
 
-This repository contains the primary documentation for the SDK and related APIs, as well as tests, examples and utilities.
-
-The SDK is in beta and actively under development.   
+ 
 
 ## Resources
 
