@@ -75,7 +75,7 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 
 ## Debugger
 
-The Debugger is essentially a remote Chrome inspector for the AltspaceVR browser.  
+The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.  
 
 **[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.zip)**   
 > Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.  
