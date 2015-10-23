@@ -82,6 +82,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
      * Enqueue a sync for the next SceneSync update.
      * 
      * This is to be used whenever you update a property and are not using auto. If multiple users could potentially move an object, this is preferred vs using auto.
+     * @instance
      * @method enqueueSend
      * @memberof module:altspace/utilities/behaviors.Object3DSync
      */

@@ -114,6 +114,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
 
     /**
      * Instantiate an object by syncType.
+     * @instance
      * @method instantiate
      * @param {String} syncType Type of object to instantiate.
      * @param {Object} initData An object containing initialization data, passed
@@ -137,6 +138,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
 
     /**
      * Destroy a synced object across instances.
+     * @instance
      * @method destroy
      * @param {Object} object3d The object to destroy.
      * @memberof module:altspace/utilities/behaviors.SceneSync
