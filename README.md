@@ -10,11 +10,15 @@ This repository contains the primary documentation for the SDK and related APIs,
 
 The SDK is in beta and actively under development.   
 
-***Please stay up to date by reading the [Wiki], the [Developer Answers] page, and the [GitHub Issues] page. We also have a number of examples in [CodePen](http://codepen.io/team/altspacevr/public/) that can be edited live in VR.***
+Resources:  
 
-**The best way to begin working with the SDK is to follow our [Getting Started](https://developer.altvr.com/get-started/) guide!**
+#####[Getting Started] - If you're new to the SDK, start here!
+#####[API Reference] - Reference for built in API functions, utilities, and more
+#####[Developer Portal] - Tutorials, projects, initiative program, and Showcase submission 
+#####[Developer Answers] - Questions and answers about the SDK
+#####[CodePen] - Examples that can be edited live in AltspaceVR
+#####[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)
 
-[![Slack Status](https://altspacevr-slackin.herokuapp.com/badge.svg)](http://altspacevr-slackin.herokuapp.com)  
 
 ## altspace.js
 
@@ -73,6 +77,13 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 * `altspace.getThreeJSTrackingSkeleton().then(callback)`  
  returns a promise that will fufill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. **Make sure to add the skeleton to your scene after receiving it**
 
+## Debugger
+
+The Debugger is essentially a remote Chrome inspector for the AltspaceVR browser.  
+
+**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.zip)**   
+> Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.  
+
 ## Three.js Feature Support
 
 **Currently supported:**
@@ -102,6 +113,10 @@ More documentation is available in the [Wiki] and project ideas, resources, show
 [Developer Answers]: http://answers.altvr.com
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
+[API Reference]: http://altspacevr.github.io/AltspaceSDK/doc/
+[CodePen]: http://codepen.io/team/altspacevr/public/
+[Getting Started]: https://developer.altvr.com/get-started/
+[Slack]: https://altspacevrsdk.slack.com
 
 [Tutorial Series]: https://developer.altvr.com/get-started/
 
