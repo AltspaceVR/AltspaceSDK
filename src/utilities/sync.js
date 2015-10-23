@@ -1,6 +1,6 @@
 /**
  * The Sync utility is currently based on Firebase. It provides a quick way 
- * to syncronize apps between users (even when they are running outside of 
+ * to synchronize apps between users (even when they are running outside of 
  * AltspaceVR). 
  * During the SDK beta, please consider all data stored with the sync 
  * utility to be ephemeral (it may be cleared or clobbered at any time). 
