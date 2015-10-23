@@ -30,9 +30,9 @@ To always use the latest version, simply add this script tag to your project:
 
 or to include a specific version add:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.2.3/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.3.0/altspace.min.js"></script>`
 
-## API Documentation  
+## API Overview  
 
 Here's a quick overview of the main features of our API. See the [API Reference](http://altspacevr.github.io/AltspaceSDK/doc) documentation for complete details, including helpful utilities.
 
