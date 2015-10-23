@@ -10,14 +10,14 @@ This repository contains the primary documentation for the SDK and related APIs,
 
 The SDK is in beta and actively under development.   
 
-Resources:  
+## Resources
 
-#####[Getting Started] - If you're new to the SDK, start here!
-#####[API Reference] - Reference for built in API functions, utilities, and more
-#####[Developer Portal] - Tutorials, projects, initiative program, and Showcase submission 
-#####[Developer Answers] - Questions and answers about the SDK
-#####[CodePen] - Examples that can be edited live in AltspaceVR
-#####[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)
+**[Getting Started] - If you're new to the SDK, start here!**  
+**[API Reference] - Reference for built in API functions, utilities, and more**  
+**[Developer Portal] - Tutorials, projects, initiative program, and Showcase submission**  
+**[Developer Answers] - Questions and answers about the SDK**  
+**[CodePen] - Examples that can be edited live in AltspaceVR**  
+**[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
 
 
 ## altspace.js
