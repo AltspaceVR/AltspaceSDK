@@ -96,8 +96,8 @@
         });
 
         describe("the threejs renderer", function () {
-            var renderer = altspace.getThreeJSRenderer();
             it("should have a render function", function () {
+                var renderer = altspace.getThreeJSRenderer();
                 expect(renderer).to.exist;
                 expect(renderer).to.have.a.property('render');
             });

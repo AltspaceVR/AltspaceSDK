@@ -3,7 +3,8 @@
 	<head>
 		<meta charset=utf-8>
 		<title>Hello World</title>
-		<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
+		<script src="../dist/altspace.min.js"></script>
 		<script src="http://sdk.altvr.com/libs/three.js/r71/examples/fonts/helvetiker_regular.typeface.js"></script>
 	</head>
 	<body>
@@ -23,7 +24,6 @@
 		mesh.position.x = -400;
 		mesh.scale.z = 0.3;
 		mesh.scale.multiplyScalar(1);
-		mesh.rotation.y = Math.PI;
 		scene.add(mesh);
 
 		//Update & Rendering
