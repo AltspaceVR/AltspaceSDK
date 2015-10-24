@@ -9,24 +9,24 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @param {Firebase} syncInstance
  * @param {Object} [config]
  * @param {Object} [config.instantiators] A dictionary of instantiation 
- *  callbacks by syncType. Instantiators are called when an object should be
- *  added to the scene. Instantiators are passed an initialization
- *  data object and the syncType. They should return an object with an 
+ *  callbacks by syncType. Instantiators are called on every client whenever an instantiation call is made. Instantiators are passed an initialization
+ *  data object and the syncType. They should return an Object3D with an 
  *  Object3DSync behavior.
- * @param {Object} [config.destructors] A dictionary of destruction 
- *  callbacks by syncType. Destructors are called when an object should be 
- *  removed from the scene.
+ * @param {Object} [config.destroyers] (Optional) A dictionary of destroy 
+ *  callbacks by syncType. Destroyers are called on every client whenever an destroy call is made. If no destroyer is provided, a default one will be use
+ *  which will remove the object from its parent and dispose its geometry, material, and texture. 
+ *  If you return true from a custom destroyer, the default destroyer will also be called.
  * @param {Function} [config.ready] A callback that is called after 
- *  synchronization is initialized. The callback is passed a boolean that 
- *  is true if this is the first callback that has ever been called across
- *  it synced instances.
+ *  checking to see if the instance has already been initialized. The callback is passed a boolean that 
+ *  is true if this is the first callback that has been called for this sync instance.
+ *  This is primarily useful for setting up any objects that should only be created once for an instance, and is not necessary otherwise.
  * @memberof module:altspace/utilities/behaviors
  **/
-window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) {
-    var sceneBase = instanceBase.child('scene');
+window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
+    var sceneRef = instanceRef.child('scene');
     config = config || {};
     var instantiators = config.instantiators || {};
-    var destructors = config.destructors || {};
+    var destroyers = config.destroyers || {};
 
     var autoSendRateMS = 100;
 
@@ -35,7 +35,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
     var objectForKey = {};
     var keyForUuid = {};
 
-    instanceBase.child('initialized').once('value', function (snapshot) {
+    instanceRef.child('initialized').once('value', function (snapshot) {
         var shouldInitialize = !snapshot.val();
         snapshot.ref().set(true);
         if (config.ready) {
@@ -43,7 +43,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         }
     });
 
-    sceneBase.on('child_added', function (snapshot) {
+    sceneRef.on('child_added', function (snapshot) {
 
         var data = snapshot.val();
         var key = snapshot.key();
@@ -73,7 +73,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
         syncBehavior.link(snapshot.ref());
     });
 
-    sceneBase.on('child_removed', function (snapshot) {
+    sceneRef.on('child_removed', function (snapshot) {
         var data = snapshot.val();
         var key = snapshot.key();
         var object3d = objectForKey[key];
@@ -86,19 +86,43 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             console.warn('No syncType found for object being destroyed', object3d);
             return;
         }
-        if (destructors[syncType]){//implementing disposal is optional
-            var disposal = destructors[syncType];
-            disposal(object3d);
+
+        function defaultDestroyer(object3d){
+
+            // remove all behaviors including this one
+            object3d.removeAllBehaviors();
+
+            // remove from scene or parent
+            if (object3d.parent){
+                object3d.parent.remove(object3d);
+            }
+
+            if(object3d.geometry){
+                object3d.geometry.dispose();
+            }
+
+            if(object3d.material){
+                if(object3d.material.map){
+                    object3d.material.map.dispose();
+                }
+                object3d.material.dispose();
+            }
         }
+
+        var customDestroyer = destroyers[syncType]
+        var shouldDefaultDestroy = !customDestroyer;
+
+        if (customDestroyer){
+
+            // returning true from a destroyer will additionally invoke the default destroyer
+            shouldDefaultDestroy = customDestroyer(object3d);
+        }
+
+        if(shouldDefaultDestroy) defaultDestroyer(object3d);
+
         //remove from our local bookkeeping
         delete objectForKey[key];
         delete keyForUuid[object3d.uuid];
-
-        object3d.removeAllBehaviors();//removes this SceneSync behavior too
-
-        if (object3d.parent){
-            object3d.parent.remove(object3d);
-        }
     });
 
 
@@ -125,14 +149,14 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
      */
     function instantiate(syncType, initData, destroyOnDisconnect) {
         initData = initData || {};
-        var objectBase = sceneBase.push({syncType: syncType, initData: initData},
+        var objectRef = sceneRef.push({syncType: syncType, initData: initData},
             function(error){if (error) throw Error('Failed to save to Firebase', error)}
         );
         if (destroyOnDisconnect){
-            objectBase.onDisconnect().remove();//send remvoe_child to remote clients
+            objectRef.onDisconnect().remove();//send remvoe_child to remote clients
         }
         //instantiation done, local child_added callback happens syncronously with push
-        return objectForKey[objectBase.key()];
+        return objectForKey[objectRef.key()];
     }
 
 
@@ -149,10 +173,10 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceBase, config) 
             console.warn('Failed to find key matching deleted object3d', object3d);
             return;
         }
-        sceneBase.child(key).remove(function(error){
+        sceneRef.child(key).remove(function(error){
             if (error) console.warn('Failed to remove from Firebase', error);
         });
-        sceneBase.child(key).off();//detach all callbacks
+        sceneRef.child(key).off();//detach all callbacks
     }
 
     var exports = {
