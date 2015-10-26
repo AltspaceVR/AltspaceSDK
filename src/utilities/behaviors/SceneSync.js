@@ -77,7 +77,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         var data = snapshot.val();
         var key = snapshot.key();
         var object3d = objectForKey[key];
-        if (!object3d){
+        if (!object3d) {
             console.warn('Failed to find object matching deleted key', key);
             return;
         }
@@ -87,22 +87,22 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
             return;
         }
 
-        function defaultDestroyer(object3d){
+        function defaultDestroyer(object3d) {
 
             // remove all behaviors including this one
             object3d.removeAllBehaviors();
 
             // remove from scene or parent
-            if (object3d.parent){
+            if (object3d.parent) {
                 object3d.parent.remove(object3d);
             }
 
-            if(object3d.geometry){
+            if (object3d.geometry) {
                 object3d.geometry.dispose();
             }
 
-            if(object3d.material){
-                if(object3d.material.map){
+            if (object3d.material) {
+                if (object3d.material.map) {
                     object3d.material.map.dispose();
                 }
                 object3d.material.dispose();
@@ -112,13 +112,13 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         var customDestroyer = destroyers[syncType]
         var shouldDefaultDestroy = !customDestroyer;
 
-        if (customDestroyer){
+        if (customDestroyer) {
 
             // returning true from a destroyer will additionally invoke the default destroyer
             shouldDefaultDestroy = customDestroyer(object3d);
         }
 
-        if(shouldDefaultDestroy) defaultDestroyer(object3d);
+        if (shouldDefaultDestroy) defaultDestroyer(object3d);
 
         //remove from our local bookkeeping
         delete objectForKey[key];
@@ -149,10 +149,10 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
      */
     function instantiate(syncType, initData, destroyOnDisconnect) {
         initData = initData || {};
-        var objectRef = sceneRef.push({syncType: syncType, initData: initData},
-            function(error){if (error) throw Error('Failed to save to Firebase', error)}
+        var objectRef = sceneRef.push({ syncType: syncType, initData: initData },
+            function (error) { if (error) throw Error('Failed to save to Firebase', error) }
         );
-        if (destroyOnDisconnect){
+        if (destroyOnDisconnect) {
             objectRef.onDisconnect().remove();//send remvoe_child to remote clients
         }
         //instantiation done, local child_added callback happens syncronously with push
@@ -168,12 +168,12 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
      * @memberof module:altspace/utilities/behaviors.SceneSync
      */
     function destroy(object3d) {
-        var key = keyForUuid[object3d.uuid]
-        if (!key){
+        var key = keyForUuid[object3d.uuid];
+        if (!key) {
             console.warn('Failed to find key matching deleted object3d', object3d);
             return;
         }
-        sceneRef.child(key).remove(function(error){
+        sceneRef.child(key).remove(function (error) {
             if (error) console.warn('Failed to remove from Firebase', error);
         });
         sceneRef.child(key).off();//detach all callbacks
@@ -186,7 +186,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         type: 'SceneSync'
     };
     Object.defineProperty(exports, 'autoSendRateMS', {
-        get: function() { return autoSendRateMS; }
+        get: function () { return autoSendRateMS; }
     });
     return exports;
 };

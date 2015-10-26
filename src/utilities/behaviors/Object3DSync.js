@@ -93,11 +93,6 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         sendEnqueued = true;
     }
 
-    function autoSend() {
-        if (config.auto || sendEnqueued) send();
-        sendEnqueued = false;
-    }
-
     function send() {
         if (config.position) {
             positionRef.set({
@@ -124,6 +119,11 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         if (config.syncData) {
             syncDataRef.set(object3d.userData.syncData);//TODO: see if this needs to be parsed and stringified
         }
+    }
+
+    function autoSend() {
+        if (config.auto || sendEnqueued) send();
+        sendEnqueued = false;
     }
 
     function awake(o) {
