@@ -97,7 +97,8 @@ SolarSystemApp = (function(){
 	function loadModels(){// Load up the models
 		multiloader.init({
 			crossOrigin: 'anonymous',
-			baseUrl: 'http://sdk.altvr.com/examples/models/share/solar-system/'
+			baseUrl: 'models/solar-system/'
+			//hosted: 'http://sdk.altvr.com/examples/models/share/solar-system/'
 		});
 		loadRequest = new multiloader.LoadRequest();
 		for (var i=0; i < CONFIG.length; i++) {
