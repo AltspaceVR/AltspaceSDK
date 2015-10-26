@@ -170,7 +170,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     function destroy(object3d) {
         var key = keyForUuid[object3d.uuid];
         if (!key) {
-            console.warn('Failed to find key matching deleted object3d', object3d);
+            console.warn('Failed to find key for object3d to be destroyed', object3d);
             return;
         }
         sceneRef.child(key).remove(function (error) {

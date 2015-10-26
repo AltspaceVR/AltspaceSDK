@@ -25,7 +25,7 @@
 			instantiators: {
 				'Cube': createCube,
 				'InstantiationSphere': createInstantiationSphere,
-				'DestructionSphere': createDestructionSphere,
+				'DestructionSphere': createDestructionSphere
 			},
 			ready: ready
 		});
@@ -33,7 +33,7 @@
 
 		function createInstantiationSphere(initData) {
 			var sphere = createSphere(initData);
-			sphere.material.color = "green";
+			sphere.material.color = new THREE.Color("green");
 			sphere.position.x = 100;
 
 			sphere.addEventListener('cursordown', function () {
@@ -54,8 +54,8 @@
 		}
 
 		function createDestructionSphere(initData) {
-			createSphere(initData);
-			sphere.material.color = "red";
+			var sphere = createSphere(initData);
+			sphere.material.color = new THREE.Color("red");
 			sphere.position.x = -100;
 
 			sphere.addEventListener('cursordown', function () {
@@ -78,7 +78,6 @@
 				  position: true
 			  })
 			);
-			sphere.position.y = -100;
 			sim.scene.add(sphere);
 			return sphere;
 		}
@@ -86,7 +85,7 @@
 		function destroyCube(cube) {
 
 			var i = cubes.indexOf(cube);
-			if (i != -1) {
+			if (i !== -1) {
 				cubes.splice(i, 1);
 			}
 
