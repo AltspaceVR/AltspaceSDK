@@ -9,17 +9,21 @@
 </head>
 <body>
 	<script>
-
+		// Convience snippet to compress all the altspace namespaces down to window.alt
 		(function () { var a = window.altspace; (function insert(ss, t) { for (var i in ss) { for (var j in ss[i]) { t[j] = ss[i][j]; } }; })([a, a.utilities, a.utilities.behaviors, a.utilities.shims], window.alt = {}) })();
 
 		var sim = alt.Simulation();
 		var inCodePen = alt.codePen.inCodePen;
 		var instanceBase = alt.sync.getInstance({
-			authorId: inCodePen ? alt.codePen.getAuthorId() : null,
+			authorId: inCodePen ? alt.codePen.getAuthorId() : 'AltspaceVRExamples',
 			instanceId: inCodePen ? alt.codePen.getPenId() : null
 		});
 
 		var cubes = [];
+		var BoardWidth = 300;
+		var BoardDepth = 300;
+
+		var myColor = Please.make_color()[0];
 
 		var sceneSync = alt.SceneSync(instanceBase, {
 			instantiators: {
@@ -27,13 +31,16 @@
 				'InstantiationSphere': createInstantiationSphere,
 				'DestructionSphere': createDestructionSphere
 			},
+			destroyers: {
+				'Cube': destroyCube
+			},
 			ready: ready
 		});
 		sim.scene.addBehavior(sceneSync);
 
 		function createInstantiationSphere(initData) {
 			var sphere = createSphere(initData);
-			sphere.material.color = new THREE.Color("green");
+			sphere.material.color = new THREE.Color("#00EE00");
 			sphere.position.x = 100;
 
 			sphere.addEventListener('cursordown', function () {
@@ -43,9 +50,10 @@
 					width: randInt(20, 100),
 					height: randInt(20, 100),
 					depth: randInt(20, 100),
-					x: randInt(-200, 200),
-					y: randInt(-200, 200),
-					z: randInt(-200, 200)
+					x: randInt(-BoardWidth / 2, BoardWidth / 2),
+					y: randInt(-BoardWidth / 2, BoardWidth / 2),
+					z: randInt(-BoardWidth / 2, BoardWidth / 2),
+					color: myColor
 				};
 				sceneSync.instantiate('Cube', initData, true);
 			});
@@ -55,11 +63,11 @@
 
 		function createDestructionSphere(initData) {
 			var sphere = createSphere(initData);
-			sphere.material.color = new THREE.Color("red");
+			sphere.material.color = new THREE.Color("#EE0000");
 			sphere.position.x = -100;
 
 			sphere.addEventListener('cursordown', function () {
-				sceneSync.destroy(cubes[cubes.length - 1]);
+				if (cubes.length) sceneSync.destroy(cubes[cubes.length - 1]);
 			});
 
 			return sphere;
@@ -103,7 +111,7 @@
 
 			var cube = new THREE.Mesh(
 			  new THREE.BoxGeometry(width, height, depth),
-			  new THREE.MeshBasicMaterial({ color: '#EB5B40' })
+			  new THREE.MeshBasicMaterial({ color: new THREE.Color(initData.color) })
 			);
 			cube.addBehaviors(
 			  alt.Bob({ shouldMove: false }),
@@ -111,14 +119,15 @@
 			  alt.ButtonStateStyle(),
 			  alt.Object3DSync({
 				  position: true
+			  }),
+			  alt.Drag({
+				  x: { min: -BoardWidth / 2, max: BoardWidth / 2 },
+				  z: { min: -BoardWidth / 2, max: BoardWidth / 2 }
 			  })
-			  //TODO: add Drag when we have right-click or other event besides cursordown
+
 			);
 			cube.position.set(x, y, z);
 			cube.position.y = -100;
-			cube.addEventListener('cursordown', function (event) {
-				sceneSync.destroy(cube);//clicking cube destroys it
-			});
 			sim.scene.add(cube);
 
 			cubes.push(cube);
@@ -136,5 +145,3 @@
 	</script>
 </body>
 </html>
-
-

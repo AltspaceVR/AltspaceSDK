@@ -1,5 +1,5 @@
 /**
- * Notes on gulp that were compiled during hte development of this build script can be found here:
+ * Notes on gulp that were compiled during the development of this build script can be found here:
  * https://docs.google.com/document/d/1ikgmMnOGGbyTu9ggs7NSDByLrXCfX6Ll0F0JbT1CwZ0/edit?usp=sharing
  **/
 

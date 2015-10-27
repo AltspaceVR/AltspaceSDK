@@ -47,6 +47,7 @@ altspace.utilities.sync = (function() {
         } else {
             firebaseInstance = firebaseApp.child('instances').push();
             instanceId = firebaseInstance.key();
+            url.query['altspace-sync-instance'] = instanceId;
             window.location.href = url.toString();
         }
         instance = firebaseInstance;
