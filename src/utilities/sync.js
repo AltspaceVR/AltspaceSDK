@@ -73,7 +73,7 @@ altspace.utilities.sync = (function() {
      * @param {Object} params
      * @param {String} params.appId An identifier for your app.
      * @param {String} [params.instanceId] An id for a particular instance of
-     *  your app. Leave this blank if you would like to have one automatically generated and appeneded as a query string.
+     *  your app. Leave this blank if you would like to have one automatically generated and appended as a query string.
      * @param {String} [params.authorId] An identifier for the author of the
      *  app.
      * @return {Firebase}
