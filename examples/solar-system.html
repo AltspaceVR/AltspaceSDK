@@ -3,9 +3,9 @@
 <head>
 <meta charset=utf-8>
 <title>Solar System Example</title>
-<script src="http://sdk.altvr.com/libs/three.js/r71/build/three.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/OBJMTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
@@ -97,7 +97,8 @@ SolarSystemApp = (function(){
 	function loadModels(){// Load up the models
 		multiloader.init({
 			crossOrigin: 'anonymous',
-			baseUrl: 'http://sdk.altvr.com/examples/models/share/solar-system/'
+			baseUrl: 'models/solar-system/'
+			//hosted: 'http://sdk.altvr.com/examples/models/share/solar-system/'
 		});
 		loadRequest = new multiloader.LoadRequest();
 		for (var i=0; i < CONFIG.length; i++) {
