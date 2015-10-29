@@ -30,10 +30,11 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 
     var deltaTime = now - lastNow;
 
+    var self = this;
     this.traverse(function (object3d) {
 
         if (object3d.__behaviorList) {
-            object3d.updateBehaviors(deltaTime, this);
+            object3d.updateBehaviors(deltaTime, self);
         }
 
     });
@@ -149,7 +150,7 @@ THREE.Object3D.prototype.getBehaviorByType = function(type) {
  * @param {Number} deltaTime Elapsed time in milliseconds
  * @memberof THREE.Object3D
  */
-THREE.Object3D.prototype.updateBehaviors = function(deltaTime) {
+THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 
     if (!this.__behaviorList || this.__behaviorList.length === 0) return;
 
@@ -169,7 +170,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime) {
         var behavior = toInit[i];
         try {
 
-            if (behavior.awake) behavior.awake.call(behavior, this);
+            if (behavior.awake) behavior.awake.call(behavior, this, scene);
 
         } catch (e) {
 

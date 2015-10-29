@@ -1,104 +1,102 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Behaviors Example</title>
+<title>Adding Cubes</title>
 <script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
 <script src="../dist/altspace.min.js"></script>
 
 </head>
 <body>
+	<script>
+
+		(function () { var a = window.altspace; (function insert(ss, t) { for (var i in ss) { for (var j in ss[i]) { t[j] = ss[i][j]; } }; })([a, a.utilities, a.utilities.behaviors, a.utilities.shims], window.alt = {}) })();
+
+		var sim = alt.Simulation();
+		var inCodePen = alt.codePen.inCodePen;
+		var instanceBase = alt.sync.getInstance({
+			authorId: inCodePen ? alt.codePen.getAuthorId() : null,
+			instanceId: inCodePen ? alt.codePen.getPenId() : null
+		});
+
+		var sceneSync = alt.SceneSync(instanceBase, {
+			instantiators: {
+				'Cube': createCube,
+				'Sphere': createSphere,
+			},
+			ready: ready
+		});
+		sim.scene.addBehavior(sceneSync);
+
+		function createSphere(initData) {
+			var radius = initData.radius;
+			var sphere = new THREE.Mesh(
+			  new THREE.SphereGeometry(radius, 20, 20),
+			  new THREE.MeshBasicMaterial({ color: '#EB5B40' })
+			);
+			sphere.addBehaviors(
+			  alt.Bob({ shouldMove: true }),
+			  alt.ButtonStateStyle(),
+			  alt.Object3DSync({
+				  position: true
+			  })
+			);
+			sphere.position.y = -100;
+			sphere.addEventListener('cursordown', function () {
+				//clicking on sphere creates block of random size nearby
+				function randInt(min, max) { return Math.random() * (max - min) + min; }
+				var initData = {
+					width: randInt(20, 100),
+					height: randInt(20, 100),
+					depth: randInt(20, 100),
+					x: randInt(-200, 200),
+					y: randInt(-200, 200),
+					z: randInt(-200, 200)
+				};
+				sceneSync.instantiate('Cube', initData, true);
+			});
+			sim.scene.add(sphere);
+			return sphere;
+		}
+
+		function createCube(initData) {
+			var width = initData.width;
+			var height = initData.height;
+			var depth = initData.depth;
+			var x = initData.x || 0;
+			var y = initData.y || 0;
+			var z = initData.z || 0;
+
+			var cube = new THREE.Mesh(
+			  new THREE.BoxGeometry(width, height, depth),
+			  new THREE.MeshBasicMaterial({ color: '#EB5B40' })
+			);
+			cube.addBehaviors(
+			  alt.Bob({ shouldMove: false }),
+			  alt.Spin({ speed: 0.002 }),
+			  alt.ButtonStateStyle(),
+			  alt.Object3DSync({
+				  position: true
+			  })
+			);
+			cube.position.set(x, y, z);
+			cube.position.y = -100;
+			cube.addEventListener('cursordown', function (event) {
+				sceneSync.destroy(cube);//clicking cube destroys it
+			});
+			sim.scene.add(cube);
+
+			return cube;
+		}
+
+		function ready(firstInInstance) {
+			if (firstInInstance) {
+				sceneSync.instantiate('Sphere', { radius: 50 });
+			}
+		}
+
+	</script>
 </body>
-<script>
-
-(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
-
-var sim = alt.Simulation();
-var inCodePen = alt.codePen.inCodePen;
-var instanceBase = alt.sync.getInstance({
-  	authorId: inCodePen ? alt.codePen.getAuthorId() : null,
-  	instanceId: inCodePen ? alt.codePen.getPenId() : null
-});
-
-var sceneSync = alt.SceneSync(instanceBase, {
-  instantiators: {
-    'Cube': createCube,
-    'Sphere': createSphere,
-  },
-  ready: ready
-});
-sim.scene.addBehavior(sceneSync);
-
-function createSphere(initData) {
-  var radius = initData.radius;
-  var sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(radius, 20, 20),
-    new THREE.MeshBasicMaterial({color:'#EB5B40'})
-  );
-  sphere.addBehaviors(
-    alt.Bob({shouldMove:true}),
-    alt.ButtonStateStyle(),
-    alt.Object3DSync({
-      position: true
-    })
-  );
-  sphere.position.y = -100;
-  sphere.addEventListener('cursordown', function() {
-    //clicking on sphere creates block of random size nearby
-    function randInt(min, max){return Math.random() * (max - min) + min;}
-    var initData = {
-      width: randInt(20, 100),
-      height: randInt(20, 100),
-      depth: randInt(20, 100),
-      x: randInt(-200, 200),
-      y: randInt(-200, 200),
-      z: randInt(-200, 200)
-    };
-    //destroyOnDisconntect=true so blocks we create are removed when we leave
-    sceneSync.instantiate('Cube', initData, true);
-  });
-  sim.scene.add(sphere);
-  return sphere;
-}
-
-function createCube(initData) {
-  var width = initData.width;
-  var height = initData.height;
-  var depth = initData.depth;
-  var x = initData.x || 0;
-  var y = initData.y || 0;
-  var z = initData.z || 0;
-
-  var cube = new THREE.Mesh(
-    new THREE.BoxGeometry(width, height, depth),
-    new THREE.MeshBasicMaterial({color:'#EB5B40'})
-  );
-  cube.addBehaviors(
-    alt.Bob({shouldMove:false}),
-    alt.Spin({speed:0.002}),
-    alt.ButtonStateStyle(),
-    alt.Object3DSync({
-      position: true
-    })
-    //TODO: add Drag when we have right-click or other event besides cursordown
-  );
-  cube.position.set(x, y, z);
-  cube.position.y = -100;
-  cube.addEventListener('cursordown', function(event){
-    sceneSync.destroy(cube);//clicking cube destroys it
-  });
-  sim.scene.add(cube);
-  
-  return cube;
-}
-
-function ready(firstInstance){
-  if(firstInstance){
-    sceneSync.instantiate('Sphere', {radius: 50});
-  }
-}
-
-</script>
 </html>
-               
-               
+
+

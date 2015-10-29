@@ -26,43 +26,43 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     if (config.scale === undefined) config.scale = true;
     if (config.syncData === undefined) config.syncData = true;*/
     var object3d;
-    var base;
+    var ref;
     var key;
 
     var sendEnqueued = false;
 
-    var positionBase;
-    var rotationBase;
-    var scaleBase;
-    var syncDataBase;
+    var positionRef;
+    var rotationRef;
+    var scaleRef;
+    var syncDataRef;
 
-    function link(objectBase) {
-        base = objectBase;
-        key = base.key();
-        positionBase = base.child('position');
-        rotationBase = base.child('rotation');
-        scaleBase = base.child('scale');
-        syncDataBase = base.child('syncData');
+    function link(objectRef) {
+        ref = objectRef;
+        key = ref.key();
+        positionRef = ref.child('position');
+        rotationRef = ref.child('rotation');
+        scaleRef = ref.child('scale');
+        syncDataRef = ref.child('syncData');
     }
 
     //TODO: lerp
     function setupReceive() {
         if (config.position) {
-            positionBase.on('value', function (snapshot) {
+            positionRef.on('value', function (snapshot) {
                 var value = snapshot.val();
                 if(!value) return;
                 object3d.position.set(value.x, value.y, value.z);
             });
         }
         if (config.rotation) {
-            rotationBase.on('value', function (snapshot) {
+            rotationRef.on('value', function (snapshot) {
                 var value = snapshot.val();
                 if (!value) return;
                 object3d.quaternion.set(value.x, value.y, value.z, value.w);
             });
         }
         if (config.scale) {
-            scaleBase.on('value', function (snapshot) {
+            scaleRef.on('value', function (snapshot) {
                 var value = snapshot.val();
                 if (!value) return;
                 object3d.scale.set(value.x, value.y, value.z);
@@ -72,7 +72,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             if (!object3d.userData.syncData) {//init here so app can assume it exists
                 object3d.userData.syncData = {};
             }
-            syncDataBase.on('value', function (snapshot) {
+            syncDataRef.on('value', function (snapshot) {
                 var value = snapshot.val();
                 if (!value) return;
                 object3d.userData.syncData = value;
@@ -93,21 +93,16 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         sendEnqueued = true;
     }
 
-    function autoSend() {
-        if (config.auto || sendEnqueued) send();
-        sendEnqueued = false;
-    }
-
     function send() {
         if (config.position) {
-            positionBase.set({
+            positionRef.set({
                 x: object3d.position.x,
                 y: object3d.position.y,
                 z: object3d.position.z
             });
         }
         if (config.rotation) {
-            rotationBase.set({
+            rotationRef.set({
                 x: object3d.quaternion.x,
                 y: object3d.quaternion.y,
                 z: object3d.quaternion.z,
@@ -115,15 +110,20 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             });
         }
         if (config.scale) {
-            scaleBase.set({
+            scaleRef.set({
                 x: object3d.scale.x,
                 y: object3d.scale.y,
                 z: object3d.scale.z
             });
         }
         if (config.syncData) {
-            syncDataBase.set(object3d.userData.syncData);//TODO: see if this needs to be parsed and stringified
+            syncDataRef.set(object3d.userData.syncData);//TODO: see if this needs to be parsed and stringified
         }
+    }
+
+    function autoSend() {
+        if (config.auto || sendEnqueued) send();
+        sendEnqueued = false;
     }
 
     function awake(o) {
