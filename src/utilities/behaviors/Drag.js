@@ -50,7 +50,7 @@ altspace.utilities.behaviors.Drag = function (config) {
     var raycaster = new THREE.Raycaster();
     raycaster.linePrecision = 3;
 
-    if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72');
+    //if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72'); //TODO: Do we need a revision check?
 
     function awake(o) {
         object3d = o;

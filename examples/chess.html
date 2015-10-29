@@ -15,25 +15,11 @@
 
 ChessApp = (function(){
 	//Chess Board with draggable pieces and multiplayer sychronization.
-
-	function main(){
-		ChessBoard.init(function(){//onComplete
-			console.log('Chess Board initialized');
-		});
-	}//end main
-
-	return {
-		main: main,
-	};
-
-}());//end ChessApp
-
-ChessBoard = (function(){
 	//Logic for 'responsive' chess board, which sizes itself based on boardSize.
 	//Pieces are placed in their initial positions when first loaded, but then
 	//can be dragged without restriction (no checking if the move is legal). 
 	var sim;
-	var instanceBase;
+	var instanceRef;
 	var sceneSync;
 
 	var board;
@@ -60,57 +46,24 @@ ChessBoard = (function(){
 	var modelScale = CONFIG.boardSize / 8 / CONFIG.pieceWidth;
 	var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
-	function init(onComplete){
-		var sim = alt.Simulation();
+	function main(){
+		sim = alt.Simulation();
 		var inCodePen = alt.codePen.inCodePen;
-		var instanceBase = alt.sync.getInstance({
+		instanceRef = alt.sync.getInstance({
 			authorId: inCodePen ? alt.codePen.getAuthorId() : null,
 			instanceId: inCodePen ? alt.codePen.getPenId() : null
 		});
 
-		//Models will take a couple seconds to download, so callback when done.
-		if (!sim || !onComplete || !sim instanceof alt.Simulation ||
-			typeof(onComplete) !== 'function') {
-			throw new Error('ChessBoard init called with incorrect arguments');
-		}
 		sim.camera.position.z = CONFIG.boardSize;
 		sim.camera.position.y = CONFIG.boardSize + 100;
 		sim.camera.lookAt(sim.scene.position);
 
-		loadModels(function(){//onComplete
-			initBoard();
-			sceneSync = alt.SceneSync(instanceBase, {
-				instantiators: {
-					'Piece': function(initData){
-						var i = initData.index;
-						var array = initData.color === 'white' ? whitePieces : blackPieces;
-						var object3d = array[i];
-						object3d.addBehaviors(alt.Object3DSync({position: true}));
-						sim.scene.add(object3d);
-						return object3d;
-					}
-				},
-				ready: function(firstInstance){
-					if (firstInstance){
-						arrangePieces();
-					}
-					sim.scene.add(board);
-					for(var i=0; i < whitePieces.length; i++){
-						if (firstInstance) {
-							var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
-							var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
-							white.getBehaviorByType('Object3DSync').enqueueSend();
-							black.getBehaviorByType('Object3DSync').enqueueSend();
-						}
-					}
-				}
-			});
-			sim.scene.addBehavior(sceneSync);
-			onComplete();
-		});
-	}//end init
+		loadModels(initBoard);
+
+	}//end main
 
 	function loadModels(onComplete){
+		//Models will take a couple seconds to download, so callback when done.
 		//Load only 7 different models, then clone and color as necessary. 
 		console.log('Downloading chess models...');
 		//var multiloader = alt.utilities.multiloader;
@@ -152,35 +105,7 @@ ChessBoard = (function(){
 		});
 	}//end loadModels
 
-/*************************************************************
-	function initEffects(){
-		//DragPlane should not be bigger than our bounding box, if it is then
-		//objects will disappear when they are moved outside of the box.
-		var dragPlaneSize = CONFIG.dragPlaneSize;
-		var dragPlaneGeo = new THREE.BoxGeometry(dragPlaneSize, 0.25, dragPlaneSize);
-		var dragPlaneMat = new THREE.MeshBasicMaterial({
-			color: 0xFFFFFF, 
-			opacity: 0.25,
-			transparent: true,
-		});
-		dragPlane = new THREE.Mesh(dragPlaneGeo, dragPlaneMat);
-		dragPlane.name = 'drag plane';
-		var dragEffect = new altspace.utilities.DragPlaneEffect();
-		dragEffect.init(scene, dragPlane);
-		var redTint = new THREE.Color(0.8, 0.2, 0.2);
-		var hoverEffect = new altspace.utilities.ColorHoverEffect();
-		hoverEffect.init(scene, redTint);
-		for (var i=0; i < whitePieces.length; i++){
-			//Add all pieces to our drag-and-drop controls.
-			dragEffect.add(whitePieces[i]);
-			dragEffect.add(blackPieces[i]);
-			hoverEffect.add(whitePieces[i]);
-			hoverEffect.add(blackPieces[i]);
-		}
-	}//end initEffects
-*************************************************************/
-
-	function initBoard(){
+	function initBoard() {
 		//Make the board model same size as our boardSize constant.
 		board.scale.set(boardScale, boardScale, boardScale);
 		board.position.y = CONFIG.tableHeight + (CONFIG.board.height * boardScale / 2); 
@@ -188,7 +113,42 @@ ChessBoard = (function(){
 		var blackTint = new THREE.Color(0.2, 0.2, 0.2);
 		whitePieces = cloneModels(whitePieces, whiteTint);
 		blackPieces = cloneModels(blackPieces, blackTint);
-	}//end initBoard
+
+		sceneSync = alt.SceneSync(instanceRef, {
+			instantiators: {
+				'Piece': function(initData){
+					var i = initData.index;
+					var array = initData.color === 'white' ? whitePieces : blackPieces;
+					var object3d = array[i];
+					var limit = CONFIG.dragPlaneSize;
+					object3d.addBehaviors(
+						alt.Object3DSync({position: true}),
+						alt.Drag({x: {min: -1 * limit, max: limit},
+						          z: {min: -1 * limit, max: limit}})
+					);
+					sim.scene.add(object3d);
+					return object3d;
+				}
+			},
+			ready: function(firstInstance){
+				if (firstInstance){
+					arrangePieces();
+				}
+				sim.scene.add(board);
+				for(var i=0; i < whitePieces.length; i++){
+					if (firstInstance) {
+						var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
+						var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
+						white.getBehaviorByType('Object3DSync').enqueueSend();
+						black.getBehaviorByType('Object3DSync').enqueueSend();
+					}
+				}
+			}
+		});
+		sim.scene.addBehavior(sceneSync);
+		console.log('Chess Board initialized');
+
+	}//end onLoadComplete
 
 	function cloneModels(pieces, color){
 		//Duplicate models so we have a full chess set.
@@ -287,11 +247,10 @@ ChessBoard = (function(){
 	}//end arrangePieces
 
 	return {
-		BOARD_SIZE: CONFIG.boardSize, 
-		init: init,
+		main: main
 	};
 
-}());//end ChessBoard
+}());//end ChessApp
 
 
 ChessApp.main();
