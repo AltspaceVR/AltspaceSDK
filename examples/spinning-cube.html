@@ -3,9 +3,9 @@
 <head>
 <meta charset=utf-8>
 <title>Spinning Cube</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r71/examples/js/loaders/MTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 </head>
 <body>
 </body>
@@ -34,7 +34,8 @@ function createCube() {
 	//else antialiasing won't work (this is a limitation of WebGL)
 	var materialCreator = new THREE.MTLLoader.MaterialCreator();
 	materialCreator.crossOrigin = 'anonymous';
-	var url = 'https://sdk.altvr.com/examples/models/share/cube/altspace-logo.jpg';
+	var url = 'models/cube/altspace-logo.jpg';
+	//hosted: 'https://sdk.altvr.com/examples/models/share/cube/altspace-logo.jpg';
 	var texture = materialCreator.loadTexture(url);
 	var geometry = new THREE.BoxGeometry(1, 1, 1);
 	var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
