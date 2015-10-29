@@ -81,6 +81,7 @@ gulp.task('altspace_js', function () {
             './src/utilities/sync.js',
             './src/utilities/codepen.js',
             './src/utilities/simulation.js',
+            './src/utilities/multiloader.js',
 
             './src/utilities/shims/behaviors.js',
             './src/utilities/shims/cursor.js',

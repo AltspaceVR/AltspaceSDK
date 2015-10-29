@@ -2,84 +2,25 @@
 <html lang='en'>
 <head>
 <title>Chess</title>
-<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
-<script src="http://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
-
-<script src="http://sdk.altvr.com/utilities/0.5.2/ColorHoverEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/DragPlaneEffect.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/threebase.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/multiloader.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
 
 </head>
 <body>
 <script>
 
+(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
+
 ChessApp = (function(){
 	//Chess Board with draggable pieces and multiplayer sychronization.
-	var ascp = altspace.utilities.codePen;
-	var inAltspace = !!(window.altspace && window.altspace.inClient);
-	var inCodePen = !!location.href.match('codepen.io/');
-	var inCodePenEditor = inAltspace && (inCodePen && window.innerHeight < 750);
-
-	var scene = new THREE.Scene();
-	var dualRenderer;
-	var threebase;
 
 	function main(){
-		//Entry point into the app, kicks off the rendering loop.
-		ascp.setName('Chess'); 
-		initThreebase();
-		initScene();
-		ChessBoard.init(scene, threebase, function(){//onComplete
+		ChessBoard.init(function(){//onComplete
 			console.log('Chess Board initialized');
-			animate();
 		});
 	}//end main
-
-	function initThreebase(){
-		//threebase synchronizes the game objects across multiple clients.
-		var syncParams = inCodePen ? {
-			instanceId: ascp.getPenId(),
-			authorId: ascp.getAuthorId()
-		} : null;
-		var syncInstance = altspace.utilities.sync.getInstance(syncParams);
-		threebase = altspace.utilities.threebase;
-		threebase.init(syncInstance);
-	}//end initThreebase
-
-	function initScene(){
-
-		//This app works both in Altspace and in a traditional browser.
-		dualRenderer = altspace.utilities.shims.dualRenderer;
-		dualRenderer.init(scene);
-		if (dualRenderer.inAltMode){
-			altspace.getEnclosure().then(function(e){
-				if (inCodePenEditor && e.innerDepth < 500) {
-          scene.position.y = e.innerHeight / -2 + 175;
-          scene.scale.multiplyScalar(0.75);//in personal browser, downsize objects
-				} else {
-					scene.position.y = e.innerHeight / -2 ;//Lower board onto botton of enclosure.
-				}
-			});
-		} else {
-			var camera = dualRenderer.camera;
-      altspace.utilities.shims.cursor.init(scene, camera);
-			camera.position.z = ChessBoard.BOARD_SIZE;
-			camera.position.y = ChessBoard.BOARD_SIZE + 100;
-			camera.lookAt(scene.position);
-		}
-	}//end initScene
-
-	function animate(){
-		requestAnimationFrame(animate);
-		threebase.update();
-	  dualRenderer.render();
-	}//end animate
 
 	return {
 		main: main,
@@ -91,7 +32,10 @@ ChessBoard = (function(){
 	//Logic for 'responsive' chess board, which sizes itself based on boardSize.
 	//Pieces are placed in their initial positions when first loaded, but then
 	//can be dragged without restriction (no checking if the move is legal). 
-	var scene; 
+	var sim;
+	var instanceBase;
+	var sceneSync;
+
 	var board;
 	var whitePieces = [];
 	var blackPieces = [];
@@ -116,29 +60,52 @@ ChessBoard = (function(){
 	var modelScale = CONFIG.boardSize / 8 / CONFIG.pieceWidth;
 	var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
-		function init(myScene, myThreebase, onComplete){
+	function init(onComplete){
+		var sim = alt.Simulation();
+		var inCodePen = alt.codePen.inCodePen;
+		var instanceBase = alt.sync.getInstance({
+			authorId: inCodePen ? alt.codePen.getAuthorId() : null,
+			instanceId: inCodePen ? alt.codePen.getPenId() : null
+		});
+
 		//Models will take a couple seconds to download, so callback when done.
-		if(!myScene || !myThreebase || !onComplete ||
-		  !myScene instanceof THREE.Scene ||
-			!myThreebase  instanceof THREE.Scene ||
-			typeof(onComplete) !== 'function'){
+		if (!sim || !onComplete || !sim instanceof alt.Simulation ||
+			typeof(onComplete) !== 'function') {
 			throw new Error('ChessBoard init called with incorrect arguments');
 		}
-		scene = myScene;
-		threebase = myThreebase;
+		sim.camera.position.z = CONFIG.boardSize;
+		sim.camera.position.y = CONFIG.boardSize + 100;
+		sim.camera.lookAt(sim.scene.position);
+
 		loadModels(function(){//onComplete
 			initBoard();
-			arrangePieces();
-			scene.add(board);
-			for(var i=0; i < whitePieces.length; i++){
-				var white = whitePieces[i];
-				var black = blackPieces[i];
-				threebase.add(white);
-				threebase.add(black);
-				scene.add(white);
-				scene.add(black);
-			}
-			initEffects();
+			sceneSync = alt.SceneSync(instanceBase, {
+				instantiators: {
+					'Piece': function(initData){
+						var i = initData.index;
+						var array = initData.color === 'white' ? whitePieces : blackPieces;
+						var object3d = array[i];
+						object3d.addBehaviors(alt.Object3DSync({position: true}));
+						sim.scene.add(object3d);
+						return object3d;
+					}
+				},
+				ready: function(firstInstance){
+					if (firstInstance){
+						arrangePieces();
+					}
+					sim.scene.add(board);
+					for(var i=0; i < whitePieces.length; i++){
+						if (firstInstance) {
+							var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
+							var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
+							white.getBehaviorByType('Object3DSync').enqueueSend();
+							black.getBehaviorByType('Object3DSync').enqueueSend();
+						}
+					}
+				}
+			});
+			sim.scene.addBehavior(sceneSync);
 			onComplete();
 		});
 	}//end init
@@ -146,12 +113,12 @@ ChessBoard = (function(){
 	function loadModels(onComplete){
 		//Load only 7 different models, then clone and color as necessary. 
 		console.log('Downloading chess models...');
-		var multiloader = altspace.utilities.multiloader;
-		multiloader.init({
+		//var multiloader = alt.utilities.multiloader;
+		alt.multiloader.init({
 			crossOrigin: 'anonymous',
 			baseUrl: CONFIG.directory,
 		});
-		var req = new multiloader.LoadRequest();
+		var req = new alt.multiloader.LoadRequest();
 		var names = Object.keys(CONFIG.pieces);
 		for (var i=0; i < names.length; i++){
 			var file = CONFIG.pieces[names[i]].modelFile;
@@ -161,7 +128,7 @@ ChessBoard = (function(){
 		var boardFile = CONFIG.board.modelFile;
 		req.objUrls.push(boardFile+'.obj');
 		req.mtlUrls.push(boardFile+'.mtl');
-		multiloader.load(req, function(){//onComplete
+		alt.multiloader.load(req, function(){//onComplete
 			if(req.error) {
 				throw new Error(req.error);
 			}
@@ -185,6 +152,7 @@ ChessBoard = (function(){
 		});
 	}//end loadModels
 
+/*************************************************************
 	function initEffects(){
 		//DragPlane should not be bigger than our bounding box, if it is then
 		//objects will disappear when they are moved outside of the box.
@@ -210,6 +178,7 @@ ChessBoard = (function(){
 			hoverEffect.add(blackPieces[i]);
 		}
 	}//end initEffects
+*************************************************************/
 
 	function initBoard(){
 		//Make the board model same size as our boardSize constant.
