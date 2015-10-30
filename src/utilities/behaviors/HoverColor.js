@@ -9,13 +9,14 @@ altspace.utilities.behaviors.HoverColor = function(config){
   config = config || {};
 
   if (config.scene === undefined) throw Error('Must pass config.scene');//TODO: better way to get the scene
-  if (config.color === undefined) config.color = THREE.Color('yellow');
+  if (config.color === undefined) config.color = new THREE.Color('yellow');
   if (config.TRACE === undefined) config.TRACE = false;
 
   var object3d;
-  var hoverColor;
-  var hoverObject;
   var cursordownObject;
+  var hoverObject;
+  var hoverColor = config.color;
+  var TRACE = config.TRACE;
 
 
   function awake(o) {
@@ -93,6 +94,8 @@ altspace.utilities.behaviors.HoverColor = function(config){
       unsetHoverColor(o.children[i]);
     }
   }
+
+  function update(){}
 
   return {
     awake: awake,

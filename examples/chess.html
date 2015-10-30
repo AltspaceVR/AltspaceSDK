@@ -123,8 +123,14 @@ ChessApp = (function(){
 					var limit = CONFIG.dragPlaneSize;
 					object3d.addBehaviors(
 						alt.Object3DSync({position: true}),
-						alt.Drag({x: {min: -1 * limit, max: limit},
-						          z: {min: -1 * limit, max: limit}})
+						alt.Drag({
+							x: {min: -1 * limit, max: limit},
+		          z: {min: -1 * limit, max: limit}
+		        }),
+						alt.HoverColor({
+							scene: sim.scene,
+							color: new THREE.Color(0.8, 0.2, 0.2)
+						})
 					);
 					sim.scene.add(object3d);
 					return object3d;
