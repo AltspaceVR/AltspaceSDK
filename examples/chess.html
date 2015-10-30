@@ -54,9 +54,13 @@ ChessApp = (function(){
 			instanceId: inCodePen ? alt.codePen.getPenId() : null
 		});
 
-		sim.camera.position.z = CONFIG.boardSize;
-		sim.camera.position.y = CONFIG.boardSize + 100;
-		sim.camera.lookAt(sim.scene.position);
+		if (alt.inClient) {
+			sim.scene.position.y -= 1024/2;//TODO: get actual size of enclosure
+		} else {
+			sim.camera.position.z = CONFIG.boardSize;
+			sim.camera.position.y = CONFIG.boardSize + 100;
+			sim.camera.lookAt(sim.scene.position);
+		}
 
 		loadModels(initBoard);
 
