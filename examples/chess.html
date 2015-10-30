@@ -25,7 +25,7 @@ ChessApp = (function(){
 	var board;
 	var whitePieces = [];
 	var blackPieces = [];
-	var threebase;
+	var gameObjects = new THREE.Group();
 
 	var CONFIG = Object.freeze({//constants
 		boardSize: 700,//chess piece models are scaled to fit the board
@@ -55,7 +55,7 @@ ChessApp = (function(){
 		});
 
 		if (alt.inClient) {
-			sim.scene.position.y -= 1024/2;//TODO: get actual size of enclosure
+			gameObjects.position.y -= 1024/2;//TODO: get actual size of enclosure
 		} else {
 			sim.camera.position.z = CONFIG.boardSize;
 			sim.camera.position.y = CONFIG.boardSize + 100;
@@ -132,11 +132,12 @@ ChessApp = (function(){
 		          z: {min: -1 * limit, max: limit}
 		        }),
 						alt.HoverColor({
+							//event: 'cursordown',
 							scene: sim.scene,
 							color: new THREE.Color(0.8, 0.2, 0.2)
 						})
 					);
-					sim.scene.add(object3d);
+					gameObjects.add(object3d);
 					return object3d;
 				}
 			},
@@ -144,7 +145,8 @@ ChessApp = (function(){
 				if (firstInstance){
 					arrangePieces();
 				}
-				sim.scene.add(board);
+				gameObjects.add(board);
+				sim.scene.add(gameObjects);
 				for(var i=0; i < whitePieces.length; i++){
 					if (firstInstance) {
 						var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });

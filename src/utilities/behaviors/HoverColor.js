@@ -9,6 +9,8 @@ altspace.utilities.behaviors.HoverColor = function(config){
   config = config || {};
 
   if (config.scene === undefined) throw Error('Must pass config.scene');//TODO: better way to get the scene
+  //Default is to trigger color change on cursorenter/cursorleave events,
+  //also support triggering on cursordown/cursorup events.
   if (config.event === undefined) config.event = 'cursorenter';
   if (config.event !== 'cursorenter' && config.event !== 'cursordown') {
     throw Error('Expected config.event "cursorenter" or "cursordown"');
