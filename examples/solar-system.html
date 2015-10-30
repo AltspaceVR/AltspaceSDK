@@ -4,16 +4,10 @@
 <meta charset=utf-8>
 <title>Solar System Example</title>
 <script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
 <script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-
-<script src="http://sdk.altvr.com/utilities/0.5.2/multiloader.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/cursor.js"></script>
-<script src="http://sdk.altvr.com/utilities/0.5.2/shims/dualRenderer.js"></script>
-
-
 
 <style>
 	body {
@@ -67,30 +61,23 @@ SolarSystemApp = (function(){
 	var distanceCoeff = 9;
 	var velocityCoeff = 0.005;
 
-	var scene = new THREE.Scene();
+	var sim;
 	var planets = [];
 	var planetsByName = {};
 	var compactMode;
 	var selectedPlanetName = 'earth';
 	var solarSystem = new THREE.Object3D();
-	var dualRenderer = altspace.utilities.shims.dualRenderer;
 	var multiloader = altspace.utilities.multiloader;
 	var loadRequest;
-	var inAltMode;
 
 	function main() {
-		dualRenderer.init(scene);
-		inAltMode = dualRenderer.inAltMode;
-		compactMode = !inAltMode || window.innerHeight < 800;
-		if (!inAltMode) {
-			var camera = dualRenderer.camera;
-		  altspace.utilities.shims.cursor.init(scene, camera);
-			camera.position.z = 100;
-			camera.position.y = 25;
-			camera.lookAt( scene.position );
+		sim = altspace.utilities.Simulation();
+		if (altspace.inClient) {
+			sim.scene.position.y -= 1024/3;//TODO: get actual size of enclosure
 		}
-		compactMode ? solarSystem.scale.set(5, 5, 5) : solarSystem.scale.set(5, 5, 5);
-		scene.add(solarSystem);
+		compactMode = !altspace.inClient || window.innerHeight < 800;
+		compactMode ? solarSystem.scale.set(20, 20, 20) : solarSystem.scale.set(5, 5, 5);
+		sim.scene.add(solarSystem);
 		loadModels();
 	}
 
@@ -115,6 +102,7 @@ SolarSystemApp = (function(){
 
 	function initPlanets(){//Callback to be sure all models are loaded.
 		for (var i=0; i < loadRequest.objects.length; i++) {
+
 			var p = CONFIG[i];//guaranteed to be in same order
 			var name = p[0];
 			var radius = p[1];
@@ -122,6 +110,7 @@ SolarSystemApp = (function(){
 			var orbitalPeriod = p[3];
 
 			var obj = loadRequest.objects[i];
+
 			planetsByName[name] = obj;
 			obj.solarDistance = distance * distanceCoeff;
 			obj.position.y = 10;
@@ -138,20 +127,26 @@ SolarSystemApp = (function(){
 
 			planets.push(obj);
 			solarSystem.add(obj);
+			obj.addBehaviors(OrbitBehavior());
 		}
-		animate();
 	}
 
-	function update(){
-		for(var i = 0, max = planets.length; i < max; i++){
-			var obj = planets[i];
+	function OrbitBehavior(){
+
+		var obj;
+
+		function awake(o) {
+			obj = o;
+		}
+
+		function update(deltatime) {
 			if(compactMode){
 				if(obj === planetsByName[selectedPlanetName]) {
 				 	obj.visible = true;
 					obj.position.x = 0;
 					obj.position.y = 0;
 					obj.position.z = 0;
-					var scale = inAltMode ? 3.6 : 0.4 ;//We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
+					var scale = altspace.inClient ? 3.6 : 0.4 ;//We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
 					obj.scale.x = scale;
 					obj.scale.y = scale;
 					obj.scale.z = scale;
@@ -171,6 +166,12 @@ SolarSystemApp = (function(){
 			}
 			obj.rotation.y += 0.001;
 		}
+
+		return {
+			awake: awake,
+			update: update
+		};
+
 	}
 
 	window.addEventListener('resize', function(){
@@ -187,16 +188,8 @@ SolarSystemApp = (function(){
 		}
 	});
 
-	// Update & Rendering
-	function animate() {
-		requestAnimationFrame(animate);
-		SolarSystemApp.update();
-		dualRenderer.render();
-	}
-
 	return {
 		main: main,
-		update: update,
 	}
 
 }());
