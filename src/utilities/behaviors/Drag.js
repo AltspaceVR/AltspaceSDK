@@ -47,10 +47,11 @@ altspace.utilities.behaviors.Drag = function (config) {
     var object3d;
     var scene;
     var intersector;
+    var dragOffset = new THREE.Vector3();
     var raycaster = new THREE.Raycaster();
     raycaster.linePrecision = 3;
 
-    if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72');
+    //if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72'); //TODO: Do we need a revision check?
 
     function awake(o) {
         object3d = o;
@@ -112,43 +113,57 @@ altspace.utilities.behaviors.Drag = function (config) {
         intersector.material.visible = false;// ensures we never see flicker during temp visibility
     }
 
-    function startDrag() {
-        scene.addEventListener('cursorup', stopDrag);
-        scene.addEventListener('cursormove', moveDrag);
+    function getWorldPosition(obj) {
+        obj.updateMatrixWorld();
+        var vec = new THREE.Vector3();
+        vec.setFromMatrixPosition(obj.matrixWorld);
+        return vec;
     }
 
+    function vec2str(vec) {
+        function shortNum(num) {
+            return Math.floor(num * 100) / 100;
+        }
+        return 'x: ' + shortNum(vec.x) + ', y: ' + shortNum(vec.y) + ', z: ' + shortNum(vec.z);
+    }
+
+    function startDrag(event) {
+        scene.addEventListener('cursorup', stopDrag);
+        scene.addEventListener('cursormove', moveDrag);
+
+        //Remember difference between center of object and drag point. 
+        //Otherwise, object appears to 'jump' when selected, moving so its
+        //center is directly until the cursor. We allow drag on edge of object.
+        raycaster.set(event.ray.origin, event.ray.direction);
+        var hit = raycaster.intersectObject(object3d, true)[0];
+        if (!hit) return;
+        var dragPoint = hit.point.clone();
+        var objectCenterPoint = getWorldPosition(object3d).clone();
+        dragOffset.copy(dragPoint).sub(objectCenterPoint);
+
+        //Move to drag point (not object center), where raycast hits the object.
+        intersector.position.copy(dragPoint);
+        intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+    }
 
     function moveDrag(event) {
-
-        function getWorldPosition(obj) {
-            obj.updateMatrixWorld();
-            var vec = new THREE.Vector3();
-            vec.setFromMatrixPosition(obj.matrixWorld);
-            return vec;
-        }
-
-        function vec2str(vec) {
-            function shortNum(num) {
-                return Math.floor(num * 100) / 100;
-            }
-            return 'x: ' + shortNum(vec.x) + ', y: ' + shortNum(vec.y) + ', z: ' + shortNum(vec.z);
-        }
-
-        //position intersector
-        //TODO: if local, copy rotation
-        intersector.position.copy(getWorldPosition(object3d));
-        intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
 
         //find intersection
         intersector.visible = true;// allow our intersector to be intersected
         raycaster.set(event.ray.origin, event.ray.direction);
-        var intersection = raycaster.intersectObject(intersector)[0];
+        var intersection = raycaster.intersectObject(intersector, true)[0];
         intersector.visible = false;// disallow our intersector to be intersected
 
         if (!intersection) return;
 
+        //New position is intersection point minus offset. Need offset since
+        //user probably won't click on exact center of object to drag it.
+        var targetWorldPosition = new THREE.Vector3();
+        targetWorldPosition.copy(intersection.point).sub(dragOffset);
+        //But maintain the original y position of the object.
+        targetWorldPosition.y = getWorldPosition(object3d).y;
+
         //constrain target position
-        var targetWorldPosition = intersection.point.clone();
         targetWorldPosition.clamp(min, max);
 
         //move object
@@ -160,7 +175,9 @@ altspace.utilities.behaviors.Drag = function (config) {
           config.z ? targetLocalPosition.z : object3d.position.z
         );
 
-        var sync = object3d.getBehaviorByType('Object3DSync');//TODO: Figure out better way of doing this
+        //If this object is sychronized, update its position.
+        //TODO: Figure out better way of doing this
+        var sync = object3d.getBehaviorByType('Object3DSync');
         if(sync) sync.enqueueSend();
     }
 

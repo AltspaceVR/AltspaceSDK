@@ -81,6 +81,7 @@ gulp.task('altspace_js', function () {
             './src/utilities/sync.js',
             './src/utilities/codepen.js',
             './src/utilities/simulation.js',
+            './src/utilities/multiloader.js',
 
             './src/utilities/shims/behaviors.js',
             './src/utilities/shims/cursor.js',
@@ -92,6 +93,7 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/ButtonStateStyle.js',
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/Spin.js',
+            './src/utilities/behaviors/HoverColor.js',
         ], { cwd: cwd }),
         browserify(
             './src/utilities/behaviors/Layout.js'
