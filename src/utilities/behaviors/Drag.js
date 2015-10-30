@@ -47,6 +47,7 @@ altspace.utilities.behaviors.Drag = function (config) {
     var object3d;
     var scene;
     var intersector;
+    var dragOffset = new THREE.Vector3();
     var raycaster = new THREE.Raycaster();
     raycaster.linePrecision = 3;
 
@@ -112,11 +113,25 @@ altspace.utilities.behaviors.Drag = function (config) {
         intersector.material.visible = false;// ensures we never see flicker during temp visibility
     }
 
-    function startDrag() {
+    function startDrag(event) {
         scene.addEventListener('cursorup', stopDrag);
         scene.addEventListener('cursormove', moveDrag);
-    }
 
+        //Remember difference between center of object and drag point.
+        raycaster.set(event.ray.origin, event.ray.direction);
+        var hit = raycaster.intersectObject(object3d, true)[0];
+        var dragPoint = hit.point.clone();
+        var objectCenterPoint = object3d.position.clone();
+        dragOffset.copy(dragPoint).sub(objectCenterPoint);
+
+        //Move intersector to drag point, not to object center else it 'jumps'
+        //when selected).
+        intersector.position.copy(dragPoint);
+        intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+
+        console.log('object position', object3d.position);
+        console.log('drag point', dragPoint);
+    }
 
     function moveDrag(event) {
 
@@ -134,21 +149,42 @@ altspace.utilities.behaviors.Drag = function (config) {
             return 'x: ' + shortNum(vec.x) + ', y: ' + shortNum(vec.y) + ', z: ' + shortNum(vec.z);
         }
 
+        /*
+        raycaster.set(event.ray.origin, event.ray.direction);
+        var hit = raycaster.intersectObject(object3d, true)[0];
+        if (!hit) {
+            console.warn('drag start but no intersected object');
+            return;
+        }
+        var dragPoint = hit.point.clone();
+        */
+
         //position intersector
         //TODO: if local, copy rotation
-        intersector.position.copy(getWorldPosition(object3d));
+        //Was getWorldPosition(object3d) but that breaks if scene position moved,
+        //e.g. to place the scene at bottom of enclosure.
+        //intersector.position.copy(object3d.position);//XXX
+        /*
+        intersector.position.copy(dragPoint);
         intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+        */
 
         //find intersection
         intersector.visible = true;// allow our intersector to be intersected
-        raycaster.set(event.ray.origin, event.ray.direction);
+        raycaster.set(event.ray.origin, event.ray.direction);//XXX
         var intersection = raycaster.intersectObject(intersector)[0];
         intersector.visible = false;// disallow our intersector to be intersected
 
         if (!intersection) return;
 
+        //New position is intersection point minus offset. Need offset since
+        //user probably won't click on exact center of object to drag it.
+        var targetWorldPosition = new THREE.Vector3();//XXX
+        targetWorldPosition.copy(intersection.point).sub(dragOffset);
+        //But maintain the original y position of the object.
+        targetWorldPosition.y = object3d.position.y;
+
         //constrain target position
-        var targetWorldPosition = intersection.point.clone();
         targetWorldPosition.clamp(min, max);
 
         //move object
