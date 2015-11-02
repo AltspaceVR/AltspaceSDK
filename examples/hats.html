@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Hats Example</title>
+<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
+<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
+</head>
+<body>
+</body>
+<script>
+
+HatsApp = (function(){
+
+	var CONFIG = {
+		models: [
+			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}},
+			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}},
+			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}},
+			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}},
+			{name: 'redhat',     position: {x:   50, y: 0, z: 0}},
+			{name: 'hardhat',    position: {x: -100, y: 0, z: 0}},
+		],
+		pixelsPerMeter: 285.714294,
+	};
+
+	var sim;
+	var hats = [];
+	var hatsByName = {};
+	var selectedHatName;
+	var hatGroup = new THREE.Group();
+	var multiloader = altspace.utilities.multiloader;
+	var loadRequest;
+	var enclosurePixelsPerMeter;
+
+	function main() {
+		sim = altspace.utilities.Simulation();
+		if (altspace.inClient) {
+			altspace.getEnclosure().then(function(e) {
+				enclosurePixelsPerMeter = e.pixelsPerMeter;
+				loadModels();
+			});
+		} else {
+			enclosurePixelsPerMeter = 165.837418;//current Altspace default
+			loadModels();
+		}
+	}
+
+	function loadModels(){
+		multiloader.init({
+			crossOrigin: 'anonymous',
+			baseUrl: 'models/hats/',
+			TRACE: false,//enable for debugging logs
+		});
+		loadRequest = new multiloader.LoadRequest();
+		for (var i=0; i < CONFIG.models.length; i++) {
+			var name = CONFIG.models[i].name;
+			loadRequest.objUrls.push(name+'.obj');
+			loadRequest.mtlUrls.push(name+'.mtl');
+		}
+		multiloader.load(loadRequest, initHats);
+	}
+
+	function initHats(){
+		for (var i=0; i < loadRequest.objects.length; i++) {
+			var obj = loadRequest.objects[i];
+			var name = CONFIG.models[i].name;//guaranteed to be in same order
+			var position = CONFIG.models[i].position;
+			if (!obj) throw Error('Error loading hat model ' + name);
+			hatsByName[name] = obj;
+
+			obj.name = name;
+			obj.position.set(
+				position.x,
+				position.y,
+				position.z
+			);
+			var scale = 3.5 / CONFIG.pixelsPerMeter * enclosurePixelsPerMeter;
+			obj.scale.set(scale, scale, scale);
+
+			hats.push(obj);
+			hatGroup.add(obj);
+			var offset = new THREE.Vector3(0, 10, 0);
+			offset.x = offset.x / CONFIG.pixelsPerMeter * enclosurePixelsPerMeter;
+			offset.y = offset.y / CONFIG.pixelsPerMeter * enclosurePixelsPerMeter;
+			offset.z = offset.z / CONFIG.pixelsPerMeter * enclosurePixelsPerMeter;
+			obj.addBehaviors(FollowUserBehavior({
+				scene: sim.scene,	
+				offset: offset,
+			}));
+		}
+		sim.scene.add(hatGroup);
+	}
+
+	function FollowUserBehavior(config){
+
+		config = config || {};
+		if (config.scene === undefined) throw Error('config.scene required');
+		if (config.offset === undefined) config.offset = new THREE.Vector3();
+		if (!config.offset instanceof THREE.Vector3) {
+			throw Error('config.offset must be of type THREE.Vector3');
+		}
+
+		var object3d;
+		var initialPosition;
+		var initialRay;
+		var ray;
+		var lastRay;
+		var isFollowingUser = false;
+
+		function awake(o) {
+			object3d = o;
+			initialPosition = object3d.position;
+	    object3d.addEventListener('cursordown', cursordown);
+		  config.scene.addEventListener('cursormove', cursormove);
+		}
+
+		function cursordown(event) {
+			ray = event.ray;
+			isFollowingUser = true;
+		}
+
+		function cursormove(event) {
+			//Track cursor position since we're using ray to position hat,
+			//should be using tracking skeleton.
+			ray = event.ray;
+		}
+
+		function update(deltatime) {
+			if (!isFollowingUser || !ray) return;
+			if (lastRay) {
+				//Ignore slight changes in position.
+				var diff = ray.origin.clone().sub(lastRay.origin); 
+				if (Math.abs(diff.x) < 1 && 
+				    Math.abs(diff.y) < 1 && 
+				    Math.abs(diff.z) < 1) return;
+			}
+			//Move hat relative to it's original position for now,
+			//should move relative to the user's tracking skeleton.
+			var newPosition = ray.origin.clone().add(config.offset);
+			object3d.position.copy(newPosition);
+			lastRay = ray;
+		}
+
+		return {
+			awake: awake,
+			update: update
+		};
+
+	}
+
+	return {
+		main: main,
+	}
+
+}());
+
+HatsApp.main();
+
+</script>
+</html>
