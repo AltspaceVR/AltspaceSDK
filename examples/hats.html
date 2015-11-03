@@ -16,43 +16,37 @@ HatsApp = (function(){
 
 	var CONFIG = {
 		models: [
-			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}, offset {x: 0, y: 10, z: 0}},
-			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}, offset {x: 0, y: 10, z: 0}},
-			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset {x: 0, y: 10, z: 0}},
-			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset {x: 0, y: 10, z: 0}},
-			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset {x: 0, y: 10, z: 0}},
-			{name: 'hardhat',    position: {x: -100, y: 0, z: 0}, offset {x: 0, y: 10, z: 0}},
+			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
+			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
+			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
+			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
+			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
+			{name: 'hardhat',    position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}}
 		],
-		pixelsPerMeter: 285.714294,
+		modelsPixelsPerMeter: 285.714294,
 	};
 
 	var sim;
 	var sceneSync;
-	var hats = [];
 	var hatsByName = {};
 	var selectedHat;
 	var hatGroup = new THREE.Group();
-	var multiloader = altspace.utilities.multiloader;
 	var loadRequest;
-	var enclosurePixelsPerMeter;
-	var hatScale;
+
+	var altPixelsPerMeter = 165.837418;//current Altspace default
+	var scale = 3.5 / CONFIG.modelsPixelsPerMeter * altPixelsPerMeter;
 
 	function main() {
 		sim = altspace.utilities.Simulation();
-		sim.scene.add(hatGroup);
-		if (altspace.inClient) {
-			altspace.getEnclosure().then(function(e) {
-				enclosurePixelsPerMeter = e.pixelsPerMeter;
-		    hatScale = 3.5 / CONFIG.pixelsPerMeter * enclosurePixelsPerMeter;
-				loadModels();
-			});
-		} else {
-			enclosurePixelsPerMeter = 165.837418;//current Altspace default
-			loadModels();
-		}
+		var instanceBase = altspace.utilities.sync.getInstance();
+		sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
+			instantiators: {'Hat': createHat },
+			ready: loadModels()
+		});
 	}
 
 	function loadModels(){
+		var multiloader = altspace.utilities.multiloader;
 		multiloader.init({
 			crossOrigin: 'anonymous',
 			baseUrl: 'models/hats/',
@@ -68,76 +62,48 @@ HatsApp = (function(){
 	}
 
 	function onLoaded() {
-		//Start syncing after models are loaded, but before any synced objects
-		//are created.  Don't call 'sceneSync.instantiate' before sync is 'ready'.
-		var instanceBase = altspace.utilities.sync.getInstance();
-		sceneSync = altsapce.utilities.behaviors.SceneSync(instanceBase, {
-			instantiators: {'hat': createHat },
-			ready: ready
-		});
-	}
-
-	function ready() {
 		for (var i=0; i < loadRequest.objects.length; i++) {
-			//Create the template objects.
 			var objTemplate = loadRequest.objects[i];
 			var name = CONFIG.models[i].name;//guaranteed to be in same order
 			if (!objTemplate) throw Error('Error loading hat model ' + name);
 			var v3 = new THREE.Vector3();
 			v3.copy(CONFIG.models[i].offset);
-			v3.multiplyScalar(1 / CONFIG.pixelsPerMeter * enclosurePixelsPerMeter);
+			v3.multiplyScalar(1 / CONFIG.modelsPixelsPerMeter * altPixelsPerMeter);
 
 			objTemplate.name = name;
 			objTemplate.userData.offset = v3;
 			objTemplate.position.copy(CONFIG.models[i].position);//initial position
-			objTemplate.scale.set(hatScale, hatScale, hatScale);
+			objTemplate.scale.set(scale, scale, scale);
 			hatsByName[name] = objTemplate;//we'll clone this later
 
-			//Inital (stationary) set of hats is not synchronized.
-			var obj = createHat('Hat', {
-				name: name,
-				sync: false
-			});
-			//When user clicks on hat, a clone of it starts following them.
+			//Create one hat (not synced) from template and attach event handler.
+			var obj = createHat({name: name, sync: false});
 			obj.addEventListener('cursordown', function(event) {
-				var destroyOnDisconnect = true;
-				var myHat = sceneSync.instantiate('Hat', {
-					name: name,
-					sync: true,
-				}, destroyOnDisconnect);
-				myHat.addBehavior(FollowUserBehavior({
-					scene: sim.scene,
-					ray: event.ray,
-				});
-			});
+				//Copy of this hat now follows user. destroyOnDisconnect=true.
+				var myHat = sceneSync.instantiate('Hat', {name: this.name, sync: true}, true);
+				myHat.addBehavior(FollowUserBehavior({scene: sim.scene, ray: event.ray}));
+				selectedHat = myHat;//TODO: If hat already selected, destroy it.
+			}.bind(obj));
 		}
+		sim.scene.add(hatGroup);//done setup, add hats to scene
 	}
 
 	function createHat(initData){
 		var name = initData.name;
-		var obj = hatsByName[name].clone();
-		hats.push(obj);
+		var objTemplate = hatsByName[name];
+		if (!objTemplate) throw Error('Error creating hat ' + name);
+		var obj = objTemplate.clone();
 		hatGroup.add(obj);
 		if (initData.sync) {
-			obj.addBehaviors([
-				altspace.utilities.behaviors.Object3DSync({
-					position: true
-				})
-			]);
+			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({position: true}));
 		}
 		return obj;
 	}
 
 	function FollowUserBehavior(config){
-
 		config = config || {};
 		if (config.scene === undefined) throw Error('config.scene required');
 		if (config.ray === undefined) throw Error('config.ray required');
-		if (config.offset === undefined) config.offset = new THREE.Vector3();
-		if (!config.offset instanceof THREE.Vector3) {
-			throw Error('config.offset must be of type THREE.Vector3');
-		}
-
 		var object3d;
 		var ray;
 		var lastRay;
@@ -145,18 +111,16 @@ HatsApp = (function(){
 
 		function awake(o) {
 			object3d = o;
+			offset = object3d.userData.offset;
+			if(!offset) throw Error('Missing offset');
 			ray = config.ray;
-		  config.scene.addEventListener('cursormove', cursormove);
+		  config.scene.addEventListener('cursormove', function(event){
+				ray = event.ray;
+		  });
 		}
 
 		function start() {
 			updatePosition();
-		}
-
-		function cursormove(event) {
-			//Track cursor position since we're using ray to position hat,
-			//should be using tracking skeleton.
-			ray = event.ray;
 		}
 
 		function update(deltatime) {
@@ -169,15 +133,15 @@ HatsApp = (function(){
 		}
 
 		function updatePosition() {
-			//Move hat relative to it's original position for now,
-			//should move relative to the user's tracking skeleton.
-			var newPosition = ray.origin.clone().add(config.offset);
+			//TODO: Move relative to the user's tracking skeleton, not ray origin.
+			var newPosition = ray.origin.clone().add(offset);
 			object3d.position.copy(newPosition);
 			lastRay = ray;
 		}
 
 		return {
 			awake: awake,
+			start: start,
 			update: update
 		};
 
