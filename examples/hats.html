@@ -21,7 +21,7 @@ HatsApp = (function(){
 			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
 			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
 			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
-			{name: 'hardhat',    position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}}
+			{name: 'hardhat',    position: {x:  100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}}
 		],
 		modelsPixelsPerMeter: 285.714294,
 	};
@@ -79,10 +79,11 @@ HatsApp = (function(){
 			//Create one hat (not synced) from template and attach event handler.
 			var obj = createHat({name: name, sync: false});
 			obj.addEventListener('cursordown', function(event) {
+				if (selectedHat) sceneSync.destroy(selectedHat);
 				//Copy of this hat now follows user. destroyOnDisconnect=true.
 				var myHat = sceneSync.instantiate('Hat', {name: this.name, sync: true}, true);
 				myHat.addBehavior(FollowUserBehavior({scene: sim.scene, ray: event.ray}));
-				selectedHat = myHat;//TODO: If hat already selected, destroy it.
+				selectedHat = myHat;
 			}.bind(obj));
 		}
 		sim.scene.add(hatGroup);//done setup, add hats to scene
