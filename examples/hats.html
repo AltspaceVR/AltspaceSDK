@@ -16,12 +16,12 @@ HatsApp = (function(){
 
 	var CONFIG = {
 		models: [
-			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
-			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
-			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
-			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
-			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}},
-			{name: 'hardhat',    position: {x:  100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 0}}
+			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
+			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
+			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
+			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
+			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
+			{name: 'hardhat',    position: {x:  100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}}
 		],
 		modelsPixelsPerMeter: 285.714294,
 	};
@@ -30,7 +30,7 @@ HatsApp = (function(){
 	var sceneSync;
 	var objTemplateByName = {};
 	var selectedHat;
-	var initialHats = new THREE.Group();
+	var initialHats = [];
 	var loadRequest;
 
 	var altPixelsPerMeter = 165.837418;//current Altspace default
@@ -74,14 +74,14 @@ HatsApp = (function(){
 
 			//Create one hat (not synced) from template
 			var obj = createHat({name: objTemplate.name, sync: false});
-			initialHats.add(obj);
+			initialHats.push(obj);
 		}
 
 		// Now that hat templates ready, init sync.
 		var instanceBase = altspace.utilities.sync.getInstance();
 		sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
 			instantiators: {'Hat': createHat },
-			ready: onSyncReady()
+			ready: onSyncReady
 		});
 		sim.scene.addBehavior(sceneSync);
 	}
@@ -89,20 +89,21 @@ HatsApp = (function(){
 	function onSyncReady() {
 		//Attach event handlers to initial hats. Clicking on a hat clones it.
 		//Needed to wait until sceneSync ready, since the new hats will be synced.
-		for (var i=0; i < initialHats.children.length; i++) {
-			var obj = initialHats.children[i];
-			obj.addEventListener('cursordown', function(event) {
-				if (selectedHat) sceneSync.destroy(selectedHat);
-				//destroyOnDisconnect=true so when user leaves, their hat vanishes.
-				var myHat = sceneSync.instantiate('Hat', {name: this.name, sync: true}, true);
-				//Add follow behavior here, not in createHat, since only the local hat
-				//follows this user (although its position is synced to all users).
-				myHat.addBehavior(FollowUserBehavior({scene: sim.scene, ray: event.ray}));
-				selectedHat = myHat;
-				sim.scene.add(myHat);
-			}.bind(obj));
+		for (var i=0; i < initialHats.length; i++) {
+			addEventListener(initialHats[i]);
 		}
-		sim.scene.add(initialHats);//done setup, add hats to scene
+	}
+
+	function addEventListener(obj) {
+		obj.addEventListener('cursordown', function(event) {
+			if (selectedHat) sceneSync.destroy(selectedHat);
+			//destroyOnDisconnect=true so when user leaves, their hat vanishes.
+			var myHat = sceneSync.instantiate('Hat', {name: obj.name, sync: true}, true);
+			//Add follow behavior here, not in createHat, since only the local hat
+			//follows this user (although its position is synced to all users).
+			myHat.addBehavior(FollowUserBehavior({scene: sim.scene, ray: event.ray}));
+			selectedHat = myHat;
+		});
 	}
 
 	function createHat(initData){
@@ -111,9 +112,10 @@ HatsApp = (function(){
 		if (!objTemplate) throw Error('Error creating hat ' + name);
 		var obj = objTemplate.clone();
 		if (initData.sync) {
-			console.log('creating synced hat ' + name);
+			console.log('Creating synced hat ' + name + ' at position', obj.position);
 			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({position: true}));
 		}
+		sim.scene.add(obj);
 		return obj;
 	}
 
@@ -127,8 +129,7 @@ HatsApp = (function(){
 		var offset;
 
 		var interval;
-		var autoSendRateMS = 500;
-		var lastPosition;
+		var autoSendRateMS = 100;
 
 		function awake(o) {
 			object3d = o;
@@ -147,10 +148,8 @@ HatsApp = (function(){
 
 		function startAutoSend() {
 			interval = setInterval(function() {
-				if (lastPosition && lastPositon === object3d.position) return;
 				var sync = object3d.getBehaviorByType('Object3DSync');
 				if (sync) sync.enqueueSend();
-				lastPosition = object3d.position;
 			}, autoSendRateMS);
 		}
 
