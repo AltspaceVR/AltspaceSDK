@@ -16,12 +16,12 @@ HatsApp = (function(){
 
 	var CONFIG = {
 		models: [
-			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
-			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
-			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
-			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
-			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}},
-			{name: 'hardhat',    position: {x:  100, y: 0, z: 0}, offset: {x: 0, y: 10, z: 80}}
+			{name: 'wizardhat',  position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 20, z: -40}},
+			{name: 'strawhat',   position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 20, z: -40}},
+			{name: 'tophat',     position: {x:  -50, y: 0, z: 0}, offset: {x: 0, y: 20, z: -40}},
+			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 20, z: -40}},
+			{name: 'redhat',     position: {x:   50, y: 0, z: 0}, offset: {x: 0, y: 20, z: -40}},
+			{name: 'hardhat',    position: {x:  100, y: 0, z: 0}, offset: {x: 0, y: 20, z: -40}}
 		],
 		modelsPixelsPerMeter: 285.714294,
 	};
@@ -64,7 +64,6 @@ HatsApp = (function(){
 			if (!objTemplate) throw Error('Error loading hat model ' + name);
 			var v3 = new THREE.Vector3();
 			v3.copy(CONFIG.models[i].offset);
-			v3.multiplyScalar(1 / CONFIG.modelsPixelsPerMeter * altPixelsPerMeter);
 
 			objTemplate.name = name;
 			objTemplate.userData.offset = v3;
@@ -112,7 +111,6 @@ HatsApp = (function(){
 		if (!objTemplate) throw Error('Error creating hat ' + name);
 		var obj = objTemplate.clone();
 		if (initData.sync) {
-			console.log('Creating synced hat ' + name + ' at position', obj.position);
 			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({position: true}));
 		}
 		sim.scene.add(obj);
@@ -163,9 +161,13 @@ HatsApp = (function(){
 		}
 
 		function updatePosition() {
-			//TODO: Move relative to the user's tracking skeleton, not ray origin.
-			var newPosition = ray.origin.clone().add(offset);
-			object3d.position.copy(newPosition);
+			object3d.position.copy(ray.origin);//update position
+			var pointOnRay = ray.origin.clone().add(ray.direction);
+			object3d.lookAt(pointOnRay);//update rotation
+			object3d.translateX(offset.x);
+			object3d.translateY(offset.y);
+			object3d.translateZ(offset.z);
+			//TODO: transform rotation
 			lastRay = ray;
 		}
 
