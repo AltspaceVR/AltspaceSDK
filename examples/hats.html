@@ -111,7 +111,9 @@ HatsApp = (function(){
 		if (!objTemplate) throw Error('Error creating hat ' + name);
 		var obj = objTemplate.clone();
 		if (initData.sync) {
-			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({position: true}));
+			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
+				position: true, rotation: true, auto: true
+			}));
 		}
 		sim.scene.add(obj);
 		return obj;
@@ -123,11 +125,7 @@ HatsApp = (function(){
 		if (config.ray === undefined) throw Error('config.ray required');
 		var object3d;
 		var ray;
-		var lastRay;
 		var offset;
-
-		var interval;
-		var autoSendRateMS = 100;
 
 		function awake(o) {
 			object3d = o;
@@ -140,27 +138,10 @@ HatsApp = (function(){
 		}
 
 		function start() {
-			updatePosition();
-			startAutoSend();
-		}
-
-		function startAutoSend() {
-			interval = setInterval(function() {
-				var sync = object3d.getBehaviorByType('Object3DSync');
-				if (sync) sync.enqueueSend();
-			}, autoSendRateMS);
+			update();
 		}
 
 		function update(deltatime) {
-			//Ignore slight changes in position.
-			var diff = ray.origin.clone().sub(lastRay.origin); 
-			if (Math.abs(diff.x) < 1 && 
-			    Math.abs(diff.y) < 1 && 
-			    Math.abs(diff.z) < 1) return;
-			updatePosition();
-		}
-
-		function updatePosition() {
 			object3d.position.copy(ray.origin);//update position
 			var pointOnRay = ray.origin.clone().add(ray.direction);
 			object3d.lookAt(pointOnRay);//update rotation
@@ -168,18 +149,12 @@ HatsApp = (function(){
 			object3d.translateY(offset.y);
 			object3d.translateZ(offset.z);
 			//TODO: transform rotation
-			lastRay = ray;
-		}
-
-		function dispose() {
-			if (interval) clearInterval(interval);
 		}
 
 		return {
 			awake: awake,
 			start: start,
 			update: update,
-			dispose: dispose
 		};
 
 	}
