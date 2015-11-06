@@ -59,6 +59,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 			}
 			if (config.position) {
 				var position = data.position;
+				toNumber(data.position);
 				if (!position) {
 					console.warn('Missing position data for object '+object3d.name, data);
 				}
@@ -66,6 +67,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 			}
 			if (config.rotation) {
 				var rotation = data.rotation;
+				toNumber(data.rotation);
 				if (!rotation) {
 					console.warn('Missing rotation data for object '+object3d.name, data);
 				}
@@ -73,6 +75,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 			}
 			if (config.scale) {
 				var scale = data.scale;
+				toNumber(data.scale);
 				if (!scale) {
 					console.warn('Missing scale data for object '+object3d.name, data);
 				}
@@ -115,29 +118,31 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 		if (!object3d) return;
 
 		var data = {}
-		//Round so comparisions work as expected, 4 decimal places seems sufficient. 
 		data.senderUuid = object3d.uuid;
 		if (config.position) {
 			data.position = {
-				x: object3d.position.x.toFixed(4),
-				y: object3d.position.y.toFixed(4),
-				z: object3d.position.z.toFixed(4)
+				x: object3d.position.x,
+				y: object3d.position.y,
+				z: object3d.position.z
 			};
+			toFixed(data.position);
 		}
 		if (config.rotation) {
 			data.rotation = {
-				x: object3d.quaternion.x.toFixed(4),
-				y: object3d.quaternion.y.toFixed(4),
-				z: object3d.quaternion.z.toFixed(4),
-				w: object3d.quaternion.w.toFixed(4)
+				x: object3d.quaternion.x,
+				y: object3d.quaternion.y,
+				z: object3d.quaternion.z,
+				w: object3d.quaternion.w
 			};
+			toFixed(data.rotation);
 		}
 		if (config.scale) {
 			data.scale = {
-				x: object3d.scale.x.toFixed(4),
-				y: object3d.scale.y.toFixed(4),
-				z: object3d.scale.z.toFixed(4)
+				x: object3d.scale.x,
+				y: object3d.scale.y,
+				z: object3d.scale.z
 			};
+			toFixed(data.scale);
 		}
 		if (config.syncData) {
 			data.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
@@ -156,6 +161,22 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 		if (config.rotation) lastData.rotation = data.rotation;
 		if (config.scale) lastData.scale = data.scale;
 		if (config.position) lastData.syncData = data.syncData;
+	}
+
+	function toFixed(triple) {
+		//Round so comparisions work as expected, 4 decimal places seems sufficient. 
+		if (triple.x) triple.x = triple.x.toFixed(4);
+		if (triple.y) triple.y = triple.y.toFixed(4);
+		if (triple.z) triple.z = triple.z.toFixed(4);
+		if (triple.w) triple.w = triple.w.toFixed(4);//for quaternion
+	}
+
+	function toNumber(triple) {
+		//Values storted in Firebase as strings, convert to numbers.
+		if (triple.x) triple.x = parseFloat(triple.x);
+		if (triple.y) triple.y = parseFloat(triple.y);
+		if (triple.z) triple.z = parseFloat(triple.z);
+		if (triple.w) triple.w = parseFloat(triple.w);//for quaternion
 	}
 
 	function needsUpdate(newData) {
