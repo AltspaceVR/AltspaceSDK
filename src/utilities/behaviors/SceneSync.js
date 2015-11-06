@@ -23,12 +23,12 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
+    if (config.autoSendRateMS === undefined) config.autoSendRateMS = 100;
+
     var sceneRef = instanceRef.child('scene');
     config = config || {};
     var instantiators = config.instantiators || {};
     var destroyers = config.destroyers || {};
-
-    var autoSendRateMS = 100;
 
     var syncBehaviors = [];
 
@@ -133,7 +133,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     }
 
     function awake(o) {
-        setInterval(autoSendAll, autoSendRateMS);
+        setInterval(autoSendAll, config.autoSendRateMS);
     }
 
     /**
@@ -186,7 +186,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         type: 'SceneSync'
     };
     Object.defineProperty(exports, 'autoSendRateMS', {
-        get: function () { return autoSendRateMS; }
+        get: function () { return config.autoSendRateMS; }
     });
     return exports;
 };

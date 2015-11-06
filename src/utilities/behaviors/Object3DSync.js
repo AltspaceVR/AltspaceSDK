@@ -21,10 +21,15 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
 	config = config || {};
-	/*if (config.position === undefined) config.position = true;
-	if (config.rotation === undefined) config.rotation = true;
-	if (config.scale === undefined) config.scale = true;
-	if (config.syncData === undefined) config.syncData = true;*/
+	if (config.position === undefined) config.position = false;
+	if (config.rotation === undefined) config.rotation = false;
+	if (config.scale === undefined) config.scale = false;
+	if (config.syncData === undefined) config.syncData = false;
+	if (config.auto === undefined) config.auto = false;
+	if (config.tolerance === undefined) config.tolerance = {
+		position: 1, rotation: 1, scale: 1
+	};
+
 	var object3d;
 	var ref;
 	var key;
@@ -32,6 +37,8 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 	var sendEnqueued = false;
 
 	var dataRef;
+
+	var lastData;//most recent data sent for this object
 
 	function link(objectRef) {
 		ref = objectRef;
@@ -105,39 +112,93 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 	}
 
 	function send() {
+		if (!object3d) return;
 
 		var data = {}
+		//Round so comparisions work as expected, 4 decimal places seems sufficient. 
 		data.senderUuid = object3d.uuid;
 		if (config.position) {
 			data.position = {
-				x: object3d.position.x,
-				y: object3d.position.y,
-				z: object3d.position.z
+				x: object3d.position.x.toFixed(4),
+				y: object3d.position.y.toFixed(4),
+				z: object3d.position.z.toFixed(4)
 			};
 		}
 		if (config.rotation) {
 			data.rotation = {
-				x: object3d.quaternion.x,
-				y: object3d.quaternion.y,
-				z: object3d.quaternion.z,
-				w: object3d.quaternion.w
+				x: object3d.quaternion.x.toFixed(4),
+				y: object3d.quaternion.y.toFixed(4),
+				z: object3d.quaternion.z.toFixed(4),
+				w: object3d.quaternion.w.toFixed(4)
 			};
 		}
 		if (config.scale) {
 			data.scale = {
-				x: object3d.scale.x,
-				y: object3d.scale.y,
-				z: object3d.scale.z
+				x: object3d.scale.x.toFixed(4),
+				y: object3d.scale.y.toFixed(4),
+				z: object3d.scale.z.toFixed(4)
 			};
 		}
 		if (config.syncData) {
 			data.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
 		}
-		dataRef.set(data);
-		if (config.TRACE) {
-			console.log('SEND data for object '+object3d.name, data);
+
+		//If auto-send enabled, only send if values differ from last time.
+		if (!config.auto || lastData === undefined || needsUpdate(data)) {
+			dataRef.set(data);
+			if (config.TRACE) {
+				console.log('SEND data for object '+object3d.name, data);
+			}
 		}
+
+		lastData = {};
+		if (config.position) lastData.position = data.position;
+		if (config.rotation) lastData.rotation = data.rotation;
+		if (config.scale) lastData.scale = data.scale;
+		if (config.position) lastData.syncData = data.syncData;
 	}
+
+	function needsUpdate(newData) {
+
+		var diff = function(triple1, triple2, tolerance) {
+			//Use greater-than-or-equal-to so setting tolerance to 0 always sends.
+			var result =
+				Math.abs(triple1.x - triple2.x) >= tolerance ||
+				Math.abs(triple1.y - triple2.y) >= tolerance ||
+				Math.abs(triple1.z - triple2.z) >= tolerance;
+
+			return result;
+		};
+
+		if (config.position) {
+			if (diff(newData.position, lastData.position, config.tolerance.position)) {
+				return true;
+			}
+		}
+
+		if (config.rotation) {
+			if (diff(newData.rotation, lastData.rotation, config.tolerance.rotation)) {
+				return true;
+			}
+		}
+
+		if (config.scale) {
+			if (diff(newData.scale, lastData.scale, config.tolerance.scale)) {
+				return true;
+			}
+		}
+
+		if (config.syncData) {
+			var keys = Object.keys(lastData);
+			for (var i = 0; i < keys.length; i++) {
+				var key = keys[i];
+				if (lastData[key] !== newData[key]) return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	function autoSend() {
 		if (config.auto || sendEnqueued) send();
