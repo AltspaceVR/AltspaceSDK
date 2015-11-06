@@ -42,6 +42,7 @@ altspace.utilities.shims.cursor = (function () {
     }
 
     function mouseDown(event) {
+        if (!event.view) return;//Target was another window.
 
         var intersection = findIntersection(event);
         if (!intersection || !intersection.point) return;
@@ -51,20 +52,23 @@ altspace.utilities.shims.cursor = (function () {
     }
 
     function mouseUp(event) {
-        var intersection = findIntersection(event);
-
-        var cursorEvent = createCursorEvent('cursorup', intersection);
-
-        if (intersection) {
-            intersection.object.dispatchEvent(cursorEvent);
-        } else {
-            scene.dispatchEvent(cursorEvent);
+        var intersection;
+        if (event.view) {//Be sure target was this window before intersecting.
+            intersection = findIntersection(event);
+            if (intersection) {
+                var cursorEvent = createCursorEvent('cursorup', intersection);
+                intersection.object.dispatchEvent(cursorEvent);
+            }
         }
+
+        var cursorEvent = createCursorEvent('cursorup', null);
+        scene.dispatchEvent(cursorEvent);
     }
 
     function mouseMove(event) {
-        var intersection = findIntersection(event);
+        if (!event.view) return;//Target was another window.
 
+        var intersection = findIntersection(event);
         var cursorEvent = createCursorEvent('cursormove', intersection);//TODO improve and don't fire only on scene
         scene.dispatchEvent(cursorEvent);
 
