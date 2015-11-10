@@ -25,10 +25,21 @@ for(var i = 0, max = text.length; i < max; i++){
 	var geometry = new THREE.TextGeometry(text.charAt(i));
 	var material = new THREE.MeshBasicMaterial({color:'green'});
 	var mesh = new THREE.Mesh(geometry, material);
+
 	mesh.scale.z = 0.3;
 	mesh.scale.multiplyScalar(0.3);
 	mesh.position.z = 30;
 	mesh.position.x = 8;
+
+	/*
+	mesh.scale.z = 0.1;
+	mesh.scale.multiplyScalar(0.1);
+	mesh.position.z = 8;
+	mesh.position.x = -1;
+	*/
+
+
+
 	mesh.rotation.x = Math.PI / 2;
 	scene.add(mesh);
 	letters.push(mesh);
@@ -40,7 +51,7 @@ altspace.getThreeJSTrackingSkeleton().then(function(args){
 	scene.add(skeleton);
 
 	var i = 0;
-	skeleton.getJoint('Little', 'Left', 	3).add(letters[i++]);
+	skeleton.getJoint('Pinky', 'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Ring', 	'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Middle', 'Left', 	3).add(letters[i++]);
 	skeleton.getJoint('Index', 	'Left', 	3).add(letters[i++]);
@@ -49,7 +60,7 @@ altspace.getThreeJSTrackingSkeleton().then(function(args){
 	skeleton.getJoint('Index', 	'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Middle', 'Right', 	3).add(letters[i++]);
 	skeleton.getJoint('Ring', 	'Right', 	3).add(letters[i++]);
-	skeleton.getJoint('Little', 'Right', 	3).add(letters[i++]);
+	skeleton.getJoint('Pinky', 'Right', 	3).add(letters[i++]);
 });
 
 //Rendering
