@@ -16,76 +16,57 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @param {Boolean} [config.syncData=false] Whether object's syncData should
  *  be synced
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
- *  automatically. Not currently recommended.
+ *  automatically.
+ * @param {Boolean} [config.tolerance={position: 1, rotation: 1, scale: 1}] When auto is enabled, only changes above this threshold will be sent.
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
 	config = config || {};
-	if (config.position === undefined) config.position = false;
-	if (config.rotation === undefined) config.rotation = false;
-	if (config.scale === undefined) config.scale = false;
-	if (config.syncData === undefined) config.syncData = false;
-	if (config.auto === undefined) config.auto = false;
 	if (config.tolerance === undefined) config.tolerance = {
 		position: 1, rotation: 1, scale: 1
 	};
 
 	var object3d;
-	var ref;
-	var key;
-
-	var sendEnqueued = false;
-
 	var dataRef;
 
-	var lastData;//most recent data sent for this object
+	var sendEnqueued = false;
+	var lastData;//most recent data for this object
 
 	function link(objectRef) {
-		ref = objectRef;
-		key = ref.key();
-		dataRef = ref.child('data');
+		//Need child 'data' to encapsulate synced data, since SyncSync already added
+		//'initData' and 'syncType' as top-level properties on the object ref.
+		dataRef = objectRef.child('data');
 	}
 
 	//TODO: lerp
 	function setupReceive() {
 		dataRef.on('value', function (snapshot) {
-			var data = snapshot.val();
-			if(!data) return;
-			if (!data.senderUuid) console.warn('Missing data.senderUuid', data);
-			if (data.senderUuid === object3d.uuid) return;//We just sent this, ignore.
+			var value = snapshot.val();
+			if(!value) return;//When we first add an object, we get an empty callback.
+			if (!value.senderUuid) console.warn('Missing value.senderUuid', value);
+			if (value.senderUuid === object3d.uuid) return;//We just sent this, ignore.
 
 			if (config.TRACE) {
-				console.log('RECV data for object '+object3d.name, data);
+				console.log('RECV value for object '+object3d.name, value);
 			}
 			if (config.position) {
-				var position = data.position;
-				toNumber(data.position);
-				if (!position) {
-					console.warn('Missing position data for object '+object3d.name, data);
-				}
+				var position = value.position;
+				toNumber(value.position);
 				object3d.position.set(position.x, position.y, position.z);
 			}
+			//NOTE: rotation is expressed in quaternions, might want to rename.
 			if (config.rotation) {
-				var rotation = data.rotation;
-				toNumber(data.rotation);
-				if (!rotation) {
-					console.warn('Missing rotation data for object '+object3d.name, data);
-				}
-				object3d.rotation.set(rotation.x, rotation.y, rotation.z);
+				var rotation = value.rotation;
+				toNumber(value.rotation);
+				object3d.rotation.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 			}
 			if (config.scale) {
-				var scale = data.scale;
-				toNumber(data.scale);
-				if (!scale) {
-					console.warn('Missing scale data for object '+object3d.name, data);
-				}
+				var scale = value.scale;
+				toNumber(value.scale);
 				object3d.scale.set(scale.x, scale.y, scale.z);
 			}
 			if (config.syncData) {
-				var syncData = data.syncData;
-				if (!syncData) {
-					console.warn('Missing syncData data for object '+object3d.name, data);
-				}
+				var syncData = value.syncData;
 				if (syncData) {
 					object3d.userData.syncData = syncData;
 				}
@@ -115,7 +96,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 	}
 
 	function send() {
-		if (!object3d) return;
+		if (!object3d) return;//This can happen just after we start auto-sending but before object awake.
 
 		var data = {}
 		data.senderUuid = object3d.uuid;
@@ -163,6 +144,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 		if (config.position) lastData.syncData = data.syncData;
 	}
 
+	//TODO: change this to more robust comparison
+	// http://floating-point-gui.de/errors/comparison/
+	// https://github.com/scijs/almost-equal
 	function toFixed(triple) {
 		//Round so comparisions work as expected, 4 decimal places seems sufficient. 
 		if (triple.x) triple.x = triple.x.toFixed(4);
@@ -186,8 +170,8 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 			var result =
 				Math.abs(triple1.x - triple2.x) >= tolerance ||
 				Math.abs(triple1.y - triple2.y) >= tolerance ||
-				Math.abs(triple1.z - triple2.z) >= tolerance;
-
+				Math.abs(triple1.z - triple2.z) >= tolerance ||
+				(triple1.w !== undefined && Math.abs(triple1.w - triple2.w) >= tolerance);
 			return result;
 		};
 
@@ -210,6 +194,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 		}
 
 		if (config.syncData) {
+			//TODO: Is there a more efficient way to do this?
 			var keys = Object.keys(lastData);
 			for (var i = 0; i < keys.length; i++) {
 				var key = keys[i];
@@ -238,7 +223,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 	}
 
 	function update(deltaTime) {
-		
+		//nohting here for now	
 	}
 
 	var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, send: send, enqueueSend: enqueueSend, autoSend: autoSend};

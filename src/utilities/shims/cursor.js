@@ -42,7 +42,7 @@ altspace.utilities.shims.cursor = (function () {
     }
 
     function mouseDown(event) {
-        if (!event.view) return;//Target was another window.
+        if (!event.view) return;//Target was another window (i.e. another browser tab).
 
         var intersection = findIntersection(event);
         if (!intersection || !intersection.point) return;
