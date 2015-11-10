@@ -32,6 +32,7 @@ HatsApp = (function(){
 	var selectedHat;
 	var initialHats = [];
 	var loadRequest;
+	var head;
 
 	var altPixelsPerMeter = 165.837418;//current Altspace default
 	var scale = 3.5 / CONFIG.modelsPixelsPerMeter * altPixelsPerMeter;
@@ -40,6 +41,20 @@ HatsApp = (function(){
 		sim = altspace.utilities.Simulation();
 		if (!altspace.inClient) {
 			sim.camera.position.z = 400;//inside the enclosure
+		}
+
+		if (altspace.inClient) {
+			altspace.getThreeJSTrackingSkeleton().then(function(skeleton){
+				if (!skeleton) throw Error('Failed to get tracking skeleton');
+				head = skeleton.getJoint('Head');//head is an Object3D
+				if (!head) throw Error('Failed to get head joint');
+				//TODO: Remove debug logging.
+				console.log('head joint position', head.position);
+				setInterval(function() {
+					console.log('head joint position', head.position);
+				}, 2000);
+			});
+			//Assume this promise returns before models are loaded.
 		}
 
 		var multiloader = altspace.utilities.multiloader;
@@ -72,7 +87,7 @@ HatsApp = (function(){
 			objTemplateByName[name] = objTemplate;//we'll clone in createHat
 
 			//Create one hat (not synced) from template
-			var obj = createHat({name: objTemplate.name, sync: false});
+			var obj = createHat({name: objTemplate.name, isOnHead: false});
 			initialHats.push(obj);
 		}
 
@@ -97,10 +112,10 @@ HatsApp = (function(){
 		obj.addEventListener('cursordown', function(event) {
 			if (selectedHat) sceneSync.destroy(selectedHat);
 			//destroyOnDisconnect=true so when user leaves, their hat vanishes.
-			var myHat = sceneSync.instantiate('Hat', {name: obj.name, sync: true}, true);
+			var myHat = sceneSync.instantiate('Hat', {name: obj.name, isOnHead: true}, true);
 			//Add follow behavior here, not in createHat, since only the local hat
 			//follows this user (although its position is synced to all users).
-			myHat.addBehavior(FollowUserBehavior({scene: sim.scene, ray: event.ray}));
+			myHat.addBehavior(FollowUserBehavior({scene: sim.scene}));
 			selectedHat = myHat;
 		});
 	}
@@ -110,7 +125,17 @@ HatsApp = (function(){
 		var objTemplate = objTemplateByName[name];
 		if (!objTemplate) throw Error('Error creating hat ' + name);
 		var obj = objTemplate.clone();
-		if (initData.sync) {
+		if (initData.isOnHead) {
+			obj.position.copy(head.position);
+
+			//TODO: Get this working. Hat is placed relative to head joint.
+			//obj.position.x += offset.x;
+			//obj.position.y += offset.y;
+			//obj.position.z += offset.z;
+			//TODO: rotation offset?
+
+			//TODO: Get this working. Hat doesn't seem to follow head.
+			head.add(obj);//hat follows head joint
 			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
 				position: true, rotation: true, auto: true
 			}));
@@ -122,19 +147,13 @@ HatsApp = (function(){
 	function FollowUserBehavior(config){
 		config = config || {};
 		if (config.scene === undefined) throw Error('config.scene required');
-		if (config.ray === undefined) throw Error('config.ray required');
 		var object3d;
-		var ray;
 		var offset;
 
 		function awake(o) {
 			object3d = o;
 			offset = object3d.userData.offset;
 			if(!offset) throw Error('Missing offset');
-			ray = config.ray;
-		  config.scene.addEventListener('cursormove', function(event){
-				ray = event.ray;
-		  });
 		}
 
 		function start() {
@@ -142,13 +161,7 @@ HatsApp = (function(){
 		}
 
 		function update(deltatime) {
-			object3d.position.copy(ray.origin);//update position
-			var pointOnRay = ray.origin.clone().add(ray.direction);
-			object3d.lookAt(pointOnRay);//update rotation
-			object3d.translateX(offset.x);
-			object3d.translateY(offset.y);
-			object3d.translateZ(offset.z);
-			//TODO: transform rotation
+			//TODO: Do we need anything here?
 		}
 
 		return {
