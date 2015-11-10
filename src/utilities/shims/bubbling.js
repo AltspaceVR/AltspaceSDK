@@ -81,7 +81,16 @@
 
 		if ( event.bubbles && this.parent && this.parent.dispatchEvent && ! shouldStopPropagation ) {
 
-			dispatchEvent.call( this.parent, event );
+			//clone event to prevent changing currentTarget for already dispatched events.
+			var clone = function(obj) {
+		    var copy = obj.constructor();
+		    for (var attr in obj) {
+	        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+		    }
+		    return copy;
+			};
+
+			dispatchEvent.call( this.parent, clone(event) );
 
 		}
 

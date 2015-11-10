@@ -20,15 +20,16 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  checking to see if the instance has already been initialized. The callback is passed a boolean that 
  *  is true if this is the first callback that has been called for this sync instance.
  *  This is primarily useful for setting up any objects that should only be created once for an instance, and is not necessary otherwise.
+ * @param {Function} [config.autoSendRateMS=100] When auto-syncing, the interval at which to send updates.
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
+    if (config.autoSendRateMS === undefined) config.autoSendRateMS = 100;
+
     var sceneRef = instanceRef.child('scene');
     config = config || {};
     var instantiators = config.instantiators || {};
     var destroyers = config.destroyers || {};
-
-    var autoSendRateMS = 100;
 
     var syncBehaviors = [];
 
@@ -133,7 +134,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     }
 
     function awake(o) {
-        setInterval(autoSendAll, autoSendRateMS);
+        setInterval(autoSendAll, config.autoSendRateMS);
     }
 
     /**
@@ -186,7 +187,7 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         type: 'SceneSync'
     };
     Object.defineProperty(exports, 'autoSendRateMS', {
-        get: function () { return autoSendRateMS; }
+        get: function () { return config.autoSendRateMS; }
     });
     return exports;
 };
