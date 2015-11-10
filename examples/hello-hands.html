@@ -25,6 +25,7 @@ for(var i = 0, max = text.length; i < max; i++){
 	var geometry = new THREE.TextGeometry(text.charAt(i));
 	var material = new THREE.MeshBasicMaterial({color:'green'});
 	var mesh = new THREE.Mesh(geometry, material);
+
 	mesh.scale.z = 0.3;
 	mesh.scale.multiplyScalar(0.3);
 	mesh.position.z = 30;
