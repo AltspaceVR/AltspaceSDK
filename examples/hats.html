@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset=utf-8>
@@ -42,10 +42,12 @@ HatsApp = (function(){
 		sim = altspace.utilities.Simulation();
 		var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
 		Promise.all(promises).then(function(array) {
-			skeleton = array[0];
+	    skeleton = array[0];
+			enclosure = array[1];
+
+	    sim.scene.add(skeleton);
 			head = skeleton.getJoint('Head');//head is an Object3D
 			if (!head) throw Error('Failed to get head joint');
-			enclosure = array[1];
 		  scale = (1.0 * config.modelsPixelsPerMeter) / enclosure.pixelsPerMeter;
 		  loadModels();
 		}).catch(function(err) {
@@ -126,8 +128,15 @@ HatsApp = (function(){
 		var obj = objTemplate.clone();
 		sim.scene.add(obj);
 		if (initData.isOnHead) {
-			//TODO: Why does hat fail to follow head if we do head.add(obj) here. 
-			//For now, copy the head position in the update method.
+			obj.position.set(0, 0, 0);
+			head.add(obj);
+
+			//Hat should sit on top of head.
+			//TODO: add rotation offset
+			var offset = obj.userData.offset;
+			obj.translateX(offset.x);
+			obj.translateY(offset.y);
+			obj.translateZ(offset.z);
 			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
 				position: true, rotation: true, auto: true
 			}));
@@ -139,27 +148,17 @@ HatsApp = (function(){
 		config = config || {};
 		if (config.scene === undefined) throw Error('config.scene required');
 		var object3d;
-		var offset;
 
 		function awake(o) {
 			object3d = o;
-			offset = object3d.userData.offset;
-			if(!offset) throw Error('Missing offset');
 		}
 
 		function start() {
-			update();
+			// nothing for now			
 		}
 
 		function update(deltatime) {
-			object3d.position.copy(head.position);
-			object3d.rotation.copy(head.rotation);
-
-			//Hat should sit on top of head.
-			//TODO: add rotation offset
-			object3d.translateX(offset.x);
-			object3d.translateY(offset.y);
-			object3d.translateZ(offset.z);
+			// nothing for now			
 		}
 
 		return {
