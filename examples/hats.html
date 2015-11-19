@@ -16,14 +16,14 @@ if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view t
 HatsApp = (function(){
 
 	var config = {
-		models: [
-			{name: 'wizardhat',  position: {x: -450, y: 0, z: 0}, offset: {x: 0, y: 25, z: -35}},
-			{name: 'strawhat',   position: {x: -300, y: 0, z: 0}, offset: {x: 0, y: 35, z: -35}},
-			{name: 'tophat',     position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 25, z: -35}},
-			{name: 'LavaHelmet', position: {x:    0, y: 0, z: 0}, offset: {x: 0, y: 25, z: -35}},
-			{name: 'redhat',     position: {x:  150, y: 0, z: 0}, offset: {x: 0, y: 25, z: -35}},
-			{name: 'hardhat',    position: {x:  300, y: 0, z: 0}, offset: {x: 0, y: 25, z: -35}}
-		],
+		models: {
+			'wizardhat': { position: {x: -450, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
+			'strawhat': { position: {x: -300, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
+			'tophat': { position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
+			'LavaHelmet': { position: {x: 0, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
+			'redhat': { position: {x:  150, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
+			'hardhat': { position: {x:  300, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}}
+		},
 		modelsPixelsPerMeter: 400,
 
 	};
@@ -31,6 +31,7 @@ HatsApp = (function(){
 	var sim;
 	var sceneSync;
 	var objTemplateByName = {};
+	var modelNames = [];
 	var selectedHat;
 	var initialHats = [];
 	var loadRequest;
@@ -43,6 +44,7 @@ HatsApp = (function(){
 		var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
 		Promise.all(promises).then(function(array) {
 			skeleton = array[0];
+			sim.scene.add(skeleton);
 			head = skeleton.getJoint('Head');//head is an Object3D
 			if (!head) throw Error('Failed to get head joint');
 			enclosure = array[1];
@@ -62,8 +64,9 @@ HatsApp = (function(){
 			TRACE: false,//enable for debugging logs
 		});
 		loadRequest = new multiloader.LoadRequest();
-		for (var i=0; i < config.models.length; i++) {
-			var name = config.models[i].name;
+		modelNames = Object.keys(config.models);
+		for (var i=0; i < modelNames.length; i++) {
+			var name = modelNames[i];
 			loadRequest.objUrls.push(name+'.obj');
 			loadRequest.mtlUrls.push(name+'.mtl');
 		}
@@ -74,14 +77,11 @@ HatsApp = (function(){
 
 		for (var i=0; i < loadRequest.objects.length; i++) {
 			var objTemplate = loadRequest.objects[i];
-			var name = config.models[i].name;//guaranteed to be in same order
+			var name = modelNames[i];//guaranteed to be in same order
 			if (!objTemplate) throw Error('Error loading hat model ' + name);
-			var v3 = new THREE.Vector3();
-			v3.copy(config.models[i].offset);
 
 			objTemplate.name = name;
-			objTemplate.userData.offset = v3;
-			objTemplate.position.copy(config.models[i].position);//initial position
+			objTemplate.position.copy(config.models[name].position);//initial position
 			objTemplate.scale.set(scale, scale, scale);
 			objTemplateByName[name] = objTemplate;//we'll clone in createHat
 
@@ -112,9 +112,15 @@ HatsApp = (function(){
 			if (selectedHat) sceneSync.destroy(selectedHat);
 			//destroyOnDisconnect=true so when user leaves, their hat vanishes.
 			var myHat = sceneSync.instantiate('Hat', {name: obj.name, isOnHead: true}, true);
-			//Add follow behavior here, not in createHat, since only the local hat
-			//follows this user (although its position is synced to all users).
-			myHat.addBehavior(FollowUserBehavior({scene: sim.scene}));
+			sim.scene.remove(myHat);
+			head.add(myHat);
+			//Add to head, not in createHat, since only local hat follows this user.
+			//Use offset to position hat on top of head.
+			var offset = new THREE.Vector3();
+			offset.copy(config.models[obj.name].offset);
+			myHat.translateX(offset.x);
+			myHat.translateY(offset.y);
+			myHat.translateZ(offset.z);
 			selectedHat = myHat;
 		});
 	}
@@ -126,48 +132,12 @@ HatsApp = (function(){
 		var obj = objTemplate.clone();
 		sim.scene.add(obj);
 		if (initData.isOnHead) {
-			//TODO: Why does hat fail to follow head if we do head.add(obj) here. 
-			//For now, copy the head position in the update method.
+			obj.position.set(0, 0, 0);
 			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
 				position: true, rotation: true, auto: true
 			}));
 		}
 		return obj;
-	}
-
-	function FollowUserBehavior(config){
-		config = config || {};
-		if (config.scene === undefined) throw Error('config.scene required');
-		var object3d;
-		var offset;
-
-		function awake(o) {
-			object3d = o;
-			offset = object3d.userData.offset;
-			if(!offset) throw Error('Missing offset');
-		}
-
-		function start() {
-			update();
-		}
-
-		function update(deltatime) {
-			object3d.position.copy(head.position);
-			object3d.rotation.copy(head.rotation);
-
-			//Hat should sit on top of head.
-			//TODO: add rotation offset
-			object3d.translateX(offset.x);
-			object3d.translateY(offset.y);
-			object3d.translateZ(offset.z);
-		}
-
-		return {
-			awake: awake,
-			start: start,
-			update: update,
-		};
-
 	}
 
 	return {
