@@ -22,7 +22,7 @@ HatsApp = (function(){
 			'tophat': { position: {x: -50, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
 			'LavaHelmet': { position: {x: -10, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
 			'redhat': { position: {x: 40, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
-			'hardhat': { position: {x:  90, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}}
+			'hardhat': { position: {x: 90, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}}
 		},
 		modelScaleFactor: 1 / 60,
 
@@ -46,10 +46,9 @@ HatsApp = (function(){
 			skeleton = array[0];
 			sim.scene.add(skeleton);
 			head = skeleton.getJoint('Head');//head is an Object3D
-			if (!head) throw Error('Failed to get head joint');
 			enclosure = array[1];
-		  scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
-		  loadModels();
+			scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
+			loadModels();
 		}).catch(function(err) {
 			console.log('Failed to get Altspace browser properties', err);
 		});
