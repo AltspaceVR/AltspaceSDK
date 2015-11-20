@@ -17,14 +17,14 @@ HatsApp = (function(){
 
 	var config = {
 		models: {
-			'wizardhat': { position: {x: -450, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
-			'strawhat': { position: {x: -300, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
-			'tophat': { position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
-			'LavaHelmet': { position: {x: 0, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
-			'redhat': { position: {x:  150, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}},
-			'hardhat': { position: {x:  300, y: 0, z: 0}, offset: {x: 0, y: 15, z: 0}}
+			'wizardhat': { position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
+			'strawhat': { position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
+			'tophat': { position: {x: -50, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
+			'LavaHelmet': { position: {x: -10, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
+			'redhat': { position: {x: 40, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
+			'hardhat': { position: {x:  90, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}}
 		},
-		modelsPixelsPerMeter: 400,
+		modelScaleFactor: 1 / 60,
 
 	};
 
@@ -48,7 +48,7 @@ HatsApp = (function(){
 			head = skeleton.getJoint('Head');//head is an Object3D
 			if (!head) throw Error('Failed to get head joint');
 			enclosure = array[1];
-		  scale = (1.0 * config.modelsPixelsPerMeter) / enclosure.pixelsPerMeter;
+		  scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
 		  loadModels();
 		}).catch(function(err) {
 			console.log('Failed to get Altspace browser properties', err);
@@ -81,7 +81,10 @@ HatsApp = (function(){
 			if (!objTemplate) throw Error('Error loading hat model ' + name);
 
 			objTemplate.name = name;
-			objTemplate.position.copy(config.models[name].position);//initial position
+			var spawnPosition = new THREE.Vector3();
+			spawnPosition.copy(config.models[name].position);
+			spawnPosition.multiplyScalar(scale);
+			objTemplate.position.copy(spawnPosition);//initial position
 			objTemplate.scale.set(scale, scale, scale);
 			objTemplateByName[name] = objTemplate;//we'll clone in createHat
 
@@ -118,6 +121,7 @@ HatsApp = (function(){
 			//Use offset to position hat on top of head.
 			var offset = new THREE.Vector3();
 			offset.copy(config.models[obj.name].offset);
+			offset.multiplyScalar(scale);
 			myHat.translateX(offset.x);
 			myHat.translateY(offset.y);
 			myHat.translateZ(offset.z);
