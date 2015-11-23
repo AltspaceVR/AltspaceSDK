@@ -71,14 +71,27 @@ SolarSystemApp = (function(){
 	var loadRequest;
 
 	function main() {
-		sim = altspace.utilities.Simulation();
-		if (altspace.inClient) {
-			sim.scene.position.y -= 1024/3;//TODO: get actual size of enclosure
-		}
-		compactMode = !altspace.inClient || window.innerHeight < 800;
-		compactMode ? solarSystem.scale.set(20, 20, 20) : solarSystem.scale.set(5, 5, 5);
+		sim = window.sim = altspace.utilities.Simulation();
 		sim.scene.add(solarSystem);
-		loadModels();
+		if (altspace.inClient) {
+			altspace.getEnclosure().then(function (enclosure) {
+				sim.scene.position.y -= enclosure.innerHeight / enclosure.pixelsPerMeter / 3;
+				// HACK: Personal web panels are 1280 pixels.
+				compactMode = enclosure.innerWidth > 1024;
+				if (compactMode) {
+					solarSystem.scale.multiplyScalar(enclosure.pixelsPerMeter / 150);
+				}
+				else {
+					solarSystem.scale.multiplyScalar(enclosure.pixelsPerMeter / 80);
+				}
+				loadModels();
+			});
+		}
+		else {
+			compactMode = true;
+			solarSystem.scale.set(20, 20, 20);
+			loadModels();
+		}
 	}
 
 	function loadModels(){// Load up the models
@@ -146,7 +159,8 @@ SolarSystemApp = (function(){
 					obj.position.x = 0;
 					obj.position.y = 0;
 					obj.position.z = 0;
-					var scale = altspace.inClient ? 3.6 : 0.4 ;//We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
+					// We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
+					var scale = altspace.inClient ? 3.6 : 0.4 ;
 					obj.scale.x = scale;
 					obj.scale.y = scale;
 					obj.scale.z = scale;
