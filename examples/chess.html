@@ -55,7 +55,9 @@ ChessApp = (function(){
 		});
 
 		if (alt.inClient) {
-			gameObjects.position.y -= 1024/2;//TODO: get actual size of enclosure
+			altspace.getEnclosure().then(function (enclosure) {
+				gameObjects.position.y -= enclosure.innerHeight / 2;
+			});
 		} else {
 			sim.camera.position.z = CONFIG.boardSize;
 			sim.camera.position.y = CONFIG.boardSize + 100;
