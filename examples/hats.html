@@ -114,16 +114,7 @@ HatsApp = (function(){
 			if (selectedHat) sceneSync.destroy(selectedHat);
 			//destroyOnDisconnect=true so when user leaves, their hat vanishes.
 			var myHat = sceneSync.instantiate('Hat', {name: obj.name, isOnHead: true}, true);
-			sim.scene.remove(myHat);
-			head.add(myHat);
-			//Add to head, not in createHat, since only local hat follows this user.
-			//Use offset to position hat on top of head.
-			var offset = new THREE.Vector3();
-			offset.copy(config.models[obj.name].offset);
-			offset.multiplyScalar(scale);
-			myHat.translateX(offset.x);
-			myHat.translateY(offset.y);
-			myHat.translateZ(offset.z);
+			myHat.addBehavior(FollowBehavior());
 			selectedHat = myHat;
 		});
 	}
@@ -135,12 +126,36 @@ HatsApp = (function(){
 		var obj = objTemplate.clone();
 		sim.scene.add(obj);
 		if (initData.isOnHead) {
-			obj.position.set(0, 0, 0);
 			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
 				position: true, rotation: true, auto: true
 			}));
 		}
 		return obj;
+	}
+
+	function FollowBehavior() {
+
+		var object3d;
+		var offset;
+
+		function awake(o) {
+			object3d = o;
+			offset = new THREE.Vector3();
+			offset.copy(config.models[object3d.name].offset);
+			offset.multiplyScalar(scale);
+		}
+
+		function update(deltaTime) {
+			object3d.position.copy(head.position);
+			object3d.quaternion.copy(head.quaternion);
+			//Use offset to position hat on top of head.
+			object3d.translateX(offset.x);
+			object3d.translateY(offset.y);
+			object3d.translateZ(offset.z);
+		}
+
+		return { awake: awake, update: update };
+
 	}
 
 	return {
