@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset=utf-8>
@@ -17,12 +17,12 @@ HatsApp = (function(){
 
 	var config = {
 		models: {
-			'wizardhat': { position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
-			'strawhat': { position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
-			'tophat': { position: {x: -50, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
-			'LavaHelmet': { position: {x: -10, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
-			'redhat': { position: {x: 40, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}},
-			'hardhat': { position: {x: 90, y: 0, z: 0}, offset: {x: 0, y: 6, z: 0}}
+			'wizardhat': { position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
+			'strawhat': { position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
+			'tophat': { position: {x: -50, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
+			'LavaHelmet': { position: {x: -10, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
+			'redhat': { position: {x: 40, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
+			'hardhat': { position: {x: 90, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}}
 		},
 		modelScaleFactor: 1 / 60,
 
@@ -88,7 +88,8 @@ HatsApp = (function(){
 			objTemplateByName[name] = objTemplate;//we'll clone in createHat
 
 			//Create one hat (not synced) from template
-			var obj = createHat({name: objTemplate.name, isOnHead: false});
+			var obj = objTemplate.clone();
+			sim.scene.add(obj);
 			initialHats.push(obj);
 		}
 
@@ -113,8 +114,8 @@ HatsApp = (function(){
 		obj.addEventListener('cursordown', function(event) {
 			if (selectedHat) sceneSync.destroy(selectedHat);
 			//destroyOnDisconnect=true so when user leaves, their hat vanishes.
-			var myHat = sceneSync.instantiate('Hat', {name: obj.name, isOnHead: true}, true);
-			myHat.addBehavior(FollowBehavior());
+			var initData = {name: obj.name, ownerSceneUuid: sim.scene.uuid};
+			var myHat = sceneSync.instantiate('Hat', initData, true);
 			selectedHat = myHat;
 		});
 	}
@@ -124,43 +125,49 @@ HatsApp = (function(){
 		var objTemplate = objTemplateByName[name];
 		if (!objTemplate) throw Error('Error creating hat ' + name);
 		var obj = objTemplate.clone();
-		sim.scene.add(obj);
-		if (initData.isOnHead) {
-			obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
-				position: true, rotation: true, auto: true
-			}));
+
+		var isOwner = (initData.ownerSceneUuid === sim.scene.uuid);
+		if (isOwner) {
+			var offset = new THREE.Vector3();
+			offset.copy(config.models[obj.name].offset);
+			offset.multiplyScalar(scale);
+			obj.addBehavior(FollowBehavior({ offset: offset, joint: head }));
 		}
+		obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
+			position: true, rotation: true
+		}));
+		sim.scene.add(obj);
 		return obj;
 	}
 
-	function FollowBehavior() {
+	function FollowBehavior(config) {
+
+		var offset = config.offset;
+		var joint = config.joint;
 
 		var object3d;
-		var offset;
+		var sync;
 
 		function awake(o) {
 			object3d = o;
-			offset = new THREE.Vector3();
-			offset.copy(config.models[object3d.name].offset);
-			offset.multiplyScalar(scale);
+			sync = object3d.getBehaviorByType('Object3DSync');
 		}
 
-		function update(deltaTime) {
-			object3d.position.copy(head.position);
-			object3d.quaternion.copy(head.quaternion);
+		function update() {
+			object3d.position.copy(joint.position);
+			object3d.rotation.copy(joint.rotation);
 			//Use offset to position hat on top of head.
 			object3d.translateX(offset.x);
 			object3d.translateY(offset.y);
 			object3d.translateZ(offset.z);
+			sync.enqueueSend();
 		}
 
 		return { awake: awake, update: update };
 
 	}
 
-	return {
-		main: main,
-	}
+	return { main: main };
 
 }());
 
