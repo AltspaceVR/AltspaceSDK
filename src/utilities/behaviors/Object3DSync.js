@@ -17,6 +17,10 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  be synced
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
  *  automatically. Not currently recommended.
+ * @param {Boolean} [config.world=false] Whether world coordiantes should
+ *  be sent when synchronizing position and rotation, instead of the
+ *  transformation relative to the object's parent.  Use if synced object
+ *  is a child (e.g. of the tracking skeleton) only in the sender scene.
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
@@ -94,26 +98,38 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     }
 
     function send() {
+
+        var position, quaternion, scale;
+        if (config.world) {
+            position = new THREE.Vector3();
+            quaternion = new THREE.Quaternion(); 
+            scale = new THREE.Vector3();
+            object3d.matrixWorld.decompose(position, quaternion, scale); 
+        } else {
+            position = object3d.position;
+            quaternion = object3d.quaternion;
+            scale = object3d.scale;
+        }
         if (config.position) {
             positionRef.set({
-                x: object3d.position.x,
-                y: object3d.position.y,
-                z: object3d.position.z
+                x: position.x,
+                y: position.y,
+                z: position.z
             });
         }
         if (config.rotation) {
             rotationRef.set({
-                x: object3d.quaternion.x,
-                y: object3d.quaternion.y,
-                z: object3d.quaternion.z,
-                w: object3d.quaternion.w
+                x: quaternion.x,
+                y: quaternion.y,
+                z: quaternion.z,
+                w: quaternion.w
             });
         }
         if (config.scale) {
             scaleRef.set({
-                x: object3d.scale.x,
-                y: object3d.scale.y,
-                z: object3d.scale.z
+                x: scale.x,
+                y: scale.y,
+                z: scale.z
             });
         }
         if (config.syncData) {
