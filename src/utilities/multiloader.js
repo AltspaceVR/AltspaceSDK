@@ -1,10 +1,7 @@
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 
-/**
- * Asynchronous loading of models using THREE.OBJMTLLoader
- * @module altspace/utilities/multiloader
- */
+
 altspace.utilities.multiloader = (function(){
 
   var loader;
