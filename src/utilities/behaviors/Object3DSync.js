@@ -51,6 +51,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     //TODO: lerp
     function setupReceive() {
         batchRef.on('value', function (snapshot) {
+            if (config.syncData && !object3d.userData.syncData) {
+                object3d.userData.syncData = {};//init here so app can assume it exists
+            }
             var value = snapshot.val();
             if(!value) return;
             if (value.senderId === scene.uuid) return;//We sent this batch, ignore it.
@@ -64,9 +67,6 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
                 object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
             }
             if (config.syncData) {
-                if (!object3d.userData.syncData) {//init here so app can assume it exists
-                    object3d.userData.syncData = {};
-                }
                 object3d.userData.syncData = value.syncData;
             }
         });
