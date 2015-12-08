@@ -34,6 +34,10 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var ref;
     var key;
 
+    var position = new THREE.Vector3();
+    var quaternion = new THREE.Quaternion(); 
+    var scale = new THREE.Vector3();
+
     var sendEnqueued = false;
 
     var batchRef;
@@ -51,16 +55,13 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             if(!value) return;
             if (value.senderId === scene.uuid) return;//We sent this batch, ignore it.
             if (config.position) {
-                var position = value.position;
-                object3d.position.set(position.x, position.y, position.z);
+                object3d.position.set(value.position.x, value.position.y, value.position.z);
             }
             if (config.rotation) {
-                var quaternion = value.quaternion;
-                object3d.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+                object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
             }
             if (config.scale) {
-                var scale = value.scale;
-                object3d.scale.set(scale.x, scale.y, scale.z);
+                object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
             }
             if (config.syncData) {
                 if (!object3d.userData.syncData) {//init here so app can assume it exists
@@ -87,11 +88,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     function send() {
 
         var batch = {};
-        var position, quaternion, scale;
         if (config.world) {
-            position = new THREE.Vector3();
-            quaternion = new THREE.Quaternion(); 
-            scale = new THREE.Vector3();
             object3d.matrixWorld.decompose(position, quaternion, scale); 
         } else {
             position = object3d.position;
