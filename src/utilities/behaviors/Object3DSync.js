@@ -40,23 +40,20 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 
     var sendEnqueued = false;
 
-    var batchRef;
-
     function link(objectRef) {
         ref = objectRef;
         key = ref.key();
-        batchRef = ref.child('batch');
     }
 
     //TODO: lerp
     function setupReceive() {
-        batchRef.on('value', function (snapshot) {
+        ref.on('value', function (snapshot) {
             if (config.syncData && !object3d.userData.syncData) {
                 object3d.userData.syncData = {};//init here so app can assume it exists
             }
             var value = snapshot.val();
-            if(!value) return;
-            if (value.senderId === scene.uuid) return;//We sent this batch, ignore it.
+            //Return if no updates sent yet, or if we sent this update.
+            if(!value.senderId || value.senderId === scene.uuid) return;
             if (config.position) {
                 object3d.position.set(value.position.x, value.position.y, value.position.z);
             }
@@ -87,8 +84,10 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 
     function send() {
 
-        var batch = {};
+        var update = {};
         if (config.world) {
+            object3d.updateMatrixWorld();
+            object3d.updateMatrix();
             object3d.matrixWorld.decompose(position, quaternion, scale); 
         } else {
             position = object3d.position;
@@ -96,14 +95,14 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             scale = object3d.scale;
         }
         if (config.position) {
-            batch.position = {
+            update.position = {
                 x: position.x,
                 y: position.y,
                 z: position.z
             };
         }
         if (config.rotation) {
-            batch.quaternion = {
+            update.quaternion = {
                 x: quaternion.x,
                 y: quaternion.y,
                 z: quaternion.z,
@@ -111,18 +110,18 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             };
         }
         if (config.scale) {
-            batch.scale = {
+            update.scale = {
                 x: scale.x,
                 y: scale.y,
                 z: scale.z
             };
         }
         if (config.syncData) {
-            batch.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
+            update.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
         }
-        if (Object.keys(batch).length > 0) {
-            batch.senderId = scene.uuid;//Use uuid of the THREE.Scene as senderId.
-            batchRef.set(batch);
+        if (Object.keys(update).length > 0) {
+            update.senderId = scene.uuid;//Use uuid of the THREE.Scene as senderId.
+            ref.update(update);
         }
     }
 
