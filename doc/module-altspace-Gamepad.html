@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Drag - Documentation</title>
+    <title>Gamepad - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Drag</h1>
+    <h1 class="page-title">Gamepad</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="behaviors.html">altspace/utilities/behaviors</a>.</span>
+            <span class="ancestors"><a href="module-altspace.html">altspace</a>~</span>
         
-        Drag
+        Gamepad
         </h2>
         
     
@@ -56,14 +56,14 @@
 
     
 
-    <h4 class="name" id="Drag"><span class="type-signature"></span>new Drag<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Gamepad"><span class="type-signature"></span>new Gamepad<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>A behavior that makes an object draggable along a plane.</p>
+    <p>Represents a gamepad. Can be retrived via <a href="module-altspace.html#getGamepads">altspace.getGamepads</a>. See the official <a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad">Gamepad</a> spec for more details.</p>
 </div>
 
 
@@ -72,70 +72,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>config</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Specify the axes along which the object can be 
- dragged.
- E.g. To constraint th object to an XY plane: <code>{x: true, y: true}</code><br> Each axis can also be an object specifying the minimum and maximum limits
- of the constraint. E.g. <code>{x: {min: -10, max: 20}, y: true}</code><br> Currently you must specify exactly two axes.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -207,6 +143,159 @@
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="preventDefault"><span class="type-signature"></span>preventDefault<span class="signature">(axes, buttons)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Prevents default actions on specific axes and buttons.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>axes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An array of booleans, arranged according to the axis order of the layout. A true value for a given location will block the default action for that axis.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>buttons</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An array of booleans, arranged according to the button order of the layout. A true value for a given location will block the default action for that button.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
