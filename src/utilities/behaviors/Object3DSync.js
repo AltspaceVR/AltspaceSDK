@@ -87,10 +87,10 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 
     function send() {
 
-        object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
 
         var batch = {};
         if (config.world) {
+            object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
             object3d.matrixWorld.decompose(position, quaternion, scale); 
         } else {
             position = object3d.position;
