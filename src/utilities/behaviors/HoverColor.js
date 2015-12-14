@@ -6,6 +6,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 /**
  * Changes the color of an object when cursor hovers over it.
  * @class HoverColor
+ * @param {Object} [config] Optional parameters.
  * @param {String} [config.event='cursorenter'] Specify the name of event which
  *  triggers the color change.  Default is 'cursorenter' for a hover effect.
  * @param {String} [config.color='yellow'] Color specified as a hexadecimal or
