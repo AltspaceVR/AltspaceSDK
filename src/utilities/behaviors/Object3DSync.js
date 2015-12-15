@@ -17,6 +17,10 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  be synced
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
  *  automatically. Not currently recommended.
+ * @param {Boolean} [config.world=false] Whether world coordiantes should
+ *  be sent when synchronizing position and rotation, instead of the
+ *  transformation relative to the object's parent.  Use if synced object
+ *  is a child (e.g. of the tracking skeleton) only in the sender scene.
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
@@ -26,58 +30,46 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     if (config.scale === undefined) config.scale = true;
     if (config.syncData === undefined) config.syncData = true;*/
     var object3d;
+    var scene;
     var ref;
     var key;
 
+    var position = new THREE.Vector3();
+    var quaternion = new THREE.Quaternion(); 
+    var scale = new THREE.Vector3();
+
     var sendEnqueued = false;
 
-    var positionRef;
-    var rotationRef;
-    var scaleRef;
-    var syncDataRef;
+    var batchRef;
 
     function link(objectRef) {
         ref = objectRef;
         key = ref.key();
-        positionRef = ref.child('position');
-        rotationRef = ref.child('rotation');
-        scaleRef = ref.child('scale');
-        syncDataRef = ref.child('syncData');
+        batchRef = ref.child('batch');
     }
 
     //TODO: lerp
     function setupReceive() {
-        if (config.position) {
-            positionRef.on('value', function (snapshot) {
-                var value = snapshot.val();
-                if(!value) return;
-                object3d.position.set(value.x, value.y, value.z);
-            });
-        }
-        if (config.rotation) {
-            rotationRef.on('value', function (snapshot) {
-                var value = snapshot.val();
-                if (!value) return;
-                object3d.quaternion.set(value.x, value.y, value.z, value.w);
-            });
-        }
-        if (config.scale) {
-            scaleRef.on('value', function (snapshot) {
-                var value = snapshot.val();
-                if (!value) return;
-                object3d.scale.set(value.x, value.y, value.z);
-            });
-        }
-        if (config.syncData) {
-            if (!object3d.userData.syncData) {//init here so app can assume it exists
-                object3d.userData.syncData = {};
+        batchRef.on('value', function (snapshot) {
+            if (config.syncData && !object3d.userData.syncData) {
+                object3d.userData.syncData = {};//init here so app can assume it exists
             }
-            syncDataRef.on('value', function (snapshot) {
-                var value = snapshot.val();
-                if (!value) return;
-                object3d.userData.syncData = value;
-            });
-        }
+            var value = snapshot.val();
+            if(!value) return;
+            if (value.senderId === scene.uuid) return;//We sent this batch, ignore it.
+            if (config.position) {
+                object3d.position.set(value.position.x, value.position.y, value.position.z);
+            }
+            if (config.rotation) {
+                object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
+            }
+            if (config.scale) {
+                object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
+            }
+            if (config.syncData) {
+                object3d.userData.syncData = value.syncData;
+            }
+        });
     }
 
 
@@ -94,30 +86,45 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     }
 
     function send() {
+
+
+        var batch = {};
+        if (config.world) {
+            object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
+            object3d.matrixWorld.decompose(position, quaternion, scale); 
+        } else {
+            position = object3d.position;
+            quaternion = object3d.quaternion;
+            scale = object3d.scale;
+        }
         if (config.position) {
-            positionRef.set({
-                x: object3d.position.x,
-                y: object3d.position.y,
-                z: object3d.position.z
-            });
+            batch.position = {
+                x: position.x,
+                y: position.y,
+                z: position.z
+            };
         }
         if (config.rotation) {
-            rotationRef.set({
-                x: object3d.quaternion.x,
-                y: object3d.quaternion.y,
-                z: object3d.quaternion.z,
-                w: object3d.quaternion.w
-            });
+            batch.quaternion = {
+                x: quaternion.x,
+                y: quaternion.y,
+                z: quaternion.z,
+                w: quaternion.w
+            };
         }
         if (config.scale) {
-            scaleRef.set({
-                x: object3d.scale.x,
-                y: object3d.scale.y,
-                z: object3d.scale.z
-            });
+            batch.scale = {
+                x: scale.x,
+                y: scale.y,
+                z: scale.z
+            };
         }
         if (config.syncData) {
-            syncDataRef.set(object3d.userData.syncData);//TODO: see if this needs to be parsed and stringified
+            batch.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
+        }
+        if (Object.keys(batch).length > 0) {
+            batch.senderId = scene.uuid;//Use uuid of the THREE.Scene as senderId.
+            batchRef.set(batch);
         }
     }
 
@@ -126,8 +133,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         sendEnqueued = false;
     }
 
-    function awake(o) {
+    function awake(o, s) {
         object3d = o;
+        scene = s;
 
         setupReceive();
     }
