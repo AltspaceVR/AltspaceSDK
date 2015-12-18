@@ -3,12 +3,20 @@ window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
-
+/**
+ * Changes the color of an object when cursor hovers over it.
+ * @class HoverColor
+ * @param {Object} [config] Optional parameters.
+ * @param {String} [config.event='cursorenter'] Specify the name of event which
+ *  triggers the color change.  Default is 'cursorenter' for a hover effect.
+ * @param {String} [config.color='yellow'] Color specified as a hexadecimal or
+ *  a CSS-style string, for example, "red", "#ff0000", or "rgb(250, 0, 0)".
+ * @memberof module:altspace/utilities/behaviors
+ */
 altspace.utilities.behaviors.HoverColor = function(config){
 
   config = config || {};
 
-  if (config.scene === undefined) throw Error('Must pass config.scene');//TODO: better way to get the scene
   //Default is to trigger color change on cursorenter/cursorleave events,
   //also support triggering on cursordown/cursorup events.
   if (config.event === undefined) config.event = 'cursorenter';
@@ -16,18 +24,18 @@ altspace.utilities.behaviors.HoverColor = function(config){
     throw Error('Expected config.event "cursorenter" or "cursordown"');
   }
   if (config.color === undefined) config.color = new THREE.Color('yellow');
-  if (config.TRACE === undefined) config.TRACE = false;
 
   var object3d;
   var cursordownObject;
   var cursorenterObject;
-  var TRACE = config.TRACE;
+  var scene;
 
 
-  function awake(o) {
+  function awake(o, s) {
     object3d = o;
+    scene = s;
     object3d.addEventListener('cursordown', cursordown);
-    config.scene.addEventListener('cursorup', cursorupScene);
+    scene.addEventListener('cursorup', cursorupScene);
     if (config.event === 'cursorenter') {
       object3d.addEventListener('cursorenter', cursorenter);
       object3d.addEventListener('cursorleave', cursorleave);
@@ -35,7 +43,6 @@ altspace.utilities.behaviors.HoverColor = function(config){
   }
 
   function cursordown(event){
-    if (TRACE) console.log('setting cursordownObject', object3d);
     cursordownObject = object3d;
     if (config.event === 'cursordown' ){
       setColor(cursordownObject);
@@ -46,7 +53,6 @@ altspace.utilities.behaviors.HoverColor = function(config){
     //ignore hover events if a different object is selected,
     //for example during a drag we don't want to change highlight
     if (cursordownObject && cursordownObject !== object3d){
-      if (trace) console.log('ignore hover, other object selected', cursordownObject);
       return;
     } 
     if (cursorenterObject){
@@ -64,7 +70,6 @@ altspace.utilities.behaviors.HoverColor = function(config){
   }
 
   function cursorupScene(event){
-    if (TRACE) console.log('clearning cursordownObject', cursordownObject);
     if (config.event === 'cursordown' && cursordownObject ){
       unsetColor(cursordownObject);
     }
@@ -72,7 +77,6 @@ altspace.utilities.behaviors.HoverColor = function(config){
   }
 
   function setColor(o){
-    if (TRACE) console.log('setColor', o);
     if (o.material && o.material.color){
       o.userData.origColor = o.material.color;
       o.material.color = config.color;  
@@ -85,7 +89,6 @@ altspace.utilities.behaviors.HoverColor = function(config){
   }
 
   function unsetColor(o){
-    if (TRACE) console.log('unsetColor', o);
     if (o.material && o.material.color){
       if (!o.userData.origColor){
         console.error('Cannot unsetColor, no userData.origColor for object', o);
