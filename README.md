@@ -94,6 +94,7 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 * Using GIF images for textures
 * Line Geometries
 * Dynamic meshes, skinned meshes
+* Geometries with more than 65,000 vertices (Note: Calculated as <number of faces> * 3)
 
 **Habits of Successful AltspaceVR Web Apps:**
 * Use power-of-two dimensions on your textures for improved performance.
