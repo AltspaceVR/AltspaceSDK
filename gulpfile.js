@@ -87,13 +87,14 @@ gulp.task('altspace_js', function () {
             './src/utilities/shims/cursor.js',
             './src/utilities/shims/bubbling.js',
 
-            './src/utilities/behaviors/SceneSync.js',
-            './src/utilities/behaviors/Object3DSync.js',
             './src/utilities/behaviors/Bob.js',
             './src/utilities/behaviors/ButtonStateStyle.js',
             './src/utilities/behaviors/Drag.js',
-            './src/utilities/behaviors/Spin.js',
+            './src/utilities/behaviors/GamepadControls.js',
             './src/utilities/behaviors/HoverColor.js',
+            './src/utilities/behaviors/Object3DSync.js',
+            './src/utilities/behaviors/SceneSync.js',
+            './src/utilities/behaviors/Spin.js',
         ], { cwd: cwd }),
         browserify(
             './src/utilities/behaviors/Layout.js'
