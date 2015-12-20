@@ -8,7 +8,7 @@ window.telekenetic = window.telekenetic || {};
     var Object3DSync = altspace.utilities.behaviors.Object3DSync;
     var Drag = altspace.utilities.behaviors.Drag;
 
-    function destroyCubes(cube) {
+    function destroyCube(cube) {
         var i = telekenetic.cubes.indexOf(cube);
         if (i !== -1) {
             telekenetic.cubes.splice(i, 1);
@@ -52,6 +52,6 @@ window.telekenetic = window.telekenetic || {};
         return cube;
     }
 
-    telekenetic.destroyCubes = destroyCubes;
+    telekenetic.destroyCube = destroyCube;
     telekenetic.createCube = createCube;
 })();
