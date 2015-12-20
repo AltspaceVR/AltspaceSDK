@@ -19,38 +19,20 @@ telekenetic.Grab = function (config) {
             scene.add(skeleton); //if it is already in the scene, this shouldn't do anything
             centerEye = skeleton.getJoint('Eye');
 
-            object3d.addEventListener('cursorup', grab);
+            object3d.addEventListener('cursordown', grab);
+            scene.addEventListener('cursorup', release);
         });
 
     }
 
     function grab() {
-        //centerEye.add(object3d);
-        //object3d.position.set(0, 0, config.defaultDistance);
         THREE.SceneUtils.attach(object3d, scene, centerEye);
         object3d.rotation.set(0, 0, 0);
-
-        object3d.removeEventListener('cursorup', grab);
-        //object3d.addEventListener('cursorup', release);
-        altspace.addEventListener('touchpadgesture', touchpadRelease);
         object3d.dispatchEvent({ type: 'grabbed' });
-    }
-
-    function touchpadRelease(event) {
-        if (event.gesture !== 'tap') return;
-
-        THREE.SceneUtils.detach(object3d, object3d.parent, scene);
-
-        altspace.removeEventListener('touchpadgesture', touchpadRelease);
-        object3d.addEventListener('cursorup', grab);
-        object3d.dispatchEvent({ type: 'released' });
     }
 
     function release() {
         THREE.SceneUtils.detach(object3d, object3d.parent, scene);
-
-        object3d.removeEventListener('cursorup', release);
-        object3d.addEventListener('cursorup', grab);
         object3d.dispatchEvent({ type: 'released' });
     }
 
