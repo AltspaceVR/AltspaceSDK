@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>AltRenderer - Documentation</title>
+    <title>GamepadControls - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">AltRenderer</h1>
+    <h1 class="page-title">GamepadControls</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-altspace.html">altspace</a>~</span>
+            <span class="ancestors"><a href="behaviors.html">altspace/utilities/behaviors</a>.</span>
         
-        AltRenderer
+        GamepadControls
         </h2>
         
     
@@ -56,16 +56,23 @@
 
     
 
-    <h4 class="name" id="AltRenderer"><span class="type-signature"></span>new AltRenderer<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="GamepadControls"><span class="type-signature"></span>new GamepadControls<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>AltRenderer renders a Three.js scene in AltspaceVR. AltRenderer should not
-be instantiated directly, instead it should be retrieved via 
-<a href="module-altspace.html#getThreeJSRenderer">altspace.getThreeJSRenderer</a>.</p>
+    <p>Allows an object to be moved, rotated, and scaled using a gamepad controller.
+Left stick left / right and up / down moves object in the X-Y plane.
+Clicking left stick enters left alt mode, where movement is in X-Z plane.
+Clicking left stick again exits left alt mode.
+Right stick left / right rotates object clockwise / counterclockwise (y axis).
+Rifht stick up / down rotates object away forwards / backwards (x axis).
+Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
+Clicking right stick again exits right alt mode.
+D-pad up / down scales object.
+Back / reset button resets object to its original position and rotation.</p>
 </div>
 
 
@@ -74,6 +81,153 @@ be instantiated directly, instead it should be retrieved via
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config.position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether object's position can be changed.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config.rotation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether object's rotation can be changed.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config.scale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether object's scale can be changed.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -145,136 +299,6 @@ be instantiated directly, instead it should be retrieved via
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">(scene)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Render the given scene in AltspaceVR.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>scene</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="THREE.Scene.html">THREE.Scene</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     

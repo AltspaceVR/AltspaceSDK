@@ -1,0 +1,34 @@
+newmtl face1
+Kd 0.71 0.87 0.39
+illum 0
+map_Kd altspace-logo.jpg
+    
+newmtl face2
+Kd 0 0.60 1
+illum 0
+map_Kd altspace-logo.jpg
+	
+newmtl face3
+Kd 0.22 0.94 0.97
+illum 0
+map_Kd altspace-logo.jpg
+    
+newmtl face4
+Kd 0.82 0.18 0.95 
+illum 0
+map_Kd altspace-logo.jpg
+    
+newmtl face5
+Kd 0.50 0.27 1
+illum 0
+map_Kd altspace-logo.jpg
+
+newmtl face6
+Kd 0.81 0.86 0.86 
+illum 0
+map_Kd altspace-logo.jpg
+
+# Notes:
+# Colors from AltspaceVR branding guidelines. Hex values:
+# #B4DD0A, #0098FF, #37F0F7, #D02FF2, #7F45FF, #CEDBDB
+# Use normalized RGB values for diffuse (Kd) channel.
