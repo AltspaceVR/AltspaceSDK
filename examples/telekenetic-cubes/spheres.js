@@ -14,16 +14,16 @@ window.telekenetic = window.telekenetic || {};
         sphere.position.x = 100;
 
         sphere.addEventListener('cursordown', function () {
-            var BoardWidth = telekenetic.BoardWidth;
+            var enclosure = telekenetic.enclosure;
             //clicking on sphere creates block of random size nearby
             function randInt(min, max) { return Math.random() * (max - min) + min; }
             var initData = {
                 width: randInt(20, 100),
                 height: randInt(20, 100),
                 depth: randInt(20, 100),
-                x: randInt(-BoardWidth / 2, BoardWidth / 2),
-                y: randInt(-BoardWidth / 2, BoardWidth / 2),
-                z: randInt(-BoardWidth / 2, BoardWidth / 2),
+                x: randInt(-enclosure.innerWidth / 2, enclosure.innerWidth / 2),
+                y: randInt(-enclosure.innerHeight / 2, enclosure.innerHeight / 2),
+                z: randInt(-enclosure.innerDepth / 2, enclosure.innerDepth / 2),
                 color: myColor
             };
             telekenetic.sceneSync.instantiate('Cube', initData, true);

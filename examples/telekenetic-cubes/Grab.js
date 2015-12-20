@@ -1,20 +1,19 @@
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+window.telekenetic = window.telekenetic || {};
 
-//TODO: grab and release callback
-altspace.utilities.behaviors.Grab = function (config) {
+telekenetic.Grab = function (config) {
     config = config || {};
 
     var object3d;
     var scene;
     var centerEye;
+    var sync;
 
-    if (config.defaultDistance === undefined) config.defaultDistance = 100;
+    if (config.defaultDistance === undefined) config.defaultDistance = 200;
 
     function awake(o, s) {
         object3d = o;
         scene = s;
+        sync = object3d.getBehaviorByType('Object3DSync');
 
         altspace.getThreeJSTrackingSkeleton().then(function(skeleton) {
             scene.add(skeleton); //if it is already in the scene, this shouldn't do anything
@@ -26,19 +25,37 @@ altspace.utilities.behaviors.Grab = function (config) {
     }
 
     function grab() {
-        centerEye.add(object3d);
-        object3d.position.x = 0;
-        object3d.position.y = 0;
-        object3d.position.set(0, 0, config.defaultDistance);
+        //centerEye.add(object3d);
+        //object3d.position.set(0, 0, config.defaultDistance);
+        THREE.SceneUtils.attach(object3d, scene, centerEye);
+        object3d.rotation.set(0, 0, 0);
+
+        object3d.removeEventListener('cursorup', grab);
+        //object3d.addEventListener('cursorup', release);
+        altspace.addEventListener('touchpadgesture', touchpadRelease);
+        object3d.dispatchEvent({ type: 'grabbed' });
+    }
+
+    function touchpadRelease(event) {
+        if (event.gesture !== 'tap') return;
+
+        THREE.SceneUtils.detach(object3d, object3d.parent, scene);
+
+        altspace.removeEventListener('touchpadgesture', touchpadRelease);
+        object3d.addEventListener('cursorup', grab);
+        object3d.dispatchEvent({ type: 'released' });
     }
 
     function release() {
-        scene.add(object3d);
-        //TODO: change position
+        THREE.SceneUtils.detach(object3d, object3d.parent, scene);
+
+        object3d.removeEventListener('cursorup', release);
+        object3d.addEventListener('cursorup', grab);
+        object3d.dispatchEvent({ type: 'released' });
     }
 
     function update(deltaTime) {
-
+        if (object3d.parent == centerEye && sync) sync.enqueueSend();
     }
 
     function start() {

@@ -7,6 +7,8 @@ window.telekenetic = window.telekenetic || {};
     var ButtonStateStyle = altspace.utilities.behaviors.ButtonStateStyle;
     var Object3DSync = altspace.utilities.behaviors.Object3DSync;
     var Drag = altspace.utilities.behaviors.Drag;
+    var Grab = telekenetic.Grab;
+    var PushPull = telekenetic.PushPull;
 
     function destroyCube(cube) {
         var i = telekenetic.cubes.indexOf(cube);
@@ -33,18 +35,15 @@ window.telekenetic = window.telekenetic || {};
         );
         cube.addBehaviors(
             Bob({ shouldMove: false }),
-            Spin({ speed: 0.002 }),
             ButtonStateStyle(),
+            Grab(),
+            PushPull(),
             Object3DSync({
-                position: true
-            }),
-            Drag({
-                x: { min: -BoardWidth / 2, max: BoardWidth / 2 },
-                z: { min: -BoardWidth / 2, max: BoardWidth / 2 }
+                position: true,
+                world: true
             })
         );
         cube.position.set(x, y, z);
-        cube.position.y = -100;
         telekenetic.sim.scene.add(cube);
 
         telekenetic.cubes.push(cube);
