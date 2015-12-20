@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset=utf-8>
@@ -9,169 +9,168 @@
 <script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 </head>
 <body>
+    <script>
+        if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+
+        HatsApp = (function () {
+
+            var config = {
+                models: {
+                    'wizardhat': { position: { x: -150, y: 0, z: 0 }, offset: { x: 0, y: 6, z: -1 } },
+                    'strawhat': { position: { x: -100, y: 0, z: 0 }, offset: { x: 0, y: 6, z: -1 } },
+                    'tophat': { position: { x: -50, y: 0, z: 0 }, offset: { x: 0, y: 6, z: -1 } },
+                    'LavaHelmet': { position: { x: -10, y: 0, z: 0 }, offset: { x: 0, y: 6, z: -1 } },
+                    'redhat': { position: { x: 40, y: 0, z: 0 }, offset: { x: 0, y: 6, z: -1 } },
+                    'hardhat': { position: { x: 90, y: 0, z: 0 }, offset: { x: 0, y: 6, z: -1 } }
+                },
+                modelScaleFactor: 1 / 60,
+
+            };
+
+            var sim;
+            var sceneSync;
+            var objTemplateByName = {};
+            var modelNames = [];
+            var selectedHat;
+            var initialHats = [];
+            var loadRequest;
+            var head;
+            var scale;
+
+            function main() {
+
+                sim = altspace.utilities.Simulation();
+                var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
+                Promise.all(promises).then(function (array) {
+                    skeleton = array[0];
+                    sim.scene.add(skeleton);
+                    head = skeleton.getJoint('Head');//head is an Object3D
+                    enclosure = array[1];
+                    scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
+                    loadModels();
+                }).catch(function (err) {
+                    console.log('Failed to get Altspace browser properties', err);
+                });
+            }
+
+            function loadModels() {
+
+                var multiloader = altspace.utilities.multiloader;
+                multiloader.init({
+                    crossOrigin: 'anonymous',
+                    baseUrl: 'models/hats/',
+                    TRACE: false,//enable for debugging logs
+                });
+                loadRequest = new multiloader.LoadRequest();
+                modelNames = Object.keys(config.models);
+                for (var i = 0; i < modelNames.length; i++) {
+                    var name = modelNames[i];
+                    loadRequest.objUrls.push(name + '.obj');
+                    loadRequest.mtlUrls.push(name + '.mtl');
+                }
+                multiloader.load(loadRequest, onLoaded);
+            }
+
+            function onLoaded() {
+
+                for (var i = 0; i < loadRequest.objects.length; i++) {
+                    var objTemplate = loadRequest.objects[i];
+                    var name = modelNames[i];//guaranteed to be in same order
+                    if (!objTemplate) throw Error('Error loading hat model ' + name);
+
+                    objTemplate.name = name;
+                    var spawnPosition = new THREE.Vector3();
+                    spawnPosition.copy(config.models[name].position);
+                    spawnPosition.multiplyScalar(scale);
+                    objTemplate.position.copy(spawnPosition);//initial position
+                    objTemplate.scale.set(scale, scale, scale);
+                    objTemplateByName[name] = objTemplate;//we'll clone in createHat
+
+                    //Create one hat (not synced) from template
+                    var obj = objTemplate.clone();
+                    sim.scene.add(obj);
+                    initialHats.push(obj);
+                }
+
+                // Now that hat templates ready, init sync.
+                var instanceBase = altspace.utilities.sync.getInstance();
+                sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
+                    instantiators: { 'Hat': createHat },
+                    ready: onSyncReady
+                });
+                sim.scene.addBehavior(sceneSync);
+            }
+
+            function onSyncReady() {
+                //Attach event handlers to initial hats. Clicking on a hat clones it.
+                //Needed to wait until sceneSync ready, since the new hats will be synced.
+                for (var i = 0; i < initialHats.length; i++) {
+                    addEventListener(initialHats[i]);
+                }
+            }
+
+            function addEventListener(obj) {
+                obj.addEventListener('cursordown', function (event) {
+                    if (selectedHat) sceneSync.destroy(selectedHat);
+                    //destroyOnDisconnect=true so when user leaves, their hat vanishes.
+                    var initData = { name: obj.name, ownerSceneUuid: sim.scene.uuid };
+                    var myHat = sceneSync.instantiate('Hat', initData, true);
+                    selectedHat = myHat;
+                });
+            }
+
+            function createHat(initData) {
+                var name = initData.name;
+                var objTemplate = objTemplateByName[name];
+                if (!objTemplate) throw Error('Error creating hat ' + name);
+                var obj = objTemplate.clone();
+
+                var isOwner = (initData.ownerSceneUuid === sim.scene.uuid);
+                if (isOwner) {
+                    var offset = new THREE.Vector3();
+                    offset.copy(config.models[obj.name].offset);
+                    offset.multiplyScalar(scale);
+                    obj.addBehavior(FollowBehavior({ offset: offset, joint: head }));
+                }
+                obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
+                    position: true, rotation: true
+                }));
+                sim.scene.add(obj);
+                return obj;
+            }
+
+            function FollowBehavior(config) {
+
+                var offset = config.offset;
+                var joint = config.joint;
+
+                var object3d;
+                var sync;
+
+                function awake(o) {
+                    object3d = o;
+                    sync = object3d.getBehaviorByType('Object3DSync');
+                }
+
+                function update() {
+                    object3d.position.copy(joint.position);
+                    object3d.rotation.copy(joint.rotation);
+                    //Use offset to position hat on top of head.
+                    object3d.translateX(offset.x);
+                    object3d.translateY(offset.y);
+                    object3d.translateZ(offset.z);
+                    sync.enqueueSend();
+                }
+
+                return { awake: awake, update: update };
+
+            }
+
+            return { main: main };
+
+        }());
+
+        HatsApp.main();
+    </script>
 </body>
-<script>
-if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
-
-HatsApp = (function(){
-
-	var config = {
-		models: {
-			'wizardhat': { position: {x: -150, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
-			'strawhat': { position: {x: -100, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
-			'tophat': { position: {x: -50, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
-			'LavaHelmet': { position: {x: -10, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
-			'redhat': { position: {x: 40, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}},
-			'hardhat': { position: {x: 90, y: 0, z: 0}, offset: {x: 0, y: 6, z: -1}}
-		},
-		modelScaleFactor: 1 / 60,
-
-	};
-
-	var sim;
-	var sceneSync;
-	var objTemplateByName = {};
-	var modelNames = [];
-	var selectedHat;
-	var initialHats = [];
-	var loadRequest;
-	var head;
-	var scale;
-
-	function main() {
-
-		sim = altspace.utilities.Simulation();
-		var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
-		Promise.all(promises).then(function(array) {
-			skeleton = array[0];
-			sim.scene.add(skeleton);
-			head = skeleton.getJoint('Head');//head is an Object3D
-			enclosure = array[1];
-			scale = enclosure.pixelsPerMeter * config.modelScaleFactor;
-			loadModels();
-		}).catch(function(err) {
-			console.log('Failed to get Altspace browser properties', err);
-		});
-	}
-
-	function loadModels() {
-
-		var multiloader = altspace.utilities.multiloader;
-		multiloader.init({
-			crossOrigin: 'anonymous',
-			baseUrl: 'models/hats/',
-			TRACE: false,//enable for debugging logs
-		});
-		loadRequest = new multiloader.LoadRequest();
-		modelNames = Object.keys(config.models);
-		for (var i=0; i < modelNames.length; i++) {
-			var name = modelNames[i];
-			loadRequest.objUrls.push(name+'.obj');
-			loadRequest.mtlUrls.push(name+'.mtl');
-		}
-		multiloader.load(loadRequest, onLoaded);
-	}
-
-	function onLoaded() {
-
-		for (var i=0; i < loadRequest.objects.length; i++) {
-			var objTemplate = loadRequest.objects[i];
-			var name = modelNames[i];//guaranteed to be in same order
-			if (!objTemplate) throw Error('Error loading hat model ' + name);
-
-			objTemplate.name = name;
-			var spawnPosition = new THREE.Vector3();
-			spawnPosition.copy(config.models[name].position);
-			spawnPosition.multiplyScalar(scale);
-			objTemplate.position.copy(spawnPosition);//initial position
-			objTemplate.scale.set(scale, scale, scale);
-			objTemplateByName[name] = objTemplate;//we'll clone in createHat
-
-			//Create one hat (not synced) from template
-			var obj = objTemplate.clone();
-			sim.scene.add(obj);
-			initialHats.push(obj);
-		}
-
-		// Now that hat templates ready, init sync.
-		var instanceBase = altspace.utilities.sync.getInstance();
-		sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
-			instantiators: {'Hat': createHat },
-			ready: onSyncReady
-		});
-		sim.scene.addBehavior(sceneSync);
-	}
-
-	function onSyncReady() {
-		//Attach event handlers to initial hats. Clicking on a hat clones it.
-		//Needed to wait until sceneSync ready, since the new hats will be synced.
-		for (var i=0; i < initialHats.length; i++) {
-			addEventListener(initialHats[i]);
-		}
-	}
-
-	function addEventListener(obj) {
-		obj.addEventListener('cursordown', function(event) {
-			if (selectedHat) sceneSync.destroy(selectedHat);
-			//destroyOnDisconnect=true so when user leaves, their hat vanishes.
-			var initData = {name: obj.name, ownerSceneUuid: sim.scene.uuid};
-			var myHat = sceneSync.instantiate('Hat', initData, true);
-			selectedHat = myHat;
-		});
-	}
-
-	function createHat(initData){
-		var name = initData.name;
-		var objTemplate = objTemplateByName[name];
-		if (!objTemplate) throw Error('Error creating hat ' + name);
-		var obj = objTemplate.clone();
-
-		var isOwner = (initData.ownerSceneUuid === sim.scene.uuid);
-		if (isOwner) {
-			var offset = new THREE.Vector3();
-			offset.copy(config.models[obj.name].offset);
-			offset.multiplyScalar(scale);
-			obj.addBehavior(FollowBehavior({ offset: offset, joint: head }));
-		}
-		obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
-			position: true, rotation: true
-		}));
-		sim.scene.add(obj);
-		return obj;
-	}
-
-	function FollowBehavior(config) {
-
-		var offset = config.offset;
-		var joint = config.joint;
-
-		var object3d;
-		var sync;
-
-		function awake(o) {
-			object3d = o;
-			sync = object3d.getBehaviorByType('Object3DSync');
-		}
-
-		function update() {
-			object3d.position.copy(joint.position);
-			object3d.rotation.copy(joint.rotation);
-			//Use offset to position hat on top of head.
-			object3d.translateX(offset.x);
-			object3d.translateY(offset.y);
-			object3d.translateZ(offset.z);
-			sync.enqueueSend();
-		}
-
-		return { awake: awake, update: update };
-
-	}
-
-	return { main: main };
-
-}());
-
-HatsApp.main();
-
-</script>
 </html>
