@@ -1,6 +1,6 @@
-window.telekenetic = window.telekenetic || {};
+window.party = window.party || {};
 
-telekenetic.PushPull = function (config) {
+party.PushPull = function (config) {
     config = config || {};
 
     var object3d;

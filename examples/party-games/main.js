@@ -1,16 +1,18 @@
-window.telekenetic = window.telekenetic || {};
+window.party = window.party || {};
 
 (function () {
     var SceneSync = altspace.utilities.behaviors.SceneSync;
     var Sync = altspace.utilities.SceneSync;
 
-    telekenetic.cubes = [];
-    telekenetic.BoardWidth = 300;
-    telekenetic.BoardDepth = 300;
-    telekenetic.syncInstance = altspace.utilities.sync.getInstance();
+    party.cubes = [];
+    party.BoardWidth = 300;
+    party.BoardDepth = 300;
+    party.syncInstance = altspace.utilities.sync.getInstance();
 
     function init() {
-        if (!window.altspace || !window.altspace.inClient) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+        if (!window.altspace || !window.altspace.inClient) {
+          document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+        }
 
         var sim = altspace.utilities.Simulation();
         var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
@@ -20,23 +22,23 @@ window.telekenetic = window.telekenetic || {};
 
             sim.scene.add(skeleton);
 
-            var sceneSync = SceneSync(telekenetic.syncInstance, {
+            var sceneSync = SceneSync(party.syncInstance, {
                 instantiators: {
-                    'Cube': telekenetic.createCube,
-                    'InstantiationSphere': telekenetic.createInstantiationSphere,
-                    'DestructionSphere': telekenetic.createDestructionSphere
+                    'Cube': party.createCube,
+                    'InstantiationSphere': party.createInstantiationSphere,
+                    'DestructionSphere': party.createDestructionSphere
                 },
                 destroyers: {
-                    'Cube': telekenetic.destroyCube
+                    'Cube': party.destroyCube
                 },
                 ready: ready
             });
             sim.scene.addBehavior(sceneSync);
 
-            telekenetic.skeleton = skeleton;
-            telekenetic.sim = sim;
-            telekenetic.sceneSync = sceneSync;
-            telekenetic.enclosure = enclosure;
+            party.skeleton = skeleton;
+            party.sim = sim;
+            party.sceneSync = sceneSync;
+            party.enclosure = enclosure;
 
         }).catch(function (err) {
             console.error('Failed to get Altspace browser properties');
@@ -46,8 +48,8 @@ window.telekenetic = window.telekenetic || {};
 
     function ready(firstInInstance) {
         if (firstInInstance) {
-            telekenetic.sceneSync.instantiate('InstantiationSphere', { radius: 50 });
-            telekenetic.sceneSync.instantiate('DestructionSphere', { radius: 50 });
+            party.sceneSync.instantiate('InstantiationSphere', { radius: 50 });
+            party.sceneSync.instantiate('DestructionSphere', { radius: 50 });
         }
     }
 

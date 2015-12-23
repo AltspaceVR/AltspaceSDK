@@ -6,7 +6,7 @@ window.altspace.utilities = window.altspace.utilities || {};
  */
 
 /**
- * Simluation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
+ * Simulation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
  *
  * If all of your application logic is in behaviors, you do not need to create any additional requestAnimationFrame loops.
  *

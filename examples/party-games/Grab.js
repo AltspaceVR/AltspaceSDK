@@ -1,6 +1,6 @@
-window.telekenetic = window.telekenetic || {};
+window.party = window.party || {};
 
-telekenetic.Grab = function (config) {
+party.Grab = function (config) {
     config = config || {};
 
     var object3d;

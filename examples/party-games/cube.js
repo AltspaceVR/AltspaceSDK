@@ -1,4 +1,4 @@
-window.telekenetic = window.telekenetic || {};
+window.party = window.party || {};
 
 (function () {
 
@@ -7,13 +7,13 @@ window.telekenetic = window.telekenetic || {};
     var ButtonStateStyle = altspace.utilities.behaviors.ButtonStateStyle;
     var Object3DSync = altspace.utilities.behaviors.Object3DSync;
     var Drag = altspace.utilities.behaviors.Drag;
-    var Grab = telekenetic.Grab;
-    var PushPull = telekenetic.PushPull;
+    var Grab = party.Grab;
+    var PushPull = party.PushPull;
 
     function destroyCube(cube) {
-        var i = telekenetic.cubes.indexOf(cube);
+        var i = party.cubes.indexOf(cube);
         if (i !== -1) {
-            telekenetic.cubes.splice(i, 1);
+            party.cubes.splice(i, 1);
         }
 
         // returning true invokes the default destructor (removes from scene and disposes references)
@@ -27,7 +27,7 @@ window.telekenetic = window.telekenetic || {};
         var x = initData.x || 0;
         var y = initData.y || 0;
         var z = initData.z || 0;
-        var BoardWidth = telekenetic.BoardWidth;
+        var BoardWidth = party.BoardWidth;
 
         var cube = new THREE.Mesh(
             new THREE.BoxGeometry(width, height, depth),
@@ -44,13 +44,13 @@ window.telekenetic = window.telekenetic || {};
             })
         );
         cube.position.set(x, y, z);
-        telekenetic.sim.scene.add(cube);
+        party.sim.scene.add(cube);
 
-        telekenetic.cubes.push(cube);
+        party.cubes.push(cube);
 
         return cube;
     }
 
-    telekenetic.destroyCube = destroyCube;
-    telekenetic.createCube = createCube;
+    party.destroyCube = destroyCube;
+    party.createCube = createCube;
 })();
