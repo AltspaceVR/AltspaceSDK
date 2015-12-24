@@ -33,6 +33,12 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var scene;
     var ref;
     var key;
+    var dataRef;
+    var ownerRef;
+    var batchRef;
+
+    var clientId;
+    var isOwner = false;
 
     var position = new THREE.Vector3();
     var quaternion = new THREE.Quaternion(); 
@@ -40,23 +46,27 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 
     var sendEnqueued = false;
 
-    var batchRef;
 
     function link(objectRef) {
         ref = objectRef;
         key = ref.key();
         batchRef = ref.child('batch');
+        dataRef = ref.child('data');
+        ownerRef = ref.child('owner');
     }
 
     //TODO: lerp
     function setupReceive() {
         batchRef.on('value', function (snapshot) {
+
+            if (isOwner) return;
+
             if (config.syncData && !object3d.userData.syncData) {
                 object3d.userData.syncData = {};//init here so app can assume it exists
             }
             var value = snapshot.val();
             if(!value) return;
-            if (value.senderId === scene.uuid) return;//We sent this batch, ignore it.
+            if (value.senderId === clientId) return;//We sent this batch, ignore it.
             if (config.position) {
                 object3d.position.set(value.position.x, value.position.y, value.position.z);
             }
@@ -69,6 +79,10 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             if (config.syncData) {
                 object3d.userData.syncData = value.syncData;
             }
+        });
+
+        ownerRef.on('value', function (snapshot) {
+            isOwner = snapshot.val() === clientId;
         });
     }
 
@@ -86,7 +100,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     }
 
     function send() {
-
+        if (!isOwner) return;
 
         var batch = {};
         if (config.world) {
@@ -123,7 +137,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             batch.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
         }
         if (Object.keys(batch).length > 0) {
-            batch.senderId = scene.uuid;//Use uuid of the THREE.Scene as senderId.
+            batch.senderId = clientId;//Use uuid of the THREE.Scene as senderId.
             batchRef.set(batch);
         }
     }
@@ -137,6 +151,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         object3d = o;
         scene = s;
 
+        clientId = scene.uuid;//temporary way of having unique identifiers for each client
         setupReceive();
     }
 
@@ -144,7 +159,23 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         
     }
 
-    var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, send: send, enqueueSend: enqueueSend, autoSend: autoSend};
+    function takeOwnership() {
+        ownerRef.set(clientId);
+    }
+
+    var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, send: send, enqueueSend: enqueueSend, autoSend: autoSend, takeOwnership: takeOwnership };
+
+    Object.defineProperty(exports, 'dataRef', {
+        get: function () {
+            return dataRef;
+        }
+    });
+
+    Object.defineProperty(exports, 'isOwner', {
+        get: function () {
+            return isOwner;
+        }
+    });
 
     return exports;
 };
