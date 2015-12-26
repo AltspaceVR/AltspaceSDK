@@ -77,7 +77,14 @@ altspace.utilities.behaviors.Elemental = function (config) {
 
         var existingPositionEls = el.getElementsByTagName('x-position');
         var positionEl = existingPositionEls[0] || el.appendChild(document.createElement('x-position'));
-        var savedPosition = positionEl.savedPosition || new THREE.Vector3();
+
+        if (positionEl.savedPosition) {
+            if (!positionEl.savedPosition.equals(this.position)) {
+                this.position = positionEl.getAttribute('x');
+                this.position = positionEl.getAttribute('y');
+                this.position = positionEl.getAttribute('z');
+            }
+        }
         positionEl.setAttribute('x', formatNumber(this.position.x));
         positionEl.setAttribute('y', formatNumber(this.position.y));
         positionEl.setAttribute('z', formatNumber(this.position.z));
