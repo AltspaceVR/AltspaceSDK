@@ -35,7 +35,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var key;
     var dataRef;
     var ownerRef;
-    var batchRef;
+    var transformRef;
 
     var clientId;
     var isOwner = false;
@@ -44,29 +44,24 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var quaternion = new THREE.Quaternion(); 
     var scale = new THREE.Vector3();
 
-    var sendEnqueued = false;
-
 
     function link(objectRef) {
         ref = objectRef;
         key = ref.key();
-        batchRef = ref.child('batch');
+        transformRef = ref.child('batch');
         dataRef = ref.child('data');
         ownerRef = ref.child('owner');
     }
 
     //TODO: lerp
     function setupReceive() {
-        batchRef.on('value', function (snapshot) {
+        transformRef.on('value', function (snapshot) {
 
             if (isOwner) return;
 
-            if (config.syncData && !object3d.userData.syncData) {
-                object3d.userData.syncData = {};//init here so app can assume it exists
-            }
             var value = snapshot.val();
-            if(!value) return;
-            if (value.senderId === clientId) return;//We sent this batch, ignore it.
+            if (!value) return;
+
             if (config.position) {
                 object3d.position.set(value.position.x, value.position.y, value.position.z);
             }
@@ -76,27 +71,11 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             if (config.scale) {
                 object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
             }
-            if (config.syncData) {
-                object3d.userData.syncData = value.syncData;
-            }
         });
 
         ownerRef.on('value', function (snapshot) {
             isOwner = snapshot.val() === clientId;
         });
-    }
-
-
-    /**
-     * Enqueue a sync for the next SceneSync update.
-     * 
-     * This is to be used whenever you update a property and are not using auto. If multiple users could potentially move an object, this is preferred vs using auto.
-     * @instance
-     * @method enqueueSend
-     * @memberof module:altspace/utilities/behaviors.Object3DSync
-     */
-    function enqueueSend() {
-        sendEnqueued = true;
     }
 
     function send() {
@@ -133,18 +112,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
                 z: scale.z
             };
         }
-        if (config.syncData) {
-            batch.syncData = object3d.userData.syncData;//TODO: see if this needs to be parsed and stringified
-        }
         if (Object.keys(batch).length > 0) {
-            batch.senderId = clientId;//Use uuid of the THREE.Scene as senderId.
-            batchRef.set(batch);
+            transformRef.set(batch);
         }
-    }
-
-    function autoSend() {
-        if (config.auto || sendEnqueued) send();
-        sendEnqueued = false;
     }
 
     function awake(o, s) {
@@ -163,7 +133,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         ownerRef.set(clientId);
     }
 
-    var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, send: send, enqueueSend: enqueueSend, autoSend: autoSend, takeOwnership: takeOwnership };
+    var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, autoSend: send, takeOwnership: takeOwnership };
 
     Object.defineProperty(exports, 'dataRef', {
         get: function () {
@@ -180,3 +150,4 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     return exports;
 };
 
+//manual modifications to the ref's will not obey ownership status.
