@@ -25,6 +25,8 @@ altspace.utilities.behaviors.Elemental = function (config) {
 
         rootEl = document.createElement('x-elemental');
         attachRoot();
+
+        setInterval(refresh, 1000);
     }
 
     function addElement(newO) {
@@ -55,7 +57,7 @@ altspace.utilities.behaviors.Elemental = function (config) {
 
         var sync = this.getBehaviorByType('Object3DSync');
         if (sync) {
-            el.setAttribute('isOwner', sync.isOwner);
+            el.setAttribute('isMine', sync.isMine);
         }
 
         //todo add behaviors
@@ -109,6 +111,9 @@ altspace.utilities.behaviors.Elemental = function (config) {
     }
 
     function update(deltaTime) {
+    }
+
+    function refresh() {
         //resetRoot();
         scene.traverse(function (o) {
             if (elements[o.uuid]) {

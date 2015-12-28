@@ -38,7 +38,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var transformRef;
 
     var clientId;
-    var isOwner = false;
+    var isMine = false;
 
     var position = new THREE.Vector3();
     var quaternion = new THREE.Quaternion(); 
@@ -57,7 +57,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     function setupReceive() {
         transformRef.on('value', function (snapshot) {
 
-            if (isOwner) return;
+            //if (isMine) return;
 
             var value = snapshot.val();
             if (!value) return;
@@ -74,14 +74,22 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         });
 
         ownerRef.on('value', function (snapshot) {
-            isOwner = snapshot.val() === clientId;
+            var newOwnerId = snapshot.val();
+
+            var gained = newOwnerId === clientId && !isMine;
+            if (gained) object3d.dispatchEvent({ type: 'ownershipgained' });
+
+            var lost = newOwnerId !== clientId && isMine;
+            if (lost) object3d.dispatchEvent({ type: 'ownershiplost' });
+            
+            isMine = newOwnerId === clientId;
         });
     }
 
     function send() {
-        if (!isOwner) return;
+        if (!isMine) return;
 
-        var batch = {};
+        var transform = {};
         if (config.world) {
             object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
             object3d.matrixWorld.decompose(position, quaternion, scale); 
@@ -91,14 +99,14 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             scale = object3d.scale;
         }
         if (config.position) {
-            batch.position = {
+            transform.position = {
                 x: position.x,
                 y: position.y,
                 z: position.z
             };
         }
         if (config.rotation) {
-            batch.quaternion = {
+            transform.quaternion = {
                 x: quaternion.x,
                 y: quaternion.y,
                 z: quaternion.z,
@@ -106,14 +114,14 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             };
         }
         if (config.scale) {
-            batch.scale = {
+            transform.scale = {
                 x: scale.x,
                 y: scale.y,
                 z: scale.z
             };
         }
-        if (Object.keys(batch).length > 0) {
-            transformRef.set(batch);
+        if (Object.keys(transform).length > 0) {
+            transformRef.set(transform);
         }
     }
 
@@ -141,9 +149,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         }
     });
 
-    Object.defineProperty(exports, 'isOwner', {
+    Object.defineProperty(exports, 'isMine', {
         get: function () {
-            return isOwner;
+            return isMine;
         }
     });
 

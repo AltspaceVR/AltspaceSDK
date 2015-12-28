@@ -24,6 +24,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  **/
 window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     var sceneRef = instanceRef.child('scene');
+    var clientsRef = instanceRef.child('clients');
+
     config = config || {};
     var instantiators = config.instantiators || {};
     var destroyers = config.destroyers || {};
@@ -31,9 +33,12 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     var autoSendRateMS = 100;
 
     var syncBehaviors = [];
-
     var objectForKey = {};
     var keyForUuid = {};
+
+    var clientId;
+    // there should always be one master client in the room. For now it will be the longest person online.
+    var masterClientId;
 
     instanceRef.child('initialized').once('value', function (snapshot) {
         var shouldInitialize = !snapshot.val();
@@ -132,8 +137,24 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         }
     }
 
-    function awake(o) {
+    function awake(o, s) {
         setInterval(autoSendAll, autoSendRateMS);
+
+        var scene = s;
+
+        // temporary way of having unique identifiers for each client
+        clientId = scene.uuid;
+        clientsRef.on("value", function (snapshot) {
+            var clientIds = snapshot.val();
+
+            if (!clientIds) return;
+
+            masterClientId = clientIds[0];
+        });
+        // add our client ID to the list of connected clients, 
+        // but have it be automatically removed by firebase if we disconnect for any reason
+        clientsRef.push(clientId).onDisconnect().remove();
+
     }
 
     /**
@@ -187,6 +208,9 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     };
     Object.defineProperty(exports, 'autoSendRateMS', {
         get: function () { return autoSendRateMS; }
+    });
+    Object.defineProperty(exports, 'isMasterClient', {
+        get: function () { return masterClientId === clientId; }
     });
     return exports;
 };

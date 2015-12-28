@@ -31,13 +31,22 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
     var deltaTime = now - lastNow;
 
     var self = this;
+
+    //gather objects first so that behaviors can change the hierarchy during traversal without incident
+    var objectsWithBehaviors = [];
+
     this.traverse(function (object3d) {
 
         if (object3d.__behaviorList) {
-            object3d.updateBehaviors(deltaTime, self);
+            objectsWithBehaviors.push(object3d);
         }
 
     });
+
+    for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
+        object3d = objectsWithBehaviors[i];
+        object3d.updateBehaviors(deltaTime, self);
+    }
 
     this.__lastNow = now;
 
