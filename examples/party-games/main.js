@@ -1,3 +1,6 @@
+/*
+location.href = "http://localhost:8000/examples/party-games";
+*/
 window.party = window.party || {};
 
 (function () {
@@ -26,7 +29,8 @@ window.party = window.party || {};
                 instantiators: {
                     'Cube': party.createCube,
                     'InstantiationSphere': party.createInstantiationSphere,
-                    'DestructionSphere': party.createDestructionSphere
+                    'DestructionSphere': party.createDestructionSphere,
+                    'Card': party.createCard
                 },
                 destroyers: {
                     'Cube': party.destroyCube
@@ -46,10 +50,23 @@ window.party = window.party || {};
         });
     }
 
+
     function ready(firstInInstance) {
+        console.log("hi");
         if (firstInInstance) {
+            console.log("yep");
             party.sceneSync.instantiate('InstantiationSphere', { radius: 50 });
             party.sceneSync.instantiate('DestructionSphere', { radius: 50 });
+            var card = party.sceneSync.instantiate('Card', { 
+                text: "This is a card.", 
+                backColor: party.colors.blue.dark, 
+                textColor: party.colors.blue.light 
+            });
+            party.attachCardToEye(card);
+            party.card = card;
+        }
+        else {
+            console.log("noooop");
         }
     }
 

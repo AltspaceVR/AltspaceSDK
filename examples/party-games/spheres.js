@@ -10,26 +10,28 @@ window.party = window.party || {};
 
     function createInstantiationSphere(initData) {
         var sphere = createSphere(initData);
-        sphere.material.color = new THREE.Color("#00EE00");
+        sphere.material.color = new THREE.Color('#00EE00');
         sphere.position.x = 100;
         sphere.position.y = -450;
 
-       // sphere.addEventListener('cursordown', spawnCube); 
-        //sphere.large = false;
-        sphere.addEventListener('cursormove', function(){
-          console.log("BOO");
-          //grow(sphere);
-        });
-        party.sim.scene.addEventListener('cursorenter', function(e){
-          console.log(e.target === sphere);
-          var s = 1.3;
-          sphere.scale.set(s,s,s);
-        });
-        party.sim.scene.addEventListener('cursorleave', function(e){
-          sphere.scale.set(1,1,1);
-        });
+        //sphere.addEventListener('cursordown', spawnCube); 
+        sphere.addEventListener('cursordown', changeWord);
 
         return sphere;
+    }
+
+    function changeWord(){
+        var previousCard = party.card;
+        party.sceneSync.destroy(previousCard);
+
+        var text = party.nextWord();
+        var card = party.sceneSync.instantiate('Card', { 
+            text: text, 
+            backColor: party.colors.blue.dark, 
+            textColor: party.colors.blue.light 
+        });
+        party.attachCardToEye(card);
+        party.card = card;
     }
 
     function spawnCube(){
@@ -49,14 +51,11 @@ window.party = window.party || {};
     }
     
 
-    function grow(sphere){
-      console.log("hi");
-      sphere.scale.set(2,2,2)
-    }
-
     function createDestructionSphere(initData) {
+        console.log("HI");
+
         var sphere = createSphere(initData);
-        sphere.material.color = new THREE.Color("#EE0000");
+        sphere.material.color = new THREE.Color('#EE0000');
         sphere.position.x = -100;
         sphere.position.y = -450;
 
