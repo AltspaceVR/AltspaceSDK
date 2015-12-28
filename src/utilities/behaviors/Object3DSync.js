@@ -37,7 +37,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var ownerRef;
     var transformRef;
 
-    var clientId;
+    var sceneSync;
     var isMine = false;
 
     var position = new THREE.Vector3();
@@ -45,12 +45,13 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var scale = new THREE.Vector3();
 
 
-    function link(objectRef) {
+    function link(objectRef, sS) {
         ref = objectRef;
         key = ref.key();
         transformRef = ref.child('batch');
         dataRef = ref.child('data');
         ownerRef = ref.child('owner');
+        sceneSync = sS;
     }
 
     //TODO: lerp
@@ -76,13 +77,13 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         ownerRef.on('value', function (snapshot) {
             var newOwnerId = snapshot.val();
 
-            var gained = newOwnerId === clientId && !isMine;
+            var gained = newOwnerId === sceneSync.clientId && !isMine;
             if (gained) object3d.dispatchEvent({ type: 'ownershipgained' });
 
-            var lost = newOwnerId !== clientId && isMine;
+            var lost = newOwnerId !== sceneSync.clientId && isMine;
             if (lost) object3d.dispatchEvent({ type: 'ownershiplost' });
             
-            isMine = newOwnerId === clientId;
+            isMine = newOwnerId === sceneSync.clientId;
         });
     }
 
@@ -129,7 +130,6 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         object3d = o;
         scene = s;
 
-        clientId = scene.uuid;//temporary way of having unique identifiers for each client
         setupReceive();
     }
 
@@ -138,7 +138,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     }
 
     function takeOwnership() {
-        ownerRef.set(clientId);
+        ownerRef.set(sceneSync.clientId);
     }
 
     var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, autoSend: send, takeOwnership: takeOwnership };

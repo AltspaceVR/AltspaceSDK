@@ -74,10 +74,10 @@ altspace.utilities.behaviors.Elemental = function (config) {
         //el.setAttribute('rot-x', formatNumber(this.rotation.x));
         //el.setAttribute('rot-y', formatNumber(this.rotation.y));
         //el.setAttribute('rot-z', formatNumber(this.rotation.z));
-        //el.setAttribute('rotation', JSON.stringify(this.rotation, null, '\t'));
-        //el.setAttribute('position', JSON.stringify(this.position, null, '\t'));
+        el.setAttribute('rotation', JSON.stringify(this.rotation, null, '\t'));
+        el.setAttribute('position', JSON.stringify(this.position, null, '\t'));
 
-        var existingPositionEls = el.getElementsByTagName('x-position');
+        /*var existingPositionEls = el.getElementsByTagName('x-position');
         var positionEl = existingPositionEls[0] || el.appendChild(document.createElement('x-position'));
 
         if (positionEl.savedPosition) {
@@ -96,7 +96,7 @@ altspace.utilities.behaviors.Elemental = function (config) {
         rotationEl.setAttribute('x', formatNumber(this.rotation.x));
         rotationEl.setAttribute('y', formatNumber(this.rotation.y));
         rotationEl.setAttribute('z', formatNumber(this.rotation.z));
-
+        */
         return el;
     }
 
