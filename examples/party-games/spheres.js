@@ -20,9 +20,12 @@ window.party = window.party || {};
         return sphere;
     }
 
+
     function changeWord(){
-        var previousCard = party.card;
-        party.sceneSync.destroy(previousCard);
+        if (typeof(party.card) !== 'undefined'){
+            party.detachCardFromEye();
+            party.sceneSync.destroy(party.card);
+        }
 
         var text = party.nextWord();
         var card = party.sceneSync.instantiate('Card', { 
@@ -30,8 +33,9 @@ window.party = window.party || {};
             backColor: party.colors.blue.dark, 
             textColor: party.colors.blue.light 
         });
-        party.attachCardToEye(card);
         party.card = card;
+
+        party.attachCardToEye();
     }
 
     function spawnCube(){
@@ -52,8 +56,6 @@ window.party = window.party || {};
     
 
     function createDestructionSphere(initData) {
-        console.log("HI");
-
         var sphere = createSphere(initData);
         sphere.material.color = new THREE.Color('#EE0000');
         sphere.position.x = -100;

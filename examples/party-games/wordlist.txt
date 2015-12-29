@@ -32,7 +32,7 @@ sod
 midsummer
 fear
 doom
-Murphy's Law
+murphy's law
 safe
 simmer
 goblin
@@ -41,7 +41,7 @@ ogre
 shrub
 cloak
 purge
-BFF
+bff
 jade
 fancy
 meticulous
@@ -52,7 +52,7 @@ degree
 swirl
 dress shirt
 my
-Christmas carolers
+christmas carolers
 punk
 tine
 crop
@@ -83,7 +83,7 @@ tiptop
 intern
 bonnet
 ladder rung
-Olympian
+olympian
 pine tree
 skating rink
 publisher

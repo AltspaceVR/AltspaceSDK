@@ -16,7 +16,7 @@ window.party = window.party || {};
         card.add(back);
         card.add(text3D);
 
-        card.addBehavior( Object3DSync({ position: true }) );
+        card.addBehavior( Object3DSync({ position: true , rotation: true}));
         card.scale.set(0.2,0.2,0.2);
 
         party.sim.scene.add(card);
@@ -41,48 +41,58 @@ window.party = window.party || {};
         return mesh;
     }
 
-    function cardFollowBehavior(config) {
-
-        var offset = config.offset;
-        var joint = config.joint;
+    function testBehavior(){
 
         var object3d;
         var sync;
 
-        function awake(o) {
+        function awake(o){
             object3d = o;
             sync = object3d.getBehaviorByType('Object3DSync');
         }
 
-        function update() {
-            object3d.rotation.set(0, joint.rotation.y+Math.PI, 0, 'XYZ');
-
-            object3d.position.copy(joint.position);
-
-            object3d.translateX(offset.x);
-            object3d.translateY(offset.y);
-            object3d.translateZ(offset.z);
-
+        function update(){
             sync.enqueueSend();
         }
 
         return { awake: awake, update: update };
     }
 
-    function attachCardToEye(card){
-        var eye = party.skeleton.getJoint('Eye', 'Center', 0);
-        var offset = computeOffsetForCard(card);
-        card.addBehavior(party.cardFollowBehavior({ offset: offset, joint: eye }));
+    function attachCardToEye(){
+        if (wordIsAttached){
+            return;
+        }
+
+        if (typeof(party.eye !== 'undefined')){
+            party.eye = party.skeleton.getJoint('Eye', 'Center', 0);
+        }
+        party.eye.add(party.card);
+        wordIsAttached = true;
+
+        party.card.rotation.set(0, Math.PI, 0, 'XYZ');
+        party.card.position.set(0,0,0);
+
+        var offset = computeOffsetForCard();
+        party.card.translateX(offset.x);
+        party.card.translateY(offset.y);
+        party.card.translateZ(offset.z);
     }
 
-    function computeOffsetForCard(card){
-        var dX = new THREE.Box3().setFromObject(card).size().x/2 * -1;
+    function computeOffsetForCard(){
+        var dX = new THREE.Box3().setFromObject(party.card).size().x * 1/2 * -1;
         var dZ = -200;
         return new THREE.Vector3(dX,0,dZ);
     }
 
+    function detachCardFromEye(){
+        if (wordIsAttached){
+            party.eye.remove(party.card);
+            wordIsAttached = false;
+        }
+    }
 
+    party.testBehavior = testBehavior;
     party.attachCardToEye = attachCardToEye;
-    party.cardFollowBehavior = cardFollowBehavior;
+    party.detachCardFromEye = detachCardFromEye;
     party.createCard = createCard;
 })();

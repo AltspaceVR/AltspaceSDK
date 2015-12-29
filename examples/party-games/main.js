@@ -2,6 +2,7 @@
 location.href = "http://localhost:8000/examples/party-games";
 */
 window.party = window.party || {};
+var wordIsAttached = false;
 
 (function () {
     var SceneSync = altspace.utilities.behaviors.SceneSync;
@@ -18,10 +19,28 @@ window.party = window.party || {};
         }
 
         var sim = altspace.utilities.Simulation();
-        var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
+        var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure(), altspace.getUser()];
         Promise.all(promises).then(function (array) {
             var skeleton = array[0];
             var enclosure = array[1];
+            var user = array[2];
+            console.log(user.userId);
+            console.log(user.displayName);
+            //console.log(party.syncInstance.child("users"));
+
+            
+            party.syncInstance.once("value", function(snapshot){
+                var hasUsers = snapshot.hasChild("my/users");
+                if (hasUsers){
+                    console.log('A');
+                    console.log(party.syncInstance.child("my/users"));
+                } 
+                else {
+                    console.log('B');
+                    usersRef = party.syncInstance.child("my/users");
+                    usersRef.set({id: user.userId});
+                }
+            });
 
             sim.scene.add(skeleton);
 
@@ -30,7 +49,7 @@ window.party = window.party || {};
                     'Cube': party.createCube,
                     'InstantiationSphere': party.createInstantiationSphere,
                     'DestructionSphere': party.createDestructionSphere,
-                    'Card': party.createCard
+                    'Card': party.createCard,
                 },
                 destroyers: {
                     'Cube': party.destroyCube
@@ -50,23 +69,12 @@ window.party = window.party || {};
         });
     }
 
-
     function ready(firstInInstance) {
-        console.log("hi");
         if (firstInInstance) {
-            console.log("yep");
             party.sceneSync.instantiate('InstantiationSphere', { radius: 50 });
             party.sceneSync.instantiate('DestructionSphere', { radius: 50 });
-            var card = party.sceneSync.instantiate('Card', { 
-                text: "This is a card.", 
-                backColor: party.colors.blue.dark, 
-                textColor: party.colors.blue.light 
-            });
-            party.attachCardToEye(card);
-            party.card = card;
         }
         else {
-            console.log("noooop");
         }
     }
 

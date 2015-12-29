@@ -3,7 +3,8 @@ window.party = window.party || {};
 (function () {
     $(document).ready(function(){
         $.get('wordlist.txt', function(data) {
-            party.words = data.split('/n');
+            party.words = data.split('\n');
+            console.log(party.words.length);
         });
     });
 
