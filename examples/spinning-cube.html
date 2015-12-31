@@ -61,23 +61,23 @@ function ChangeColor() {//define a custom behavior
 
 	var object3d;
 	var lastColor;
-	var dataRef;
+	var colorRef;
 
 	function awake(o) {
 		object3d = o;
 		var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
-		dataRef = sync.dataRef;
+		colorRef = sync.dataRef.child('color');
 
-		dataRef.on('value', function (snapshot) {
+		colorRef.on('value', function (snapshot) {
 			var value = snapshot.val();
 			if (!value) return; //we are first to create the cube, no color set yet
-			object3d.material.color = new THREE.Color(value.cubeColor);
+			object3d.material.color = new THREE.Color(value);
 			object3d.material.needsUpdate = true;//currently required in Altspace
 		});
 
 		object3d.addEventListener('cursordown', function() {
 			var color = Please.make_color()[0];//random color
-			dataRef.update({ cubeColor: color });
+			colorRef.set(color);
 		});
 	}
 
