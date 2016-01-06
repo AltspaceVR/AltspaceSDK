@@ -24,6 +24,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  **/
 window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     var sceneRef = instanceRef.child('scene');
+    var clientsRef = instanceRef.child('clients');
+
     config = config || {};
     var instantiators = config.instantiators || {};
     var destroyers = config.destroyers || {};
@@ -31,19 +33,76 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     var autoSendRateMS = 100;
 
     var syncBehaviors = [];
-
     var objectForKey = {};
     var keyForUuid = {};
 
-    instanceRef.child('initialized').once('value', function (snapshot) {
-        var shouldInitialize = !snapshot.val();
-        snapshot.ref().set(true);
-        if (config.ready) {
-            config.ready(shouldInitialize);
-        }
-    });
+    var clientId;
+    // there should always be one master client in the room. For now it will be the longest person online.
+    var masterClientId;
 
-    sceneRef.on('child_added', function (snapshot) {
+    function autoSendAll() {
+        for (var i = 0, max = syncBehaviors.length; i < max; i++) {
+            syncBehaviors[i].autoSend();
+        }
+    }
+
+    function awake(o, s) {
+        setInterval(autoSendAll, autoSendRateMS);
+
+        var scene = s;
+
+        // temporary way of having unique identifiers for each client
+        clientId = scene.uuid;
+        clientsRef.on("value", function (snapshot) {
+            var clientIds = snapshot.val();
+
+            if (!clientIds) return;
+
+            masterClientId = clientIds[0];
+        });
+        // add our client ID to the list of connected clients, 
+        // but have it be automatically removed by firebase if we disconnect for any reason
+        clientsRef.push(clientId).onDisconnect().remove();
+
+        instanceRef.child('initialized').once('value', function (snapshot) {
+            var shouldInitialize = !snapshot.val();
+            snapshot.ref().set(true);
+            if (config.ready) {
+                config.ready(shouldInitialize);
+            }
+        });
+        
+
+        sceneRef.on('child_added', onInstantiate.bind(this));
+        sceneRef.on('child_removed', onDestroy.bind(this));
+    }
+
+    /**
+     * Instantiate an object by syncType.
+     * @instance
+     * @method instantiate
+     * @param {String} syncType Type of object to instantiate.
+     * @param {Object} initData An object containing initialization data, passed
+     *  to the instantiator.
+     * @param {Boolean} destroyOnDisconnect If the object should be destroyed
+     *  across all synced instance when the instantiating instance disconnects.
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
+    function instantiate(syncType, initData, destroyOnDisconnect) {
+        initData = initData || {};
+        var objectRef = sceneRef.push({ syncType: syncType, initData: initData },
+            function (error) { if (error) throw Error('Failed to save to Firebase', error) }
+        );
+        if (destroyOnDisconnect) {
+            objectRef.onDisconnect().remove();//send remvoe_child to remote clients
+        }
+        //instantiation done, local child_added callback happens syncronously with push
+        var object = objectForKey[objectRef.key()];
+        object.getBehaviorByType('Object3DSync').takeOwnership();
+        return object;
+    }
+
+    function onInstantiate(snapshot) {
 
         var data = snapshot.val();
         var key = snapshot.key();
@@ -70,10 +129,29 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         }
 
         syncBehaviors.push(syncBehavior);
-        syncBehavior.link(snapshot.ref());
-    });
+        syncBehavior.link(snapshot.ref(), this);
+    }
 
-    sceneRef.on('child_removed', function (snapshot) {
+    /**
+     * Destroy a synced object across instances.
+     * @instance
+     * @method destroy
+     * @param {Object} object3d The object to destroy.
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
+    function destroy(object3d) {
+        var key = keyForUuid[object3d.uuid];
+        if (!key) {
+            console.warn('Failed to find key for object3d to be destroyed', object3d);
+            return;
+        }
+        sceneRef.child(key).remove(function (error) {
+            if (error) console.warn('Failed to remove from Firebase', error);
+        });
+        sceneRef.child(key).off();//detach all callbacks
+    }
+
+    function onDestroy(snapshot) {
         var data = snapshot.val();
         var key = snapshot.key();
         var object3d = objectForKey[key];
@@ -123,60 +201,6 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         //remove from our local bookkeeping
         delete objectForKey[key];
         delete keyForUuid[object3d.uuid];
-    });
-
-
-    function autoSendAll() {
-        for (var i = 0, max = syncBehaviors.length; i < max; i++) {
-            syncBehaviors[i].autoSend();
-        }
-    }
-
-    function awake(o) {
-        setInterval(autoSendAll, autoSendRateMS);
-    }
-
-    /**
-     * Instantiate an object by syncType.
-     * @instance
-     * @method instantiate
-     * @param {String} syncType Type of object to instantiate.
-     * @param {Object} initData An object containing initialization data, passed
-     *  to the instantiator.
-     * @param {Boolean} destroyOnDisconnect If the object should be destroyed
-     *  across all synced instance when the instantiating instance disconnects.
-     * @memberof module:altspace/utilities/behaviors.SceneSync
-     */
-    function instantiate(syncType, initData, destroyOnDisconnect) {
-        initData = initData || {};
-        var objectRef = sceneRef.push({ syncType: syncType, initData: initData },
-            function (error) { if (error) throw Error('Failed to save to Firebase', error) }
-        );
-        if (destroyOnDisconnect) {
-            objectRef.onDisconnect().remove();//send remvoe_child to remote clients
-        }
-        //instantiation done, local child_added callback happens syncronously with push
-        return objectForKey[objectRef.key()];
-    }
-
-
-    /**
-     * Destroy a synced object across instances.
-     * @instance
-     * @method destroy
-     * @param {Object} object3d The object to destroy.
-     * @memberof module:altspace/utilities/behaviors.SceneSync
-     */
-    function destroy(object3d) {
-        var key = keyForUuid[object3d.uuid];
-        if (!key) {
-            console.warn('Failed to find key for object3d to be destroyed', object3d);
-            return;
-        }
-        sceneRef.child(key).remove(function (error) {
-            if (error) console.warn('Failed to remove from Firebase', error);
-        });
-        sceneRef.child(key).off();//detach all callbacks
     }
 
     var exports = {
@@ -187,6 +211,12 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     };
     Object.defineProperty(exports, 'autoSendRateMS', {
         get: function () { return autoSendRateMS; }
+    });
+    Object.defineProperty(exports, 'isMasterClient', {
+        get: function () { return masterClientId === clientId; }
+    });
+    Object.defineProperty(exports, 'clientId', {
+        get: function () { return clientId; }
     });
     return exports;
 };

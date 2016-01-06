@@ -42,7 +42,7 @@ function createCube() {
 	var cube = new THREE.Mesh(geometry, material);
 	cube.scale.multiplyScalar(CUBE_SCALE);
 	cube.addBehaviors(
-		alt.Object3DSync({syncData: true}),
+		alt.Object3DSync(),
 		alt.Spin({speed: 0.0005}),
 		ChangeColor()
 	);
@@ -61,22 +61,28 @@ function ChangeColor() {//define a custom behavior
 
 	var object3d;
 	var lastColor;
+	var colorRef;
 
 	function awake(o) {
 		object3d = o;
+		var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
+		colorRef = sync.dataRef.child('color');
+
+		colorRef.on('value', function (snapshot) {
+			var value = snapshot.val();
+			if (!value) return; //we are first to create the cube, no color set yet
+			object3d.material.color = new THREE.Color(value);
+			object3d.material.needsUpdate = true;//currently required in Altspace
+		});
+
 		object3d.addEventListener('cursordown', function() {
-			object3d.userData.syncData.color = Please.make_color()[0];//random cololr
-			var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
-			if (sync) sync.enqueueSend();
+			var color = Please.make_color()[0];//random color
+			colorRef.set(color);
 		});
 	}
 
 	function update(deltaTime) {
-		if (object3d.userData.syncData.color !== lastColor) {
-			lastColor = object3d.userData.syncData.color;
-			object3d.material.color = new THREE.Color(object3d.userData.syncData.color);
-			object3d.material.needsUpdate = true;//currently required in Altspace
-		}
+		/* no updating needed, color changes in Firebase 'value' callback above */
 	}
 
 	return { awake: awake, update: update };
