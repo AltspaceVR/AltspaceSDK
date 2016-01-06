@@ -153,8 +153,6 @@ ChessApp = (function(){
 					if (firstInstance) {
 						var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
 						var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
-						white.getBehaviorByType('Object3DSync').enqueueSend();
-						black.getBehaviorByType('Object3DSync').enqueueSend();
 					}
 				}
 			}
