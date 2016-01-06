@@ -1,5 +1,5 @@
 /*
-location.href = "http://localhost:8000/examples/party-games";
+location.href = "http://localhost:8002/examples/party-games";
 */
 window.party = window.party || {};
 var wordIsAttached = false;
@@ -8,9 +8,6 @@ var wordIsAttached = false;
     var SceneSync = altspace.utilities.behaviors.SceneSync;
     var Sync = altspace.utilities.SceneSync;
 
-    party.cubes = [];
-    party.BoardWidth = 300;
-    party.BoardDepth = 300;
     party.syncInstance = altspace.utilities.sync.getInstance();
 
     function init() {
@@ -18,64 +15,86 @@ var wordIsAttached = false;
           document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
         }
 
-        var sim = altspace.utilities.Simulation();
+        party.sim = altspace.utilities.Simulation();
+
         var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure(), altspace.getUser()];
         Promise.all(promises).then(function (array) {
-            var skeleton = array[0];
-            var enclosure = array[1];
-            var user = array[2];
-            console.log(user.userId);
-            console.log(user.displayName);
-            //console.log(party.syncInstance.child("users"));
+          addSkeleton(array[0]);
 
-            
-            party.syncInstance.once("value", function(snapshot){
-                var hasUsers = snapshot.hasChild("my/users");
-                if (hasUsers){
-                    console.log('A');
-                    console.log(party.syncInstance.child("my/users"));
-                } 
-                else {
-                    console.log('B');
-                    usersRef = party.syncInstance.child("my/users");
-                    usersRef.set({id: user.userId});
-                }
-            });
+          party.enclosure = array[1];
 
-            sim.scene.add(skeleton);
+          logUser(array[2]);
 
-            var sceneSync = SceneSync(party.syncInstance, {
-                instantiators: {
-                    'Cube': party.createCube,
-                    'InstantiationSphere': party.createInstantiationSphere,
-                    'DestructionSphere': party.createDestructionSphere,
-                    'Card': party.createCard,
-                },
-                destroyers: {
-                    'Cube': party.destroyCube
-                },
-                ready: ready
-            });
-            sim.scene.addBehavior(sceneSync);
-
-            party.skeleton = skeleton;
-            party.sim = sim;
-            party.sceneSync = sceneSync;
-            party.enclosure = enclosure;
-
+          setupSceneSync();
         }).catch(function (err) {
-            console.error('Failed to get Altspace browser properties');
-            console.dir(err);
+          console.error('Failed to get Altspace browser properties');
+          console.dir(err);
         });
     }
 
+    function addSkeleton(skeleton){
+      party.sim.scene.add(skeleton);
+      party.skeleton = skeleton;
+    }
+
+    function logUser(user){
+      console.log(user.userId);
+      console.log(user.displayName);
+    }
+
+    function setupSceneSync(){
+      var sceneSync = SceneSync(party.syncInstance, {
+        instantiators: {
+          'Cube': party.createCube,
+          'SphereThatStartsGame': party.createSphereThatStartsGame,
+          'SphereThatEndsGame': party.createSphereThatEndsGame,
+//          'Round': party.createRound,
+          'Card': party.createCard
+        },
+        destroyers: {
+          'Cube': party.destroyCube
+        },
+        ready: ready
+      });
+      party.sim.scene.addBehavior(sceneSync);
+      party.sceneSync = sceneSync;
+    }
+
+//    function createRound(){
+//      var round = new THREE.Object3d();
+//      round.addBehavior(roundBehavior());
+//      return round;
+//    }
+//    party.createRound = createRound;
+//
+//    function roundBehavior(){
+//      var object3d;
+//      var users;
+//
+//      function awake(o){
+//        object3d = o;
+//      }
+//
+//      function update(deltaTime){
+//        if (!_.isEqual(users, object3d.userData.syncData.users)){
+//          users = object3d.userData.syncData.users;
+//          console.log("users updated to:");
+//          console.log(users);
+//        }
+//      }
+//
+//      return {awake: awake, update: update};
+//    }
+
+
     function ready(firstInInstance) {
-        if (firstInInstance) {
-            party.sceneSync.instantiate('InstantiationSphere', { radius: 50 });
-            party.sceneSync.instantiate('DestructionSphere', { radius: 50 });
-        }
-        else {
-        }
+      if (firstInInstance) {
+        party.sceneSync.instantiate('SphereThatStartsGame', { radius: 30 });
+        party.sceneSync.instantiate('SphereThatEndsGame', { radius: 30 });
+//        party.round = party.sceneSync.instantiate('Round', {});
+      }
+      else {
+      }
     }
 
     init();
