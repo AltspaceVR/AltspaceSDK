@@ -125,10 +125,10 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		//For axis and button numbers see: https://w3c.github.io/gamepad/  
 		var isResetButton = gamepad.buttons[8].pressed;//reset / back button
 		if (isResetButton) {
+			if (!sync.isMine) sync.takeOwnership();
 			object3d.position.copy(originalObj.position);
 			object3d.rotation.copy(originalObj.rotation);
 			object3d.scale.copy(originalObj.scale);
-	    if (sync) sync.enqueueSend();
 			return;
 		}
 
@@ -139,6 +139,9 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 
 			var leftStickX = gamepad.axes[0];//left / right
 			var leftStickY = gamepad.axes[1];//up / down
+
+			var isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
+			if (isMove && !sync.isMine) sync.takeOwnership();
 
 			var moveDistance = 200 * (deltaTime/1000);// 200 units per second
 			if (!isAltModeL && Math.abs(leftStickX) > tolerance) {
@@ -163,6 +166,9 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 			var rightStickX = gamepad.axes[2];//left / right
 			var rightStickY = gamepad.axes[3];//up / down
 
+			var isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
+			if (isRotate && !sync.isMine) sync.takeOwnership();
+
 			var rotateAngle = Math.PI * (deltaTime/1000);// 180 degrees per second
 			if (!isAltModeR && Math.abs(rightStickX) > tolerance) {
 				object3d.rotation.y += rotateAngle * rightStickX;
@@ -180,6 +186,9 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 			var dpadUp = gamepad.buttons[12].pressed;//d-pad up
 			var dpadDown = gamepad.buttons[13].pressed;//d-pad down
 
+			var isScale = gamepad.buttons[12].pressed || gamepad.buttons[13].pressed;
+			if (isScale && !sync.isMine) sync.takeOwnership();
+
 			var prev = object3d.scale;
 			var v3 = new THREE.Vector3(1, 1, 1);
 			v3.multiplyScalar(scaleChange);
@@ -190,8 +199,6 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 				}
 			}
 		}
-
-    if (sync) sync.enqueueSend();
 
 	}
 
