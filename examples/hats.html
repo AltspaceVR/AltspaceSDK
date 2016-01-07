@@ -153,13 +153,13 @@
                 }
 
                 function update() {
+                    //No need to take ownership of this hat, since we created it.
                     object3d.position.copy(joint.position);
                     object3d.rotation.copy(joint.rotation);
                     //Use offset to position hat on top of head.
                     object3d.translateX(offset.x);
                     object3d.translateY(offset.y);
                     object3d.translateZ(offset.z);
-                    sync.enqueueSend();
                 }
 
                 return { awake: awake, update: update };
