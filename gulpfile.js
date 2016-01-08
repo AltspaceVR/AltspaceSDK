@@ -166,6 +166,7 @@ gulp.task('publish-precheck', function (done) {
             done(message);
             return false;
         }
+        return true;
     };
 
     git.fetch(targetRemote, '', function (err) {
