@@ -162,8 +162,9 @@ gulp.task('doc', ['altspace_js'], function () {
 gulp.task('publish-precheck', function (done) {
     var checkEnv = function (varName) {
         if (!process.env[varName]) {
-            done(varName + ' environment variable required.');
-            throw new Error();
+            var message = varName + ' environment variable required.';
+            done(message);
+            throw new Error(message);
         }
     };
 
