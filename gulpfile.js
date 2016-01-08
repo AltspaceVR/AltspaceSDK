@@ -163,7 +163,7 @@ gulp.task('publish-precheck', function (done) {
     var checkEnv = function (varName) {
         if (!process.env[varName]) {
             var message = varName + ' environment variable required.';
-            done(message);
+            done(-1);
             throw new Error(message);
         }
     };
