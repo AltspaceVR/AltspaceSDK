@@ -280,8 +280,8 @@ gulp.task('publish', function (done) {
         'push-tags',
         'push-gh-pages',
         'release',
-        // 'publish-npm',
-        // 'publish-aws',
-        // 'invalidate-aws',
+        'publish-npm',
+        'publish-aws',
+        'invalidate-aws',
         done);
 });
