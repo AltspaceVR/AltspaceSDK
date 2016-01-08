@@ -182,7 +182,7 @@ gulp.task('publish-precheck', function (done) {
                 done('Commit or discard all changes before you publish.'); return;
             }
             if (!checkEnv('githubtoken')) { return; }
-            // checkEnv('awssecretkey');
+            if (!checkEnv('awssecretkey')) { return; }
             done();
         });
     });
