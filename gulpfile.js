@@ -39,6 +39,7 @@ var gulp = require('gulp'),
 var awsRegion = 'us-west-1';
 var awsAccessKey = 'AKIAJEGF6GH26BCU7VYA';
 var s3Path = '/test/altspace.js';
+var targetRemote = 'origin';
 
 gulp.task('default', function () {
     return gulp.start('altspace_js');
@@ -158,6 +159,32 @@ gulp.task('doc', ['altspace_js'], function () {
         }));
 });
 
+gulp.task('publish-precheck', function (done) {
+    var checkEnv = function (varName) {
+        if (!process.env[varName]) {
+            throw new Error(varName + ' environment variable required.');
+        }
+    };
+
+    git.fetch(targetRemote, '', function (err) {
+        if (err) { throw new Error(err); }
+        git.status(function (err, stdout) {
+            if (err) { throw new Error(err); }
+            if (stdout.indexOf('On branch master') === -1) {
+                throw new Error('Must publish from master.');
+            }
+            if (stdout.indexOf("up-to-date with '" + targetRemote + "'/master") === -1) {
+                throw new Error('Branch or remote is out of date.');
+            }
+            if (stdout.indexOf('Changes') === -1) {
+                throw new Error('Commit or discard all changes before you publish.');
+            }
+            checkEnv('githubtoken');
+            // checkEnv('awssecretkey');
+            done();
+        });
+    });
+});
 gulp.task('bump', function () {
     var argv = require('yargs')
         .option('bump', {
@@ -180,13 +207,13 @@ gulp.task('tag', function (done) {
     git.tag('v' + version, 'Release v' + version, done);
 });
 gulp.task('push-tags', function (done) {
-    git.push('origin' , 'master', {args: '--tags'}, done);
+    git.push(targetRemote , 'master', {args: '--tags'}, done);
 });
 gulp.task('push-master', function (done) {
-    git.push('origin' , 'master', done);
+    git.push(targetRemote , 'master', done);
 });
 gulp.task('push-gh-pages', function (done) {
-    git.push('origin' , 'master:gh-pages', {args: '-f'}, done);
+    git.push(targetRemote , 'master:gh-pages', {args: '-f'}, done);
 });
 gulp.task('release', function (done) {
     release({type: 'oauth', token: process.env.githubtoken}, {preset: 'jquery'}, done);
@@ -238,25 +265,18 @@ gulp.task('invalidate-aws', function (done) {
     }, done);
 });
 gulp.task('publish', function (done) {
-    var checkEnv = function (varName) {
-        if (!process.env[varName]) {
-            throw new Error(varName + ' environment variable required.');
-        }
-    };
-    checkEnv('githubtoken');
-    checkEnv('awssecretkey');
-
     runsequence(
-        'bump',
-        'altspace_js',
-        'doc',
-        'add',
-        'commit',
-        'tag',
-        'push-master',
-        'push-tags',
-        'push-gh-pages',
-        'release',
+        'publish-precheck',
+        // 'bump',
+        // 'altspace_js',
+        // 'doc',
+        // 'add',
+        // 'commit',
+        // 'tag',
+        // 'push-master',
+        // 'push-tags',
+        // 'push-gh-pages',
+        // 'release',
         // 'publish-npm',
         // 'publish-aws',
         // 'invalidate-aws',
