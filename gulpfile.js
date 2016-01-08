@@ -29,6 +29,7 @@ var gulp = require('gulp'),
 
     awspublish = require('gulp-awspublish'),
     bump = require('gulp-bump'),
+    del = require('del'),
     git = require('gulp-git'),
     prompt = require('gulp-prompt'),
     release = require('conventional-github-releaser'),
@@ -200,13 +201,15 @@ gulp.task('bump', function () {
         .pipe(bump({type: argv.bump}))
         .pipe(gulp.dest('.'))
 });
-gulp.task('bump-readme', function () {
+gulp.task('bump-readme', function (done) {
     version = JSON.parse(fs.readFileSync('./package.json')).version;
-    return gulp.src('README.md')
-        .pipe(replace(/ VERSION -->(.+?)</g, function (match, group) {
-            return match.substring(0, 12) + version + '<';
-        }))
-        .pipe(gulp.dest('.'));
+    del('README.md').then(function () {
+        gulp.src('README.md.template')
+            .pipe(replace('VERSION', version))
+            .pipe(rename('README.md'))
+            .pipe(gulp.dest('.'))
+            .on('end', done);
+    });
 });
 gulp.task('add', function () {
     return gulp.src('.').pipe(git.add());

@@ -9,6 +9,7 @@
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
     "conventional-github-releaser": "^0.5.1",
+    "del": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-awspublish": "^3.0.1",
     "gulp-babel": "^5.2.1",
