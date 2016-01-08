@@ -41,6 +41,8 @@ var awsAccessKey = 'AKIAJEGF6GH26BCU7VYA';
 var s3Path = '/libs/altspace.js';
 var targetRemote = 'origin';
 
+var version;
+
 gulp.task('default', function () {
     return gulp.start('altspace_js');
 });
@@ -62,9 +64,8 @@ gulp.task('watch', ['altspace_js', 'doc'], function () {
 
 gulp.task('altspace_js', function () {
     var cwd = './';
-    var version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
-    console.log('version');
-    console.log(version);
+    version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
+    console.log('version', version);
 
     gulp.src([
         './**/*.es6.js'
@@ -183,7 +184,7 @@ gulp.task('publish-precheck', function (done) {
                 done('Commit or discard all changes before you publish.'); return;
             }
             if (!checkEnv('githubtoken')) { return; }
-            // if (!checkEnv('awssecretkey')) { return; }
+            if (!checkEnv('awssecretkey')) { return; }
             done();
         });
     });
@@ -198,6 +199,14 @@ gulp.task('bump', function () {
         .pipe(prompt.confirm('Are you sure you want to publish a new version?'))
         .pipe(bump({type: argv.bump}))
         .pipe(gulp.dest('.'))
+});
+gulp.task('bump-readme', function () {
+    version = JSON.parse(fs.readFileSync('./package.json')).version;
+    return gulp.src('README.md')
+        .pipe(replace(/ VERSION -->(.+?)</g, function (match, group) {
+            return match.substring(0, 12) + version + '<';
+        }))
+        .pipe(gulp.dest('.'));
 });
 gulp.task('add', function () {
     return gulp.src('.').pipe(git.add());
@@ -271,6 +280,7 @@ gulp.task('publish', function (done) {
     runsequence(
         'publish-precheck',
         'bump',
+        'bump-readme',
         'altspace_js',
         'doc',
         'add',
