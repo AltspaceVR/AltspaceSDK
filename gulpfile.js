@@ -177,7 +177,7 @@ gulp.task('publish-precheck', function (done) {
             if (stdout.indexOf("up-to-date with '" + targetRemote + "/master'") === -1) {
                 done('Branch or remote is out of date.'); return;
             }
-            if (stdout.indexOf('Changes') === -1) {
+            if (stdout.indexOf('Changes') !== -1) {
                 done('Commit or discard all changes before you publish.'); return;
             }
             checkEnv('githubtoken');
