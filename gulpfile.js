@@ -162,22 +162,23 @@ gulp.task('doc', ['altspace_js'], function () {
 gulp.task('publish-precheck', function (done) {
     var checkEnv = function (varName) {
         if (!process.env[varName]) {
-            throw new Error(varName + ' environment variable required.');
+            done(varName + ' environment variable required.');
+            throw new Error();
         }
     };
 
     git.fetch(targetRemote, '', function (err) {
-        if (err) { throw new Error(err); }
+        if (err) { done(err); return; }
         git.status(function (err, stdout) {
-            if (err) { throw new Error(err); }
+            if (err) { done(err); }
             if (stdout.indexOf('On branch master') === -1) {
-                throw new Error('Must publish from master.');
+                done('Must publish from master.'); return;
             }
             if (stdout.indexOf("up-to-date with '" + targetRemote + "'/master") === -1) {
-                throw new Error('Branch or remote is out of date.');
+                done('Branch or remote is out of date.'); return;
             }
             if (stdout.indexOf('Changes') === -1) {
-                throw new Error('Commit or discard all changes before you publish.');
+                done('Commit or discard all changes before you publish.'); return;
             }
             checkEnv('githubtoken');
             // checkEnv('awssecretkey');
