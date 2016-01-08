@@ -171,7 +171,7 @@ gulp.task('publish-precheck', function (done) {
     git.fetch(targetRemote, '', function (err) {
         if (err) { done(err); return; }
         git.status(function (err, stdout) {
-            if (err) { done(err); }
+            if (err) { done(err); return; }
             if (stdout.indexOf('On branch master') === -1) {
                 done('Must publish from master.'); return;
             }
@@ -269,7 +269,7 @@ gulp.task('invalidate-aws', function (done) {
 gulp.task('publish', function (done) {
     runsequence(
         'publish-precheck',
-        // 'bump',
+        'bump',
         // 'altspace_js',
         // 'doc',
         // 'add',
