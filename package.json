@@ -1,6 +1,6 @@
 {
   "name": "bp-test-altspace",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "repository": "brianpeiris/AltspaceSDK",
   "devDependencies": {
     "babel": "^5.8.23",
