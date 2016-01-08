@@ -216,7 +216,7 @@ module.exports = {
       // 23.2.3.6 Set.prototype.forEach(callbackfn, thisArg = undefined)
       // 23.1.3.5 Map.prototype.forEach(callbackfn, thisArg = undefined)
       forEach: function forEach(callbackfn /*, that = undefined */){
-        var f = ctx(callbackfn, arguments[1], 3)
+        var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3)
           , entry;
         while(entry = entry ? entry.n : this._f){
           f(entry.v, entry.k, this);
@@ -353,7 +353,7 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
   return C;
 };
 },{"./$":28,"./$.def":13,"./$.fails":15,"./$.for-of":16,"./$.global":17,"./$.hide":19,"./$.mix":30,"./$.strict-new":35,"./$.support-desc":37,"./$.tag":38}],11:[function(require,module,exports){
-var core = module.exports = {version: '1.2.1'};
+var core = module.exports = {version: '1.2.3'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 },{}],12:[function(require,module,exports){
 // optional / simple context binding
@@ -460,9 +460,8 @@ module.exports = function(iterable, entries, fn, that){
 };
 },{"./$.an-object":5,"./$.ctx":12,"./$.is-array-iter":21,"./$.iter-call":23,"./$.to-length":41,"./core.get-iterator-method":45}],17:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var UNDEFINED = 'undefined';
-var global = module.exports = typeof window != UNDEFINED && window.Math == Math
-  ? window : typeof self != UNDEFINED && self.Math == Math ? self : Function('return this')();
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
 if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 },{}],18:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
@@ -479,9 +478,9 @@ module.exports = require('./$.support-desc') ? function(object, key, value){
   return object;
 };
 },{"./$":28,"./$.property-desc":31,"./$.support-desc":37}],20:[function(require,module,exports){
-// indexed object, fallback for non-array-like ES3 strings
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = require('./$.cof');
-module.exports = 0 in Object('z') ? Object : function(it){
+module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
 },{"./$.cof":7}],21:[function(require,module,exports){
@@ -562,8 +561,8 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE)
   Iterators[TAG]  = returnThis;
   if(DEFAULT){
     methods = {
-      keys:    IS_SET            ? _default : createMethod(KEYS),
       values:  DEFAULT == VALUES ? _default : createMethod(VALUES),
+      keys:    IS_SET            ? _default : createMethod(KEYS),
       entries: DEFAULT != VALUES ? _default : createMethod('entries')
     };
     if(FORCE)for(key in methods){
@@ -657,14 +656,14 @@ module.exports = !require('./$.fails')(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
 },{"./$.fails":15}],38:[function(require,module,exports){
-var has  = require('./$.has')
-  , hide = require('./$.hide')
-  , TAG  = require('./$.wks')('toStringTag');
+var def = require('./$').setDesc
+  , has = require('./$.has')
+  , TAG = require('./$.wks')('toStringTag');
 
 module.exports = function(it, tag, stat){
-  if(it && !has(it = stat ? it : it.prototype, TAG))hide(it, TAG, tag);
+  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
 };
-},{"./$.has":18,"./$.hide":19,"./$.wks":44}],39:[function(require,module,exports){
+},{"./$":28,"./$.has":18,"./$.wks":44}],39:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
@@ -705,7 +704,9 @@ var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
 module.exports = require('./$.core').getIteratorMethod = function(it){
-  if(it != undefined)return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
+  if(it != undefined)return it[ITERATOR]
+    || it['@@iterator']
+    || Iterators[classof(it)];
 };
 },{"./$.classof":6,"./$.core":11,"./$.iterators":27,"./$.wks":44}],46:[function(require,module,exports){
 'use strict';
@@ -748,7 +749,7 @@ var strong = require('./$.collection-strong');
 
 // 23.1 Map Objects
 require('./$.collection')('Map', function(get){
-  return function Map(){ return get(this, arguments[0]); };
+  return function Map(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.1.3.6 Map.prototype.get(key)
   get: function get(key){

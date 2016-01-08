@@ -58,7 +58,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     function setupReceive() {
         transformRef.on('value', function (snapshot) {
 
-            //if (isMine) return;
+            if (isMine) return;
 
             var value = snapshot.val();
             if (!value) return;
