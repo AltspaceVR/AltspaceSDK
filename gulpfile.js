@@ -174,7 +174,7 @@ gulp.task('publish-precheck', function (done) {
             if (stdout.indexOf('On branch master') === -1) {
                 done('Must publish from master.'); return;
             }
-            if (stdout.indexOf("up-to-date with '" + targetRemote + "'/master") === -1) {
+            if (stdout.indexOf("up-to-date with '" + targetRemote + "/master'") === -1) {
                 done('Branch or remote is out of date.'); return;
             }
             if (stdout.indexOf('Changes') === -1) {
