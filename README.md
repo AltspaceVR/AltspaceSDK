@@ -1,4 +1,4 @@
-# AltspaceVR SDK
+# AltspaceVR  SDK
 
 **Latest Version: v0.3.1 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.3.1)**  
 
