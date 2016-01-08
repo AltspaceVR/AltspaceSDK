@@ -1,6 +1,6 @@
 {
   "name": "bp-test-altspace",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-core": "^5.8.25",
