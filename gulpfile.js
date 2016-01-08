@@ -219,7 +219,7 @@ gulp.task('push-gh-pages', function (done) {
     git.push(targetRemote , 'master:gh-pages', {args: '-f'}, done);
 });
 gulp.task('release', function (done) {
-    release({type: 'oauth', token: process.env.githubtoken}, {preset: 'jquery'}, done);
+    release({type: 'oauth', token: process.env.githubtoken}, done);
 });
 gulp.task('publish-npm', function (done) {
     var task = shell.task('npm publish', {verbose: true})
