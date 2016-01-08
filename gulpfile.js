@@ -163,7 +163,8 @@ gulp.task('publish-precheck', function (done) {
     var checkEnv = function (varName) {
         if (!process.env[varName]) {
             var message = varName + ' environment variable required.';
-            throw new Error(message);
+            done(message);
+            return false;
         }
     };
 
@@ -180,7 +181,7 @@ gulp.task('publish-precheck', function (done) {
             if (stdout.indexOf('Changes') !== -1) {
                 done('Commit or discard all changes before you publish.'); return;
             }
-            checkEnv('githubtoken');
+            if (!checkEnv('githubtoken')) { return; }
             // checkEnv('awssecretkey');
             done();
         });
