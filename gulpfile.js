@@ -25,7 +25,21 @@ var gulp = require('gulp'),
 
     jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
-    sourcemaps = require('gulp-sourcemaps');
+    sourcemaps = require('gulp-sourcemaps'),
+
+    awspublish = require('gulp-awspublish'),
+    bump = require('gulp-bump'),
+    git = require('gulp-git'),
+    prompt = require('gulp-prompt'),
+    release = require('conventional-github-releaser'),
+    runsequence = require('run-sequence'),
+    shell = require('gulp-shell'),
+    aws = require('aws-sdk');
+
+var awsRegion = 'us-west-1';
+var awsAccessKey = 'AKIAJEGF6GH26BCU7VYA';
+var s3Path = '/libs/altspace.js';
+var targetRemote = 'origin';
 
 gulp.task('default', function () {
     return gulp.start('altspace_js');
@@ -143,4 +157,131 @@ gulp.task('doc', ['altspace_js'], function () {
         }, {
             plugins: ['plugins/markdown']
         }));
+});
+
+gulp.task('publish-precheck', function (done) {
+    var checkEnv = function (varName) {
+        if (!process.env[varName]) {
+            var message = varName + ' environment variable required.';
+            done(message);
+            return false;
+        }
+        return true;
+    };
+
+    git.fetch(targetRemote, '', function (err) {
+        if (err) { done(err); return; }
+        git.status(function (err, stdout) {
+            if (err) { done(err); return; }
+            if (stdout.indexOf('On branch master') === -1) {
+                done('Must publish from master.'); return;
+            }
+            if (stdout.indexOf("up-to-date with '" + targetRemote + "/master'") === -1) {
+                done('Branch or remote is out of date.'); return;
+            }
+            if (stdout.indexOf('Changes') !== -1) {
+                done('Commit or discard all changes before you publish.'); return;
+            }
+            if (!checkEnv('githubtoken')) { return; }
+            // if (!checkEnv('awssecretkey')) { return; }
+            done();
+        });
+    });
+});
+gulp.task('bump', function () {
+    var argv = require('yargs')
+        .option('bump', {
+            choices: ['major', 'minor', 'patch'],
+            default: 'patch'})
+        .argv;
+    return gulp.src('package.json')
+        .pipe(prompt.confirm('Are you sure you want to publish a new version?'))
+        .pipe(bump({type: argv.bump}))
+        .pipe(gulp.dest('.'))
+});
+gulp.task('add', function () {
+    return gulp.src('.').pipe(git.add());
+});
+gulp.task('commit', function () {
+    version = JSON.parse(fs.readFileSync('./package.json')).version;
+    return gulp.src('.').pipe(git.commit('Bump release v' + version));
+});
+gulp.task('tag', function (done) {
+    git.tag('v' + version, 'Release v' + version, done);
+});
+gulp.task('push-tags', function (done) {
+    git.push(targetRemote , 'master', {args: '--tags'}, done);
+});
+gulp.task('push-master', function (done) {
+    git.push(targetRemote , 'master', done);
+});
+gulp.task('push-gh-pages', function (done) {
+    git.push(targetRemote , 'master:gh-pages', {args: '-f'}, done);
+});
+gulp.task('release', function (done) {
+    release({type: 'oauth', token: process.env.githubtoken}, done);
+});
+gulp.task('publish-npm', function (done) {
+    var task = shell.task('npm publish', {verbose: true})
+    task(function (error) {
+        if (error) {
+            console.error(error.message, error.stderr);
+        }
+        done(error);
+    });
+});
+gulp.task('publish-aws', function () {
+    var publisher = awspublish.create({
+        region: awsRegion,
+        accessKeyId: awsAccessKey,
+        secretAccessKey: process.env.awssecretkey,
+        params: {Bucket: 'sdk.altvr.com'}
+    });
+    var getFiles = function (versionDir) {
+        return gulp.src('dist/**')
+            .pipe(rename(function (path) {
+                if (path.dirname === '.') { path.dirname = ''; }
+                path.dirname = s3Path + '/' + versionDir + '/' + path.dirname;
+            }));
+    };
+    return merge(getFiles('latest'), getFiles(version))
+        .pipe(publisher.publish())
+        .pipe(awspublish.reporter());
+});
+gulp.task('invalidate-aws', function (done) {
+    var cloudfront = new aws.CloudFront({
+        region: awsRegion,
+        accessKeyId: awsAccessKey,
+        secretAccessKey: process.env.awssecretkey
+    });
+    cloudfront.createInvalidation({
+        DistributionId: 'E2PD2TV7TP1TIP',
+        InvalidationBatch: {
+            CallerReference: version,
+            Paths: {
+                Quantity: 1, 
+                Items: [
+                    s3Path + '/latest*'
+                ]
+            }
+        }
+    }, done);
+});
+gulp.task('publish', function (done) {
+    runsequence(
+        'publish-precheck',
+        'bump',
+        'altspace_js',
+        'doc',
+        'add',
+        'commit',
+        'tag',
+        'push-master',
+        'push-tags',
+        'push-gh-pages',
+        'release',
+        'publish-npm',
+        'publish-aws',
+        'invalidate-aws',
+        done);
 });
