@@ -9,6 +9,14 @@ var wordIsAttached = false;
     var Sync = altspace.utilities.SceneSync;
 
     party.syncInstance = altspace.utilities.sync.getInstance();
+//    var partyGamesRef = party.syncInstance.child("partygames");
+//    var allClients = partyGamesRef.child("clients");
+//    allClients.on("value", function(snapshot){
+//      var clientIds = snapshot.val();
+//      if (!clientIds) return;
+//      updateTheViewOfAllTheClientsInThisRound(clientIds);
+//    });
+
 
     function init() {
         if (!window.altspace || !window.altspace.inClient) {
@@ -23,6 +31,7 @@ var wordIsAttached = false;
 
           party.enclosure = array[1];
 
+          var user = array[2];
           logUser(array[2]);
 
           setupSceneSync();
@@ -31,6 +40,18 @@ var wordIsAttached = false;
           console.dir(err);
         });
     }
+
+    //    clientId = scene.uuid;
+    //    clientsRef.on("value", function (snapshot) {
+    //        var clientIds = snapshot.val();
+
+    //        if (!clientIds) return;
+
+    //        masterClientId = clientIds[0];
+    //    });
+    //    // add our client ID to the list of connected clients, 
+    //    // but have it be automatically removed by firebase if we disconnect for any reason
+    //    clientsRef.push(clientId).onDisconnect().remove();
 
     function addSkeleton(skeleton){
       party.sim.scene.add(skeleton);
