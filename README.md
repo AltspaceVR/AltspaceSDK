@@ -125,4 +125,6 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 [Live Coding Tutorial]: https://www.youtube.com/watch?v=R47GvXmvmec
 [AltspaceVR looking for SDK Collaborators]: https://www.youtube.com/watch?v=dk8i5or4PJI
 
+---
 
+[![dev dependency status](https://david-dm.org/AltspaceVR/AltspaceSDK/dev-status.svg)](https://david-dm.org/AltspaceVR/AltspaceSDK/#info=devDependencies)
