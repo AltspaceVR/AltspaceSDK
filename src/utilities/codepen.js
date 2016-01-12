@@ -9,7 +9,7 @@ altspace.utilities.codePen = (function () {
     var Url = window.Url;
 
     var name = 'VR CodePen';
-    var inTile = window.name.startsWith('pen-');
+    var inTile = window.name && window.name.slice(0, 4) === 'pen-';
     var inVR = !!window.altspace.inClient;
     var inCodePen = !!location.href.match('codepen.io/');
 
