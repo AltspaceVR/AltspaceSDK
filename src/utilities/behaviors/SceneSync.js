@@ -56,9 +56,11 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         clientsRef.on("value", function (snapshot) {
             var clientIds = snapshot.val();
 
+            if (!clientIds) console.log('no clientIds, returning');
             if (!clientIds) return;
 
-            masterClientId = clientIds[0];
+            masterClientKey = Object.keys(clientIds)[0];
+            masterClientId = clientIds[masterClientKey];
         });
         // add our client ID to the list of connected clients, 
         // but have it be automatically removed by firebase if we disconnect for any reason
