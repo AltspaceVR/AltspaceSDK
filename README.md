@@ -91,8 +91,15 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 **Not currently supported:**
 * Lighting, custom shaders, screen space effects.
 * Examples that won't work: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
+* Using GIF images for textures
+* Line Geometries
+* Dynamic meshes, skinned meshes
+* Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)
 
 **Habits of Successful AltspaceVR Web Apps:**
+* Use power-of-two dimensions on your textures for improved performance.
+* Mind your texture sizes. Large textures can cause frame locking in the client.
+* If your app requires many different textures and geometries, add them to a scene incrementally.
 * Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
 * Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
 * Limit the number of objects per scene and polygons per object.
@@ -125,4 +132,6 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 [Live Coding Tutorial]: https://www.youtube.com/watch?v=R47GvXmvmec
 [AltspaceVR looking for SDK Collaborators]: https://www.youtube.com/watch?v=dk8i5or4PJI
 
+---
 
+[![dev dependency status](https://david-dm.org/AltspaceVR/AltspaceSDK/dev-status.svg)](https://david-dm.org/AltspaceVR/AltspaceSDK/#info=devDependencies)
