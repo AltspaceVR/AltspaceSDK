@@ -220,5 +220,8 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
     Object.defineProperty(exports, 'clientId', {
         get: function () { return clientId; }
     });
+    Object.defineProperty(exports, 'clientsRef', {
+        get: function () { return clientsRef; }
+    });
     return exports;
 };
