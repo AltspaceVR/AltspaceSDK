@@ -227,25 +227,6 @@ gulp.task('publish-aws', function () {
         .pipe(publisher.publish())
         .pipe(awspublish.reporter());
 });
-gulp.task('invalidate-aws', function (done) {
-    var cloudfront = new aws.CloudFront({
-        region: awsRegion,
-        accessKeyId: awsAccessKey,
-        secretAccessKey: process.env.awssecretkey
-    });
-    cloudfront.createInvalidation({
-        DistributionId: 'E2PD2TV7TP1TIP',
-        InvalidationBatch: {
-            CallerReference: version,
-            Paths: {
-                Quantity: 1, 
-                Items: [
-                    s3Path + '/latest*'
-                ]
-            }
-        }
-    }, done);
-});
 
 // ### Main tasks ###
 
@@ -300,6 +281,5 @@ gulp.task('publish', function (done) {
         'release',
         'publish-npm',
         'publish-aws',
-        'invalidate-aws',
         done);
 });
