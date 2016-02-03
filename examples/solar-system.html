@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang=en>
 <head>
 <meta charset=utf-8>
@@ -71,7 +71,7 @@ SolarSystemApp = (function(){
 	var loadRequest;
 
 	function main() {
-		sim = window.sim = altspace.utilities.Simulation();
+	    sim = window.sim = altspace.utilities.Simulation();
 		sim.scene.add(solarSystem);
 		if (altspace.inClient) {
 			altspace.getEnclosure().then(function (enclosure) {

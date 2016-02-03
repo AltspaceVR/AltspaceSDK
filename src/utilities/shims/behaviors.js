@@ -31,13 +31,22 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
     var deltaTime = now - lastNow;
 
     var self = this;
+
+    //gather objects first so that behaviors can change the hierarchy during traversal without incident
+    var objectsWithBehaviors = [];
+
     this.traverse(function (object3d) {
 
         if (object3d.__behaviorList) {
-            object3d.updateBehaviors(deltaTime, self);
+            objectsWithBehaviors.push(object3d);
         }
 
     });
+
+    for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
+        object3d = objectsWithBehaviors[i];
+        object3d.updateBehaviors(deltaTime, self);
+    }
 
     this.__lastNow = now;
 
@@ -92,9 +101,15 @@ THREE.Object3D.prototype.removeBehavior = function(behavior)
 
             if (behavior.dispose) behavior.dispose.call(behavior, this);
 
-        } catch (e) {
-
-            (console.error || console.log).call(console, e.stack || e);
+        } catch (error) {
+            
+            console.group();
+            (console.error || console.log).call(console, error.stack || error);
+            console.log('[Behavior]');
+            console.log(behavior);
+            console.log('[Object3D]');
+            console.log(this);
+            console.groupEnd();
 
         }
     }
@@ -118,9 +133,15 @@ THREE.Object3D.prototype.removeAllBehaviors = function ()
 
             if (behavior.dispose) behavior.dispose.call(behavior, this);
 
-        } catch (e) {
+        } catch (error) {
 
-            (console.error || console.log).call(console, e.stack || e);
+            console.group();
+            (console.error || console.log).call(console, error.stack || error);
+            console.log('[Behavior]');
+            console.log(behavior);
+            console.log('[Object3D]');
+            console.log(this);
+            console.groupEnd();
 
         }
     }
@@ -172,9 +193,15 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 
             if (behavior.awake) behavior.awake.call(behavior, this, scene);
 
-        } catch (e) {
+        } catch (error) {
 
-            (console.error || console.log).call(console, e.stack || e);
+            console.group();
+            (console.error || console.log).call(console, error.stack || error);
+            console.log('[Behavior]');
+            console.log(behavior);
+            console.log('[Object3D]');
+            console.log(this);
+            console.groupEnd();
 
         }
 
@@ -188,9 +215,15 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 
             if (behavior.start) behavior.start.call(behavior);
 
-        } catch (e) {
+        } catch (error) {
 
-            (console.error || console.log).call(console, e.stack || e);
+            console.group();
+            (console.error || console.log).call(console, error.stack || error);
+            console.log('[Behavior]');
+            console.log(behavior);
+            console.log('[Object3D]');
+            console.log(this);
+            console.groupEnd();
 
         }
         behavior.__isInitialized = true;
@@ -205,9 +238,15 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 
             if (behavior.update) behavior.update.call(behavior, deltaTime);
 
-        } catch (e) {
+        } catch (error) {
 
-            (console.error || console.log).call(console, e.stack || e);
+            console.group();
+            (console.error || console.log).call(console, error.stack || error);
+            console.log('[Behavior]');
+            console.log(behavior);
+            console.log('[Object3D]');
+            console.log(this);
+            console.groupEnd();
 
         }
 
