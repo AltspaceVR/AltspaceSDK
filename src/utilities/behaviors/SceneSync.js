@@ -56,7 +56,6 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         clientsRef.on("value", function (snapshot) {
             var clientIds = snapshot.val();
 
-            if (!clientIds) console.log('no clientIds, returning');
             if (!clientIds) return;
 
             masterClientKey = Object.keys(clientIds)[0];
@@ -211,15 +210,50 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         destroy: destroy,
         type: 'SceneSync'
     };
+
+    /**
+     * Interval at which an object's position/rotation/scale data is sent to Firebase,
+     * in milliseconds.
+     * @readonly
+     * @instance
+     * @member {number} autoSendRateMS
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
     Object.defineProperty(exports, 'autoSendRateMS', {
         get: function () { return autoSendRateMS; }
     });
+
+    /**
+     * True if this client is the master, false otherwise. Master is generally the client that 
+     * has been in the room the longest.
+     * @readonly
+     * @instance
+     * @member {boolean} isMasterClient
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
     Object.defineProperty(exports, 'isMasterClient', {
         get: function () { return masterClientId === clientId; }
     });
+
+    /**
+     * UUID of the current client. 
+     * @readonly
+     * @instance
+     * @member {string} clientId
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
     Object.defineProperty(exports, 'clientId', {
         get: function () { return clientId; }
     });
+
+    /**
+     * Firebase reference for the 'clients' child location. Can be used by app to listen
+     * to clients entering and leaving the room (but generally should not be modified by apps).
+     * @readonly
+     * @instance
+     * @member {Firebase} clientsRef
+     * @memberof module:altspace/utilities/behaviors.SceneSync
+     */
     Object.defineProperty(exports, 'clientsRef', {
         get: function () { return clientsRef; }
     });

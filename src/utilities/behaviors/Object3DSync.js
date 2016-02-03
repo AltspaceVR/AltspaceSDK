@@ -13,8 +13,6 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  be synced
  * @param {Boolean} [config.scale=false] Whether object's scale should
  *  be synced
- * @param {Boolean} [config.syncData=false] Whether object's syncData should
- *  be synced
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
  *  automatically. Not currently recommended.
  * @param {Boolean} [config.world=false] Whether world coordiantes should
@@ -27,8 +25,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     config = config || {};
     /*if (config.position === undefined) config.position = true;
     if (config.rotation === undefined) config.rotation = true;
-    if (config.scale === undefined) config.scale = true;
-    if (config.syncData === undefined) config.syncData = true;*/
+    if (config.scale === undefined) config.scale = true; */
     var object3d;
     var scene;
     var ref;
@@ -137,18 +134,41 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
         
     }
 
+    /**
+     * Take ownership of this object. The client that instantiates an object owns it,
+     * afterwards changes in ownership must be managed by the app. Manual modifications
+     * to the Firebase ref's will not obey ownership status.
+     * @instance
+     * @method takeOwnership
+     * @memberof module:altspace/utilities/behaviors.Object3DSync
+     */
     function takeOwnership() {
         ownerRef.set(sceneSync.clientId);
     }
 
     var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, autoSend: send, takeOwnership: takeOwnership };
 
+    /**
+     * Firebase reference for the 'data' child location, can be used to store data related to
+     * this object.
+     * @readonly
+     * @instance
+     * @member {Firebase} dataRef
+     * @memberof module:altspace/utilities/behaviors.Object3DSync
+     */
     Object.defineProperty(exports, 'dataRef', {
         get: function () {
             return dataRef;
         }
     });
 
+    /**
+     * True if this object is currently owned by this client, false otherwise.
+     * @readonly
+     * @instance
+     * @member {boolean} isMine
+     * @memberof module:altspace/utilities/behaviors.Object3DSync
+     */
     Object.defineProperty(exports, 'isMine', {
         get: function () {
             return isMine;
