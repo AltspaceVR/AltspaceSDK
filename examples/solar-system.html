@@ -68,12 +68,10 @@ SolarSystemApp = (function(){
 	var selectedPlanetName = 'earth';
 	var solarSystem = new THREE.Object3D();
 	var multiloader = altspace.utilities.multiloader;
-	//var Elemental = altspace.utilities.behaviors.Elemental;
 	var loadRequest;
 
 	function main() {
 	    sim = window.sim = altspace.utilities.Simulation();
-	    //sim.scene.addBehavior(Elemental());
 		sim.scene.add(solarSystem);
 		if (altspace.inClient) {
 			altspace.getEnclosure().then(function (enclosure) {
