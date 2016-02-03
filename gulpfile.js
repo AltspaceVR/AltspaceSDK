@@ -95,8 +95,6 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/Object3DSync.js',
             './src/utilities/behaviors/SceneSync.js',
             './src/utilities/behaviors/Spin.js',
-            './src/utilities/behaviors/Elemental.js',
-            //'./src/utilities/behaviors/Grab.js',
             './src/utilities/behaviors/TouchpadRotate.js'
         ], { cwd: cwd }),
         browserify(
