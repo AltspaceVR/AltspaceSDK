@@ -44,24 +44,11 @@ var targetRemote = 'origin';
 
 var version;
 
-gulp.task('default', function () {
-    return gulp.start('altspace_js');
-});
-
 var docfiles = [
     'src/utilities/**/*.js',
     '!src/utilities/**/*.es6.js',
     'README.md'
 ];
-
-gulp.task('watch', ['altspace_js', 'doc'], function () {
-    gulp.watch('./version.json', ['altspace_js']);
-    gulp.watch('./examples/**/*.js', ['altspace_js']);
-    gulp.watch('./src/**/*.js', ['altspace_js']);
-    gulp.watch('./lib/**/*.js', ['altspace_js']);
-    gulp.watch('./tests/**/*.js', ['altspace_js']);
-    gulp.watch(docfiles, {verbose: true}, ['doc']);
-});
 
 gulp.task('altspace_js', function () {
     var cwd = './';
@@ -139,27 +126,7 @@ gulp.task('altspace_js', function () {
         .pipe(print());
 });
 
-gulp.task('doc', ['altspace_js'], function () {
-    var argv = yargs.option(
-        'clientjs',
-        {
-            describe: 'Path to the directory containing altspace-client.js',
-            demand: true
-        }
-    ).argv
-    if (argv.clientjs) {
-        docfiles.push(argv.clientjs + '/*.js');
-    }
-    return gulp.src(docfiles)
-        .pipe(jsdoc('./doc', {
-            path: path.resolve('node_modules/minami'),
-            default: {
-                outputSourceFiles: false
-            }
-        }, {
-            plugins: ['plugins/markdown']
-        }));
-});
+// ### Publish tasks ###
 
 gulp.task('publish-precheck', function (done) {
     var checkEnv = function (varName) {
@@ -279,6 +246,44 @@ gulp.task('invalidate-aws', function (done) {
         }
     }, done);
 });
+
+// ### Main tasks ###
+
+gulp.task('default', function () {
+    return gulp.start('altspace_js');
+});
+
+gulp.task('doc', ['altspace_js'], function () {
+    var argv = yargs.option(
+        'clientjs',
+        {
+            describe: 'Path to the directory containing altspace-client.js',
+            demand: true
+        }
+    ).argv
+    if (argv.clientjs) {
+        docfiles.push(argv.clientjs + '/*.js');
+    }
+    return gulp.src(docfiles)
+        .pipe(jsdoc('./doc', {
+            path: path.resolve('node_modules/minami'),
+            default: {
+                outputSourceFiles: false
+            }
+        }, {
+            plugins: ['plugins/markdown']
+        }));
+});
+
+gulp.task('watch', ['altspace_js', 'doc'], function () {
+    gulp.watch('./version.json', ['altspace_js']);
+    gulp.watch('./examples/**/*.js', ['altspace_js']);
+    gulp.watch('./src/**/*.js', ['altspace_js']);
+    gulp.watch('./lib/**/*.js', ['altspace_js']);
+    gulp.watch('./tests/**/*.js', ['altspace_js']);
+    gulp.watch(docfiles, {verbose: true}, ['doc']);
+});
+
 gulp.task('publish', function (done) {
     runsequence(
         'publish-precheck',
