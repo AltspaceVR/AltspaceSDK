@@ -121,7 +121,6 @@ gulp.task('altspace_js', function () {
         })
         .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest('./dist/', { cwd: cwd }))
-        //.pipe(gulp.dest('./dist/latest', { cwd: cwd }))
         //.pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
         .pipe(print());
 });
@@ -216,14 +215,11 @@ gulp.task('publish-aws', function () {
         secretAccessKey: process.env.awssecretkey,
         params: {Bucket: 'sdk.altvr.com'}
     });
-    var getFiles = function (versionDir) {
-        return gulp.src('dist/**')
-            .pipe(rename(function (path) {
-                if (path.dirname === '.') { path.dirname = ''; }
-                path.dirname = s3Path + '/' + versionDir + '/' + path.dirname;
-            }));
-    };
-    return merge(getFiles('latest'), getFiles(version))
+    return gulp.src('dist/**')
+        .pipe(rename(function (path) {
+            if (path.dirname === '.') { path.dirname = ''; }
+            path.dirname = s3Path + '/' + version + '/' + path.dirname;
+        }))
         .pipe(publisher.publish())
         .pipe(awspublish.reporter());
 });
