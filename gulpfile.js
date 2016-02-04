@@ -25,11 +25,24 @@ var gulp = require('gulp'),
 
     jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
-    sourcemaps = require('gulp-sourcemaps');
+    sourcemaps = require('gulp-sourcemaps'),
 
-gulp.task('default', function () {
-    return gulp.start('altspace_js');
-});
+    awspublish = require('gulp-awspublish'),
+    bump = require('gulp-bump'),
+    del = require('del'),
+    git = require('gulp-git'),
+    prompt = require('gulp-prompt'),
+    release = require('conventional-github-releaser'),
+    runsequence = require('run-sequence'),
+    shell = require('gulp-shell'),
+    aws = require('aws-sdk');
+
+var awsRegion = 'us-west-1';
+var awsAccessKey = 'AKIAJEGF6GH26BCU7VYA';
+var s3Path = '/libs/altspace.js';
+var targetRemote = 'origin';
+
+var version;
 
 var docfiles = [
     'src/utilities/**/*.js',
@@ -37,20 +50,10 @@ var docfiles = [
     'README.md'
 ];
 
-gulp.task('watch', ['altspace_js', 'doc'], function () {
-    gulp.watch('./version.json', ['altspace_js']);
-    gulp.watch('./examples/**/*.js', ['altspace_js']);
-    gulp.watch('./src/**/*.js', ['altspace_js']);
-    gulp.watch('./lib/**/*.js', ['altspace_js']);
-    gulp.watch('./tests/**/*.js', ['altspace_js']);
-    gulp.watch(docfiles, {verbose: true}, ['doc']);
-});
-
 gulp.task('altspace_js', function () {
     var cwd = './';
-    var version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
-    console.log('version');
-    console.log(version);
+    version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
+    console.log('version', version);
 
     gulp.src([
         './**/*.es6.js'
@@ -74,7 +77,6 @@ gulp.task('altspace_js', function () {
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
             './lib/firebase.js',
-            //'./lib/TweenLite.min.js',
 
             './src/shim-core.js',
 
@@ -107,8 +109,8 @@ gulp.task('altspace_js', function () {
             './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
-        //.pipe(jshint())
-        //.pipe(jshint.reporter('default'))
+        .pipe(concat('altspace.js'))
+        .pipe(gulp.dest('./dist/', { cwd: cwd }))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
         .pipe(uglify())
@@ -117,9 +119,116 @@ gulp.task('altspace_js', function () {
         })
         .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest('./dist/', { cwd: cwd }))
-        //.pipe(gulp.dest('./dist/latest', { cwd: cwd }))
-        //.pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
         .pipe(print());
+});
+
+// ### Publish tasks ###
+
+gulp.task('publish-precheck', function (done) {
+    var checkEnv = function (varName) {
+        if (!process.env[varName]) {
+            var message = varName + ' environment variable required.';
+            done(message);
+            return false;
+        }
+        return true;
+    };
+
+    git.fetch(targetRemote, '', function (err) {
+        if (err) { done(err); return; }
+        git.status(function (err, stdout) {
+            if (err) { done(err); return; }
+            if (stdout.indexOf('On branch master') === -1) {
+                done('Must publish from master.'); return;
+            }
+            if (stdout.indexOf("up-to-date with '" + targetRemote + "/master'") === -1) {
+                done('Branch or remote is out of date.'); return;
+            }
+            if (stdout.indexOf('Changes') !== -1) {
+                done('Commit or discard all changes before you publish.'); return;
+            }
+            if (!checkEnv('githubtoken')) { return; }
+            if (!checkEnv('awssecretkey')) { return; }
+            done();
+        });
+    });
+});
+gulp.task('bump', function () {
+    var argv = require('yargs')
+        .option('bump', {
+            choices: ['major', 'minor', 'patch'],
+            default: 'patch'})
+        .argv;
+    return gulp.src('package.json')
+        .pipe(prompt.confirm('Are you sure you want to publish a new version?'))
+        .pipe(bump({type: argv.bump}))
+        .pipe(gulp.dest('.'))
+});
+gulp.task('bump-readme', function (done) {
+    version = JSON.parse(fs.readFileSync('./package.json')).version;
+    del('README.md').then(function () {
+        gulp.src('README.md.template')
+            .pipe(replace('VERSION', version))
+            .pipe(rename('README.md'))
+            .pipe(gulp.dest('.'))
+            .on('end', done);
+    });
+});
+gulp.task('add', function () {
+    return gulp.src('.').pipe(git.add());
+});
+gulp.task('commit', function () {
+    version = JSON.parse(fs.readFileSync('./package.json')).version;
+    return gulp.src('.').pipe(git.commit('Bump release v' + version));
+});
+gulp.task('tag', function (done) {
+    git.tag('v' + version, 'Release v' + version, done);
+});
+gulp.task('push-tag', function (done) {
+    git.push(targetRemote , 'master', {args: 'v' + version}, done);
+});
+gulp.task('push-master', function (done) {
+    git.push(targetRemote , 'master', done);
+});
+gulp.task('push-gh-pages', function (done) {
+    git.push(targetRemote , 'master:gh-pages', {args: '-f'}, done);
+});
+gulp.task('release', function (done) {
+    release({type: 'oauth', token: process.env.githubtoken}, done);
+});
+gulp.task('publish-npm', function (done) {
+    var task = shell.task('npm publish', {verbose: true})
+    task(function (error) {
+        if (error) {
+            console.error(error.message, error.stderr);
+        }
+        done(error);
+    });
+});
+gulp.task('publish-aws', function () {
+    var publisher = awspublish.create({
+        region: awsRegion,
+        accessKeyId: awsAccessKey,
+        secretAccessKey: process.env.awssecretkey,
+        params: {Bucket: 'sdk.altvr.com'}
+    });
+    return gulp.src('dist/**')
+        .pipe(rename(function (path) {
+            if (path.dirname === '.') { path.dirname = ''; }
+            path.dirname = s3Path + '/' + version + '/' + path.dirname;
+        }))
+        .pipe(publisher.publish())
+        .pipe(awspublish.reporter());
+});
+
+// ### Main tasks ###
+
+gulp.task('default', function () {
+    return gulp.start('altspace_js');
+});
+
+gulp.task('del-doc', function () {
+    return del('doc');
 });
 
 gulp.task('doc', ['altspace_js'], function () {
@@ -133,6 +242,7 @@ gulp.task('doc', ['altspace_js'], function () {
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }
+    console.log('deleting old docs');
     return gulp.src(docfiles)
         .pipe(jsdoc('./doc', {
             path: path.resolve('node_modules/minami'),
@@ -142,4 +252,33 @@ gulp.task('doc', ['altspace_js'], function () {
         }, {
             plugins: ['plugins/markdown']
         }));
+});
+
+gulp.task('watch', ['altspace_js', 'doc'], function () {
+    gulp.watch('./version.json', ['altspace_js']);
+    gulp.watch('./examples/**/*.js', ['altspace_js']);
+    gulp.watch('./src/**/*.js', ['altspace_js']);
+    gulp.watch('./lib/**/*.js', ['altspace_js']);
+    gulp.watch('./tests/**/*.js', ['altspace_js']);
+    gulp.watch(docfiles, {verbose: true}, ['doc']);
+});
+
+gulp.task('publish', function (done) {
+    runsequence(
+        'publish-precheck',
+        'bump',
+        'bump-readme',
+        'altspace_js',
+        'del-doc',
+        'doc',
+        'add',
+        'commit',
+        'tag',
+        'push-master',
+        'push-tag',
+        'push-gh-pages',
+        'release',
+        'publish-npm',
+        'publish-aws',
+        done);
 });
