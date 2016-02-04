@@ -238,7 +238,9 @@ gulp.task('doc', ['altspace_js'], function () {
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }
+    console.log('deleting old docs');
     return del('./doc').then(function () { 
+        console.log('generating new docs');
         return gulp.src(docfiles)
             .pipe(jsdoc('./doc', {
                 path: path.resolve('node_modules/minami'),
