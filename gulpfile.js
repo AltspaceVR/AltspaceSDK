@@ -175,7 +175,7 @@ gulp.task('bump-readme', function (done) {
     });
 });
 gulp.task('add', function () {
-    return gulp.src('./*').pipe(git.add());
+    return gulp.src('./**').pipe(git.add());
 });
 gulp.task('commit', function () {
     version = JSON.parse(fs.readFileSync('./package.json')).version;
