@@ -77,7 +77,6 @@ gulp.task('altspace_js', function () {
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
             './lib/firebase.js',
-            //'./lib/TweenLite.min.js',
 
             './src/shim-core.js',
 
@@ -110,8 +109,6 @@ gulp.task('altspace_js', function () {
             './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
-        //.pipe(jshint())
-        //.pipe(jshint.reporter('default'))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
         .pipe(uglify())
@@ -120,7 +117,6 @@ gulp.task('altspace_js', function () {
         })
         .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest('./dist/', { cwd: cwd }))
-        //.pipe(gulp.dest('./dist/' + version + '/', { cwd: cwd }))
         .pipe(print());
 });
 
