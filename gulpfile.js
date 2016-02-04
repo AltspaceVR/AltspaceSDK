@@ -109,6 +109,8 @@ gulp.task('altspace_js', function () {
             './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
+        .pipe(concat('altspace.js'))
+        .pipe(gulp.dest('./dist/', { cwd: cwd }))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
         .pipe(uglify())
