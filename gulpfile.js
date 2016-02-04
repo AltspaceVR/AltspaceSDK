@@ -238,15 +238,17 @@ gulp.task('doc', ['altspace_js'], function () {
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }
-    return gulp.src(docfiles)
-        .pipe(jsdoc('./doc', {
-            path: path.resolve('node_modules/minami'),
-            default: {
-                outputSourceFiles: false
-            }
-        }, {
-            plugins: ['plugins/markdown']
-        }));
+    return del('./doc').then(function () { 
+        return gulp.src(docfiles)
+            .pipe(jsdoc('./doc', {
+                path: path.resolve('node_modules/minami'),
+                default: {
+                    outputSourceFiles: false
+                }
+            }, {
+                plugins: ['plugins/markdown']
+            }));
+    });
 });
 
 gulp.task('watch', ['altspace_js', 'doc'], function () {
