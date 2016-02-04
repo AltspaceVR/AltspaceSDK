@@ -1,8 +1,10 @@
-# AltspaceVR SDK 
-
-**Latest Version: v0.3.1 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.3.1)**  
+# AltspaceVR SDK
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.  
+
+**Latest Version: v0.4.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.4.0)**  
+
+<!-- THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD --> 
 
 [Three.js](http://threejs.org/) is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
 
@@ -24,13 +26,13 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 **The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.** This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js` we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
 
-To always use the latest version, simply add this script tag to your project:
+Include the latest version of altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.4.0/altspace.min.js"></script>`
 
-or to include a specific version add:
+If you use npm, you can install altspace.js with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.3.1/altspace.min.js"></script>`
+`npm install altspace`
 
 ## API Overview  
 
