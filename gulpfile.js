@@ -175,7 +175,7 @@ gulp.task('bump-readme', function (done) {
     });
 });
 gulp.task('add', function () {
-    return gulp.src('./**').pipe(git.add());
+    return gulp.src('.').pipe(git.add());
 });
 gulp.task('commit', function () {
     version = JSON.parse(fs.readFileSync('./package.json')).version;
@@ -227,6 +227,10 @@ gulp.task('default', function () {
     return gulp.start('altspace_js');
 });
 
+gulp.task('del-doc', function () {
+    return del('doc');
+});
+
 gulp.task('doc', ['altspace_js'], function () {
     var argv = yargs.option(
         'clientjs',
@@ -239,18 +243,15 @@ gulp.task('doc', ['altspace_js'], function () {
         docfiles.push(argv.clientjs + '/*.js');
     }
     console.log('deleting old docs');
-    return del('./doc').then(function () { 
-        console.log('generating new docs');
-        return gulp.src(docfiles)
-            .pipe(jsdoc('./doc', {
-                path: path.resolve('node_modules/minami'),
-                default: {
-                    outputSourceFiles: false
-                }
-            }, {
-                plugins: ['plugins/markdown']
-            }));
-    });
+    return gulp.src(docfiles)
+        .pipe(jsdoc('./doc', {
+            path: path.resolve('node_modules/minami'),
+            default: {
+                outputSourceFiles: false
+            }
+        }, {
+            plugins: ['plugins/markdown']
+        }));
 });
 
 gulp.task('watch', ['altspace_js', 'doc'], function () {
@@ -268,6 +269,7 @@ gulp.task('publish', function (done) {
         'bump',
         'bump-readme',
         'altspace_js',
+        'del-doc',
         'doc',
         'add',
         'commit',
