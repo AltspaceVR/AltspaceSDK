@@ -26,13 +26,13 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 **The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.** This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js` we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
 
-To always use the latest version, simply add this script tag to your project:
-
-`<script src="http://sdk.altvr.com/libs/altspace.js/latest/altspace.min.js"></script>`
-
-or to include a specific version add:
+Include the latest version of altspace in your app with:
 
 `<script src="http://sdk.altvr.com/libs/altspace.js/VERSION/altspace.min.js"></script>`
+
+If you use npm, you can install altspace.js with:
+
+`npm install altspace`
 
 ## API Overview  
 
