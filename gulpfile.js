@@ -175,7 +175,7 @@ gulp.task('bump-readme', function (done) {
     });
 });
 gulp.task('add', function () {
-    return gulp.src('.').pipe(git.add());
+    return gulp.src('./*').pipe(git.add());
 });
 gulp.task('commit', function () {
     version = JSON.parse(fs.readFileSync('./package.json')).version;
@@ -184,8 +184,8 @@ gulp.task('commit', function () {
 gulp.task('tag', function (done) {
     git.tag('v' + version, 'Release v' + version, done);
 });
-gulp.task('push-tags', function (done) {
-    git.push(targetRemote , 'master', {args: '--tags'}, done);
+gulp.task('push-tag', function (done) {
+    git.push(targetRemote , 'master', {args: 'v' + version}, done);
 });
 gulp.task('push-master', function (done) {
     git.push(targetRemote , 'master', done);
@@ -271,7 +271,7 @@ gulp.task('publish', function (done) {
         'commit',
         'tag',
         'push-master',
-        'push-tags',
+        'push-tag',
         'push-gh-pages',
         'release',
         'publish-npm',
