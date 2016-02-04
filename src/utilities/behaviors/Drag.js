@@ -46,6 +46,7 @@ altspace.utilities.behaviors.Drag = function (config) {
 
     var object3d;
     var scene;
+    var sync;
     var intersector;
     var dragOffset = new THREE.Vector3();
     var raycaster = new THREE.Raycaster();
@@ -53,14 +54,10 @@ altspace.utilities.behaviors.Drag = function (config) {
 
     //if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72'); //TODO: Do we need a revision check?
 
-    function awake(o) {
+    function awake(o, s) {
         object3d = o;
-        object3d.traverseAncestors(function (ancestor) {
-            scene = ancestor;
-        });
-        if (scene.type !== 'Scene') {
-            console.error('Drag behavior can only run on object3ds in a scene');
-        }
+        scene = s;
+        sync = object3d.getBehaviorByType('Object3DSync');
         makeIntersector();
         scene.add(intersector);//TODO: see if I can remove it from the scene. Might not req 72.
     }
@@ -148,6 +145,8 @@ altspace.utilities.behaviors.Drag = function (config) {
 
     function moveDrag(event) {
 
+        if (!sync.isMine) sync.takeOwnership();
+
         //find intersection
         intersector.visible = true;// allow our intersector to be intersected
         raycaster.set(event.ray.origin, event.ray.direction);
@@ -175,10 +174,6 @@ altspace.utilities.behaviors.Drag = function (config) {
           config.z ? targetLocalPosition.z : object3d.position.z
         );
 
-        //If this object is sychronized, update its position.
-        //TODO: Figure out better way of doing this
-        var sync = object3d.getBehaviorByType('Object3DSync');
-        if(sync) sync.enqueueSend();
     }
 
     function stopDrag() {
