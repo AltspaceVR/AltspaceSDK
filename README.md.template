@@ -14,6 +14,8 @@ The AltspaceVR SDK can be used together with [three.js] to create holographic, m
 **[API Reference] - Reference for built in API functions, utilities, and more**  
 **[Developer Portal] - Tutorials, projects, initiative program, and app submission**  
 **[Developer Answers] - Questions and answers about the SDK**  
+**[Local Dev Setup] - Instructions for setting up a local dev environment**  
+**[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**  
 **[CodePen] - Examples that can be edited live in AltspaceVR**  
 **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
 
@@ -114,6 +116,8 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
 [API Reference]: http://altspacevr.github.io/AltspaceSDK/doc/
+[Local Dev Setup]: https://developer.altvr.com/local-dev/
+[App Guidelines]: https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f
 [CodePen]: http://codepen.io/team/altspacevr/public/
 [Getting Started]: https://developer.altvr.com/get-started/
 [Slack]: https://altspacevrsdk.slack.com
