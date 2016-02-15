@@ -101,7 +101,7 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 * Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)
 
 **Habits of Successful AltspaceVR Web Apps:**
-* Use power-of-two dimensions on your textures for improved performance.
+* If you're loading a texture from a URL, make sure its dimenstions are a power-of-two for improved performance.
 * Mind your texture sizes. Large textures can cause frame locking in the client.
 * If your app requires many different textures and geometries, add them to a scene incrementally.
 * Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
