@@ -54,6 +54,7 @@ altspace.utilities.sync = (function() {
         return firebaseInstance;
     }
 
+    //TODO: return a promise instead of using a callback
     function getInstanceForSpace(params, callback) {//TODO: document
 
       params = params || {};
