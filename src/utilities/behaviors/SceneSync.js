@@ -54,12 +54,12 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
         // temporary way of having unique identifiers for each client
         clientId = scene.uuid;
         clientsRef.on("value", function (snapshot) {
-            var clientIds = snapshot.val();
-
-            if (!clientIds) return;
-
-            masterClientKey = Object.keys(clientIds)[0];
-            masterClientId = clientIds[masterClientKey];
+			var clientIds = [];
+			snapshot.forEach(function(child) {
+				clientIds.push(child.val());    
+			});
+			if (clientIds.length === 0) return;
+			masterClientId = clientIds[0];
         });
         // add our client ID to the list of connected clients, 
         // but have it be automatically removed by firebase if we disconnect for any reason

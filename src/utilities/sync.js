@@ -54,6 +54,49 @@ altspace.utilities.sync = (function() {
         return firebaseInstance;
     }
 
+    function getInstanceForSpace(params, callback) {//TODO: document
+
+      params = params || {};
+
+      var inAltspace = altspace && altspace.inClient;
+      var hasRoomId = window.location.search.indexOf('roomId=') !== -1;
+
+      //If roomId is given in the URL, use it, otherwise get the sid.
+      //sid is an URL-safe user-readable string, unique to each space.
+      if (inAltspace && !hasRoomId) {
+        altspace.getSpace().then(function(spaceInfo) {
+          spaceSid = spaceInfo.sid;
+          console.log('Running in Altspace space ' + spaceSid);
+          instance = connect(params, spaceSid);
+          if (callback) callback(instance);
+        }, function(err) {
+          console.error('Error trying to get space info from Altspace', err);
+        });
+      } else {
+        instance = connect(params);
+        if (callback) callback(instance);
+      }      
+    }
+
+    function connect(params, spaceSid) {//TODO: document
+
+      //three cases: roomId in the URL, use Altspace sid, or use default roomId
+      var roomId = url.query['roomId'];
+      if (roomId) {
+        console.log("Got roomId from URL: " + roomId);
+      } else if (spaceSid) {
+        roomId = spaceSid;
+        console.log("No roomId in URL, using Altspace space sid: " + roomId);
+      } else {
+        roomId = params.defaultRoomId || 'default';
+        console.log("No roomId in URL and not running in Altspace, using default room: " + roomId);
+      }
+
+      // Connect to Firebase
+      params["instanceId"] = roomId;
+      return getInstance(params);
+    }
+
     function authenticate(callback){//TODO: Promise and document
         var ref = instance || getInstance(params);
         ref.authAnonymously(function(error, authData) {
@@ -87,5 +130,10 @@ altspace.utilities.sync = (function() {
      *      authorId: yourAuthorId  
      *  });
      */
-    return { getInstance: getInstance, authenticate: authenticate };
+    return {
+      getInstance: getInstance,
+      getInstanceForSpace: getInstanceForSpace,
+      authenticate: authenticate
+    };
+    
 }());
