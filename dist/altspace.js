@@ -7599,7 +7599,7 @@ window.altspace.utilities.behaviors.Layout = Layout;
 
 (function () {
 
-    var version = '0.4.1';
+    var version = '0.4.2';
 
     if (window.altspace && window.altspace.requestVersion) {
         window.altspace.requestVersion(version);

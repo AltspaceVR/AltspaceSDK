@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.  
 
-**Latest Version: v0.4.1 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.4.1)**  
+**Latest Version: v0.4.2 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.4.2)**  
 
 <!-- THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD --> 
 
@@ -29,7 +29,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.4.1/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.4.2/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -107,6 +107,9 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 * Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
 * Limit the number of objects per scene and polygons per object.
 * Bake ambient occlusion and other lighting into your models. All models currently render as unlit.  
+
+**Known Issues:**
+* Object visibility does not propagate to child objects in the scene graph. You can work around this by recursively setting the visibility on an object and its children.
 
 [three.js]: http://threejs.org/
 
