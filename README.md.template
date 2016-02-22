@@ -108,6 +108,9 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 * Limit the number of objects per scene and polygons per object.
 * Bake ambient occlusion and other lighting into your models. All models currently render as unlit.  
 
+**Known Issues:**
+* Object visibility does not propagate to child objects in the scene graph. You can work around this by recursively setting the visibility on an object and its children.
+
 [three.js]: http://threejs.org/
 
 [Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
