@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.  
 
-**Latest Version: v0.4.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.4.0)**  
+**Latest Version: v0.4.1 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.4.1)**  
 
 <!-- THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD --> 
 
@@ -15,7 +15,7 @@ The AltspaceVR SDK can be used together with [three.js] to create holographic, m
 **[Developer Portal] - Tutorials, projects, initiative program, and app submission**  
 **[Developer Answers] - Questions and answers about the SDK**  
 **[Local Dev Setup] - Instructions for setting up a local dev environment**  
-**[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**  
+**[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**    
 **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
 
 
@@ -29,7 +29,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.4.0/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.4.1/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
