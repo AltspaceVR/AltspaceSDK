@@ -160,7 +160,6 @@ gulp.task('bump', function () {
             default: 'patch'})
         .argv;
     return gulp.src('package.json')
-        .pipe(prompt.confirm('Are you sure you want to publish a new version?'))
         .pipe(bump({type: argv.bump}))
         .pipe(gulp.dest('.'))
 });
