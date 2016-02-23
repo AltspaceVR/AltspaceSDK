@@ -557,7 +557,22 @@ altspace.utilities.sync = (function() {
         return firebaseInstance;
     }
 
-    function getInstanceForSpace(params, callback) {//TODO: document
+    /**
+     * Returns a promise whose argument is a firebase instance, shared by all
+     * instances of this app running in the same Altspace space.
+     * @method getInstanceForSpace
+     * @param {Object} params Same as getInstance
+     * @return {Promise}
+     * @memberof module:altspace/utilities/sync
+     * @example
+     *    var params = { appId: yourAppName, authorId: yourAuthorId };
+     *    altspace.utilities.sync.getInstanceForSpace(params).then(onConnected);
+     *    function onConnected(firebaseRef) {
+     *        firebaseRef.child('highscore').set(42);
+     *        // or create a SceneSync using firebaseRef as the syncInstance 
+     *    }
+     */
+    function getInstanceForSpace(params) {
 
       params = params || {};
 
@@ -566,24 +581,30 @@ altspace.utilities.sync = (function() {
 
       //If roomId is given in the URL, use it, otherwise get the sid.
       //sid is an URL-safe user-readable string, unique to each space.
-      if (inAltspace && !hasRoomId) {
-        altspace.getSpace().then(function(spaceInfo) {
-          spaceSid = spaceInfo.sid;
-          console.log('Running in Altspace space ' + spaceSid);
-          instance = connect(params, spaceSid);
-          if (callback) callback(instance);
-        }, function(err) {
-          console.error('Error trying to get space info from Altspace', err);
-        });
-      } else {
-        instance = connect(params);
-        if (callback) callback(instance);
-      }      
+      var p = new Promise(function(resolve, reject) {
+        if (inAltspace && !hasRoomId) {
+          altspace.getSpace().then(function(spaceInfo) {
+            spaceSid = spaceInfo.sid;
+            console.log('Running in Altspace space ' + spaceSid);
+            instance = connect(params, spaceSid);
+            resolve(instance);
+          }, function(err) {
+            var msg = 'Error trying to get space info from Altspace: ' + err;
+            console.log(msg);
+            reject(msg);
+          });
+        } else {
+          instance = connect(params);
+          resolve(instance);
+        }      
+      });
+      return p;
     }
 
-    function connect(params, spaceSid) {//TODO: document
+    function connect(params, spaceSid) {
 
       //three cases: roomId in the URL, use Altspace sid, or use default roomId
+      var url = new Url();
       var roomId = url.query['roomId'];
       if (roomId) {
         console.log("Got roomId from URL: " + roomId);
@@ -597,7 +618,7 @@ altspace.utilities.sync = (function() {
 
       // Connect to Firebase
       params["instanceId"] = roomId;
-      return getInstance(params, spaceSid);
+      return getInstance(params);
     }
 
     function authenticate(callback){//TODO: Promise and document
