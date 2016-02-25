@@ -13,12 +13,15 @@
  */
 
 //TODO: Change name. kvSync?
-altspace.utilities.sync = (function() {
-    
+altspace.utilities.sync = (function () {
+    var Firebase = window.Firebase;
+    var inAltspace = altspace && altspace.inClient;
+    var canonicalUrl = getCanonicalUrl();
+
     var instance;
     var spaceId; //only set when getSpaceRef is called.
 
-    function dashEscapeFirebaseKey(keyName) {
+    function dashEscape(keyName) {
         return encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-');
     }
 
@@ -38,13 +41,11 @@ altspace.utilities.sync = (function() {
         var url = new Url();
 
         params = params || {};
-        var appName = params.appId || '';
+
         var instanceId = params.instanceId || url.query['altspace-sync-instance'];
-        var authorName = params.authorId || canonicalUrl;
+        var projectId = getProjectId(params.appId, params.instanceId, canonicalUrl);
 
-        var appId = dashEscapeFirebaseKey(authorName) + ':' + dashEscapeFirebaseKey(appName);
-
-        var firebaseApp = new Firebase('https://altspace-apps.firebaseio.com/apps/examples/').child(appId); //An example firebase to be used for testing. Data will be cleared periodically.
+        var firebaseApp = new Firebase('https://altspace-apps.firebaseio.com/apps/examples/').child(projectId); //An example firebase to be used for testing. Data will be cleared periodically.
         firebaseApp.child('lastUrl').set(canonicalUrl);
 
         var firebaseInstance;
@@ -59,6 +60,10 @@ altspace.utilities.sync = (function() {
         }
         instance = firebaseInstance;
         return firebaseInstance;
+    }
+
+    function getProjectId(appId, authorId, canonicalUrl) {
+        return dashEscape(authorId || canonicalUrl) + ':' + dashEscape(appId || '');
     }
 
     /**
@@ -113,7 +118,7 @@ altspace.utilities.sync = (function() {
       return p;
     }
 
-    function authenticate(callback){//TODO: Promise and document
+    function depreciatedAuthenticate(callback){//TODO: Promise and document
         var ref = instance || getInstance(params);
         ref.authAnonymously(function(error, authData) {
           if (error) {
@@ -123,6 +128,113 @@ altspace.utilities.sync = (function() {
           }
         }, {remember: 'sessionOnly'});
     }
+
+
+
+
+
+
+
+
+
+
+    function authenticate() {
+        return new Promise(function(resolve, reject) {
+            ref.authAnonymously(function(error, authData) {
+                if (error) {
+                    console.error('Authetication Failed!', error);
+                    reject(error);
+                } else {
+                    resolve(authData);
+                }
+            }, { remember: 'sessionOnly' });
+        });
+    }
+
+
+    /**
+     * Connect to a sync session to obtain Firebase refs that can be used for syncronizing your app.
+     *
+     * @method connect
+     * @param {Object} [config]
+     * @param {Object} [config.authorId] 
+     * @param {Object} [config.appId] 
+     * @param {Object} [config.instanceId] (Optional) 
+     * @param {Object} [config.spaceId] (Optional) 
+     * @param {Object} [config.userId] (Optional) 
+     * @param {Object} [config.baseRefUrl] (Optional) 
+     * @return {Promise}
+     * @memberof module:altspace/utilities/sync
+     **/
+    //TODO params
+    //todo return docs
+    function connect(config) {
+        config = config || {};
+
+        var url = new Url();
+
+        // Our ref used for example apps. Data may be cleared periodically.
+        var baseRefUrl = 'https://altspace-apps.firebaseio.com/apps/examples/';
+
+        // Gather query paramaters (some may only be used as testing overrides)
+        var instanceId = url.query['altspace-sync-instance'];
+        var spaceId = url.query['altspace-sync-space'];
+        var userId = url.query['altspace-sync-user'];
+
+        var tasks = [authenticate()];
+        if (inAltspace) {
+            if(!spaceId) tasks.push(altspace.getSpace());
+            if(!userId) tasks.push(altspace.getUser());
+        }
+
+        function getRefs() {
+            var baseRef = new Firebase(baseRefUrl);
+            var refs = {};
+
+            refs.app = baseRef.child(getProjectId(config.appId, config.authorId, canonicalUrl)).child('app');
+            refs.space = spaceId ? refs.app.child(spaceId) : null;
+            refs.user = userId ? refs.app.child(userId) : null;
+
+            var instancesRef = refs.app.child('instances');
+            if (instanceId) {
+                refs.instance = instancesRef.child(instanceId);
+            } else {
+                refs.instance = instancesRef.push();
+                instanceId = refs.instance.key();
+            }
+
+            return refs;
+        }
+
+        function updateUrl() {
+            if (!url.query['altspace-sync-instance']) {
+                url.query['altspace-sync-instance'] = instanceId;
+            }
+        }
+
+        return Promise.all(tasks).then(function (results) {
+            if (!spaceId) spaceId = results.pop();
+            if (!userId) userId = results.pop();
+
+            var refs = getRefs();
+
+            updateUrl();
+
+            return refs;
+        }, function(error) {
+            console.error("Failed to connect.");
+            console.dir(error);
+        });
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * Returns a firebase instance, just as if you had called new Firebase()  
@@ -150,7 +262,7 @@ altspace.utilities.sync = (function() {
       getInstance: getInstance,
       getInstanceRef: getInstanceRef,
       getSpaceRef: getSpaceRef,
-      authenticate: authenticate,
+      authenticate: depreciatedAuthenticate,
       getSpaceId: function() { return spaceId; }
     };
     
