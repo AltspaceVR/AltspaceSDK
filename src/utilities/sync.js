@@ -138,7 +138,7 @@ altspace.utilities.sync = (function () {
 
 
 
-    function authenticate() {
+    function authenticate(ref) {
         return new Promise(function(resolve, reject) {
             ref.authAnonymously(function(error, authData) {
                 if (error) {
@@ -168,6 +168,7 @@ altspace.utilities.sync = (function () {
      **/
     //TODO params
     //todo return docs
+    //TODO next test params
     function connect(config) {
         config = config || {};
 
@@ -175,25 +176,27 @@ altspace.utilities.sync = (function () {
 
         // Our ref used for example apps. Data may be cleared periodically.
         var baseRefUrl = 'https://altspace-apps.firebaseio.com/apps/examples/';
+        var baseRef = new Firebase(baseRefUrl);
 
         // Gather query paramaters (some may only be used as testing overrides)
         var instanceId = url.query['altspace-sync-instance'];
         var spaceId = url.query['altspace-sync-space'];
         var userId = url.query['altspace-sync-user'];
 
-        var tasks = [authenticate()];
+        var tasks = [authenticate(baseRef)];
         if (inAltspace) {
-            if(!spaceId) tasks.push(altspace.getSpace());
-            if(!userId) tasks.push(altspace.getUser());
+            if(!spaceId) tasks.unshift(altspace.getSpace());
+            if (!userId) tasks.unshift(altspace.getUser());
         }
 
         function getRefs() {
-            var baseRef = new Firebase(baseRefUrl);
             var refs = {};
 
-            refs.app = baseRef.child(getProjectId(config.appId, config.authorId, canonicalUrl)).child('app');
-            refs.space = spaceId ? refs.app.child(spaceId) : null;
-            refs.user = userId ? refs.app.child(userId) : null;
+            var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
+            console.log(projectId);
+            refs.app = baseRef.child(projectId).child('app');
+            refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
+            refs.user = userId ? refs.app.child('users').child(userId) : null;
 
             var instancesRef = refs.app.child('instances');
             if (instanceId) {
@@ -202,7 +205,6 @@ altspace.utilities.sync = (function () {
                 refs.instance = instancesRef.push();
                 instanceId = refs.instance.key();
             }
-
             return refs;
         }
 
@@ -213,15 +215,19 @@ altspace.utilities.sync = (function () {
         }
 
         return Promise.all(tasks).then(function (results) {
-            if (!spaceId) spaceId = results.pop();
-            if (!userId) userId = results.pop();
+            results.pop();//auth
+            if (!spaceId) spaceId = results.pop().sid;
+            if (!userId) userId = results.pop().userId;
+
+            spaceId = dashEscape(spaceId);
+            userId = dashEscape(userId);
 
             var refs = getRefs();
 
             updateUrl();
 
             return refs;
-        }, function(error) {
+        }).catch(function(error) {
             console.error("Failed to connect.");
             console.dir(error);
         });
@@ -259,6 +265,7 @@ altspace.utilities.sync = (function () {
      *  });
      */
     return {
+      connect: connect,
       getInstance: getInstance,
       getInstanceRef: getInstanceRef,
       getSpaceRef: getSpaceRef,
