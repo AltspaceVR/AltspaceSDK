@@ -520,7 +520,6 @@ altspace.utilities.sync = (function () {
     var canonicalUrl = getCanonicalUrl();
 
     var instance;
-    var spaceId; //only set when getSpaceRef is called.
 
     function dashEscape(keyName) {
         return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
@@ -566,7 +565,8 @@ altspace.utilities.sync = (function () {
         return dashEscape(authorId || canonicalUrl) + ':' + dashEscape(appId || '');
     }
 
-    function depreciatedAuthenticate(callback){
+    function depreciatedAuthenticate(callback) {
+        console.warn('altspace.utilities.sync.authenticate has been depreciated, please use connect instead.');
         var ref = instance || getInstance(params);
         ref.authAnonymously(function(error, authData) {
           if (error) {
@@ -741,10 +741,7 @@ altspace.utilities.sync = (function () {
     return {
       connect: connect,
       getInstance: getInstance,
-      getInstanceRef: getInstanceRef,
-      getSpaceRef: getSpaceRef,
-      authenticate: depreciatedAuthenticate,
-      getSpaceId: function() { return spaceId; }
+      authenticate: depreciatedAuthenticate
     };
     
 }());
