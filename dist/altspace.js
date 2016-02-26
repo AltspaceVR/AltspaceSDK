@@ -521,6 +521,12 @@ altspace.utilities.sync = (function () {
 
     var instance;
 
+    function SyncException(message)
+    {
+        this.message = message;
+        this.name = "SyncException";
+    }
+
     function dashEscape(keyName) {
         return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
     }
@@ -531,7 +537,7 @@ altspace.utilities.sync = (function () {
     }
 
     function getInstance(params) {
-        console.warn('altspace.utilities.sync.getInstance has been depreciated, please use connect instead.');
+        console.warn('altspace.utilities.sync.getInstance has been deprecated, please use connect instead.');
       return getInstanceRef(params);
     }
 
@@ -542,7 +548,7 @@ altspace.utilities.sync = (function () {
         params = params || {};
 
         var instanceId = params.instanceId || url.query['altspace-sync-instance'];
-        var projectId = getProjectId(params.appId, params.instanceId, canonicalUrl);
+        var projectId = getProjectId(params.appId, params.authorId, canonicalUrl);
 
         var firebaseApp = new Firebase('https://altspace-apps.firebaseio.com/apps/examples/').child(projectId); //An example firebase to be used for testing. Data will be cleared periodically.
         firebaseApp.child('lastUrl').set(canonicalUrl);
@@ -565,7 +571,7 @@ altspace.utilities.sync = (function () {
         return dashEscape(authorId || canonicalUrl) + ':' + dashEscape(appId || '');
     }
 
-    function depreciatedAuthenticate(callback) {
+    function deprecatedAuthenticate(callback) {
         console.warn('altspace.utilities.sync.authenticate has been depreciated, please use connect instead.');
         var ref = instance || getInstance(params);
         ref.authAnonymously(function(error, authData) {
@@ -594,7 +600,7 @@ altspace.utilities.sync = (function () {
     /**
      * Retreived
      * via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
-     * @class module:altspace/utilities/sync~Session
+     * @class module:altspace/utilities/sync~Connection
      * @memberof module:altspace/utilities/sync
      */
 
@@ -602,7 +608,7 @@ altspace.utilities.sync = (function () {
         * (In-client only) A Firebase reference for the current user (on a per app basis). This can be used for things like a persistent inventory or personal highscores.
         * @instance
         * @member {Firebase} user
-        * @memberof module:altspace/utilities/sync~Session
+        * @memberof module:altspace/utilities/sync~Connection
         */
 
     /**
@@ -611,14 +617,14 @@ altspace.utilities.sync = (function () {
         * This can be used as an input to SceneSync
         * @instance
         * @member {Firebase} instance
-        * @memberof module:altspace/utilities/sync~Session
+        * @memberof module:altspace/utilities/sync~Connection
         */
 
     /**
         * (In-client only) A Firebase reference for the current space. Especially useful if multiple apps / instances need to communicate inside the space.
         * @instance
         * @member {Firebase} space
-        * @memberof module:altspace/utilities/sync~Session
+        * @memberof module:altspace/utilities/sync~Connection
         */
 
     /**
@@ -626,13 +632,13 @@ altspace.utilities.sync = (function () {
         * This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.
         * @instance
         * @member {Firebase} app
-        * @memberof module:altspace/utilities/sync~Session
+        * @memberof module:altspace/utilities/sync~Connection
         */
 
 
     /**
      * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
-     * Returns a promise that will fufill with a [Session]{@link module:altspace/utilities/sync~Session}.
+     * Returns a promise that will fufill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
      *
      * @method connect
      * @param {Object} config
@@ -659,6 +665,10 @@ altspace.utilities.sync = (function () {
         var instanceId = config.instanceId || url.query['altspace-sync-instance'];
         var spaceId = config.spaceId || url.query['altspace-sync-space'];
         var userId = config.userId || url.query['altspace-sync-user'];
+
+        if (!config.appId || !config.authorId) {
+            throw new Error('Both the appId and authorId must be provided to connect.');
+        }
 
         var tasks = [authenticate(baseRef)];
         if (inAltspace) {
@@ -703,11 +713,11 @@ altspace.utilities.sync = (function () {
             userId = dashEscape(userId);
             instanceId = dashEscape(instanceId);
 
-            var session = getRefs();
+            var connection = getRefs();
 
             updateUrl();
 
-            return session;
+            return connection;
         }).catch(function(error) {
             console.error("Failed to connect.");
             console.dir(error);
@@ -741,7 +751,7 @@ altspace.utilities.sync = (function () {
     return {
       connect: connect,
       getInstance: getInstance,
-      authenticate: depreciatedAuthenticate
+      authenticate: deprecatedAuthenticate
     };
     
 }());

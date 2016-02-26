@@ -7,51 +7,52 @@ describe('the sync utility', function () {
 		return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
 	}
 
-	describe("when asked for a default sync session", function () {
-		var session;
+	describe("when asked for a sync connection with no parameters", function () {
+		it("should throw an error for missing an authorId or appId", function () {
+			expect(altspace.utilities.sync.connect).to['throw'](Error);
+		});
+	});
+
+	describe("when asked for a default sync connection", function () {
+		var connection;
 		before(function (done) {
-			altspace.utilities.sync.connect().then(function (s) {
-				session = s;
+			altspace.utilities.sync.connect({ authorId: 'AltspaceVR', appId: 'SyncTest' }).then(function (s) {
+				connection = s;
 				done();
 			});
 		});
 
 		it("should have a instance ref", function () {
-			expect(session).to.have.a.property('instance').which.is.a('Object');
-			expect(session.instance.parent().key()).to.equal(session.app.child('instances').key());
+			expect(connection).to.have.a.property('instance').which.is.a('Object');
+			expect(connection.instance.parent().key()).to.equal(connection.app.child('instances').key());
 		});
 
 		it("should have a app ref", function () {
-			expect(session).to.have.a.property('app').which.is.a('Object');
+			expect(connection).to.have.a.property('app').which.is.a('Object');
 		});
 
 		if (altspace.inClient) {
 			it("should have a space ref", function () {
-				expect(session).to.have.a.property('space').which.is.a('Object');
-				expect(session.space.parent().key()).to.equal(session.app.child('spaces').key());
+				expect(connection).to.have.a.property('space').which.is.a('Object');
+				expect(connection.space.parent().key()).to.equal(connection.app.child('spaces').key());
 			});
 
 			it("should have a user ref", function () {
-				expect(session).to.have.a.property('user').which.is.a('Object');;
-				expect(session.user.parent().key()).to.equal(session.app.child('users').key());
+				expect(connection).to.have.a.property('user').which.is.a('Object');;
+				expect(connection.user.parent().key()).to.equal(connection.app.child('users').key());
 			});
 		} else {
 			it("should not have a space ref", function () {
-				expect(session).to.have.a.property('space').which.is['null'];
+				expect(connection).to.have.a.property('space').which.is['null'];
 			});
 
 			it("should not have a user ref", function () {
-				expect(session).to.have.a.property('user').which.is['null'];
+				expect(connection).to.have.a.property('user').which.is['null'];
 			});
 		}
-
-		it("should have a clients ref", function () {
-			expect(session).to.have.a.property('clients').which.is.a('Object');
-			expect(session.clients.parent().key()).to.equal(session.app.child('clients').key());
-		});
 	});
-	describe("when asked for a customized sync session", function () {
-		var session;
+	describe("when asked for a customized sync connection", function () {
+		var connection;
 		var config = {
 			appId: Math.random() + '',
 			authorId: Math.random() + '',
@@ -61,21 +62,21 @@ describe('the sync utility', function () {
 		};
 		before(function (done) {
 			altspace.utilities.sync.connect(config).then(function (s) {
-				session = s;
+				connection = s;
 				done();
 			});
 		});
 
 		it("should have a custom instance ref", function () {
-			expect(session.instance.key()).to.equal(dashEscape(config.instanceId));
+			expect(connection.instance.key()).to.equal(dashEscape(config.instanceId));
 		});
 
 		it("should have a custom space ref", function () {
-			expect(session.space.key()).to.equal(dashEscape(config.spaceId));
+			expect(connection.space.key()).to.equal(dashEscape(config.spaceId));
 		});
 
 		it("should have a custom user ref", function () {
-			expect(session.user.key()).to.equal(dashEscape(config.userId));
+			expect(connection.user.key()).to.equal(dashEscape(config.userId));
 		});
 	});
 });
