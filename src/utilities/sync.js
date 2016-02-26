@@ -11,8 +11,6 @@
  * when working with the sync instance.
  * @module altspace/utilities/sync
  */
-
-//TODO: Change name. kvSync?
 altspace.utilities.sync = (function () {
     var Firebase = window.Firebase;
     var inAltspace = altspace && altspace.inClient;
@@ -22,7 +20,7 @@ altspace.utilities.sync = (function () {
     var spaceId; //only set when getSpaceRef is called.
 
     function dashEscape(keyName) {
-        return encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-');
+        return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
     }
 
     function getCanonicalUrl() {
@@ -31,8 +29,7 @@ altspace.utilities.sync = (function () {
     }
 
     function getInstance(params) {
-
-      console.warn('altspace.utilities.sync.getInstance is depreciated, use getInstanceRef instead.');
+        console.warn('altspace.utilities.sync.getInstance has been depreciated, please use connect instead.');
       return getInstanceRef(params);
     }
 
@@ -66,59 +63,7 @@ altspace.utilities.sync = (function () {
         return dashEscape(authorId || canonicalUrl) + ':' + dashEscape(appId || '');
     }
 
-    /**
-     * Returns a promise whose argument is a firebase instance, specific to 
-     * this app and this Altspace space. Promise rejected if not in Altspace
-     * (unless spaceId given in the URL).
-     * @method getSpaceRef
-     * @param {Object} params Same as getInstanceRef
-     * @return {Promise}
-     * @memberof module:altspace/utilities/sync
-     * @example
-     *    var params = { appId: yourAppName, authorId: yourAuthorId };
-     *    altspace.utilities.sync.getSpaceRef(params).then(onConnected);
-     *    function onConnected(firebaseRef) {
-     *        firebaseRef.child('highscore').set(42);
-     *        // or create a SceneSync using firebaseRef as the syncInstance 
-     *    }
-     */
-    function getSpaceRef(params) {
-
-      params = params || {};
-      var inAltspace = altspace && altspace.inClient;
-      var hasSpaceId = window.location.search.indexOf('spaceId=') !== -1;
-
-      var p = new Promise(function(resolve, reject) {
-        if (hasSpaceId) {
-          //spaceId is given in the URL. Needed if in an iframe, cannot call
-          //getSpaceRef directly, instead set iframe url query param 'spaceId'
-          //using getSpaceId. Can also enable testing outside of Altspace.
-          var url = new Url();
-          spaceId = url.query['spaceId'];
-          console.log("Got spaceId from URL: " + spaceId);
-          params["instanceId"] = spaceId;
-          instance = getInstanceRef(params);
-          resolve(instance);
-        } else if (!inAltspace) {//error if not in altspace
-          var msg = 'Called getSpaceRef but not running in Altspace';
-          reject(msg);
-        } else {//get space id using altspace API
-          altspace.getSpace().then(function(spaceInfo) {
-            spaceId = spaceInfo.sid;
-            console.log("Got spaceId from Altspace " + spaceId);
-            params["instanceId"] = spaceId;
-            instance = getInstanceRef(params);
-            resolve(instance);
-          }, function(err) {
-            var msg = 'Error trying to get space info from Altspace: ' + err;
-            reject(msg);
-          });
-        }      
-      });
-      return p;
-    }
-
-    function depreciatedAuthenticate(callback){//TODO: Promise and document
+    function depreciatedAuthenticate(callback){
         var ref = instance || getInstance(params);
         ref.authAnonymously(function(error, authData) {
           if (error) {
@@ -128,14 +73,6 @@ altspace.utilities.sync = (function () {
           }
         }, {remember: 'sessionOnly'});
     }
-
-
-
-
-
-
-
-
 
 
     function authenticate(ref) {
@@ -150,42 +87,79 @@ altspace.utilities.sync = (function () {
             }, { remember: 'sessionOnly' });
         });
     }
+    
+    /**
+     * Retreived
+     * via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
+     * @class module:altspace/utilities/sync~Session
+     * @memberof module:altspace/utilities/sync
+     */
+
+    /**
+        * (In-client only) A Firebase reference for the current user (on a per app basis). This can be used for things like a persistent inventory or personal highscores.
+        * @instance
+        * @member {Firebase} user
+        * @memberof module:altspace/utilities/sync~Session
+        */
+
+    /**
+        * A Firebase reference to the current instance of the app. 
+        * This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons. 
+        * This can be used as an input to SceneSync
+        * @instance
+        * @member {Firebase} instance
+        * @memberof module:altspace/utilities/sync~Session
+        */
+
+    /**
+        * (In-client only) A Firebase reference for the current space. Especially useful if multiple apps / instances need to communicate inside the space.
+        * @instance
+        * @member {Firebase} space
+        * @memberof module:altspace/utilities/sync~Session
+        */
+
+    /**
+        * A Firebase reference for the app. 
+        * This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.
+        * @instance
+        * @member {Firebase} app
+        * @memberof module:altspace/utilities/sync~Session
+        */
 
 
     /**
-     * Connect to a sync session to obtain Firebase refs that can be used for syncronizing your app.
+     * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
+     * Returns a promise that will fufill with a [Session]{@link module:altspace/utilities/sync~Session}.
      *
      * @method connect
-     * @param {Object} [config]
-     * @param {Object} [config.authorId] 
-     * @param {Object} [config.appId] 
-     * @param {Object} [config.instanceId] (Optional) 
-     * @param {Object} [config.spaceId] (Optional) 
-     * @param {Object} [config.userId] (Optional) 
-     * @param {Object} [config.baseRefUrl] (Optional) 
+     * @param {Object} config
+     * @param {String} config.authorId A unique identifier for yourself or your organization
+     * @param {String} config.appId The name of your app
+     * @param {String} [config.baseRefUrl] Override the base reference. Set this to use your own Firebase.
+     * @param {String} [config.instanceId] Override the instanceId. Can also be overriden using a query parameter.
+     * @param {String} [config.spaceId] Override the spaceId. Can also be overriden using a query parameter.
+     * @param {String} [config.userId] Override the userId. Can also be overriden using a query parameter.
      * @return {Promise}
      * @memberof module:altspace/utilities/sync
      **/
-    //TODO params
-    //todo return docs
-    //TODO next test params
+    //todo clients
     function connect(config) {
         config = config || {};
 
         var url = new Url();
 
         // Our ref used for example apps. Data may be cleared periodically.
-        var baseRefUrl = 'https://altspace-apps.firebaseio.com/apps/examples/';
+        var baseRefUrl = config.baseRefUrl || 'https://altspace-apps.firebaseio.com/apps/examples/';
         var baseRef = new Firebase(baseRefUrl);
 
         // Gather query paramaters (some may only be used as testing overrides)
-        var instanceId = url.query['altspace-sync-instance'];
-        var spaceId = url.query['altspace-sync-space'];
-        var userId = url.query['altspace-sync-user'];
+        var instanceId = config.instanceId || url.query['altspace-sync-instance'];
+        var spaceId = config.spaceId || url.query['altspace-sync-space'];
+        var userId = config.userId || url.query['altspace-sync-user'];
 
         var tasks = [authenticate(baseRef)];
         if (inAltspace) {
-            if(!spaceId) tasks.unshift(altspace.getSpace());
+            if (!spaceId) tasks.unshift(altspace.getSpace());
             if (!userId) tasks.unshift(altspace.getUser());
         }
 
@@ -216,17 +190,21 @@ altspace.utilities.sync = (function () {
 
         return Promise.all(tasks).then(function (results) {
             results.pop();//auth
-            if (!spaceId) spaceId = results.pop().sid;
-            if (!userId) userId = results.pop().userId;
+
+            if (inAltspace) {
+                if (!spaceId) spaceId = results.pop().sid;
+                if (!userId) userId = results.pop().userId;
+            }
 
             spaceId = dashEscape(spaceId);
             userId = dashEscape(userId);
+            instanceId = dashEscape(instanceId);
 
-            var refs = getRefs();
+            var session = getRefs();
 
             updateUrl();
 
-            return refs;
+            return session;
         }).catch(function(error) {
             console.error("Failed to connect.");
             console.dir(error);
@@ -234,19 +212,12 @@ altspace.utilities.sync = (function () {
     }
 
 
-
-
-
-
-
-
-
-
     /**
      * Returns a firebase instance, just as if you had called new Firebase()  
      *
      * By using syncInstance.parent() you can store cross-instance data like high scores. Likewise you can store persistent user data at syncInstance.parent().child([userId).
-     * @method getInstanceRef
+     * @deprecated The connect function can do this and more! Please switch to using it instead. This function will be removed in the next major version
+     * @method getInstance
      * @param {Object} params
      * @param {String} params.appId An identifier for your app.
      * @param {String} [params.instanceId] An id for a particular instance of
@@ -256,7 +227,7 @@ altspace.utilities.sync = (function () {
      * @return {Firebase}
      * @memberof module:altspace/utilities/sync
      * @example
-     *  var syncInstance = altspace.utilities.sync.getInstanceRef({
+     *  var syncInstance = altspace.utilities.sync.getInstance({
      *      // All sync instances with the same instance id will share 
      *      // properties. 
      *      instanceId: yourInstanceId, 

@@ -1,5 +1,5 @@
 let expect = chai.expect;
-describe('layout', () => {
+describe('the layout utility', () => {
 	let behaviors = altspace.utilities.behaviors;
 	let scene,
 		cube,

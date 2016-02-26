@@ -3,6 +3,7 @@
   "version": "0.4.2",
   "repository": "AltspaceVR/AltspaceSDK",
   "devDependencies": {
+    "aws-sdk": "^2.2.38",
     "babel": "5.8.34",
     "babel-core": "5.8.34",
     "babel-runtime": "5.8.34",

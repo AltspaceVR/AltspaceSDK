@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>AltRenderer - Documentation</title>
+    <title>Session - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">AltRenderer</h1>
+    <h1 class="page-title">Session</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-altspace.html">altspace</a>~</span>
+            <span class="ancestors"><a href="sync.html">altspace/utilities/sync</a>~</span>
         
-        AltRenderer
+        Session
         </h2>
         
     
@@ -56,16 +56,15 @@
 
     
 
-    <h4 class="name" id="AltRenderer"><span class="type-signature"></span>new AltRenderer<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Session"><span class="type-signature"></span>new Session<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>AltRenderer renders a Three.js scene in AltspaceVR. AltRenderer should not
-be instantiated directly, instead it should be retrieved via 
-<a href="module-altspace.html#getThreeJSRenderer">altspace.getThreeJSRenderer</a>.</p>
+    <p>Retreived
+via altspace.utilities.sync.connect.</p>
 </div>
 
 
@@ -144,80 +143,20 @@ be instantiated directly, instead it should be retrieved via
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
             
+<h4 class="name" id="app"><span class="type-signature"></span>app<span class="type-signature"> :Firebase</span></h4>
 
-    
-
-    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">(scene)</span><span class="type-signature"></span></h4>
-
-    
 
 
 
 <div class="description">
-    <p>Render the given scene in AltspaceVR.</p>
+    <p>A Firebase reference for the app. 
+This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.</p>
 </div>
 
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>scene</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="THREE.Scene.html">THREE.Scene</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -264,10 +203,59 @@ be instantiated directly, instead it should be retrieved via
 
 
 
+        
+            
+<h4 class="name" id="instance"><span class="type-signature"></span>instance<span class="type-signature"> :Firebase</span></h4>
 
 
 
 
+<div class="description">
+    <p>A Firebase reference to the current instance of the app. 
+This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons. 
+This can be used as an input to SceneSync</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 
@@ -275,6 +263,122 @@ be instantiated directly, instead it should be retrieved via
 
 
         
+            
+<h4 class="name" id="space"><span class="type-signature"></span>space<span class="type-signature"> :Firebase</span></h4>
+
+
+
+
+<div class="description">
+    <p>(In-client only) A Firebase reference for the current space. Especially useful if multiple apps / instances need to communicate inside the space.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="user"><span class="type-signature"></span>user<span class="type-signature"> :Firebase</span></h4>
+
+
+
+
+<div class="description">
+    <p>(In-client only) A Firebase reference for the current user (on a per app basis). This can be used for things like a persistent inventory or personal highscores.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
     
 
     
