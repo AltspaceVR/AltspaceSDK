@@ -1,6 +1,16 @@
 (function () {
     var expect = chai.expect;
+
+    //todo next is add a test for running in the client and return if false
+
+
     var core = function () {
+
+        before(function () {
+            if (!altspace.inClient)
+                throw new Error("Not in client. Skipping in-client tests");
+        });
+
         describe("the window.altspace namespace", function () {
 
             it("should not be deleteable", function () {
@@ -104,7 +114,7 @@
         });
     }
 
-    describe("immediately", core);
+    describe("in-client tests", core);
 
     /*describe("one second later", function () {
         it('should be tried again', function (done) {

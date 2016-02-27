@@ -235,9 +235,14 @@ gulp.task('doc', ['altspace_js'], function () {
         'clientjs',
         {
             describe: 'Path to the directory containing altspace-client.js',
-            demand: true
+            demand: false
         }
     ).argv
+
+    if (!argv.clientjs) {
+        argv.clientjs = "../UnityClient/js/src";
+    }
+
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }
