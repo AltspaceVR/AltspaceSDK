@@ -12,9 +12,10 @@
 </body>
 <script>
 
-(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
+TouchpadCube = (function () {
 
-TouchpadCube = (function(){
+    var utilities = altspace.utilities;
+    var behaviors = altspace.utilities.behaviors;
 
 	var sim;
 	var sceneSync;
@@ -23,21 +24,23 @@ TouchpadCube = (function(){
 
 	// Setup
 	function main() {
-		sim = alt.Simulation();
+	    sim = utilities.Simulation();
 		loadCubeModel();//must load model before creating synced cube
 	}
 
 	function onModelReady() {
-		var inCodePen = alt.codePen.inCodePen;
-		var instanceBase = alt.sync.getInstance({
-				authorId: inCodePen ? alt.codePen.getAuthorId() : null,
-				instanceId: inCodePen ? alt.codePen.getPenId() : null
-		});
-		sceneSync = alt.SceneSync(instanceBase, {
-			instantiators: {'Cube': createCube },
-			ready: ready
-		});
-		sim.scene.addBehavior(sceneSync);
+	    var inCodePen = utilities.codePen.inCodePen;
+	    utilities.sync.connect({
+            appId: "TouchpadCube",
+	        authorId: inCodePen ? utilities.codePen.getAuthorId() : "AltspaceVR",
+	        instanceId: inCodePen ? utilities.codePen.getPenId() : null
+	    }).then(function (connection) {
+	        sceneSync = behaviors.SceneSync(connection.instance, {
+	            instantiators: { 'Cube': createCube },
+	            ready: ready
+	        });
+	        sim.scene.addBehavior(sceneSync);
+	    });
 	}
 
 	function loadCubeModel() {
@@ -55,8 +58,8 @@ TouchpadCube = (function(){
 		cube = cubeModel.clone();
 		cube.scale.multiplyScalar(15);
 		cube.addBehaviors(
-			alt.Object3DSync({position: true, rotation: true, scale: true}),
-			alt.TouchpadRotate()
+			behaviors.Object3DSync({ position: true, rotation: true, scale: true }),
+			behaviors.TouchpadRotate()
 		);
 		cube.name = 'cube';
 		cube.rotation.y += Math.PI / 8;

@@ -171,7 +171,6 @@ altspace.utilities.sync = (function () {
             var refs = {};
 
             var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
-            console.log(projectId);
             refs.app = baseRef.child(projectId).child('app');
             refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
             refs.user = userId ? refs.app.child('users').child(userId) : null;

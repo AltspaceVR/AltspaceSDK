@@ -521,12 +521,6 @@ altspace.utilities.sync = (function () {
 
     var instance;
 
-    function SyncException(message)
-    {
-        this.message = message;
-        this.name = "SyncException";
-    }
-
     function dashEscape(keyName) {
         return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
     }
@@ -680,7 +674,6 @@ altspace.utilities.sync = (function () {
             var refs = {};
 
             var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
-            console.log(projectId);
             refs.app = baseRef.child(projectId).child('app');
             refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
             refs.user = userId ? refs.app.child('users').child(userId) : null;
