@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Gamepad Cube</title>
-<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
 </head>
 <body>
 </body>
@@ -41,7 +41,7 @@ GamepadCube = (function(){
 	}
 
 	function loadCubeModel() {
-		var loader = new THREE.OBJMTLLoader();
+		var loader = new altspace.utilities.shims.OBJMTLLoader();
 		var objFilename = "models/cube/cube-colored-faces.obj";
 		var mtlFilename = "models/cube/cube-colored-faces.mtl";
 		loader.load(objFilename, mtlFilename, function ( obj ) {

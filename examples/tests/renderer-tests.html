@@ -11,11 +11,12 @@
 		</style>
 	</head>
 	<body>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/libs/stats.min.js"></script>
+		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
 
 		<script 
 			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
@@ -221,22 +222,21 @@
 					description: '',
 					enabled: true,
 					init: function () {
-						var loader = new THREE.OBJMTLLoader();
-						var objFilename = "../models/test/test.obj";
-						var mtlFilename = "../models/test/test.mtl";
-						loader.load(
-							objFilename,
-							mtlFilename,
-							function ( loadedObject ) {
+						var mtlLoader = new THREE.MTLLoader()
+						mtlLoader.setBaseUrl('../models/test/');
+						mtlLoader.load('../models/test/test.mtl', function (materials) {
+							var objLoader = new THREE.OBJLoader();
+							objLoader.setMaterials(materials);
+							objLoader.load('../models/test/test.obj', function (object) {
 								// BOTTOM LEFT
-								colorObj = loadedObject;
+								colorObj = object;
 								colorObj.name = 'colorObj';
 								colorObj.scale.multiplyScalar(30);
 								colorObj.position.set(-50, -50, 0);
 								scene.add(colorObj);
 								objLoaded = true;
-							}
-						);
+							});
+						});
 					},
 					tick: function () {
 						deepColor(colorObj, YELLOW);
@@ -275,7 +275,7 @@
 				}
 			];
 
-			//tests = tests.filter(test => 'colored, textured cube, performance' === test.name);
+			// tests = tests.filter(test => 'animated cube' === test.name);
 
 			function init() {
 				window.scene = scene = new THREE.Scene();
@@ -306,7 +306,7 @@
 				stats.domElement.style.top = '0';
 				document.body.appendChild(stats.domElement);
 
-				addAxisSpheres();
+				// addAxisSpheres();
 
 				tests.
 					filter(test => test.enabled).
@@ -340,7 +340,7 @@
 
 				renderer.render( scene, camera );
 
-				if (objLoaded && !debugInfoShown) {
+				if (window.altspace && objLoaded && !debugInfoShown) {
 					altspace.getThreeJSDebugInfo().then(function (debugInfo) {
 						console.table(debugInfo);
 					});

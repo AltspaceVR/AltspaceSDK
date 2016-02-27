@@ -3,11 +3,9 @@
 <head>
 <meta charset=utf-8>
 <title>Hello Hands</title>
-<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/geometries/TextGeometry.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/utils/FontUtils.js"></script>
-<script src="https://sdk.altvr.com/libs/three.js/r73/examples/fonts/helvetiker_regular.typeface.js"></script>
 </head>
 <body>
 <script>
@@ -21,36 +19,43 @@ var renderer = altspace.getThreeJSRenderer();
 
 //Letters
 var letters = [];
-for(var i = 0, max = text.length; i < max; i++){
-	var geometry = new THREE.TextGeometry(text.charAt(i));
-	var material = new THREE.MeshBasicMaterial({color:'green'});
-	var mesh = new THREE.Mesh(geometry, material);
-	mesh.scale.z = 0.3;
-	mesh.scale.multiplyScalar(0.3);
-	mesh.position.z = 30;
-	mesh.position.x = 8;
-	mesh.rotation.x = Math.PI / 2;
-	scene.add(mesh);
-	letters.push(mesh);
+new THREE.FontLoader().load(
+	'https://cdn.rawgit.com/mrdoob/three.js/r74/examples/fonts/helvetiker_regular.typeface.js',
+	createLettersAndAttachToSkeleton
+);
+
+function createLettersAndAttachToSkeleton (font) {
+	for(var i = 0, max = text.length; i < max; i++){
+		var geometry = new THREE.TextGeometry(text.charAt(i), {font: font});
+		var material = new THREE.MeshBasicMaterial({color:'green'});
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.scale.z = 0.3;
+		mesh.scale.multiplyScalar(0.3);
+		mesh.position.z = 30;
+		mesh.position.x = 8;
+		mesh.rotation.x = Math.PI / 2;
+		scene.add(mesh);
+		letters.push(mesh);
+	}
+
+	//Skeleton
+	altspace.getThreeJSTrackingSkeleton().then(function(args){
+		var skeleton = args;
+		scene.add(skeleton);
+
+		var i = 0;
+		skeleton.getJoint('Pinky', 'Left', 	3).add(letters[i++]);
+		skeleton.getJoint('Ring', 	'Left', 	3).add(letters[i++]);
+		skeleton.getJoint('Middle', 'Left', 	3).add(letters[i++]);
+		skeleton.getJoint('Index', 	'Left', 	3).add(letters[i++]);
+		skeleton.getJoint('Thumb', 	'Left', 	3).add(letters[i++]);
+		skeleton.getJoint('Thumb', 	'Right', 	3).add(letters[i++]);
+		skeleton.getJoint('Index', 	'Right', 	3).add(letters[i++]);
+		skeleton.getJoint('Middle', 'Right', 	3).add(letters[i++]);
+		skeleton.getJoint('Ring', 	'Right', 	3).add(letters[i++]);
+		skeleton.getJoint('Pinky', 'Right', 	3).add(letters[i++]);
+	});
 }
-
-//Skeleton
-altspace.getThreeJSTrackingSkeleton().then(function(args){
-	var skeleton = args;
-	scene.add(skeleton);
-
-	var i = 0;
-	skeleton.getJoint('Pinky', 'Left', 	3).add(letters[i++]);
-	skeleton.getJoint('Ring', 	'Left', 	3).add(letters[i++]);
-	skeleton.getJoint('Middle', 'Left', 	3).add(letters[i++]);
-	skeleton.getJoint('Index', 	'Left', 	3).add(letters[i++]);
-	skeleton.getJoint('Thumb', 	'Left', 	3).add(letters[i++]);
-	skeleton.getJoint('Thumb', 	'Right', 	3).add(letters[i++]);
-	skeleton.getJoint('Index', 	'Right', 	3).add(letters[i++]);
-	skeleton.getJoint('Middle', 'Right', 	3).add(letters[i++]);
-	skeleton.getJoint('Ring', 	'Right', 	3).add(letters[i++]);
-	skeleton.getJoint('Pinky', 'Right', 	3).add(letters[i++]);
-});
 
 //Rendering
 function animate() {

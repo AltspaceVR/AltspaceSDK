@@ -3,7 +3,6 @@ window.altspace.utilities = window.altspace.utilities || {};
 
 
 altspace.utilities.multiloader = (function(){
-
   var loader;
   var TRACE;
   var baseUrl = '';
@@ -35,7 +34,7 @@ altspace.utilities.multiloader = (function(){
     if (p.baseUrl) baseUrl = p.baseUrl;
     if (baseUrl.slice(-1) !== '/') baseUrl += '/';
 
-    loader = new THREE.OBJMTLLoader();
+    loader = new altspace.utilities.shims.OBJMTLLoader();
     loader.crossOrigin = crossOrigin;
     if (TRACE) console.log('MultiLoader initialized with params', params);
   }

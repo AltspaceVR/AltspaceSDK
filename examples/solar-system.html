@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Solar System Example</title>
-<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <style>
@@ -88,7 +88,7 @@ SolarSystemApp = (function(){
 			});
 		}
 		else {
-			compactMode = true;
+			compactMode = false;
 			solarSystem.scale.set(20, 20, 20);
 			loadModels();
 		}
