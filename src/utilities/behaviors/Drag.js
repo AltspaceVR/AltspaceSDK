@@ -145,7 +145,7 @@ altspace.utilities.behaviors.Drag = function (config) {
 
     function moveDrag(event) {
 
-        if (!sync.isMine) sync.takeOwnership();
+        if (sync && !sync.isMine) sync.takeOwnership();
 
         //find intersection
         intersector.visible = true;// allow our intersector to be intersected
