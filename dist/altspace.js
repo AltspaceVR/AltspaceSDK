@@ -691,6 +691,7 @@ altspace.utilities.sync = (function () {
         function updateUrl() {
             if (!url.query['altspace-sync-instance']) {
                 url.query['altspace-sync-instance'] = instanceId;
+                window.location.href = url.toString();
             }
         }
 
@@ -7755,7 +7756,7 @@ window.altspace.utilities.behaviors.Layout = Layout;
 
 (function () {
 
-    var version = '0.5.1';
+    var version = '0.5.2';
 
     if (window.altspace && window.altspace.requestVersion) {
         window.altspace.requestVersion(version);
