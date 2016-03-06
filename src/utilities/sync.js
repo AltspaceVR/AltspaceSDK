@@ -188,6 +188,7 @@ altspace.utilities.sync = (function () {
         function updateUrl() {
             if (!url.query['altspace-sync-instance']) {
                 url.query['altspace-sync-instance'] = instanceId;
+                window.location.href = url.toString();
             }
         }
 
