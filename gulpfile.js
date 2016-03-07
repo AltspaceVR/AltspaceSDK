@@ -230,7 +230,7 @@ gulp.task('del-doc', function () {
     return del('doc');
 });
 
-gulp.task('doc', ['altspace_js'], function () {
+gulp.task('doc', ['altspace_js', 'bump-readme'], function () {
     var argv = yargs.option(
         'clientjs',
         {

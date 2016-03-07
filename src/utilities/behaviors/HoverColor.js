@@ -9,8 +9,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @param {Object} [config] Optional parameters.
  * @param {String} [config.event='cursorenter'] Specify the name of event which
  *  triggers the color change.  Default is 'cursorenter' for a hover effect.
- * @param {String} [config.color='yellow'] Color specified as a hexadecimal or
- *  a CSS-style string, for example, "red", "#ff0000", or "rgb(250, 0, 0)".
+ * @param {THREE.Color} [config.color=THREE.Color('yellow')] A THREE.Color value that will be applied to the object's
+ *  material.
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.HoverColor = function(config){

@@ -3,7 +3,9 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The Object3DSync behavior syncs an object's transform and data
+ * The Object3DSync behavior syncs an object's transform and data.  
+ * **Note:** Object3DSync must be used in conjunction with 
+ * [SceneSync]{@link module:altspace/utilities/behaviors.SceneSync}
  *
  * @class Object3DSync
  * @param {Object} [config]
