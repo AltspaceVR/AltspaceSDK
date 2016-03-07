@@ -1727,7 +1727,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  E.g. To constraint th object to an XY plane: `{x: true, y: true}`  
  *  Each axis can also be an object specifying the minimum and maximum limits
  *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`  
- *  Currently you must specify exactly two axes.
+ *  **Note:** Currently you must specify exactly two axes.
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.Drag = function (config) {
@@ -2120,8 +2120,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @param {Object} [config] Optional parameters.
  * @param {String} [config.event='cursorenter'] Specify the name of event which
  *  triggers the color change.  Default is 'cursorenter' for a hover effect.
- * @param {String} [config.color='yellow'] Color specified as a hexadecimal or
- *  a CSS-style string, for example, "red", "#ff0000", or "rgb(250, 0, 0)".
+ * @param {THREE.Color} [config.color=THREE.Color('yellow')] A THREE.Color value that will be applied to the object's
+ *  material.
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.HoverColor = function(config){
@@ -2225,7 +2225,9 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The Object3DSync behavior syncs an object's transform and data
+ * The Object3DSync behavior syncs an object's transform and data.  
+ * **Note:** Object3DSync must be used in conjunction with 
+ * [SceneSync]{@link module:altspace/utilities/behaviors.SceneSync}
  *
  * @class Object3DSync
  * @param {Object} [config]
@@ -2401,6 +2403,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 };
 
 //manual modifications to the ref's will not obey ownership status.
+
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
@@ -7756,7 +7759,7 @@ window.altspace.utilities.behaviors.Layout = Layout;
 
 (function () {
 
-    var version = '0.5.2';
+    var version = '0.5.3';
 
     if (window.altspace && window.altspace.requestVersion) {
         window.altspace.requestVersion(version);

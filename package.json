@@ -1,6 +1,6 @@
 {
   "name": "altspace",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "repository": "AltspaceVR/AltspaceSDK",
   "devDependencies": {
     "aws-sdk": "^2.2.38",
