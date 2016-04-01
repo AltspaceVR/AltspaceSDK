@@ -2,6 +2,10 @@
   "name": "altspace",
   "version": "0.5.3",
   "repository": "AltspaceVR/AltspaceSDK",
+  "main": "dist/altspace.js",
+  "peerDependencies": {
+    "three": "~0.73.0"
+  },
   "devDependencies": {
     "aws-sdk": "^2.2.38",
     "babel": "5.8.34",
@@ -26,6 +30,7 @@
     "gulp-shell": "0.5.1",
     "gulp-sourcemaps": "1.6.0",
     "gulp-uglify": "1.4.1",
+    "gulp-wrap-umd": "^0.2.1",
     "jsdoc": "3.4.0",
     "merge-stream": "1.0.0",
     "minami": "AltspaceVR/minami",

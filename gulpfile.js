@@ -22,6 +22,7 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
+    wrapUmd = require('gulp-wrap-umd'),
 
     jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
@@ -110,6 +111,13 @@ gulp.task('altspace_js', function () {
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
         .pipe(concat('altspace.js'))
+        .pipe(wrapUmd({
+          namespace: "altspace",
+          deps: [
+            {name: 'three', globalName: 'THREE', paramName: 'THREE'}
+          ],
+          exports: "altspace"
+        }))
         .pipe(gulp.dest('./dist/', { cwd: cwd }))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
