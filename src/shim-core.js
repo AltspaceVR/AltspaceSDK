@@ -7,4 +7,10 @@
     if (!window.altspace.utilities) {
         window.altspace.utilities = {};
     }
+
+    // THREE is exposed locally by the UMD wrapper, but altspace-client.js
+    // requires it to be global so export it here, once we
+    if (!window.THREE) {
+      window.THREE = THREE
+    }
 }());
