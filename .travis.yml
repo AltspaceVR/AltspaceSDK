@@ -3,5 +3,5 @@ cache:
     directories:
         - node_modules
         - .nvm
-install: npm install eslint eslint-plugin-html
+install: npm install eslint@2.7.0 eslint-plugin-html@1.4.0
 script: eslint src examples
