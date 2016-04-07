@@ -1,6 +1,6 @@
 {
   "name": "altspace",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "repository": "AltspaceVR/AltspaceSDK",
   "main": "dist/altspace.js",
   "dependencies": {
