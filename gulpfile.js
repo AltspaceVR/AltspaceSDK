@@ -74,6 +74,12 @@ gulp.task('altspace_js', function () {
         .pipe(gulp.dest('./examples/living-room/'));
 
     return orderedMerge([
+        browserify(
+            './src/utilities/behaviors/Object3DSync.js'
+        )
+            .bundle()
+            .pipe(vsource('Object3DSync.js'))
+            .pipe(vbuffer()),
         gulp.src([
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
@@ -95,7 +101,6 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/GamepadControls.js',
             './src/utilities/behaviors/HoverColor.js',
-            './src/utilities/behaviors/Object3DSync.js',
             './src/utilities/behaviors/SceneSync.js',
             './src/utilities/behaviors/Spin.js',
             './src/utilities/behaviors/TouchpadRotate.js'
