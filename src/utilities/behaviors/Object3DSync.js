@@ -42,6 +42,7 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
     var position = new THREE.Vector3();
     var quaternion = new THREE.Quaternion(); 
     var scale = new THREE.Vector3();
+    var isEqual = require('lodash.isequal');
 
 
     function link(objectRef, sS) {
@@ -121,7 +122,9 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
             };
         }
         if (Object.keys(transform).length > 0) {
+            if (isEqual(transform, this.lastTransform)) { return; }
             transformRef.set(transform);
+            this.lastTransform = transform;
         }
     }
 
