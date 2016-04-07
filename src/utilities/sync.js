@@ -141,6 +141,16 @@ altspace.utilities.sync = (function () {
      * @param {String} [config.userId] Override the userId. Can also be overriden using a query parameter.
      * @return {Promise}
      * @memberof module:altspace/utilities/sync
+     * @example
+     *  var syncInstance;
+     *  altspace.utilities.sync.connect({
+     *      // All sync instances with the same instance id will share properties.
+     *      instanceId: yourInstanceId, 
+     *      // This helps to prevent collisions.
+     *      authorId: yourAuthorId  
+     *  }).then(function(connection) {
+     *      syncInstance = connection.instance;  
+     *  });
      **/
     //todo clients
     function connect(config) {
