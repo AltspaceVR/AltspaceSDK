@@ -1,5 +1,7 @@
 language: node_js
-install: npm install eslint eslint-plugin-html
 cache:
-    directories: node_modules
+    directories:
+        - node_modules
+        - .nvm
+install: npm install eslint eslint-plugin-html
 script: eslint src examples
