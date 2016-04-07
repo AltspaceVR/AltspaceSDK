@@ -1,9 +1,9 @@
 (function () {
 
-    var version = VERSION;
+	var version = VERSION;
 
-    if (window.altspace && window.altspace.requestVersion) {
-        window.altspace.requestVersion(version);
-    }
+	if (window.altspace && window.altspace.requestVersion) {
+		window.altspace.requestVersion(version);
+	}
 
 }());

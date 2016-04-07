@@ -18,115 +18,115 @@ window.altspace.utilities = window.altspace.utilities || {};
  * @memberof module:altspace/utilities
  */
 altspace.utilities.Simulation = function (config) {
-    config = config || {};
-    if (config.auto === undefined) config.auto = true;
+	config = config || {};
+	if (config.auto === undefined) config.auto = true;
 
-    var exports = {};
-    var scene = new THREE.Scene();
-    var renderer;
-    var camera;
+	var exports = {};
+	var scene = new THREE.Scene();
+	var renderer;
+	var camera;
 
-    setup();
+	setup();
 
-    function loop() {
-        window.requestAnimationFrame(loop);
+	function loop() {
+		window.requestAnimationFrame(loop);
 
-        if (scene.updateAllBehaviors)
-            scene.updateAllBehaviors();
+		if (scene.updateAllBehaviors)
+			scene.updateAllBehaviors();
 
-        renderer.render(scene, camera);
-    }
+		renderer.render(scene, camera);
+	}
 
-    function setup() {
-        function setupAltspace() {
-            renderer = altspace.getThreeJSRenderer();
-            camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
-            altspace.getThreeJSTrackingSkeleton(function (s) {//TODO: this should have a non-promise version
-                var skeleton = s;
-                skeleton.getJoint('Eye').add(camera);// add our virtual camera to the center eye so that it looks normal to other behaviors
-            });
-        }
+	function setup() {
+		function setupAltspace() {
+			renderer = altspace.getThreeJSRenderer();
+			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
+			altspace.getThreeJSTrackingSkeleton(function (s) {//TODO: this should have a non-promise version
+				var skeleton = s;
+				skeleton.getJoint('Eye').add(camera);// add our virtual camera to the center eye so that it looks normal to other behaviors
+			});
+		}
 
-        function setupWebGL() {
-            renderer = new THREE.WebGLRenderer({antialias: true});
-            camera = new THREE.PerspectiveCamera();
-            camera.position.z = 500;
+		function setupWebGL() {
+			renderer = new THREE.WebGLRenderer({antialias: true});
+			camera = new THREE.PerspectiveCamera();
+			camera.position.z = 500;
 
-            var resizeRender = function () {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            };
-            document.addEventListener("DOMContentLoaded", function (event) {
-                document.body.style.margin = '0px';
-                document.body.style.overflow = 'hidden';
-                renderer.setClearColor('#035F72');
-                var container = document.createElement('div');
-                document.body.appendChild(container);
-                container.appendChild(renderer.domElement);
-            });
-            window.addEventListener('resize', resizeRender);
-            resizeRender();
-            camera.fov = 45;
-            camera.near = 1;
-            camera.far = 2000;
-            scene.add(camera);
-            scene.add(new THREE.AmbientLight('white'));
+			var resizeRender = function () {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			};
+			document.addEventListener("DOMContentLoaded", function (event) {
+				document.body.style.margin = '0px';
+				document.body.style.overflow = 'hidden';
+				renderer.setClearColor('#035F72');
+				var container = document.createElement('div');
+				document.body.appendChild(container);
+				container.appendChild(renderer.domElement);
+			});
+			window.addEventListener('resize', resizeRender);
+			resizeRender();
+			camera.fov = 45;
+			camera.near = 1;
+			camera.far = 2000;
+			scene.add(camera);
+			scene.add(new THREE.AmbientLight('white'));
 
-            var shouldShimCursor = altspace && altspace.utilities && altspace.utilities.shims && altspace.utilities.shims.cursor;
-            if (shouldShimCursor) altspace.utilities.shims.cursor.init(scene, camera);
-        }
+			var shouldShimCursor = altspace && altspace.utilities && altspace.utilities.shims && altspace.utilities.shims.cursor;
+			if (shouldShimCursor) altspace.utilities.shims.cursor.init(scene, camera);
+		}
 
-        if (altspace && altspace.inClient) {
-            setupAltspace();
-        } else {
-            setupWebGL();
-        }
-    }
+		if (altspace && altspace.inClient) {
+			setupAltspace();
+		} else {
+			setupWebGL();
+		}
+	}
 
-    if (config.auto) window.requestAnimationFrame(loop);
+	if (config.auto) window.requestAnimationFrame(loop);
 
 
-    /**
-     * The simulation scene.
-     * @readonly
-     * @instance
-     * @member {THREE.Scene} scene
-     * @memberof module:altspace/utilities.Simulation
-     */
-    Object.defineProperty(exports, 'scene', {
-        get: function () {
-            return scene;
-        }
-    })
+	/**
+	 * The simulation scene.
+	 * @readonly
+	 * @instance
+	 * @member {THREE.Scene} scene
+	 * @memberof module:altspace/utilities.Simulation
+	 */
+	Object.defineProperty(exports, 'scene', {
+		get: function () {
+			return scene;
+		}
+	})
 
-    /**
-     * The renderer being used.
-     * @readonly
-     * @instance
-     * @member {(THREE.WebGLRenderer|AltRenderer)} renderer
-     * @memberof module:altspace/utilities.Simulation
-     */
-    Object.defineProperty(exports, 'renderer', {
-        get: function () {
-            return renderer;
-        }
-    })
+	/**
+	 * The renderer being used.
+	 * @readonly
+	 * @instance
+	 * @member {(THREE.WebGLRenderer|AltRenderer)} renderer
+	 * @memberof module:altspace/utilities.Simulation
+	 */
+	Object.defineProperty(exports, 'renderer', {
+		get: function () {
+			return renderer;
+		}
+	})
 
-    /**
-     * The camera being used by the WebGL renderer.
-     * @readonly
-     * @instance
-     * @member {Three.Camera} camera
-     * @memberof module:altspace/utilities.Simulation
-     */
-    Object.defineProperty(exports, 'camera', {
-        get: function () {
-            return camera;
-        },
-        set: function (value) {
-            camera = value;
-        }
-    })
-    return exports;
+	/**
+	 * The camera being used by the WebGL renderer.
+	 * @readonly
+	 * @instance
+	 * @member {Three.Camera} camera
+	 * @memberof module:altspace/utilities.Simulation
+	 */
+	Object.defineProperty(exports, 'camera', {
+		get: function () {
+			return camera;
+		},
+		set: function (value) {
+			camera = value;
+		}
+	})
+	return exports;
 }

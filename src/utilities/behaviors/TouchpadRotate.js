@@ -3,55 +3,55 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 altspace.utilities.behaviors.TouchpadRotate = function (config) {
-    config = config || {};
+	config = config || {};
 
-    var object3d;
-    var scene;
+	var object3d;
+	var scene;
 
-    var startingRotation;
+	var startingRotation;
 
-    var activelyRotating = false;
+	var activelyRotating = false;
 
-    function awake(o, s) {
-        object3d = o;
-        scene = s;
+	function awake(o, s) {
+		object3d = o;
+		scene = s;
 
-        altspace.addEventListener('touchpadup', onTouchpadUp);
-        altspace.addEventListener('touchpaddown', onTouchpadDown);
-        altspace.addEventListener('touchpadmove', onTouchpadMove);
-    }
+		altspace.addEventListener('touchpadup', onTouchpadUp);
+		altspace.addEventListener('touchpaddown', onTouchpadDown);
+		altspace.addEventListener('touchpadmove', onTouchpadMove);
+	}
 
-    function onTouchpadUp(event) {
-        activelyRotating = false;
-    }
+	function onTouchpadUp(event) {
+		activelyRotating = false;
+	}
 
-    function onTouchpadDown(event) {
-        activelyRotating = true;
-        startingRotation = object3d.rotation.clone();
-    }
+	function onTouchpadDown(event) {
+		activelyRotating = true;
+		startingRotation = object3d.rotation.clone();
+	}
 
-    var lastDisplacementX = 0;
+	var lastDisplacementX = 0;
 
-    var runningCount = 5;
-    var runningAverageVelocityX = 0;
+	var runningCount = 5;
+	var runningAverageVelocityX = 0;
 
-    function onTouchpadMove(event) {
-        var deltaX = event.displacementX - lastDisplacementX;
-        object3d.rotation.set(startingRotation.x, startingRotation.y + event.displacementX / 300, startingRotation.z);
+	function onTouchpadMove(event) {
+		var deltaX = event.displacementX - lastDisplacementX;
+		object3d.rotation.set(startingRotation.x, startingRotation.y + event.displacementX / 300, startingRotation.z);
 
-        runningAverageVelocityX = ((runningAverageVelocityX * runningCount) + deltaX / 300) / (runningCount + 1);
-        lastDisplacementX = event.displacementX;
-    }
+		runningAverageVelocityX = ((runningAverageVelocityX * runningCount) + deltaX / 300) / (runningCount + 1);
+		lastDisplacementX = event.displacementX;
+	}
 
-    function update(deltaTime) {
-        if (!activelyRotating && Math.abs(runningAverageVelocityX) > 0.01) {
-            object3d.rotation.y += runningAverageVelocityX;
-            runningAverageVelocityX *= 0.97;
-        }
-    }
+	function update(deltaTime) {
+		if (!activelyRotating && Math.abs(runningAverageVelocityX) > 0.01) {
+			object3d.rotation.y += runningAverageVelocityX;
+			runningAverageVelocityX *= 0.97;
+		}
+	}
 
-    function start() {
-    }
+	function start() {
+	}
 
-    return { awake: awake, start: start, update: update };
+	return { awake: awake, start: start, update: update };
 };

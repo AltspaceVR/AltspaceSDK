@@ -28,7 +28,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 	var object3d;
 	var gamepad;
 	var scene;
-  var sync;
+	var sync;
 
 	var isAltModeR= false;
 	var isAltModeL= false;
@@ -48,7 +48,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 
 		object3d = o;
 		scene = s;
-    sync = object3d.getBehaviorByType('Object3DSync');
+		sync = object3d.getBehaviorByType('Object3DSync');
 		originalObj = object3d.clone();
 		gamepad = getGamepad();
 		if (gamepad) {
@@ -64,7 +64,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		}
 
 		scene.addEventListener('cursordown', function(e) {
-		  //preventDefault only works when app has focus, so call after initial click
+			//preventDefault only works when app has focus, so call after initial click
 			if (gamepad && !isInitialized) {
 				preventDefault(gamepad);
 				isInitialized = true;
