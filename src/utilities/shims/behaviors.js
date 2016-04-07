@@ -25,30 +25,30 @@
  */
 THREE.Scene.prototype.updateAllBehaviors = function () {
 
-    var now = performance.now();
-    var lastNow = this.__lastNow || now;
+	var now = performance.now();
+	var lastNow = this.__lastNow || now;
 
-    var deltaTime = now - lastNow;
+	var deltaTime = now - lastNow;
 
-    var self = this;
+	var self = this;
 
-    //gather objects first so that behaviors can change the hierarchy during traversal without incident
-    var objectsWithBehaviors = [];
+	//gather objects first so that behaviors can change the hierarchy during traversal without incident
+	var objectsWithBehaviors = [];
 
-    this.traverse(function (object3d) {
+	this.traverse(function (object3d) {
 
-        if (object3d.__behaviorList) {
-            objectsWithBehaviors.push(object3d);
-        }
+		if (object3d.__behaviorList) {
+			objectsWithBehaviors.push(object3d);
+		}
 
-    });
+	});
 
-    for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
-        object3d = objectsWithBehaviors[i];
-        object3d.updateBehaviors(deltaTime, self);
-    }
+	for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
+		object3d = objectsWithBehaviors[i];
+		object3d.updateBehaviors(deltaTime, self);
+	}
 
-    this.__lastNow = now;
+	this.__lastNow = now;
 
 }
 
@@ -67,8 +67,8 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
  */
 THREE.Object3D.prototype.addBehavior = function()
 {
-    this.__behaviorList = this.__behaviorList || [];
-    Array.prototype.push.apply(this.__behaviorList, arguments);
+	this.__behaviorList = this.__behaviorList || [];
+	Array.prototype.push.apply(this.__behaviorList, arguments);
 }
 
 /**
@@ -80,8 +80,8 @@ THREE.Object3D.prototype.addBehavior = function()
  */
 THREE.Object3D.prototype.addBehaviors = function()
 {
-    this.__behaviorList = this.__behaviorList || [];
-    Array.prototype.push.apply(this.__behaviorList, arguments);
+	this.__behaviorList = this.__behaviorList || [];
+	Array.prototype.push.apply(this.__behaviorList, arguments);
 }
 
 /**
@@ -94,25 +94,25 @@ THREE.Object3D.prototype.addBehaviors = function()
  */
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
-    var i = this.__behaviorList.indexOf(behavior);
-    if (i !== -1) {
-        this.__behaviorList.splice(i, 1);
-        try {
+	var i = this.__behaviorList.indexOf(behavior);
+	if (i !== -1) {
+		this.__behaviorList.splice(i, 1);
+		try {
 
-            if (behavior.dispose) behavior.dispose.call(behavior, this);
+			if (behavior.dispose) behavior.dispose.call(behavior, this);
 
-        } catch (error) {
-            
-            console.group();
-            (console.error || console.log).call(console, error.stack || error);
-            console.log('[Behavior]');
-            console.log(behavior);
-            console.log('[Object3D]');
-            console.log(this);
-            console.groupEnd();
+		} catch (error) {
+			
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this);
+			console.groupEnd();
 
-        }
-    }
+		}
+	}
 }
 
 /**
@@ -124,27 +124,27 @@ THREE.Object3D.prototype.removeBehavior = function(behavior)
  */
 THREE.Object3D.prototype.removeAllBehaviors = function ()
 {
-    if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
 
-    for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
-        var behavior = this.__behaviorList[i];
+	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+		var behavior = this.__behaviorList[i];
 
-        try {
+		try {
 
-            if (behavior.dispose) behavior.dispose.call(behavior, this);
+			if (behavior.dispose) behavior.dispose.call(behavior, this);
 
-        } catch (error) {
+		} catch (error) {
 
-            console.group();
-            (console.error || console.log).call(console, error.stack || error);
-            console.log('[Behavior]');
-            console.log(behavior);
-            console.log('[Object3D]');
-            console.log(this);
-            console.groupEnd();
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this);
+			console.groupEnd();
 
-        }
-    }
+		}
+	}
 }
 
 /**
@@ -156,12 +156,12 @@ THREE.Object3D.prototype.removeAllBehaviors = function ()
  * @memberof THREE.Object3D
  */
 THREE.Object3D.prototype.getBehaviorByType = function(type) {
-    if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
 
-    for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
-        if (this.__behaviorList[i].type === type)
-            return this.__behaviorList[i];
-    }
+	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+		if (this.__behaviorList[i].type === type)
+			return this.__behaviorList[i];
+	}
 }
 
 /**
@@ -173,84 +173,84 @@ THREE.Object3D.prototype.getBehaviorByType = function(type) {
  */
 THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 
-    if (!this.__behaviorList || this.__behaviorList.length === 0) return;
+	if (!this.__behaviorList || this.__behaviorList.length === 0) return;
 
-    var toInit = [];
-    var toUpdate = this.__behaviorList.slice(); // prevent mutation of the behavior list during this loop
+	var toInit = [];
+	var toUpdate = this.__behaviorList.slice(); // prevent mutation of the behavior list during this loop
 
-    for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
 
-        var behavior = this.__behaviorList[i];
-        if (!behavior.__isInitialized) toInit.push(behavior);
+		var behavior = this.__behaviorList[i];
+		if (!behavior.__isInitialized) toInit.push(behavior);
 
-    }
+	}
 
-    //Awake
-    for (var i = 0, max = toInit.length; i < max; i++) {
+	//Awake
+	for (var i = 0, max = toInit.length; i < max; i++) {
 
-        var behavior = toInit[i];
-        try {
+		var behavior = toInit[i];
+		try {
 
-            if (behavior.awake) behavior.awake.call(behavior, this, scene);
+			if (behavior.awake) behavior.awake.call(behavior, this, scene);
 
-        } catch (error) {
+		} catch (error) {
 
-            console.group();
-            (console.error || console.log).call(console, error.stack || error);
-            console.log('[Behavior]');
-            console.log(behavior);
-            console.log('[Object3D]');
-            console.log(this);
-            console.groupEnd();
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this);
+			console.groupEnd();
 
-        }
+		}
 
-    }
+	}
 
-    //Start
-    for (var i = 0, max = toInit.length; i < max; i++) {
+	//Start
+	for (var i = 0, max = toInit.length; i < max; i++) {
 
-        var behavior = toInit[i];
-        try {
+		var behavior = toInit[i];
+		try {
 
-            if (behavior.start) behavior.start.call(behavior);
+			if (behavior.start) behavior.start.call(behavior);
 
-        } catch (error) {
+		} catch (error) {
 
-            console.group();
-            (console.error || console.log).call(console, error.stack || error);
-            console.log('[Behavior]');
-            console.log(behavior);
-            console.log('[Object3D]');
-            console.log(this);
-            console.groupEnd();
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this);
+			console.groupEnd();
 
-        }
-        behavior.__isInitialized = true;
+		}
+		behavior.__isInitialized = true;
 
-    }
+	}
 
-    //Update
-    for (var i = 0, max = toUpdate.length; i < max; i++) {
+	//Update
+	for (var i = 0, max = toUpdate.length; i < max; i++) {
 
-        var behavior = toUpdate[i];
-        try {
+		var behavior = toUpdate[i];
+		try {
 
-            if (behavior.update) behavior.update.call(behavior, deltaTime);
+			if (behavior.update) behavior.update.call(behavior, deltaTime);
 
-        } catch (error) {
+		} catch (error) {
 
-            console.group();
-            (console.error || console.log).call(console, error.stack || error);
-            console.log('[Behavior]');
-            console.log(behavior);
-            console.log('[Object3D]');
-            console.log(this);
-            console.groupEnd();
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this);
+			console.groupEnd();
 
-        }
+		}
 
-    }
+	}
 
 }
 

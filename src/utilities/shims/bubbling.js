@@ -18,12 +18,12 @@
  */
 ( function() {
 
-    if (!THREE) return;
+	if (!THREE) return;
 
-    if (window.altspace && window.altspace.inAltspace) return;
+	if (window.altspace && window.altspace.inAltspace) return;
 
-    THREE.EventDispatcher.prototype.dispatchEvent = dispatchEvent;
-    THREE.Object3D.prototype.dispatchEvent = dispatchEvent;
+	THREE.EventDispatcher.prototype.dispatchEvent = dispatchEvent;
+	THREE.Object3D.prototype.dispatchEvent = dispatchEvent;
 
 	function dispatchEvent( event ) {
 
