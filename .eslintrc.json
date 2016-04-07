@@ -1,0 +1,18 @@
+{
+	"plugins": [
+		"html"
+	],
+	"extends": "eslint:recommended",
+	"env": {
+		"browser": true
+	},
+	"rules": {
+		"no-console": 0,
+		"quotes": [2, "single"]
+	},
+	"globals": {
+		"THREE": true,
+		"altspace": true
+	}
+}
+
