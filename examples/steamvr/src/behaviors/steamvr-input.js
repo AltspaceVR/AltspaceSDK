@@ -1,3 +1,14 @@
+const STEAMVR_TRIGGER = 0;
+const STEAMVR_GRIP = 1;
+const STEAMVR_TOUCHPAD = 2;
+const STEAMVR_DPAD_UP = 3;
+const STEAMVR_DPAD_RIGHT = 4;
+const STEAMVR_DPAD_DOWN = 5;
+const STEAMVR_DPAD_LEFT = 6;
+
+const STEAMVR_TOUCHPAD_X = 0;
+const STEAMVR_TOUCHPAD_Y = 1;
+
 // Returns a Promise that resovles when a steamvr controller is found
 function getController(deviceIndex) {
     const findGamepad = (resolve, reject) => {
@@ -25,8 +36,16 @@ export default class SteamVRInputBehavior {
   awake(object3d, scene) {
     this._object3d = object3d;
     this._scene = scene;
+
     getController(this._deviceIndex).then((controller) => {
-      controller.preventDefault([],[true])
+      let blockedAxes = controller.axes.map((a) => false)
+      let blockedButtons = controller.buttons.map((b) => false)
+
+      blockedButtons[STEAMVR_TRIGGER] = true;
+      blockedButtons[STEAMVR_DPAD_UP] = true;
+      blockedButtons[STEAMVR_DPAD_DOWN] = true;
+
+      controller.preventDefault(blockedAxes, blockedButtons);
       this._controller = controller;
     })
   }
@@ -42,9 +61,9 @@ export default class SteamVRInputBehavior {
       var {x,y,z,w} = controller.rotation;
       object3d.quaternion.set(x,y,z,w);
 
-      object3d.scale.z = 1 + controller.axes[1];
+      object3d.scale.z = 1 + controller.axes[STEAMVR_TOUCHPAD_Y];
 
-      let triggerDown = controller.buttons[0].pressed;
+      let triggerDown = controller.buttons[STEAMVR_TRIGGER].pressed;
       if(!triggerDown && this._prevTriggerDown) {  // trigger was pressed
         var sceneSync = this._scene.getBehaviorByType('SceneSync');
         try {
