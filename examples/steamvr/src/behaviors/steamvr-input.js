@@ -22,9 +22,11 @@ export default class SteamVRInputBehavior {
     this._deviceIndex = device;
   }
 
-  awake(object3d) {
+  awake(object3d, scene) {
     this._object3d = object3d;
+    this._scene = scene;
     getController(this._deviceIndex).then((controller) => {
+      controller.preventDefault([],[true])
       this._controller = controller;
     })
   }
@@ -34,7 +36,6 @@ export default class SteamVRInputBehavior {
     let object3d = this._object3d;
 
     if(controller) {
-      // console.log(this._deviceIndex, controller.steamDeviceIndex, controller.position)
       var {x,y,z} = controller.position;
       object3d.position.set(x,y,z);
 
@@ -42,6 +43,21 @@ export default class SteamVRInputBehavior {
       object3d.quaternion.set(x,y,z,w);
 
       object3d.scale.z = 1 + controller.axes[1];
+
+      let triggerDown = controller.buttons[0].pressed;
+      if(!triggerDown && this._prevTriggerDown) {  // trigger was pressed
+        var sceneSync = this._scene.getBehaviorByType('SceneSync');
+        try {
+          sceneSync.instantiate('cube', {
+            color: this._deviceIndex === SteamVRInputBehavior.LEFT_CONTROLLER ? '#ff0000' : '#0000ff',
+            position: controller.position,
+            rotation: controller.rotation,
+            size: 1 + controller.axes[1]
+          }, true);
+        } catch(e) {}
+      }
+      this._prevTriggerDown = triggerDown;
+
     }
   }
 }
