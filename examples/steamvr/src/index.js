@@ -22,13 +22,9 @@ function createCube({ device, tracked, color, position, rotation, size }) {
   const group = new THREE.Object3D();
   if (tracked) {
     group.addBehaviors(
-      new SteamVRInputBehavior({ device }),
-      altspace.utilities.behaviors.Object3DSync({
-        position: tracked,
-        rotation: tracked,
-        scale: tracked,
-      })
+      new SteamVRInputBehavior({ device })
     );
+    group.position.set(0,-600, 0);
   } else {
     group.position.set(position.x, position.y, position.z);
     group.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
@@ -38,6 +34,16 @@ function createCube({ device, tracked, color, position, rotation, size }) {
   sim.scene.add(group);
 
   return group;
+}
+
+function createFloor() {
+  const geometry = new THREE.BoxGeometry(1000, 10, 1000);
+  const material = new THREE.MeshBasicMaterial({
+    color: '#FFFFFF'
+  });
+  const ground = new THREE.Mesh(geometry, material);
+  ground.position.y = -520
+  sim.scene.add(ground);
 }
 
 altspace.utilities.sync.connect(config).then((connection) => {
@@ -54,6 +60,7 @@ altspace.utilities.sync.connect(config).then((connection) => {
   sim.scene.addBehavior(sceneSync);
 });
 
+createFloor();
 // Thes only need to be created locally
 createCube({
   device: SteamVRInputBehavior.LEFT_CONTROLLER,
