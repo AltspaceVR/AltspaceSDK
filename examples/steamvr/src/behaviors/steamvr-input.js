@@ -35,14 +35,20 @@ export default class SteamVRInputBehavior {
   }
 
   awake() {
-    this.anyControllerAvailable = Promise.race([
-      getController(LEFT_CONTROLLER).then((controller) => {
-        this.leftController = controller;
-      }),
-      getController(RIGHT_CONTROLLER).then((controller) => {
-        this.rightController = controller;
-      }),
-    ]).then((controller) => {
+    this.leftControllerPromise = getController(LEFT_CONTROLLER);
+    this.rightControllerPromise = getController(RIGHT_CONTROLLER);
+    this.firstControllerPromise = Promise.race([
+      this.leftControllerPromise,
+      this.rightControllerPromise,
+    ]);
+
+    this.leftControllerPromise.then((controller) => {
+      this.leftController = controller;
+    });
+    this.rightControllerPromise.then((controller) => {
+      this.rightController = controller;
+    });
+    this.firstControllerPromise.then((controller) => {
       this.firstController = controller;
 
       const blockedAxes = controller.axes.map(() => false);
