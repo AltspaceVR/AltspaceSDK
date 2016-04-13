@@ -1,7 +1,7 @@
 'use strict';
 
 var expect = chai.expect;
-describe('layout', function () {
+describe('the layout utility', function () {
 	var behaviors = altspace.utilities.behaviors;
 	var scene = undefined,
 	    cube = undefined,

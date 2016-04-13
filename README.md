@@ -2,9 +2,13 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.  
 
-**Latest Version: v0.4.2 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.4.2)**  
+**Latest Version: v0.6.2 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.6.2)**  
 
-<!-- THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD --> 
+<!-- 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--> 
 
 [Three.js](http://threejs.org/) is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
 
@@ -29,7 +33,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.4.2/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.6.2/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -84,18 +88,25 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 > Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.  
 
 ## Three.js Feature Support
+Altspace supports Three.js r69 to r73. r73 is recommended.
 
 **Currently supported:**
 * Object3D transformation and hierarchy
 * Most Geometries
 * MeshBasicMaterial map and color properties
-* Examples that should work: [Draggable Cubes] - [Voxel Painter] - [Falling Cubes] - [Flocking Birds] - [OBJ/MTL Import]
 
 **Not currently supported:**
+* Three.js r74
 * Lighting, custom shaders, screen space effects.
-* Examples that won't work: [Hemisphere Light] - [Material Reflection] - [Ocean Shader]
+* Texture wrap, filter, format, anisotropy, repeat, offset, flip
 * Using GIF images for textures
+* VideoTexture
+* Material opacity, transparency, blending, side
+* Wireframes
+* Face and vertex colors
+* Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial
 * Line Geometries
+* Quad faces
 * Dynamic meshes, skinned meshes
 * Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)
 
@@ -109,7 +120,19 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 * Bake ambient occlusion and other lighting into your models. All models currently render as unlit.  
 
 **Known Issues:**
-* Object visibility does not propagate to child objects in the scene graph. You can work around this by recursively setting the visibility on an object and its children.
+* Object visibility does not propagate to child objects in the scene graph. 
+  You can work around this by recursively setting the visibility on an object and its children.
+
+## Browser Feature Support
+Altspace's browser is based on Chromium version 28.
+
+**Currently supported:**
+* Libre audio and video codecs (ogg, webm)
+
+**Not currently supported:**
+* Proprietary audio and video codecs (h.264, mp4, mp3)
+* WebRTC
+* ES6
 
 [three.js]: http://threejs.org/
 

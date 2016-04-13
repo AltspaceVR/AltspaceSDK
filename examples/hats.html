@@ -93,12 +93,16 @@
                 }
 
                 // Now that hat templates ready, init sync.
-                var instanceBase = altspace.utilities.sync.getInstance();
-                sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
-                    instantiators: { 'Hat': createHat },
-                    ready: onSyncReady
+                altspace.utilities.sync.connect({
+                    appId: 'Hats',
+                    authorId: 'AltspaceVR'
+                }).then(function (connection) {
+                    sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+                        instantiators: { 'Hat': createHat },
+                        ready: onSyncReady
+                    });
+                    sim.scene.addBehavior(sceneSync);
                 });
-                sim.scene.addBehavior(sceneSync);
             }
 
             function onSyncReady() {

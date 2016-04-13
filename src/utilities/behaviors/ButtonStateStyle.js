@@ -14,65 +14,65 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.ButtonStateStyle = function (config) {
-    var object3d;
-    var scene;
-    var originalColor;
-    var modifiedColor = new THREE.Color();
+	var object3d;
+	var scene;
+	var originalColor;
+	var modifiedColor = new THREE.Color();
 
-    config = config || {};
-    var overBrightness = config.overBrightness || 1.5;
-    var downBrightness = config.downBrightness || 0.5;
+	config = config || {};
+	var overBrightness = config.overBrightness || 1.5;
+	var downBrightness = config.downBrightness || 0.5;
 
-    function changeBrightness(brightness) {
-        modifiedColor.set(originalColor);
-        modifiedColor.multiplyScalar(brightness);
-        modifiedColor.r = THREE.Math.clamp(modifiedColor.r, 0, 1);
-        modifiedColor.g = THREE.Math.clamp(modifiedColor.g, 0, 1);
-        modifiedColor.b = THREE.Math.clamp(modifiedColor.b, 0, 1);
-        object3d.material.color = modifiedColor;
-    }
+	function changeBrightness(brightness) {
+		modifiedColor.set(originalColor);
+		modifiedColor.multiplyScalar(brightness);
+		modifiedColor.r = THREE.Math.clamp(modifiedColor.r, 0, 1);
+		modifiedColor.g = THREE.Math.clamp(modifiedColor.g, 0, 1);
+		modifiedColor.b = THREE.Math.clamp(modifiedColor.b, 0, 1);
+		object3d.material.color = modifiedColor;
+	}
 
-    function cursorLeave() {
-        object3d.removeEventListener('cursorleave', cursorLeave);
-        changeBrightness(1.0);
-    }
+	function cursorLeave() {
+		object3d.removeEventListener('cursorleave', cursorLeave);
+		changeBrightness(1.0);
+	}
 
-    function cursorEnter() {
-        changeBrightness(overBrightness);
-        object3d.addEventListener('cursorleave', cursorLeave);
-    }
+	function cursorEnter() {
+		changeBrightness(overBrightness);
+		object3d.addEventListener('cursorleave', cursorLeave);
+	}
 
-    function cursorUp(event) {
-        scene.removeEventListener('cursorup', cursorUp);
-        object3d.addEventListener('cursorenter', cursorEnter);
-        if (event.target === object3d) {
-            changeBrightness(overBrightness);
-            object3d.addEventListener('cursorleave', cursorLeave);
-        } else {
-            changeBrightness(1.0);
-        }
-    }
-    function cursorDown() {
-        scene.addEventListener('cursorup', cursorUp);
-        object3d.removeEventListener('cursorleave', cursorLeave);
-        object3d.removeEventListener('cursorenter', cursorEnter);
-        changeBrightness(downBrightness);
-    }
+	function cursorUp(event) {
+		scene.removeEventListener('cursorup', cursorUp);
+		object3d.addEventListener('cursorenter', cursorEnter);
+		if (event.target === object3d) {
+			changeBrightness(overBrightness);
+			object3d.addEventListener('cursorleave', cursorLeave);
+		} else {
+			changeBrightness(1.0);
+		}
+	}
+	function cursorDown() {
+		scene.addEventListener('cursorup', cursorUp);
+		object3d.removeEventListener('cursorleave', cursorLeave);
+		object3d.removeEventListener('cursorenter', cursorEnter);
+		changeBrightness(downBrightness);
+	}
 
-    function awake(o, s) {
-        object3d = o;
-        scene = s;
-        originalColor = config.originalColor || object3d.material.color;
-        object3d.addEventListener('cursorenter', cursorEnter);
-        object3d.addEventListener('cursordown', cursorDown);
-    }
+	function awake(o, s) {
+		object3d = o;
+		scene = s;
+		originalColor = config.originalColor || object3d.material.color;
+		object3d.addEventListener('cursorenter', cursorEnter);
+		object3d.addEventListener('cursordown', cursorDown);
+	}
 
-    function dispose() {
-        object3d.removeEventListener('cursorenter', cursorEnter);
-        object3d.removeEventListener('cursorleave', cursorLeave);
-        object3d.removeEventListener('cursorup', cursorUp);
-        object3d.removeEventListener('cursordown', cursorDown);
-    }
+	function dispose() {
+		object3d.removeEventListener('cursorenter', cursorEnter);
+		object3d.removeEventListener('cursorleave', cursorLeave);
+		object3d.removeEventListener('cursorup', cursorUp);
+		object3d.removeEventListener('cursordown', cursorDown);
+	}
 
-    return { awake: awake, dispose: dispose, type: 'ButtonStateStyle' };
+	return { awake: awake, dispose: dispose, type: 'ButtonStateStyle' };
 };

@@ -22,6 +22,7 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
+    wrapUmd = require('gulp-wrap-umd'),
 
     jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
@@ -81,6 +82,12 @@ gulp.task('altspace_js', ['transpile_es6'], function () {
             .bundle()
             .pipe(vsource('OBJMTLLoader.js'))
             .pipe(vbuffer()),
+        browserify(
+            './src/utilities/behaviors/Object3DSync.js'
+        )
+            .bundle()
+            .pipe(vsource('Object3DSync.js'))
+            .pipe(vbuffer()),
         gulp.src([
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
@@ -102,7 +109,6 @@ gulp.task('altspace_js', ['transpile_es6'], function () {
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/GamepadControls.js',
             './src/utilities/behaviors/HoverColor.js',
-            './src/utilities/behaviors/Object3DSync.js',
             './src/utilities/behaviors/SceneSync.js',
             './src/utilities/behaviors/Spin.js',
             './src/utilities/behaviors/TouchpadRotate.js'
@@ -118,6 +124,13 @@ gulp.task('altspace_js', ['transpile_es6'], function () {
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
         .pipe(concat('altspace.js'))
+        .pipe(wrapUmd({
+          namespace: "altspace",
+          deps: [
+            {name: 'three', globalName: 'THREE', paramName: 'THREE'}
+          ],
+          exports: "altspace"
+        }))
         .pipe(gulp.dest('./dist/', { cwd: cwd }))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))
@@ -238,14 +251,19 @@ gulp.task('del-doc', function () {
     return del('doc');
 });
 
-gulp.task('doc', ['altspace_js'], function () {
+gulp.task('doc', ['altspace_js', 'bump-readme'], function () {
     var argv = yargs.option(
         'clientjs',
         {
             describe: 'Path to the directory containing altspace-client.js',
-            demand: true
+            demand: false
         }
     ).argv
+
+    if (!argv.clientjs) {
+        argv.clientjs = "../UnityClient/js/src";
+    }
+
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }

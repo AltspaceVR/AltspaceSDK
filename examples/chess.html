@@ -11,8 +11,6 @@
 <body>
 <script>
 
-(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
-
 ChessApp = (function(){
 	//Chess Board with draggable pieces and multiplayer sychronization.
 	//Logic for 'responsive' chess board, which sizes itself based on boardSize.
@@ -47,24 +45,27 @@ ChessApp = (function(){
 	var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
 	function main(){
-		sim = alt.Simulation();
-		var inCodePen = alt.codePen.inCodePen;
-		instanceRef = alt.sync.getInstance({
-			authorId: inCodePen ? alt.codePen.getAuthorId() : null,
-			instanceId: inCodePen ? alt.codePen.getPenId() : null
-		});
+		sim = altspace.utilities.Simulation();
+		var inCodePen = altspace.utilities.codePen.inCodePen;
+	    altspace.utilities.sync.connect({
+            appId: 'Chess',
+	        authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
+	        instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
+	    }).then(function(connection) {
+	        instanceRef = connection.instance;
 
-		if (alt.inClient) {
-			altspace.getEnclosure().then(function (enclosure) {
-				gameObjects.position.y -= enclosure.innerHeight / 2;
-			});
-		} else {
-			sim.camera.position.z = CONFIG.boardSize;
-			sim.camera.position.y = CONFIG.boardSize + 100;
-			sim.camera.lookAt(sim.scene.position);
-		}
+	        if (altspace.inClient) {
+	            altspace.getEnclosure().then(function (enclosure) {
+	                gameObjects.position.y -= enclosure.innerHeight / 2;
+	            });
+	        } else {
+	            sim.camera.position.z = CONFIG.boardSize;
+	            sim.camera.position.y = CONFIG.boardSize + 100;
+	            sim.camera.lookAt(sim.scene.position);
+	        }
 
-		loadModels(initBoard);
+	        loadModels(initBoard);
+	    });
 
 	}//end main
 
@@ -72,12 +73,11 @@ ChessApp = (function(){
 		//Models will take a couple seconds to download, so callback when done.
 		//Load only 7 different models, then clone and color as necessary. 
 		console.log('Downloading chess models...');
-		//var multiloader = alt.utilities.multiloader;
-		alt.multiloader.init({
+		altspace.utilities.multiloader.init({
 			crossOrigin: 'anonymous',
 			baseUrl: CONFIG.directory,
 		});
-		var req = new alt.multiloader.LoadRequest();
+		var req = new altspace.utilities.multiloader.LoadRequest();
 		var names = Object.keys(CONFIG.pieces);
 		for (var i=0; i < names.length; i++){
 			var file = CONFIG.pieces[names[i]].modelFile;
@@ -87,7 +87,7 @@ ChessApp = (function(){
 		var boardFile = CONFIG.board.modelFile;
 		req.objUrls.push(boardFile+'.obj');
 		req.mtlUrls.push(boardFile+'.mtl');
-		alt.multiloader.load(req, function(){//onComplete
+		altspace.utilities.multiloader.load(req, function(){//onComplete
 			if(req.error) {
 				throw new Error(req.error);
 			}
@@ -120,7 +120,7 @@ ChessApp = (function(){
 		whitePieces = cloneModels(whitePieces, whiteTint);
 		blackPieces = cloneModels(blackPieces, blackTint);
 
-		sceneSync = alt.SceneSync(instanceRef, {
+		sceneSync = altspace.utilities.behaviors.SceneSync(instanceRef, {
 			instantiators: {
 				'Piece': function(initData){
 					var i = initData.index;
@@ -128,12 +128,12 @@ ChessApp = (function(){
 					var object3d = array[i];
 					var limit = CONFIG.dragPlaneSize;
 					object3d.addBehaviors(
-						alt.Object3DSync({position: true}),
-						alt.Drag({
+						altspace.utilities.behaviors.Object3DSync({position: true}),
+						altspace.utilities.behaviors.Drag({
 							x: {min: -1 * limit, max: limit},
 		          z: {min: -1 * limit, max: limit}
 		        }),
-						alt.HoverColor({
+						altspace.utilities.behaviors.HoverColor({
 							//event: 'cursordown',
 							scene: sim.scene,
 							color: new THREE.Color(0.8, 0.2, 0.2)

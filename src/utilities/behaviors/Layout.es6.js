@@ -126,13 +126,13 @@ class Layout {
 		altspace.getEnclosure().then((_enclosure) => {
 			this[enclosure] = _enclosure;
 			if (this[object3D].parent instanceof THREE.Scene) {
-					let 
-						hw = this[enclosure].innerWidth / 2,
-						hh = this[enclosure].innerHeight / 2,
-						hd = this[enclosure].innerDepth / 2;
-					this[containerMax] = new THREE.Vector3(hw, hh, hd);
-					this[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
-					this.doLayout();
+				let 
+					hw = this[enclosure].innerWidth / 2,
+					hh = this[enclosure].innerHeight / 2,
+					hd = this[enclosure].innerDepth / 2;
+				this[containerMax] = new THREE.Vector3(hw, hh, hd);
+				this[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
+				this.doLayout();
 			}
 			else {
 				let objWorldScale = this[object3D].getWorldScale();

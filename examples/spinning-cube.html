@@ -12,20 +12,16 @@
 var CUBE_SCALE = 150;
 //can change above value in live-coding, 10-500 works well
 
-(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
-
-// Setup
-var sim = alt.Simulation();
-var inCodePen = alt.codePen.inCodePen;
-var instanceBase = alt.sync.getInstance({
-		authorId: inCodePen ? alt.codePen.getAuthorId() : null,
-		instanceId: inCodePen ? alt.codePen.getPenId() : null
+var sim = altspace.utilities.Simulation();
+var config = { authorId: 'AltspaceVR', appId: 'SpinningCube' };
+var sceneSync;
+altspace.utilities.sync.connect(config).then(function(connection) {
+	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+		instantiators: {'Cube': createCube },
+		ready: ready
+	});
+	sim.scene.addBehavior(sceneSync);
 });
-var sceneSync = alt.SceneSync(instanceBase, {
-	instantiators: {'Cube': createCube },
-	ready: ready
-});
-sim.scene.addBehavior(sceneSync);
 
 function createCube() {
 	var url = 'models/cube/altspace-logo.jpg';
@@ -35,8 +31,8 @@ function createCube() {
 	var cube = new THREE.Mesh(geometry, material);
 	cube.scale.multiplyScalar(CUBE_SCALE);
 	cube.addBehaviors(
-		alt.Object3DSync(),
-		alt.Spin({speed: 0.0005}),
+		altspace.utilities.behaviors.Object3DSync(),
+		altspace.utilities.behaviors.Spin({speed: 0.0005}),
 		ChangeColor()
 	);
 
