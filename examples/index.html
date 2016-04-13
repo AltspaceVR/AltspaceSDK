@@ -1,0 +1,41 @@
+<!doctype html>
+<head>
+	<title>AltspaceSDK examples</title>
+	<meta charset="utf-8" />
+	<style>
+		body { 
+			background: white;
+			font: bold 20pt sans-serif;
+			margin: 2em;
+		}
+	</style>
+</head>
+<body>
+<ol id="list"></ol>
+<script>
+[
+	'spinning-cube.html',
+	'adding-cubes.html',
+	'bubbling.html',
+	'hello-world.html',
+	'chess.html',
+	'solar-system.html',
+	'hats.html',
+	'living-room/living-room.html',
+	'tests/cloning.html',
+	'tests/renderer-tests.html',
+	'tests/visibility.html',
+	'hello-hands.html',
+	'gamepad-cube.html',
+	'telekenetic-cubes/index.html',
+	'touchpad-cube.html',
+].forEach(function (example) {
+		var li = document.createElement('li');
+		var a = document.createElement('a');
+		a.href = a.textContent = example;
+		li.appendChild(a);
+		list.appendChild(li);
+});
+</script>
+</body>
+</html>
