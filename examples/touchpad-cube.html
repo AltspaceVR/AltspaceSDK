@@ -44,7 +44,7 @@ TouchpadCube = (function () {
 	}
 
 	function loadCubeModel() {
-		var loader = new THREE.OBJMTLLoader();
+		var loader = new altspace.utilities.shims.OBJMTLLoader();
 		var objFilename = "models/cube/cube-colored-faces.obj";
 		var mtlFilename = "models/cube/cube-colored-faces.mtl";
 		loader.load(objFilename, mtlFilename, function ( obj ) {
