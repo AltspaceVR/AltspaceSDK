@@ -3603,6 +3603,8 @@ altspace.utilities.shims.cursor = (function () {
 
 	var scene;
 	var camera;
+	var domElem;
+
 	var overObject;
 
 	var raycaster = new THREE.Raycaster();
@@ -3613,6 +3615,9 @@ altspace.utilities.shims.cursor = (function () {
 	 * @method init
 	 * @param {THREE.Scene} scene
 	 * @param {THREE.Camera} camera - Camera used for raycasting.
+	 * @param {Object} [options] - An options object
+	 * @param {THREE.WebGLRenderer} [options.renderer] - If supplied, applies cursor movement to render target 
+	 *	instead of entire client
 	 * @memberof module:altspace/utilities/shims/cursor
 	 */
 	function init(_scene, _camera, _params) {
@@ -3626,10 +3631,11 @@ altspace.utilities.shims.cursor = (function () {
 		camera = _camera;
 
 		p = _params || {};
+		domElem = p.renderer && p.renderer.domElement || window;
 
-		window.addEventListener('mousedown', mouseDown, false)
-		window.addEventListener('mouseup', mouseUp, false)
-		window.addEventListener('mousemove', mouseMove, false)
+		domElem.addEventListener('mousedown', mouseDown, false)
+		domElem.addEventListener('mouseup', mouseUp, false)
+		domElem.addEventListener('mousemove', mouseMove, false)
 	}
 
 	function mouseDown(event) {
@@ -3690,8 +3696,8 @@ altspace.utilities.shims.cursor = (function () {
 
 	function findIntersection(mouseEvent) {
 		var mouse = new THREE.Vector2();
-		mouse.x = (mouseEvent.clientX / window.innerWidth) * 2 - 1;
-		mouse.y = -(mouseEvent.clientY / window.innerHeight) * 2 + 1;
+		mouse.x = (mouseEvent.offsetX / (domElem.width || domElem.innerWidth)) * 2 - 1;
+		mouse.y = -(mouseEvent.offsetY / (domElem.height || domElem.innerHeight)) * 2 + 1;
 
 		raycaster.setFromCamera(mouse, camera);
 
@@ -9797,7 +9803,7 @@ window.altspace.utilities.behaviors.Layout = Layout;
 
 (function () {
 
-	var version = '0.6.2';
+	var version = '0.7.0';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
