@@ -4,9 +4,9 @@
 <meta charset=utf-8>
 <title>Solar System Example</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+<script src="../dist/altspace.min.js"></script>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="../dist/altspace.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <style>
@@ -47,15 +47,15 @@ SolarSystemApp = (function(){
 
 	var CONFIG = [
 		// name, radius, distance, orbitalPeriod
-		['sun',	     30,   0,   1],
+		//['sun',	     30,   0,   1],
 		['mercury',	 2.4,  2,   0.2409],
-		['venus',    6,    3,   0.616],
-		['earth',    6.3,  4,   1],
-		['mars',     3.3,  5,   1.9],
-		['jupiter',	 14,   8,   12.0],
-		['saturn',	 12,   10,  29.5],
-		['uranus', 	 10,   12,  84],
-		['neptune',  8,    14,  165],
+		//['venus',    6,    3,   0.616],
+		// ['earth',    6.3,  4,   1],
+		// ['mars',     3.3,  5,   1.9],
+		// ['jupiter',	 14,   8,   12.0],
+		// ['saturn',	 12,   10,  29.5],
+		// ['uranus', 	 10,   12,  84],
+		// ['neptune',  8,    14,  165],
 	];
 	var radiusCoeff = 0.022;
 	var distanceCoeff = 9;
@@ -98,7 +98,6 @@ SolarSystemApp = (function(){
 		multiloader.init({
 			crossOrigin: 'anonymous',
 			baseUrl: 'models/solar-system/'
-			//hosted: 'http://sdk.altvr.com/examples/models/share/solar-system/'
 		});
 		loadRequest = new multiloader.LoadRequest();
 		for (var i=0; i < CONFIG.length; i++) {
