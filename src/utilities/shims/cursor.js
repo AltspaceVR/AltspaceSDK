@@ -24,6 +24,8 @@ altspace.utilities.shims.cursor = (function () {
 	 * @method init
 	 * @param {THREE.Scene} scene
 	 * @param {THREE.Camera} camera - Camera used for raycasting.
+	 * @param {Object} options - An options object
+	 * @param {THREE.WebGLRenderer} options.renderer - If supplied, applies cursor movement to render target instead of entire client
 	 * @memberof module:altspace/utilities/shims/cursor
 	 */
 	function init(_scene, _camera, _params) {
