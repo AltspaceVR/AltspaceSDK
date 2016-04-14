@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Material Side Tests</title>
+		<meta charset="utf-8">
+		<style>
+			body { margin: 0px; overflow: hidden; }
+			label { 
+				font: bold 40pt sans-serif; 
+				position: absolute; 
+				color: white;
+				top: 300px;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="../../../UnityClient/js/src/altspace-schema.js"></script>
+		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/FlyControls.js"></script>
+		<script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
+
+		<script >
+			var scene, renderer, camera, controls, flip = true, lastFlip = 0;
+
+			scene = new THREE.Scene();
+
+			function sideLabel (side, xs) {
+				return ['F', 'B', 'D'][side] + (xs < 0 ? "'":'');
+			}
+
+			function makeSphere (side, x, xs) {
+				var texture = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg');
+				var material = new THREE.MeshBasicMaterial({color:'#ff00ff', map: texture});
+				material.side = side;
+				var sphere = new THREE.Mesh(new THREE.SphereGeometry(), material);
+				sphere.position.x = x;
+				sphere.scale.x = xs;
+				scene.add(sphere);
+				sphere.userData.label = $('<label>').text(sideLabel(side, xs)).css('left', x / 1.2 + 400).appendTo('body');
+				return sphere;
+			}
+			makeSphere(THREE.FrontSide, -400, 1);
+			makeSphere(THREE.DoubleSide, -300, 1);
+			makeSphere(THREE.BackSide, -200, 1);
+			makeSphere(THREE.FrontSide, -100, -1);
+			makeSphere(THREE.DoubleSide, 0, -1);
+			makeSphere(THREE.BackSide, 100, -1);
+			var flipper = makeSphere(THREE.BackSide, 200, 1);
+
+
+			if (window.altspace) {
+				renderer = altspace.getThreeJSRenderer();
+			}
+			else {
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor("#AAAAAA");
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				var aspect = window.innerWidth / window.innerHeight;
+				camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+				camera.position.z = 1400;
+				camera.position.x = 70;
+				camera.position.y = -80;
+				controls = new THREE.FlyControls(camera);
+				controls.movementSpeed = 500;
+				controls.rollSpeed = 1;
+				controls.dragToLook = true;
+
+				scene.add( new THREE.AmbientLight( 0xffffff ) );
+			}
+
+			var lastElapsed = 0;
+			var clock = new THREE.Clock();
+			function animate(elapsed) {
+				requestAnimationFrame(animate);
+				var now = Math.floor(Date.now() / 1000)
+				if (now != lastFlip) {
+					flip = now % 2 === 0;
+					flipper.material.side = flip ? THREE.FrontSide : THREE.BackSide;
+					flipper.userData.label.text(sideLabel(flipper.material.side));
+					lastFlip = now;
+				}
+				if (!window.altspace) { controls.update(clock.getDelta()); }
+				renderer.render(scene, camera);
+			}
+
+			animate(0);
+		</script>
+	</body>
+</html>
