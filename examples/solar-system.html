@@ -47,15 +47,15 @@ SolarSystemApp = (function(){
 
 	var CONFIG = [
 		// name, radius, distance, orbitalPeriod
-		//['sun',	     30,   0,   1],
+		['sun',	     30,   0,   1],
 		['mercury',	 2.4,  2,   0.2409],
-		//['venus',    6,    3,   0.616],
-		// ['earth',    6.3,  4,   1],
-		// ['mars',     3.3,  5,   1.9],
-		// ['jupiter',	 14,   8,   12.0],
-		// ['saturn',	 12,   10,  29.5],
-		// ['uranus', 	 10,   12,  84],
-		// ['neptune',  8,    14,  165],
+		['venus',    6,    3,   0.616],
+		['earth',    6.3,  4,   1],
+		['mars',     3.3,  5,   1.9],
+		['jupiter',	 14,   8,   12.0],
+		['saturn',	 12,   10,  29.5],
+		['uranus', 	 10,   12,  84],
+		['neptune',  8,    14,  165],
 	];
 	var radiusCoeff = 0.022;
 	var distanceCoeff = 9;
@@ -165,9 +165,9 @@ SolarSystemApp = (function(){
 					obj.scale.z = scale;
 				} else {
 				 	obj.visible = false;
-					obj.scale.x = 0;
-					obj.scale.y = 0;
-					obj.scale.z = 0;
+					obj.scale.x = 0.00001;
+					obj.scale.y = 0.00001;
+					obj.scale.z = 0.00001;
 				}
 			} else {
 				obj.orbitalPosition += obj.orbitalVelocity;
