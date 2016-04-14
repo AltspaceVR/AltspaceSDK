@@ -1,8 +1,8 @@
 import * as SteamVR from './steamvr-input.js';
 
 export default class BrushBehavior {
-  constructor({ device }) {
-    this._deviceIndex = device;
+  constructor({ hand }) {
+    this._hand = hand;
   }
 
   awake(object3d, scene) {
@@ -14,20 +14,24 @@ export default class BrushBehavior {
   }
 
   update() {
-    const controller = this._steamVRInput[this._deviceIndex + "Controller"];
+    const controller = this._steamVRInput[this._hand + "Controller"];
     const object3d = this._object3d;
 
     if (controller) {
-      object3d.scale.z = 1 + controller.axes[SteamVR.AXIS_TOUCHPAD_Y];
+      const s = 1 + controller.axes[SteamVR.AXIS_TOUCHPAD_Y];
+      object3d.scale.set(s, s, s);
 
       const triggerDown = controller.buttons[SteamVR.BUTTON_TRIGGER].pressed;
       if (!triggerDown && this._prevTriggerDown) {  // trigger was pressed
         try {
-          this._sceneSync.instantiate('cube', {
-            color: this._deviceIndex === SteamVR.LEFT_CONTROLLER ? '#ff0000' : '#0000ff',
+          this._sceneSync.instantiate('clone', {
             position: controller.position,
             rotation: controller.rotation,
-            size: 1 + controller.axes[1],
+            scale: {
+              x: object3d.scale.x,
+              y: object3d.scale.y,
+              z: object3d.scale.z,
+            },
           }, true);
         } catch (e) {
           console.error(e);

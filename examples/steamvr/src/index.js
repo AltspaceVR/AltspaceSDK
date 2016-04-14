@@ -11,44 +11,59 @@ const sim = altspace.utilities.Simulation();
 const config = { authorId: 'AltspaceVR', appId: 'SpinningCube' };
 
 window.sim = sim;
-function createBrush({ device }) {
-  const geometry = new THREE.BoxGeometry(10, 10, 50);
-  const material = new THREE.MeshBasicMaterial({
-    color: device === SteamVR.LEFT_CONTROLLER ? '#ff0000' : '#0000ff',
-  });
-  const cube = new THREE.Mesh(geometry, material);
-  cube.position.z = 25;
-  cube.position.y = -10;
-
+function createAxis() {
   const group = new THREE.Object3D();
-  group.addBehaviors(
-    new SteamVRTrackedObjectBehavior({ device }),
-    new BrushBehavior({ device })
-  );
   group.position.set(0, -600, 0);
-  group.add(cube);
-  sim.scene.add(group);
+
+  const x = new THREE.Mesh(
+    new THREE.BoxGeometry(50, 5, 5),
+    new THREE.MeshBasicMaterial({
+      color: '#FF0000',
+    })
+  );
+  x.position.x = 25;
+  group.add(x);
+
+  const y = new THREE.Mesh(
+    new THREE.BoxGeometry(5, 50, 5),
+    new THREE.MeshBasicMaterial({
+      color: '#00FF00',
+    })
+  );
+  y.position.y = 25;
+  group.add(y);
+
+  const z = new THREE.Mesh(
+    new THREE.BoxGeometry(5, 5, 50),
+    new THREE.MeshBasicMaterial({
+      color: '#0000FF',
+    })
+  );
+  z.position.z = 25;
+  group.add(z);
 
   return group;
 }
 
-function createCube({ color, position, rotation, size }) {
-  const geometry = new THREE.BoxGeometry(10, 10, 50);
-  const material = new THREE.MeshBasicMaterial({ color });
-  const cube = new THREE.Mesh(geometry, material);
-  cube.position.z = 25;
-  cube.position.y = -10;
+function createBrush({ hand }) {
+  const group = createAxis();
+  group.addBehaviors(
+    new SteamVRTrackedObjectBehavior({ hand }),
+    new BrushBehavior({ hand })
+  );
+  sim.scene.add(group);
+  return group;
+}
 
-  const group = new THREE.Object3D();
+function createClone({ position, rotation, scale }) {
+  const group = createAxis();
   group.addBehaviors(
     altspace.utilities.behaviors.Object3DSync()
   );
   group.position.set(position.x, position.y, position.z);
   group.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
-  group.scale.z = size;
-  group.add(cube);
+  group.scale.set(scale.x, scale.y, scale.z);
   sim.scene.add(group);
-
   return group;
 }
 
@@ -65,7 +80,7 @@ function createFloor() {
 altspace.utilities.sync.connect(config).then((connection) => {
   const sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
     instantiators: {
-      cube: createCube,
+      clone: createClone,
     },
     ready: (firstInstance) => {
       if (firstInstance) {
@@ -82,9 +97,9 @@ altspace.utilities.sync.connect(config).then((connection) => {
   createFloor();
   // Thes only need to be created locally
   createBrush({
-    device: SteamVR.LEFT_CONTROLLER,
+    hand: SteamVR.LEFT_CONTROLLER,
   });
   createBrush({
-    device: SteamVR.RIGHT_CONTROLLER,
+    hand: SteamVR.RIGHT_CONTROLLER,
   });
 });

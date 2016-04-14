@@ -9,19 +9,19 @@ export const BUTTON_DPAD_LEFT = 6;
 export const AXIS_TOUCHPAD_X = 0;
 export const AXIS_TOUCHPAD_Y = 1;
 
-export const FIRST_CONTROLLER = 'left';
+export const FIRST_CONTROLLER = 'first';
 export const LEFT_CONTROLLER = 'left';
 export const RIGHT_CONTROLLER = 'right';
 
 // Returns a Promise that resovles when a steamvr controller is found
-function getController(deviceIndex) {
+function getController(hand) {
   const findGamepad = (resolve, reject) => {
-    const gamepad = altspace.getGamepads().find((g) => g.mapping === 'steamvr' && g.steamDeviceIndex === deviceIndex);
+    const gamepad = altspace.getGamepads().find((g) => g.mapping === 'steamvr' && g.hand === hand);
     if (gamepad) {
-      console.log("Controller found", gamepad);
+      console.log("SteamVR input device found", gamepad);
       resolve(gamepad);
     } else {
-      console.log("Controller not found trying again");
+      console.log("SteamVR input device not found trying again in 500ms...");
       setTimeout(findGamepad, 500, resolve, reject);
     }
   };

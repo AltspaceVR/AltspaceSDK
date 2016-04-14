@@ -1,6 +1,6 @@
 export default class SteamVRTrackedObjectBehavior {
-  constructor({ device = 'first' }) {
-    this._deviceIndex = device;
+  constructor({ hand = 'first' }) {
+    this._hand = hand;
   }
 
   awake(object3d, scene) {
@@ -11,7 +11,7 @@ export default class SteamVRTrackedObjectBehavior {
   }
 
   update() {
-    const controller = this._steamVRInput[this._deviceIndex + "Controller"];
+    const controller = this._steamVRInput[this._hand + "Controller"];
     const object3d = this._object3d;
 
     if (controller) {
