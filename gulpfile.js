@@ -112,6 +112,16 @@ gulp.task('altspace_js', function () {
             .pipe(vsource('Layout.js'))
             .pipe(vbuffer()),
         gulp.src(
+            './src/utilities/behaviors/SteamVRInput.js'
+        )
+            .pipe(babel())
+            .pipe(vbuffer()),
+        gulp.src(
+            './src/utilities/behaviors/SteamVRTrackedObject.js'
+        )
+            .pipe(babel())
+            .pipe(vbuffer()),
+        gulp.src(
             './src/version.js', { cwd: cwd })
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
