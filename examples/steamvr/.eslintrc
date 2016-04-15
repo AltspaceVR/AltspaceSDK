@@ -1,6 +1,0 @@
-{
-  "extends": "airbnb/base",
-    "rules": {
-      "new-cap": 0
-    }
-}
