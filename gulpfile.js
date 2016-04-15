@@ -22,6 +22,7 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     orderedMerge = require('ordered-merge-stream'),
     replace = require('gulp-replace'),
+    wrapUmd = require('gulp-wrap-umd'),
 
     jsdoc = require('gulp-jsdoc'),
     jshint = require('gulp-jshint'),
@@ -73,6 +74,12 @@ gulp.task('altspace_js', function () {
         .pipe(gulp.dest('./examples/living-room/'));
 
     return orderedMerge([
+        browserify(
+            './src/utilities/behaviors/Object3DSync.js'
+        )
+            .bundle()
+            .pipe(vsource('Object3DSync.js'))
+            .pipe(vbuffer()),
         gulp.src([
             './lib/Please.js',//TODO: Put these elsewhere because of window clobbering, esp url.js
             './lib/url.js',
@@ -94,7 +101,6 @@ gulp.task('altspace_js', function () {
             './src/utilities/behaviors/Drag.js',
             './src/utilities/behaviors/GamepadControls.js',
             './src/utilities/behaviors/HoverColor.js',
-            './src/utilities/behaviors/Object3DSync.js',
             './src/utilities/behaviors/SceneSync.js',
             './src/utilities/behaviors/Spin.js',
             './src/utilities/behaviors/TouchpadRotate.js'
@@ -110,6 +116,13 @@ gulp.task('altspace_js', function () {
             .pipe(replace("VERSION", "'" + version + "'"))
     ])
         .pipe(concat('altspace.js'))
+        .pipe(wrapUmd({
+          namespace: "altspace",
+          deps: [
+            {name: 'three', globalName: 'THREE', paramName: 'THREE'}
+          ],
+          exports: "altspace"
+        }))
         .pipe(gulp.dest('./dist/', { cwd: cwd }))
         .pipe(sourcemaps.init())
         .pipe(concat('altspace.min.js'))

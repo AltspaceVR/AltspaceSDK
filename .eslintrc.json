@@ -1,0 +1,25 @@
+{
+	"plugins": [
+		"html"
+	],
+	"extends": "eslint:recommended",
+	"env": {
+		"browser": true,
+		"es6": true,
+		"commonjs": true
+	},
+	"rules": {
+		"indent": [1, "tab"],
+		"no-console": 0,
+		"comma-dangle": 0,
+		// TODO: Re-enable these rules when existing lint is removed
+		"no-unused-vars": 0,
+		"no-undef": 0,
+		"no-redeclare": 0
+	},
+	"globals": {
+		"THREE": true,
+		"altspace": true
+	}
+}
+
