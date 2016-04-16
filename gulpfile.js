@@ -111,15 +111,17 @@ gulp.task('altspace_js', function () {
             .bundle()
             .pipe(vsource('Layout.js'))
             .pipe(vbuffer()),
-        gulp.src(
+        browserify(
             './src/utilities/behaviors/SteamVRInput.js'
         )
-            .pipe(babel())
+            .bundle()
+            .pipe(vsource('SteamVRInput.js'))
             .pipe(vbuffer()),
-        gulp.src(
+        browserify(
             './src/utilities/behaviors/SteamVRTrackedObject.js'
         )
-            .pipe(babel())
+            .bundle()
+            .pipe(vsource('SteamVRTrackedObject.js'))
             .pipe(vbuffer()),
         gulp.src(
             './src/version.js', { cwd: cwd })
