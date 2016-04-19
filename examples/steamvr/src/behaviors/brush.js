@@ -1,9 +1,17 @@
 import altspace from 'altspace';
 const SteamVRInputBehavior = altspace.utilities.behaviors.SteamVRInput;
 
+const BRUSH_SIZE = 0.3; // in meters
+
 export default class BrushBehavior {
 	constructor({ hand }) {
 		this._hand = hand;
+		this._pixelsPerMeter = 0;
+		altspace.getEnclosure().then((enclosure) => {
+			this._pixelsPerMeter = enclosure.pixelsPerMeter;
+			const s = BRUSH_SIZE/10 * this._pixelsPerMeter;
+			this._object3d.scale.set(s, s, s);
+		});
 	}
 
 	awake(object3d, scene) {
@@ -19,7 +27,7 @@ export default class BrushBehavior {
 		const object3d = this._object3d;
 
 		if (controller) {
-			const s = 1 + controller.axes[SteamVRInputBehavior.AXIS_TOUCHPAD_Y];
+			const s = BRUSH_SIZE/10 * this._pixelsPerMeter + controller.axes[SteamVRInputBehavior.AXIS_TOUCHPAD_Y];
 			object3d.scale.set(s, s, s);
 
 			const triggerDown = controller.buttons[SteamVRInputBehavior.BUTTON_TRIGGER].pressed;
