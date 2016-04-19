@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Solar System Example</title>
-<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <style>
@@ -88,7 +88,7 @@ SolarSystemApp = (function(){
 			});
 		}
 		else {
-			compactMode = true;
+			compactMode = false;
 			solarSystem.scale.set(20, 20, 20);
 			loadModels();
 		}
@@ -98,7 +98,6 @@ SolarSystemApp = (function(){
 		multiloader.init({
 			crossOrigin: 'anonymous',
 			baseUrl: 'models/solar-system/'
-			//hosted: 'http://sdk.altvr.com/examples/models/share/solar-system/'
 		});
 		loadRequest = new multiloader.LoadRequest();
 		for (var i=0; i < CONFIG.length; i++) {
@@ -166,9 +165,9 @@ SolarSystemApp = (function(){
 					obj.scale.z = scale;
 				} else {
 				 	obj.visible = false;
-					obj.scale.x = 0;
-					obj.scale.y = 0;
-					obj.scale.z = 0;
+					obj.scale.x = 0.00001;
+					obj.scale.y = 0.00001;
+					obj.scale.z = 0.00001;
 				}
 			} else {
 				obj.orbitalPosition += obj.orbitalVelocity;
