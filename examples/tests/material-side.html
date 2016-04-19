@@ -62,6 +62,7 @@
 			makeSphere(THREE.BackSide, 100, -100, 1, 1, -1);
 
 			var flipper = makeSphere(THREE.BackSide, 200, 0, 1);
+			var mirroredFlipper = makeSphere(THREE.BackSide, 300, 0, 1);
 
 
 			if (window.altspace) {
@@ -95,6 +96,9 @@
 					flip = now % 2 === 0;
 					flipper.material.side = flip ? THREE.FrontSide : THREE.BackSide;
 					flipper.userData.label.text(sideLabel(flipper.material.side));
+					mirroredFlipper.scale.x *= -1;
+					var labelText = sideLabel(mirroredFlipper.material.side, mirroredFlipper.scale.x);
+					mirroredFlipper.userData.label.text(labelText);
 					lastFlip = now;
 				}
 				if (!window.altspace) { controls.update(clock.getDelta()); }
