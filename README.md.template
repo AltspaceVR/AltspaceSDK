@@ -23,7 +23,7 @@ THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
 **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
 
 
-## altspace.js
+## altspace.js 
 
 `altspace.js` should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.  
 
