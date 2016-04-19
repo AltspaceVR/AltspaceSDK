@@ -10,6 +10,104 @@
 }(this, function(THREE) {
 
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
+},{"core-js/library/fn/object/define-property":4}],2:[function(require,module,exports){
+"use strict";
+
+exports["default"] = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+exports.__esModule = true;
+},{}],3:[function(require,module,exports){
+"use strict";
+
+var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
+
+exports["default"] = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+
+      _Object$defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+})();
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/define-property":1}],4:[function(require,module,exports){
+var $ = require('../../modules/$');
+module.exports = function defineProperty(it, key, desc){
+  return $.setDesc(it, key, desc);
+};
+},{"../../modules/$":5}],5:[function(require,module,exports){
+var $Object = Object;
+module.exports = {
+  create:     $Object.create,
+  getProto:   $Object.getPrototypeOf,
+  isEnum:     {}.propertyIsEnumerable,
+  getDesc:    $Object.getOwnPropertyDescriptor,
+  setDesc:    $Object.defineProperty,
+  setDescs:   $Object.defineProperties,
+  getKeys:    $Object.keys,
+  getNames:   $Object.getOwnPropertyNames,
+  getSymbols: $Object.getOwnPropertySymbols,
+  each:       [].forEach
+};
+},{}],6:[function(require,module,exports){
+'use strict';
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+if (!window.altspace) {
+    window.altspace = {};
+}
+if (!window.altspace.utilities) {
+    window.altspace.utilities = {};
+}
+if (!window.altspace.utilities.shims) {
+    window.altspace.utilities.shims = {};
+}
+
+var OBJMTLLoader = (function () {
+    function OBJMTLLoader() {
+        _classCallCheck(this, OBJMTLLoader);
+    }
+
+    _createClass(OBJMTLLoader, [{
+        key: 'load',
+        value: function load(objFile, mtlFile, callback) {
+            var mtlLoader = new THREE.MTLLoader();
+            var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
+            mtlLoader.setBaseUrl(baseUrl + '/');
+            mtlLoader.load(mtlFile, function (materials) {
+                var objLoader = new THREE.OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.load(objFile, callback);
+            });
+        }
+    }]);
+
+    return OBJMTLLoader;
+})();
+
+window.altspace.utilities.shims.OBJMTLLoader = OBJMTLLoader;
+},{"babel-runtime/helpers/class-call-check":2,"babel-runtime/helpers/create-class":3}]},{},[6]);
+
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 /**
  * lodash 3.0.1 (Custom Build) <https://lodash.com/>
@@ -3241,7 +3339,6 @@ window.altspace.utilities = window.altspace.utilities || {};
 
 
 altspace.utilities.multiloader = (function(){
-
 	var loader;
 	var TRACE;
 	var baseUrl = '';
@@ -3273,7 +3370,7 @@ altspace.utilities.multiloader = (function(){
 		if (p.baseUrl) baseUrl = p.baseUrl;
 		if (baseUrl.slice(-1) !== '/') baseUrl += '/';
 
-		loader = new THREE.OBJMTLLoader();
+		loader = new altspace.utilities.shims.OBJMTLLoader();
 		loader.crossOrigin = crossOrigin;
 		if (TRACE) console.log('MultiLoader initialized with params', params);
 	}
@@ -11077,7 +11174,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.9.0';
+	var version = '0.9.1';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
