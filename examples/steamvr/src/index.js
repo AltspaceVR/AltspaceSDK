@@ -65,13 +65,13 @@ function createClone({ position, rotation, scale }) {
 	return group;
 }
 
-function createFloor({innerWidth, innerDepth, innerHeight, pixelsPerMeter}) {
-	const geometry = new THREE.BoxGeometry(innerWidth, 1, innerDepth);
+function createFocusCube({innerWidth, innerDepth, innerHeight, pixelsPerMeter}) {
+	const geometry = new THREE.BoxGeometry(pixelsPerMeter, pixelsPerMeter, pixelsPerMeter);
 	const material = new THREE.MeshBasicMaterial({
 		color: '#FFFFFF',
 	});
 	const ground = new THREE.Mesh(geometry, material);
-	ground.position.y = -innerHeight/2;
+	ground.position.y = -innerHeight/2 + pixelsPerMeter/2
 	sim.scene.add(ground);
 }
 
@@ -93,7 +93,7 @@ altspace.utilities.sync.connect(config).then((connection) => {
 	);
 
 	altspace.getEnclosure().then((enclosure) => {
-		createFloor(enclosure);
+		createFocusCube(enclosure);
 		createBrush({
 			hand: SteamVRInputBehavior.LEFT_CONTROLLER,
 			enclosure
