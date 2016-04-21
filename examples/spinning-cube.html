@@ -3,18 +3,14 @@
 <head>
 <meta charset=utf-8>
 <title>Spinning Cube</title>
-<script src="http://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="http://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
 </head>
 <body>
-</body>
 <script>
 
-var CUBE_SCALE = 150;
-//can change above value in live-coding, 10-500 works well
-
 var sim = altspace.utilities.Simulation();
+sim.camera.position.z = 5;
 var config = { authorId: 'AltspaceVR', appId: 'SpinningCube' };
 var sceneSync;
 altspace.utilities.sync.connect(config).then(function(connection) {
@@ -26,17 +22,11 @@ altspace.utilities.sync.connect(config).then(function(connection) {
 });
 
 function createCube() {
-	//Use MTLLoader for loadTexture, to ensure image is power of 2
-	//else antialiasing won't work (this is a limitation of WebGL)
-	var materialCreator = new THREE.MTLLoader.MaterialCreator();
-	materialCreator.crossOrigin = 'anonymous';
 	var url = 'models/cube/altspace-logo.jpg';
-	//hosted: 'https://sdk.altvr.com/examples/models/share/cube/altspace-logo.jpg';
-	var texture = materialCreator.loadTexture(url);
+	var texture = new THREE.TextureLoader().load(url);
 	var geometry = new THREE.BoxGeometry(1, 1, 1);
 	var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 	var cube = new THREE.Mesh(geometry, material);
-	cube.scale.multiplyScalar(CUBE_SCALE);
 	cube.addBehaviors(
 		altspace.utilities.behaviors.Object3DSync(),
 		altspace.utilities.behaviors.Spin({speed: 0.0005}),
@@ -75,6 +65,14 @@ function ChangeColor() {//define a custom behavior
 			var color = Please.make_color()[0];//random color
 			colorRef.set(color);
 		});
+
+		if (altspace && altspace.inClient) {
+			altspace.getEnclosure().then(function(e) {
+				// scale cube so it's 1 meter in Altspace
+				object3d.scale.multiplyScalar(e.pixelsPerMeter);
+			});
+		}
+
 	}
 
 	function update(deltaTime) {
@@ -86,4 +84,5 @@ function ChangeColor() {//define a custom behavior
 };
 
 </script>
+</body>
 </html>

@@ -11,14 +11,13 @@
 		</style>
 	</head>
 	<body>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/build/three.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/OBJMTLLoader.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/loaders/MTLLoader.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://sdk.altvr.com/libs/three.js/r73/examples/js/libs/stats.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
 
-		<script 
-			src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
 		</script>
 		<script type="text/babel">
 
@@ -101,7 +100,7 @@
 					name: 'colored, textured cube, performance',
 					enabled: true,
 					init: function () {
-						var numCubes = 2;
+						var numCubes = 50;
 						for (var i = 0; i < numCubes; i++) {
 							colorTexCube = addTexturedCube();
 							if (!this.material) {
@@ -221,22 +220,21 @@
 					description: '',
 					enabled: true,
 					init: function () {
-						var loader = new THREE.OBJMTLLoader();
-						var objFilename = "../models/test/test.obj";
-						var mtlFilename = "../models/test/test.mtl";
-						loader.load(
-							objFilename,
-							mtlFilename,
-							function ( loadedObject ) {
+						var mtlLoader = new THREE.MTLLoader()
+						mtlLoader.setBaseUrl('../models/test/');
+						mtlLoader.load('../models/test/test.mtl', function (materials) {
+							var objLoader = new THREE.OBJLoader();
+							objLoader.setMaterials(materials);
+							objLoader.load('../models/test/test.obj', function (object) {
 								// BOTTOM LEFT
-								colorObj = loadedObject;
+								colorObj = object;
 								colorObj.name = 'colorObj';
 								colorObj.scale.multiplyScalar(30);
 								colorObj.position.set(-50, -50, 0);
 								scene.add(colorObj);
 								objLoaded = true;
-							}
-						);
+							});
+						});
 					},
 					tick: function () {
 						deepColor(colorObj, YELLOW);
@@ -275,7 +273,7 @@
 				}
 			];
 
-			//tests = tests.filter(test => 'colored, textured cube, performance' === test.name);
+			//tests = tests.filter(test => 'adding/removing textured cube' === test.name);
 
 			function init() {
 				window.scene = scene = new THREE.Scene();
@@ -315,11 +313,12 @@
 
 			var lastTick = Date.now();
 			var tick = true;
+			var limitTicks = -1;
 			var debugInfoShown = false;
 			function animate(elapsed) {
 				requestAnimationFrame(animate);
 
-				if (Date.now() - lastTick > 1000) {
+				if (Date.now() - lastTick > 1000 && limitTicks !== 0) {
 					if (tick) {
 						tests.forEach(test => test.tick && test.tick());
 					}
@@ -328,6 +327,7 @@
 					}
 					tick = !tick;
 					lastTick = Date.now();
+					limitTicks--;
 				}
 
 				tests.
@@ -340,7 +340,7 @@
 
 				renderer.render( scene, camera );
 
-				if (objLoaded && !debugInfoShown) {
+				if (window.altspace && objLoaded && !debugInfoShown) {
 					altspace.getThreeJSDebugInfo().then(function (debugInfo) {
 						console.table(debugInfo);
 					});

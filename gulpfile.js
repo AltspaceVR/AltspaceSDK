@@ -51,12 +51,8 @@ var docfiles = [
     'README.md'
 ];
 
-gulp.task('altspace_js', function () {
-    var cwd = './';
-    version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
-    console.log('version', version);
-
-    gulp.src([
+gulp.task('transpile_es6', function () {
+    return gulp.src([
         './**/*.es6.js'
     ])
         .pipe(babel({optional: ['runtime']}))
@@ -64,6 +60,12 @@ gulp.task('altspace_js', function () {
             path.basename = path.basename.replace('.es6', '');
         }))
         .pipe(gulp.dest('./'));
+});
+
+gulp.task('altspace_js', ['transpile_es6'], function () {
+    var cwd = './';
+    version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
+    console.log('version', version);
 
     browserify(
         './examples/living-room/living-room.js'
@@ -74,6 +76,12 @@ gulp.task('altspace_js', function () {
         .pipe(gulp.dest('./examples/living-room/'));
 
     return orderedMerge([
+        browserify(
+            './src/utilities/shims/OBJMTLLoader.js'
+        )
+            .bundle()
+            .pipe(vsource('OBJMTLLoader.js'))
+            .pipe(vbuffer()),
         browserify(
             './src/utilities/behaviors/Object3DSync.js'
         )

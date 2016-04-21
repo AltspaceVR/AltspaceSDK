@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.  
 
-**Latest Version: v0.8.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.8.0)**  
+**Latest Version: v0.10.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.10.0)**  
 
 <!-- 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -23,7 +23,7 @@ THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
 **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
 
 
-## altspace.js
+## altspace.js 
 
 `altspace.js` should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.  
 
@@ -33,7 +33,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.8.0/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.10.0/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -88,7 +88,7 @@ The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
 > Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.  
 
 ## Three.js Feature Support
-Altspace supports Three.js r69 to r73. r73 is recommended.
+Altspace supports Three.js r73 to r74. r74 is recommended.
 
 **Currently supported:**
 * Object3D transformation and hierarchy
