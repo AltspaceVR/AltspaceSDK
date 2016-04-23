@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Transparency Tests</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+	</head>
+	<body>
+		<script type="text/babel">
+			var scene, renderer, camera, controls;
+
+			scene = new THREE.Scene();
+			scene.position.set(0, 20, 0);
+			scene.scale.multiplyScalar(2);
+
+			var textureMat;
+			function addTexturedCube (color, x, y, z) {
+				var geometry = new THREE.BoxGeometry( 25, 25, 25 );
+
+				if (!textureMat) {
+					var texture = THREE.ImageUtils.loadTexture('../images/altspace-logo.png' );
+					textureMat = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opactiy: 0.8 });
+				}
+
+				if (color) {
+					textureMat = textureMat.clone();
+					textureMat.color.setStyle(color);
+				}
+
+				var tCube = new THREE.Mesh( geometry, textureMat );
+				tCube.position.set(x, y, z);
+				scene.add( tCube );
+				return tCube;
+			}
+
+			function addCube (color, transparent, x, y, z) {
+				var cube = new THREE.Mesh(
+					new THREE.BoxGeometry( 25, 25, 25 ),
+					new THREE.MeshBasicMaterial({color: color, transparent: transparent, opacity: 0.8})
+				);
+				cube.position.set(x, y, z);
+				scene.add( cube );
+				return cube;
+			}
+
+			var cube = addCube('red', false, -11, -10, -10);
+			var transparentCube = addCube('green', true, 0, 0, 0);
+			var transparentTexturedCube = addTexturedCube('white', -10, 10, 10);
+
+			if (window.altspace) {
+				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+			}
+			else {
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor("#AAAAAA");
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				var aspect = window.innerWidth / window.innerHeight;
+				camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+				camera.position.z = 400;
+				camera.position.y = 200;
+				camera.lookAt( scene.position );
+
+				scene.add( new THREE.AmbientLight( 0xffffff ) );
+				controls = new THREE.OrbitControls(camera);
+			}
+
+			function animate(elapsed) {
+				if (controls) { 
+					controls.update();
+				}
+				requestAnimationFrame(animate);
+				renderer.render(scene, camera);
+			}
+			animate(0);
+		</script>
+	</body>
+</html>
+
