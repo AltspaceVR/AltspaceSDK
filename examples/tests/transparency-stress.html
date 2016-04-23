@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Transparency Tests</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+	</head>
+	<body>
+		<script type="text/babel">
+			var scene, renderer, camera, controls;
+
+			scene = new THREE.Scene();
+			scene.scale.multiplyScalar(30);
+
+			var textureMat;
+			function addTexturedCube (s, x, y, z) {
+				var geometry = new THREE.BoxGeometry(s, s, s);
+
+				if (!textureMat) {
+					var texture = THREE.ImageUtils.loadTexture('../images/altspace-logo.png' );
+					textureMat = new THREE.MeshBasicMaterial({ map: texture, transparent: false, opactiy: 0.8 });
+				}
+
+				var tCube = new THREE.Mesh( geometry, textureMat );
+				tCube.position.set(x, y, z);
+				scene.add(tCube);
+				return tCube;
+			}
+
+			var spacing = 1.5
+			var j = 5;
+			var w = j * 1.5;
+			for (var x = 0; x < j; x++) {
+				for (var y = 0; y < j; y++) {
+					for (var z = 0; z < 3; z++) {
+						addTexturedCube(1, x * spacing - w / 2 + 1.5 / 2, y * spacing - w / 2 + 1.5 / 2, z * spacing);
+					}
+				}
+			}
+			addTexturedCube(w, 0, 0, 15);
+
+			if (window.altspace) {
+				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+			}
+			else {
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor("#AAAAAA");
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				var aspect = window.innerWidth / window.innerHeight;
+				camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+				camera.position.z = 400;
+				camera.position.y = 200;
+				camera.lookAt( scene.position );
+
+				scene.add( new THREE.AmbientLight( 0xffffff ) );
+				controls = new THREE.OrbitControls(camera);
+			}
+
+			function animate(elapsed) {
+				if (controls) { 
+					controls.update();
+				}
+				requestAnimationFrame(animate);
+				renderer.render(scene, camera);
+			}
+			animate(0);
+		</script>
+	</body>
+</html>
+
+
