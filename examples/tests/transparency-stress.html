@@ -20,7 +20,7 @@
 
 				if (!textureMat) {
 					var texture = THREE.ImageUtils.loadTexture('../images/altspace-logo.png' );
-					textureMat = new THREE.MeshBasicMaterial({ map: texture, transparent: false, opactiy: 0.8 });
+					textureMat = new THREE.MeshBasicMaterial({ color: 'green', transparent: true, opacity: 0.8 });
 				}
 
 				var tCube = new THREE.Mesh( geometry, textureMat );
