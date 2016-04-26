@@ -1,8 +1,13 @@
 ## aframe-altspace-component
 
-Component to make an [A-Frame](https://aframe.io) scene compatible with [AltspaceVR](http://altvr.com). When loading your scene in Altspace, the Altspace Render is used instead of the WebGLRender. Behavior outside of Altspace is not affected.
+Component to make an [A-Frame](https://aframe.io) scene compatible with [AltspaceVR](http://altvr.com). 
+When loading your scene in Altspace, the Altspace Render is used instead of the WebGLRender. 
+Behavior outside of Altspace is not affected.
 
-Note that when running in Altspace, the scene will not respond to cursor events nor be synchronized between users.  In addition, the following A-Frame features are currently not supported in Altspace: lights, transparency, and video.  For details, see the [Three.js Feature Support](http://github.com/AltspaceVR/AltspaceSDK#threejs-feature-support) section in the [AltspaceSDK](http://github.com/AltspaceVR/AltspaceSDK) repo. 
+Note that when running in Altspace, the scene will not respond to cursor events nor be synchronized between users.  
+In addition, some A-Frame features are currently not supported in Altspace, such as lighting and videos.
+For details, see the [Three.js Feature Support](http://github.com/AltspaceVR/AltspaceSDK#threejs-feature-support) 
+section in the [AltspaceSDK](http://github.com/AltspaceVR/AltspaceSDK) repo. 
 
 ### Properties
 
