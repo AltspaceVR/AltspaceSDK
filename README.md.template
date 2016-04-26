@@ -93,7 +93,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 **Currently supported:**
 * Object3D transformation and hierarchy
 * Most Geometries
-* MeshBasicMaterial map and color properties
+* MeshBasicMaterial
 
 **Not currently supported:**
 * Three.js r75
@@ -101,7 +101,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * Texture wrap, filter, format, anisotropy, repeat, offset, flip
 * Using GIF images for textures
 * VideoTexture
-* Material opacity, transparency, blending, side
+* Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
 * Wireframes
 * Face and vertex colors
 * Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial
