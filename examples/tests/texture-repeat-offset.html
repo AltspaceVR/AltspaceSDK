@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Renderer Tests</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+		<style>body { font: bold 20pt sans-serif; background: white; margin-top: 40pt; }</style>
+	</head>
+	<body>
+		<span id="info"></span>
+		<script type="text/babel">
+
+			var scene, renderer, camera, controls, stats, textures = [];
+
+			window.scene = scene = new THREE.Scene();
+
+			function makeTestPlane (wrapping, x) {
+				var texture = THREE.ImageUtils.loadTexture('../images/UV_Grid_Sm.jpg');
+				texture.wrapS = texture.wrapT = wrapping;
+				var textureMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+				var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), textureMat);
+				mesh.position.x = x;
+				scene.add(mesh);
+				textures.push(texture);
+			}
+			makeTestPlane(THREE.ClampToEdgeWrapping, -1.1);
+			makeTestPlane(THREE.RepeatWrapping, 0);
+			makeTestPlane(THREE.MirroredRepeatWrapping, 1.1);
+
+
+			if (window.altspace) {
+				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+				altspace.getEnclosure().then(enclosure => {
+					scene.scale.multiplyScalar(enclosure.pixelsPerMeter);
+				});
+			}
+			else {
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor("#AAAAAA");
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				var aspect = window.innerWidth / window.innerHeight;
+				camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+				camera.position.z = 6;
+				camera.position.y = 2;
+				camera.lookAt( scene.position );
+				var ambient = new THREE.AmbientLight( 0xffffff );
+				scene.add( ambient );
+				controls = new THREE.OrbitControls(camera);
+			}
+
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0';
+			document.body.appendChild(stats.domElement);
+
+			var i = 0;
+			function animate(elapsed) {
+				requestAnimationFrame(animate);
+
+				var j = Math.sin(i) * 2;
+				var k = Math.cos(i) * 2;
+				textures.forEach(texture => {
+					texture.repeat.set(j, j);
+					texture.offset.set(k, k);
+					info.textContent = `${j.toFixed(2)}, ${k.toFixed(2)}`;
+				});
+				i += 0.005;
+
+				if (!window.altspace) { 
+					controls.update();
+				}
+
+				renderer.render( scene, camera );
+
+				stats.update();
+			}
+
+			animate(0);
+		</script>
+	</body>
+</html>
