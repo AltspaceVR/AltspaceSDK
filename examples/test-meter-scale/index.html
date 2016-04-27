@@ -1,11 +1,11 @@
 <html>
   <head>
-    <title>A-Frame Altspace Component - Basic</title>
+    <title>A-Frame Altspace Component - Test Meter Scale</title>
     <script src="../build.js"></script>
   </head>
   <body>
-    <a-scene altspace>
-      <!-- cube size will be 1 meter in AltspaceVR -->
+    <a-scene altspace="usePixelScale: false" scale="2 2 2">
+      <!-- cube size will be 2 meters in AltspaceVR -->
       <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
     </a-scene>
   </body>
