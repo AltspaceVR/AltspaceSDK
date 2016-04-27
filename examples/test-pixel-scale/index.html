@@ -1,11 +1,11 @@
 <html>
   <head>
-    <title>A-Frame Altspace Component - Basic</title>
+    <title>A-Frame Altspace Component - Test Pixel Scale</title>
     <script src="../build.js"></script>
   </head>
   <body>
-    <a-scene altspace>
-      <!-- cube size will be 1 meter in AltspaceVR -->
+    <a-scene altspace="usePixelScale: true" scale="50 50 50">
+      <!-- cube size will be 50 pixels in AltspaceVR -->
       <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
     </a-scene>
   </body>
