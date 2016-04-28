@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>SteamVRInput - Documentation</title>
+    <title>NativeObject - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">SteamVRInput</h1>
+    <h1 class="page-title">NativeObject</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="behaviors.html">altspace/utilities/behaviors</a>.</span>
+            <span class="ancestors"><a href="module-altspace.html">altspace</a>~</span>
         
-        SteamVRInput
+        NativeObject
         </h2>
         
     
@@ -56,16 +56,12 @@
 
     
 
-    <h4 class="name" id="SteamVRInput"><span class="type-signature"></span>new SteamVRInput<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="NativeObject"><span class="type-signature"></span>new NativeObject<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
-<div class="description">
-    <p>The SteamVRInput behavior manages SteamVR input devices. It should be added
-to the ThreeJS scene and is required to use <a href="behaviors.SteamVRTrackedObject.html">SteamVRTrackedObject</a></p>
-</div>
 
 
 
@@ -74,174 +70,6 @@ to the ThreeJS scene and is required to use <a href="behaviors.SteamVRTrackedObj
 
 
 
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>leftController</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Gamepad</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the left SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a> or undefined if one has not yet been found</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>rightController</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Gamepad</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the right SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a> or undefined if one has not yet been found</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>firstController</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Gamepad</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the first SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a>  or undefined if none have yet been found</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>leftControllerPromise</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Promise</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>a promise that resolves once the left SteamVR input device is found</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>rightControllerPromise</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Promise</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>a promise that resolves once the right SteamVR input device is found</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>firstControllerPromise</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Promise</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>a promise that resolves once any SteamVR input device is found</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -300,6 +128,17 @@ to the ThreeJS scene and is required to use <a href="behaviors.SteamVRTrackedObj
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="THREE.Object3D.html">THREE.Object3D</a></li>
+    </ul>
+
+
+    
 
     
 
@@ -312,7 +151,267 @@ to the ThreeJS scene and is required to use <a href="behaviors.SteamVRTrackedObj
     
 
     
+        <h3 class="subsection-title">Methods</h3>
 
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="ThreeJSCursorEvent">ThreeJSCursorEvent</h4>
+
+
+
+
+<div class="description">
+    <p>The ThreeJSCursorEvent interface represents events that occur due to the user interacting with three.js objects using the cursor</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ray</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Ray</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ray that was used to project the cursor. Will often come from either the user's center eye or a motion controller they are holding.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>point</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Vector3</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The point in world space where the ray intersected an object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bubbles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether this event will bubble up the three.js hierarchy. True for all ThreeJSCursorEvents. Roughly matches DOM bubbling (does not have a capture step).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>target</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="THREE.Object3D.html">THREE.Object3D</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The <a href="THREE.Object3D.html">THREE.Object3D</a> the event originally fired on.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>currentTarget</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="THREE.Object3D.html">THREE.Object3D</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The <a href="THREE.Object3D.html">THREE.Object3D</a> the event is currently firing on as it bubbles.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stopPropagation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Allows the remaining event listeners for this event on this <a href="THREE.Object3D.html">THREE.Object3D</a> to fire and then stops.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stopImmediatePropagation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Stops the firing of any more event listeners for this event.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="THREE.Object3D.html#ThreeJSCursorEvent">THREE.Object3D#ThreeJSCursorEvent</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
     
 
     
