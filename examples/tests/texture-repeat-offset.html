@@ -23,12 +23,12 @@
 				var textureMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 				var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), textureMat);
 				mesh.position.x = x;
+				mesh.position.z = 0.1;
 				scene.add(mesh);
 				textures.push(texture);
 			}
 			makeTestPlane(THREE.ClampToEdgeWrapping, -1.1);
 			makeTestPlane(THREE.RepeatWrapping, 0);
-			makeTestPlane(THREE.MirroredRepeatWrapping, 1.1);
 
 
 			if (window.altspace) {
