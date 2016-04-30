@@ -209,9 +209,6 @@ altspace.utilities.sync = (function () {
 			updateUrl();
 
 			return connection;
-		}).catch(function(error) {
-			console.error("Failed to connect.");
-			console.dir(error);
 		});
 	}
 

@@ -3032,9 +3032,6 @@ altspace.utilities.sync = (function () {
 			updateUrl();
 
 			return connection;
-		}).catch(function(error) {
-			console.error("Failed to connect.");
-			console.dir(error);
 		});
 	}
 
@@ -11174,7 +11171,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.11.0';
+	var version = '0.11.2';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
