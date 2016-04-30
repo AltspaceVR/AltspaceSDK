@@ -98,7 +98,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 **Not currently supported:**
 * Three.js r75
 * Lighting, custom shaders, screen space effects.
-* Texture wrap, filter, format, anisotropy, repeat, offset, flip
+* Texture filter, format, anisotropy, flip, THREE.MirroredRepeatWrapping.
 * Using GIF images for textures
 * VideoTexture
 * Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
@@ -123,6 +123,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 **Known Issues:**
 * Object visibility does not propagate to child objects in the scene graph. 
   You can work around this by recursively setting the visibility on an object and its children.
+* Texture wrap mode is ignored on the `wrapT` property. The value of `wrapS` is used for both axes.
 
 ## Browser Feature Support
 Altspace's browser is based on Chromium version 28.
