@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.  
 
-**Latest Version: v0.11.2 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.11.2)**  
+**Latest Version: v0.12.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.12.0)**  
 
 <!-- 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -33,7 +33,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.11.2/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.12.0/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -98,7 +98,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 **Not currently supported:**
 * Three.js r75
 * Lighting, custom shaders, screen space effects.
-* Texture wrap, filter, format, anisotropy, repeat, offset, flip
+* Texture filter, format, anisotropy, flip, THREE.MirroredRepeatWrapping.
 * Using GIF images for textures
 * VideoTexture
 * Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
@@ -123,6 +123,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 **Known Issues:**
 * Object visibility does not propagate to child objects in the scene graph. 
   You can work around this by recursively setting the visibility on an object and its children.
+* Texture wrap mode is ignored on the `wrapT` property. The value of `wrapS` is used for both axes.
 
 ## Browser Feature Support
 Altspace's browser is based on Chromium version 28.
