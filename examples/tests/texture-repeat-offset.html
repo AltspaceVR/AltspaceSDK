@@ -58,18 +58,18 @@
 			stats.domElement.style.top = '0';
 			document.body.appendChild(stats.domElement);
 
-			var i = 0;
 			function animate(elapsed) {
 				requestAnimationFrame(animate);
 
-				var j = Math.sin(i) * 2;
-				var k = Math.cos(i) * 2;
+				var now = Date.now() / 2000;
+				console.log(now);
+				var j = Math.sin(now) * 2;
+				var k = Math.cos(now) * 2;
 				textures.forEach(texture => {
 					texture.repeat.set(j, j);
 					texture.offset.set(k, k);
 					info.textContent = `${j.toFixed(2)}, ${k.toFixed(2)}`;
 				});
-				i += 0.005;
 
 				if (!window.altspace) { 
 					controls.update();
