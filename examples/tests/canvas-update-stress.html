@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Canvas Update Stress Test</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+	</head>
+	<body>
+		<script type="text/babel">
+			var scene, renderer, camera, controls;
+
+			scene = new THREE.Scene();
+
+
+			var canvas = document.createElement('canvas');
+			var textureSize = 512;
+			canvas.width = textureSize;
+			canvas.height = textureSize;
+			var context = canvas.getContext('2d');
+			var canvasTexture = new THREE.CanvasTexture(canvas);
+			var material = new THREE.MeshBasicMaterial({
+				'map': canvasTexture,
+				'side': THREE.FrontSide
+			});
+			canvasTexture.needsUpdate = true;
+
+			var boxSize = 256;
+			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			var mesh = new THREE.Mesh(box, material);
+			scene.add(mesh);
+
+			if (window.altspace) {
+				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
+			}
+			else {
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor("#AAAAAA");
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				var aspect = window.innerWidth / window.innerHeight;
+				camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
+				camera.position.z = 400;
+				camera.position.y = 200;
+				camera.lookAt( scene.position );
+
+				scene.add( new THREE.AmbientLight( 0xffffff ) );
+				controls = new THREE.OrbitControls(camera);
+			}
+
+			function animate(elapsed) {
+				context.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+				context.fillRect(0, 0, textureSize, textureSize);
+				canvasTexture.needsUpdate = true;
+
+				if (controls) { 
+					controls.update();
+				}
+				requestAnimationFrame(animate);
+				renderer.render(scene, camera);
+			}
+			animate(0);
+		</script>
+	</body>
+</html>
+
