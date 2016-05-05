@@ -1,6 +1,6 @@
 {
   "name": "aframe-altspace-component",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "aframe-altspace-component component for A-Frame.",
   "main": "index.js",
   "scripts": {
@@ -32,13 +32,13 @@
   },
   "homepage": "https://github.com/AltspaceVR/aframe-altspace-component#readme",
   "devDependencies": {
-    "aframe": "^0.2.0",
-    "browserify": "^12.0.1",
-    "browserify-css": "^0.8.3",
-    "budo": "^7.1.0",
+    "aframe": "0.2.0",
+    "browserify": "12.0.1",
+    "browserify-css": "0.8.3",
+    "budo": "7.1.0",
     "ghpages": "0.0.3",
-    "inquirer": "^0.12.0",
-    "shelljs": "^0.6.0",
-    "webpack": "^1.12.9"
+    "inquirer": "0.12.0",
+    "shelljs": "0.6.0",
+    "webpack": "1.12.9"
   }
 }
