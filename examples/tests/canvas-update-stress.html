@@ -5,12 +5,13 @@
 		<meta charset="utf-8">
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
 		<script src="../../../dist/altspace.js"></script>
 	</head>
 	<body>
 		<button id="toggle">toggle</button>
 		<script>
-			var sim = new altspace.utilities.Simulation({auto: false}), controls;
+			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: true}}), controls, stats;
 
 			if (!altspace.inClient) {
 				controls = new THREE.OrbitControls(sim.camera);
@@ -46,8 +47,16 @@
 				}
 			}
 
-			var doAnimate = false;
+			stats = new Stats();
+			stats.domElement.style.zoom = '2';
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0';
+			stats.domElement.style.right = '0';
+			document.body.appendChild(stats.domElement);
+
+			var doAnimate = true;
 			function animate(elapsed) {
+				requestAnimationFrame(animate);
 				if (doAnimate) {
 					boxes.forEach(function (box) {
 						box.context.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
@@ -59,8 +68,9 @@
 				if (controls) { 
 					controls.update();
 				}
-				requestAnimationFrame(animate);
 				sim.renderer.render(sim.scene, sim.camera);
+
+				stats.update();
 			}
 			animate(0);
 

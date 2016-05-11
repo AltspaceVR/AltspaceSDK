@@ -20,6 +20,7 @@ window.altspace.utilities = window.altspace.utilities || {};
 altspace.utilities.Simulation = function (config) {
 	config = config || {};
 	if (config.auto === undefined) config.auto = true;
+	if (config.rendererOptions === undefined) config.rendererOptions = {};
 
 	var exports = {};
 	var scene = new THREE.Scene();
@@ -39,7 +40,7 @@ altspace.utilities.Simulation = function (config) {
 
 	function setup() {
 		function setupAltspace() {
-			renderer = altspace.getThreeJSRenderer();
+			renderer = altspace.getThreeJSRenderer(config.rendererOptions);
 			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
 			altspace.getThreeJSTrackingSkeleton(function (s) {//TODO: this should have a non-promise version
 				var skeleton = s;
