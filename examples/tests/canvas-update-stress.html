@@ -8,31 +8,53 @@
 		<script src="../../../dist/altspace.js"></script>
 	</head>
 	<body>
+		<button id="toggle">toggle</button>
 		<script>
 			var sim = new altspace.utilities.Simulation({auto: false}), controls;
-
-			var canvas = document.createElement('canvas');
-			var textureSize = 512;
-			canvas.width = textureSize;
-			canvas.height = textureSize;
-			var context = canvas.getContext('2d');
-			var canvasTexture = new THREE.CanvasTexture(canvas);
-			var material = new THREE.MeshBasicMaterial({ map: canvasTexture });
-			canvasTexture.needsUpdate = true;
-
-			var boxSize = 256;
-			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-			var mesh = new THREE.Mesh(box, material);
-			sim.scene.add(mesh);
 
 			if (!altspace.inClient) {
 				controls = new THREE.OrbitControls(sim.camera);
 			}
 
-			function animate(elapsed) {
-				context.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+			var numBoxesI = 1;
+			var numBoxesJ = 1;
+			var boxes = [];
+			var textureSize = 512;
+			var boxSize = 300;
+			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			function createBox (i, j) {
+				var canvas = document.createElement('canvas');
+				canvas.width = textureSize;
+				canvas.height = textureSize;
+				var context = canvas.getContext('2d');
+				var texture = new THREE.CanvasTexture(canvas);
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				context.fillStyle = 'red';
 				context.fillRect(0, 0, textureSize, textureSize);
-				canvasTexture.needsUpdate = true;
+				texture.needsUpdate = true;
+
+				var mesh = new THREE.Mesh(box, material);
+				mesh.position.x = i * boxSize * 1.5 - ((numBoxesI - 1) / 2 * boxSize * 1.5);
+				mesh.position.y = j * boxSize * 1.5 - ((numBoxesJ - 1) / 2 * boxSize * 1.5);
+				sim.scene.add(mesh);
+				boxes.push({context: context, texture: texture});
+			}
+			
+			for (var i = 0; i < numBoxesI; i++) {
+				for (var j = 0; j < numBoxesJ; j++) {
+					createBox(i, j);
+				}
+			}
+
+			var doAnimate = false;
+			function animate(elapsed) {
+				if (doAnimate) {
+					boxes.forEach(function (box) {
+						box.context.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+						box.context.fillRect(0, 0, textureSize, textureSize);
+						box.texture.needsUpdate = true;
+					});
+				}
 
 				if (controls) { 
 					controls.update();
@@ -41,6 +63,10 @@
 				sim.renderer.render(sim.scene, sim.camera);
 			}
 			animate(0);
+
+			toggle.addEventListener('click', function () {
+				doAnimate = !doAnimate;
+			});
 		</script>
 	</body>
 </html>

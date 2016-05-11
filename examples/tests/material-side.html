@@ -30,7 +30,7 @@
 			}
 
 			function makeSphere (side, x, y, xs, ys, zs) {
-				var texture = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg');
+				var texture = new THREE.TextureLoader().load('../images/uv-grid.jpg');
 				var material = new THREE.MeshBasicMaterial({color:'#ff00ff', map: texture, opacity: 0.5});
 				material.side = side;
 				var sphere = new THREE.Mesh(new THREE.SphereGeometry(), material);

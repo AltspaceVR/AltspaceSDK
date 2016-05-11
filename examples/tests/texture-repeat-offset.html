@@ -18,7 +18,7 @@
 			window.scene = scene = new THREE.Scene();
 
 			function makeTestThing (geometry, wrapping, x) {
-				var texture = THREE.ImageUtils.loadTexture('../images/UV_Grid_Sm.jpg');
+				var texture = THREE.ImageUtils.loadTexture('../images/uv-grid.jpg');
 				texture.wrapS = texture.wrapT = wrapping;
 				var textureMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 				var mesh = new THREE.Mesh(geometry, textureMat);
