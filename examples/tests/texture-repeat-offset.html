@@ -17,24 +17,29 @@
 
 			window.scene = scene = new THREE.Scene();
 
-			function makeTestPlane (wrapping, x) {
-				var texture = THREE.ImageUtils.loadTexture('../images/UV_Grid_Sm.jpg');
+			function makeTestThing (geometry, wrapping, x) {
+				var texture = THREE.ImageUtils.loadTexture('../images/uv-grid.jpg');
 				texture.wrapS = texture.wrapT = wrapping;
 				var textureMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-				var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), textureMat);
+				var mesh = new THREE.Mesh(geometry, textureMat);
 				mesh.position.x = x;
 				mesh.position.z = 0.1;
 				scene.add(mesh);
 				textures.push(texture);
 			}
-			makeTestPlane(THREE.ClampToEdgeWrapping, -1.1);
-			makeTestPlane(THREE.RepeatWrapping, 0);
+			var i = -4;
+			makeTestThing(new THREE.PlaneGeometry(1, 1), THREE.ClampToEdgeWrapping, i+=1.1);
+			makeTestThing(new THREE.PlaneGeometry(1, 1), THREE.RepeatWrapping, i+=1.1);
+			makeTestThing(new THREE.BoxGeometry(1, 1, 1), THREE.ClampToEdgeWrapping, i+=1.1);
+			makeTestThing(new THREE.BoxGeometry(1, 1, 1), THREE.RepeatWrapping, i+=1.1);
+			makeTestThing(new THREE.SphereGeometry(0.5), THREE.ClampToEdgeWrapping, i+=1.1);
+			makeTestThing(new THREE.SphereGeometry(0.5), THREE.RepeatWrapping, i+=1.1);
 
 
 			if (window.altspace) {
 				renderer = altspace.getThreeJSRenderer({version: '0.2.0'});
 				altspace.getEnclosure().then(enclosure => {
-					scene.scale.multiplyScalar(enclosure.pixelsPerMeter);
+					scene.scale.multiplyScalar(enclosure.pixelsPerMeter / 2);
 				});
 			}
 			else {
@@ -62,7 +67,6 @@
 				requestAnimationFrame(animate);
 
 				var now = Date.now() / 2000;
-				console.log(now);
 				var j = Math.sin(now) * 2;
 				var k = Math.cos(now) * 2;
 				textures.forEach(texture => {

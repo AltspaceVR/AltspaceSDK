@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Canvas Update Stress Test</title>
+		<meta charset="utf-8">
+		<script src="../../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<button id="toggle">toggle</button>
+		<script>
+			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: true}}), controls, stats;
+
+			if (!altspace.inClient) {
+				controls = new THREE.OrbitControls(sim.camera);
+			}
+
+			var numBoxesI = 1;
+			var numBoxesJ = 1;
+			var boxes = [];
+			var textureSize = 512;
+			var boxSize = 300;
+			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			function createBox (i, j) {
+				var canvas = document.createElement('canvas');
+				canvas.width = textureSize;
+				canvas.height = textureSize;
+				var context = canvas.getContext('2d');
+				var texture = new THREE.CanvasTexture(canvas);
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				context.fillStyle = 'red';
+				context.fillRect(0, 0, textureSize, textureSize);
+				texture.needsUpdate = true;
+
+				var mesh = new THREE.Mesh(box, material);
+				mesh.position.x = i * boxSize * 1.5 - ((numBoxesI - 1) / 2 * boxSize * 1.5);
+				mesh.position.y = j * boxSize * 1.5 - ((numBoxesJ - 1) / 2 * boxSize * 1.5);
+				sim.scene.add(mesh);
+				boxes.push({context: context, texture: texture, canvas: canvas});
+			}
+			
+			for (var i = 0; i < numBoxesI; i++) {
+				for (var j = 0; j < numBoxesJ; j++) {
+					createBox(i, j);
+				}
+			}
+
+			stats = new Stats();
+			stats.domElement.style.zoom = '8';
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0';
+			stats.domElement.style.right = '0';
+			document.body.appendChild(stats.domElement);
+
+			var doAnimate = true;
+			var i = 0;
+			function animate() {
+				//requestAnimationFrame(animate);
+				if (doAnimate) {
+					i += 0.2;
+					boxes.forEach(function (box) {
+						box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
+						box.context.fillRect(0, 0, textureSize, textureSize);
+						box.texture.needsUpdate = true;
+						//box.canvas.toDataURL();
+						//box.context.getImageData(0, 0, textureSize, textureSize);
+						//box.canvas.toBlob(function (blob) {
+						//	new Uint8Array(blob);
+						//});
+					});
+				}
+
+				if (controls) { 
+					controls.update();
+				}
+				sim.renderer.render(sim.scene, sim.camera);
+
+				stats.update();
+			}
+			setInterval(animate, 10);
+			//animate();
+
+			toggle.addEventListener('click', function () {
+				doAnimate = !doAnimate;
+			});
+		</script>
+	</body>
+</html>
