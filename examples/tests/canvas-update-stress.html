@@ -3,10 +3,11 @@
 	<head>
 		<title>Canvas Update Stress Test</title>
 		<meta charset="utf-8">
+		<script src="../../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
-		<script src="../../../dist/altspace.js"></script>
+		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
 		<button id="toggle">toggle</button>
@@ -38,7 +39,7 @@
 				mesh.position.x = i * boxSize * 1.5 - ((numBoxesI - 1) / 2 * boxSize * 1.5);
 				mesh.position.y = j * boxSize * 1.5 - ((numBoxesJ - 1) / 2 * boxSize * 1.5);
 				sim.scene.add(mesh);
-				boxes.push({context: context, texture: texture});
+				boxes.push({context: context, texture: texture, canvas: canvas});
 			}
 			
 			for (var i = 0; i < numBoxesI; i++) {
@@ -48,20 +49,27 @@
 			}
 
 			stats = new Stats();
-			stats.domElement.style.zoom = '2';
+			stats.domElement.style.zoom = '8';
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0';
 			stats.domElement.style.right = '0';
 			document.body.appendChild(stats.domElement);
 
 			var doAnimate = true;
-			function animate(elapsed) {
-				requestAnimationFrame(animate);
+			var i = 0;
+			function animate() {
+				//requestAnimationFrame(animate);
 				if (doAnimate) {
+					i += 0.2;
 					boxes.forEach(function (box) {
-						box.context.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+						box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
 						box.context.fillRect(0, 0, textureSize, textureSize);
 						box.texture.needsUpdate = true;
+						//box.canvas.toDataURL();
+						//box.context.getImageData(0, 0, textureSize, textureSize);
+						//box.canvas.toBlob(function (blob) {
+						//	new Uint8Array(blob);
+						//});
 					});
 				}
 
@@ -72,7 +80,8 @@
 
 				stats.update();
 			}
-			animate(0);
+			setInterval(animate, 10);
+			//animate();
 
 			toggle.addEventListener('click', function () {
 				doAnimate = !doAnimate;
@@ -80,4 +89,3 @@
 		</script>
 	</body>
 </html>
-
