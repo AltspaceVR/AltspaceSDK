@@ -3,16 +3,17 @@
 	<head>
 		<title>Canvas Update Stress Test</title>
 		<meta charset="utf-8">
-		<script src="../../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		<script src="../../../UnityClient/js/src/dynamic-thrift-buffer.js"></script>
+		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/stats.js/r16/build/stats.min.js"></script>
 		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
 		<button id="toggle">toggle</button>
 		<script>
-			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: true}}), controls, stats;
+			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: false}}), controls, stats;
 
 			if (!altspace.inClient) {
 				controls = new THREE.OrbitControls(sim.camera);
@@ -21,8 +22,9 @@
 			var numBoxesI = 1;
 			var numBoxesJ = 1;
 			var boxes = [];
-			var textureSize = 512;
-			var boxSize = 300;
+			var textureSize = Math.pow(2, 9);
+			console.info('textureSize: ', textureSize);
+			var boxSize = 30;
 			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
 			function createBox (i, j) {
 				var canvas = document.createElement('canvas');
@@ -49,10 +51,8 @@
 			}
 
 			stats = new Stats();
-			stats.domElement.style.zoom = '8';
-			stats.domElement.style.position = 'absolute';
-			stats.domElement.style.top = '0';
-			stats.domElement.style.right = '0';
+			stats.showPanel(0);
+			stats.domElement.style.zoom = '6';
 			document.body.appendChild(stats.domElement);
 
 			var doAnimate = true;
@@ -62,14 +62,14 @@
 				if (doAnimate) {
 					i += 0.2;
 					boxes.forEach(function (box) {
-						box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
-						box.context.fillRect(0, 0, textureSize, textureSize);
+						// box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
+						// box.context.fillRect(0, 0, textureSize, textureSize);
 						box.texture.needsUpdate = true;
-						//box.canvas.toDataURL();
-						//box.context.getImageData(0, 0, textureSize, textureSize);
-						//box.canvas.toBlob(function (blob) {
-						//	new Uint8Array(blob);
-						//});
+						// box.canvas.toDataURL().length;
+						// box.context.getImageData(0, 0, textureSize, textureSize).data.length;
+						// box.canvas.toBlob(function (blob) {
+						// 	new Uint8Array(blob).length;
+						// });
 					});
 				}
 

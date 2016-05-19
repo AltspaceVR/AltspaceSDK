@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style> html { font-family: monospace; white-space: pre; }</style>
+<script src="https://npmcdn.com/lodash@4.12.0"></script>
+<script src="https://npmcdn.com/benchmark@2.1.0"></script>
+</head>
+<body>
+<div id="output">running...</div>
+<script>
+var suite = new Benchmark.Suite();
+
+var data = new Uint8Array(512*512*4);
+for (var i = 0; i < data.length; i++) {
+	data[i] = Math.floor(Math.random() * 255);
+}
+(function () {
+	var len = data.length;
+	var chunkSize = (0xfff) + 1;
+	var numChunks = Math.floor(len / chunkSize) + (len % chunkSize == 0 ? 0 : 1);
+	console.log(numChunks);
+}());
+suite.add('BinaryString', function () {
+	var len = data.length;
+	var chunkSize = 0xffff + 1;
+	var numChunks = Math.floor(len / chunkSize) + (len % chunkSize == 0 ? 0 : 1);
+	var outputStr = new Array(numChunks);
+
+	for (var i = 0, c = 0; c < len; i++, c = i * chunkSize) {
+		var lastIndex = i == numChunks - 1 ? len : (i + 1) * chunkSize;
+		outputStr[i] = String.fromCharCode.apply(null, data.subarray(c, lastIndex));
+	}
+
+	outputStr.join("");
+})
+.on('complete', function () {
+	var results = this[0];
+	output.textContent = '';
+	output.textContent += JSON.stringify(_(results).omit('stats', 'options', 'times')).replace(/,/g, ',\n');
+	output.textContent += '\n\n';
+	output.textContent += JSON.stringify(_(results.stats).omit('sample')).replace(/,/g, ',\n');
+})
+.run();
+</script>
+</body>
+</html>
