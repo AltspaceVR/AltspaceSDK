@@ -11,45 +11,45 @@ const config = { authorId: 'AltspaceVR', appId: 'SpinningCube' };
 
 function createAxis() {
 	const group = new THREE.Object3D();
-	group.position.set(0, -600, 0);
 
 	const x = new THREE.Mesh(
-		new THREE.BoxGeometry(50, 5, 5),
+		new THREE.BoxGeometry(10, 1, 1),
 		new THREE.MeshBasicMaterial({
 			color: '#FF0000',
 		})
 	);
-	x.position.x = 25;
+	x.position.x = 5;
 	group.add(x);
 
 	const y = new THREE.Mesh(
-		new THREE.BoxGeometry(5, 50, 5),
+		new THREE.BoxGeometry(1, 10, 1),
 		new THREE.MeshBasicMaterial({
 			color: '#00FF00',
 		})
 	);
-	y.position.y = 25;
+	y.position.y = 5;
 	group.add(y);
 
 	const z = new THREE.Mesh(
-		new THREE.BoxGeometry(5, 5, 50),
+		new THREE.BoxGeometry(1, 1, 10),
 		new THREE.MeshBasicMaterial({
 			color: '#0000FF',
 		})
 	);
-	z.position.z = 25;
+	z.position.z = 5;
 	group.add(z);
 
 	return group;
 }
 
-function createBrush({ hand }) {
+function createBrush({ hand, enclosure }) {
 	const group = createAxis();
 	group.addBehaviors(
 		new SteamVRTrackedObjectBehavior({ hand }),
 		new BrushBehavior({ hand })
 	);
 	sim.scene.add(group);
+	group.position.y = -enclosure.innerHeight/2;
 	return group;
 }
 
@@ -65,13 +65,13 @@ function createClone({ position, rotation, scale }) {
 	return group;
 }
 
-function createFloor() {
-	const geometry = new THREE.BoxGeometry(1000, 10, 1000);
+function createFocusCube({innerWidth, innerDepth, innerHeight, pixelsPerMeter}) {
+	const geometry = new THREE.BoxGeometry(pixelsPerMeter, pixelsPerMeter, pixelsPerMeter);
 	const material = new THREE.MeshBasicMaterial({
 		color: '#FFFFFF',
 	});
 	const ground = new THREE.Mesh(geometry, material);
-	ground.position.y = -520;
+	ground.position.y = -innerHeight/2 + pixelsPerMeter/2
 	sim.scene.add(ground);
 }
 
@@ -92,12 +92,16 @@ altspace.utilities.sync.connect(config).then((connection) => {
 		sceneSync
 	);
 
-	createFloor();
-	// Thes only need to be created locally
-	createBrush({
-		hand: SteamVRInputBehavior.LEFT_CONTROLLER,
-	});
-	createBrush({
-		hand: SteamVRInputBehavior.RIGHT_CONTROLLER,
-	});
+	altspace.getEnclosure().then((enclosure) => {
+		createFocusCube(enclosure);
+		createBrush({
+			hand: SteamVRInputBehavior.LEFT_CONTROLLER,
+			enclosure
+		});
+		createBrush({
+			hand: SteamVRInputBehavior.RIGHT_CONTROLLER,
+			enclosure
+		});
+	})
+
 });
