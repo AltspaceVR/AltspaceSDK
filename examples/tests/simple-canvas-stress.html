@@ -18,7 +18,6 @@
 
 			var i = 0;
 			function animate() {
-				//requestAnimationFrame(animate);
 				i += 0.2;
 				context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
 				context.fillRect(0, 0, textureSize, textureSize);
@@ -31,9 +30,11 @@
 				function readBlob () {
 					reader.removeEventListener('loadend', readBlob);
 					reader.result.byteLength;
+					blob.close();
 				}
 				reader.addEventListener('loadend', readBlob);
 				box.canvas.toBlob(function (_blob) {
+					blob = _blob;
 					reader.readAsArrayBuffer(_blob);
 				});
 
@@ -45,11 +46,6 @@
 				stats.update();
 			}
 			setInterval(animate, 10);
-			//animate();
-
-			toggle.addEventListener('click', function () {
-				doAnimate = !doAnimate;
-			});
 		</script>
 	</body>
 </html>
