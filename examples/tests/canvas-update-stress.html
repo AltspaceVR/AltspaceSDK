@@ -69,11 +69,21 @@
 						box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
 						box.context.fillRect(0, 0, textureSize, textureSize);
 						box.texture.needsUpdate = true;
-						//box.canvas.toDataURL().length;
-						//box.context.getImageData(0, 0, textureSize, textureSize).data.length;
-						// box.canvas.toBlob(function (blob) {
-						//  	new Uint8Array(blob).length;
-						// });
+
+						// box.canvas.toDataURL().length;
+
+						// box.context.getImageData(0, 0, textureSize, textureSize).data.length;
+
+						var reader = new FileReader();
+						function readBlob () {
+							reader.removeEventListener('loadend', readBlob);
+							reader.result.byteLength;
+						}
+						reader.addEventListener('loadend', readBlob);
+						box.canvas.toBlob(function (blob) {
+							reader.readAsArrayBuffer(blob);
+						});
+
 					});
 				}
 
