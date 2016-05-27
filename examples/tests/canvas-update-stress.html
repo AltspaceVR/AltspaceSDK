@@ -3,8 +3,12 @@
 	<head>
 		<title>Canvas Update Stress Test</title>
 		<meta charset="utf-8">
+		<!--
 		<script src="../../../UnityClient/js/src/dynamic-thrift-buffer.js"></script>
+		<script src="../../../UnityClient/js/src/altspace-client.js"></script>
+		<script src="../../../UnityClient/js/src/AltRenderer.js"></script>
 		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		-->
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/stats.js/r16/build/stats.min.js"></script>
@@ -13,7 +17,7 @@
 	<body>
 		<button id="toggle">toggle</button>
 		<script>
-			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: false}}), controls, stats;
+			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: true}}), controls, stats;
 
 			if (!altspace.inClient) {
 				controls = new THREE.OrbitControls(sim.camera);
@@ -23,7 +27,7 @@
 			var numBoxesJ = 1;
 			var boxes = [];
 			var textureSize = Math.pow(2, 9);
-			console.info('textureSize: ', textureSize);
+			console.info('textureSize: ', textureSize, textureSize * textureSize * 4);
 			var boxSize = 30;
 			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
 			function createBox (i, j) {
@@ -62,13 +66,13 @@
 				if (doAnimate) {
 					i += 0.2;
 					boxes.forEach(function (box) {
-						// box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
-						// box.context.fillRect(0, 0, textureSize, textureSize);
+						box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
+						box.context.fillRect(0, 0, textureSize, textureSize);
 						box.texture.needsUpdate = true;
-						// box.canvas.toDataURL().length;
-						// box.context.getImageData(0, 0, textureSize, textureSize).data.length;
+						//box.canvas.toDataURL().length;
+						//box.context.getImageData(0, 0, textureSize, textureSize).data.length;
 						// box.canvas.toBlob(function (blob) {
-						// 	new Uint8Array(blob).length;
+						//  	new Uint8Array(blob).length;
 						// });
 					});
 				}
@@ -76,7 +80,7 @@
 				if (controls) { 
 					controls.update();
 				}
-				sim.renderer.render(sim.scene, sim.camera);
+				//sim.renderer.render(sim.scene, sim.camera);
 
 				stats.update();
 			}
