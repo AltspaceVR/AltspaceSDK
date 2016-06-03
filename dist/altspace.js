@@ -3241,10 +3241,6 @@ altspace.utilities.Simulation = function (config) {
 		function setupAltspace() {
 			renderer = altspace.getThreeJSRenderer();
 			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
-			altspace.getThreeJSTrackingSkeleton(function (s) {//TODO: this should have a non-promise version
-				var skeleton = s;
-				skeleton.getJoint('Eye').add(camera);// add our virtual camera to the center eye so that it looks normal to other behaviors
-			});
 		}
 
 		function setupWebGL() {
@@ -11171,7 +11167,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.13.0';
+	var version = '0.13.1';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
