@@ -54,10 +54,11 @@
 	AFRAME.registerComponent('altspace', {
 
 	  /**
-	   * usePixelScale will allow you to use A-Frame units as CSS pixels. This is the default behavior for three.js apps, but not for A-Frame apps.
+	   * usePixelScale will allow you to use A-Frame units as CSS pixels. This is the default behavior for three.js apps, but not for A-Frame apps.  verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
 	   */
 	  schema: { 
-	    usePixelScale: { type: 'boolean', default: 'false'}
+	    usePixelScale: { type: 'boolean', default: 'false'},
+	    verticalAlign: { type: 'string', default: 'middle'}
 	  },
 
 	  /**
@@ -119,6 +120,21 @@
 	    if (!this.data.usePixelScale) {
 	      altspace.getEnclosure().then(function(e) {
 	        scene.scale.multiplyScalar(e.pixelsPerMeter);
+	      });
+	    }
+	    var verticalAlign = this.data.verticalAlign;
+	    if (verticalAlign !== 'center') {
+	      altspace.getEnclosure().then(function(e) {
+	        switch (verticalAlign) {
+	          case 'bottom':
+	            scene.position.y -= e.innerHeight / 2;
+	            break;
+	          case 'top':
+	            scene.position.y += e.innerHeight / 2;
+	            break;
+	          default:
+	            console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+	        }
 	      });
 	    }
 	    var renderer = this.el.renderer = altspace.getThreeJSRenderer();
