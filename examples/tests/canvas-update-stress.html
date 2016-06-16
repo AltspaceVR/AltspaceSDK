@@ -28,8 +28,8 @@
 			var boxes = [];
 			var textureSize = Math.pow(2, 9);
 			console.info('textureSize: ', textureSize, textureSize * textureSize * 4);
-			var boxSize = 30;
-			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			var boxSize = 150;
+			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize * 2);
 			function createBox (i, j) {
 				var canvas = document.createElement('canvas');
 				canvas.width = textureSize;
@@ -42,7 +42,7 @@
 				texture.needsUpdate = true;
 
 				var mesh = new THREE.Mesh(box, material);
-				mesh.position.x = i * boxSize * 1.5 - ((numBoxesI - 1) / 2 * boxSize * 1.5);
+				mesh.position.x = i * boxSize * 1.5 - ((numBoxesI - 1) / 2 * boxSize * 1.5) - 100;
 				mesh.position.y = j * boxSize * 1.5 - ((numBoxesJ - 1) / 2 * boxSize * 1.5);
 				sim.scene.add(mesh);
 				boxes.push({context: context, texture: texture, canvas: canvas});
@@ -66,23 +66,27 @@
 				if (doAnimate) {
 					i += 0.2;
 					boxes.forEach(function (box) {
-						box.context.fillStyle = '#'+((Math.sin(i) * 255 << 16)).toString(16);
-						box.context.fillRect(0, 0, textureSize, textureSize);
+						for(var x = 0; x < textureSize/8; x++) {
+							for(var y = 0; y < textureSize/8; y++) {
+								box.context.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
+								box.context.fillRect(x * 8, y * 8, 8, 8);
+							}
+						}
 						box.texture.needsUpdate = true;
 
 						// box.canvas.toDataURL().length;
 
 						// box.context.getImageData(0, 0, textureSize, textureSize).data.length;
 
-						var reader = new FileReader();
-						function readBlob () {
-							reader.removeEventListener('loadend', readBlob);
-							reader.result.byteLength;
-						}
-						reader.addEventListener('loadend', readBlob);
-						box.canvas.toBlob(function (blob) {
-							reader.readAsArrayBuffer(blob);
-						});
+						// var reader = new FileReader();
+						// function readBlob () {
+						// 	reader.removeEventListener('loadend', readBlob);
+						// 	reader.result.byteLength;
+						// }
+						// reader.addEventListener('loadend', readBlob);
+						// box.canvas.toBlob(function (blob) {
+						// 	reader.readAsArrayBuffer(blob);
+						// });
 
 					});
 				}
@@ -90,7 +94,7 @@
 				if (controls) { 
 					controls.update();
 				}
-				//sim.renderer.render(sim.scene, sim.camera);
+				sim.renderer.render(sim.scene, sim.camera);
 
 				stats.update();
 			}
