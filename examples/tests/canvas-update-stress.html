@@ -66,10 +66,11 @@
 				if (doAnimate) {
 					i += 0.2;
 					boxes.forEach(function (box) {
-						for(var x = 0; x < textureSize/8; x++) {
-							for(var y = 0; y < textureSize/8; y++) {
+						var w = 32;
+						for(var x = 0; x < textureSize/w; x++) {
+							for(var y = 0; y < textureSize/w; y++) {
 								box.context.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
-								box.context.fillRect(x * 8, y * 8, 8, 8);
+								box.context.fillRect(x * w, y * w, w, w);
 							}
 						}
 						box.texture.needsUpdate = true;
