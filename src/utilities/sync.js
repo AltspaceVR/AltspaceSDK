@@ -74,7 +74,7 @@ altspace.utilities.sync = (function () {
 		}, {remember: 'sessionOnly'});
 	}
 
-
+	// TODO Removed authentication step for now, until we upgrade to the new Firebase auth.
 	function authenticate(ref) {
 		return new Promise(function(resolve, reject) {
 			ref.authAnonymously(function(error, authData) {
@@ -161,7 +161,7 @@ altspace.utilities.sync = (function () {
 			throw new Error('Both the appId and authorId must be provided to connect.');
 		}
 
-		var tasks = [authenticate(baseRef)];
+		var tasks = [];
 		if (inAltspace) {
 			if (!spaceId) tasks.unshift(altspace.getSpace());
 			if (!userId) tasks.unshift(altspace.getUser());
@@ -193,8 +193,6 @@ altspace.utilities.sync = (function () {
 		}
 
 		return Promise.all(tasks).then(function (results) {
-			results.pop();//auth
-
 			if (inAltspace) {
 				if (!spaceId) spaceId = results.pop().sid;
 				if (!userId) userId = results.pop().userId;
