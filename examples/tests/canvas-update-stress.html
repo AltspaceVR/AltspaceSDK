@@ -8,8 +8,8 @@
 		<script src="../../../UnityClient/js/src/altspace-client.js"></script>
 		<script src="../../../UnityClient/js/src/AltRenderer.js"></script>
 		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
-		-->
 		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
+		-->
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/stats.js/r16/build/stats.min.js"></script>
@@ -27,7 +27,7 @@
 			var numBoxesI = 1;
 			var numBoxesJ = 1;
 			var boxes = [];
-			var textureSize = Math.pow(2, 2);
+			var textureSize = Math.pow(2, 9);
 			console.info('textureSize: ', textureSize, textureSize * textureSize * 4);
 			var boxSize = 150;
 			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize * 2);
@@ -67,7 +67,7 @@
 				if (doAnimate) {
 					i += 0.2;
 					boxes.forEach(function (box) {
-						var w = 2;
+						var w = 256;
 						for(var x = 0; x < textureSize/w; x++) {
 							for(var y = 0; y < textureSize/w; y++) {
 								box.context.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
