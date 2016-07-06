@@ -27,7 +27,7 @@
 			var numBoxesI = 1;
 			var numBoxesJ = 1;
 			var boxes = [];
-			var textureSize = Math.pow(2, 2);
+			var textureSize = 256;//Math.pow(2, 8);
 			console.info('textureSize: ', textureSize, textureSize * textureSize * 4);
 			var boxSize = 150;
 			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize * 2);
@@ -60,25 +60,45 @@
 			stats.domElement.style.zoom = '6';
 			document.body.appendChild(stats.domElement);
 
+			var canvasOne = document.createElement('canvas');
+			canvasOne.width = textureSize;
+			canvasOne.height = textureSize;
+			var contextOne = canvasOne.getContext('2d');
+			for(var x = 0; x < textureSize; x++) {
+				for(var y = 0; y < textureSize; y++) {
+					contextOne.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
+					contextOne.fillRect(x, y, 1, 1);
+				}
+			}
+
+			var canvasTwo = document.createElement('canvas');
+			canvasTwo.width = textureSize;
+			canvasTwo.height = textureSize;
+			var contextTwo = canvasTwo.getContext('2d');
+			for(var x = 0; x < textureSize; x++) {
+				for(var y = 0; y < textureSize; y++) {
+					contextTwo.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
+					contextTwo.fillRect(x, y, 1, 1);
+				}
+			}
+
 			var doAnimate = true;
 			var i = 0;
 			function animate() {
 				//requestAnimationFrame(animate);
 				if (doAnimate) {
-					i += 0.2;
+					i += 1;
 					boxes.forEach(function (box) {
-						var w = 2;
-						for(var x = 0; x < textureSize/w; x++) {
-							for(var y = 0; y < textureSize/w; y++) {
-								box.context.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
-								box.context.fillRect(x * w, y * w, w, w);
-							}
+						if (i % 2 === 0) { 
+							box.context.drawImage(canvasOne, 0, 0);
+						} else {
+							box.context.drawImage(canvasTwo, 0, 0);
 						}
 						box.texture.needsUpdate = true;
 
 						// box.canvas.toDataURL().length;
 
-						// box.context.getImageData(0, 0, textureSize, textureSize).data.length;
+						//console.log(box.context.getImageData(0, 0, textureSize, textureSize).data);
 
 						// var reader = new FileReader();
 						// function readBlob () {
@@ -101,6 +121,8 @@
 				stats.update();
 			}
 			setInterval(animate, 10);
+			//setTimeout(animate, 500);
+			//setTimeout(animate, 1000);
 			//animate();
 
 			toggle.addEventListener('click', function () {
