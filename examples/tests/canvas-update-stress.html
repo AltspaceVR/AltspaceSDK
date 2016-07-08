@@ -8,8 +8,8 @@
 		<script src="../../../UnityClient/js/src/altspace-client.js"></script>
 		<script src="../../../UnityClient/js/src/AltRenderer.js"></script>
 		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
-		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		-->
+		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/stats.js/r16/build/stats.min.js"></script>
@@ -17,6 +17,7 @@
 	</head>
 	<body>
 		<button id="toggle">toggle</button>
+		<span id="now" style="font: 85px sans-serif; color: red; position: absolute; right: 0; top: 3em;"></span>
 		<script>
 			var sim = new altspace.utilities.Simulation({auto: false, rendererOptions: {profile: true}}), controls, stats;
 
@@ -36,6 +37,8 @@
 				canvas.width = textureSize;
 				canvas.height = textureSize;
 				var context = canvas.getContext('2d');
+				context.font = "25px sans-serif";
+				context.textBaseline = "top";
 				var texture = new THREE.CanvasTexture(canvas);
 				var material = new THREE.MeshBasicMaterial({ map: texture });
 				context.fillStyle = 'red';
@@ -81,6 +84,7 @@
 					contextTwo.fillRect(x, y, 1, 1);
 				}
 			}
+			boxes[0].context.fillStyle = 'black';
 
 			var doAnimate = true;
 			var i = 0;
@@ -94,7 +98,10 @@
 						} else {
 							box.context.drawImage(canvasTwo, 0, 0);
 						}
+						var dnow = Date.now();
+						box.context.fillText(dnow, 0, 0);
 						box.texture.needsUpdate = true;
+						now.textContent = dnow;
 
 						// box.canvas.toDataURL().length;
 
