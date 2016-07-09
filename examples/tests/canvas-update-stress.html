@@ -4,10 +4,6 @@
 		<title>Canvas Update Stress Test</title>
 		<meta charset="utf-8">
 		<!--
-		<script src="../../../UnityClient/js/src/dynamic-thrift-buffer.js"></script>
-		<script src="../../../UnityClient/js/src/altspace-client.js"></script>
-		<script src="../../../UnityClient/js/src/AltRenderer.js"></script>
-		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		-->
 		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
@@ -25,14 +21,11 @@
 				controls = new THREE.OrbitControls(sim.camera);
 			}
 
-			var numBoxesI = 1;
-			var numBoxesJ = 1;
-			var boxes = [];
 			var textureSize = 256;//Math.pow(2, 8);
 			console.info('textureSize: ', textureSize, textureSize * textureSize * 4);
-			var boxSize = 150;
+			var boxSize = 350;
 			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize * 2);
-			function createBox (i, j) {
+			function createBox () {
 				var canvas = document.createElement('canvas');
 				canvas.width = textureSize;
 				canvas.height = textureSize;
@@ -41,83 +34,49 @@
 				context.textBaseline = "top";
 				var texture = new THREE.CanvasTexture(canvas);
 				var material = new THREE.MeshBasicMaterial({ map: texture });
-				context.fillStyle = 'red';
-				context.fillRect(0, 0, textureSize, textureSize);
-				texture.needsUpdate = true;
 
 				var mesh = new THREE.Mesh(box, material);
-				mesh.position.x = i * boxSize * 1.5 - ((numBoxesI - 1) / 2 * boxSize * 1.5) - 100;
-				mesh.position.y = j * boxSize * 1.5 - ((numBoxesJ - 1) / 2 * boxSize * 1.5);
 				sim.scene.add(mesh);
-				boxes.push({context: context, texture: texture, canvas: canvas});
+				return {context: context, texture: texture, canvas: canvas};
 			}
 			
-			for (var i = 0; i < numBoxesI; i++) {
-				for (var j = 0; j < numBoxesJ; j++) {
-					createBox(i, j);
-				}
-			}
+			var box = createBox();
 
 			stats = new Stats();
 			stats.showPanel(0);
 			stats.domElement.style.zoom = '6';
 			document.body.appendChild(stats.domElement);
 
-			var canvasOne = document.createElement('canvas');
-			canvasOne.width = textureSize;
-			canvasOne.height = textureSize;
-			var contextOne = canvasOne.getContext('2d');
-			for(var x = 0; x < textureSize; x++) {
-				for(var y = 0; y < textureSize; y++) {
-					contextOne.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
-					contextOne.fillRect(x, y, 1, 1);
+			var n = 2;
+			var w = textureSize / n;
+
+			var canvases = [];
+			for (var i = 0; i < 1; i++) {
+				var canvas = document.createElement('canvas');
+				canvas.width = textureSize;
+				canvas.height = textureSize;
+				var contextOne = canvas.getContext('2d');
+				for(var x = 0; x < n; x++) {
+					for(var y = 0; y < n; y++) {
+						contextOne.fillStyle = 'hsl(' + (128) + ', 100%, 50%)';
+						contextOne.fillRect(x * w , y * w, w, w);
+					}
 				}
+				canvases.push(canvas);
 			}
 
-			var canvasTwo = document.createElement('canvas');
-			canvasTwo.width = textureSize;
-			canvasTwo.height = textureSize;
-			var contextTwo = canvasTwo.getContext('2d');
-			for(var x = 0; x < textureSize; x++) {
-				for(var y = 0; y < textureSize; y++) {
-					contextTwo.fillStyle = 'hsl(' + (Math.random() * 360) + ', 100%, 50%)';
-					contextTwo.fillRect(x, y, 1, 1);
-				}
-			}
-			boxes[0].context.fillStyle = 'black';
+			box.context.fillStyle = 'black';
 
 			var doAnimate = true;
 			var i = 0;
 			function animate() {
-				//requestAnimationFrame(animate);
 				if (doAnimate) {
 					i += 1;
-					boxes.forEach(function (box) {
-						if (i % 2 === 0) { 
-							box.context.drawImage(canvasOne, 0, 0);
-						} else {
-							box.context.drawImage(canvasTwo, 0, 0);
-						}
-						var dnow = Date.now();
-						box.context.fillText(dnow, 0, 0);
-						box.texture.needsUpdate = true;
-						now.textContent = dnow;
-
-						// box.canvas.toDataURL().length;
-
-						//console.log(box.context.getImageData(0, 0, textureSize, textureSize).data);
-
-						// var reader = new FileReader();
-						// function readBlob () {
-						// 	reader.removeEventListener('loadend', readBlob);
-						// 	reader.result.byteLength;
-						// }
-						// reader.addEventListener('loadend', readBlob);
-						// box.canvas.toBlob(function (blob) {
-						// 	reader.readAsArrayBuffer(blob);
-						// });
-
-					});
+					box.context.drawImage(canvases[i % canvases.length], 0, 0);
+					var dnow = Date.now();
+					box.context.fillText(dnow, 0, 0);
+					box.texture.needsUpdate = true;
+					now.textContent = dnow;
 				}
 
 				if (controls) { 
@@ -127,10 +86,7 @@
 
 				stats.update();
 			}
-			setInterval(animate, 10);
-			//setTimeout(animate, 500);
-			//setTimeout(animate, 1000);
-			//animate();
+			setInterval(animate, 33);
 
 			toggle.addEventListener('click', function () {
 				doAnimate = !doAnimate;
