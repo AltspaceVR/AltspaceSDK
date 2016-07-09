@@ -42,10 +42,6 @@ altspace.utilities.Simulation = function (config) {
 		function setupAltspace() {
 			renderer = altspace.getThreeJSRenderer(config.rendererOptions);
 			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
-			altspace.getThreeJSTrackingSkeleton(function (s) {//TODO: this should have a non-promise version
-				var skeleton = s;
-				skeleton.getJoint('Eye').add(camera);// add our virtual camera to the center eye so that it looks normal to other behaviors
-			});
 		}
 
 		function setupWebGL() {

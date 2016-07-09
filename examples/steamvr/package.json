@@ -5,8 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot --inline --host 0.0.0.0",
-    "build": "NODE_ENV=production webpack -p --progress --profile --colors"
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --host 0.0.0.0",
+    "build": "NODE_ENV=production webpack -p --progress --profile --colors",
+    "build_win": "SET NODE_ENV=production & webpack -p --progress --profile --colors"
   },
   "author": "",
   "devDependencies": {
@@ -23,7 +24,7 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "altspace": "^0.6.0",
+    "altspace": "^0.12",
     "three": "^0.73.0"
   }
 }
