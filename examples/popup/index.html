@@ -25,9 +25,9 @@ altspace.utilities.sync.connect(config).then(function(connection) {
 	sim.scene.addBehavior(sceneSync);
 
 	// Open a popup with a form (popup.html) which allows you to add shapes to the scene.
-	var popupUrl = getFullUrl('/examples/popup/popup.html' + location.search);
+	var popupUrl = getFullUrl('popup.html' + location.search);
 	altspace.open(popupUrl, '_experience', {
-		icon: getFullUrl('/examples/images/favicon.png'),
+		icon: getFullUrl('favicon.png'),
 		hidden: true
 	}).then(function (_popup) {
 		// Save a reference to the popup so that we can open it when a user clicks 
@@ -63,7 +63,11 @@ function ShowPopup() {
 };
 
 function getFullUrl(path) {
-	return location.origin + path;
+	var currPath = location.pathname;
+	if (!currPath.endsWith('/')) {
+		currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+	}
+	return location.origin + currPath + path;
 }
 
 function getTextTexture(text) {
