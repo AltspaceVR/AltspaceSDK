@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Texture Reuse Test</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+			var sim = new altspace.utilities.Simulation({auto: false}), controls;
+
+			if (!altspace.inClient) {
+				controls = new THREE.OrbitControls(sim.camera);
+			}
+
+			function createTexture() {
+				var textureSize = 8;
+				var canvas = document.createElement('canvas');
+				canvas.width = textureSize;
+				canvas.height = textureSize;
+				var context = canvas.getContext('2d');
+				var canvasTexture = new THREE.CanvasTexture(canvas);
+				context.fillStyle = '#eeaaaa';
+				context.fillRect(0, 0, textureSize, textureSize);
+				return canvasTexture;
+			}
+
+			function createMaterial(texture) {
+				return new THREE.MeshBasicMaterial({ color: 'red', map: texture });
+			}
+
+			function createBox(material, x) {
+				var boxSize = 20;
+				var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+				var boxMesh = new THREE.Mesh(box, material);
+				boxMesh.position.x = sim.scene.children.length * 25;
+				sim.scene.add(boxMesh);
+			}
+
+			var tex = createTexture();
+			var matOne = createMaterial(tex);
+
+			createBox(matOne);
+
+			setTimeout(function () {
+				createBox(matOne);
+			}, 1000);
+
+			setTimeout(function () {
+				createBox(createMaterial(tex));
+			}, 2000);
+
+			setTimeout(function () {
+				createBox(createMaterial(tex));
+			}, 3000);
+
+			function animate(elapsed) {
+				if (controls) {
+					controls.update();
+				}
+				requestAnimationFrame(animate);
+				sim.renderer.render(sim.scene, sim.camera);
+			}
+			animate(0);
+		</script>
+	</body>
+</html>
+
