@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Disable Hitbox</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+			var sim = new altspace.utilities.Simulation({auto: false}), controls;
+			sim.scene.position.y = -256
+
+			if (!altspace.inClient) {
+				controls = new THREE.OrbitControls(sim.camera);
+			}
+
+			var boxSize = 50;
+			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
+
+			function toggleColor() {
+				this.material.color.b = +!this.material.color.b;
+			}
+
+			function makeBox(x, z) {
+				var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
+				boxMesh.position.x = x;
+				boxMesh.position.z = z;
+				boxMesh.addEventListener('cursordown', toggleColor);
+				sim.scene.add(boxMesh);
+				return boxMesh;
+			}
+
+			makeBox(-35, 0);
+			makeBox(35, -75);
+
+			var hitboxlessBoxMesh = makeBox(35, 0);
+			var collider = hitboxlessBoxMesh.userData.altspace = {collider: {enabled: false}};
+
+			var lastFlip = 0;
+			function animate(elapsed) {
+				requestAnimationFrame(animate);
+				if (controls) {
+					controls.update();
+				}
+				if (performance.now() - lastFlip > 3000) {
+					collider.enabled = !collider.enabled;
+					hitboxlessBoxMesh.material.color.r = collider.enabled ? 1 : 0;
+					lastFlip = performance.now();
+				}
+				sim.renderer.render(sim.scene, sim.camera);
+			}
+			animate(0);
+		</script>
+	</body>
+</html>
+
