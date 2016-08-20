@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Gamepad and Focus Tests</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../dist/altspace.js"></script>
+		<style>
+			body { background: white; }
+			li { font: 20pt sans-serif; list-style-type: none }
+		</style>
+	</head>
+	<body>
+		<ol id="watchList"></ol>
+		<ol id="logList"></ol>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+		<script type="text/babel">
+			var sim = new altspace.utilities.Simulation({auto: false}), controls;
+
+			if (!altspace.inClient) {
+				controls = new THREE.OrbitControls(sim.camera);
+			}
+
+			function log () {
+				var li = document.createElement('li');
+				li.textContent = Array.prototype.slice.apply(arguments).join(' ');
+				logList.insertBefore(li, logList.firstChild);
+			}
+
+			var watches = [];
+			function watch (func) {
+				watches.push(func);
+			}
+			setInterval(() => {
+				watches.forEach((watch, i) =>{
+				if (!watchList.children[i]) {
+					var watchItem = document.createElement('li');
+					watchList.appendChild(watchItem);
+				}
+				try {
+					let val = watch();
+					if (!Array.isArray(val)) {
+					val = [val];
+					}
+					watchList.childNodes[i].textContent = val.join(' ').toString();
+				}
+				catch(e) {}
+				})
+			}, 100)
+
+			log('hi');
+
+			document.addEventListener('click', ()=>{
+				log('click');
+			})
+
+			window.addEventListener('blur', ()=>{
+				log('blur');
+			})
+
+			window.addEventListener('focus', ()=>{
+				log('focus');
+				log('gamepads', altspace.getGamepads())
+			})
+
+			altspace.getEnclosure().then(enclosure => {
+				watch(() => ['hasFocus', enclosure.hasFocus]);
+			});
+
+			watch(() => ['gamepads', altspace.getGamepads().length]);
+
+			for (var i = 0; i < 3; i++) {
+				(function (i) {
+				watch(() =>
+					['gamepad', i, 'connected', altspace.getGamepads()[i].connected]);
+				watch(() =>
+					['gamepad', i, 'buttons', altspace.getGamepads()[i].buttons.map(button=>+button.value.toFixed(2))]);
+				watch(() =>
+					['gamepad', i, 'axes', altspace.getGamepads()[i].axes.map(axis=>axis.toFixed(2))]);
+				}(i));
+			}
+
+			var renderer = altspace.getThreeJSRenderer();
+			var scene = new THREE.Scene();
+			scene.add(new THREE.Mesh(
+				new THREE.BoxGeometry(1, 1, 1),
+				new THREE.MeshBasicMaterial({color: 'red'})
+			));
+			scene.scale.multiplyScalar(100);
+			renderer.render(scene);
+
+		</script>
+	</body>
+</html>
