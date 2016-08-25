@@ -18,11 +18,12 @@
 
 			var boxSize = 50;
 			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-			var boxTex = THREE.ImageUtils.loadTexture('../images/UV_Grid_Sm.jpg');
-			var boxMat = new THREE.MeshBasicMaterial({color: 'green', map: boxTex});
+			var boxTex = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg');
+			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
 
 			function toggleColor() {
 				this.material.color.b = +!this.material.color.b;
+				sim.renderer.render(sim.scene, sim.camera);
 			}
 
 			function makeBox(x, z) {
@@ -39,7 +40,10 @@
 
 			var hitboxlessBoxMesh = makeBox(35, 0);
 			hitboxlessBoxMesh.userData.altspace = {collider: {enabled: false}};
+			hitboxlessBoxMesh.material.color.r = 1;
 			var collider = hitboxlessBoxMesh.userData.altspace.collider;
+
+			sim.renderer.render(sim.scene, sim.camera);
 
 			var lastFlip = 0;
 			function animate(elapsed) {
@@ -54,7 +58,10 @@
 				}
 				sim.renderer.render(sim.scene, sim.camera);
 			}
-			animate(0);
+
+			setTimeout(function () {
+				animate(0);
+			}, 3000);
 		</script>
 	</body>
 </html>
