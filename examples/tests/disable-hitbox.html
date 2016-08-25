@@ -16,52 +16,55 @@
 				controls = new THREE.OrbitControls(sim.camera);
 			}
 
-			var boxSize = 50;
-			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-			var boxTex = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg');
-			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
+			var boxTex = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg', init);
 
-			function toggleColor() {
-				this.material.color.b = +!this.material.color.b;
-				sim.renderer.render(sim.scene, sim.camera);
-			}
+			function init () {
+				var boxSize = 80;
+				var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+				var boxMat = new THREE.MeshBasicMaterial({color: 'green', map: boxTex});
 
-			function makeBox(x, z) {
-				var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
-				boxMesh.position.x = x;
-				boxMesh.position.z = z;
-				boxMesh.addEventListener('cursordown', toggleColor);
-				sim.scene.add(boxMesh);
-				return boxMesh;
-			}
-
-			makeBox(-35, 0);
-			makeBox(35, -75);
-
-			var hitboxlessBoxMesh = makeBox(35, 0);
-			hitboxlessBoxMesh.userData.altspace = {collider: {enabled: false}};
-			hitboxlessBoxMesh.material.color.r = 1;
-			var collider = hitboxlessBoxMesh.userData.altspace.collider;
-
-			sim.renderer.render(sim.scene, sim.camera);
-
-			var lastFlip = 0;
-			function animate(elapsed) {
-				requestAnimationFrame(animate);
-				if (controls) {
-					controls.update();
+				function toggleColor() {
+					this.material.color.b = +!this.material.color.b;
+					sim.renderer.render(sim.scene, sim.camera);
 				}
-				if (performance.now() - lastFlip > 3000) {
-					collider.enabled = !collider.enabled;
-					hitboxlessBoxMesh.material.color.r = collider.enabled ? 0 : 1;
-					lastFlip = performance.now();
-				}
-				sim.renderer.render(sim.scene, sim.camera);
-			}
 
-			setTimeout(function () {
-				animate(0);
-			}, 3000);
+				function makeBox(x, z) {
+					var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
+					boxMesh.position.x = x;
+					boxMesh.position.z = z;
+					boxMesh.addEventListener('cursordown', toggleColor);
+					sim.scene.add(boxMesh);
+					return boxMesh;
+				}
+
+				makeBox(-boxSize * 0.6, 0);
+				makeBox(boxSize * 0.6, -boxSize * 1.2);
+
+				var hitboxlessBoxMesh = makeBox(boxSize * 0.6, 0);
+				hitboxlessBoxMesh.userData.altspace = {collider: {enabled: false}};
+				hitboxlessBoxMesh.material.color.r = 1;
+				var collider = hitboxlessBoxMesh.userData.altspace.collider;
+
+				sim.renderer.render(sim.scene, sim.camera);
+
+				var lastFlip = 0;
+				function animate(elapsed) {
+					requestAnimationFrame(animate);
+					if (controls) {
+						controls.update();
+					}
+					if (performance.now() - lastFlip > 3000) {
+						collider.enabled = !collider.enabled;
+						hitboxlessBoxMesh.material.color.r = collider.enabled ? 0 : 1;
+						lastFlip = performance.now();
+					}
+					sim.renderer.render(sim.scene, sim.camera);
+				}
+
+				setTimeout(function () {
+					animate(0);
+				}, 3000);
+			}
 		</script>
 	</body>
 </html>
