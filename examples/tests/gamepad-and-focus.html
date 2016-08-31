@@ -111,6 +111,7 @@
 				}
 				if (currentGamepad) {
 					currentGamepad.preventDefault([true, true], [true]);
+					log('preventing default behavior of primary button and axes');
 				}
 			}, 100);
 
