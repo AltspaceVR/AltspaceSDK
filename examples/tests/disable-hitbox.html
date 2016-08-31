@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Disable Hitbox</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+			var sim = new altspace.utilities.Simulation({auto: false}), controls;
+			sim.scene.position.y = -256
+
+			if (!altspace.inClient) {
+				controls = new THREE.OrbitControls(sim.camera);
+			}
+
+			var boxTex = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg', init);
+
+			function init () {
+				var boxSize = 80;
+				var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+				var boxMat = new THREE.MeshBasicMaterial({color: 'green', map: boxTex});
+
+				function toggleColor() {
+					this.material.color.b = +!this.material.color.b;
+					sim.renderer.render(sim.scene, sim.camera);
+				}
+
+				function makeBox(x, z) {
+					var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
+					boxMesh.position.x = x;
+					boxMesh.position.z = z;
+					boxMesh.addEventListener('cursordown', toggleColor);
+					sim.scene.add(boxMesh);
+					return boxMesh;
+				}
+
+				makeBox(-boxSize * 0.6, 0);
+				makeBox(boxSize * 0.6, -boxSize * 1.2);
+
+				var hitboxlessBoxMesh = makeBox(boxSize * 0.6, 0);
+				hitboxlessBoxMesh.userData.altspace = {collider: {enabled: false}};
+				hitboxlessBoxMesh.material.color.r = 1;
+				var collider = hitboxlessBoxMesh.userData.altspace.collider;
+
+				sim.renderer.render(sim.scene, sim.camera);
+
+				var lastFlip = 0;
+				function animate(elapsed) {
+					requestAnimationFrame(animate);
+					if (controls) {
+						controls.update();
+					}
+					if (performance.now() - lastFlip > 3000) {
+						collider.enabled = !collider.enabled;
+						hitboxlessBoxMesh.material.color.r = collider.enabled ? 0 : 1;
+						lastFlip = performance.now();
+					}
+					sim.renderer.render(sim.scene, sim.camera);
+				}
+
+				setTimeout(function () {
+					animate(0);
+				}, 3000);
+			}
+		</script>
+	</body>
+</html>
+
