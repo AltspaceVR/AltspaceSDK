@@ -142,6 +142,121 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="userData"><span class="type-signature"></span>userData<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    <p>User data for this Object3D instance. If <code>userData</code> has an <code>altspace</code> property, it will be used to set extra
+properties on the object that are used by the Altspace renderer.</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>altspace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="THREE.Object3D.html#AltspaceFlags">THREE.Object3D~AltspaceFlags</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Altspace-specific properties
+associated with this object.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -893,7 +1008,8 @@ possible.</p>
 
 
 <div class="description">
-    <p>The ThreeJSCursorEvent interface represents events that occur due to the user interacting with three.js objects using the cursor</p>
+    <p>The ThreeJSCursorEvent interface represents events that occur due to the user interacting with three.js
+objects using the cursor</p>
 </div>
 
 
@@ -944,7 +1060,8 @@ possible.</p>
 
             
 
-            <td class="description last"><p>The ray that was used to project the cursor. Will often come from either the user's center eye or a motion controller they are holding.</p></td>
+            <td class="description last"><p>The ray that was used to project the cursor. Will often come from either the
+    user's center eye or a motion controller they are holding.</p></td>
         </tr>
 
     
@@ -990,7 +1107,8 @@ possible.</p>
 
             
 
-            <td class="description last"><p>Whether this event will bubble up the three.js hierarchy. True for all ThreeJSCursorEvents. Roughly matches DOM bubbling (does not have a capture step).</p></td>
+            <td class="description last"><p>Whether this event will bubble up the three.js hierarchy. True for all
+    ThreeJSCursorEvents. Roughly matches DOM bubbling (does not have a capture step).</p></td>
         </tr>
 
     
@@ -1036,7 +1154,8 @@ possible.</p>
 
             
 
-            <td class="description last"><p>The <a href="THREE.Object3D.html">THREE.Object3D</a> the event is currently firing on as it bubbles.</p></td>
+            <td class="description last"><p>The <a href="THREE.Object3D.html">THREE.Object3D</a> the event is currently
+    firing on as it bubbles.</p></td>
         </tr>
 
     
@@ -1059,7 +1178,8 @@ possible.</p>
 
             
 
-            <td class="description last"><p>Allows the remaining event listeners for this event on this <a href="THREE.Object3D.html">THREE.Object3D</a> to fire and then stops.</p></td>
+            <td class="description last"><p>Allows the remaining event listeners for this event on
+    this <a href="THREE.Object3D.html">THREE.Object3D</a> to fire and then stops.</p></td>
         </tr>
 
     
@@ -1133,6 +1253,183 @@ possible.</p>
 
 
             
+                
+<h4 class="name" id="AltspaceFlags">AltspaceFlags</h4>
+
+
+
+
+<div class="description">
+    <p>Altspace-specific properties associated with an <a href="THREE.Object3D.html">Object3D</a> instance via the
+<a href="THREE.Object3D.html#userData">userData.altspace</a> property.</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collider</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Properties for the collider (hitbox) associated with the Object3D</p>
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enabled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>If set to false, the Altspace cursor will not collide with this
+    object.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
     
 
     
@@ -1150,7 +1447,8 @@ possible.</p>
 
 
 <div class="description">
-    <p>The cursordown event is fired from an <a href="THREE.Object3D.html">THREE.Object3D</a> when the user's primary cursor button is pressed down over an object</p>
+    <p>The cursordown event is fired from an <a href="THREE.Object3D.html">THREE.Object3D</a> when the user's primary
+cursor button is pressed down over an object</p>
 </div>
 
 
@@ -1413,7 +1711,8 @@ moves off the object.</p>
 
 
 <div class="description">
-    <p>The cursorup event is fired from an <a href="THREE.Object3D.html">THREE.Object3D</a> when the user's primary cursor button is lifted up over an object</p>
+    <p>The cursorup event is fired from an <a href="THREE.Object3D.html">THREE.Object3D</a> when the user's primary
+cursor button is lifted up over an object</p>
 </div>
 
 
