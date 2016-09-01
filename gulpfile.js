@@ -263,7 +263,7 @@ gulp.task('del-doc', function () {
     return del('doc');
 });
 
-gulp.task('doc', ['altspace_js', 'bump-readme'], function () {
+gulp.task('doc', ['altspace_js', 'bump-readme'], function (done) {
     var argv = yargs.option(
         'clientjs',
         {
@@ -279,7 +279,7 @@ gulp.task('doc', ['altspace_js', 'bump-readme'], function () {
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }
-    return gulp.src(docfiles)
+    gulp.src(docfiles)
         .pipe(jsdoc({
             opts: {
                 destination: './doc',
@@ -292,7 +292,7 @@ gulp.task('doc', ['altspace_js', 'bump-readme'], function () {
                     layoutFile: './node_modules/minami/tmpl/layout.tmpl'
                 }
             }
-        }));
+        }, done));
 });
 
 gulp.task('watch', ['altspace_js', 'doc'], function () {
