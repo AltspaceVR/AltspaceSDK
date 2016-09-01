@@ -24,7 +24,7 @@ var gulp = require('gulp'),
     replace = require('gulp-replace'),
     wrapUmd = require('gulp-wrap-umd'),
 
-    jsdoc = require('gulp-jsdoc'),
+    jsdoc = require('gulp-jsdoc3'),
     jshint = require('gulp-jshint'),
     sourcemaps = require('gulp-sourcemaps'),
 
@@ -279,15 +279,19 @@ gulp.task('doc', ['altspace_js', 'bump-readme'], function () {
     if (argv.clientjs) {
         docfiles.push(argv.clientjs + '/*.js');
     }
-    console.log('deleting old docs');
     return gulp.src(docfiles)
-        .pipe(jsdoc('./doc', {
-            path: path.resolve('node_modules/minami'),
-            default: {
-                outputSourceFiles: false
+        .pipe(jsdoc({
+            opts: {
+                destination: './doc',
+                template: './node_modules/minami'
+            },
+            plugins: ['plugins/markdown'],
+            templates: {
+                default: {
+                    outputSourceFiles: false,
+                    layoutFile: './node_modules/minami/tmpl/layout.tmpl'
+                }
             }
-        }, {
-            plugins: ['plugins/markdown']
         }));
 });
 

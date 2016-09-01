@@ -26,7 +26,7 @@
     "gulp-bump": "1.0.0",
     "gulp-concat": "2.6.0",
     "gulp-git": "1.6.1",
-    "gulp-jsdoc": "0.1.5",
+    "gulp-jsdoc3": "^0.3.0",
     "gulp-jshint": "1.11.2",
     "gulp-print": "2.0.1",
     "gulp-prompt": "0.1.2",
