@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Document API Test</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+		<style>
+			html, body, video { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+			body { border: 1px solid red; background-color: white; display: none; }
+			#cursorFollow { position: absolute; width: 50px; height: 50px; background-color: green; }
+			li { font: 20pt sans-serif; list-style-type: none }
+		</style>
+	</head>
+	<body>
+		<ol id="logList"></ol>
+		<div id="cursorFollow"></div>
+		<script>
+			function log () {
+				var li = document.createElement('li');
+				var args = Array.prototype.slice.apply(arguments);
+				args.unshift(Date.now());
+				li.textContent = args.join(' ');
+				logList.insertBefore(li, logList.firstChild);
+			}
+
+			var sim = new altspace.utilities.Simulation({auto: false});
+
+			if (false && altspace.getDocument) {
+				altspace.getDocument().then(function (doc) {
+					doc.position.set(256, 0, 256);
+					doc.scale.set(0.25, 0.25, 0.25);
+					doc.rotateY(Math.PI/4);
+					doc.userData.altspace = {collider: {enabled: false}};
+					sim.scene.add(doc);
+					sim.renderer.render(sim.scene, sim.camera);
+					document.body.style.display = 'block';
+				});
+			}
+			else {
+				document.body.style.display = 'block';
+			}
+
+			function changeColor(down) {
+				cursorFollow.style.backgroundColor = down ? 'red' : 'green';
+			}
+			function logEvent(event) {
+				log(
+					event.type,
+					event.button,
+					event.buttons,
+					event.clientX, event.clientY,
+					event.touches,
+					event.touches && event.touches[0] && event.touches[0].clientX,
+					event.touches && event.touches[0] && event.touches[0].clientY
+				);
+			}
+			document.body.addEventListener('touchstart', logEvent);
+			document.body.addEventListener('touchend', logEvent);
+			document.body.addEventListener('touchmove', logEvent);
+
+			if (altspace.addEventListener) {
+				altspace.addEventListener('touchpadup', logEvent);
+				altspace.addEventListener('touchpaddown', logEvent);
+				altspace.addEventListener('touchpadmove', logEvent);
+				altspace.addEventListener('touchpadgesture', logEvent);
+			}
+
+			document.body.addEventListener('click', logEvent);
+
+			document.body.addEventListener('mouseup', logEvent);
+			document.body.addEventListener('mousedown', logEvent);
+			document.body.addEventListener('mousemove', function (e) {
+				logEvent(e);
+				cursorFollow.style.left = e.clientX + 'px';
+				cursorFollow.style.top = e.clientY + 'px';
+				cursorFollow.textContent = e.clientX + ', ' + e.clientY;
+			});
+		</script>
+	</body>
+</html>
+
