@@ -8,7 +8,7 @@
 	</head>
 <body>
 <a-scene altspace>
-	<a-entity id="floors">
+	<!--<a-entity id="floors">
 		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="0 0 0"></a-entity>
 		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="0 0 4"></a-entity>
 		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="4 0 0"></a-entity>
@@ -18,11 +18,77 @@
 		<a-entity native-object="asset: Architecture/FloorSlice_cCave_2R" position="-2 0.25 4" rotation="0 180 0"></a-entity>
 		<a-entity native-object="asset: Architecture/FloorSlice_cCave_2R" position="0 0.25 6" rotation="0 270 0"></a-entity>
 	</a-entity>
-	<a-entity id="spinner" position="0 2 4">
+	<a-entity id="spinner" position="0 2 4" pivot="10 5 2">
+		<a-animation attribute="rotation"
+		             dur="5000"
+		             fill="forwards"
+		             to="0 360 0"
+		             repeat="indefinite"></a-animation>
 		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 0 0"></a-entity>
 		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 90 0"></a-entity>
 		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 180 0"></a-entity>
 		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 270 0"></a-entity>
+	</a-entity>-->
+	<a-entity id="all">
+		<a-entity native-object="asset: Architecture/Ceiling_2Wx2L" 									position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_2Wx4L" 									position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_4Wx2L" 									position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_4Wx4L" 									position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Skylight_4Wx4L" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Skylight_Corner_2Wx2L" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Skylight_Edge_2W" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Skylight_Edge_4W" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Skylight_Filled_4Wx4L" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Skylight_Filled2_4Wx4L" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Slice_Concave_2R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Slice_Concave_4R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Slice_Convex_2R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Ceiling_Slice_Convex_4R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Door_4Wx4H" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_2Wx2L" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_2Wx4L" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_4Wx2L" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_4Wx4L" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_Slice_Concave_2R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_Slice_Concave_4R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_Slice_Convex_2R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_Slice_Convex_4R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Railing_2L" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Railing_4L" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Railing_Curve_Concave_2R" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_2Wx4H" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_4Wx4H" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Base_2W" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Base_4W" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Base_Curve_Concave_2R" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Base_Curve_Concave_4R" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Base_Curve_Convex_2R" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Base_Curve_Convex_4R" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Bulkhead_2W" 									position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Bulkhead_4W" 									position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Bulkhead_Curve_Concave_2R" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Bulkhead_Curve_Concave_4R" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Bulkhead_Curve_Convex_2R" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Bulkhead_Curve_Convex_4R" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Concave_2Rx4H" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Concave_4Rx4H" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Convex_2Rx4H" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Convex_4Rx4H" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Window_Concave_4Rx4H" 					position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Window_Gap_Concave_4Rx4H" 				position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Window_Gap_End_L_Concave_4Rx4H" 		position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Curve_Window_Gap_End_R_Concave_4Rx4H" 		position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Filler_Corner_Inner_4H" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Filler_Corner_Outer_4H" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_4Wx4H" 								position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_GapEnd_R_4Wx4H" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_Gap_2Wx4H" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_Gap_4Wx4H" 							position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_Gap_End_L_2Wx4H" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_Gap_End_L_4Wx4H" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window_Gap_End_R_2Wx4H" 						position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Wall_Window2" 										position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Window_Wall_Curve_Concave_4Rx4H" 					position="0 0 0"></a-entity>
 	</a-entity>
 </a-scene>
 </body>
