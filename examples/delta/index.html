@@ -1,0 +1,29 @@
+<!-- ReSharper disable Html.TagNotResolved -->
+<html>
+<head>
+	<title>Delta Editor</title>
+	<!--<script src="../build.js"></script>-->
+	<script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
+	<script src="../../dist/aframe-altspace-component.min.js"></script>
+	</head>
+<body>
+<a-scene altspace>
+	<a-entity id="floors">
+		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="0 0 4"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="4 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/Floor_4Wx4L" position="4 0 4"></a-entity>
+		<a-entity native-object="asset: Architecture/FloorSlice_cCave_2R" position="2 0.25 4"></a-entity>
+		<a-entity native-object="asset: Architecture/FloorSlice_cCave_2R" position="0 0.25 2" rotation="0 90 0"></a-entity>
+		<a-entity native-object="asset: Architecture/FloorSlice_cCave_2R" position="-2 0.25 4" rotation="0 180 0"></a-entity>
+		<a-entity native-object="asset: Architecture/FloorSlice_cCave_2R" position="0 0.25 6" rotation="0 270 0"></a-entity>
+	</a-entity>
+	<a-entity id="spinner" position="0 2 4">
+		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 0 0"></a-entity>
+		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 90 0"></a-entity>
+		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 180 0"></a-entity>
+		<a-entity native-object="asset: Architecture/WallCurveWindow_cCave_4Rx4H" position="4 0 4" rotation="0 270 0"></a-entity>
+	</a-entity>
+</a-scene>
+</body>
+</html>

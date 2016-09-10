@@ -2,6 +2,26 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+
+
+AFRAME.registerComponent('native-object', {
+	schema: {
+		asset: { type: 'string' }
+	},
+	init: function () {
+		altspace.instantiateNativeObject(this.data.asset).then(function (nativeObject) {
+			this.el.setObject3D('nativeObject', nativeObject);
+		}.bind(this));
+	},
+	update: function (oldData) {
+	},
+	remove: function () {
+		this.el.removeObject3D('nativeObject');
+	}
+});
+
+
+
 /**
  * aframe-altspace-component component for A-Frame.
  */
@@ -25,8 +45,10 @@ AFRAME.registerComponent('altspace', {
     }
 
     if (window.altspace && window.altspace.inClient) {
-      this.initRenderer();
-      this.initCursorEvents();
+	    this.initRenderer();
+	    this.initCursorEvents();
+    } else {
+    	console.warn('aframe-altspace-component only works inside of AltspaceVR');
     }
 
   },
