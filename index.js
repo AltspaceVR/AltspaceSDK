@@ -2,28 +2,24 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 AFRAME.registerComponent('editor', {
-	schema: { },
 	init: function () {
-	  document.querySelector('a-scene').object3D.addEventListener('cursordown', function (event) {
-	    this.selectedObject = event.target;
-          window.addEventListener('keydown', function (event) {
-            if (!this.selectedObject) { return; }
-	    var el = this.selectedObject.el
-	    var pos = Object.assign({}, el.components.position.data);
-	    switch (event.keyCode) {
-	      case 'I'.charCodeAt(0): pos.z--; break;
-	      case 'J'.charCodeAt(0): pos.x--; break;
-	      case 'K'.charCodeAt(0): pos.z++; break;
-	      case 'L'.charCodeAt(0): pos.x++; break;
-	      case 'P'.charCodeAt(0): pos.y+=0.25; break;
-	      case ';'.charCodeAt(0): pos.y-=0.25; break;
-	    }
-            el.setAttribute('position', pos);
-          }.bind(this));
-	},
-	update: function () {
-	},
-	remove: function () {
+		document.querySelector('a-scene').object3D.addEventListener('cursordown', function (event) {
+			this.selectedObject = event.target;
+		}.bind(this));
+		window.addEventListener('keydown', function (event) {
+			if (!this.selectedObject) { return; }
+			var el = this.selectedObject.el
+			var pos = Object.assign({}, el.components.position.data);
+			switch (event.keyCode) {
+				case 'I'.charCodeAt(0): pos.z--; break;
+				case 'J'.charCodeAt(0): pos.x--; break;
+				case 'K'.charCodeAt(0): pos.z++; break;
+				case 'L'.charCodeAt(0): pos.x++; break;
+				case 'P'.charCodeAt(0): pos.y+=0.25; break;
+				case ';'.charCodeAt(0): pos.y-=0.25; break;
+			}
+			el.setAttribute('position', pos);
+		}.bind(this));
 	}
 });
 
