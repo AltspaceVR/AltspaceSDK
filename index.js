@@ -2,41 +2,41 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 AFRAME.registerComponent('editor', {
-	init: function () {
-		document.querySelector('a-scene').object3D.addEventListener('cursordown', function (event) {
-			this.selectedObject = event.target;
-		}.bind(this));
-		window.addEventListener('keydown', function (event) {
-			if (!this.selectedObject) { return; }
-			var el = this.selectedObject.el
-			var pos = Object.assign({}, el.components.position.data);
-			switch (event.keyCode) {
-				case 'I'.charCodeAt(0): pos.z--; break;
-				case 'J'.charCodeAt(0): pos.x--; break;
-				case 'K'.charCodeAt(0): pos.z++; break;
-				case 'L'.charCodeAt(0): pos.x++; break;
-				case 'P'.charCodeAt(0): pos.y+=0.25; break;
-				case ';'.charCodeAt(0): pos.y-=0.25; break;
-			}
-			el.setAttribute('position', pos);
-		}.bind(this));
-	}
+  init: function () {
+    document.querySelector('a-scene').object3D.addEventListener('cursordown', function (event) {
+      this.selectedObject = event.target;
+    }.bind(this));
+    window.addEventListener('keydown', function (event) {
+      if (!this.selectedObject) { return; }
+      var el = this.selectedObject.el
+      var pos = Object.assign({}, el.components.position.data);
+      switch (event.keyCode) {
+        case 'I'.charCodeAt(0): pos.z--; break;
+        case 'J'.charCodeAt(0): pos.x--; break;
+        case 'K'.charCodeAt(0): pos.z++; break;
+        case 'L'.charCodeAt(0): pos.x++; break;
+        case 'P'.charCodeAt(0): pos.y+=0.25; break;
+        case ';'.charCodeAt(0): pos.y-=0.25; break;
+      }
+      el.setAttribute('position', pos);
+    }.bind(this));
+  }
 });
 
 AFRAME.registerComponent('native-object', {
-	schema: {
-		asset: { type: 'string' }
-	},
-	init: function () {
-		altspace.instantiateNativeObject(this.data.asset).then(function (nativeObject) {
-			this.el.setObject3D('nativeObject', nativeObject);
-		}.bind(this));
-	},
-	update: function (oldData) {
-	},
-	remove: function () {
-		this.el.removeObject3D('nativeObject');
-	}
+  schema: {
+    asset: { type: 'string' }
+  },
+  init: function () {
+    altspace.instantiateNativeObject(this.data.asset).then(function (nativeObject) {
+      this.el.setObject3D('nativeObject', nativeObject);
+    }.bind(this));
+  },
+  update: function (oldData) {
+  },
+  remove: function () {
+    this.el.removeObject3D('nativeObject');
+  }
 });
 
 /**
@@ -62,10 +62,10 @@ AFRAME.registerComponent('altspace', {
     }
 
     if (window.altspace && window.altspace.inClient) {
-	    this.initRenderer();
-	    this.initCursorEvents();
+      this.initRenderer();
+      this.initCursorEvents();
     } else {
-    	console.warn('aframe-altspace-component only works inside of AltspaceVR');
+      console.warn('aframe-altspace-component only works inside of AltspaceVR');
     }
 
   },
