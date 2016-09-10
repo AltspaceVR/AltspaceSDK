@@ -1,8 +1,31 @@
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
-
-
+AFRAME.registerComponent('editor', {
+	schema: { },
+	init: function () {
+	  document.querySelector('a-scene').object3D.addEventListener('cursordown', function (event) {
+	    this.selectedObject = event.target;
+          window.addEventListener('keydown', function (event) {
+            if (!this.selectedObject) { return; }
+	    var el = this.selectedObject.el
+	    var pos = Object.assign({}, el.components.position.data);
+	    switch (event.keyCode) {
+	      case 'I'.charCodeAt(0): pos.z--; break;
+	      case 'J'.charCodeAt(0): pos.x--; break;
+	      case 'K'.charCodeAt(0): pos.z++; break;
+	      case 'L'.charCodeAt(0): pos.x++; break;
+	      case 'P'.charCodeAt(0): pos.y+=0.25; break;
+	      case ';'.charCodeAt(0): pos.y-=0.25; break;
+	    }
+            el.setAttribute('position', pos);
+          }.bind(this));
+	},
+	update: function () {
+	},
+	remove: function () {
+	}
+});
 
 AFRAME.registerComponent('native-object', {
 	schema: {
@@ -20,8 +43,6 @@ AFRAME.registerComponent('native-object', {
 	}
 });
 
-
-
 /**
  * aframe-altspace-component component for A-Frame.
  */
@@ -30,7 +51,7 @@ AFRAME.registerComponent('altspace', {
   /**
    * usePixelScale will allow you to use A-Frame units as CSS pixels. This is the default behavior for three.js apps, but not for A-Frame apps.  verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
    */
-  schema: { 
+  schema: {
     usePixelScale: { type: 'boolean', default: 'false'},
     verticalAlign: { type: 'string', default: 'middle'}
   },
@@ -128,7 +149,7 @@ AFRAME.registerComponent('altspace', {
     renderer.context = {canvas: {}};
     renderer.shadowMap = {};
 
-  },  
+  },
 
   /**
    * Emulate A-Frame cursor events when running in altspaceVR.
@@ -137,7 +158,7 @@ AFRAME.registerComponent('altspace', {
 
     var scene = this.el.object3D;
     var cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
-    if (cursorEl) { 
+    if (cursorEl) {
       // Hide A-Frame cursor mesh.
       cursorEl.setAttribute('material', 'transparent', true);
       cursorEl.setAttribute('material', 'opacity', 0.0);
