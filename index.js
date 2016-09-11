@@ -4,7 +4,10 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('editor', {
   _setSelectedObject: function (event) {
       if(event.target.el.dataset.editorAsset) { return; }
-      if (this.placingObject) { this.placingObject = null; }
+      if (this.placingObject) {
+        this.placingObject = null;
+      this.raycastFloor.userData.altspace.collider.enabled = false;
+      }
       this.selectedObject = event.target;
   },
   _moveSelectedObject: function (event) {
@@ -23,11 +26,12 @@ AFRAME.registerComponent('editor', {
   },
   _placeObject: function (event) {
     if (!this.placingObject) { return; }
+    this.raycastFloor.userData.altspace.collider.enabled = true;
     this.raycaster.set(event.ray.origin, event.ray.direction);
     var intersection = this.raycaster.intersectObject(this.raycastFloor)[0];
     if (!intersection) { return; }
     var pos = intersection.point.clone().multiplyScalar(1/this.scene.object3D.scale.x);
-    pos.x = Math.floor(pos.x);
+    pos.x = Math.ceil(pos.x);
     pos.z = Math.floor(pos.z);
     pos.x += 0.5;
     pos.z -= 0.5;
