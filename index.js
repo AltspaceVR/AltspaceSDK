@@ -26,7 +26,12 @@ AFRAME.registerComponent('editor', {
     this.raycaster.set(event.ray.origin, event.ray.direction);
     var intersection = this.raycaster.intersectObject(this.raycastFloor)[0];
     if (!intersection) { return; }
-    this.placingObject.setAttribute('position',  intersection.point.clone().multiplyScalar(1/this.scene.object3D.scale.x));
+    var pos = intersection.point.clone().multiplyScalar(1/this.scene.object3D.scale.x);
+    pos.x = Math.floor(pos.x);
+    pos.z = Math.floor(pos.z);
+    pos.x += 0.5;
+    pos.z -= 0.5;
+    this.placingObject.setAttribute('position',  pos);
   },
   _assets: [
     'Architecture/Ceiling_2Wx2L',
@@ -127,7 +132,7 @@ AFRAME.registerComponent('editor', {
     window.addEventListener('keydown', this._moveSelectedObject.bind(this));
 
     this.raycastFloor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({color: 'white'}));
-    //this.raycastFloor.material.visible = false;
+    this.raycastFloor.material.visible = false;
     this.raycastFloor.userData.altspace = {collider: {enabled: false}};
 
     // Hack so that we avoid errors about this non-aframe object
