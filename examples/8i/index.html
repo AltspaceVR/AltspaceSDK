@@ -226,7 +226,6 @@
 				</a-entity>
 			</a-entity>
 		</a-entity>
-
 		<a-entity class="walls-half" position="0, 0, -20" rotation="0 180 0">
 			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -26" scale="-1 1 1"></n-entity>
 			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -18" scale="-1 1 1"></n-entity>
@@ -266,6 +265,131 @@
 				</a-entity>
 			</a-entity>
 		</a-entity>
+		
+		<a-entity class="display-case" position="0 0 -20">
+			<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Toolbar": "None" }' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
+			<!-- <n-entity asset="System/Browser" attributes='{"Url": "http://8i.com/viewer/9mw"}' position="0 2.3 0" rotation="0 90 0" scale="5 5 5"></n-entity> -->
+			<a-entity class="geometry" position="0 0 0">
+				<n-entity asset="Colliders/CapsuleNavigable" position="0 2 0" scale="8.4 8.4 8.4"></n-entity>
+				<a-entity class="ceiling" position="0 -0.25 0">
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="4 4 0"></n-entity>
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 4 -4" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="-4 4 0" rotation="0 180 0"></n-entity>
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 4 4" rotation="0 270 0"></n-entity>
+				</a-entity>
+				<a-entity class="floor" position="0 0.25 0">
+					<a-entity scale="1.5 1 1.5">
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="4 0 0"></n-entity>
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 0 -4" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="-4 0 0" rotation="0 180 0"></n-entity>
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 0 4" rotation="0 270 0"></n-entity>
+					</a-entity>
+
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="2 0.25 0"></n-entity>
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
+				</a-entity>
+				<a-entity class="rings">
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="4 0 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 0 -4" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="-4 0 0" rotation="0 180 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 0 4" rotation="0 270 0"></n-entity>
+
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="4 0 0" rotation="0 270 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 -4"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="-4 0 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 4" rotation="0 180 0"></n-entity>
+
+					<a-entity class="inner">
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 2" rotation="0 180 0"></n-entity>
+
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="2 0.25 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
+					</a-entity>
+
+					<a-entity class="inner-upper" position="0 8 0" rotation="180 0 0">
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 2" rotation="0 180 0"></n-entity>
+
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="2 0.25 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
+					</a-entity>
+				</a-entity>
+			</a-entity>
+		</a-entity>
+	
+		<a-entity class="display-case" position="0 0 0">
+			<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Toolbar": "None" }' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
+			<!-- <n-entity asset="System/Browser" attributes='{"Url": "http://8i.com/viewer/Vbr"}' position="0 2.25 0" rotation="0 90 0" scale="5 5 5"></n-entity> -->
+			<a-entity class="geometry" position="0 0 0">
+				<n-entity asset="Colliders/CapsuleNavigable" position="0 2 0" scale="8.4 8.4 8.4"></n-entity>
+				<a-entity class="ceiling" position="0 -0.25 0">
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="4 4 0"></n-entity>
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 4 -4" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="-4 4 0" rotation="0 180 0"></n-entity>
+					<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 4 4" rotation="0 270 0"></n-entity>
+				</a-entity>
+				<a-entity class="floor" position="0 0.25 0">
+					<a-entity scale="1.5 1 1.5">
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="4 0 0"></n-entity>
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 0 -4" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="-4 0 0" rotation="0 180 0"></n-entity>
+						<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 0 4" rotation="0 270 0"></n-entity>
+					</a-entity>
+
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="2 0.25 0"></n-entity>
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
+					<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
+				</a-entity>
+				<a-entity class="rings">
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="4 0 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 0 -4" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="-4 0 0" rotation="0 180 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 0 4" rotation="0 270 0"></n-entity>
+
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="4 0 0" rotation="0 270 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 -4"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="-4 0 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 4" rotation="0 180 0"></n-entity>
+
+					<a-entity class="inner">
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 2" rotation="0 180 0"></n-entity>
+
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="2 0.25 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
+					</a-entity>
+
+					<a-entity class="inner-upper" position="0 8 0" rotation="180 0 0">
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 2" rotation="0 180 0"></n-entity>
+
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="2 0.25 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
+						<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
+					</a-entity>
+				</a-entity>
+			</a-entity>
+		</a-entity>
+
 	</a-entity>
 
 </a-scene>
