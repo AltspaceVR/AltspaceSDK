@@ -200,14 +200,35 @@
 
 	AFRAME.registerComponent('native', {
 	  schema: {
-		asset: { type: 'string' }
+		asset: { type: 'string' },
+	  	attributes: {
+	  		type: 'string',
+	  		/*parse: function (value) {
+				var ret;
+				  try {
+					  ret = JSON.parse(value);
+				  } catch (e) {}
+				  return ret;
+	  		},
+	  		stringify: function (value) {
+	  			var ret;
+	  			try {
+	  				ret = JSON.stringify(value);
+	  			} catch (e) { }
+	  			return ret;
+	  		}*/
+		  }
 	  },
 	  init: function () {
-	    altspace.instantiateNativeObject(this.data.asset).then(function (nativeObject) {
-	      this.el.setObject3D('native', nativeObject);
-	    }.bind(this));
+	    this.el.setObject3D('native', altspace.instantiateNativeObject(this.data.asset));
 	  },
 	  update: function (oldData) {
+	  	if (this.data.attributes) {
+	  		altspace._internal.callClientFunction('UpdateNativeAttributes', {
+	  			MeshId: this.el.object3DMap.native.id,
+	  			Attributes: this.data.attributes
+	  		}, { argsType: 'JSTypeUpdateNativeAttributes' });
+		}
 	  },
 	  remove: function () {
 	    this.el.removeObject3D('native');
@@ -215,6 +236,9 @@
 	});
 
 	//Use selector for teleporting
+	//The attributes may just be better strongly typed. Hmm hard call.
+	//Maybe some things are just only Primitives like browsers, and some can be used like components (if they are actually native components)
+	//Primitives for native 
 
 	//TODO: Bug in AFRAME 2.0
 	//AFRAME.registerPrimitive('n-browser', {
@@ -225,20 +249,21 @@
 	//	}
 	//});
 
-	AFRAME.registerPrimitive('n-browser', {
-		defaultAttributes: {
-			native: { asset: 'System/Browser' }
-		},
-		mappings: {
-		}
-	});
+	//AFRAME.registerPrimitive('n-browser', {
+	//	defaultComponents: {
+	//		native: { asset: 'System/Browser' }
+	//	},
+	//	mappings: {
+	//	}
+	//});
 
 	AFRAME.registerPrimitive('n-entity', {
 		defaultComponents: {
 			native: {}
 		},
 		mappings: {
-			asset: 'native.asset'
+			asset: 'native.asset',
+			attributes: 'native.attributes'
 		}
 	});
 
