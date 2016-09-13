@@ -267,7 +267,7 @@
 		</a-entity>
 		
 		<a-entity class="display-case" position="0 0 -20">
-			<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Toolbar": "None" }' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
+			<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Controls": "Hidden" }' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
 			<!-- <n-entity asset="System/Browser" attributes='{"Url": "http://8i.com/viewer/9mw"}' position="0 2.3 0" rotation="0 90 0" scale="5 5 5"></n-entity> -->
 			<a-entity class="geometry" position="0 0 0">
 				<n-entity asset="Colliders/CapsuleNavigable" position="0 2 0" scale="8.4 8.4 8.4"></n-entity>
@@ -302,6 +302,9 @@
 					<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 4" rotation="0 180 0"></n-entity>
 
 					<a-entity class="inner">
+						<a-animation attribute="rotation" dur="5000" to="0 360 0" repeat="indefinite"></a-animation>
+						<a-animation attribute="position" dur="5000" direction="alternate-reverse" to="0 -0.5 0" repeat="indefinite"></a-animation>
+
 						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
 						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
 						<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
@@ -329,7 +332,7 @@
 		</a-entity>
 	
 		<a-entity class="display-case" position="0 0 0">
-			<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Toolbar": "None" }' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
+			<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Controls": "Hidden"}' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
 			<!-- <n-entity asset="System/Browser" attributes='{"Url": "http://8i.com/viewer/Vbr"}' position="0 2.25 0" rotation="0 90 0" scale="5 5 5"></n-entity> -->
 			<a-entity class="geometry" position="0 0 0">
 				<n-entity asset="Colliders/CapsuleNavigable" position="0 2 0" scale="8.4 8.4 8.4"></n-entity>
