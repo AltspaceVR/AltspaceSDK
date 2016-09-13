@@ -194,6 +194,7 @@ AFRAME.registerComponent('native', {
 //Maybe some things are just only Primitives like browsers, and some can be used like components (if they are actually native components)
 //Primitives for native 
 //Demo by remaking D&D including the Tomes
+//Point Layout enclsure url at github repo
 
 //TODO: Bug in AFRAME 2.0
 //AFRAME.registerPrimitive('n-browser', {
