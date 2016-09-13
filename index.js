@@ -152,20 +152,48 @@ AFRAME.registerComponent('editor', {
   }
 });
 
-AFRAME.registerComponent('native-object', {
+AFRAME.registerComponent('native', {
   schema: {
-    asset: { type: 'string' }
+	asset: { type: 'string' }
   },
   init: function () {
     altspace.instantiateNativeObject(this.data.asset).then(function (nativeObject) {
-      this.el.setObject3D('nativeObject', nativeObject);
+      this.el.setObject3D('native', nativeObject);
     }.bind(this));
   },
   update: function (oldData) {
   },
   remove: function () {
-    this.el.removeObject3D('nativeObject');
+    this.el.removeObject3D('native');
   }
+});
+
+//Use selector for teleporting
+
+//TODO: Bug in AFRAME 2.0
+//AFRAME.registerPrimitive('n-browser', {
+//	defaultComponents: {
+//		native: { asset: 'System/Browser' }
+//	},
+//	mappings: {
+//	}
+//});
+
+AFRAME.registerPrimitive('n-browser', {
+	defaultAttributes: {
+		native: { asset: 'System/Browser' }
+	},
+	mappings: {
+	}
+});
+
+AFRAME.registerPrimitive('n-entity', {
+	defaultComponents: {
+		native: {}
+	},
+	mappings: {
+		asset: 'native.asset'
+	}
 });
 
 /**
