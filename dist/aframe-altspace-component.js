@@ -49,14 +49,16 @@
 	}
 
 	/**
-	 * aframe-altspace-component component for A-Frame.
+	 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 	 */
 	AFRAME.registerComponent('altspace', {
 
 	  /**
-	   * usePixelScale will allow you to use A-Frame units as CSS pixels. This is the default behavior for three.js apps, but not for A-Frame apps.  verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
+	   * usePixelScale will allow you to use A-Frame units as CSS pixels.
+	   * This is the default behavior for three.js apps, but not for A-Frame apps.
+	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
 	   */
-	  schema: { 
+	  schema: {
 	    usePixelScale: { type: 'boolean', default: 'false'},
 	    verticalAlign: { type: 'string', default: 'middle'}
 	  },
@@ -71,6 +73,7 @@
 	    }
 
 	    if (window.altspace && window.altspace.inClient) {
+	      this.el.setAttribute('vr-mode-ui', {enabled: false});
 	      this.initRenderer();
 	      this.initCursorEvents();
 	    }
@@ -82,7 +85,6 @@
 	   * Generally modifies the entity based on the data.
 	   */
 	  update: function (oldData) {
-
 	  },
 
 	  /**
@@ -137,7 +139,7 @@
 	        }
 	      });
 	    }
-	    var renderer = this.el.renderer = altspace.getThreeJSRenderer();
+	    var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
 	    var noop = function() {};
 	    renderer.setSize = noop;
 	    renderer.setPixelRatio = noop;
@@ -152,7 +154,7 @@
 	    renderer.context = {canvas: {}};
 	    renderer.shadowMap = {};
 
-	  },  
+	  },
 
 	  /**
 	   * Emulate A-Frame cursor events when running in altspaceVR.
@@ -161,7 +163,7 @@
 
 	    var scene = this.el.object3D;
 	    var cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
-	    if (cursorEl) { 
+	    if (cursorEl) {
 	      // Hide A-Frame cursor mesh.
 	      cursorEl.setAttribute('material', 'transparent', true);
 	      cursorEl.setAttribute('material', 'opacity', 0.0);
@@ -169,8 +171,8 @@
 
 	    var emit = function(eventName, targetEl) {
 	      // Fire events on intersected object and A-Frame cursor.
-	      if (targetEl) targetEl.emit(eventName, {target: targetEl});
 	      if (cursorEl) cursorEl.emit(eventName, {target: targetEl});
+	      if (targetEl) targetEl.emit(eventName, {target: targetEl});
 	    } ;
 
 	    var cursordownObj = null;
@@ -188,12 +190,14 @@
 	    });
 
 	    scene.addEventListener('cursorenter', function(event) {
+	      if (!event.target.el) { return; }
 	      event.target.el.addState('hovered');
 	      if (cursorEl) cursorEl.addState('hovering');
 	      emit('mouseenter', event.target.el);
 	    });
 
 	    scene.addEventListener('cursorleave', function(event) {
+	      if (!event.target.el) { return; }
 	      event.target.el.removeState('hovered');
 	      if (cursorEl) cursorEl.removeState('hovering');
 	      emit('mouseleave', event.target.el);

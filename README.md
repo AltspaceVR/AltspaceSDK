@@ -4,7 +4,7 @@ Component to make an [A-Frame](https://aframe.io) scene compatible with [Altspac
 
 Live examples: http://altspacevr.github.io/aframe/examples/ (forked from [aframevr/aframe](https://github.com/aframevr/aframe))
 
-Note that when running in Altspace, the scene will not be synchronized between users.  In addition, some A-Frame features are currently not supported in Altspace, such as lighting and video.  For details, see the [Three.js Feature Support](http://github.com/AltspaceVR/AltspaceSDK#threejs-feature-support) section in the [AltspaceSDK](http://github.com/AltspaceVR/AltspaceSDK) repo. 
+Note that when running in Altspace, the scene will not be synchronized between users.  In addition, some A-Frame features are currently not supported in Altspace, such as lighting and video.  For details, see the [Three.js Feature Support](http://github.com/AltspaceVR/AltspaceSDK#threejs-feature-support) section in the [AltspaceSDK](http://github.com/AltspaceVR/AltspaceSDK) repo.
 
 ### Properties
 
@@ -24,8 +24,8 @@ Install and use by directly including the [browser files](dist):
 ```html
 <head>
   <title>My A-Frame Scene</title>
-  <script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
-  <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v0.2.2/dist/aframe-altspace-component.min.js"></script>
+  <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v0.3.0/dist/aframe-altspace-component.min.js"></script>
 </head>
 
 <body>
