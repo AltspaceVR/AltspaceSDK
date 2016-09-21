@@ -160,3 +160,13 @@ AFRAME.registerComponent('altspace', {
   },
 
 });
+
+AFRAME.registerComponent('altspace-tracked-controls', {
+  update: function () {
+      if (window.altspace && altspace.getGamepads) {
+        this.el.setAttribute('tracked-controls', 'controller', 0);
+        var gamepadIndex = this.el.components['hand-controls'].data === 'left' ? 2 : 1;
+        this.el.setAttribute('tracked-controls', 'id', altspace.getGamepads()[gamepadIndex].id);
+      }
+  }
+});
