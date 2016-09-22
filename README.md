@@ -14,8 +14,8 @@ Note that when running in Altspace, the scene will not be synchronized between u
 | `verticalAlign` | Puts the scene origin at the bottom, middle, or top of the Altspace enclosure.  If your scene seems to be floating in midair, try setting this to 'bottom'. | `middle`
 
 ### Usage
-Add the "altspace" parameter on your `<a-scene>` like so: `<a-scene altspace>`
 
+Add the "altspace" attribute on your `<a-scene>` like so: `<a-scene altspace>`
 
 #### Example
 
@@ -33,4 +33,17 @@ Install and use by directly including the [browser files](dist):
     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
   </a-scene>
 </body>
+```
+
+## altspace-tracked-controls
+
+This library also includes an `altspace-tracked-controls` component that enables tracked control support for A-Frame
+applications that use the built-in `tracked-controls`, `vive-controls` or `hand-controls` components.
+
+### Usage
+
+Add the "altspace-tracked-controls" attribute to your tracked entity. For example:
+
+```html
+<a-entity hand-controls="right" altspace-tracked-controls></a-entity>
 ```
