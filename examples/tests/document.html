@@ -8,7 +8,7 @@
 		<style>
 			html, body, video { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
 			body { border: 1px solid red; background-color: white; display: none; }
-			#cursorFollow { position: absolute; width: 50px; height: 50px; background-color: green; }
+			#cursorFollow { position: absolute; width: 50px; height: 50px; background-color: green; top: 0; right: 0; }
 			li { font: 20pt sans-serif; list-style-type: none }
 		</style>
 	</head>
@@ -26,7 +26,7 @@
 
 			var sim = new altspace.utilities.Simulation({auto: false});
 
-			if (false && altspace.getDocument) {
+			if (altspace.getDocument) {
 				altspace.getDocument().then(function (doc) {
 					doc.position.set(256, 0, 256);
 					doc.scale.set(0.25, 0.25, 0.25);
@@ -56,25 +56,27 @@
 					event.touches && event.touches[0] && event.touches[0].clientY
 				);
 			}
-			document.body.addEventListener('touchstart', logEvent);
-			document.body.addEventListener('touchend', logEvent);
-			document.body.addEventListener('touchmove', logEvent);
+			//document.body.addEventListener('touchstart', logEvent);
+			//document.body.addEventListener('touchend', logEvent);
+			// document.body.addEventListener('touchmove', logEvent);
 
-			if (altspace.addEventListener) {
+			if (altspace.addEventListener && /mobile/i.test(navigator.userAgent)) {
 				altspace.addEventListener('touchpadup', logEvent);
 				altspace.addEventListener('touchpaddown', logEvent);
-				altspace.addEventListener('touchpadmove', logEvent);
-				altspace.addEventListener('touchpadgesture', logEvent);
+				// altspace.addEventListener('touchpadmove', logEvent);
+				//altspace.addEventListener('touchpadgesture', logEvent);
 			}
 
-			document.body.addEventListener('click', logEvent);
+			//document.body.addEventListener('click', logEvent);
 
+			if (!/mobile/i.test(navigator.userAgent)) {
 			document.body.addEventListener('mouseup', logEvent);
 			document.body.addEventListener('mousedown', logEvent);
+			}
 			document.body.addEventListener('mousemove', function (e) {
 				//logEvent(e);
-				cursorFollow.style.left = e.clientX + 'px';
-				cursorFollow.style.top = e.clientY + 'px';
+				// cursorFollow.style.left = e.clientX + 'px';
+				// cursorFollow.style.top = e.clientY + 'px';
 				cursorFollow.textContent = e.clientX + ', ' + e.clientY;
 			});
 		</script>
