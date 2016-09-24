@@ -32,6 +32,7 @@
 					doc.scale.set(0.25, 0.25, 0.25);
 					doc.rotateY(Math.PI/4);
 					doc.userData.altspace = {collider: {enabled: false}};
+					doc.inputEnabled = true;
 					sim.scene.add(doc);
 					sim.renderer.render(sim.scene, sim.camera);
 					document.body.style.display = 'block';
@@ -71,7 +72,7 @@
 			document.body.addEventListener('mouseup', logEvent);
 			document.body.addEventListener('mousedown', logEvent);
 			document.body.addEventListener('mousemove', function (e) {
-				logEvent(e);
+				//logEvent(e);
 				cursorFollow.style.left = e.clientX + 'px';
 				cursorFollow.style.top = e.clientY + 'px';
 				cursorFollow.textContent = e.clientX + ', ' + e.clientY;
