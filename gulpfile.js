@@ -276,9 +276,8 @@ gulp.task('doc', ['altspace_js', 'bump-readme'], function (done) {
 		argv.clientjs = '../UnityClient/js/src';
 	}
 
-	if (argv.clientjs) {
-		docfiles.push(argv.clientjs + '/*.js');
-	}
+	docfiles.push(argv.clientjs + '/*.js');
+	docfiles.push(argv.clientjs + '/apis/*.js');
 	gulp.src(docfiles)
 		.pipe(jsdoc({
 			opts: {

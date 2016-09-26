@@ -14,6 +14,8 @@
         "no-param-reassign": 0,
 		"indent": [1, "tab"],
 		"no-console": 0,
+		"global-require": 0,
+		"one-var": 0,
 		"comma-dangle": 0,
 		// TODO: Re-enable these rules when existing lint is removed
 		"no-unused-vars": 0,
