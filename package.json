@@ -19,6 +19,7 @@
     "conventional-github-releaser": "0.5.1",
     "del": "2.2.0",
     "eslint": "^2.6.0",
+    "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-html": "^1.4.0",
     "gulp": "3.9.0",
     "gulp-awspublish": "3.0.1",
