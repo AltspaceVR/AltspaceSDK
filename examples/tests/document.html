@@ -16,7 +16,7 @@
 		<ol id="logList"></ol>
 		<div id="cursorFollow"></div>
 		<script>
-			function log () {
+			function log() {
 				var li = document.createElement('li');
 				var args = Array.prototype.slice.apply(arguments);
 				args.unshift(Date.now());
@@ -24,59 +24,41 @@
 				logList.insertBefore(li, logList.firstChild);
 			}
 
-			var sim = new altspace.utilities.Simulation({auto: false});
+			var sim = new altspace.utilities.Simulation({ auto: false });
 
 			if (altspace.getDocument) {
 				altspace.getDocument().then(function (doc) {
 					doc.position.set(256, 0, 256);
 					doc.scale.set(0.25, 0.25, 0.25);
-					doc.rotateY(Math.PI/4);
-					doc.userData.altspace = {collider: {enabled: false}};
+					doc.rotateY(Math.PI / 4);
 					doc.inputEnabled = true;
 					sim.scene.add(doc);
 					sim.renderer.render(sim.scene, sim.camera);
 					document.body.style.display = 'block';
 				});
-			}
-			else {
+			} else {
 				document.body.style.display = 'block';
 			}
 
-			function changeColor(down) {
-				cursorFollow.style.backgroundColor = down ? 'red' : 'green';
-			}
 			function logEvent(event) {
 				log(
 					event.type,
 					event.button,
 					event.buttons,
-					event.clientX, event.clientY,
-					event.touches,
-					event.touches && event.touches[0] && event.touches[0].clientX,
-					event.touches && event.touches[0] && event.touches[0].clientY
+					event.clientX, event.clientY
 				);
 			}
-			//document.body.addEventListener('touchstart', logEvent);
-			//document.body.addEventListener('touchend', logEvent);
-			// document.body.addEventListener('touchmove', logEvent);
 
-			if (altspace.addEventListener && /mobile/i.test(navigator.userAgent)) {
+			var isMobile = /mobile/i.test(navigator.userAgent);
+			if (altspace.addEventListener && isMobile) {
 				altspace.addEventListener('touchpadup', logEvent);
 				altspace.addEventListener('touchpaddown', logEvent);
-				// altspace.addEventListener('touchpadmove', logEvent);
-				//altspace.addEventListener('touchpadgesture', logEvent);
 			}
-
-			//document.body.addEventListener('click', logEvent);
-
-			if (!/mobile/i.test(navigator.userAgent)) {
-			document.body.addEventListener('mouseup', logEvent);
-			document.body.addEventListener('mousedown', logEvent);
+			if (!isMobile) {
+				document.body.addEventListener('mouseup', logEvent);
+				document.body.addEventListener('mousedown', logEvent);
 			}
 			document.body.addEventListener('mousemove', function (e) {
-				//logEvent(e);
-				// cursorFollow.style.left = e.clientX + 'px';
-				// cursorFollow.style.top = e.clientY + 'px';
 				cursorFollow.textContent = e.clientX + ', ' + e.clientY;
 			});
 		</script>
