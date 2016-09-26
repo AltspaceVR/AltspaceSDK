@@ -295,12 +295,14 @@
 	});
 
 	/**
-	 * aframe-altspace-component component for A-Frame.
+	 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 	 */
 	AFRAME.registerComponent('altspace', {
 
 	  /**
-	   * usePixelScale will allow you to use A-Frame units as CSS pixels. This is the default behavior for three.js apps, but not for A-Frame apps.  verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
+	   * usePixelScale will allow you to use A-Frame units as CSS pixels.
+	   * This is the default behavior for three.js apps, but not for A-Frame apps.
+	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
 	   */
 	  schema: {
 	    usePixelScale: { type: 'boolean', default: 'false'},
@@ -317,6 +319,7 @@
 	    }
 
 	    if (window.altspace && window.altspace.inClient) {
+	      this.el.setAttribute('vr-mode-ui', {enabled: false});
 	      this.initRenderer();
 	      this.initCursorEvents();
 	    } else {
@@ -330,7 +333,6 @@
 	   * Generally modifies the entity based on the data.
 	   */
 	  update: function (oldData) {
-
 	  },
 
 	  /**
@@ -385,7 +387,7 @@
 	        }
 	      });
 	    }
-	    var renderer = this.el.renderer = altspace.getThreeJSRenderer();
+	    var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
 	    var noop = function() {};
 	    renderer.setSize = noop;
 	    renderer.setPixelRatio = noop;
@@ -417,8 +419,8 @@
 
 	    var emit = function(eventName, targetEl) {
 	      // Fire events on intersected object and A-Frame cursor.
-	      if (targetEl) targetEl.emit(eventName, {target: targetEl});
 	      if (cursorEl) cursorEl.emit(eventName, {target: targetEl});
+	      if (targetEl) targetEl.emit(eventName, {target: targetEl});
 	    } ;
 
 	    var cursordownObj = null;
@@ -436,12 +438,14 @@
 	    });
 
 	    scene.addEventListener('cursorenter', function(event) {
+	      if (!event.target.el) { return; }
 	      event.target.el.addState('hovered');
 	      if (cursorEl) cursorEl.addState('hovering');
 	      emit('mouseenter', event.target.el);
 	    });
 
 	    scene.addEventListener('cursorleave', function(event) {
+	      if (!event.target.el) { return; }
 	      event.target.el.removeState('hovered');
 	      if (cursorEl) cursorEl.removeState('hovering');
 	      emit('mouseleave', event.target.el);
@@ -449,6 +453,39 @@
 
 	  },
 
+	});
+
+	AFRAME.registerComponent('altspace-tracked-controls', {
+	  init: function () {
+	    this.gamepadIndex = null;
+	    this.trackedControlsSystem = document.querySelector('a-scene').systems['tracked-controls'];
+	    this.systemGamepads = 0;
+	    altspace.getGamepads();
+	  },
+	  tick: function () {
+	      if (
+	        this.trackedControlsSystem &&
+	        this.systemGamepads !== this.trackedControlsSystem.controllers.length &&
+	        window.altspace && altspace.getGamepads && altspace.getGamepads().length
+	      ) {
+	        var components = this.el.components;
+	        if (components['paint-controls']) {
+	          this.gamepadIndex = components['paint-controls'].data.hand === 'left' ? 2 : 1;
+	        }
+	        if (this.gamepadIndex === null && components['hand-controls']) {
+	          this.gamepadIndex = components['hand-controls'].data === 'left' ? 2 : 1;
+	        }
+	        if (this.gamepadIndex === null && components['vive-controls']) {
+	          this.gamepadIndex = components['vive-controls'].data.hand === 'left' ? 2 : 1;
+	        }
+	        if (this.gamepadIndex === null && components['tracked-controls']) {
+	          this.gamepadIndex = components['tracked-controls'].data.controller;
+	        }
+	        this.el.setAttribute('tracked-controls', 'id', altspace.getGamepads()[this.gamepadIndex].id);
+	        this.el.setAttribute('tracked-controls', 'controller', 0);
+	        this.systemGamepads = this.trackedControlsSystem.controllers.length;
+	      }
+	  }
 	});
 
 
