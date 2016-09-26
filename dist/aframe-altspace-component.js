@@ -237,7 +237,7 @@
 
 	AFRAME.registerComponent('n-sphere-collider', {
 		schema: {
-			isTrigger: false
+			isTrigger: { default: false }
 		},
 		init: function () {
 			//TODO: This is a placeholder to get the SDK to pick up the element if there isn't a mesh

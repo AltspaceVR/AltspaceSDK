@@ -1,0 +1,275 @@
+<!-- ReSharper disable Html.TagNotResolved -->
+<html>
+<head>
+	<title>Native Example</title>
+	<!--<script src="../build.js"></script>-->
+	<script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	</head>
+<body>
+<a-scene debug altspace>
+	<!--<n-entity id="all">
+		<n-entity asset="Architecture/Ceiling_2Wx2L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_2Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_4Wx2L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_4Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Skylight_4Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Skylight_Corner_2Wx2L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Skylight_Edge_2W" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Skylight_Edge_4W" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Skylight_Filled_4Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Skylight_Filled2_4Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Slice_Concave_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Slice_Convex_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Ceiling_Slice_Convex_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Door_4Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_2Wx2L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_2Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_4Wx2L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_4Wx4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_Slice_Convex_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Floor_Slice_Convex_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Railing_2L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Railing_4L" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Railing_Curve_Concave_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_2Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_4Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Base_2W" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Base_4W" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Bulkhead_2W" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Bulkhead_4W" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Bulkhead_Curve_Concave_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Bulkhead_Curve_Concave_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Bulkhead_Curve_Convex_2R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Bulkhead_Curve_Convex_4R" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Concave_2Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Concave_4Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Convex_2Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Window_Concave_4Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Window_Gap_Concave_4Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Window_Gap_End_L_Concave_4Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Curve_Window_Gap_End_R_Concave_4Rx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Filler_Corner_Inner_4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Filler_Corner_Outer_4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_4Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_GapEnd_R_4Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_Gap_2Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_Gap_End_L_2Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_Gap_End_L_4Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window_Gap_End_R_2Wx4H" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Wall_Window2" position="0 3 0"></n-entity>
+		<n-entity asset="Architecture/Window_Wall_Curve_Concave_4Rx4H" position="0 3 0"></n-entity>
+	</n-entity>-->
+
+	<a-entity class="room" position="0 -0.01 0">
+		<a-entity class="floor-half">
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, 6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, 6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, 6"></n-entity>
+
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, -6"></n-entity>
+
+			<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="-6, 0, 10" rotation="0 -90 0"></n-entity>
+			<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="10, 0, 6"></n-entity>
+		</a-entity>
+		<a-entity class="floor-half" position="0, 0, -20" rotation="0 180 0">
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-6, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, -10"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="10, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, 6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, 6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, 6"></n-entity>
+
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="-2, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="2, 0, -6"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, 2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, -2"></n-entity>
+			<n-entity asset="Architecture/Floor_4Wx4L" position="6, 0, -6"></n-entity>
+
+			<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="-6, 0, 10" rotation="0 -90 0"></n-entity>
+			<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="10, 0, 6"></n-entity>
+		</a-entity>
+		<a-entity class="ceiling-half">
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, 6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, 6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, 6"></n-entity>
+
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, -6"></n-entity>
+
+			<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="-6, 4, 10" rotation="0 -90 0"></n-entity>
+			<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="10, 4, 6"></n-entity>
+		</a-entity>
+		<a-entity class="ceiling-half" position="0, 0, -20" rotation="0 180 0">
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-6, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, -10"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="10, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, 6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, 6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, 6"></n-entity>
+
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="-2, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="2, 4, -6"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, 2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, -2"></n-entity>
+			<n-entity asset="Architecture/Ceiling_4Wx4L" position="6, 4, -6"></n-entity>
+
+			<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="-6, 4, 10" rotation="0 -90 0"></n-entity>
+			<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="10, 4, 6"></n-entity>
+		</a-entity>
+		<a-entity class="walls-half">
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -26" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -18" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -22" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -14" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -26"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -18"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -22"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -14"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="-6, 0, -30"></n-entity>
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="-6, 4, -30"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="10, 0, -26" rotation="0 -90 0"></n-entity>
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="10, 4, -26" rotation="0 -90 0"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Window_Gap_End_L_4Wx4H" position="10, 0, -26" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="10, 0, -22" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="10, 0, -18" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="10, 0, -14w" scale="-1 1 1"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Window_Gap_End_L_4Wx4H" position="-10, 0, -26"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="-10, 0, -22"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="-10, 0, -18"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="-10, 0, -14w"></n-entity>
+
+			<a-entity class="railings" position="0, 0, -30">
+				<a-entity class="railing-bottom" position="0, 0, 0">
+					<n-entity asset="Architecture/Railing_4L" position="-6, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="-2, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="2, 0, 0" rotation="0 90 0"></n-entity>
+				</a-entity>
+				<a-entity class="railing-bottom" position="0, 8, 0" rotation="0 0 180">
+					<n-entity asset="Architecture/Railing_4L" position="-6, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="-2, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="2, 0, 0" rotation="0 90 0"></n-entity>
+				</a-entity>
+			</a-entity>
+		</a-entity>
+		<a-entity class="walls-half" position="0, 0, -20" rotation="0 180 0">
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -26" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -18" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -22" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="10, 4, -14" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -26"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -18"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -22"></n-entity>
+			<n-entity asset="Architecture/Wall_4Wx4H" position="-10, 4, -14"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="-6, 0, -30"></n-entity>
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="-6, 4, -30"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="10, 0, -26" rotation="0 -90 0"></n-entity>
+			<n-entity asset="Architecture/Wall_Curve_Convex_4Rx4H" position="10, 4, -26" rotation="0 -90 0"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Window_Gap_End_L_4Wx4H" position="10, 0, -26" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="10, 0, -22" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="10, 0, -18" scale="-1 1 1"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="10, 0, -14w" scale="-1 1 1"></n-entity>
+
+			<n-entity asset="Architecture/Wall_Window_Gap_End_L_4Wx4H" position="-10, 0, -26"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="-10, 0, -22"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="-10, 0, -18"></n-entity>
+			<n-entity asset="Architecture/Wall_Window_Gap_4Wx4H" position="-10, 0, -14w"></n-entity>
+
+			<a-entity class="railings" position="0, 0, -30">
+				<a-entity class="railing-bottom" position="0, 0, 0">
+					<n-entity asset="Architecture/Railing_4L" position="-6, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="-2, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="2, 0, 0" rotation="0 90 0"></n-entity>
+				</a-entity>
+				<a-entity class="railing-bottom" position="0, 8, 0" rotation="0 0 180">
+					<n-entity asset="Architecture/Railing_4L" position="-6, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="-2, 0, 0" rotation="0 90 0"></n-entity>
+					<n-entity asset="Architecture/Railing_4L" position="2, 0, 0" rotation="0 90 0"></n-entity>
+				</a-entity>
+			</a-entity>
+		</a-entity>
+	</a-entity>
+
+	<a-sphere n-sphere-collider>
+	</a-sphere>
+
+</a-scene>
+</body>
+</html>
