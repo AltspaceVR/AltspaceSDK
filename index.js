@@ -189,6 +189,31 @@ AFRAME.registerComponent('native', {
   }
 });
 
+AFRAME.registerComponent('n-sphere-collider', {
+	schema: {
+		isTrigger: false
+	},
+	init: function () {
+		//TODO: This is a placeholder to get the SDK to pick up the element if there isn't a mesh
+		var placeholder = this.el.getOrCreateObject3D('n-sphere-collider-placeholder', THREE.Mesh);
+		altspace._internal.callClientFunction('AddNativeComponent', {
+			MeshId: placeholder.id,
+			Type: 'n-sphere-collider'
+		}, { argsType: 'JSTypeAddNativeComponent' });
+	},
+	update: function (oldData) {
+		/*if (this.data.attributes) {
+			altspace._internal.callClientFunction('UpdateNativeAttributes', {
+				MeshId: this.el.object3DMap.native.id,
+				Attributes: this.data.attributes
+			}, { argsType: 'JSTypeUpdateNativeAttributes' });
+		}*/
+	},
+	remove: function () {
+		this.el.removeObject3D('n-sphere-collider-placeholder');
+	}
+});
+
 //Use selector for teleporting
 //The attributes may just be better strongly typed. Hmm hard call.
 //Maybe some things are just only Primitives like browsers, and some can be used like components (if they are actually native components)
