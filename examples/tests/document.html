@@ -24,17 +24,28 @@
 				logList.insertBefore(li, logList.firstChild);
 			}
 
-			var sim = new altspace.utilities.Simulation({ auto: false });
+			var sim = new altspace.utilities.Simulation();
+			var cube = new THREE.Mesh(
+				new THREE.BoxGeometry(100, 100, 100),
+				new THREE.MeshBasicMaterial({ color: 'red' })
+			);
+			cube.addEventListener('cursordown', function () {
+				altspace.getDocument().then(function (doc) { doc.reset(); });
+			});
+cube.position.z = 200;
 
 			if (altspace.getDocument) {
 				altspace.getDocument().then(function (doc) {
-					doc.position.set(256, 0, 256);
+					doc.position.set(0, 0, 196);
 					doc.scale.set(0.25, 0.25, 0.25);
-					doc.rotateY(Math.PI / 4);
+					doc.rotateY(-Math.PI);
 					doc.inputEnabled = true;
 					sim.scene.add(doc);
-					sim.renderer.render(sim.scene, sim.camera);
 					document.body.style.display = 'block';
+					altspace.getThreeJSTrackingSkeleton().then(function (skel) {
+							sim.scene.add(skel);
+							skel.getJoint('Head').add(doc);
+					});
 				});
 			} else {
 				document.body.style.display = 'block';
