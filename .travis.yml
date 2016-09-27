@@ -3,5 +3,5 @@ cache:
     directories:
         - node_modules
         - .nvm
-install: npm install eslint@2.7.0 eslint-plugin-html@1.4.0
+install: npm install eslint@2.7.0 eslint-plugin-html@1.4.0 eslint-config-airbnb@12.0.0
 script: eslint src examples
