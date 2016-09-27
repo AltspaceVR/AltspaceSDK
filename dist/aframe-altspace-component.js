@@ -234,56 +234,64 @@
 	    this.el.removeObject3D('native');
 	  }
 	});
+	//TODO Next: Add and trigger thrust function to the n-rigidbody
+	(function () {
+		function registerNativeComponent(name, component) {
+			function defaultInit() {
+				var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+				altspace._internal.callClientFunction('AddNativeComponent', {
+					MeshId: mesh.id,
+					Type: name
+				}, { argsType: 'JSTypeAddNativeComponent' });
+			}
+			function defaultUpdate(oldData) {
+				console.log('calling update for ' + this.el.object3DMap.mesh.id);
+				altspace._internal.callClientFunction('UpdateNativeComponent', {
+					MeshId: this.el.object3DMap.mesh.id,
+					ComponentName: name,
+					Attributes: JSON.stringify(this.data),
+				}, { argsType: 'JSTypeUpdateNativeComponent' });
+			}
 
-	AFRAME.registerComponent('n-sphere-collider', {
-		schema: {
+			component.init = component.init || defaultInit;
+			component.update = component.update || defaultUpdate;
+
+			AFRAME.registerComponent(name, component);
+		}
+
+		function parseBool(boolString) {
+			return boolString === 'true';//good enough
+		}
+
+		//TODO: Get them to add type registration to AFRAME
+		var vec3bool = {
+			default: 'false false false',
+			parse: function (value) {
+				return value.split(' ').map(parseBool);
+			},
+			stringify: function (value) {
+				return value.join(' ');
+			}
+		}
+
+		registerNativeComponent('n-sphere-collider', {schema: {
 			isTrigger: { default: false, type: 'boolean' },
-			radius: { default: undefined, type: 'number' },
-			center: { default: undefined, type: 'vec3' }
-		},
-		init: function () {
-			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
-			altspace._internal.callClientFunction('AddNativeComponent', {
-				MeshId: mesh.id,
-				Type: 'n-sphere-collider'
-			}, { argsType: 'JSTypeAddNativeComponent' });
-		},
-		update: function (oldData) {
-			console.log('calling UpdateNativeComponent');
-			altspace._internal.callClientFunction('UpdateNativeComponent', {
-				MeshId: this.el.object3DMap.mesh.id,
-				ComponentName: 'n-sphere-collider',
-				Attributes: JSON.stringify(this.data)
-			}, { argsType: 'JSTypeUpdateNativeComponent' });
-		},
-		remove: function () {
-			//TODO: RemoveNativeComponent
-		}
-	});
+			radius: { default: '0', type: 'number' },
+			center: { type: 'vec3' }
+		}});
 
-	AFRAME.registerComponent('n-rigidbody', {
-		schema: {
-			isTrigger: { default: false }
-		},
-		init: function () {
-			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
-			altspace._internal.callClientFunction('AddNativeComponent', {
-				MeshId: mesh.id,
-				Type: 'n-rigidbody'
-			}, { argsType: 'JSTypeAddNativeComponent' });
-		},
-		update: function (oldData) {
-			/*if (this.data.attributes) {
-				altspace._internal.callClientFunction('UpdateNativeAttributes', {
-					MeshId: this.el.object3DMap.native.id,
-					Attributes: this.data.attributes
-				}, { argsType: 'JSTypeUpdateNativeAttributes' });
-			}*/
-		},
-		remove: function () {
-			//TODO: RemoveNativeComponent
-		}
-	});
+		registerNativeComponent('n-rigidbody', {
+			schema: {
+				mass: { default: 1, type: 'number' },
+				drag: { default: 0, type: 'number' },
+				angularDrag: { default: 0.05, type: 'number' },
+				useGravity: { default: true, type: 'boolean' },
+				isKinematic: { default: false, type: 'boolean' },
+				positionConstraints: vec3bool,
+				rotationConstraints: vec3bool
+			}
+		});
+	})();
 
 	//Use selector for teleporting
 	//The attributes may just be better strongly typed. Hmm hard call.

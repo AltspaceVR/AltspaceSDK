@@ -5,6 +5,21 @@
 	<!--<script src="../build.js"></script>-->
 	<script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script>
+		AFRAME.registerComponent('click-for-thrust', {
+			schema: {
+			},
+			init: function () {
+				this.el.addEventListener('click', function() {
+					console.log('thrusting');
+				});
+			},
+			update: function (oldData) {
+			},
+			remove: function () {
+			}
+		});
+	</script>
 	</head>
 <body>
 <a-scene debug altspace>
@@ -267,11 +282,11 @@
 		</a-entity>
 	</a-entity>
 
-	<a-sphere color="blue" n-sphere-collider="radius:2; center:1 1 1" n-rigidbody radius="0.5" position="1 3 0">
+	<a-sphere color="blue" material="src: url(texture.jpg)" click-for-thrust n-sphere-collider="radius:0.3" n-rigidbody radius="0.5" position="1 3 0">
 	</a-sphere>
-	<a-sphere color="red" n-sphere-collider n-rigidbody radius="0.5" position="0 2 0">
+	<a-sphere color="red" material="src: url(texture.jpg)" click-for-thrust n-sphere-collider n-rigidbody="useGravity:true" radius="0.7" position="0 4 0">
 	</a-sphere>
-	<a-sphere color="green" n-sphere-collider n-rigidbody radius="0.5" position="-1 3 0">
+	<a-sphere color="green" material="src: url(texture.jpg)" click-for-thrust n-sphere-collider n-rigidbody radius="0.5" position="-1 3 0">
 	</a-sphere>
 
 </a-scene>
