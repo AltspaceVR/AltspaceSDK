@@ -237,14 +237,39 @@
 
 	AFRAME.registerComponent('n-sphere-collider', {
 		schema: {
+			isTrigger: { default: false, type: 'boolean' },
+			radius: { default: undefined, type: 'number' },
+			center: { default: undefined, type: 'vec3' }
+		},
+		init: function () {
+			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+			altspace._internal.callClientFunction('AddNativeComponent', {
+				MeshId: mesh.id,
+				Type: 'n-sphere-collider'
+			}, { argsType: 'JSTypeAddNativeComponent' });
+		},
+		update: function (oldData) {
+			console.log('calling UpdateNativeComponent');
+			altspace._internal.callClientFunction('UpdateNativeComponent', {
+				MeshId: this.el.object3DMap.mesh.id,
+				ComponentName: 'n-sphere-collider',
+				Attributes: JSON.stringify(this.data)
+			}, { argsType: 'JSTypeUpdateNativeComponent' });
+		},
+		remove: function () {
+			//TODO: RemoveNativeComponent
+		}
+	});
+
+	AFRAME.registerComponent('n-rigidbody', {
+		schema: {
 			isTrigger: { default: false }
 		},
 		init: function () {
-			//TODO: This is a placeholder to get the SDK to pick up the element if there isn't a mesh
-			var placeholder = this.el.getOrCreateObject3D('n-sphere-collider-placeholder', THREE.Mesh);
+			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
 			altspace._internal.callClientFunction('AddNativeComponent', {
-				MeshId: placeholder.id,
-				Type: 'n-sphere-collider'
+				MeshId: mesh.id,
+				Type: 'n-rigidbody'
 			}, { argsType: 'JSTypeAddNativeComponent' });
 		},
 		update: function (oldData) {
@@ -256,7 +281,7 @@
 			}*/
 		},
 		remove: function () {
-			this.el.removeObject3D('n-sphere-collider-placeholder');
+			//TODO: RemoveNativeComponent
 		}
 	});
 
