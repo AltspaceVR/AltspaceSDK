@@ -32,20 +32,16 @@
 			cube.addEventListener('cursordown', function () {
 				altspace.getDocument().then(function (doc) { doc.reset(); });
 			});
-cube.position.z = 200;
+			sim.scene.add(cube);
 
 			if (altspace.getDocument) {
 				altspace.getDocument().then(function (doc) {
 					doc.position.set(0, 0, 196);
 					doc.scale.set(0.25, 0.25, 0.25);
-					doc.rotateY(-Math.PI);
+					doc.rotateY(Math.PI / 4);
 					doc.inputEnabled = true;
 					sim.scene.add(doc);
 					document.body.style.display = 'block';
-					altspace.getThreeJSTrackingSkeleton().then(function (skel) {
-							sim.scene.add(skel);
-							skel.getJoint('Head').add(doc);
-					});
 				});
 			} else {
 				document.body.style.display = 'block';
@@ -71,6 +67,8 @@ cube.position.z = 200;
 			}
 			document.body.addEventListener('mousemove', function (e) {
 				cursorFollow.textContent = e.clientX + ', ' + e.clientY;
+				cursorFollow.style.left = e.clientX + 'px';
+				cursorFollow.style.top = e.clientY + 'px';
 			});
 		</script>
 	</body>
