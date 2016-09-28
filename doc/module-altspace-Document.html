@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>altspace/utilities/codePen - Documentation</title>
+    <title>Document - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">altspace/utilities/codePen</h1>
+    <h1 class="page-title">Document</h1>
     
 
     
@@ -40,8 +40,11 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-altspace.html">altspace</a>~</span>
         
-            
+        Document
+        </h2>
         
     
 </header>
@@ -50,13 +53,20 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Utilities to help build AltspaceVR apps on CodePen.io.</p></div>
-        
 
-        
-            
+    
+
+    <h4 class="name" id="Document"><span class="type-signature"></span>new Document<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
 
 
+
+<div class="description">
+    <p>Represents the 2D content in an enclosure. Document should
+not be instantiated directly, instead it should be retrieved
+via <a href="module-altspace.html#.getDocument">altspace.getDocument</a>.</p>
+</div>
 
 
 
@@ -120,9 +130,19 @@
 
 
 
-        
     
     </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>THREE.Mesh</li>
+    </ul>
+
 
     
 
@@ -144,15 +164,15 @@
 
     
 
-    <h4 class="name" id=".ensureInVR"><span class="type-signature">(static) </span>ensureInVR<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Will stop code exection and post a message informing the user to 
-open the example in VR</p>
+    <p>Reset the document to its default position regardless of the scene transform.
+Called by default when the document is initally retrieved.</p>
 </div>
 
 
@@ -161,286 +181,6 @@ open the example in VR</p>
 
 
 
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".getAuthorId"><span class="type-signature">(static) </span>getAuthorId<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Returns the pen author ID, useful for setting the sync authorId.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".getPenId"><span class="type-signature">(static) </span>getPenId<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Returns the pen ID, useful for setting the sync instanceId.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".setName"><span class="type-signature">(static) </span>setName<span class="signature">(name)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Sets the name to be used by ensureInVR()</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
