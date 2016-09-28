@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Document API Test</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+		<style>
+			html, body, video { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+			body { border: 1px solid red; background-color: white; display: none; }
+			#cursorFollow { position: absolute; width: 50px; height: 50px; background-color: green; top: 0; right: 0; }
+			li { font: 20pt sans-serif; list-style-type: none }
+		</style>
+	</head>
+	<body>
+		<ol id="logList"></ol>
+		<div id="cursorFollow"></div>
+		<script>
+			function log() {
+				var li = document.createElement('li');
+				var args = Array.prototype.slice.apply(arguments);
+				args.unshift(Date.now());
+				li.textContent = args.join(' ');
+				logList.insertBefore(li, logList.firstChild);
+			}
+
+			var sim = new altspace.utilities.Simulation();
+			var cube = new THREE.Mesh(
+				new THREE.BoxGeometry(100, 100, 100),
+				new THREE.MeshBasicMaterial({ color: 'red' })
+			);
+			cube.addEventListener('cursordown', function () {
+				altspace.getDocument().then(function (doc) { doc.reset(); });
+			});
+			sim.scene.add(cube);
+
+			if (altspace.getDocument) {
+				altspace.getDocument().then(function (doc) {
+					doc.position.set(0, 0, 196);
+					doc.scale.set(0.25, 0.25, 0.25);
+					doc.rotateY(Math.PI / 4);
+					doc.inputEnabled = true;
+					sim.scene.add(doc);
+					document.body.style.display = 'block';
+				});
+			} else {
+				document.body.style.display = 'block';
+			}
+
+			function logEvent(event) {
+				log(
+					event.type,
+					event.button,
+					event.buttons,
+					event.clientX, event.clientY
+				);
+			}
+
+			var isMobile = /mobile/i.test(navigator.userAgent);
+			if (altspace.addEventListener && isMobile) {
+				altspace.addEventListener('touchpadup', logEvent);
+				altspace.addEventListener('touchpaddown', logEvent);
+			}
+			if (!isMobile) {
+				document.body.addEventListener('mouseup', logEvent);
+				document.body.addEventListener('mousedown', logEvent);
+			}
+			document.body.addEventListener('mousemove', function (e) {
+				cursorFollow.textContent = e.clientX + ', ' + e.clientY;
+				cursorFollow.style.left = e.clientX + 'px';
+				cursorFollow.style.top = e.clientY + 'px';
+			});
+		</script>
+	</body>
+</html>
+
