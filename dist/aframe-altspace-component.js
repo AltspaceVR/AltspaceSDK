@@ -236,33 +236,35 @@
 	});
 	//TODO Next: Add and trigger thrust function to the n-rigidbody
 	(function () {
-		function registerNativeComponent(name, component) {
-			function defaultInit() {
-				var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
-				altspace._internal.callClientFunction('AddNativeComponent', {
-					MeshId: mesh.id,
-					Type: name
-				}, { argsType: 'JSTypeAddNativeComponent' });
-			}
-			function defaultUpdate(oldData) {
-				console.log('calling update for ' + this.el.object3DMap.mesh.id);
-				altspace._internal.callClientFunction('UpdateNativeComponent', {
-					MeshId: this.el.object3DMap.mesh.id,
-					ComponentName: name,
-					Attributes: JSON.stringify(this.data),
-				}, { argsType: 'JSTypeUpdateNativeComponent' });
-			}
 
-			component.init = component.init || defaultInit;
-			component.update = component.update || defaultUpdate;
+		function nativeComponentInit() {
+			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+			altspace._internal.callClientFunction('AddNativeComponent', {
+				MeshId: mesh.id,
+				Type: this.name
+			}, { argsType: 'JSTypeAddNativeComponent' });
+		}
+		function nativeComponentUpdate(oldData) {
+			altspace._internal.callClientFunction('UpdateNativeComponent', {
+				MeshId: this.el.object3DMap.mesh.id,
+				ComponentName: this.name,
+				Attributes: JSON.stringify(this.data),
+			}, { argsType: 'JSTypeUpdateNativeComponent' });
+		}
 
-			AFRAME.registerComponent(name, component);
+		function callComponent(functionName, args) {
+			altspace._internal.callClientFunction('CallNativeComponent', {
+				MeshId: this.el.object3DMap.mesh.id,
+				ComponentName: this.name,
+				FunctionName: functionName,
+				Arguments: JSON.stringify(args)
+			}, { argsType: 'JSTypeCallNativeComponent' });
 		}
 
 		function parseBool(boolString) {
 			return boolString === 'true';//good enough
 		}
-
+		                   
 		//TODO: Get them to add type registration to AFRAME
 		var vec3bool = {
 			default: 'false false false',
@@ -274,13 +276,34 @@
 			}
 		}
 
-		registerNativeComponent('n-sphere-collider', {schema: {
-			isTrigger: { default: false, type: 'boolean' },
-			radius: { default: '0', type: 'number' },
-			center: { type: 'vec3' }
-		}});
+		AFRAME.registerComponent('n-sphere-collider', {
+			init:nativeComponentInit,
+			update: nativeComponentUpdate,
+			schema: {
+				isTrigger: { default: false, type: 'boolean' },
+				radius: { default: '0', type: 'number' },
+				center: { type: 'vec3' }
+			}
+		});
 
-		registerNativeComponent('n-rigidbody', {
+		AFRAME.registerComponent('n-rigidbody', {
+			init: function() {
+				nativeComponentInit.call(this);
+
+				this.addRelativeForce = function(force, mode) {
+					callComponent.call(this, 'addRelativeForce', {
+						force: force,
+						mode: mode || 'impulse'
+					});
+				}.bind(this);
+				this.addForce = function (force, mode) {
+					callComponent.call(this, 'addForce', {
+						force: force,
+						mode: mode || 'impulse'
+					});
+				}.bind(this);
+			},
+			update: nativeComponentUpdate,
 			schema: {
 				mass: { default: 1, type: 'number' },
 				drag: { default: 0, type: 'number' },
@@ -450,22 +473,23 @@
 	      cursorEl.setAttribute('material', 'opacity', 0.0);
 	    }
 
-	    var emit = function(eventName, targetEl) {
-	      // Fire events on intersected object and A-Frame cursor.
-	      if (cursorEl) cursorEl.emit(eventName, {target: targetEl});
-	      if (targetEl) targetEl.emit(eventName, {target: targetEl});
+	    var emit = function (eventName, event) {
+	    	// Fire events on intersected object and A-Frame cursor.
+	    	var targetEl = event.target.el;
+	    	if (cursorEl) cursorEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
+	    	if (targetEl) targetEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
 	    } ;
 
 	    var cursordownObj = null;
 	    scene.addEventListener('cursordown', function(event) {
 	      cursordownObj = event.target;
-	      emit('mousedown', event.target.el);
+	      emit('mousedown', event);
 	    });
 
 	    scene.addEventListener('cursorup', function(event) {
-	      emit('mouseup', event.target.el);
+	      emit('mouseup', event);
 	      if (event.target.uuid === cursordownObj.uuid) {
-	        emit('click', event.target.el);
+	        emit('click', event);
 	      }
 	      cursordownObj = null;
 	    });
@@ -474,14 +498,14 @@
 	      if (!event.target.el) { return; }
 	      event.target.el.addState('hovered');
 	      if (cursorEl) cursorEl.addState('hovering');
-	      emit('mouseenter', event.target.el);
+	      emit('mouseenter', event);
 	    });
 
 	    scene.addEventListener('cursorleave', function(event) {
 	      if (!event.target.el) { return; }
 	      event.target.el.removeState('hovered');
 	      if (cursorEl) cursorEl.removeState('hovering');
-	      emit('mouseleave', event.target.el);
+	      emit('mouseleave', event);
 	    });
 
 	  },
