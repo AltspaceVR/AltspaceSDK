@@ -333,6 +333,7 @@ AFRAME.registerComponent('altspace', {
       this.el.setAttribute('vr-mode-ui', {enabled: false});
       this.initRenderer();
       this.initCursorEvents();
+      this.initCollisionEvents();
     } else {
       console.warn('aframe-altspace-component only works inside of AltspaceVR');
     }
@@ -462,6 +463,33 @@ AFRAME.registerComponent('altspace', {
       if (cursorEl) cursorEl.removeState('hovering');
       emit('mouseleave', event);
     });
+
+  },
+
+
+  initCollisionEvents: function () {
+
+  	var scene = this.el.object3D;
+
+  	var emit = function (eventName, event) {
+  		var targetEl = event.target.el;
+  		if (!targetEl) return;
+
+		//remap target and other from object3Ds to aframe element
+  		event.target = targetEl;
+  		if (event.other && event.other.el) {
+  			event.other = event.other.el;
+		}
+		targetEl.emit(eventName, event);
+  	};
+
+  	scene.addEventListener('collisionenter', function (event) {
+  		emit('collisionenter', event);
+  	});
+
+  	scene.addEventListener('collisionexit', function (event) {
+  		emit('collisionexit', event);
+  	});
 
   },
 
