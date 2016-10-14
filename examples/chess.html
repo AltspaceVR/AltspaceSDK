@@ -47,25 +47,25 @@ ChessApp = (function(){
 	function main(){
 		sim = altspace.utilities.Simulation();
 		var inCodePen = altspace.utilities.codePen.inCodePen;
-	    altspace.utilities.sync.connect({
-            appId: 'Chess',
-	        authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
-	        instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
-	    }).then(function(connection) {
-	        instanceRef = connection.instance;
+		altspace.utilities.sync.connect({
+			appId: 'Chess',
+			authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
+			instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
+		}).then(function(connection) {
+			instanceRef = connection.instance;
 
-	        if (altspace.inClient) {
-	            altspace.getEnclosure().then(function (enclosure) {
-	                gameObjects.position.y -= enclosure.innerHeight / 2;
-	            });
-	        } else {
-	            sim.camera.position.z = CONFIG.boardSize;
-	            sim.camera.position.y = CONFIG.boardSize + 100;
-	            sim.camera.lookAt(sim.scene.position);
-	        }
+			if (altspace.inClient) {
+				altspace.getEnclosure().then(function (enclosure) {
+					gameObjects.position.y -= enclosure.innerHeight / 2;
+				});
+			} else {
+				sim.camera.position.z = CONFIG.boardSize;
+				sim.camera.position.y = CONFIG.boardSize + 100;
+				sim.camera.lookAt(sim.scene.position);
+			}
 
-	        loadModels(initBoard);
-	    });
+			loadModels(initBoard);
+		});
 
 	}//end main
 
@@ -131,8 +131,8 @@ ChessApp = (function(){
 						altspace.utilities.behaviors.Object3DSync({position: true}),
 						altspace.utilities.behaviors.Drag({
 							x: {min: -1 * limit, max: limit},
-		          z: {min: -1 * limit, max: limit}
-		        }),
+							z: {min: -1 * limit, max: limit}
+						}),
 						altspace.utilities.behaviors.HoverColor({
 							//event: 'cursordown',
 							scene: sim.scene,
@@ -216,33 +216,33 @@ ChessApp = (function(){
 			var object = whitePieces[i];
 			object.position.z = rankRow;
 			switch(object.userData.pieceType){
-				case 'king':
-					object.position.x = (3 * width) + offsetX;
-					break;
-				case 'queen':
-					object.position.x = (4 * width) + offsetX;
-					break;
-				case 'bishop':
-					object.position.x = (2 * width) + offsetX;
-					secondPiece(++i, 2);
-					break;
-				case 'knight':
-					object.position.x = (1 * width) + offsetX;
-					secondPiece(++i, 1);
-					break;
-				case 'rook':
-					object.position.x = (0 * width) + offsetX;
-					secondPiece(++i, 0);
-					break;
-				case 'pawn':
-					for (var j=0; j < 8; j++){
-						object = whitePieces[i++];
-						object.position.x = (j * width) + offsetX;
-						object.position.z = pawnRow;
-					}
-					break;
-				default:
-					console.error('Unexpected piece type', object.userData.pieceType);	
+			case 'king':
+				object.position.x = (3 * width) + offsetX;
+				break;
+			case 'queen':
+				object.position.x = (4 * width) + offsetX;
+				break;
+			case 'bishop':
+				object.position.x = (2 * width) + offsetX;
+				secondPiece(++i, 2);
+				break;
+			case 'knight':
+				object.position.x = (1 * width) + offsetX;
+				secondPiece(++i, 1);
+				break;
+			case 'rook':
+				object.position.x = (0 * width) + offsetX;
+				secondPiece(++i, 0);
+				break;
+			case 'pawn':
+				for (var j=0; j < 8; j++){
+					object = whitePieces[i++];
+					object.position.x = (j * width) + offsetX;
+					object.position.z = pawnRow;
+				}
+				break;
+			default:
+				console.error('Unexpected piece type', object.userData.pieceType);	
 			}
 		}
 		//Black pieces mirror position of white ones.
