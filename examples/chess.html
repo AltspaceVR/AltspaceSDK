@@ -216,10 +216,10 @@ ChessApp = (function(){
 			var object = whitePieces[i];
 			object.position.z = rankRow;
 			switch(object.userData.pieceType){
-			case 'king':
+			case 'queen':
 				object.position.x = (3 * width) + offsetX;
 				break;
-			case 'queen':
+			case 'king':
 				object.position.x = (4 * width) + offsetX;
 				break;
 			case 'bishop':
