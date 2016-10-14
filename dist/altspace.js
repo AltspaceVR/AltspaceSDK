@@ -11189,7 +11189,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.19.0';
+	var version = '0.19.1';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
