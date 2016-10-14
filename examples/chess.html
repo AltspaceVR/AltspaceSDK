@@ -45,13 +45,14 @@ ChessApp = (function(){
 	var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
 	function main(){
-		sim = altspace.utilities.Simulation();
 		var inCodePen = altspace.utilities.codePen.inCodePen;
 		altspace.utilities.sync.connect({
 			appId: 'Chess',
 			authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
 			instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
 		}).then(function(connection) {
+			if (!location.search) { return; }
+			sim = altspace.utilities.Simulation();
 			instanceRef = connection.instance;
 
 			if (altspace.inClient) {
