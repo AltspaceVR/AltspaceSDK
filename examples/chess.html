@@ -81,11 +81,11 @@ ChessApp = (function(){
 		var names = Object.keys(CONFIG.pieces);
 		for (var i=0; i < names.length; i++){
 			var file = CONFIG.pieces[names[i]].modelFile;
-			req.objUrls.push(file+'.obj');
+			req.objUrls.push(file+'.obj.txt');
 			req.mtlUrls.push(file+'.mtl');
 		}
 		var boardFile = CONFIG.board.modelFile;
-		req.objUrls.push(boardFile+'.obj');
+		req.objUrls.push(boardFile+'.obj.txt');
 		req.mtlUrls.push(boardFile+'.mtl');
 		altspace.utilities.multiloader.load(req, function(){//onComplete
 			if(req.error) {
