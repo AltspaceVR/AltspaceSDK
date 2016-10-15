@@ -12,8 +12,15 @@
 					this.components['n-rigidbody'].addForce(event.detail.ray.direction, 'impulse');
 				});
 				this.el.addEventListener('collisionenter', function () {
-					this.components['n-rigidbody'].addForce({ x: 0, y: 10, z: 0 }, 'impulse');
-					console.dir(this);
+					this.components['n-rigidbody'].addForce({ x: 1, y: 10, z: 0 }, 'impulse');
+					var scene = document.querySelector('a-scene');
+					var cylinder = document.createElement('a-cylinder');
+					scene.appendChild(cylinder);
+					cylinder.setAttribute('color', '#FF9500');
+					cylinder.setAttribute('radius', '0.75');
+
+					//TODO NEXT: base this off of the collision point (and transform it into scene)
+					cylinder.setAttribute('position', '' + this.components['n-rigidbody'].worldPosition.x + ' ' + this.components['n-rigidbody'].worldPosition.y + ' ' + this.components['n-rigidbody'].worldPosition.z);
 				});
 			}
 		});
@@ -218,70 +225,6 @@
 			</a-entity>
 		</a-entity>
 	</a-entity>
-
-	<!--<a-entity class="display-case" position="0 0 -20">
-		<n-entity asset="System/Browser" attributes='{"Url": "http://codepen.io/team/altspacevr/live/rrxqAJ", "Controls": "Hidden" }' position="0 2 0" rotation="0 90 0" scale="5 5 5"></n-entity>
-		<a-entity class="geometry" position="0 0 0">
-			<n-entity asset="Colliders/CapsuleNavigable" position="0 2 0" scale="8.4 8.4 8.4"></n-entity>
-			<a-entity class="ceiling" position="0 -0.25 0">
-				<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="4 4 0"></n-entity>
-				<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 4 -4" rotation="0 90 0"></n-entity>
-				<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="-4 4 0" rotation="0 180 0"></n-entity>
-				<n-entity asset="Architecture/Ceiling_Slice_Concave_4R" position="0 4 4" rotation="0 270 0"></n-entity>
-			</a-entity>
-			<a-entity class="floor" position="0 0.25 0">
-				<a-entity scale="1.5 1 1.5">
-					<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="4 0 0"></n-entity>
-					<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 0 -4" rotation="0 90 0"></n-entity>
-					<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="-4 0 0" rotation="0 180 0"></n-entity>
-					<n-entity asset="Architecture/Floor_Slice_Concave_4R" position="0 0 4" rotation="0 270 0"></n-entity>
-				</a-entity>
-
-				<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="2 0.25 0"></n-entity>
-				<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
-				<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
-				<n-entity asset="Architecture/Floor_Slice_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
-			</a-entity>
-			<a-entity class="rings">
-				<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="4 0 0"></n-entity>
-				<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 0 -4" rotation="0 90 0"></n-entity>
-				<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="-4 0 0" rotation="0 180 0"></n-entity>
-				<n-entity asset="Architecture/Wall_Base_Curve_Concave_4R" position="0 0 4" rotation="0 270 0"></n-entity>
-
-				<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="4 0 0" rotation="0 270 0"></n-entity>
-				<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 -4"></n-entity>
-				<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="-4 0 0" rotation="0 90 0"></n-entity>
-				<n-entity asset="Architecture/Wall_Base_Curve_Convex_4R" position="0 0 4" rotation="0 180 0"></n-entity>
-
-				<a-entity class="inner">
-					<a-animation attribute="rotation" dur="5000" to="0 360 0" repeat="indefinite"></a-animation>
-					<a-animation attribute="position" dur="5000" direction="alternate-reverse" to="0 -0.5 0" repeat="indefinite"></a-animation>
-
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 2" rotation="0 180 0"></n-entity>
-
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="2 0.25 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
-				</a-entity>
-
-				<a-entity class="inner-upper" position="0 8 0" rotation="180 0 0">
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="2 0.25 0" rotation="0 270 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 -2"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="-2 0.25 0" rotation="0 90 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Convex_2R" position="0 0.25 2" rotation="0 180 0"></n-entity>
-
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="2 0.25 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 -2" rotation="0 90 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="-2 0.25 0" rotation="0 180 0"></n-entity>
-					<n-entity asset="Architecture/Wall_Base_Curve_Concave_2R" position="0 0.25 2" rotation="0 270 0"></n-entity>
-				</a-entity>
-			</a-entity>
-		</a-entity>
-	</a-entity>-->
 
 
 <a-sphere color="blue" material="src: url(texture.jpg)" click-for-thrust n-sphere-collider="radius:0.3" n-rigidbody="positionConstraints:true false true" radius="0.5" position="1 3 0">

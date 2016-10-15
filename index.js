@@ -188,7 +188,7 @@ AFRAME.registerComponent('native', {
     this.el.removeObject3D('native');
   }
 });
-//TODO Next: Add and trigger thrust function to the n-rigidbody
+
 (function () {
 
 	function nativeComponentInit() {
@@ -257,6 +257,21 @@ AFRAME.registerComponent('native', {
 					mode: mode || 'impulse'
 				});
 			}.bind(this);
+
+			//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
+			this.worldPosition = new THREE.Vector3();
+			this.worldQuaternion = new THREE.Quaternion();
+			this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+
+				this.worldPosition.x = event.worldPosition.x;
+				this.worldPosition.y = event.worldPosition.y;
+				this.worldPosition.z = event.worldPosition.z;
+
+				this.worldQuaternion.x = event.worldQuaternion.x;
+				this.worldQuaternion.y = event.worldQuaternion.y;
+				this.worldQuaternion.z = event.worldQuaternion.z;
+				this.worldQuaternion.w = event.worldQuaternion.w;
+			}.bind(this));
 		},
 		update: nativeComponentUpdate,
 		schema: {
@@ -466,7 +481,6 @@ AFRAME.registerComponent('altspace', {
 
   },
 
-
   initCollisionEvents: function () {
 
   	var scene = this.el.object3D;
@@ -491,7 +505,7 @@ AFRAME.registerComponent('altspace', {
   		emit('collisionexit', event);
   	});
 
-  },
+  }
 
 });
 
