@@ -546,7 +546,7 @@
 	  }
 	});
 
-	AFRAME.registerSystem('sync',
+	AFRAME.registerSystem('sync-system',
 	{
 	    schema: {
 	        author: { type: 'string', default: null },
@@ -563,6 +563,38 @@
 	        }).then(function(connection) {
 	            this.connection = connection;
 	            this.sceneEl.emit('connected', null, false);
+
+	            this.sceneRef = this.connection.instance.child('scene');
+	            this.clientsRef = this.connection.instance.child('clients');
+
+	            // temporary way of having unique identifiers for each client
+	            var clientId = this.sceneEl.object3D.uuid;
+	            var masterClientId;
+	            this.clientsRef.on("value", function (snapshot) {
+	                var clientIds = snapshot.val();
+
+	                if (!clientIds) return;
+
+	                var masterClientKey = Object.keys(clientIds)[0];
+	                masterClientId = clientIds[masterClientKey];
+	            });
+
+	            // add our client ID to the list of connected clients, 
+	            // but have it be automatically removed by firebase if we disconnect for any reason
+	            this.clientsRef.push(clientId).onDisconnect().remove();
+
+	            this.connection.instance.child('initialized').once('value', function (snapshot) {
+	                var shouldInitialize = !snapshot.val();
+	                snapshot.ref().set(true);
+
+	                this.sceneEl.emit('instanceready', { shouldInitialize: shouldInitialize }, false);
+	                //todo: change this to an event. Perhaps also do this for creators and destroyers
+	            }.bind(this));
+
+
+	            Object.defineProperty(this, 'isMasterClient', {
+	                get: function () { return masterClientId === clientId; }
+	            });
 	        }.bind(this));
 	    }
 	});
@@ -894,7 +926,21 @@
 	//    return exports;
 	//};
 
-	//AFRAME.registerComponent('sync', syncComponent);
+	AFRAME.registerComponent('sync',
+	{
+	    schema: {
+	        mode: {default:'link'}
+	    },
+	    init: function(){
+	        if(this.data.mode === 'link') {
+	            var id = this.el.id;
+	            if (!id) {
+	                console.error('Entities cannot be synced using link mode without an id.');
+	                return;
+	            }
+	        }
+	    }
+	});
 
 
 
