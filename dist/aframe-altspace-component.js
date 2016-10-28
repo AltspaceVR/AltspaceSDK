@@ -568,7 +568,7 @@
 	            this.clientsRef = this.connection.instance.child('clients');
 
 	            // temporary way of having unique identifiers for each client
-	            var clientId = this.sceneEl.object3D.uuid;
+	            this.clientId = this.sceneEl.object3D.uuid;
 	            var masterClientId;
 	            this.clientsRef.on("value", function (snapshot) {
 	                var clientIds = snapshot.val();
@@ -581,7 +581,7 @@
 
 	            // add our client ID to the list of connected clients, 
 	            // but have it be automatically removed by firebase if we disconnect for any reason
-	            this.clientsRef.push(clientId).onDisconnect().remove();
+	            this.clientsRef.push(this.clientId).onDisconnect().remove();
 
 	            this.connection.instance.child('initialized').once('value', function (snapshot) {
 	                var shouldInitialize = !snapshot.val();
@@ -593,11 +593,76 @@
 
 
 	            Object.defineProperty(this, 'isMasterClient', {
-	                get: function () { return masterClientId === clientId; }
+	                get: function () { return masterClientId === this.clientId; }.bind(this)
 	            });
 	        }.bind(this));
 	    }
 	});
+
+	AFRAME.registerComponent('sync',
+	{
+	    schema: {
+	        mode: { default: 'link' }
+	    },
+	    init: function () {
+	        var scene = document.querySelector('a-scene');
+	        var syncSys = scene.systems['sync-system'];
+
+	        var ref;
+	        var key;
+	        var dataRef;
+	        var ownerRef;
+	        var isMine = false;
+
+	        var component = this;
+
+	        if (this.data.mode === 'link') {
+	            var id = this.el.id;
+	            if (!id) {
+	                console.error('Entities cannot be synced using link mode without an id.');
+	                return;
+	            }
+
+	            link(syncSys.sceneRef.child(id));
+	            setupReceive();
+	        }
+
+	        function link(entityRef) {
+	            ref = entityRef;
+	            key = ref.key();
+	            dataRef = ref.child('data');
+	            ownerRef = ref.child('owner');
+	        }
+
+	        function setupReceive() {
+	            ownerRef.on('value',
+	                function(snapshot) {
+	                    var newOwnerId = snapshot.val();
+	                    if (!newOwnerId) component.takeOwnership(); //link only?
+
+	                    var gained = newOwnerId === syncSys.clientId && !isMine;
+	                    if (gained) component.el.emit('ownershipgained', null, false);
+
+
+	                    var lost = newOwnerId !== syncSys.clientId && isMine;
+	                    if (lost) component.el.emit('ownershiplost', null, false);
+
+	                    isMine = newOwnerId === syncSys.clientId;
+	                });
+	        }
+
+	        this.takeOwnership = function() {
+	            ownerRef.set(syncSys.clientId);
+	        }
+
+	        Object.defineProperty(component, 'isMine', {
+	            get: function () {
+	                return isMine;
+	            }
+	        });
+	    }
+	});
+
 
 	//var syncSystem = function (instanceRef, config) {
 	//    var sceneRef = instanceRef.child('scene');
@@ -628,27 +693,6 @@
 
 	//        var scene = s;
 
-	//        // temporary way of having unique identifiers for each client
-	//        clientId = scene.uuid;
-	//        clientsRef.on("value", function (snapshot) {
-	//            var clientIds = snapshot.val();
-
-	//            if (!clientIds) return;
-
-	//            masterClientKey = Object.keys(clientIds)[0];
-	//            masterClientId = clientIds[masterClientKey];
-	//        });
-	//        // add our client ID to the list of connected clients, 
-	//        // but have it be automatically removed by firebase if we disconnect for any reason
-	//        clientsRef.push(clientId).onDisconnect().remove();
-
-	//        instanceRef.child('initialized').once('value', function (snapshot) {
-	//            var shouldInitialize = !snapshot.val();
-	//            snapshot.ref().set(true);
-	//            if (config.ready) {
-	//                config.ready(shouldInitialize);
-	//            }
-	//        });
 
 
 	//        sceneRef.on('child_added', onInstantiate.bind(this));
@@ -925,23 +969,6 @@
 
 	//    return exports;
 	//};
-
-	AFRAME.registerComponent('sync',
-	{
-	    schema: {
-	        mode: {default:'link'}
-	    },
-	    init: function(){
-	        if(this.data.mode === 'link') {
-	            var id = this.el.id;
-	            if (!id) {
-	                console.error('Entities cannot be synced using link mode without an id.');
-	                return;
-	            }
-	        }
-	    }
-	});
-
 
 
 /***/ }
