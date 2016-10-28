@@ -732,13 +732,11 @@
 
 	        colorRef.on('value', function (snapshot) {
 	            var color = snapshot.val();
-	            console.log(component.el.getAttribute('material'));
 	            feedbackLocked = true;
-	            var rand = function () { return Math.floor(Math.random() * 255) };
-	            component.el.setAttribute.call(component.el, 'material', 'color', 'rgb(' + rand() + ',' + rand() + ',' + rand() + ')');
+	            component.el.setAttribute.call(component.el, 'material', 'color', color);
 	            feedbackLocked = false;
-	            console.log(component.el.getAttribute('material'));
-	        }).bind(this);
+	            
+	        });
 	    }
 	});
 
