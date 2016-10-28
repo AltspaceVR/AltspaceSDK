@@ -556,6 +556,8 @@
 			'ref-url': { type: 'string', default: null },
 		},
 		init: function() {
+			var component = this;
+
 			altspace.utilities.sync.connect({
 				authorId: this.data.author,
 				appId: this.data.app,
@@ -578,6 +580,16 @@
 
 					var masterClientKey = Object.keys(clientIds)[0];
 					masterClientId = clientIds[masterClientKey];
+				});
+
+				this.clientsRef.on('child_added', function(childSnapshot) {
+					var joinedClientId = childSnapshot.val();
+					component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
+				});
+
+				this.clientsRef.on('child_removed', function(childSnapshot) {
+					var leftClientId = childSnapshot.val();
+					component.sceneEl.emit('clientleft', {id: leftClientId}, false);
 				});
 
 				// add our client ID to the list of connected clients, 
@@ -613,9 +625,16 @@
 			var key;
 			var dataRef;
 			var ownerRef;
+			var ownerId;
 			var isMine = false;
 
 			var component = this;
+
+			scene.addEventListener('clientleft', function(event){
+				var shouldTakeOwnership = ownerId === event.details.id && syncSys.isMasterClient;
+
+				if(shouldTakeOwnership) takeOwnership();
+			});
 
 			if (this.data.mode === 'link') {
 				var id = this.el.id;
@@ -654,6 +673,8 @@
 						var lost = newOwnerId !== syncSys.clientId && isMine;
 						if (lost) component.el.emit('ownershiplost', null, false);
 
+						ownerId = newOwnerId;
+
 						isMine = newOwnerId === syncSys.clientId;
 					});
 			}
@@ -684,6 +705,8 @@
 			var positionRef = sync.dataRef.child('position');
 			var rotationRef = sync.dataRef.child('rotation');
 			var scaleRef = sync.dataRef.child('scale');
+
+			this.updateRate = 100;
 
 			var stoppedAnimations = [];
 			//pause all animations
@@ -806,7 +829,7 @@
 			  };
 
 
-			this.el.addEventListener('componentchanged', throttle(onComponentChanged, 100));
+			this.el.addEventListener('componentchanged', throttle(onComponentChanged, this.updateRate));
 		}
 	});
 
