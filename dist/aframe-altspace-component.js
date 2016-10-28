@@ -49,189 +49,190 @@
 	}
 	AFRAME.registerComponent('editor', {
 	  _setSelectedObject: function (event) {
-	      if(event.target.el.dataset.editorAsset) { return; }
-	      if (this.placingObject) {
-	        this.placingObject = null;
-	      this.raycastFloor.userData.altspace.collider.enabled = false;
-	      }
-	      this.selectedObject = event.target;
+		  if(event.target.el.dataset.editorAsset) { return; }
+		  if (this.placingObject) {
+			this.placingObject = null;
+		  this.raycastFloor.userData.altspace.collider.enabled = false;
+		  }
+		  this.selectedObject = event.target;
 	  },
 	  _moveSelectedObject: function (event) {
-	    if (!this.selectedObject) { return; }
-	    var el = this.selectedObject.el
-	    var pos = Object.assign({}, el.components.position.data);
-	    switch (event.keyCode) {
-	      case 'I'.charCodeAt(0): pos.z--; break;
-	      case 'J'.charCodeAt(0): pos.x--; break;
-	      case 'K'.charCodeAt(0): pos.z++; break;
-	      case 'L'.charCodeAt(0): pos.x++; break;
-	      case 'P'.charCodeAt(0): pos.y+=0.25; break;
-	      case ';'.charCodeAt(0): pos.y-=0.25; break;
-	    }
-	    el.setAttribute('position', pos);
+		if (!this.selectedObject) { return; }
+		var el = this.selectedObject.el
+		var pos = Object.assign({}, el.components.position.data);
+		switch (event.keyCode) {
+		  case 'I'.charCodeAt(0): pos.z--; break;
+		  case 'J'.charCodeAt(0): pos.x--; break;
+		  case 'K'.charCodeAt(0): pos.z++; break;
+		  case 'L'.charCodeAt(0): pos.x++; break;
+		  case 'P'.charCodeAt(0): pos.y+=0.25; break;
+		  case ';'.charCodeAt(0): pos.y-=0.25; break;
+		}
+		el.setAttribute('position', pos);
 	  },
 	  _placeObject: function (event) {
-	    if (!this.placingObject) { return; }
-	    this.raycastFloor.userData.altspace.collider.enabled = true;
-	    this.raycaster.set(event.ray.origin, event.ray.direction);
-	    var intersection = this.raycaster.intersectObject(this.raycastFloor)[0];
-	    if (!intersection) { return; }
-	    var pos = intersection.point.clone().multiplyScalar(1/this.scene.object3D.scale.x);
-	    pos.x = Math.ceil(pos.x);
-	    pos.z = Math.floor(pos.z);
-	    pos.x += 0.5;
-	    pos.z -= 0.5;
-	    this.placingObject.setAttribute('position',  pos);
+		if (!this.placingObject) { return; }
+		this.raycastFloor.userData.altspace.collider.enabled = true;
+		this.raycaster.set(event.ray.origin, event.ray.direction);
+		var intersection = this.raycaster.intersectObject(this.raycastFloor)[0];
+		if (!intersection) { return; }
+		var pos = intersection.point.clone().multiplyScalar(1/this.scene.object3D.scale.x);
+		pos.x = Math.ceil(pos.x);
+		pos.z = Math.floor(pos.z);
+		pos.x += 0.5;
+		pos.z -= 0.5;
+		this.placingObject.setAttribute('position',  pos);
 	  },
 	  _assets: [
-	    'Architecture/Ceiling_2Wx2L',
-	    'Architecture/Ceiling_2Wx4L',
-	    'Architecture/Ceiling_4Wx2L',
-	    'Architecture/Ceiling_4Wx4L',
-	    'Architecture/Ceiling_Skylight_4Wx4L',
-	    'Architecture/Ceiling_Skylight_Corner_2Wx2L',
-	    'Architecture/Ceiling_Skylight_Edge_2W',
-	    'Architecture/Ceiling_Skylight_Edge_4W',
-	    'Architecture/Ceiling_Skylight_Filled_4Wx4L',
-	    'Architecture/Ceiling_Skylight_Filled2_4Wx4L',
-	    'Architecture/Ceiling_Slice_Concave_2R',
-	    'Architecture/Ceiling_Slice_Concave_4R',
-	    'Architecture/Ceiling_Slice_Convex_2R',
-	    'Architecture/Ceiling_Slice_Convex_4R',
-	    'Architecture/Door_4Wx4H',
-	    'Architecture/Floor_2Wx2L',
-	    'Architecture/Floor_2Wx4L',
-	    'Architecture/Floor_4Wx2L',
-	    'Architecture/Floor_4Wx4L',
-	    'Architecture/Floor_Slice_Concave_2R',
-	    'Architecture/Floor_Slice_Concave_4R',
-	    'Architecture/Floor_Slice_Convex_2R',
-	    'Architecture/Floor_Slice_Convex_4R',
-	    'Architecture/Railing_2L',
-	    'Architecture/Railing_4L',
-	    'Architecture/Railing_Curve_Concave_2R',
-	    'Architecture/Wall_2Wx4H',
-	    'Architecture/Wall_4Wx4H',
-	    'Architecture/Wall_Base_2W',
-	    'Architecture/Wall_Base_4W',
-	    'Architecture/Wall_Base_Curve_Concave_2R',
-	    'Architecture/Wall_Base_Curve_Concave_4R',
-	    'Architecture/Wall_Base_Curve_Convex_2R',
-	    'Architecture/Wall_Base_Curve_Convex_4R',
-	    'Architecture/Wall_Bulkhead_2W',
-	    'Architecture/Wall_Bulkhead_4W',
-	    'Architecture/Wall_Bulkhead_Curve_Concave_2R',
-	    'Architecture/Wall_Bulkhead_Curve_Concave_4R',
-	    'Architecture/Wall_Bulkhead_Curve_Convex_2R',
-	    'Architecture/Wall_Bulkhead_Curve_Convex_4R',
-	    'Architecture/Wall_Curve_Concave_2Rx4H',
-	    'Architecture/Wall_Curve_Concave_4Rx4H',
-	    'Architecture/Wall_Curve_Convex_2Rx4H',
-	    'Architecture/Wall_Curve_Convex_4Rx4H',
-	    'Architecture/Wall_Curve_Window_Concave_4Rx4H',
-	    'Architecture/Wall_Curve_Window_Gap_Concave_4Rx4H',
-	    'Architecture/Wall_Curve_Window_Gap_End_L_Concave_4Rx4H',
-	    'Architecture/Wall_Curve_Window_Gap_End_R_Concave_4Rx4H',
-	    'Architecture/Wall_Filler_Corner_Inner_4H',
-	    'Architecture/Wall_Filler_Corner_Outer_4H',
-	    'Architecture/Wall_Window_4Wx4H',
-	    'Architecture/Wall_Window_GapEnd_R_4Wx4H',
-	    'Architecture/Wall_Window_Gap_2Wx4H',
-	    'Architecture/Wall_Window_Gap_4Wx4H',
-	    'Architecture/Wall_Window_Gap_End_L_2Wx4H',
-	    'Architecture/Wall_Window_Gap_End_L_4Wx4H',
-	    'Architecture/Wall_Window_Gap_End_R_2Wx4H',
-	    'Architecture/Wall_Window2',
-	    'Architecture/Window_Wall_Curve_Concave_4Rx4H'
+		'Architecture/Ceiling_2Wx2L',
+		'Architecture/Ceiling_2Wx4L',
+		'Architecture/Ceiling_4Wx2L',
+		'Architecture/Ceiling_4Wx4L',
+		'Architecture/Ceiling_Skylight_4Wx4L',
+		'Architecture/Ceiling_Skylight_Corner_2Wx2L',
+		'Architecture/Ceiling_Skylight_Edge_2W',
+		'Architecture/Ceiling_Skylight_Edge_4W',
+		'Architecture/Ceiling_Skylight_Filled_4Wx4L',
+		'Architecture/Ceiling_Skylight_Filled2_4Wx4L',
+		'Architecture/Ceiling_Slice_Concave_2R',
+		'Architecture/Ceiling_Slice_Concave_4R',
+		'Architecture/Ceiling_Slice_Convex_2R',
+		'Architecture/Ceiling_Slice_Convex_4R',
+		'Architecture/Door_4Wx4H',
+		'Architecture/Floor_2Wx2L',
+		'Architecture/Floor_2Wx4L',
+		'Architecture/Floor_4Wx2L',
+		'Architecture/Floor_4Wx4L',
+		'Architecture/Floor_Slice_Concave_2R',
+		'Architecture/Floor_Slice_Concave_4R',
+		'Architecture/Floor_Slice_Convex_2R',
+		'Architecture/Floor_Slice_Convex_4R',
+		'Architecture/Railing_2L',
+		'Architecture/Railing_4L',
+		'Architecture/Railing_Curve_Concave_2R',
+		'Architecture/Wall_2Wx4H',
+		'Architecture/Wall_4Wx4H',
+		'Architecture/Wall_Base_2W',
+		'Architecture/Wall_Base_4W',
+		'Architecture/Wall_Base_Curve_Concave_2R',
+		'Architecture/Wall_Base_Curve_Concave_4R',
+		'Architecture/Wall_Base_Curve_Convex_2R',
+		'Architecture/Wall_Base_Curve_Convex_4R',
+		'Architecture/Wall_Bulkhead_2W',
+		'Architecture/Wall_Bulkhead_4W',
+		'Architecture/Wall_Bulkhead_Curve_Concave_2R',
+		'Architecture/Wall_Bulkhead_Curve_Concave_4R',
+		'Architecture/Wall_Bulkhead_Curve_Convex_2R',
+		'Architecture/Wall_Bulkhead_Curve_Convex_4R',
+		'Architecture/Wall_Curve_Concave_2Rx4H',
+		'Architecture/Wall_Curve_Concave_4Rx4H',
+		'Architecture/Wall_Curve_Convex_2Rx4H',
+		'Architecture/Wall_Curve_Convex_4Rx4H',
+		'Architecture/Wall_Curve_Window_Concave_4Rx4H',
+		'Architecture/Wall_Curve_Window_Gap_Concave_4Rx4H',
+		'Architecture/Wall_Curve_Window_Gap_End_L_Concave_4Rx4H',
+		'Architecture/Wall_Curve_Window_Gap_End_R_Concave_4Rx4H',
+		'Architecture/Wall_Filler_Corner_Inner_4H',
+		'Architecture/Wall_Filler_Corner_Outer_4H',
+		'Architecture/Wall_Window_4Wx4H',
+		'Architecture/Wall_Window_GapEnd_R_4Wx4H',
+		'Architecture/Wall_Window_Gap_2Wx4H',
+		'Architecture/Wall_Window_Gap_4Wx4H',
+		'Architecture/Wall_Window_Gap_End_L_2Wx4H',
+		'Architecture/Wall_Window_Gap_End_L_4Wx4H',
+		'Architecture/Wall_Window_Gap_End_R_2Wx4H',
+		'Architecture/Wall_Window2',
+		'Architecture/Window_Wall_Curve_Concave_4Rx4H'
 	  ],
 	  _setPlacingObject: function (event) {
-	    var placingObject = document.createElement('a-entity');
-	    placingObject.setAttribute('native-object', {asset: event.target.el.components['native-object'].data.asset});
-	    this.placingObject = placingObject;
-	    this.scene.appendChild(placingObject);
+		var placingObject = document.createElement('a-entity');
+		placingObject.setAttribute('native-object', {asset: event.target.el.components['native-object'].data.asset});
+		this.placingObject = placingObject;
+		this.scene.appendChild(placingObject);
 	  },
 	  _addAssetToPalette: function (asset, i) {
-	    var assetEntity = document.createElement('a-entity');
-	    assetEntity.dataset.editorAsset = true;
-	    assetEntity.setAttribute('native-object', {asset: asset});
+		var assetEntity = document.createElement('a-entity');
+		assetEntity.dataset.editorAsset = true;
+		assetEntity.setAttribute('native-object', {asset: asset});
 
-	    // Hack to fix scaling issue
-	    setTimeout(function (assetEntity) { return function () {
-	      assetEntity.setAttribute('scale', '0.05 0.05 0.05');
-	    }}(assetEntity), 500);
+		// Hack to fix scaling issue
+		setTimeout(function (assetEntity) { return function () {
+		  assetEntity.setAttribute('scale', '0.05 0.05 0.05');
+		}}(assetEntity), 500);
 
-	    var cols = 3;
-	    var scale = 1 / 5;
-	    var spacing = 1 + 1 / 3;
-	    var pos = {x: (i % cols) * (scale * spacing), y: -Math.floor(i / cols) * (scale * spacing)};
+		var cols = 3;
+		var scale = 1 / 5;
+		var spacing = 1 + 1 / 3;
+		var pos = {x: (i % cols) * (scale * spacing), y: -Math.floor(i / cols) * (scale * spacing)};
 
-	    assetEntity.setAttribute('position', pos);
-	    assetEntity.object3D.addEventListener('cursordown', this._setPlacingObject.bind(this));
-	    this.palette.appendChild(assetEntity);
+		assetEntity.setAttribute('position', pos);
+		assetEntity.object3D.addEventListener('cursordown', this._setPlacingObject.bind(this));
+		this.palette.appendChild(assetEntity);
 	  },
 	  _createPalette: function () {
-	    this.palette = document.createElement('a-entity');
-	    this.palette.id = 'editorPalette';
-	    this.palette.setAttribute('position', '0 1.5 5');
-	    this._assets.forEach(this._addAssetToPalette.bind(this));
-	    this.scene.appendChild(this.palette);
+		this.palette = document.createElement('a-entity');
+		this.palette.id = 'editorPalette';
+		this.palette.setAttribute('position', '0 1.5 5');
+		this._assets.forEach(this._addAssetToPalette.bind(this));
+		this.scene.appendChild(this.palette);
 	  },
 	  init: function () {
-	    this.scene = document.querySelector('a-scene');
-	    this.scene.object3D.addEventListener('cursordown', this._setSelectedObject.bind(this));
-	    window.addEventListener('keydown', this._moveSelectedObject.bind(this));
+		this.scene = document.querySelector('a-scene');
+		this.scene.object3D.addEventListener('cursordown', this._setSelectedObject.bind(this));
+		window.addEventListener('keydown', this._moveSelectedObject.bind(this));
 
-	    this.raycastFloor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({color: 'white'}));
-	    this.raycastFloor.material.visible = false;
-	    this.raycastFloor.userData.altspace = {collider: {enabled: false}};
+		this.raycastFloor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({color: 'white'}));
+		this.raycastFloor.material.visible = false;
+		this.raycastFloor.userData.altspace = {collider: {enabled: false}};
 
-	    // Hack so that we avoid errors about this non-aframe object
-	    var noop = function () {}
-	    this.raycastFloor.el = { removeState: noop, addState: noop, emit: noop};
+		// Hack so that we avoid errors about this non-aframe object
+		var noop = function () {}
+		this.raycastFloor.el = { removeState: noop, addState: noop, emit: noop};
 
-	    this.raycastFloor.rotation.x = -Math.PI / 2;
-	    this.scene.object3D.add(this.raycastFloor);
-	    this.raycaster = new THREE.Raycaster();
-	    this.scene.object3D.addEventListener('cursormove', this._placeObject.bind(this));
+		this.raycastFloor.rotation.x = -Math.PI / 2;
+		this.scene.object3D.add(this.raycastFloor);
+		this.raycaster = new THREE.Raycaster();
+		this.scene.object3D.addEventListener('cursormove', this._placeObject.bind(this));
 
-	    this._createPalette();
+		this._createPalette();
 	  }
 	});
+
 
 	AFRAME.registerComponent('native', {
 	  schema: {
 		asset: { type: 'string' },
-	  	attributes: {
-	  		type: 'string',
-	  		/*parse: function (value) {
+		attributes: {
+			type: 'string',
+			/*parse: function (value) {
 				var ret;
 				  try {
 					  ret = JSON.parse(value);
 				  } catch (e) {}
 				  return ret;
-	  		},
-	  		stringify: function (value) {
-	  			var ret;
-	  			try {
-	  				ret = JSON.stringify(value);
-	  			} catch (e) { }
-	  			return ret;
-	  		}*/
+			},
+			stringify: function (value) {
+				var ret;
+				try {
+					ret = JSON.stringify(value);
+				} catch (e) { }
+				return ret;
+			}*/
 		  }
 	  },
 	  init: function () {
-	    this.el.setObject3D('native', altspace.instantiateNativeObject(this.data.asset));
+		this.el.setObject3D('native', altspace.instantiateNativeObject(this.data.asset));
 	  },
 	  update: function (oldData) {
-	  	if (this.data.attributes) {
-	  		altspace._internal.callClientFunction('UpdateNativeAttributes', {
-	  			MeshId: this.el.object3DMap.native.id,
-	  			Attributes: this.data.attributes
-	  		}, { argsType: 'JSTypeUpdateNativeAttributes' });
+		if (this.data.attributes) {
+			altspace._internal.callClientFunction('UpdateNativeAttributes', {
+				MeshId: this.el.object3DMap.native.id,
+				Attributes: this.data.attributes
+			}, { argsType: 'JSTypeUpdateNativeAttributes' });
 		}
 	  },
 	  remove: function () {
-	    this.el.removeObject3D('native');
+		this.el.removeObject3D('native');
 	  }
 	});
 	//TODO Next: Add and trigger thrust function to the n-rigidbody
@@ -264,7 +265,7 @@
 		function parseBool(boolString) {
 			return boolString === 'true';//good enough
 		}
-		                   
+						   
 		//TODO: Get them to add type registration to AFRAME
 		var vec3bool = {
 			default: 'false false false',
@@ -362,26 +363,26 @@
 	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
 	   */
 	  schema: {
-	    usePixelScale: { type: 'boolean', default: 'false'},
-	    verticalAlign: { type: 'string', default: 'middle'}
+		usePixelScale: { type: 'boolean', default: 'false'},
+		verticalAlign: { type: 'string', default: 'middle'}
 	  },
 
 	  /**
 	   * Called once when component is attached. Generally for initial setup.
 	   */
 	  init: function () {
-	    if (!(this.el.object3D instanceof THREE.Scene)) {
-	      console.warn('aframe-altspace-component can only be attached to a-scene');
-	      return;
-	    }
+		if (!(this.el.object3D instanceof THREE.Scene)) {
+		  console.warn('aframe-altspace-component can only be attached to a-scene');
+		  return;
+		}
 
-	    if (window.altspace && window.altspace.inClient) {
-	      this.el.setAttribute('vr-mode-ui', {enabled: false});
-	      this.initRenderer();
-	      this.initCursorEvents();
-	    } else {
-	      console.warn('aframe-altspace-component only works inside of AltspaceVR');
-	    }
+		if (window.altspace && window.altspace.inClient) {
+		  this.el.setAttribute('vr-mode-ui', {enabled: false});
+		  this.initRenderer();
+		  this.initCursorEvents();
+		} else {
+		  console.warn('aframe-altspace-component only works inside of AltspaceVR');
+		}
 
 	  },
 
@@ -423,41 +424,41 @@
 	   */
 	  initRenderer: function () {
 
-	    var scene = this.el.object3D;
-	    if (!this.data.usePixelScale) {
-	      altspace.getEnclosure().then(function(e) {
-	        scene.scale.multiplyScalar(e.pixelsPerMeter);
-	      });
-	    }
-	    var verticalAlign = this.data.verticalAlign;
-	    if (verticalAlign !== 'center') {
-	      altspace.getEnclosure().then(function(e) {
-	        switch (verticalAlign) {
-	          case 'bottom':
-	            scene.position.y -= e.innerHeight / 2;
-	            break;
-	          case 'top':
-	            scene.position.y += e.innerHeight / 2;
-	            break;
-	          default:
-	            console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
-	        }
-	      });
-	    }
-	    var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
-	    var noop = function() {};
-	    renderer.setSize = noop;
-	    renderer.setPixelRatio = noop;
-	    renderer.setClearColor = noop;
-	    renderer.clear = noop;
-	    renderer.enableScissorTest = noop;
-	    renderer.setScissor = noop;
-	    renderer.setViewport = noop;
-	    renderer.getPixelRatio = noop;
-	    renderer.getMaxAnisotropy = noop;
-	    renderer.setFaceCulling = noop;
-	    renderer.context = {canvas: {}};
-	    renderer.shadowMap = {};
+		var scene = this.el.object3D;
+		if (!this.data.usePixelScale) {
+		  altspace.getEnclosure().then(function(e) {
+			scene.scale.multiplyScalar(e.pixelsPerMeter);
+		  });
+		}
+		var verticalAlign = this.data.verticalAlign;
+		if (verticalAlign !== 'center') {
+		  altspace.getEnclosure().then(function(e) {
+			switch (verticalAlign) {
+			  case 'bottom':
+				scene.position.y -= e.innerHeight / 2;
+				break;
+			  case 'top':
+				scene.position.y += e.innerHeight / 2;
+				break;
+			  default:
+				console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+			}
+		  });
+		}
+		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
+		var noop = function() {};
+		renderer.setSize = noop;
+		renderer.setPixelRatio = noop;
+		renderer.setClearColor = noop;
+		renderer.clear = noop;
+		renderer.enableScissorTest = noop;
+		renderer.setScissor = noop;
+		renderer.setViewport = noop;
+		renderer.getPixelRatio = noop;
+		renderer.getMaxAnisotropy = noop;
+		renderer.setFaceCulling = noop;
+		renderer.context = {canvas: {}};
+		renderer.shadowMap = {};
 
 	  },
 
@@ -466,48 +467,48 @@
 	   */
 	  initCursorEvents: function() {
 
-	    var scene = this.el.object3D;
-	    var cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
-	    if (cursorEl) {
-	      // Hide A-Frame cursor mesh.
-	      cursorEl.setAttribute('material', 'transparent', true);
-	      cursorEl.setAttribute('material', 'opacity', 0.0);
-	    }
+		var scene = this.el.object3D;
+		var cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
+		if (cursorEl) {
+		  // Hide A-Frame cursor mesh.
+		  cursorEl.setAttribute('material', 'transparent', true);
+		  cursorEl.setAttribute('material', 'opacity', 0.0);
+		}
 
-	    var emit = function (eventName, event) {
-	    	// Fire events on intersected object and A-Frame cursor.
-	    	var targetEl = event.target.el;
-	    	if (cursorEl) cursorEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
-	    	if (targetEl) targetEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
-	    } ;
+		var emit = function (eventName, event) {
+			// Fire events on intersected object and A-Frame cursor.
+			var targetEl = event.target.el;
+			if (cursorEl) cursorEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
+			if (targetEl) targetEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
+		} ;
 
-	    var cursordownObj = null;
-	    scene.addEventListener('cursordown', function(event) {
-	      cursordownObj = event.target;
-	      emit('mousedown', event);
-	    });
+		var cursordownObj = null;
+		scene.addEventListener('cursordown', function(event) {
+		  cursordownObj = event.target;
+		  emit('mousedown', event);
+		});
 
-	    scene.addEventListener('cursorup', function(event) {
-	      emit('mouseup', event);
-	      if (event.target.uuid === cursordownObj.uuid) {
-	        emit('click', event);
-	      }
-	      cursordownObj = null;
-	    });
+		scene.addEventListener('cursorup', function(event) {
+		  emit('mouseup', event);
+		  if (event.target.uuid === cursordownObj.uuid) {
+			emit('click', event);
+		  }
+		  cursordownObj = null;
+		});
 
-	    scene.addEventListener('cursorenter', function(event) {
-	      if (!event.target.el) { return; }
-	      event.target.el.addState('hovered');
-	      if (cursorEl) cursorEl.addState('hovering');
-	      emit('mouseenter', event);
-	    });
+		scene.addEventListener('cursorenter', function(event) {
+		  if (!event.target.el) { return; }
+		  event.target.el.addState('hovered');
+		  if (cursorEl) cursorEl.addState('hovering');
+		  emit('mouseenter', event);
+		});
 
-	    scene.addEventListener('cursorleave', function(event) {
-	      if (!event.target.el) { return; }
-	      event.target.el.removeState('hovered');
-	      if (cursorEl) cursorEl.removeState('hovering');
-	      emit('mouseleave', event);
-	    });
+		scene.addEventListener('cursorleave', function(event) {
+		  if (!event.target.el) { return; }
+		  event.target.el.removeState('hovered');
+		  if (cursorEl) cursorEl.removeState('hovering');
+		  emit('mouseleave', event);
+		});
 
 	  },
 
@@ -515,238 +516,346 @@
 
 	AFRAME.registerComponent('altspace-tracked-controls', {
 	  init: function () {
-	    this.gamepadIndex = null;
-	    this.trackedControlsSystem = document.querySelector('a-scene').systems['tracked-controls'];
-	    this.systemGamepads = 0;
-	    altspace.getGamepads();
+		this.gamepadIndex = null;
+		this.trackedControlsSystem = document.querySelector('a-scene').systems['tracked-controls'];
+		this.systemGamepads = 0;
+		altspace.getGamepads();
 	  },
 	  tick: function () {
-	      if (
-	        this.trackedControlsSystem &&
-	        this.systemGamepads !== this.trackedControlsSystem.controllers.length &&
-	        window.altspace && altspace.getGamepads && altspace.getGamepads().length
-	      ) {
-	        var components = this.el.components;
-	        if (components['paint-controls']) {
-	          this.gamepadIndex = components['paint-controls'].data.hand === 'left' ? 2 : 1;
-	        }
-	        if (this.gamepadIndex === null && components['hand-controls']) {
-	          this.gamepadIndex = components['hand-controls'].data === 'left' ? 2 : 1;
-	        }
-	        if (this.gamepadIndex === null && components['vive-controls']) {
-	          this.gamepadIndex = components['vive-controls'].data.hand === 'left' ? 2 : 1;
-	        }
-	        if (this.gamepadIndex === null && components['tracked-controls']) {
-	          this.gamepadIndex = components['tracked-controls'].data.controller;
-	        }
-	        this.el.setAttribute('tracked-controls', 'id', altspace.getGamepads()[this.gamepadIndex].id);
-	        this.el.setAttribute('tracked-controls', 'controller', 0);
-	        this.systemGamepads = this.trackedControlsSystem.controllers.length;
-	      }
+		  if (
+			this.trackedControlsSystem &&
+			this.systemGamepads !== this.trackedControlsSystem.controllers.length &&
+			window.altspace && altspace.getGamepads && altspace.getGamepads().length
+		  ) {
+			var components = this.el.components;
+			if (components['paint-controls']) {
+			  this.gamepadIndex = components['paint-controls'].data.hand === 'left' ? 2 : 1;
+			}
+			if (this.gamepadIndex === null && components['hand-controls']) {
+			  this.gamepadIndex = components['hand-controls'].data === 'left' ? 2 : 1;
+			}
+			if (this.gamepadIndex === null && components['vive-controls']) {
+			  this.gamepadIndex = components['vive-controls'].data.hand === 'left' ? 2 : 1;
+			}
+			if (this.gamepadIndex === null && components['tracked-controls']) {
+			  this.gamepadIndex = components['tracked-controls'].data.controller;
+			}
+			this.el.setAttribute('tracked-controls', 'id', altspace.getGamepads()[this.gamepadIndex].id);
+			this.el.setAttribute('tracked-controls', 'controller', 0);
+			this.systemGamepads = this.trackedControlsSystem.controllers.length;
+		  }
 	  }
 	});
 
 	AFRAME.registerSystem('sync-system',
 	{
-	    schema: {
-	        author: { type: 'string', default: null },
-	        app: { type: 'string', default: null },
-	        instance: { type: 'string', default: null },
-	        'ref-url': { type: 'string', default: null },
-	    },
-	    init: function() {
-	        altspace.utilities.sync.connect({
-	            authorId: this.data.author,
-	            appId: this.data.app,
-	            instanceId: this.data.instance,
-	            baseRefUrl: this.data['ref-url']
-	        }).then(function(connection) {
-	            this.connection = connection;
-	            this.sceneEl.emit('connected', null, false);
+		schema: {
+			author: { type: 'string', default: null },
+			app: { type: 'string', default: null },
+			instance: { type: 'string', default: null },
+			'ref-url': { type: 'string', default: null },
+		},
+		init: function() {
+			altspace.utilities.sync.connect({
+				authorId: this.data.author,
+				appId: this.data.app,
+				instanceId: this.data.instance,
+				baseRefUrl: this.data['ref-url']
+			}).then(function(connection) {
+				this.connection = connection;
+				this.sceneEl.emit('connected', null, false);
 
-	            this.sceneRef = this.connection.instance.child('scene');
-	            this.clientsRef = this.connection.instance.child('clients');
+				this.sceneRef = this.connection.instance.child('scene');
+				this.clientsRef = this.connection.instance.child('clients');
 
-	            // temporary way of having unique identifiers for each client
-	            this.clientId = this.sceneEl.object3D.uuid;
-	            var masterClientId;
-	            this.clientsRef.on("value", function (snapshot) {
-	                var clientIds = snapshot.val();
+				// temporary way of having unique identifiers for each client
+				this.clientId = this.sceneEl.object3D.uuid;
+				var masterClientId;
+				this.clientsRef.on("value", function (snapshot) {
+					var clientIds = snapshot.val();
 
-	                if (!clientIds) return;
+					if (!clientIds) return;
 
-	                var masterClientKey = Object.keys(clientIds)[0];
-	                masterClientId = clientIds[masterClientKey];
-	            });
+					var masterClientKey = Object.keys(clientIds)[0];
+					masterClientId = clientIds[masterClientKey];
+				});
 
-	            // add our client ID to the list of connected clients, 
-	            // but have it be automatically removed by firebase if we disconnect for any reason
-	            this.clientsRef.push(this.clientId).onDisconnect().remove();
+				// add our client ID to the list of connected clients, 
+				// but have it be automatically removed by firebase if we disconnect for any reason
+				this.clientsRef.push(this.clientId).onDisconnect().remove();
 
-	            this.connection.instance.child('initialized').once('value', function (snapshot) {
-	                var shouldInitialize = !snapshot.val();
-	                snapshot.ref().set(true);
+				this.connection.instance.child('initialized').once('value', function (snapshot) {
+					var shouldInitialize = !snapshot.val();
+					snapshot.ref().set(true);
 
-	                this.sceneEl.emit('instanceready', { shouldInitialize: shouldInitialize }, false);
-	                //todo: change this to an event. Perhaps also do this for creators and destroyers
-	            }.bind(this));
+					this.sceneEl.emit('instanceready', { shouldInitialize: shouldInitialize }, false);
+					//todo: change this to an event. Perhaps also do this for creators and destroyers
+				}.bind(this));
 
 
-	            Object.defineProperty(this, 'isMasterClient', {
-	                get: function () { return masterClientId === this.clientId; }.bind(this)
-	            });
-	        }.bind(this));
-	    }
+				Object.defineProperty(this, 'isMasterClient', {
+					get: function () { return masterClientId === this.clientId; }.bind(this)
+				});
+			}.bind(this));
+		}
 	});
 
 	AFRAME.registerComponent('sync',
 	{
-	    schema: {
-	        mode: { default: 'link' }
-	    },
-	    init: function () {
-	        var scene = document.querySelector('a-scene');
-	        var syncSys = scene.systems['sync-system'];
+		schema: {
+			mode: { default: 'link' }
+		},
+		init: function () {
+			var scene = document.querySelector('a-scene');
+			var syncSys = scene.systems['sync-system'];
 
-	        var ref;
-	        var key;
-	        var dataRef;
-	        var ownerRef;
-	        var isMine = false;
+			var ref;
+			var key;
+			var dataRef;
+			var ownerRef;
+			var isMine = false;
 
-	        var component = this;
+			var component = this;
 
-	        if (this.data.mode === 'link') {
-	            var id = this.el.id;
-	            if (!id) {
-	                console.error('Entities cannot be synced using link mode without an id.');
-	                return;
-	            }
+			if (this.data.mode === 'link') {
+				var id = this.el.id;
+				if (!id) {
+					console.error('Entities cannot be synced using link mode without an id.');
+					return;
+				}
 
-	            link(syncSys.sceneRef.child(id));
-	            setupReceive();
-	        }
+				link(syncSys.sceneRef.child(id));
+				setupReceive();
+			}
 
-	        function link(entityRef) {
-	            ref = entityRef;
-	            key = ref.key();
-	            dataRef = ref.child('data');
-	            component.dataRef = dataRef;
-	            ownerRef = ref.child('owner');
-	        }
+			function link(entityRef) {
+				ref = entityRef;
+				key = ref.key();
+				dataRef = ref.child('data');
+				component.dataRef = dataRef;
+				ownerRef = ref.child('owner');
+			}
 
-	        function setupReceive() {
-	            ownerRef.transaction(function (owner) {
-	                if (owner) return undefined;
+			function setupReceive() {
+				ownerRef.transaction(function (owner) {
+					if (owner) return undefined;
 
-	                return syncSys.clientId;
-	            });
+					return syncSys.clientId;
+				});
 
-	            ownerRef.on('value',
-	                function(snapshot) {
-	                    var newOwnerId = snapshot.val();
+				ownerRef.on('value',
+					function(snapshot) {
+						var newOwnerId = snapshot.val();
 
-	                    var gained = newOwnerId === syncSys.clientId && !isMine;
-	                    if (gained) component.el.emit('ownershipgained', null, false);
+						var gained = newOwnerId === syncSys.clientId && !isMine;
+						if (gained) component.el.emit('ownershipgained', null, false);
 
 
-	                    var lost = newOwnerId !== syncSys.clientId && isMine;
-	                    if (lost) component.el.emit('ownershiplost', null, false);
+						var lost = newOwnerId !== syncSys.clientId && isMine;
+						if (lost) component.el.emit('ownershiplost', null, false);
 
-	                    isMine = newOwnerId === syncSys.clientId;
-	                });
-	        }
+						isMine = newOwnerId === syncSys.clientId;
+					});
+			}
 
-	        this.takeOwnership = function() {
-	            ownerRef.set(syncSys.clientId);
-	        }
+			this.takeOwnership = function() {
+				ownerRef.set(syncSys.clientId);
+			}
 
-	        Object.defineProperty(component, 'isMine', {
-	            get: function () {
-	                return isMine;//TODO: Should this be state instead?
-	            }
-	        });
-	    }
+			Object.defineProperty(component, 'isMine', {
+				get: function () {
+					return isMine;//TODO: Should this be state instead?
+				}
+			});
+		}
 	});
 
 
 	//TODO: Maybe do a sync-animation that syncronizes the playhead?
 	AFRAME.registerComponent('sync-transform',
 	{
-	    dependencies: ['sync'],
-	    schema: {
-	    },
-	    init: function () {
-	        var sync = this.el.components.sync;
-	        var component = this;
+		dependencies: ['sync'],
+		schema: {
+		},
+		init: function () {
+			var sync = this.el.components.sync;
+			var component = this;
 
-	        var stoppedAnimations = [];
-	        //pause all animations
-	        this.el.addEventListener('ownershiplost', function() {
-	            var children = component.el.children;
-	            for (var i = 0; i < children.length; i++) {
-	                var tagName = children[i].tagName.toLowerCase();
-	                if (tagName === "a-animation") {
-	                    stoppedAnimations.push(children[i]);
-	                    children[i].stop();
-	                }
-	            }
-	        });
-	        this.el.addEventListener('ownershipgained', function () {
-	            for (var i = 0; i < stoppedAnimations.length; i++) {
-	                var animation = stoppedAnimations[i];
-	                animation.start();
-	            }
-	            stoppedAnimations = [];
-	        });
-	    }
+			var positionRef = sync.dataRef.child('position');
+			var rotationRef = sync.dataRef.child('rotation');
+			var scaleRef = sync.dataRef.child('scale');
+
+			var stoppedAnimations = [];
+			//pause all animations
+			this.el.addEventListener('ownershiplost', function() {
+				var children = component.el.children;
+				for (var i = 0; i < children.length; i++) {
+					var tagName = children[i].tagName.toLowerCase();
+					if (tagName === "a-animation") {
+						stoppedAnimations.push(children[i]);
+						children[i].stop();
+					}
+				}
+			});
+			this.el.addEventListener('ownershipgained', function () {
+				for (var i = 0; i < stoppedAnimations.length; i++) {
+					var animation = stoppedAnimations[i];
+					animation.start();
+				}
+				stoppedAnimations = [];
+			});
+
+			positionRef.on('value', function (snapshot) {
+				if (sync.isMine) return;
+
+				var value = snapshot.val();
+				if (!value) return;
+
+				component.el.setAttribute('position', {x: value.x, y: value.y, z: value.z});
+			});
+
+			rotationRef.on('value', function (snapshot) {
+				if (sync.isMine) return;
+
+				var value = snapshot.val();
+				if (!value) return;
+
+				component.el.setAttribute('rotation', {x: value.x, y: value.y, z: value.z});
+			});
+
+			scaleRef.on('value', function (snapshot) {
+				if (sync.isMine) return;
+
+				var value = snapshot.val();
+				if (!value) return;
+
+				component.el.setAttribute('scale', {x: value.x, y: value.y, z: value.z});
+			});
+
+			function onComponentChanged(event){
+				if (!sync.isMine) return;
+
+				var name = event.detail.name;
+				var oldData = event.detail.oldData;
+				var newData = event.detail.newData;
+
+				if (name === 'position') {
+					positionRef.set({
+						x: newData.x,
+						y: newData.y,
+						z: newData.z
+					});
+				} else if (name === 'rotation') {
+					rotationRef.set({
+						x: newData.x,
+						y: newData.y,
+						z: newData.z
+					});
+				} else if (name === 'scale') {
+					scaleRef.set({
+						x: newData.x,
+						y: newData.y,
+						z: newData.z
+					});
+				} else {
+					return;
+				}
+
+			}
+
+			//from underscore.js
+			function throttle(func, wait, options) {
+				var timeout, context, args, result;
+				var previous = 0;
+				if (!options) options = {};
+
+				var later = function() {
+				  previous = options.leading === false ? 0 : Date.now();
+				  timeout = null;
+				  result = func.apply(context, args);
+				  if (!timeout) context = args = null;
+				};
+
+				var throttled = function() {
+				  var now = Date.now();
+				  if (!previous && options.leading === false) previous = now;
+				  var remaining = wait - (now - previous);
+				  context = this;
+				  args = arguments;
+				  if (remaining <= 0 || remaining > wait) {
+					if (timeout) {
+					  clearTimeout(timeout);
+					  timeout = null;
+					}
+					previous = now;
+					result = func.apply(context, args);
+					if (!timeout) context = args = null;
+				  } else if (!timeout && options.trailing !== false) {
+					timeout = setTimeout(later, remaining);
+				  }
+				  return result;
+				};
+
+				throttled.cancel = function() {
+				  clearTimeout(timeout);
+				  previous = 0;
+				  timeout = context = args = null;
+				};
+
+				return throttled;
+			  };
+
+
+			this.el.addEventListener('componentchanged', throttle(onComponentChanged, 100));
+		}
 	});
 
 
 	AFRAME.registerComponent('sync-color',
 	{
-	    dependencies: ['sync'],
-	    schema: {//TODO: useOwnership
-	    },
-	    init: function () {
-	        var sync = this.el.components.sync;
-	        var oldColor;
-	        var colorRef = sync.dataRef.child('material/color');
-	        var component = this;
+		dependencies: ['sync'],
+		schema: {//TODO: useOwnership
+		},
+		init: function () {
+			var sync = this.el.components.sync;
+			var oldColor;
+			var colorRef = sync.dataRef.child('material/color');
+			var component = this;
 
-	        var refChangedLocked = false;
-	        var componentChangedLock = false;
+			var refChangedLocked = false;
+			var componentChangedLock = false;
 
-	        this.el.addEventListener('componentchanged', function (event) {
-	            var name = event.detail.name;
-	            var oldData = event.detail.oldData;
-	            var newData = event.detail.newData;
+			this.el.addEventListener('componentchanged', function (event) {
+				var name = event.detail.name;
+				var oldData = event.detail.oldData;
+				var newData = event.detail.newData;
 
-	            if (name !== 'material') return;
-	            if (refChangedLocked) return;
+				if (name !== 'material') return;
+				if (refChangedLocked) return;
 
-	            if (oldData.color !== newData.color) {
-	            	setTimeout(function(){
-	            		componentChangedLock = true;
-	            		colorRef.set(newData.color);
-	            		componentChangedLock = false;
-	            	},1)
-	                
-	            }
+				if (oldData.color !== newData.color) {
+					setTimeout(function() {
+							componentChangedLock = true;
+							colorRef.set(newData.color);
+							componentChangedLock = false;
+						},
+						1);
 
-	            oldColor = newData.color;
-	        });
+				}
 
-	        colorRef.on('value', function (snapshot) {
-	            var color = snapshot.val();
-	        	if(componentChangedLock) return;
-			    
-	            refChangedLocked = true;
-			    component.el.setAttribute('material', 'color', color);
-	            refChangedLocked = false;
+				oldColor = newData.color;
+			});
 
-	        });
-	    }
+			colorRef.on('value', function (snapshot) {
+				var color = snapshot.val();
+				if(componentChangedLock) return;
+				
+				refChangedLocked = true;
+				component.el.setAttribute('material', 'color', color);
+				refChangedLocked = false;
+
+			});
+		}
 	});
 
 
