@@ -689,6 +689,7 @@ AFRAME.registerComponent('sync-color',
             feedbackLocked = true;
             component.el.setAttribute.call(component.el, 'material', 'color', color);
             feedbackLocked = false;
+            
         });
     }
 });
