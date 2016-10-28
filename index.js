@@ -585,6 +585,7 @@ AFRAME.registerComponent('sync',
             ref = entityRef;
             key = ref.key();
             dataRef = ref.child('data');
+            component.dataRef = dataRef;
             ownerRef = ref.child('owner');
         }
 
@@ -616,7 +617,7 @@ AFRAME.registerComponent('sync',
 
         Object.defineProperty(component, 'isMine', {
             get: function () {
-                return isMine;
+                return isMine;//TODO: Should this be state instead?
             }
         });
     }
@@ -625,6 +626,7 @@ AFRAME.registerComponent('sync',
 
 AFRAME.registerComponent('sync-transform',
 {
+    dependencies: ['sync'],
     schema: {
     },
     init: function () {
@@ -649,6 +651,44 @@ AFRAME.registerComponent('sync-transform',
                 animation.start();
             }
             stoppedAnimations = [];
+        });
+    }
+});
+
+
+AFRAME.registerComponent('sync-color',
+{
+    dependencies: ['sync'],
+    schema: {//TODO: useOwnership
+    },
+    init: function () {
+        var sync = this.el.components.sync;
+        var oldColor;
+        var colorRef = sync.dataRef.child('material/color');
+        var component = this;
+
+        var feedbackLocked = false;
+
+        this.el.addEventListener('componentchanged', function (event) {
+            var name = event.detail.name;
+            var oldData = event.detail.oldData;
+            var newData = event.detail.newData;
+
+            if (name !== 'material') return;
+            if (feedbackLocked) return;
+
+            if (oldData.color !== newData.color) {
+                colorRef.set(newData.color);
+            }
+
+            oldColor = newData.color;
+        });
+
+        colorRef.on('value', function (snapshot) {
+            var color = snapshot.val();
+            feedbackLocked = true;
+            component.el.setAttribute.call(component.el, 'material', 'color', color);
+            feedbackLocked = false;
         });
     }
 });
