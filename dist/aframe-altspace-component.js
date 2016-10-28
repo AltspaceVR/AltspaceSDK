@@ -635,10 +635,15 @@
 	        }
 
 	        function setupReceive() {
+	            ownerRef.transaction(function (owner) {
+	                if (owner) return undefined;
+
+	                return syncSys.clientId;
+	            });
+
 	            ownerRef.on('value',
 	                function(snapshot) {
 	                    var newOwnerId = snapshot.val();
-	                    if (!newOwnerId) component.takeOwnership(); //link only?
 
 	                    var gained = newOwnerId === syncSys.clientId && !isMine;
 	                    if (gained) component.el.emit('ownershipgained', null, false);
@@ -659,6 +664,37 @@
 	            get: function () {
 	                return isMine;
 	            }
+	        });
+	    }
+	});
+
+
+	AFRAME.registerComponent('sync-transform',
+	{
+	    schema: {
+	    },
+	    init: function () {
+	        var sync = this.el.components.sync;
+	        var component = this;
+
+	        var stoppedAnimations = [];
+	        //pause all animations
+	        this.el.addEventListener('ownershiplost', function() {
+	            var children = component.el.children;
+	            for (var i = 0; i < children.length; i++) {
+	                var tagName = children[i].tagName.toLowerCase();
+	                if (tagName === "a-animation") {
+	                    stoppedAnimations.push(children[i]);
+	                    children[i].stop();
+	                }
+	            }
+	        });
+	        this.el.addEventListener('ownershipgained', function () {
+	            for (var i = 0; i < stoppedAnimations.length; i++) {
+	                var animation = stoppedAnimations[i];
+	                animation.start();
+	            }
+	            stoppedAnimations = [];
 	        });
 	    }
 	});
