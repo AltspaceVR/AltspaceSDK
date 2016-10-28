@@ -624,6 +624,7 @@ AFRAME.registerComponent('sync',
 });
 
 
+//TODO: Maybe do a sync-animation that syncronizes the playhead?
 AFRAME.registerComponent('sync-transform',
 {
     dependencies: ['sync'],
@@ -667,7 +668,8 @@ AFRAME.registerComponent('sync-color',
         var colorRef = sync.dataRef.child('material/color');
         var component = this;
 
-        var feedbackLocked = false;
+        var refChangedLocked = false;
+        var componentChangedLock = false;
 
         this.el.addEventListener('componentchanged', function (event) {
             var name = event.detail.name;
@@ -675,10 +677,15 @@ AFRAME.registerComponent('sync-color',
             var newData = event.detail.newData;
 
             if (name !== 'material') return;
-            if (feedbackLocked) return;
+            if (refChangedLocked) return;
 
             if (oldData.color !== newData.color) {
-                colorRef.set(newData.color);
+            	setTimeout(function(){
+            		componentChangedLock = true;
+            		colorRef.set(newData.color);
+            		componentChangedLock = false;
+            	},1)
+                
             }
 
             oldColor = newData.color;
@@ -686,10 +693,12 @@ AFRAME.registerComponent('sync-color',
 
         colorRef.on('value', function (snapshot) {
             var color = snapshot.val();
-            feedbackLocked = true;
-            component.el.setAttribute.call(component.el, 'material', 'color', color);
-            feedbackLocked = false;
-            
+        	if(componentChangedLock) return;
+		    
+            refChangedLocked = true;
+		    component.el.setAttribute('material', 'color', color);
+            refChangedLocked = false;
+
         });
     }
 });
