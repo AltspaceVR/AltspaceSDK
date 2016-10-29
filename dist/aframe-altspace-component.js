@@ -576,20 +576,24 @@
 				this.clientsRef.on("value", function (snapshot) {
 					var clientIds = snapshot.val();
 
-					if (!clientIds) return;
-
 					var masterClientKey = Object.keys(clientIds)[0];
 					masterClientId = clientIds[masterClientKey];
 				});
 
 				this.clientsRef.on('child_added', function(childSnapshot) {
 					var joinedClientId = childSnapshot.val();
-					component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
+					//Let the master client flag get set first
+					setTimeout(function(){
+						component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
+					}, 1);
 				});
 
 				this.clientsRef.on('child_removed', function(childSnapshot) {
 					var leftClientId = childSnapshot.val();
-					component.sceneEl.emit('clientleft', {id: leftClientId}, false);
+					//Let the master client flag get set first
+					setTimeout(function(){
+						component.sceneEl.emit('clientleft', {id: leftClientId}, false);
+					}, 1);
 				});
 
 				// add our client ID to the list of connected clients, 
@@ -631,9 +635,9 @@
 			var component = this;
 
 			scene.addEventListener('clientleft', function(event){
-				var shouldTakeOwnership = ownerId === event.details.id && syncSys.isMasterClient;
+				var shouldTakeOwnership = (!ownerId || ownerId === event.detail.id) && syncSys.isMasterClient;
 
-				if(shouldTakeOwnership) takeOwnership();
+				if(shouldTakeOwnership) component.takeOwnership();
 			});
 
 			if (this.data.mode === 'link') {
@@ -659,6 +663,7 @@
 				ownerRef.transaction(function (owner) {
 					if (owner) return undefined;
 
+					ownerRef.onDisconnect().set(null);
 					return syncSys.clientId;
 				});
 
@@ -671,7 +676,10 @@
 
 
 						var lost = newOwnerId !== syncSys.clientId && isMine;
-						if (lost) component.el.emit('ownershiplost', null, false);
+						if (lost){
+							component.el.emit('ownershiplost', null, false);
+							ownerRef.onDisconnect().cancel();
+						}
 
 						ownerId = newOwnerId;
 
@@ -680,7 +688,9 @@
 			}
 
 			this.takeOwnership = function() {
+				console.log('taking ownership of: ' + component.el.id)
 				ownerRef.set(syncSys.clientId);
+				ownerRef.onDisconnect().set(null);
 			}
 
 			Object.defineProperty(component, 'isMine', {
