@@ -745,58 +745,51 @@
 				stoppedAnimations = [];
 			});
 
-			positionRef.on('value', function (snapshot) {
+			function onTransform(snapshot, componentName) {
 				if (sync.isMine) return;
 
 				var value = snapshot.val();
 				if (!value) return;
 
-				component.el.setAttribute('position', {x: value.x, y: value.y, z: value.z});
+				component.el.setAttribute(componentName, value);
+			}
+
+			positionRef.on('value', function (snapshot) {
+				onTransform(snapshot, 'position');
 			});
 
 			rotationRef.on('value', function (snapshot) {
-				if (sync.isMine) return;
-
-				var value = snapshot.val();
-				if (!value) return;
-
-				component.el.setAttribute('rotation', {x: value.x, y: value.y, z: value.z});
+				onTransform(snapshot, 'rotation');
 			});
 
 			scaleRef.on('value', function (snapshot) {
-				if (sync.isMine) return;
-
-				var value = snapshot.val();
-				if (!value) return;
-
-				component.el.setAttribute('scale', {x: value.x, y: value.y, z: value.z});
+				onTransform(snapshot, 'scale');
 			});
+
+			var sendPosition = throttle(function(value){
+				positionRef.set(value);
+			}, component.updateRate);
+
+			var sendRotation = throttle(function(value){
+				rotationRef.set(value);
+			}, component.updateRate);
+
+			var sendScale = throttle(function(value){
+				scaleRef.set(value);
+			}, component.updateRate);
 
 			function onComponentChanged(event){
 				if (!sync.isMine) return;
 
 				var name = event.detail.name;
-				var oldData = event.detail.oldData;
 				var newData = event.detail.newData;
 
 				if (name === 'position') {
-					positionRef.set({
-						x: newData.x,
-						y: newData.y,
-						z: newData.z
-					});
+					sendPosition(newData);
 				} else if (name === 'rotation') {
-					rotationRef.set({
-						x: newData.x,
-						y: newData.y,
-						z: newData.z
-					});
+					sendRotation(newData);
 				} else if (name === 'scale') {
-					scaleRef.set({
-						x: newData.x,
-						y: newData.y,
-						z: newData.z
-					});
+					sendScale(newData);
 				} else {
 					return;
 				}
@@ -846,7 +839,7 @@
 			  };
 
 
-			this.el.addEventListener('componentchanged', throttle(onComponentChanged, this.updateRate));
+			this.el.addEventListener('componentchanged', onComponentChanged);
 		}
 	});
 
@@ -854,7 +847,7 @@
 	AFRAME.registerComponent('sync-color',
 	{
 		dependencies: ['sync'],
-		schema: {//TODO: useOwnership
+		schema: {
 		},
 		init: function () {
 			var sync = this.el.components.sync;
@@ -863,7 +856,7 @@
 			var component = this;
 
 			var refChangedLocked = false;
-			var componentChangedLock = false;
+			var componentChangedLock = false;//TODO: useOwnership
 
 			this.el.addEventListener('componentchanged', function (event) {
 				var name = event.detail.name;
