@@ -559,7 +559,6 @@ AFRAME.registerSystem('sync-system',
 				snapshot.ref().set(true);
 
 				this.sceneEl.emit('instanceready', { shouldInitialize: shouldInitialize }, false);
-				//todo: change this to an event. Perhaps also do this for creators and destroyers
 			}.bind(this));
 
 
@@ -665,8 +664,6 @@ AFRAME.registerComponent('sync',
 	}
 });
 
-
-//TODO: Maybe do a sync-animation that syncronizes the playhead?
 AFRAME.registerComponent('sync-transform',
 {
 	dependencies: ['sync'],
