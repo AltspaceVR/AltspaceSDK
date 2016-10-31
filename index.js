@@ -152,6 +152,18 @@ AFRAME.registerComponent('editor', {
   }
 });
 
+AFRAME.registerComponent('object', {
+	schema: {
+		src: { type: 'string' }
+		//TODO: Maybe a useChildrenOnlyAsFallback flag
+	},
+	init: function () {
+		this.el.setObject3D('native-object', altspace.instantiateNativeObject(this.data.src));
+	},
+	remove: function () {
+		this.el.removeObject3D('native-object');
+	}
+});
 
 AFRAME.registerComponent('native', {
   schema: {
