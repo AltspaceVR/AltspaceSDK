@@ -6,7 +6,7 @@
       <script src="http://sdk.altvr.com/libs/altspace.js/0.19.2/altspace.min.js"></script>
   </head>
 <body>
-    <a-scene altspace sync-system="author: altspacevr; app: sync-test">
+    <a-scene debug altspace sync-system="author: altspacevr; app: sync-test">
         <a-assets>
             <a-mixin id="coneGeo" geometry="primitive: cone; radius-top: 0; radius-bottom: 0.5" material="color: grey"></a-mixin>
             <a-mixin id="sphereGeo" geometry="primitive: sphere; radius: 0.5;" material="color: grey"></a-mixin>
@@ -26,7 +26,7 @@
         <a-entity id="cone1" mixin="coneGeo" position="-1 0 0" sync="own-on: mousedown" sync-transform>
             <a-animation mixin="yoyoAni" to="-1 2 0"></a-animation>
         </a-entity>
-        <a-entity id="sphere" mixin="sphereGeo" position="0 0 0" sync sync-color>
+        <a-entity id="sphere" mixin="sphereGeo" position="0 0 0" sync="own-on: mouseenter mouseleave" sync-color>
             <a-animation mixin="yoyoAni" to="0 2 0"></a-animation>
         </a-entity>
         <a-entity id="cone2" mixin="coneGeo" position="1 0 0" rotation="0 0 180">

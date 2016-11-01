@@ -618,11 +618,13 @@ AFRAME.registerComponent('sync',
 			link(syncSys.sceneRef.child(id));
 			setupReceive();
 
-			var ownershipEvent = this.data.ownOn;
-			if(ownershipEvent){
-				this.el.addEventListener(ownershipEvent, function(){
-					component.takeOwnership();
-				});
+			if(this.data.ownOn){
+				var ownershipEvents = this.data.ownOn.split(/[ ,]+/);
+				for(var i = 0, max = ownershipEvents.length; i < max; i++){
+					this.el.addEventListener(ownershipEvents[i], function(){
+						component.takeOwnership();
+					});
+				}
 			}
 
 		} else {
@@ -672,7 +674,6 @@ AFRAME.registerComponent('sync',
 		}
 
 		this.takeOwnership = function() {
-			console.log('taking ownership of: ' + component.el.id)
 			ownerRef.set(syncSys.clientId);
 
 			//clear our ownership if we disconnect
@@ -829,37 +830,31 @@ AFRAME.registerComponent('sync-color',
 	},
 	init: function () {
 		var sync = this.el.components.sync;
-		var oldColor;
 		var colorRef = sync.dataRef.child('material/color');
 		var component = this;
 
 		var refChangedLocked = false;
-		var componentChangedLock = false;//TODO: use ownership. In order to do this, we must come up with a way of dealing with ownership seperately. 
 
-		this.el.addEventListener('componentchanged', function (event) {
-			var name = event.detail.name;
-			var oldData = event.detail.oldData;
-			var newData = event.detail.newData;
+			component.el.addEventListener('componentchanged', function (event) {
+				var name = event.detail.name;
+				var oldData = event.detail.oldData;
+				var newData = event.detail.newData;
 
-			if (name !== 'material') return;
-			if (refChangedLocked) return;
+				if (name !== 'material') return;
+				if (refChangedLocked) return;
 
-			if (oldData.color !== newData.color) {
-				setTimeout(function() {
-						componentChangedLock = true;
-						colorRef.set(newData.color);
-						componentChangedLock = false;
-					},
-					0);
-
-			}
-
-			oldColor = newData.color;
-		});
+				if (oldData.color !== newData.color) {
+					if(sync.isMine){
+						setTimeout(function() {//For some reason A-Frame has a misconfigured material reference if we do this too early
+							colorRef.set(newData.color);
+						}, 0);
+					}
+				}
+			});
 
 		colorRef.on('value', function (snapshot) {
+			if (sync.isMine) return;
 			var color = snapshot.val();
-			if(componentChangedLock) return;
 			
 			refChangedLocked = true;
 			component.el.setAttribute('material', 'color', color);
