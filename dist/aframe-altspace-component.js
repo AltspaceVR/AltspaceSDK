@@ -198,6 +198,18 @@
 	  }
 	});
 
+	AFRAME.registerComponent('object', {
+		schema: {
+			src: { type: 'string' }
+			//TODO: Maybe a useChildrenOnlyAsFallback flag
+		},
+		init: function () {
+			this.el.setObject3D('native-object', altspace.instantiateNativeObject(this.data.src));
+		},
+		remove: function () {
+			this.el.removeObject3D('native-object');
+		}
+	});
 
 	AFRAME.registerComponent('native', {
 	  schema: {
@@ -585,7 +597,7 @@
 					//let the master client flag get set first
 					setTimeout(function(){
 						component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
-					}, 1);
+					}, 0);
 				});
 
 				this.clientsRef.on('child_removed', function(childSnapshot) {
@@ -593,7 +605,7 @@
 					//let the master client flag get set first
 					setTimeout(function(){
 						component.sceneEl.emit('clientleft', {id: leftClientId}, false);
-					}, 1);
+					}, 0);
 				});
 
 				// add our client ID to the list of connected clients, 
@@ -618,7 +630,8 @@
 	AFRAME.registerComponent('sync',
 	{
 		schema: {
-			mode: { default: 'link' }
+			mode: { default: 'link' },
+			ownOn: { type: 'string' } //cannot be changed after creation
 		},
 		init: function () {
 			var scene = document.querySelector('a-scene');
@@ -650,6 +663,17 @@
 
 				link(syncSys.sceneRef.child(id));
 				setupReceive();
+
+				var ownershipEvent = this.data.ownOn;
+				if(ownershipEvent){
+					this.el.addEventListener(ownershipEvent, function(){
+						component.takeOwnership();
+					});
+				}
+
+			} else {
+				console.error('Unsupported sync mode: ' + this.data.mode);
+				return;
 			}
 
 			function link(entityRef) {
@@ -856,8 +880,9 @@
 			var component = this;
 
 			var refChangedLocked = false;
-			var componentChangedLock = false;//TODO: useOwnership
+			var componentChangedLock = false;//TODO: use ownership. In order to do this, we must come up with a way of dealing with ownership seperately. 
 
+			//todo synccomponentchanged
 			this.el.addEventListener('componentchanged', function (event) {
 				var name = event.detail.name;
 				var oldData = event.detail.oldData;
@@ -872,7 +897,7 @@
 							colorRef.set(newData.color);
 							componentChangedLock = false;
 						},
-						1);
+						0);
 
 				}
 
