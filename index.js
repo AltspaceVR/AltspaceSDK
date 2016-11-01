@@ -3,12 +3,14 @@ if (typeof AFRAME === 'undefined') {
 }
 AFRAME.registerComponent('editor', {
   _setSelectedObject: function (event) {
-	  if(event.target.el.dataset.editorAsset) { return; }
+	  if(event.target.el.dataset && event.target.el.dataset.editorAsset) { return; }
 	  if (this.placingObject) {
 		this.placingObject = null;
-	  this.raycastFloor.userData.altspace.collider.enabled = false;
+	this.raycastFloor.userData.altspace.collider.enabled = false;
 	  }
-	  this.selectedObject = event.target;
+	  if (event.target !== this.raycastFloor) {
+	this.selectedObject = event.target;
+	  }
   },
   _moveSelectedObject: function (event) {
 	if (!this.selectedObject) { return; }
@@ -99,29 +101,39 @@ AFRAME.registerComponent('editor', {
 	'Architecture/Window_Wall_Curve_Concave_4Rx4H'
   ],
   _setPlacingObject: function (event) {
-	var placingObject = document.createElement('a-entity');
-	placingObject.setAttribute('native-object', {asset: event.target.el.components['native-object'].data.asset});
+	var placingObject = document.createElement('n-entity');
+	placingObject.setAttribute('asset', event.target.el.querySelector('n-entity').getAttribute('asset'));
 	this.placingObject = placingObject;
 	this.scene.appendChild(placingObject);
   },
   _addAssetToPalette: function (asset, i) {
-	var assetEntity = document.createElement('a-entity');
-	assetEntity.dataset.editorAsset = true;
-	assetEntity.setAttribute('native-object', {asset: asset});
+	var assetEntity = document.createElement('n-entity');
+	assetEntity.setAttribute('asset', asset);
 
 	// Hack to fix scaling issue
 	setTimeout(function (assetEntity) { return function () {
-	  assetEntity.setAttribute('scale', '0.05 0.05 0.05');
+	  assetEntity.setAttribute('scale', '0.1 0.1 0.1');
 	}}(assetEntity), 500);
+
+	var assetContainer = document.createElement('a-box');
+	assetContainer.dataset.editorAsset = true;
+	assetContainer.setAttribute('scale', '0.2 0.2 0.2');
+	assetContainer.setAttribute('material', 'opacity: 0.1');
+	assetContainer.appendChild(assetEntity);
 
 	var cols = 3;
 	var scale = 1 / 5;
 	var spacing = 1 + 1 / 3;
-	var pos = {x: (i % cols) * (scale * spacing), y: -Math.floor(i / cols) * (scale * spacing)};
+	var pos = {
+	  x: (i % cols) * (scale * spacing),
+	  y: -Math.floor(i / cols) * (scale * spacing),
+	  z: 0
+	};
 
-	assetEntity.setAttribute('position', pos);
-	assetEntity.object3D.addEventListener('cursordown', this._setPlacingObject.bind(this));
-	this.palette.appendChild(assetEntity);
+	assetContainer.setAttribute('position', pos);
+	assetContainer.object3D.addEventListener('cursordown', this._setPlacingObject.bind(this));
+
+	this.palette.appendChild(assetContainer);
   },
   _createPalette: function () {
 	this.palette = document.createElement('a-entity');
@@ -201,7 +213,7 @@ AFRAME.registerComponent('native', {
 	this.el.removeObject3D('native');
   }
 });
-//TODO Next: Add and trigger thrust function to the n-rigidbody
+
 (function () {
 
 	function nativeComponentInit() {
@@ -231,7 +243,7 @@ AFRAME.registerComponent('native', {
 	function parseBool(boolString) {
 		return boolString === 'true';//good enough
 	}
-					   
+
 	//TODO: Get them to add type registration to AFRAME
 	var vec3bool = {
 		default: 'false false false',
@@ -270,6 +282,21 @@ AFRAME.registerComponent('native', {
 					mode: mode || 'impulse'
 				});
 			}.bind(this);
+
+			//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
+			this.worldPosition = new THREE.Vector3();
+			this.worldQuaternion = new THREE.Quaternion();
+			this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+
+				this.worldPosition.x = event.worldPosition.x;
+				this.worldPosition.y = event.worldPosition.y;
+				this.worldPosition.z = event.worldPosition.z;
+
+				this.worldQuaternion.x = event.worldQuaternion.x;
+				this.worldQuaternion.y = event.worldQuaternion.y;
+				this.worldQuaternion.z = event.worldQuaternion.z;
+				this.worldQuaternion.w = event.worldQuaternion.w;
+			}.bind(this));
 		},
 		update: nativeComponentUpdate,
 		schema: {
@@ -287,7 +314,7 @@ AFRAME.registerComponent('native', {
 //Use selector for teleporting
 //The attributes may just be better strongly typed. Hmm hard call.
 //Maybe some things are just only Primitives like browsers, and some can be used like components (if they are actually native components)
-//Primitives for native 
+//Primitives for native
 //Demo by remaking D&D including the Tomes
 //Point Layout enclsure url at github repo
 
@@ -346,6 +373,7 @@ AFRAME.registerComponent('altspace', {
 	  this.el.setAttribute('vr-mode-ui', {enabled: false});
 	  this.initRenderer();
 	  this.initCursorEvents();
+	  this.initCollisionEvents();
 	} else {
 	  console.warn('aframe-altspace-component only works inside of AltspaceVR');
 	}
@@ -477,6 +505,32 @@ AFRAME.registerComponent('altspace', {
 	});
 
   },
+
+  initCollisionEvents: function () {
+
+	var scene = this.el.object3D;
+
+	var emit = function (eventName, event) {
+		var targetEl = event.target.el;
+		if (!targetEl) return;
+
+		//remap target and other from object3Ds to aframe element
+		event.target = targetEl;
+		if (event.other && event.other.el) {
+			event.other = event.other.el;
+		}
+		targetEl.emit(eventName, event);
+	};
+
+	scene.addEventListener('collisionenter', function (event) {
+		emit('collisionenter', event);
+	});
+
+	scene.addEventListener('collisionexit', function (event) {
+		emit('collisionexit', event);
+	});
+
+  }
 
 });
 

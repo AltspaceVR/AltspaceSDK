@@ -12,6 +12,17 @@
 				this.el.addEventListener('click', function () {
 					this.components['n-rigidbody'].addForce(event.detail.ray.direction, 'impulse');
 				});
+				this.el.addEventListener('collisionenter', function () {
+					this.components['n-rigidbody'].addForce({ x: 1, y: 10, z: 0 }, 'impulse');
+					var scene = document.querySelector('a-scene');
+					var cylinder = document.createElement('a-cylinder');
+					scene.appendChild(cylinder);
+					cylinder.setAttribute('color', '#FF9500');
+					cylinder.setAttribute('radius', '0.75');
+
+					//TODO NEXT: base this off of the collision point (and transform it into scene)
+					cylinder.setAttribute('position', '' + this.components['n-rigidbody'].worldPosition.x + ' ' + this.components['n-rigidbody'].worldPosition.y + ' ' + this.components['n-rigidbody'].worldPosition.z);
+				});
 			}
 		});
 	</script>
