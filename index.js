@@ -164,19 +164,6 @@ AFRAME.registerComponent('editor', {
   }
 });
 
-AFRAME.registerComponent('object', {
-	schema: {
-		src: { type: 'string' }
-		//TODO: Maybe a useChildrenOnlyAsFallback flag
-	},
-	init: function () {
-		this.el.setObject3D('native-object', altspace.instantiateNativeObject(this.data.src));
-	},
-	remove: function () {
-		this.el.removeObject3D('native-object');
-	}
-});
-
 AFRAME.registerComponent('native', {
   schema: {
 	asset: { type: 'string' },
@@ -223,6 +210,13 @@ AFRAME.registerComponent('native', {
 			Type: this.name
 		}, { argsType: 'JSTypeAddNativeComponent' });
 	}
+	function nativeComponentRemove() {
+		var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+		altspace._internal.callClientFunction('RemoveNativeComponent', {
+			MeshId: mesh.id,
+			Type: this.name
+		}, { argsType: 'JSTypeRemoveNativeComponent' });
+	}
 	function nativeComponentUpdate(oldData) {
 		altspace._internal.callClientFunction('UpdateNativeComponent', {
 			MeshId: this.el.object3DMap.mesh.id,
@@ -255,8 +249,17 @@ AFRAME.registerComponent('native', {
 		}
 	}
 
+	AFRAME.registerComponent('nat-obj', {
+		schema: {
+			type: 'string'
+		},
+		init: nativeComponentInit,
+		remove: nativeComponentRemove
+	});
+
 	AFRAME.registerComponent('n-sphere-collider', {
-		init:nativeComponentInit,
+		init:nativeComponentInit,,
+		remove: nativeComponentRemove
 		update: nativeComponentUpdate,
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
@@ -297,7 +300,8 @@ AFRAME.registerComponent('native', {
 				this.worldQuaternion.z = event.worldQuaternion.z;
 				this.worldQuaternion.w = event.worldQuaternion.w;
 			}.bind(this));
-		},
+		},,
+		remove: nativeComponentRemove
 		update: nativeComponentUpdate,
 		schema: {
 			mass: { default: 1, type: 'number' },
@@ -317,33 +321,6 @@ AFRAME.registerComponent('native', {
 //Primitives for native
 //Demo by remaking D&D including the Tomes
 //Point Layout enclsure url at github repo
-
-//TODO: Bug in AFRAME 2.0
-//AFRAME.registerPrimitive('n-browser', {
-//	defaultComponents: {
-//		native: { asset: 'System/Browser' }
-//	},
-//	mappings: {
-//	}
-//});
-
-//AFRAME.registerPrimitive('n-browser', {
-//	defaultComponents: {
-//		native: { asset: 'System/Browser' }
-//	},
-//	mappings: {
-//	}
-//});
-
-AFRAME.registerPrimitive('n-entity', {
-	defaultComponents: {
-		native: {}
-	},
-	mappings: {
-		asset: 'native.asset',
-		attributes: 'native.attributes'
-	}
-});
 
 /**
  * The altspace component makes A-Frame apps compatible with AltspaceVR.
