@@ -17,7 +17,6 @@ THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
 **[Getting Started] - If you're new to the SDK, start here!**  
 **[API Reference] - Reference for built in API functions, utilities, and more**  
 **[Developer Portal] - Tutorials, projects, initiative program, and app submission**  
-**[Developer Answers] - Questions and answers about the SDK**  
 **[Local Dev Setup] - Instructions for setting up a local dev environment**  
 **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**    
 **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**  
@@ -139,7 +138,6 @@ Altspace's browser is based on Chromium version 28.
 [three.js]: http://threejs.org/
 
 [Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
-[Developer Answers]: http://answers.altvr.com
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
 [API Reference]: http://altspacevr.github.io/AltspaceSDK/doc/
