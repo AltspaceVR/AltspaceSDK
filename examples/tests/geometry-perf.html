@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Geometry Perf</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<ol id="logList"></ol>
+		<div id="cursorFollow"></div>
+		<script>
+			var sim = new altspace.utilities.Simulation({profile: true});
+			function genSphere(makeBuffer, makeNonIndexed) {
+				for (var i = 0; i < 5; i++) {
+					var geo;
+					if (makeBuffer) {
+						geo = new THREE.SphereBufferGeometry(50, 104, 104);
+						if (makeNonIndexed) {
+							console.log('non indexed');
+							geo = geo.toNonIndexed();
+						}
+						else {
+							console.log('indexed');
+						}
+					}
+					else {
+						console.log('plain');
+						geo = new THREE.SphereGeometry(50, 104, 104);
+						for (var j = 0; j < geo.faces.length; j++) {
+							geo.faces[j].vertexColors.push(new THREE.Color(
+								Math.random(),
+								Math.random(),
+								Math.random()
+							));
+							geo.faces[j].vertexColors.push(new THREE.Color(
+								Math.random(),
+								Math.random(),
+								Math.random()
+							));
+							geo.faces[j].vertexColors.push(new THREE.Color(
+								Math.random(),
+								Math.random(),
+								Math.random()
+							));
+						}
+						geo.colorsNeedUpdate = true;
+					}
+					window.geo = geo;
+					var sphere = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({vertexColors: THREE.VertexColors}));
+					sphere.position.set(
+						THREE.Math.randFloatSpread(400),
+						THREE.Math.randFloatSpread(400),
+						THREE.Math.randFloatSpread(400));
+					sim.scene.add(sphere);
+				}
+			}
+			genSphere();
+/*
+			setTimeout(function () { genSphere(true, true); }, 2000);
+			setTimeout(function () { genSphere(true, true); }, 6000);
+			setTimeout(function () { genSphere(true); }, 10000);
+			setTimeout(function () { genSphere(); }, 14000);
+			*/
+		</script>
+	</body>
+</html>
+
+

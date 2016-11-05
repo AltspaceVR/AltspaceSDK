@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Document API Test</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+		<style>
+			html, body, video { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+			body { background-color: white; display: none; }
+		</style>
+	</head>
+	<body>
+		<video src="http://www.vrideo.com/api/v1/videos/dW9K4xE/video?format=mp4&quality=720p" autoplay></video>
+		<script>
+			var sim = new altspace.utilities.Simulation();
+
+			if (altspace.getDocument) {
+				altspace.getDocument().then(function (doc) {
+					doc.geometry = new THREE.SphereGeometry(400, 32, 32);
+					doc.geometry.verticesNeedUpdate = true;
+					doc.scale.x = -1;
+					doc.position.y = 150;
+					sim.scene.add(doc);
+					document.body.style.display = 'block';
+				});
+			} else {
+				document.body.style.display = 'block';
+			}
+		</script>
+	</body>
+</html>
+

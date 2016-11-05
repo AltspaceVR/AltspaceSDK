@@ -45,6 +45,8 @@
 				hitboxlessBoxMesh.material.color.r = 1;
 				var collider = hitboxlessBoxMesh.userData.altspace.collider;
 
+				var indicatorBox = makeBox(boxSize * 0.6, boxSize * 1.2);
+
 				sim.renderer.render(sim.scene, sim.camera);
 
 				var lastFlip = 0;
@@ -55,7 +57,8 @@
 					}
 					if (performance.now() - lastFlip > 3000) {
 						collider.enabled = !collider.enabled;
-						hitboxlessBoxMesh.material.color.r = collider.enabled ? 0 : 1;
+						// hitboxlessBoxMesh.material.color.r = collider.enabled ? 0 : 1;
+						indicatorBox.visible = collider.enabled;
 						lastFlip = performance.now();
 					}
 					sim.renderer.render(sim.scene, sim.camera);
