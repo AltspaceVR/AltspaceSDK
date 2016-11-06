@@ -1,14 +1,14 @@
 'use strict';
 
 // Returns a Promise that resovles static when a steamvr controller is found
-function getController(hand) {
+function getController(hand, config) {
 	const findGamepad = (resolve, reject) => {
 		const gamepad = altspace.getGamepads().find((g) => g.mapping === 'steamvr' && g.hand === hand);
 		if (gamepad) {
-			console.log("SteamVR input device found", gamepad);
+			if(config.logging) console.log("SteamVR input device found", gamepad);
 			resolve(gamepad);
 		} else {
-			console.log("SteamVR input device not found trying again in 500ms...");
+			if(config.logging) console.log("SteamVR input device not found trying again in 500ms...");
 			setTimeout(findGamepad, 500, resolve, reject);
 		}
 	};
@@ -21,6 +21,8 @@ function getController(hand) {
  * to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
  *
  * @class SteamVRInput
+ * @param {Object} [config]
+ * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
  * @memberof module:altspace/utilities/behaviors
  *
  * @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
@@ -32,13 +34,15 @@ function getController(hand) {
  * @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
  */
 class SteamVRInputBehavior {
-	constructor() {
+	constructor(config) {
 		this.type = 'SteamVRInput';
+		this.config = config || {};
+		this.config.logging = this.config.logging || false;
 	}
 
 	awake() {
-		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER);
-		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER);
+		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, config);
+		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, config);
 		this.firstControllerPromise = Promise.race([
 			this.leftControllerPromise,
 			this.rightControllerPromise,
