@@ -24,7 +24,7 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "altspace": "^0.12",
+    "altspace": "../../",
     "three": "^0.73.0"
   }
 }
