@@ -14,10 +14,10 @@ function getController(hand, config) {
 			return g.mapping === 'steamvr' && g.hand === hand;
 		});
 		if (gamepad) {
-			if(config.logging) console.log("SteamVR input device found", gamepad);
+			if (config.logging) console.log("SteamVR input device found", gamepad);
 			resolve(gamepad);
 		} else {
-			if(config.logging) console.log("SteamVR input device not found trying again in 500ms...");
+			if (config.logging) console.log("SteamVR input device not found trying again in 500ms...");
 			setTimeout(findGamepad, 500, resolve, reject);
 		}
 	};
