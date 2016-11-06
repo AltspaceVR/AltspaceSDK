@@ -41,8 +41,8 @@ class SteamVRInputBehavior {
 	}
 
 	awake() {
-		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, config);
-		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, config);
+		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
+		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
 		this.firstControllerPromise = Promise.race([
 			this.leftControllerPromise,
 			this.rightControllerPromise,

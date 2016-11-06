@@ -57,8 +57,8 @@ var SteamVRInputBehavior = (function () {
 		value: function awake() {
 			var _this = this;
 
-			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, config);
-			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, config);
+			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
+			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
 			this.firstControllerPromise = _Promise.race([this.leftControllerPromise, this.rightControllerPromise]);
 
 			this.leftControllerPromise.then(function (controller) {
