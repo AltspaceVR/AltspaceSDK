@@ -3,7 +3,6 @@
 	<head>
 		<title>Disable Hitbox</title>
 		<meta charset="utf-8">
-		<script src="../../../UnityClient/js/src/AltGeoMatSerializer.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
 		<script src="../../dist/altspace.js"></script>
@@ -66,8 +65,7 @@
 					}
 					if (performance.now() - lastFlip > 3000) {
 						collider.enabled = !collider.enabled;
-						console.log('collider enabled' , collider.enabled);
-						//indicatorBox.visible = collider.enabled;
+						indicatorBox.visible = collider.enabled;
 						lastFlip = performance.now();
 					}
 					sim.renderer.render(sim.scene, sim.camera);
