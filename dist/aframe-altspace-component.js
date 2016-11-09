@@ -57,10 +57,12 @@
 	   * usePixelScale will allow you to use A-Frame units as CSS pixels.
 	   * This is the default behavior for three.js apps, but not for A-Frame apps.
 	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
+	   * disableFor2D prevents the scene from being created if enclosure is flat.
 	   */
 	  schema: {
 	    usePixelScale: { type: 'boolean', default: 'false'},
-	    verticalAlign: { type: 'string', default: 'middle'}
+	    verticalAlign: { type: 'string',  default: 'middle'},
+	    disableFor2D:  { type: 'boolean', default: 'true'}
 	  },
 
 	  /**
@@ -72,10 +74,28 @@
 	      return;
 	    }
 
-	    if (window.altspace && window.altspace.inClient) {
-	      this.el.setAttribute('vr-mode-ui', {enabled: false});
-	      this.initRenderer();
-	      this.initCursorEvents();
+	    if (window.altspace && window.altspace.inClient)
+	    {
+	      var _init = function(){
+	        this.el.setAttribute('vr-mode-ui', {enabled: false});
+	        this.initRenderer();
+	        this.initCursorEvents();
+	      }.bind(this);
+	      
+	      if(this.data.disableFor2D){
+	        altspace.getEnclosure().then(function(enc){
+	          if(enc.innerDepth > 1) _init();
+	          else {
+	            // don't break beaming
+	            altspace.getThreeJSRenderer().render(new THREE.Scene());
+	          }
+	        });
+	      }
+	      else {
+	        _init();
+	      }
+
+	      
 	    }
 
 	  },
