@@ -16,9 +16,9 @@ var sceneSync, popup;
 altspace.utilities.sync.connect(config).then(function(connection) {
 	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {
-		 	'cube': createCube,
-		 	'sphere': createSphere,
-		 	'torus': createTorus
+			'cube': createCube,
+			'sphere': createSphere,
+			'torus': createTorus
 		},
 		ready: ready
 	});
@@ -30,12 +30,12 @@ altspace.utilities.sync.connect(config).then(function(connection) {
 		icon: getFullUrl('favicon.png'),
 		hidden: true
 	}).then(function (_popup) {
-		// Save a reference to the popup so that we can open it when a user clicks 
+		// Save a reference to the popup so that we can open it when a user clicks
 		// on any shape via the ShowPopup behavior.
 		popup = _popup;
 	});
 
-	// This example uses Firebase to communicate between the popup and the main app. 
+	// This example uses Firebase to communicate between the popup and the main app.
 	// The form in the popup adds shapes to Firebase. When that happens, we instantiate the corresponding shape here.
 	connection.instance.child('things').on('child_added', function (snapshot) {
 		var thing = snapshot.val();
@@ -46,9 +46,11 @@ altspace.utilities.sync.connect(config).then(function(connection) {
 
 function ready(firstInstance) {
 	if (firstInstance) {
-		var popupShowCube = sceneSync.instantiate('cube', {
-			color: 'white',
-			position: {x: 0, y: -512, z: 0}
+		altspace.getEnclosure().then(function (enclosure) {
+			sceneSync.instantiate('cube', {
+				color: 'white',
+				position: {x: 0, y: -enclosure.innerHeight / 2, z: 0}
+			});
 		});
 	}
 }
@@ -60,7 +62,7 @@ function ShowPopup() {
 		});
 	}
 	return { awake: awake };
-};
+}
 
 function getFullUrl(path) {
 	var currPath = location.pathname;
@@ -95,7 +97,7 @@ function createThing(geometry, options) {
 		altspace.utilities.behaviors.Object3DSync(),
 		ShowPopup()
 	);
-	if (options.user) { 
+	if (options.user) {
 		var label = new THREE.Mesh(
 				new THREE.PlaneGeometry(100, 50),
 				new THREE.MeshBasicMaterial({
