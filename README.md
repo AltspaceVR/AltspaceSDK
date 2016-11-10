@@ -12,7 +12,7 @@ Note that when running in Altspace, the scene will not be synchronized between u
 | --------  | ----------- | ------------- |
 | `usePixelScale` | Treat a unit as a CSS Pixel, and have your scene scale with the scale of the AltspaceVR web browser. This is the default behavior in AltspaceVR for three.js apps. In A-Frame, however, the default value is `false`, as units are in meters by default. | `false`
 | `verticalAlign` | Puts the scene origin at the bottom, middle, or top of the Altspace enclosure.  If your scene seems to be floating in midair, try setting this to 'bottom'. | `middle`
-| `disableFor2D` | Turn off 3d rendering when loaded in 2d displays (e.g. personal browsers) | `true`
+| `enclosuresOnly` | Turn off 3d rendering when loaded in flat displays (e.g. personal browsers) | `true`
 
 ### Usage
 

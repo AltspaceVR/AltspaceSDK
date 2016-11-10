@@ -16,7 +16,7 @@ AFRAME.registerComponent('altspace', {
   schema: {
     usePixelScale: { type: 'boolean', default: 'false'},
     verticalAlign: { type: 'string',  default: 'middle'},
-    disableFor2D:  { type: 'boolean', default: 'true'}
+    enclosuresOnly:{ type: 'boolean', default: 'true'}
   },
 
   /**
@@ -95,8 +95,7 @@ AFRAME.registerComponent('altspace', {
           console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
       }
 
-      if(this.data.disableFor2D && e.innerDepth === 1){
-        //console.log('switch out altspace renderer', oldRenderer);
+      if(this.data.enclosuresOnly && e.innerDepth === 1){
         this.el.renderer.render(new THREE.Scene());
         this.el.renderer = this.el.effect = oldRenderer;
 
@@ -118,7 +117,6 @@ AFRAME.registerComponent('altspace', {
     renderer.setFaceCulling = noop;
     renderer.context = {canvas: {}};
     renderer.shadowMap = {};
-    //console.log('switch in altspace renderer', renderer);
 
   },
 
