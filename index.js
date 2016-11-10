@@ -11,7 +11,7 @@ AFRAME.registerComponent('altspace', {
    * usePixelScale will allow you to use A-Frame units as CSS pixels.
    * This is the default behavior for three.js apps, but not for A-Frame apps.
    * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
-   * disableFor2D prevents the scene from being created if enclosure is flat.
+   * enclosuresOnly prevents the scene from being created if enclosure is flat.
    */
   schema: {
     usePixelScale: { type: 'boolean', default: 'false'},
