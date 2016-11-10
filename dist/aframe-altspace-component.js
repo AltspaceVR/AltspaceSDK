@@ -57,10 +57,12 @@
 	   * usePixelScale will allow you to use A-Frame units as CSS pixels.
 	   * This is the default behavior for three.js apps, but not for A-Frame apps.
 	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
+	   * enclosuresOnly prevents the scene from being created if enclosure is flat.
 	   */
 	  schema: {
 	    usePixelScale: { type: 'boolean', default: 'false'},
-	    verticalAlign: { type: 'string', default: 'middle'}
+	    verticalAlign: { type: 'string',  default: 'middle'},
+	    enclosuresOnly:{ type: 'boolean', default: 'true'}
 	  },
 
 	  /**
@@ -72,7 +74,8 @@
 	      return;
 	    }
 
-	    if (window.altspace && window.altspace.inClient) {
+	    if (window.altspace && window.altspace.inClient)
+	    {
 	      this.el.setAttribute('vr-mode-ui', {enabled: false});
 	      this.initRenderer();
 	      this.initCursorEvents();
@@ -119,26 +122,33 @@
 	  initRenderer: function () {
 
 	    var scene = this.el.object3D;
-	    if (!this.data.usePixelScale) {
-	      altspace.getEnclosure().then(function(e) {
+	    altspace.getEnclosure().then(function(e)
+	    {
+	      if (!this.data.usePixelScale){
 	        scene.scale.multiplyScalar(e.pixelsPerMeter);
-	      });
-	    }
-	    var verticalAlign = this.data.verticalAlign;
-	    if (verticalAlign !== 'center') {
-	      altspace.getEnclosure().then(function(e) {
-	        switch (verticalAlign) {
-	          case 'bottom':
-	            scene.position.y -= e.innerHeight / 2;
-	            break;
-	          case 'top':
-	            scene.position.y += e.innerHeight / 2;
-	            break;
-	          default:
-	            console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
-	        }
-	      });
-	    }
+	      }
+
+	      switch (this.data.verticalAlign) {
+	        case 'bottom':
+	          scene.position.y -= e.innerHeight / 2;
+	          break;
+	        case 'top':
+	          scene.position.y += e.innerHeight / 2;
+	          break;
+	        case 'middle':
+	          break;
+	        default:
+	          console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+	      }
+
+	      if(this.data.enclosuresOnly && e.innerDepth === 1){
+	        this.el.renderer.render(new THREE.Scene());
+	        this.el.renderer = this.el.effect = oldRenderer;
+
+	      }
+	    }.bind(this));
+
+	    var oldRenderer = this.el.renderer;
 	    var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
 	    var noop = function() {};
 	    renderer.setSize = noop;
