@@ -30,26 +30,9 @@ AFRAME.registerComponent('altspace', {
 
     if (window.altspace && window.altspace.inClient)
     {
-      var _init = function(){
-        this.el.setAttribute('vr-mode-ui', {enabled: false});
-        this.initRenderer();
-        this.initCursorEvents();
-      }.bind(this);
-      
-      if(this.data.disableFor2D){
-        altspace.getEnclosure().then(function(enc){
-          if(enc.innerDepth > 1) _init();
-          else {
-            // don't break beaming
-            altspace.getThreeJSRenderer().render(new THREE.Scene());
-          }
-        });
-      }
-      else {
-        _init();
-      }
-
-      
+      this.el.setAttribute('vr-mode-ui', {enabled: false});
+      this.initRenderer();
+      this.initCursorEvents();
     }
 
   },
@@ -93,26 +76,34 @@ AFRAME.registerComponent('altspace', {
   initRenderer: function () {
 
     var scene = this.el.object3D;
-    if (!this.data.usePixelScale) {
-      altspace.getEnclosure().then(function(e) {
+    altspace.getEnclosure().then(function(e)
+    {
+      if (!this.data.usePixelScale){
         scene.scale.multiplyScalar(e.pixelsPerMeter);
-      });
-    }
-    var verticalAlign = this.data.verticalAlign;
-    if (verticalAlign !== 'center') {
-      altspace.getEnclosure().then(function(e) {
-        switch (verticalAlign) {
-          case 'bottom':
-            scene.position.y -= e.innerHeight / 2;
-            break;
-          case 'top':
-            scene.position.y += e.innerHeight / 2;
-            break;
-          default:
-            console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
-        }
-      });
-    }
+      }
+
+      switch (this.data.verticalAlign) {
+        case 'bottom':
+          scene.position.y -= e.innerHeight / 2;
+          break;
+        case 'top':
+          scene.position.y += e.innerHeight / 2;
+          break;
+        case 'middle':
+          break;
+        default:
+          console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+      }
+
+      if(this.data.disableFor2D && e.innerDepth === 1){
+        //console.log('switch out altspace renderer', oldRenderer);
+        this.el.renderer.render(new THREE.Scene());
+        this.el.renderer = this.el.effect = oldRenderer;
+
+      }
+    }.bind(this));
+
+    var oldRenderer = this.el.renderer;
     var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
     var noop = function() {};
     renderer.setSize = noop;
@@ -127,6 +118,7 @@ AFRAME.registerComponent('altspace', {
     renderer.setFaceCulling = noop;
     renderer.context = {canvas: {}};
     renderer.shadowMap = {};
+    //console.log('switch in altspace renderer', renderer);
 
   },
 

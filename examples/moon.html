@@ -4,15 +4,15 @@
 <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
 <script src="../index.js"></script>
 </head>
- <body>
+<body>
 <h1>This goes here!</h1>
 <!-- set up the scene -->
-<a-scene altspace='vertical-align: bottom;' embedded style='width: 600px; height: 400px;'>
+<a-scene embedded altspace='vertical-align: bottom;' style='width: 600px; height: 400px;'>
  
     <!-- preload all our textures -->
     <a-assets>
-        <img id='moon' src='https://developer.altvr.com/wp-content/uploads/2016/10/moon.jpg'/>
-        <img id='stars' src='https://developer.altvr.com/wp-content/uploads/2016/10/stars.png'/>
+        <img id='moon' crossorigin src='https://developer.altvr.com/wp-content/uploads/2016/10/moon.jpg'/>
+        <img id='stars' crossorigin src='https://developer.altvr.com/wp-content/uploads/2016/10/stars.png'/>
     </a-assets>
  
     <!-- add the moon to the scene -->
