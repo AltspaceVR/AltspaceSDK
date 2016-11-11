@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Fullscreen</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+			var sim = new altspace.utilities.Simulation(), controls;
+
+			var boxSize = 80;
+			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
+
+			function makeBox(x, z) {
+				var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
+				boxMesh.position.x = x;
+				boxMesh.position.z = z;
+				sim.scene.add(boxMesh);
+				return boxMesh;
+			}
+
+			function makeMovingBox(x, z) {
+				var boxMesh = makeBox(x, z);
+				boxMesh.addBehavior({
+					awake: function (obj) {
+						this.obj = obj;
+						this.origX = obj.position.x;
+						this.time = 0;
+					},
+					update: function (delta) {
+						this.time += delta;
+						this.obj.position.x = this.origX + Math.sin(this.time / 1000) * 1000;
+					}
+				});
+				return boxMesh;
+			}
+
+			makeBox(0, 0).addEventListener('cursordown', function () {
+			});
+
+			var spacing = 200;
+			var num = 5;
+			for (var x = 0; x < num; x++) {
+				for (var z = 0; z < num; z++) {
+					makeMovingBox(x * spacing, z * spacing);
+				}
+			}
+		</script>
+	</body>
+</html>
+
