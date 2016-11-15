@@ -9,11 +9,11 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 /**
  * A behavior that makes an object draggable along a plane.
  * @class Drag
- * @param {Object} [config] Specify the axes along which the object can be 
+ * @param {Object} [config] Specify the axes along which the object can be
  *  dragged.
- *  E.g. To constraint th object to an XY plane: `{x: true, y: true}`  
+ *  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
  *  Each axis can also be an object specifying the minimum and maximum limits
- *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`  
+ *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
  *  **Note:** Currently you must specify exactly two axes.
  * @memberof module:altspace/utilities/behaviors
  */
@@ -98,7 +98,7 @@ altspace.utilities.behaviors.Drag = function (config) {
 		} else if (axisCount === 1) {
 
 			throw new Error('Single axis dragging currently unsupported.');
-			//TODO: make possible, possibly via view-aligned plane 
+			//TODO: make possible, possibly via view-aligned plane
 
 		} else {
 			throw new Error('Invalid axis configuration');
@@ -128,7 +128,7 @@ altspace.utilities.behaviors.Drag = function (config) {
 		scene.addEventListener('cursorup', stopDrag);
 		scene.addEventListener('cursormove', moveDrag);
 
-		//Remember difference between center of object and drag point. 
+		//Remember difference between center of object and drag point.
 		//Otherwise, object appears to 'jump' when selected, moving so its
 		//center is directly until the cursor. We allow drag on edge of object.
 		raycaster.set(event.ray.origin, event.ray.direction);

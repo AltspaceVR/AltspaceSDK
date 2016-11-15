@@ -1,11 +1,11 @@
 /**
- * The Sync utility is currently based on Firebase. It provides a quick way 
- * to synchronize apps between users (even when they are running outside of 
- * AltspaceVR). 
- * During the SDK beta, please consider all data stored with the sync 
- * utility to be ephemeral (it may be cleared or clobbered at any time). 
+ * The Sync utility is currently based on Firebase. It provides a quick way
+ * to synchronize apps between users (even when they are running outside of
+ * AltspaceVR).
+ * During the SDK beta, please consider all data stored with the sync
+ * utility to be ephemeral (it may be cleared or clobbered at any time).
  * You do not need a Firebase account to use the Sync utility.
- * 
+ *
  *
  * Refer to the [Firebase API documentation](https://www.firebase.com/docs/web/api/)
  * when working with the sync instance.
@@ -87,7 +87,7 @@ altspace.utilities.sync = (function () {
 			}, { remember: 'sessionOnly' });
 		});
 	}
-	
+
 	/**
 	 * Retreived
 	 * via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
@@ -103,8 +103,8 @@ altspace.utilities.sync = (function () {
 		*/
 
 	/**
-		* A Firebase reference to the current instance of the app. 
-		* This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons. 
+		* A Firebase reference to the current instance of the app.
+		* This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons.
 		* This can be used as an input to SceneSync
 		* @instance
 		* @member {Firebase} instance
@@ -119,7 +119,7 @@ altspace.utilities.sync = (function () {
 		*/
 
 	/**
-		* A Firebase reference for the app. 
+		* A Firebase reference for the app.
 		* This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.
 		* @instance
 		* @member {Firebase} app
@@ -129,7 +129,7 @@ altspace.utilities.sync = (function () {
 
 	/**
 	 * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
-	 * Returns a promise that will fufill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
+	 * Returns a promise that will fulfill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
 	 *
 	 * @method connect
 	 * @param {Object} config
@@ -212,7 +212,7 @@ altspace.utilities.sync = (function () {
 
 
 	/**
-	 * Returns a firebase instance, just as if you had called new Firebase()  
+	 * Returns a firebase instance, just as if you had called new Firebase()
 	 *
 	 * By using syncInstance.parent() you can store cross-instance data like high scores. Likewise you can store persistent user data at syncInstance.parent().child([userId).
 	 * @deprecated The connect function can do this and more! Please switch to using it instead. This function will be removed in the next major version
@@ -227,11 +227,11 @@ altspace.utilities.sync = (function () {
 	 * @memberof module:altspace/utilities/sync
 	 * @example
 	 *  var syncInstance = altspace.utilities.sync.getInstance({
-	 *      // All sync instances with the same instance id will share 
-	 *      // properties. 
-	 *      instanceId: yourInstanceId, 
+	 *      // All sync instances with the same instance id will share
+	 *      // properties.
+	 *      instanceId: yourInstanceId,
 	 *      // This helps to prevent collisions.
-	 *      authorId: yourAuthorId  
+	 *      authorId: yourAuthorId
 	 *  });
 	 */
 	return {
@@ -239,5 +239,5 @@ altspace.utilities.sync = (function () {
 		getInstance: getInstance,
 		authenticate: deprecatedAuthenticate
 	};
-	
+
 }());
