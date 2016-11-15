@@ -13,66 +13,66 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.HoverScale = function(config) {
-    config = config || {};
-    var scale = config.scale || 1.15;
-    var duration = config.duration || 75; // Milliseconds
-    var revertOnDispose = ((config.revertOnDispose !== undefined) ? config.revertOnDispose : true);
+	config = config || {};
+	var scale = config.scale || 1.15;
+	var duration = config.duration || 75; // Milliseconds
+	var revertOnDispose = ((config.revertOnDispose !== undefined) ? config.revertOnDispose : true);
 
-    var object3d;
-    var originalScale;
-    var elapsedTime;
-    var progress;
-    var srcScale;
-    var destScale;
+	var object3d;
+	var originalScale;
+	var elapsedTime;
+	var progress;
+	var srcScale;
+	var destScale;
 
-    function awake(o, s) {
-        object3d = o;
-        originalScale = object3d.scale.clone();
+	function awake(o, s) {
+		object3d = o;
+		originalScale = object3d.scale.clone();
 
-        srcScale = object3d.scale.clone();
-        srcScale.multiplyScalar(scale);
+		srcScale = object3d.scale.clone();
+		srcScale.multiplyScalar(scale);
 
-        destScale = new THREE.Vector3();
-        destScale.copy(originalScale);
+		destScale = new THREE.Vector3();
+		destScale.copy(originalScale);
 
-        progress = 1;
-        elapsedTime = duration;
+		progress = 1;
+		elapsedTime = duration;
 
-        object3d.addEventListener('cursorenter', onHoverStateChange);
-        object3d.addEventListener('cursorleave', onHoverStateChange);
-    }
+		object3d.addEventListener('cursorenter', onHoverStateChange);
+		object3d.addEventListener('cursorleave', onHoverStateChange);
+	}
 
-    function update(deltaTime) {
-        if(progress < 1) {
-            elapsedTime += deltaTime;
-            elapsedTime = THREE.Math.clamp(elapsedTime, 0, duration);
+	function update(deltaTime) {
+		if(progress < 1) {
+			elapsedTime += deltaTime;
+			elapsedTime = THREE.Math.clamp(elapsedTime, 0, duration);
 
-            progress = THREE.Math.clamp(elapsedTime / duration, 0, 1);
-            object3d.scale.lerpVectors(srcScale, destScale, progress);
-        }
-    }
+			progress = THREE.Math.clamp(elapsedTime / duration, 0, 1);
+			object3d.scale.lerpVectors(srcScale, destScale, progress);
+		}
+	}
 
-    function dispose() {
-        object3d.removeEventListener('cursorenter', onHoverStateChange);
-        object3d.removeEventListener('cursorleave', onHoverStateChange);
+	function dispose() {
+		object3d.removeEventListener('cursorenter', onHoverStateChange);
+		object3d.removeEventListener('cursorleave', onHoverStateChange);
 
-        // Restore Original Object Scale Before Behavior Was Applied
-        if(revertOnDispose) object3d.scale.copy(originalScale);
+		// Restore Original Object Scale Before Behavior Was Applied
+		if(revertOnDispose) object3d.scale.copy(originalScale);
 
-        originalScale = null;
-        srcScale = null;
-        destScale = null;
-        object3d = null;
-    }
+		originalScale = null;
+		srcScale = null;
+		destScale = null;
+		object3d = null;
+	}
 
-    function onHoverStateChange() {
-        var temp = srcScale;
-        srcScale = destScale;
-        destScale = temp;
+	function onHoverStateChange() {
+		var temp = srcScale;
+		srcScale = destScale;
+		destScale = temp;
 
-        progress = 1 - progress;
-        elapsedTime = duration - elapsedTime;
-    }
+		progress = 1 - progress;
+		elapsedTime = duration - elapsedTime;
+	}
 
-    return { awake: awake, update: update, dispose: dispose, type: 'HoverScale' };
+	return { awake: awake, update: update, dispose: dispose, type: 'HoverScale' };
 };
