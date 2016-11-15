@@ -145,6 +145,8 @@ THREE.Object3D.prototype.removeAllBehaviors = function ()
 
 		}
 	}
+
+	this.__behaviorList.length = 0;
 }
 
 /**
