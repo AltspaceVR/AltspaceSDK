@@ -14,16 +14,15 @@
 			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
 			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
 
-			function makeBox(x, z) {
+			function makeBox(x, y, z) {
 				var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
-				boxMesh.position.x = x;
-				boxMesh.position.z = z;
+				boxMesh.position.set(x, y, z);
 				sim.scene.add(boxMesh);
 				return boxMesh;
 			}
 
-			function makeMovingBox(x, z) {
-				var boxMesh = makeBox(x, z);
+			function makeMovingBox(x, y, z) {
+				var boxMesh = makeBox(x, y, z);
 				boxMesh.addBehavior({
 					awake: function (obj) {
 						this.obj = obj;
@@ -38,14 +37,29 @@
 				return boxMesh;
 			}
 
-			makeBox(0, 0).addEventListener('cursordown', function () {
+			altspace.getEnclosure().then(function (enclosure) {
+				var button = makeBox(0, boxSize * 1.5, 0);
+				button.material.color.setStyle('white');
+				button.addEventListener('cursordown', function () {
+					if (enclosure.fullscreen) {
+						enclosure.exitFullscreen();
+						button.material.color.setStyle('white');
+					}
+					else {
+						enclosure.requestFullscreen().then(function () {
+							button.material.color.setStyle('red');
+						});
+					}
+				});
 			});
 
 			var spacing = 200;
-			var num = 5;
+			var num = 7;
 			for (var x = 0; x < num; x++) {
 				for (var z = 0; z < num; z++) {
-					makeMovingBox(x * spacing, z * spacing);
+					makeMovingBox(
+						((x / (num - 1)) - 0.5) * num * spacing, 0,
+						((z / (num - 1)) - 0.5) * num * spacing)
 				}
 			}
 		</script>
