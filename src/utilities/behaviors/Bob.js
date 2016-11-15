@@ -55,5 +55,5 @@ altspace.utilities.behaviors.Bob = function (config) {
 		}
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'Bob' };
 };

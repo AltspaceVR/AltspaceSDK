@@ -103,8 +103,9 @@ altspace.utilities.behaviors.HoverColor = function(config){
 	}
 
 	return {
-		awake: awake,
 		//no update method, event-driven
+		awake: awake,
+		type: 'HoverColor'
 	};
 
 };

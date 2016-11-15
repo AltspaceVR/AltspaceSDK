@@ -27,5 +27,5 @@ altspace.utilities.behaviors.Spin = function (config) {
 		object3d.rotation.y += config.speed * deltaTime;
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'Spin' };
 };

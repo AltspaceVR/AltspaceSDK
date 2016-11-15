@@ -45,6 +45,7 @@ class Layout {
 	constructor ({ my = {}, at }) {
 		this.my = my;
 		this.at = at;
+		this.type = 'Layout';
 	}
 
 	// TODO-BP Ideally these would be private methods.
