@@ -44,7 +44,7 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 	});
 
 	for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
-		object3d = objectsWithBehaviors[i];
+		var object3d = objectsWithBehaviors[i];
 		object3d.updateBehaviors(deltaTime, self);
 	}
 
