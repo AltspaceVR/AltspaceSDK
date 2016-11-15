@@ -36,7 +36,7 @@ let
  * @memberof module:altspace/utilities/behaviors
  * @param {Object} config
  * @param {Object} config.at An object containing the axes and position
- *  specifiers. At least one axis must be specificed. E.g. `{x: 'min', y: 'max-5%'}`
+ *  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
  * @param {Object} [config.my] An object containing the axes and position
  *  specifiers for the layout anchor.
  **/
