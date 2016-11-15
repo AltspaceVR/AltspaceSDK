@@ -102,9 +102,17 @@ altspace.utilities.behaviors.HoverColor = function(config){
 		}
 	}
 
+	function dispose() {
+		object3d.removeEventListener('cursordown', cursordown);
+		scene.removeEventListener('cursorup', cursorupScene);
+		object3d.removeEventListener('cursorenter', cursorenter);
+		object3d.removeEventListener('cursorleave', cursorleave);
+	}
+
 	return {
 		//no update method, event-driven
 		awake: awake,
+		dispose: dispose,
 		type: 'HoverColor'
 	};
 

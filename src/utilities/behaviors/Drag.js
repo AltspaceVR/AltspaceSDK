@@ -185,5 +185,9 @@ altspace.utilities.behaviors.Drag = function (config) {
 		object3d.addEventListener('cursordown', startDrag);
 	}
 
-	return { awake: awake, start: start, type: 'Drag' };
+	function dispose() {
+		object3d.removeEventListener('cursordown', startDrag);
+	}
+
+	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
 };
