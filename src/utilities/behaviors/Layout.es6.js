@@ -59,9 +59,7 @@ class Layout {
 			offset = offset / 100 * (max[axis] - min[axis]);
 		}
 		else if (offsetSetting && offsetSetting.endsWith('m')) {
-			console.log(offset, this[enclosure]);
 			offset = offset * this[enclosure].pixelsPerMeter;
-			console.log(offset);
 		}
 		return {
 			position,
