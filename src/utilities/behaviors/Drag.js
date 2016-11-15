@@ -139,7 +139,8 @@ altspace.utilities.behaviors.Drag = function (config) {
 		dragOffset.copy(dragPoint).sub(objectCenterPoint);
 
 		//Move to drag point (not object center), where raycast hits the object.
-		intersector.position.copy(dragPoint);
+		intersector.position.copy(intersector.parent.worldToLocal(dragPoint));
+		intersector.quaternion.copy(object3d.parent.quaternion);
 		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
 	}
 
@@ -185,5 +186,9 @@ altspace.utilities.behaviors.Drag = function (config) {
 		object3d.addEventListener('cursordown', startDrag);
 	}
 
-	return { awake: awake, start: start };
+	function dispose() {
+		object3d.removeEventListener('cursordown', startDrag);
+	}
+
+	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
 };

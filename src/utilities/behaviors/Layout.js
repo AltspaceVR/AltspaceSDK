@@ -68,6 +68,7 @@ var Layout = (function () {
 
 		this.my = my;
 		this.at = at;
+		this.type = 'Layout';
 	}
 
 	// TODO-BP Ideally these would be private methods.
@@ -83,9 +84,7 @@ var Layout = (function () {
 			if (offsetSetting && offsetSetting.endsWith('%')) {
 				offset = offset / 100 * (max[axis] - min[axis]);
 			} else if (offsetSetting && offsetSetting.endsWith('m')) {
-				console.log(offset, this[enclosure]);
 				offset = offset * this[enclosure].pixelsPerMeter;
-				console.log(offset);
 			}
 			return {
 				position: position,

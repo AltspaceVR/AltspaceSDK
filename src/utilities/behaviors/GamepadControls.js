@@ -202,6 +202,6 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'GamepadControls' };
 };
 

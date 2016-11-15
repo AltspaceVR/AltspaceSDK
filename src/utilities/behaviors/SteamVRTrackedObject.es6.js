@@ -17,6 +17,7 @@
 class SteamVRTrackedObjectBehavior {
 	constructor({ hand = 'first' }) {
 		this._hand = hand;
+		this.type = 'SteamVRTrackedObject';
 	}
 
 	awake(object3d, scene) {
