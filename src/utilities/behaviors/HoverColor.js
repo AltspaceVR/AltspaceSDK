@@ -54,7 +54,7 @@ altspace.utilities.behaviors.HoverColor = function(config){
 		//for example during a drag we don't want to change highlight
 		if (cursordownObject && cursordownObject !== object3d){
 			return;
-		} 
+		}
 		if (cursorenterObject){
 			unsetcolor(cursorenterObject);
 		}
@@ -79,10 +79,10 @@ altspace.utilities.behaviors.HoverColor = function(config){
 	function setColor(o){
 		if (o.material && o.material.color){
 			o.userData.origColor = o.material.color;
-			o.material.color = config.color;  
+			o.material.color = config.color;
 			//Not strictly needed but seems to make updating faster in Altspace.
 			if (o.material) o.material.needsUpdate = true;
-		} 
+		}
 		for (var i = 0; i < o.children.length; i++){
 			setColor(o.children[i], config.color);//recursively apply to children
 		}
@@ -96,7 +96,7 @@ altspace.utilities.behaviors.HoverColor = function(config){
 			}
 			o.material.color = o.userData.origColor;
 			if (o.material) o.material.needsUpdate = true;
-		} 
+		}
 		for (var i = 0; i < o.children.length; i++){
 			unsetColor(o.children[i]);
 		}

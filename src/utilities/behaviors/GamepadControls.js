@@ -122,7 +122,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		}
 		if (!gamepad) return;
 
-		//For axis and button numbers see: https://w3c.github.io/gamepad/  
+		//For axis and button numbers see: https://w3c.github.io/gamepad/
 		var isResetButton = gamepad.buttons[8].pressed;//reset / back button
 		if (isResetButton) {
 			if (!sync.isMine) sync.takeOwnership();

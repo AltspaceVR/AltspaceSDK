@@ -16,7 +16,7 @@ altspace.utilities.behaviors.HoverScale = function(config) {
     var scale = config.scale || 1.15;
     var duration = config.duration || 75; // Milliseconds
     var revertOnDispose = ((config.revertOnDispose !== undefined) ? config.revertOnDispose : true);
-    
+
     var object3d;
     var originalScale;
     var elapsedTime;
