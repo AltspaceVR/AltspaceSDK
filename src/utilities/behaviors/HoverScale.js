@@ -13,6 +13,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @memberof module:altspace/utilities/behaviors
  */
 altspace.utilities.behaviors.HoverScale = function(config) {
+    config = config || {};
     var scale = config.scale || 1.15;
     var duration = config.duration || 75; // Milliseconds
     var revertOnDispose = ((config.revertOnDispose !== undefined) ? config.revertOnDispose : true);
