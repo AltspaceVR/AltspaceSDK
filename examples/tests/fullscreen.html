@@ -10,7 +10,7 @@
 		<script>
 			var sim = new altspace.utilities.Simulation(), controls;
 
-			var boxSize = 80;
+			var boxSize = 0.5;
 			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
 			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
 
@@ -31,35 +31,43 @@
 					},
 					update: function (delta) {
 						this.time += delta;
-						this.obj.position.x = this.origX + Math.sin(this.time / 1000) * 1000;
+						//this.obj.position.x = this.origX + Math.sin(this.time / 1000) * 3;
 					}
 				});
 				return boxMesh;
 			}
 
 			altspace.getEnclosure().then(function (enclosure) {
+				sim.scene.scale.multiplyScalar(enclosure.pixelsPerMeter);
 				var button = makeBox(0, boxSize * 1.5, 0);
 				button.material.color.setStyle('white');
 				button.addEventListener('cursordown', function () {
-					if (enclosure.fullscreen) {
-						enclosure.exitFullscreen();
+					if (enclosure.fullspace) {
+						enclosure.exitFullspace();
 						button.material.color.setStyle('white');
 					}
 					else {
-						enclosure.requestFullscreen().then(function () {
+						enclosure.requestFullspace().then(function () {
 							button.material.color.setStyle('red');
 						});
 					}
 				});
 			});
 
-			var spacing = 200;
-			var num = 7;
+			var spacing = 0.9;
+			var offset = 5;
+			var num = 4;
 			for (var x = 0; x < num; x++) {
-				for (var z = 0; z < num; z++) {
-					makeMovingBox(
-						((x / (num - 1)) - 0.5) * num * spacing, 0,
-						((z / (num - 1)) - 0.5) * num * spacing)
+				for (var y = 0; y < num; y++) {
+					for (var z = 0; z < num; z++) {
+						var box = makeMovingBox(
+							((x / (num - 1)) - 0.5) * num * spacing,
+							((y / (num - 1)) - 0.5) * num * spacing,
+							((z / (num - 1)) - 0.5) * num * spacing + offset)
+						box.material.color.r = x / num;
+						box.material.color.g = y / num;
+						box.material.color.b = z / num;
+					}
 				}
 			}
 		</script>
