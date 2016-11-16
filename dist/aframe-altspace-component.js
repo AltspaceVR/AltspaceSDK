@@ -210,19 +210,6 @@
 	  }
 	});
 
-	AFRAME.registerComponent('object', {
-		schema: {
-			src: { type: 'string' }
-			//TODO: Maybe a useChildrenOnlyAsFallback flag
-		},
-		init: function () {
-			this.el.setObject3D('native-object', altspace.instantiateNativeObject(this.data.src));
-		},
-		remove: function () {
-			this.el.removeObject3D('native-object');
-		}
-	});
-
 	AFRAME.registerComponent('native', {
 	  schema: {
 		asset: { type: 'string' },
@@ -269,6 +256,13 @@
 				Type: this.name
 			}, { argsType: 'JSTypeAddNativeComponent' });
 		}
+		function nativeComponentRemove() {
+			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+			altspace._internal.callClientFunction('RemoveNativeComponent', {
+				MeshId: mesh.id,
+				Type: this.name
+			}, { argsType: 'JSTypeRemoveNativeComponent' });
+		}
 		function nativeComponentUpdate(oldData) {
 			altspace._internal.callClientFunction('UpdateNativeComponent', {
 				MeshId: this.el.object3DMap.mesh.id,
@@ -301,8 +295,17 @@
 			}
 		}
 
+		AFRAME.registerComponent('nat-obj', {
+			schema: {
+				type: 'string'
+			},
+			init: nativeComponentInit,
+			remove: nativeComponentRemove
+		});
+
 		AFRAME.registerComponent('n-sphere-collider', {
 			init:nativeComponentInit,
+			remove: nativeComponentRemove,
 			update: nativeComponentUpdate,
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
@@ -344,6 +347,7 @@
 					this.worldQuaternion.w = event.worldQuaternion.w;
 				}.bind(this));
 			},
+			remove: nativeComponentRemove,
 			update: nativeComponentUpdate,
 			schema: {
 				mass: { default: 1, type: 'number' },
@@ -364,33 +368,6 @@
 	//Demo by remaking D&D including the Tomes
 	//Point Layout enclsure url at github repo
 
-	//TODO: Bug in AFRAME 2.0
-	//AFRAME.registerPrimitive('n-browser', {
-	//	defaultComponents: {
-	//		native: { asset: 'System/Browser' }
-	//	},
-	//	mappings: {
-	//	}
-	//});
-
-	//AFRAME.registerPrimitive('n-browser', {
-	//	defaultComponents: {
-	//		native: { asset: 'System/Browser' }
-	//	},
-	//	mappings: {
-	//	}
-	//});
-
-	AFRAME.registerPrimitive('n-entity', {
-		defaultComponents: {
-			native: {}
-		},
-		mappings: {
-			asset: 'native.asset',
-			attributes: 'native.attributes'
-		}
-	});
-
 	/**
 	 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 	 */
@@ -400,10 +377,12 @@
 	   * usePixelScale will allow you to use A-Frame units as CSS pixels.
 	   * This is the default behavior for three.js apps, but not for A-Frame apps.
 	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
+	   * enclosuresOnly prevents the scene from being created if enclosure is flat.
 	   */
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
-		verticalAlign: { type: 'string', default: 'middle'}
+		verticalAlign: { type: 'string',  default: 'middle'},
+	    enclosuresOnly:{ type: 'boolean', default: 'true'}
 	  },
 
 	  /**
@@ -464,41 +443,48 @@
 	   */
 	  initRenderer: function () {
 
-		var scene = this.el.object3D;
-		if (!this.data.usePixelScale) {
-		  altspace.getEnclosure().then(function(e) {
-			scene.scale.multiplyScalar(e.pixelsPerMeter);
-		  });
-		}
-		var verticalAlign = this.data.verticalAlign;
-		if (verticalAlign !== 'center') {
-		  altspace.getEnclosure().then(function(e) {
-			switch (verticalAlign) {
-			  case 'bottom':
-				scene.position.y -= e.innerHeight / 2;
-				break;
-			  case 'top':
-				scene.position.y += e.innerHeight / 2;
-				break;
-			  default:
-				console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
-			}
-		  });
-		}
-		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
-		var noop = function() {};
-		renderer.setSize = noop;
-		renderer.setPixelRatio = noop;
-		renderer.setClearColor = noop;
-		renderer.clear = noop;
-		renderer.enableScissorTest = noop;
-		renderer.setScissor = noop;
-		renderer.setViewport = noop;
-		renderer.getPixelRatio = noop;
-		renderer.getMaxAnisotropy = noop;
-		renderer.setFaceCulling = noop;
-		renderer.context = {canvas: {}};
-		renderer.shadowMap = {};
+	    var scene = this.el.object3D;
+	    altspace.getEnclosure().then(function(e)
+	    {
+	      if (!this.data.usePixelScale){
+	        scene.scale.multiplyScalar(e.pixelsPerMeter);
+	      }
+
+	      switch (this.data.verticalAlign) {
+	        case 'bottom':
+	          scene.position.y -= e.innerHeight / 2;
+	          break;
+	        case 'top':
+	          scene.position.y += e.innerHeight / 2;
+	          break;
+	        case 'middle':
+	          break;
+	        default:
+	          console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+	      }
+
+	      if(this.data.enclosuresOnly && e.innerDepth === 1){
+	        this.el.renderer.render(new THREE.Scene());
+	        this.el.renderer = this.el.effect = oldRenderer;
+
+	      }
+	    }.bind(this));
+
+	    var oldRenderer = this.el.renderer;
+	    var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
+	    var noop = function() {};
+	    renderer.setSize = noop;
+	    renderer.setPixelRatio = noop;
+	    renderer.setClearColor = noop;
+	    renderer.clear = noop;
+	    renderer.enableScissorTest = noop;
+	    renderer.setScissor = noop;
+	    renderer.setViewport = noop;
+	    renderer.getPixelRatio = noop;
+	    renderer.getMaxAnisotropy = noop;
+	    renderer.setFaceCulling = noop;
+	    renderer.context = {canvas: {}};
+	    renderer.shadowMap = {};
 
 	  },
 
