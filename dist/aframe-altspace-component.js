@@ -249,25 +249,41 @@
 
 	(function () {
 
+		var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
+		var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+		placeholderMaterial.visible = false;
+		var PlaceholderMesh = function () {
+			THREE.Mesh.call( this, placeholderGeometry, placeholderMaterial );
+			this.userData.altspace = {collider: {enabled: false}};
+		};
+		PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
+		PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
+
 		function nativeComponentInit() {
-			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
 			altspace._internal.callClientFunction('AddNativeComponent', {
 				MeshId: mesh.id,
 				Type: this.name
 			}, { argsType: 'JSTypeAddNativeComponent' });
 		}
 		function nativeComponentRemove() {
-			var mesh = this.el.getOrCreateObject3D('mesh', THREE.Mesh);
+			var mesh = this.el.getObject3D('mesh');
 			altspace._internal.callClientFunction('RemoveNativeComponent', {
 				MeshId: mesh.id,
 				Type: this.name
 			}, { argsType: 'JSTypeRemoveNativeComponent' });
 		}
 		function nativeComponentUpdate(oldData) {
+			var attributes;
+			if(this.data instanceof Object){
+				attributes = JSON.stringify(this.data);
+			} else {
+				attributes = JSON.stringify({singularProperty:this.data});
+			}
 			altspace._internal.callClientFunction('UpdateNativeComponent', {
 				MeshId: this.el.object3DMap.mesh.id,
 				ComponentName: this.name,
-				Attributes: JSON.stringify(this.data),
+				Attributes: attributes,
 			}, { argsType: 'JSTypeUpdateNativeComponent' });
 		}
 
@@ -295,11 +311,12 @@
 			}
 		}
 
-		AFRAME.registerComponent('nat-obj', {
+		AFRAME.registerComponent('n-object', {
 			schema: {
 				type: 'string'
 			},
 			init: nativeComponentInit,
+			update: nativeComponentUpdate,
 			remove: nativeComponentRemove
 		});
 
@@ -361,13 +378,6 @@
 		});
 	})();
 
-	//Use selector for teleporting
-	//The attributes may just be better strongly typed. Hmm hard call.
-	//Maybe some things are just only Primitives like browsers, and some can be used like components (if they are actually native components)
-	//Primitives for native
-	//Demo by remaking D&D including the Tomes
-	//Point Layout enclsure url at github repo
-
 	/**
 	 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 	 */
@@ -382,7 +392,7 @@
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
-	    enclosuresOnly:{ type: 'boolean', default: 'true'}
+		enclosuresOnly:{ type: 'boolean', default: 'true'}
 	  },
 
 	  /**
@@ -443,48 +453,48 @@
 	   */
 	  initRenderer: function () {
 
-	    var scene = this.el.object3D;
-	    altspace.getEnclosure().then(function(e)
-	    {
-	      if (!this.data.usePixelScale){
-	        scene.scale.multiplyScalar(e.pixelsPerMeter);
-	      }
+		var scene = this.el.object3D;
+		altspace.getEnclosure().then(function(e)
+		{
+		  if (!this.data.usePixelScale){
+			scene.scale.multiplyScalar(e.pixelsPerMeter);
+		  }
 
-	      switch (this.data.verticalAlign) {
-	        case 'bottom':
-	          scene.position.y -= e.innerHeight / 2;
-	          break;
-	        case 'top':
-	          scene.position.y += e.innerHeight / 2;
-	          break;
-	        case 'middle':
-	          break;
-	        default:
-	          console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
-	      }
+		  switch (this.data.verticalAlign) {
+			case 'bottom':
+			  scene.position.y -= e.innerHeight / 2;
+			  break;
+			case 'top':
+			  scene.position.y += e.innerHeight / 2;
+			  break;
+			case 'middle':
+			  break;
+			default:
+			  console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+		  }
 
-	      if(this.data.enclosuresOnly && e.innerDepth === 1){
-	        this.el.renderer.render(new THREE.Scene());
-	        this.el.renderer = this.el.effect = oldRenderer;
+		  if(this.data.enclosuresOnly && e.innerDepth === 1){
+			this.el.renderer.render(new THREE.Scene());
+			this.el.renderer = this.el.effect = oldRenderer;
 
-	      }
-	    }.bind(this));
+		  }
+		}.bind(this));
 
-	    var oldRenderer = this.el.renderer;
-	    var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
-	    var noop = function() {};
-	    renderer.setSize = noop;
-	    renderer.setPixelRatio = noop;
-	    renderer.setClearColor = noop;
-	    renderer.clear = noop;
-	    renderer.enableScissorTest = noop;
-	    renderer.setScissor = noop;
-	    renderer.setViewport = noop;
-	    renderer.getPixelRatio = noop;
-	    renderer.getMaxAnisotropy = noop;
-	    renderer.setFaceCulling = noop;
-	    renderer.context = {canvas: {}};
-	    renderer.shadowMap = {};
+		var oldRenderer = this.el.renderer;
+		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
+		var noop = function() {};
+		renderer.setSize = noop;
+		renderer.setPixelRatio = noop;
+		renderer.setClearColor = noop;
+		renderer.clear = noop;
+		renderer.enableScissorTest = noop;
+		renderer.setScissor = noop;
+		renderer.setViewport = noop;
+		renderer.getPixelRatio = noop;
+		renderer.getMaxAnisotropy = noop;
+		renderer.setFaceCulling = noop;
+		renderer.context = {canvas: {}};
+		renderer.shadowMap = {};
 
 	  },
 
@@ -599,7 +609,7 @@
 	  }
 	});
 
-	AFRAME.registerSystem('sync-system',
+	/*AFRAME.registerSystem('sync-system',
 	{
 		schema: {
 			author: { type: 'string', default: null },
@@ -665,7 +675,7 @@
 				});
 			}.bind(this));
 		}
-	});
+	});*/
 
 	AFRAME.registerComponent('sync',
 	{
