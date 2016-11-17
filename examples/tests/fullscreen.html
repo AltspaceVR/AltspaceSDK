@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Fullscreen</title>
+		<title>Fullspace</title>
 		<meta charset="utf-8">
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="../../dist/altspace.js"></script>
 	</head>
-	<body>
+	<body style="background-color: red">
 		<script>
 			var sim = new altspace.utilities.Simulation(), controls;
 
@@ -31,7 +31,32 @@
 					},
 					update: function (delta) {
 						this.time += delta;
-						//this.obj.position.x = this.origX + Math.sin(this.time / 1000) * 3;
+						this.obj.position.x = this.origX + Math.sin(this.time / 1000) * 3;
+					}
+				});
+				return boxMesh;
+			}
+
+			function makeFlippingBox(x, y, z) {
+				var boxMesh = makeBox(x, y, z);
+				boxMesh.addBehavior({
+					awake: function (obj) {
+						this.obj = obj;
+						this.time = 0;
+						this.flip = true;
+					},
+					update: function (delta) {
+						this.time += delta;
+						if (this.time > 2000) {
+							if (this.flip) {
+								this.obj.position.set(0, 0, 0);
+							}
+							else {
+								this.obj.position.set(x, y, z);
+							}
+							this.time = 0;
+							this.flip = !this.flip;
+						}
 					}
 				});
 				return boxMesh;
@@ -44,19 +69,21 @@
 				button.addEventListener('cursordown', function () {
 					if (enclosure.fullspace) {
 						enclosure.exitFullspace();
+						sim.scene.scale.multiplyScalar(enclosure.pixelsPerMeter);
 						button.material.color.setStyle('white');
 					}
 					else {
 						enclosure.requestFullspace().then(function () {
 							button.material.color.setStyle('red');
+							sim.scene.scale.set(1, 1, 1);
 						});
 					}
 				});
 			});
 
 			var spacing = 0.9;
-			var offset = 5;
-			var num = 4;
+			var offset = 2;
+			var num = 8;
 			for (var x = 0; x < num; x++) {
 				for (var y = 0; y < num; y++) {
 					for (var z = 0; z < num; z++) {
@@ -70,6 +97,8 @@
 					}
 				}
 			}
+
+			makeFlippingBox(3, 3, 3);
 		</script>
 	</body>
 </html>
