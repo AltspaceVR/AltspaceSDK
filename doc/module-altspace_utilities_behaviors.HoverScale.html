@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>THREE - Documentation</title>
+    <title>HoverScale - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">THREE</h1>
+    <h1 class="page-title">HoverScale</h1>
     
 
     
@@ -41,7 +41,9 @@
 <header>
     
         <h2>
-        THREE
+            <span class="ancestors"><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a>.</span>
+        
+        HoverScale
         </h2>
         
     
@@ -51,13 +53,237 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
-Three.js.
-It adds methods to Three.js' Scene and Object3D classes which allow you to
-add, remove, retrieve and use Behaviors.</p></div>
+
+    
+
+    <h4 class="name" id="HoverScale"><span class="type-signature"></span>new HoverScale<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Changes the scale of an object when the cursor hovers over it, and restores the original scale when the cursor is no longer hovering over the object.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1.15
+                
+                </td>
+            
+
+            <td class="description last"><p>A scaling factor that will be applied to the object's initial scale when the cursor hovers over it.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    75
+                
+                </td>
+            
+
+            <td class="description last"><p>Duration the scaling effect is intended to take to complete, in milliseconds.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>revertOnDispose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Specifies whether the object's original scale should be restored when the behavior has been destroyed.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
 
 
 <dl class="details">
@@ -96,7 +322,20 @@ add, remove, retrieve and use Behaviors.</p></div>
 </dl>
 
 
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     </div>
 
@@ -104,16 +343,6 @@ add, remove, retrieve and use Behaviors.</p></div>
 
     
 
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="THREE.Object3D.html">Object3D</a></dt>
-            <dd></dd>
-        
-            <dt><a href="THREE.Scene.html">Scene</a></dt>
-            <dd></dd>
-        </dl>
     
 
      

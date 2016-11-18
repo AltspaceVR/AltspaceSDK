@@ -7,7 +7,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *
  * @class Spin
  * @param {Object} [config]
- * @param {Number} [config.speed=0.0001] Rotation speed in radians per 
+ * @param {Number} [config.speed=0.0001] Rotation speed in radians per
  *  millisecond
  * @memberof module:altspace/utilities/behaviors
  **/
@@ -27,5 +27,5 @@ altspace.utilities.behaviors.Spin = function (config) {
 		object3d.rotation.y += config.speed * deltaTime;
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'Spin' };
 };

@@ -26,6 +26,7 @@ var SteamVRTrackedObjectBehavior = (function () {
 		_classCallCheck(this, SteamVRTrackedObjectBehavior);
 
 		this._hand = hand;
+		this.type = 'SteamVRTrackedObject';
 	}
 
 	_createClass(SteamVRTrackedObjectBehavior, [{

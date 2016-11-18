@@ -8,16 +8,16 @@ var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default
 
 var _Promise = require('babel-runtime/core-js/promise')['default'];
 
-function getController(hand) {
+function getController(hand, config) {
 	var findGamepad = function findGamepad(resolve, reject) {
 		var gamepad = altspace.getGamepads().find(function (g) {
 			return g.mapping === 'steamvr' && g.hand === hand;
 		});
 		if (gamepad) {
-			console.log("SteamVR input device found", gamepad);
+			if (config.logging) console.log("SteamVR input device found", gamepad);
 			resolve(gamepad);
 		} else {
-			console.log("SteamVR input device not found trying again in 500ms...");
+			if (config.logging) console.log("SteamVR input device not found trying again in 500ms...");
 			setTimeout(findGamepad, 500, resolve, reject);
 		}
 	};
@@ -30,6 +30,8 @@ function getController(hand) {
  * to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
  *
  * @class SteamVRInput
+ * @param {Object} [config]
+ * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
  * @memberof module:altspace/utilities/behaviors
  *
  * @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
@@ -42,10 +44,12 @@ function getController(hand) {
  */
 
 var SteamVRInputBehavior = (function () {
-	function SteamVRInputBehavior() {
+	function SteamVRInputBehavior(config) {
 		_classCallCheck(this, SteamVRInputBehavior);
 
 		this.type = 'SteamVRInput';
+		this.config = config || {};
+		this.config.logging = this.config.logging || false;
 	}
 
 	_createClass(SteamVRInputBehavior, [{
@@ -53,8 +57,8 @@ var SteamVRInputBehavior = (function () {
 		value: function awake() {
 			var _this = this;
 
-			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER);
-			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER);
+			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
+			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
 			this.firstControllerPromise = _Promise.race([this.leftControllerPromise, this.rightControllerPromise]);
 
 			this.leftControllerPromise.then(function (controller) {

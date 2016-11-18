@@ -53,5 +53,5 @@ altspace.utilities.behaviors.TouchpadRotate = function (config) {
 	function start() {
 	}
 
-	return { awake: awake, start: start, update: update };
+	return { awake: awake, start: start, update: update, type: 'TouchpadRotate' };
 };

@@ -37,15 +37,23 @@
 					return boxMesh;
 				}
 
-				makeBox(-boxSize * 0.6, 0);
+				// This box just changes its color when you click on it
 				makeBox(boxSize * 0.6, -boxSize * 1.2);
 
+				// This box flips between having a collider and not having a collider
 				var hitboxlessBoxMesh = makeBox(boxSize * 0.6, 0);
 				hitboxlessBoxMesh.userData.altspace = {collider: {enabled: false}};
 				hitboxlessBoxMesh.material.color.r = 1;
 				var collider = hitboxlessBoxMesh.userData.altspace.collider;
 
+				// This box indicates whether the above box has a collider or not
 				var indicatorBox = makeBox(boxSize * 0.6, boxSize * 1.2);
+				indicatorBox.visible = false;
+
+				// This box's material should never become visible
+				var invisibleMaterialBox = makeBox(boxSize * 1.8, 0);
+				invisibleMaterialBox.material.visible = false;
+				invisibleMaterialBox.userData.altspace = {collider: {enabled: true}};
 
 				sim.renderer.render(sim.scene, sim.camera);
 
@@ -57,7 +65,6 @@
 					}
 					if (performance.now() - lastFlip > 3000) {
 						collider.enabled = !collider.enabled;
-						// hitboxlessBoxMesh.material.color.r = collider.enabled ? 0 : 1;
 						indicatorBox.visible = collider.enabled;
 						lastFlip = performance.now();
 					}
