@@ -210,43 +210,6 @@
 	  }
 	});
 
-	AFRAME.registerComponent('native', {
-	  schema: {
-		asset: { type: 'string' },
-		attributes: {
-			type: 'string',
-			/*parse: function (value) {
-				var ret;
-				  try {
-					  ret = JSON.parse(value);
-				  } catch (e) {}
-				  return ret;
-			},
-			stringify: function (value) {
-				var ret;
-				try {
-					ret = JSON.stringify(value);
-				} catch (e) { }
-				return ret;
-			}*/
-		  }
-	  },
-	  init: function () {
-		this.el.setObject3D('native', altspace.instantiateNativeObject(this.data.asset));
-	  },
-	  update: function (oldData) {
-		if (this.data.attributes) {
-			altspace._internal.callClientFunction('UpdateNativeAttributes', {
-				MeshId: this.el.object3DMap.native.id,
-				Attributes: this.data.attributes
-			}, { argsType: 'JSTypeUpdateNativeAttributes' });
-		}
-	  },
-	  remove: function () {
-		this.el.removeObject3D('native');
-	  }
-	});
-
 	(function () {
 
 		var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
@@ -609,7 +572,7 @@
 	  }
 	});
 
-	/*AFRAME.registerSystem('sync-system',
+	AFRAME.registerSystem('sync-system',
 	{
 		schema: {
 			author: { type: 'string', default: null },
@@ -619,6 +582,11 @@
 		},
 		init: function() {
 			var component = this;
+
+			if(!this.data){
+				console.warn('The sync-system must be present on the scene and configured with required data.');
+				return;
+			}
 
 			altspace.utilities.sync.connect({
 				authorId: this.data.author,
@@ -675,7 +643,7 @@
 				});
 			}.bind(this));
 		}
-	});*/
+	});
 
 	AFRAME.registerComponent('sync',
 	{
