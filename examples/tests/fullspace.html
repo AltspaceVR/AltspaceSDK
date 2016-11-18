@@ -69,10 +69,38 @@
 				return boxMesh;
 			}
 
+			function makePulsingSphere() {
+				var sphere = new THREE.Mesh(
+					new THREE.SphereGeometry(1, 6, 6),
+					new THREE.MeshBasicMaterial({color: 'white'})
+				);
+				sphere.addBehavior({
+					awake: function (obj) {
+						this.obj = obj;
+						this.time = 0;
+						this.size = 1;
+					},
+					update: function (delta) {
+						this.time += delta;
+						var x = Math.max(0.00000001, Math.abs((Math.cos(this.time / 1000) - 1) / 2 * this.size));
+						this.obj.scale.set(x, x, x);
+					},
+					type: 'pulsingSphereBehavior'
+				});
+				sim.scene.add(sphere);
+				return sphere;
+			}
+
+			function adjustToFullscreen(enclosure, button) {
+				var ppm = enclosure.pixelsPerMeter;
+				sim.scene.scale.set(ppm, ppm, ppm);
+				button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
+				pulsingSphere.getBehaviorByType('pulsingSphereBehavior').size = enclosure.fullspace ? 50 : 4;
+			}
+
 			altspace.getEnclosure().then(function (enclosure) {
-				sim.scene.scale.multiplyScalar(enclosure.pixelsPerMeter);
 				var button = makeBox(0, boxSize * 1.5, 0);
-				button.material.color.setStyle('white');
+				adjustToFullscreen(enclosure, button);
 				button.addEventListener('cursordown', function () {
 					if (enclosure.fullspace) {
 						enclosure.exitFullspace();
@@ -82,10 +110,7 @@
 					}
 				});
 				enclosure.addEventListener('fullspacechange', function () {
-					var ppm = enclosure.pixelsPerMeter;
-					sim.scene.scale.set(ppm, ppm, ppm);
-					console.log(ppm, enclosure.fullspace);
-					button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
+					adjustToFullscreen(enclosure, button);
 				});
 			});
 
@@ -107,6 +132,8 @@
 			}
 
 			makeFlippingBox(3, 3, 3);
+
+			var pulsingSphere = makePulsingSphere();
 		</script>
 	</body>
 </html>
