@@ -5,8 +5,15 @@
 		<meta charset="utf-8">
 		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 		<script src="../../dist/altspace.js"></script>
+		<style>
+			html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+			body{ display: flex; align-items: center; justify-content: center; }
+			div { display: none; }
+			#pixel { display: block; width: 1px; height: 1px; background-color: black; }
+		</style>
 	</head>
-	<body style="background-color: red">
+	<body>
+		<div id="pixel">&nbsp;</div>
 		<script>
 			var sim = new altspace.utilities.Simulation(), controls;
 
@@ -69,15 +76,16 @@
 				button.addEventListener('cursordown', function () {
 					if (enclosure.fullspace) {
 						enclosure.exitFullspace();
-						sim.scene.scale.multiplyScalar(enclosure.pixelsPerMeter);
-						button.material.color.setStyle('white');
 					}
 					else {
-						enclosure.requestFullspace().then(function () {
-							button.material.color.setStyle('red');
-							sim.scene.scale.set(1, 1, 1);
-						});
+						enclosure.requestFullspace();
 					}
+				});
+				enclosure.addEventListener('fullspacechange', function () {
+					var ppm = enclosure.pixelsPerMeter;
+					sim.scene.scale.set(ppm, ppm, ppm);
+					console.log(ppm, enclosure.fullspace);
+					button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
 				});
 			});
 
