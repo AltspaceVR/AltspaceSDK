@@ -50,11 +50,11 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The Sync utility is currently based on Firebase. It provides a quick way 
-to synchronize apps between users (even when they are running outside of 
-AltspaceVR). 
-During the SDK beta, please consider all data stored with the sync 
-utility to be ephemeral (it may be cleared or clobbered at any time). 
+            <div class="description"><p>The Sync utility is currently based on Firebase. It provides a quick way
+to synchronize apps between users (even when they are running outside of
+AltspaceVR).
+During the SDK beta, please consider all data stored with the sync
+utility to be ephemeral (it may be cleared or clobbered at any time).
 You do not need a Firebase account to use the Sync utility.</p>
 <p>Refer to the <a href="https://www.firebase.com/docs/web/api/">Firebase API documentation</a>
 when working with the sync instance.</p></div>
@@ -166,7 +166,7 @@ when working with the sync instance.</p></div>
 
 <div class="description">
     <p>Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
-Returns a promise that will fufill with a <a href="module-altspace_utilities_sync-Connection.html">Connection</a>.</p>
+Returns a promise that will fulfill with a <a href="module-altspace_utilities_sync-Connection.html">Connection</a>.</p>
 </div>
 
 
@@ -514,7 +514,7 @@ Returns a promise that will fufill with a <a href="module-altspace_utilities_syn
 
 
 <div class="description">
-    <p>Returns a firebase instance, just as if you had called new Firebase()  </p>
+    <p>Returns a firebase instance, just as if you had called new Firebase()</p>
 <p>By using syncInstance.parent() you can store cross-instance data like high scores. Likewise you can store persistent user data at syncInstance.parent().child([userId).</p>
 </div>
 
@@ -759,7 +759,7 @@ Returns a promise that will fufill with a <a href="module-altspace_utilities_syn
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var syncInstance = altspace.utilities.sync.getInstance({     // All sync instances with the same instance id will share      // properties.      instanceId: yourInstanceId,      // This helps to prevent collisions.     authorId: yourAuthorId   });</code></pre>
+    <pre class="prettyprint"><code>var syncInstance = altspace.utilities.sync.getInstance({     // All sync instances with the same instance id will share     // properties.     instanceId: yourInstanceId,     // This helps to prevent collisions.     authorId: yourAuthorId });</code></pre>
 
 
 

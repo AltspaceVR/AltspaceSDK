@@ -11,7 +11,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * Clicking left stick enters left alt mode, where movement is in X-Z plane.
  * Clicking left stick again exits left alt mode.
  * Right stick left / right rotates object clockwise / counterclockwise (y axis).
- * Rifht stick up / down rotates object away forwards / backwards (x axis).
+ * Right stick up / down rotates object away forwards / backwards (x axis).
  * Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
  * Clicking right stick again exits right alt mode.
  * D-pad up / down scales object.
@@ -37,7 +37,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 	var isInitialized = false;
 
 	var originalObj;//used to reset
-	var tolerance = 0.2;//ignore stick deadzone
+	var tolerance = 0.2;//ignore stick dead zone
 
 	config = config || {};
 	if (config.position === undefined) config.position = true;
@@ -122,7 +122,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		}
 		if (!gamepad) return;
 
-		//For axis and button numbers see: https://w3c.github.io/gamepad/  
+		//For axis and button numbers see: https://w3c.github.io/gamepad/
 		var isResetButton = gamepad.buttons[8].pressed;//reset / back button
 		if (isResetButton) {
 			if (!sync.isMine) sync.takeOwnership();
@@ -202,6 +202,6 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'GamepadControls' };
 };
 

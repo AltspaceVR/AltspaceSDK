@@ -1,8 +1,12 @@
 {
   "name": "altspace",
-  "version": "0.22.0",
+  "version": "0.23.1",
   "repository": "AltspaceVR/AltspaceSDK",
   "main": "dist/altspace.js",
+  "scripts": {
+    "build": "gulp altspace_js",
+    "doc": "gulp doc"
+  },
   "dependencies": {
     "lodash.isequal": "4.1.3"
   },
