@@ -24,6 +24,15 @@
 				background-color: rgba(1, 0, 0, 0);
 				box-shadow: 0 0 8px 600px rgba(0, 0, 0, .8);
 			}
+
+			.ontop {
+				position: absolute;
+				padding-left: 10px;
+			}
+
+			.ontop a {
+				color: white;
+			}
 		</style>
 	</head>
 	<body>
@@ -34,6 +43,9 @@
 		<script src="../dist/altspace.min.js"></script>
 
 		<script>
+			if (!window.altspace || !window.altspace.inClient) {
+				document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+			}
 
 			var scene, renderer;
 
@@ -93,7 +105,7 @@
 					testFrame.style.fontSize = '18px';
 					throw new Error(errorMsg);
 				}
-				
+
 				loader.load('models/solar-system/sun.obj', 'models/solar-system/sun.mtl', function (sun) {
 
 					sun.scale.x = 1;
