@@ -23,6 +23,7 @@
 
 			function makeBox(x, y, z) {
 				var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
+				boxMesh.userData.altspace = {collider: {enabled: false}};
 				boxMesh.position.set(x, y, z);
 				sim.scene.add(boxMesh);
 				return boxMesh;
@@ -74,6 +75,7 @@
 					new THREE.SphereGeometry(1, 6, 6),
 					new THREE.MeshBasicMaterial({color: 'white'})
 				);
+				sphere.userData.altspace = {collider: {enabled: false}};
 				sphere.addBehavior({
 					awake: function (obj) {
 						this.obj = obj;
@@ -100,6 +102,7 @@
 
 			altspace.getEnclosure().then(function (enclosure) {
 				var button = makeBox(0, boxSize * 1.5, 0);
+				button.userData.altspace.collider.enabled = true;
 				adjustToFullscreen(enclosure, button);
 				button.addEventListener('cursordown', function () {
 					if (enclosure.fullspace) {
@@ -127,6 +130,7 @@
 						box.material.color.r = x / num;
 						box.material.color.g = y / num;
 						box.material.color.b = z / num;
+						button.userData.altspace.collider.enabled = Math.random() > 0.5;
 					}
 				}
 			}
