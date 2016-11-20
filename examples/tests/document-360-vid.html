@@ -14,9 +14,9 @@
 		<video src="http://www.vrideo.com/api/v1/videos/dW9K4xE/video?format=mp4&quality=720p" autoplay></video>
 		<script>
 			var sim = new altspace.utilities.Simulation();
-
 			if (altspace.getDocument) {
 				altspace.getDocument().then(function (doc) {
+					doc.toggleAudioSpatialization(false);
 					doc.geometry = new THREE.SphereGeometry(400, 32, 32);
 					doc.geometry.verticesNeedUpdate = true;
 					doc.scale.x = -1;
