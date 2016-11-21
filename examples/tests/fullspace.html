@@ -9,7 +9,7 @@
 			html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
 			body{ display: flex; align-items: center; justify-content: center; }
 			div { display: none; }
-			#pixel { display: block; width: 1px; height: 1px; background-color: black; }
+			#pixel { display: block; width: 300px; height: 300px; background-color: black; }
 		</style>
 	</head>
 	<body>
@@ -93,17 +93,25 @@
 				return sphere;
 			}
 
-			function adjustToFullscreen(enclosure, button) {
+			function adjustToFullspace(enclosure, button, doc) {
 				var ppm = enclosure.pixelsPerMeter;
 				sim.scene.scale.set(ppm, ppm, ppm);
+				doc.scale.set(1/ppm, 1/ppm, 1/ppm);
 				button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
 				pulsingSphere.getBehaviorByType('pulsingSphereBehavior').size = enclosure.fullspace ? 50 : 4;
 			}
 
-			altspace.getEnclosure().then(function (enclosure) {
+			Promise.all([altspace.getEnclosure(), altspace.getDocument()]).then(function (results) {
+				var enclosure = results.shift();
+
+				var doc = results.shift();
+				doc.position.set(0, 0, 1.5);
+				doc.rotateY(Math.PI / 4);
+				sim.scene.add(doc);
+
 				var button = makeBox(0, boxSize * 1.5, 0);
 				button.userData.altspace.collider.enabled = true;
-				adjustToFullscreen(enclosure, button);
+				adjustToFullspace(enclosure, button, doc);
 				button.addEventListener('cursordown', function () {
 					if (enclosure.fullspace) {
 						enclosure.exitFullspace();
@@ -113,7 +121,7 @@
 					}
 				});
 				enclosure.addEventListener('fullspacechange', function () {
-					adjustToFullscreen(enclosure, button);
+					adjustToFullspace(enclosure, button, doc);
 				});
 			});
 
@@ -130,7 +138,7 @@
 						box.material.color.r = x / num;
 						box.material.color.g = y / num;
 						box.material.color.b = z / num;
-						button.userData.altspace.collider.enabled = Math.random() > 0.5;
+						box.userData.altspace.collider.enabled = Math.random() > 0.5;
 					}
 				}
 			}
