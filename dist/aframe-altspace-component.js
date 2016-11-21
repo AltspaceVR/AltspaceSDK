@@ -294,6 +294,16 @@
 			}
 		});
 
+		AFRAME.registerComponent('n-browser', {
+			init:nativeComponentInit,
+			remove: nativeComponentRemove,
+			update: nativeComponentUpdate,
+			schema: {
+				url: { type: 'string' },
+				controls: { default: 'above', type: 'string' },
+			}
+		});
+
 		AFRAME.registerComponent('n-rigidbody', {
 			init: function() {
 				nativeComponentInit.call(this);
