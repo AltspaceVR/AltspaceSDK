@@ -248,13 +248,37 @@ AFRAME.registerComponent('editor', {
 		}
 	});
 
-	AFRAME.registerComponent('n-browser', {
+	AFRAME.registerComponent('n-box-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
 		update: nativeComponentUpdate,
 		schema: {
-			url: { type: 'string' },
-			controls: { default: 'above', type: 'string' },
+			isTrigger: { default: false, type: 'boolean' },
+			radius: { default: '0', type: 'number' },
+			center: { type: 'vec3' },
+			size: { type: 'vec3' }
+		}
+	});
+
+	AFRAME.registerComponent('n-capsule-collider', {
+		init:nativeComponentInit,
+		remove: nativeComponentRemove,
+		update: nativeComponentUpdate,
+		schema: {
+			isTrigger: { default: false, type: 'boolean' },
+			radius: { default: '0', type: 'number' },
+			height: { default: '0', type: 'number' },
+			direction: { default: 'y' },
+		}
+	});
+
+	AFRAME.registerComponent('n-mesh-collider', {
+		init:nativeComponentInit,
+		remove: nativeComponentRemove,
+		update: nativeComponentUpdate,
+		schema: {
+			isTrigger: { default: false, type: 'boolean' },
+			convex: { default: true, type: 'boolean' }
 		}
 	});
 
@@ -303,8 +327,18 @@ AFRAME.registerComponent('editor', {
 			rotationConstraints: vec3bool
 		}
 	});
-})();
 
+	AFRAME.registerComponent('n-browser', {
+		init:nativeComponentInit,
+		remove: nativeComponentRemove,
+		update: nativeComponentUpdate,
+		schema: {
+			url: { type: 'string' },
+			controls: { default: 'above', type: 'string' },
+		}
+	});
+
+})();
 /**
  * The altspace component makes A-Frame apps compatible with AltspaceVR.
  */
