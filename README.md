@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
-**Latest Version: v0.24.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.24.0)**
+**Latest Version: v0.24.1 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.24.1)**
 
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -32,7 +32,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of Altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.24.0/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.24.1/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -93,6 +93,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * Object3D transformation and hierarchy
 * Most Geometries
 * MeshBasicMaterial
+* Face and vertex colors
 
 **Not currently supported:**
 * Three.js r75
@@ -102,7 +103,6 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * VideoTexture
 * Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
 * Wireframes
-* Face and vertex colors
 * Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial
 * Line Geometries
 * Quad faces
@@ -125,7 +125,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * Texture wrap mode is ignored on the `wrapT` property. The value of `wrapS` is used for both axes.
 
 ## Browser Feature Support
-Altspace's browser is based on Chromium version 28.
+Altspace's browser is based on Chromium version 40.
 
 **Currently supported:**
 * Libre audio and video codecs (ogg, webm)
