@@ -714,6 +714,19 @@
 			component.isConnected = false;
 
 			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
+
+
+			if(component.data.ownOn){
+				var ownershipEvents = component.data.ownOn.split(/[ ,]+/);
+				for(var i = 0, max = ownershipEvents.length; i < max; i++){
+					component.el.addEventListener(ownershipEvents[i], function(){
+						if(component.isConnected){
+							component.takeOwnership();
+						}
+					});
+				}
+			}
+
 			function start(){
 				//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
 				//This ensures, for example, that synced animations keep playing
@@ -735,15 +748,6 @@
 
 					link(syncSys.sceneRef.child(id));
 					setupReceive();
-
-					if(component.data.ownOn){
-						var ownershipEvents = component.data.ownOn.split(/[ ,]+/);
-						for(var i = 0, max = ownershipEvents.length; i < max; i++){
-							component.el.addEventListener(ownershipEvents[i], function(){
-								component.takeOwnership();
-							});
-						}
-					}
 
 				} else {
 					console.error('Unsupported sync mode: ' + component.data.mode);
@@ -811,6 +815,8 @@
 		}
 	});
 
+	//TODO: We need to figure out a way to recieve our first update without caring about ownership.
+	// firstValue is probably not the right way to go, probably something about having sent yet. Need to change for both
 	AFRAME.registerComponent('sync-transform',
 	{
 		dependencies: ['sync'],
@@ -964,6 +970,8 @@
 
 				var refChangedLocked = false;
 
+				var firstValue = true;
+
 				component.el.addEventListener('componentchanged', function (event) {
 					var name = event.detail.name;
 					var oldData = event.detail.oldData;
@@ -982,13 +990,14 @@
 				});
 
 				colorRef.on('value', function (snapshot) {
-					if (sync.isMine) return;
+					if (sync.isMine && !firstValue) return;
 					var color = snapshot.val();
 					
 					refChangedLocked = true;
 					component.el.setAttribute('material', 'color', color);
 					refChangedLocked = false;
 
+					firstValue = false;
 				});
 			}
 		}
