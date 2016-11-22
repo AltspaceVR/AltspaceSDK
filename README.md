@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.
 
-**Latest Version: v0.23.2 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.23.2)**
+**Latest Version: v0.24.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.24.0)**
 
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -14,12 +14,12 @@ THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
 
 ## Resources
 
-**[Getting Started] - If you're new to the SDK, start here!**
-**[API Reference] - Reference for built in API functions, utilities, and more**
-**[Developer Portal] - Tutorials, projects, initiative program, and app submission**
-**[Local Dev Setup] - Instructions for setting up a local dev environment**
-**[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
-**[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**
+- **[Getting Started] - If you're new to the SDK, start here!**
+- **[API Reference] - Reference for built in API functions, utilities, and more**
+- **[Developer Portal] - Tutorials, projects, initiative program, and app submission**
+- **[Local Dev Setup] - Instructions for setting up a local dev environment**
+- **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
+- **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**
 
 
 ## altspace.js
@@ -32,7 +32,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of Altspace in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/0.23.2/altspace.min.js"></script>`
+`<script src="http://sdk.altvr.com/libs/altspace.js/0.24.0/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
