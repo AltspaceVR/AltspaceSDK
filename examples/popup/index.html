@@ -20,9 +20,9 @@ var sceneSync, popup;
 altspace.utilities.sync.connect(config).then(function(connection) {
 	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {
-		 	'cube': createCube,
-		 	'sphere': createSphere,
-		 	'torus': createTorus
+			'cube': createCube,
+			'sphere': createSphere,
+			'torus': createTorus
 		},
 		ready: ready
 	});
@@ -50,9 +50,11 @@ altspace.utilities.sync.connect(config).then(function(connection) {
 
 function ready(firstInstance) {
 	if (firstInstance) {
-		var popupShowCube = sceneSync.instantiate('cube', {
-			color: 'white',
-			position: {x: 0, y: -512, z: 0}
+		altspace.getEnclosure().then(function (enclosure) {
+			sceneSync.instantiate('cube', {
+				color: 'white',
+				position: {x: 0, y: -enclosure.innerHeight / 2, z: 0}
+			});
 		});
 	}
 }
@@ -64,7 +66,7 @@ function ShowPopup() {
 		});
 	}
 	return { awake: awake };
-};
+}
 
 function getFullUrl(path) {
 	var currPath = location.pathname;
