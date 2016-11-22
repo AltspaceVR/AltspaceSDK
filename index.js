@@ -586,6 +586,8 @@ AFRAME.registerSystem('sync-system',
 			return;
 		}
 
+		component.isConnected = false;
+
 		altspace.utilities.sync.connect({
 			authorId: this.data.author,
 			appId: this.data.app,
@@ -593,7 +595,6 @@ AFRAME.registerSystem('sync-system',
 			baseRefUrl: this.data['ref-url']
 		}).then(function(connection) {
 			this.connection = connection;
-			this.sceneEl.emit('connected', null, false);
 
 			this.sceneRef = this.connection.instance.child('scene');
 			this.clientsRef = this.connection.instance.child('clients');
@@ -628,11 +629,13 @@ AFRAME.registerSystem('sync-system',
 			// but have it be automatically removed by firebase if we disconnect for any reason
 			this.clientsRef.push(this.clientId).onDisconnect().remove();
 
+
 			this.connection.instance.child('initialized').once('value', function (snapshot) {
 				var shouldInitialize = !snapshot.val();
 				snapshot.ref().set(true);
 
-				this.sceneEl.emit('instanceready', { shouldInitialize: shouldInitialize }, false);
+				component.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
+				component.isConnected = true;
 			}.bind(this));
 
 
@@ -661,37 +664,48 @@ AFRAME.registerComponent('sync',
 		var isMine = false;
 
 		var component = this;
+		
+		component.isConnected = false;
 
-		//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
-		//This ensures, for example, that synced animations keep playing
-		scene.addEventListener('clientleft', function(event){
-			var shouldTakeOwnership = (!ownerId || ownerId === event.detail.id) && syncSys.isMasterClient;
+		if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
+		function start(){
+			//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
+			//This ensures, for example, that synced animations keep playing
+			scene.addEventListener('clientleft', function(event){
+				var shouldTakeOwnership = (!ownerId || ownerId === event.detail.id) && syncSys.isMasterClient;
 
-			if(shouldTakeOwnership) component.takeOwnership();
-		});
+				if(shouldTakeOwnership) component.takeOwnership();
+			});
 
-		if (this.data.mode === 'link') {
-			var id = this.el.id;
-			if (!id) {
-				console.error('Entities cannot be synced using link mode without an id.');
+			if (component.data.mode === 'link') {
+				var id = component.el.id;
+				if (!id) {
+					console.error('Entities cannot be synced using link mode without an id.');
+					return;
+				}
+
+				console.log('syncSys: ' + syncSys);
+				console.log('syncSys.sceneRef: ' + syncSys.sceneRef);
+
+				link(syncSys.sceneRef.child(id));
+				setupReceive();
+
+				if(component.data.ownOn){
+					var ownershipEvents = component.data.ownOn.split(/[ ,]+/);
+					for(var i = 0, max = ownershipEvents.length; i < max; i++){
+						component.el.addEventListener(ownershipEvents[i], function(){
+							component.takeOwnership();
+						});
+					}
+				}
+
+			} else {
+				console.error('Unsupported sync mode: ' + component.data.mode);
 				return;
 			}
 
-			link(syncSys.sceneRef.child(id));
-			setupReceive();
-
-			if(this.data.ownOn){
-				var ownershipEvents = this.data.ownOn.split(/[ ,]+/);
-				for(var i = 0, max = ownershipEvents.length; i < max; i++){
-					this.el.addEventListener(ownershipEvents[i], function(){
-						component.takeOwnership();
-					});
-				}
-			}
-
-		} else {
-			console.error('Unsupported sync mode: ' + this.data.mode);
-			return;
+			component.isConnected = true;
+			component.el.emit('connected', null, false);
 		}
 
 		function link(entityRef) {
@@ -735,7 +749,7 @@ AFRAME.registerComponent('sync',
 				});
 		}
 
-		this.takeOwnership = function() {
+		component.takeOwnership = function() {
 			ownerRef.set(syncSys.clientId);
 
 			//clear our ownership if we disconnect
@@ -757,130 +771,134 @@ AFRAME.registerComponent('sync-transform',
 	schema: {
 	},
 	init: function () {
-		var sync = this.el.components.sync;
 		var component = this;
+		var sync = component.el.components.sync;
+		if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
 
-		var positionRef = sync.dataRef.child('position');
-		var rotationRef = sync.dataRef.child('rotation');
-		var scaleRef = sync.dataRef.child('scale');
+		function start(){
 
-		this.updateRate = 100;
+			var positionRef = sync.dataRef.child('position');
+			var rotationRef = sync.dataRef.child('rotation');
+			var scaleRef = sync.dataRef.child('scale');
 
-		var stoppedAnimations = [];
-		//pause all animations on ownership loss
-		this.el.addEventListener('ownershiplost', function() {
-			var children = component.el.children;
-			for (var i = 0; i < children.length; i++) {
-				var tagName = children[i].tagName.toLowerCase();
-				if (tagName === "a-animation") {
-					stoppedAnimations.push(children[i]);
-					children[i].stop();
+			component.updateRate = 100;
+
+			var stoppedAnimations = [];
+			//pause all animations on ownership loss
+			component.el.addEventListener('ownershiplost', function() {
+				var children = component.el.children;
+				for (var i = 0; i < children.length; i++) {
+					var tagName = children[i].tagName.toLowerCase();
+					if (tagName === "a-animation") {
+						stoppedAnimations.push(children[i]);
+						children[i].stop();
+					}
 				}
-			}
-		});
-		this.el.addEventListener('ownershipgained', function () {
-			for (var i = 0; i < stoppedAnimations.length; i++) {
-				var animation = stoppedAnimations[i];
-				animation.start();
-			}
-			stoppedAnimations = [];
-		});
+			});
+			component.el.addEventListener('ownershipgained', function () {
+				for (var i = 0; i < stoppedAnimations.length; i++) {
+					var animation = stoppedAnimations[i];
+					animation.start();
+				}
+				stoppedAnimations = [];
+			});
 
-		function onTransform(snapshot, componentName) {
-			if (sync.isMine) return;
+			function onTransform(snapshot, componentName) {
+				if (sync.isMine) return;
 
-			var value = snapshot.val();
-			if (!value) return;
+				var value = snapshot.val();
+				if (!value) return;
 
-			component.el.setAttribute(componentName, value);
-		}
-
-		positionRef.on('value', function (snapshot) {
-			onTransform(snapshot, 'position');
-		});
-
-		rotationRef.on('value', function (snapshot) {
-			onTransform(snapshot, 'rotation');
-		});
-
-		scaleRef.on('value', function (snapshot) {
-			onTransform(snapshot, 'scale');
-		});
-
-		var sendPosition = throttle(function(value){
-			positionRef.set(value);
-		}, component.updateRate);
-
-		var sendRotation = throttle(function(value){
-			rotationRef.set(value);
-		}, component.updateRate);
-
-		var sendScale = throttle(function(value){
-			scaleRef.set(value);
-		}, component.updateRate);
-
-		function onComponentChanged(event){
-			if (!sync.isMine) return;
-
-			var name = event.detail.name;
-			var newData = event.detail.newData;
-
-			if (name === 'position') {
-				sendPosition(newData);
-			} else if (name === 'rotation') {
-				sendRotation(newData);
-			} else if (name === 'scale') {
-				sendScale(newData);
-			} else {
-				return;
+				component.el.setAttribute(componentName, value);
 			}
 
-		}
+			positionRef.on('value', function (snapshot) {
+				onTransform(snapshot, 'position');
+			});
 
-		//from underscore.js
-		function throttle(func, wait, options) {
-			var timeout, context, args, result;
-			var previous = 0;
-			if (!options) options = {};
+			rotationRef.on('value', function (snapshot) {
+				onTransform(snapshot, 'rotation');
+			});
 
-			var later = function() {
-			  previous = options.leading === false ? 0 : Date.now();
-			  timeout = null;
-			  result = func.apply(context, args);
-			  if (!timeout) context = args = null;
-			};
+			scaleRef.on('value', function (snapshot) {
+				onTransform(snapshot, 'scale');
+			});
 
-			var throttled = function() {
-			  var now = Date.now();
-			  if (!previous && options.leading === false) previous = now;
-			  var remaining = wait - (now - previous);
-			  context = this;
-			  args = arguments;
-			  if (remaining <= 0 || remaining > wait) {
-				if (timeout) {
-				  clearTimeout(timeout);
+			var sendPosition = throttle(function(value){
+				positionRef.set(value);
+			}, component.updateRate);
+
+			var sendRotation = throttle(function(value){
+				rotationRef.set(value);
+			}, component.updateRate);
+
+			var sendScale = throttle(function(value){
+				scaleRef.set(value);
+			}, component.updateRate);
+
+			function onComponentChanged(event){
+				if (!sync.isMine) return;
+
+				var name = event.detail.name;
+				var newData = event.detail.newData;
+
+				if (name === 'position') {
+					sendPosition(newData);
+				} else if (name === 'rotation') {
+					sendRotation(newData);
+				} else if (name === 'scale') {
+					sendScale(newData);
+				} else {
+					return;
+				}
+
+			}
+
+			//from underscore.js
+			function throttle(func, wait, options) {
+				var timeout, context, args, result;
+				var previous = 0;
+				if (!options) options = {};
+
+				var later = function() {
+				  previous = options.leading === false ? 0 : Date.now();
 				  timeout = null;
-				}
-				previous = now;
-				result = func.apply(context, args);
-				if (!timeout) context = args = null;
-			  } else if (!timeout && options.trailing !== false) {
-				timeout = setTimeout(later, remaining);
-			  }
-			  return result;
-			};
+				  result = func.apply(context, args);
+				  if (!timeout) context = args = null;
+				};
 
-			throttled.cancel = function() {
-			  clearTimeout(timeout);
-			  previous = 0;
-			  timeout = context = args = null;
-			};
+				var throttled = function() {
+				  var now = Date.now();
+				  if (!previous && options.leading === false) previous = now;
+				  var remaining = wait - (now - previous);
+				  context = this;
+				  args = arguments;
+				  if (remaining <= 0 || remaining > wait) {
+					if (timeout) {
+					  clearTimeout(timeout);
+					  timeout = null;
+					}
+					previous = now;
+					result = func.apply(context, args);
+					if (!timeout) context = args = null;
+				  } else if (!timeout && options.trailing !== false) {
+					timeout = setTimeout(later, remaining);
+				  }
+				  return result;
+				};
 
-			return throttled;
-		  };
+				throttled.cancel = function() {
+				  clearTimeout(timeout);
+				  previous = 0;
+				  timeout = context = args = null;
+				};
+
+				return throttled;
+			  };
 
 
-		this.el.addEventListener('componentchanged', onComponentChanged);
+			component.el.addEventListener('componentchanged', onComponentChanged);
+		}
 	}
 });
 
@@ -891,11 +909,14 @@ AFRAME.registerComponent('sync-color',
 	schema: {
 	},
 	init: function () {
-		var sync = this.el.components.sync;
-		var colorRef = sync.dataRef.child('material/color');
 		var component = this;
+		var sync = component.el.components.sync;
+		if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
 
-		var refChangedLocked = false;
+		function start(){
+			var colorRef = sync.dataRef.child('material/color');
+
+			var refChangedLocked = false;
 
 			component.el.addEventListener('componentchanged', function (event) {
 				var name = event.detail.name;
@@ -914,14 +935,15 @@ AFRAME.registerComponent('sync-color',
 				}
 			});
 
-		colorRef.on('value', function (snapshot) {
-			if (sync.isMine) return;
-			var color = snapshot.val();
-			
-			refChangedLocked = true;
-			component.el.setAttribute('material', 'color', color);
-			refChangedLocked = false;
+			colorRef.on('value', function (snapshot) {
+				if (sync.isMine) return;
+				var color = snapshot.val();
+				
+				refChangedLocked = true;
+				component.el.setAttribute('material', 'color', color);
+				refChangedLocked = false;
 
-		});
+			});
+		}
 	}
 });

@@ -40,6 +40,7 @@
             el.setAttribute('material', 'color', 'rgb(' + rand() + ',' + rand() + ',' + rand() + ')');
         }
 
+        //TODO: Because we are attaching our event listeners here, we have to double check to get the color change to sync
         // Cone 1: Testing mousedown, listening on the entity.
         var cone1El = document.querySelector('#cone1');
         cone1El.addEventListener('mousedown', function (event) {
