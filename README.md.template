@@ -93,6 +93,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * Object3D transformation and hierarchy
 * Most Geometries
 * MeshBasicMaterial
+* Face and vertex colors
 
 **Not currently supported:**
 * Three.js r75
@@ -102,7 +103,6 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * VideoTexture
 * Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
 * Wireframes
-* Face and vertex colors
 * Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial
 * Line Geometries
 * Quad faces
@@ -125,7 +125,7 @@ Altspace supports Three.js r73 to r74. r74 is recommended.
 * Texture wrap mode is ignored on the `wrapT` property. The value of `wrapS` is used for both axes.
 
 ## Browser Feature Support
-Altspace's browser is based on Chromium version 28.
+Altspace's browser is based on Chromium version 40.
 
 **Currently supported:**
 * Libre audio and video codecs (ogg, webm)
