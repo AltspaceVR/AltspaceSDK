@@ -16,7 +16,8 @@ AFRAME.registerComponent('altspace', {
   schema: {
     usePixelScale: { type: 'boolean', default: 'false'},
     verticalAlign: { type: 'string',  default: 'middle'},
-    enclosuresOnly:{ type: 'boolean', default: 'true'}
+    enclosuresOnly:{ type: 'boolean', default: 'true'},
+    fullspace:     { type: 'boolean', default: 'false'}
   },
 
   /**
@@ -78,6 +79,10 @@ AFRAME.registerComponent('altspace', {
     var scene = this.el.object3D;
     altspace.getEnclosure().then(function(e)
     {
+      if(this.data.fullspace){
+        e.requestFullspace();
+      }
+
       if (!this.data.usePixelScale){
         scene.scale.multiplyScalar(e.pixelsPerMeter);
       }
@@ -203,3 +208,30 @@ AFRAME.registerComponent('altspace-tracked-controls', {
       }
   }
 });
+
+(function(){
+
+  function setColliderFlag(obj, state) {
+    obj.userData.altspace = {collider: {enabled: state}};
+    obj.traverse(function (obj) {
+      if (obj instanceof THREE.Mesh) {
+        obj.userData.altspace = {collider: {enabled: state}};
+      }
+    })
+  }
+
+  AFRAME.registerComponent('altspace-cursor-collider', {
+    schema: { enabled: { default: true } },
+    init: function () {
+      setColliderFlag(this.el.object3D, this.data.enabled);
+      this.el.addEventListener('model-loaded', (function(){
+        setColliderFlag(this.el.object3D, this.data.enabled);
+      }).bind(this));
+    },
+    update: function () {
+      setColliderFlag(this.el.object3D, this.data.enabled);
+    }
+  });
+
+})();
+
