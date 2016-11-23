@@ -283,6 +283,30 @@
 			remove: nativeComponentRemove
 		});
 
+		AFRAME.registerComponent('n-text', {
+			schema: {
+				type: 'string'
+			},
+			init: nativeComponentInit,
+			update: nativeComponentUpdate,
+			remove: nativeComponentRemove,
+			schema: {
+				text: { default: '', type: 'string' },
+				/*color: { default: 'white',
+					parse: function(value) {
+						return parseFloat(value, 10);
+					},
+					stringify: function(value) {
+						return value.toString();
+					}},*/
+				fontSize: { default: '10', type: 'int' },//roughly a meter tall
+				width: { default: '10', type: 'number' },//in meters
+				height: { default: '1', type: 'number' },//in meters
+				horizontalAlign: { default: 'middle'},
+				verticalAlign: { default: 'middle'}
+			}
+		});
+
 		AFRAME.registerComponent('n-sphere-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
