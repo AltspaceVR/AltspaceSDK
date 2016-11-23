@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Fullspace</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="../../../dist/altspace.js"></script>
+		<script src="meshHelpers.js"></script>
+		<style>
+			html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+			body{ display: flex; align-items: center; justify-content: center; }
+			div { display: none; }
+			#pixel { display: block; width: 300px; height: 300px; background-color: black; }
+		</style>
+	</head>
+	<body>
+		<div id="pixel">&nbsp;</div>
+		<script>
+			var sim = new altspace.utilities.Simulation();
+
+			var boxSize = 0.5;
+			var boxGeo = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			var boxMat = new THREE.MeshBasicMaterial({color: 'green'});
+
+			function adjustToFullspace(enclosure, button, doc) {
+				var ppm = enclosure.pixelsPerMeter;
+				sim.scene.scale.set(ppm, ppm, ppm);
+				doc.scale.set(1/ppm, 1/ppm, 1/ppm);
+				button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
+				pulsingSphere.getBehaviorByType('pulsingSphereBehavior').size = enclosure.fullspace ? 50 : 4;
+			}
+
+			Promise.all([altspace.getEnclosure(), altspace.getDocument()]).then(function (results) {
+				var enclosure = results.shift();
+
+				var doc = results.shift();
+				doc.position.set(0, 0, 1.5);
+				doc.rotateY(Math.PI / 4);
+				sim.scene.add(doc);
+
+				var button = meshHelpers.makeBox(0, boxSize * 1.5, 0, '../../images/click-me.jpg');
+				button.userData.altspace.collider.enabled = true;
+				adjustToFullspace(enclosure, button, doc);
+				button.addEventListener('cursordown', function () {
+					if (enclosure.fullspace) {
+						enclosure.exitFullspace();
+					}
+					else {
+						enclosure.requestFullspace().then(null, function () {
+							button.material.color.setStyle('black');
+						});
+					}
+				});
+				enclosure.addEventListener('fullspacechange', function () {
+					adjustToFullspace(enclosure, button, doc);
+				});
+			});
+
+			var spacing = 0.9;
+			var offsetZ = 2;
+			var offsetY = -3.5;
+			var num = 8;
+			for (var x = 0; x < num; x++) {
+				for (var y = 0; y < num; y++) {
+					for (var z = 0; z < num; z++) {
+						var box = meshHelpers.makeMovingBox(
+							((x / (num - 1)) - 0.5) * num * spacing,
+							((y / (num - 1)) - 0.5) * num * spacing + offsetY,
+							((z / (num - 1)) - 0.5) * num * spacing + offsetZ)
+						box.material.color.r = x / num;
+						box.material.color.g = y / num;
+						box.material.color.b = z / num;
+						box.userData.altspace.collider.enabled = Math.random() > 0.5;
+					}
+				}
+			}
+
+			meshHelpers.makeFlippingBox(3, 3, 3);
+
+			var pulsingSphere = meshHelpers.makePulsingSphere();
+		</script>
+	</body>
+</html>
+
