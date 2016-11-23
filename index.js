@@ -208,3 +208,30 @@ AFRAME.registerComponent('altspace-tracked-controls', {
       }
   }
 });
+
+(function(){
+
+  function setColliderFlag(obj, state) {
+    obj.userData.altspace = {collider: {enabled: state}};
+    obj.traverse(function (obj) {
+      if (obj instanceof THREE.Mesh) {
+        obj.userData.altspace = {collider: {enabled: state}};
+      }
+    })
+  }
+
+  AFRAME.registerComponent('altspace-collider', {
+    schema: { enabled: { default: true } },
+    init: function () {
+      setColliderFlag(this.el.object3D, this.data.enabled);
+      this.el.addEventListener('model-loaded', function(){
+        setColliderFlag(this.el.object3D, this.data.enabled);
+      });
+    },
+    update: function () {
+      setColliderFlag(this.el.object3D, this.data.enabled);
+    }
+  });
+
+})();
+
