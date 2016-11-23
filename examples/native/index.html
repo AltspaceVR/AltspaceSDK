@@ -71,7 +71,10 @@
 		<a-entity n-object="architecture/wall-window-gap-end-r-4w-4h" position="0 3 0"></a-entity>
 	</a-entity>-->
 	<a-entity n-browser position="0 3 0"></a-entity>
-	<a-entity n-object="effects/sparkler" n-rigidbody="useGravity:true" n-sphere-collider="radius:0.5" position="2 3 0"></a-entity>
+	<a-entity position="0 3 0">
+		<a-animation attribute="rotation" dur="50000" to="0 360 0" easing="linear" repeat="indefinite"></a-animation>
+		<a-entity position="2 0 0" n-object="effects/sparkler"></a-entity>
+	</a-entity>
 	<a-entity n-text="text:hello world" position="2 3 2"></a-entity>
 	<a-entity n-text="fontSize:1; width: 3; height:3; verticalAlign:top; horizontalAlign:left; text:Lorem ipsum dolor sit amet, eu vel aperiri posidonium reformidans, per tamquam dolorum volutpat at. An nulla repudiare intellegebat cum, salutatus democritum vel ex. In eius omnis tamquam qui. Unum utinam noster no vel.
 
