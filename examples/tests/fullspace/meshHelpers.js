@@ -1,6 +1,9 @@
 var meshHelpers = (function () {
-	function makeBox(x, y, z) {
+	function makeBox(x, y, z, texUrl) {
 		var boxMesh = new THREE.Mesh(boxGeo, boxMat.clone());
+		if (texUrl) {
+			boxMesh.material.map = new THREE.TextureLoader().load(texUrl);
+		}
 		boxMesh.userData.altspace = {collider: {enabled: false}};
 		boxMesh.position.set(x, y, z);
 		sim.scene.add(boxMesh);
