@@ -284,9 +284,6 @@
 		});
 
 		AFRAME.registerComponent('n-text', {
-			schema: {
-				type: 'string'
-			},
 			init: nativeComponentInit,
 			update: nativeComponentUpdate,
 			remove: nativeComponentRemove,
