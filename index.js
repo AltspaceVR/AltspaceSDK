@@ -16,7 +16,8 @@ AFRAME.registerComponent('altspace', {
   schema: {
     usePixelScale: { type: 'boolean', default: 'false'},
     verticalAlign: { type: 'string',  default: 'middle'},
-    enclosuresOnly:{ type: 'boolean', default: 'true'}
+    enclosuresOnly:{ type: 'boolean', default: 'true'},
+    fullspace:     { type: 'boolean', default: 'false'}
   },
 
   /**
@@ -78,6 +79,10 @@ AFRAME.registerComponent('altspace', {
     var scene = this.el.object3D;
     altspace.getEnclosure().then(function(e)
     {
+      if(this.data.fullspace){
+        e.requestFullspace();
+      }
+
       if (!this.data.usePixelScale){
         scene.scale.multiplyScalar(e.pixelsPerMeter);
       }
