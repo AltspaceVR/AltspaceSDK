@@ -266,13 +266,13 @@
 	    })
 	  }
 
-	  AFRAME.registerComponent('altspace-collider', {
+	  AFRAME.registerComponent('altspace-cursor-collider', {
 	    schema: { enabled: { default: true } },
 	    init: function () {
 	      setColliderFlag(this.el.object3D, this.data.enabled);
-	      this.el.addEventListener('model-loaded', function(){
+	      this.el.addEventListener('model-loaded', (function(){
 	        setColliderFlag(this.el.object3D, this.data.enabled);
-	      });
+	      }).bind(this));
 	    },
 	    update: function () {
 	      setColliderFlag(this.el.object3D, this.data.enabled);
