@@ -310,8 +310,8 @@
 			update: nativeComponentUpdate,
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
-				radius: { default: '0', type: 'number' },
-				center: { type: 'vec3' }
+				center: { type: 'vec3' },
+				radius: { default: '0', type: 'number' }
 			}
 		});
 
@@ -321,8 +321,8 @@
 			update: nativeComponentUpdate,
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
-				radius: { default: '0', type: 'number' },
 				center: { type: 'vec3' },
+				radius: { default: '0', type: 'number' },
 				size: { type: 'vec3' }
 			}
 		});
@@ -333,6 +333,7 @@
 			update: nativeComponentUpdate,
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
+				center: { type: 'vec3' },
 				radius: { default: '0', type: 'number' },
 				height: { default: '0', type: 'number' },
 				direction: { default: 'y' },
