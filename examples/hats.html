@@ -76,7 +76,7 @@
 
 			function onLoaded() {
 				var modelRoot = new THREE.Group();
-				modelRoot.position.set(0, -enclosure.innerHeight / 2 / enclosure.pixelsPerMeter + 2, 0);
+				modelRoot.position.set(0, 2, 0);
 				sim.scene.add(modelRoot);
 
 				for (var i = 0; i < loadRequest.objects.length; i++) {
