@@ -26,7 +26,9 @@
 				var ppm = enclosure.pixelsPerMeter;
 				sim.scene.scale.set(ppm, ppm, ppm);
 				doc.scale.set(1/ppm, 1/ppm, 1/ppm);
-				button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
+				setTimeout(function () {
+					button.material.color.setStyle(enclosure.fullspace ? 'red' : 'white');
+				}, 1000);
 				pulsingSphere.getBehaviorByType('pulsingSphereBehavior').size = enclosure.fullspace ? 50 : 4;
 			}
 
@@ -38,7 +40,7 @@
 				doc.rotateY(Math.PI / 4);
 				sim.scene.add(doc);
 
-				var button = meshHelpers.makeBox(0, boxSize * 1.5, 0, '../../images/click-me.jpg');
+				var button = meshHelpers.makeBox(1.5, boxSize * 1.5, -1.5, '../../images/click-me.jpg');
 				button.userData.altspace.collider.enabled = true;
 				adjustToFullspace(enclosure, button, doc);
 				button.addEventListener('cursordown', function () {
@@ -46,12 +48,18 @@
 						enclosure.exitFullspace();
 					}
 					else {
-						enclosure.requestFullspace().then(null, function () {
-							button.material.color.setStyle('black');
-						});
+						enclosure.requestFullspace().then(
+							function () {
+								button.material.color.setStyle('blue');
+							},
+							function () {
+								button.material.color.setStyle('black');
+							}
+						);
 					}
 				});
-				enclosure.addEventListener('fullspacechange', function () {
+				enclosure.addEventListener('fullspacechange', function (event) {
+					console.log('fullspacechange', enclosure.fullspace, enclosure.pixelsPerMeter);
 					adjustToFullspace(enclosure, button, doc);
 				});
 			});
