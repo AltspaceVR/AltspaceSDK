@@ -38,6 +38,7 @@
 			var loadRequest;
 			var head;
 			var scale;
+			var enclosure;
 
 			function main() {
 
@@ -74,6 +75,9 @@
 			}
 
 			function onLoaded() {
+				var modelRoot = new THREE.Group();
+				modelRoot.position.set(0, -enclosure.innerHeight / 2 / enclosure.pixelsPerMeter + 2, 0);
+				sim.scene.add(modelRoot);
 
 				for (var i = 0; i < loadRequest.objects.length; i++) {
 					var objTemplate = loadRequest.objects[i];
@@ -90,7 +94,7 @@
 
 					//Create one hat (not synced) from template
 					var obj = objTemplate.clone();
-					sim.scene.add(obj);
+					modelRoot.add(obj);
 					initialHats.push(obj);
 				}
 
@@ -176,7 +180,11 @@
 
 		}());
 
-		HatsApp.main();
+		altspace.getEnclosure().then(function (enclosure) {
+			enclosure.requestFullspace().then(function () {
+				HatsApp.main();
+			});
+		});
 	</script>
 </body>
 </html>
