@@ -283,10 +283,16 @@
 			remove: nativeComponentRemove
 		});
 
-		AFRAME.registerComponent('n-text', {
+		AFRAME.registerComponent('n-spawner', {
 			schema: {
-				type: 'string'
+				asset: {type: 'string'}
 			},
+			init: nativeComponentInit,
+			update: nativeComponentUpdate,
+			remove: nativeComponentRemove
+		});
+
+		AFRAME.registerComponent('n-text', {
 			init: nativeComponentInit,
 			update: nativeComponentUpdate,
 			remove: nativeComponentRemove,
@@ -353,7 +359,12 @@
 			}
 		});
 
+		AFRAME.registerComponent('n-billboard', {
+			init:nativeComponentInit,
+			remove: nativeComponentRemove,
+		});
 
+		//TODO: Make this track object Ids or something to ensure we don't decrement when starting in the trigger, or let other weird things happen
 		AFRAME.registerComponent('container', {
 			init: function(){
 				var component = this;
@@ -363,17 +374,31 @@
 				component.count = 0;
 
 				component.onTriggerEnter = function(event){
+					var oldCount = component.count;
 					component.count++;
-					if(component.count >= component.capacity){
-						el.emit('containerfull');
+
+					if(oldCount === 0){
+						el.removeState('container-empty');
 					}
+					if(component.count >= component.capacity){
+						el.addState('container-full');
+						el.emit('container-full');
+					}
+					el.emit('container-count-changed', {count: component.count, oldCount: oldCount});
 				};
 
 				component.onTriggerExit = function(event){
+					var oldCount = component.count;
 					component.count--;
-					if(component.count === 0){
-						el.emit('containerempty');
+
+					if(oldCount === component.capacity){
+						el.removeState('container-full');
 					}
+					if(component.count === 0){
+						el.addState('container-empty');
+						el.emit('container-empty');
+					}
+					el.emit('container-count-changed', {count: component.count, oldCount: oldCount});
 				};
 
 				el.addEventListener('triggerenter', component.onTriggerEnter);
