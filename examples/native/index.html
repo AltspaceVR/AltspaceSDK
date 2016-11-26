@@ -79,6 +79,24 @@
 		<a-entity position="6 3 -10" n-object="effects/steam"></a-entity>
 	</a-entity>-->
 		
+	<a-entity id="trigger-0" n-box-collider="isTrigger:true; size: 2 1 2" container="capacity:8" position="0 2 -5"></a-entity>
+	<script>
+		setTimeout(function(){
+			var trigger = document.querySelector('#trigger-0');
+			trigger.addEventListener('triggerenter', function(){
+				console.log('trigger enter!');
+			});
+			trigger.addEventListener('triggerexit', function(){
+				console.log('trigger exit!');
+			});
+			trigger.addEventListener('containerfull', function(){
+				console.log('full!');
+			});
+			trigger.addEventListener('containerempty', function(){
+				console.log('empty!');
+			});
+		}, 2000);
+	</script>
 
 	<a-entity n-browser position="0 3 0"></a-entity>
 	<a-entity position="0 3 0">

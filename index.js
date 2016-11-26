@@ -304,6 +304,43 @@ AFRAME.registerComponent('editor', {
 		}
 	});
 
+	//TODO: Make this track object Ids or something to ensure we don't decrement when starting in the trigger, or let other weird things happen
+	AFRAME.registerComponent('container', {
+		init: function(){
+			var component = this;
+			var el = this.el;
+
+			component.capacity = component.data.capacity || 4;
+			component.count = 0;
+
+			component.onTriggerEnter = function(event){
+				component.count++;
+				if(component.count >= component.capacity){
+					el.emit('containerfull');
+				}
+			};
+
+			component.onTriggerExit = function(event){
+				component.count--;
+				if(component.count === 0){
+					el.emit('containerempty');
+				}
+			};
+
+			el.addEventListener('triggerenter', component.onTriggerEnter);
+
+			el.addEventListener('triggerexit', component.onTriggerExit);
+		},
+		remove: function(){
+			el.removeEventListener('triggerenter', component.onTriggerEnter);
+
+			el.removeEventListener('triggerexit', component.onTriggerExit);
+		},
+		schema: {
+			capacity: { default: 4, type: 'number' },
+		}
+	});
+
 	AFRAME.registerComponent('n-rigidbody', {
 		init: function() {
 			nativeComponentInit.call(this);
@@ -553,6 +590,14 @@ AFRAME.registerComponent('altspace', {
 
 	scene.addEventListener('collisionexit', function (event) {
 		emit('collisionexit', event);
+	});
+
+	scene.addEventListener('triggerenter', function (event) {
+		emit('triggerenter', event);
+	});
+
+	scene.addEventListener('triggerexit', function (event) {
+		emit('triggerexit', event);
 	});
 
   }
