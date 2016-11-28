@@ -127,10 +127,13 @@
 	    {
 	      if(this.data.fullspace){
 	        e.requestFullspace();
+	        e.addEventListener('fullspacechange', function(){
+	          scene.scale.setScalar(e.pixelsPerMeter);
+	        });
 	      }
 
-	      if (!this.data.usePixelScale){
-	        scene.scale.multiplyScalar(e.pixelsPerMeter);
+	      if (!this.data.usePixelScale || this.data.fullspace){
+	        scene.scale.setScalar(e.pixelsPerMeter);
 	      }
 
 	      switch (this.data.verticalAlign) {
