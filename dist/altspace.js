@@ -3511,6 +3511,8 @@ THREE.Object3D.prototype.addBehaviors = function()
  */
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
+	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+
 	var i = this.__behaviorList.indexOf(behavior);
 	if (i !== -1) {
 		this.__behaviorList.splice(i, 1);
@@ -11292,7 +11294,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.24.3';
+	var version = '0.24.4';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
