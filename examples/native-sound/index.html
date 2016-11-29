@@ -1,0 +1,45 @@
+<html>
+<head>
+	<title>Native Components</title>
+	<!--<script src="../build.js"></script>-->
+	<script src="https://aframe.io/releases/0.2.0/aframe.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script src="http://sdk.altvr.com/libs/altspace.js/0.19.0/altspace.min.js"></script>
+	<script>
+		AFRAME.registerComponent('random-pitch-click', {
+			init: function (time) {
+				this.el.addEventListener('click', function () {
+					this.setAttribute('n-sound', 'pitch', Math.random() * 3 + 1);
+					this.components['n-sound'].play();
+				});
+			}
+		});
+	</script>
+</head>
+<body>
+<a-scene debug altspace>
+	<a-entity id="pingloop"
+		n-sound="res: ui/ping-enter; volume: 0.5; loop: true; on: click"
+		geometry="primitive: box" material="color: green" position="-3 1 -2">
+		<a-animation begin="click" attribute="position" dur="2000" to="2 1 -2" repeat="indefinite" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity
+		onclick="document.querySelector('#pingloop').components['n-sound'].pause()"
+		geometry="primitive: box" material="color: red" position="-1 0 -2"></a-entity>
+	<a-entity
+		n-sound="res: ui/pop; volume: 0.7; autoplay: true; oneshot: true; on: click"
+		geometry="primitive: box" material="color: blue" position="1 0 -2"></a-entity>
+	<a-entity
+		n-sound="res: ui/chime-notify; on: animationend"
+		n-sound="res: ui/chime-high; on: animationstart"
+		geometry="primitive: box" material="color: purple" position="3 0 -2">
+		<a-animation begin="click" attribute="position" dur="2000" to="3 1 -2" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity
+		n-sound="res: ui/chime-warn; spatialBlend: 0.5; time: 0.2" random-pitch-click
+		geometry="primitive: box" material="color: orange" position="3 0 0">
+	</a-entity>
+</a-entity>
+</a-scene>
+</body>
+</html>
