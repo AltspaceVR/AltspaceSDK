@@ -416,7 +416,7 @@ AFRAME.registerComponent('editor', {
 			}
 		},
 		update: function (oldData) {
-			nativeComponentUpdate.call(this);
+			nativeComponentUpdate.call(this, oldData);
 			if (this.playHandler) {
 			  this.el.removeEventListener(oldData.on, this.playHandler);
 			}
@@ -426,11 +426,15 @@ AFRAME.registerComponent('editor', {
 			}
 		},
 		schema: {
+			on: { type: 'string' },
 			src: { type: 'string' },
 			loop: { type: 'boolean' },
 			volume: { type: 'number', default: 1 },
 			autoplay: { type: 'boolean' },
 			oneshot: { type: 'boolean' },
+			spatialBlend: { type: 'float', default: 1 },
+			time: { type: 'float' },
+			pitch: { type: 'float', default: 1 },
 		}
 	});
 

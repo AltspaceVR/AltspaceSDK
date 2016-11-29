@@ -2,27 +2,38 @@
 <head>
 	<title>Native Components</title>
 	<!--<script src="../build.js"></script>-->
-	<script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
+	<script src="https://aframe.io/releases/0.2.0/aframe.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
 	<script src="http://sdk.altvr.com/libs/altspace.js/0.19.0/altspace.min.js"></script>
+	<script>
+		AFRAME.registerComponent('wahwah', {
+			tick: function (time) {
+				this.el.setAttribute('n-sound', 'pitch', 2 + Math.round(Math.sin(time / 500)));
+			}
+		});
+	</script>
 </head>
 <body>
 <a-scene debug altspace>
 	<a-entity id="chefloop"
 		n-sound="src: swedchef; volume: 0.5; loop: true; on: click"
 		geometry="primitive: box" material="color: green" position="-3 1 -2">
-		<a-animation begin="click" attribute="position" dur="2000" to="3 1 -2" repeat="indefinite" direction="alternate"></a-animation>
+		<a-animation begin="click" attribute="position" dur="2000" to="2 1 -2" repeat="indefinite" direction="alternate"></a-animation>
 	</a-entity>
 	<a-entity
 		onclick="document.querySelector('#chefloop').components['n-sound'].pause()"
 		geometry="primitive: box" material="color: red" position="-1 0 -2"></a-entity>
 	<a-entity
-		n-sound="src: beaker; volume: 0.1; autoplay: true; oneshot: true; on: click"
+		n-sound="src: beaker; volume: 0.2; autoplay: true; oneshot: true; on: click"
 		geometry="primitive: box" material="color: blue" position="1 0 -2"></a-entity>
 	<a-entity
 		n-sound="src: swedchef; on: animationend"
 		geometry="primitive: box" material="color: purple" position="3 0 -2">
 		<a-animation begin="click" attribute="position" dur="2000" to="3 1 -2" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity
+		n-sound="src: beaker; spatialBlend: 0.5; pitch: 2; time: 1; on: click" wahwah
+		geometry="primitive: box" material="color: orange" position="3 0 0">
 	</a-entity>
 </a-entity>
 </a-scene>
