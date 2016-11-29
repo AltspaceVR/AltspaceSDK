@@ -10,7 +10,7 @@
 <body>
 <a-scene debug altspace>
 		
-	<a-entity id="trigger-0" n-sphere-collider="isTrigger:true; radius: 2" container="capacity:3" position="0 0 -20"></a-entity>
+	<a-entity id="trigger-0" n-sphere-collider="isTrigger:true; radius: 2" n-container="capacity:3" position="0 0 -20"></a-entity>
 	<script>
 		setTimeout(function(){
 			var trigger = document.querySelector('#trigger-0');
@@ -25,13 +25,19 @@
 			label.setAttribute('n-text', 'text:' + 0);
 			label.setAttribute('n-billboard');
 
-			trigger.addEventListener('container-count-changed', function(event){
-				if(trigger.is('container-full')){
+			trigger.addEventListener('stateadded', function(){
+				if(event.detail.state === 'container-full'){
 					fireworks.setAttribute('n-object', 'effects/fireworks');
-				} else {
+				}
+			});
+			
+			trigger.addEventListener('stateremoved', function(){
+				if(event.detail.state === 'container-full'){
 					fireworks.removeAttribute('n-object');
 				}
+			});
 
+			trigger.addEventListener('container-count-changed', function(event){
 				label.setAttribute('n-text', 'text:' + event.detail.count);
 			});
 		}, 2000);
