@@ -427,7 +427,7 @@ AFRAME.registerComponent('editor', {
 		},
 		schema: {
 			on: { type: 'string' },
-			src: { type: 'string' },
+			res: { type: 'string' },
 			loop: { type: 'boolean' },
 			volume: { type: 'number', default: 1 },
 			autoplay: { type: 'boolean' },
