@@ -471,6 +471,39 @@
 			}
 		});
 
+		AFRAME.registerComponent('n-sound', {
+			init: nativeComponentInit,
+			pause: function () {
+				callComponent.call(this, 'pause');
+			},
+			play: function () {
+				callComponent.call(this, 'play');
+			},
+			remove: function () {
+				nativeComponentRemove.call(this);
+				if (this.playHandler) {
+				  this.el.removeEventListener(oldData.on, this.playHandler);
+				}
+			},
+			update: function (oldData) {
+				nativeComponentUpdate.call(this);
+				if (this.playHandler) {
+				  this.el.removeEventListener(oldData.on, this.playHandler);
+				}
+				if (this.data.on) {
+				  this.playHandler = this.play.bind(this);
+				  this.el.addEventListener(this.data.on, this.playHandler);
+				}
+			},
+			schema: {
+				src: { type: 'string' },
+				loop: { type: 'boolean' },
+				volume: { type: 'number', default: 1 },
+				autoplay: { type: 'boolean' },
+				oneshot: { type: 'boolean' },
+			}
+		});
+
 	})();
 	/**
 	 * The altspace component makes A-Frame apps compatible with AltspaceVR.
@@ -766,7 +799,7 @@
 					}, 0);
 				});
 
-				// add our client ID to the list of connected clients, 
+				// add our client ID to the list of connected clients,
 				// but have it be automatically removed by firebase if we disconnect for any reason
 				this.clientsRef.push(this.clientId).onDisconnect().remove();
 
@@ -805,7 +838,7 @@
 			var isMine = false;
 
 			var component = this;
-			
+
 			component.isConnected = false;
 
 			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
@@ -863,7 +896,7 @@
 
 			function setupReceive() {
 
-				//if nobody has owned the object yet, we will. 
+				//if nobody has owned the object yet, we will.
 				ownerRef.transaction(function (owner) {
 					if (owner) return undefined;
 
@@ -1087,7 +1120,7 @@
 				colorRef.on('value', function (snapshot) {
 					if (sync.isMine && !firstValue) return;
 					var color = snapshot.val();
-					
+
 					refChangedLocked = true;
 					component.el.setAttribute('material', 'color', color);
 					refChangedLocked = false;
@@ -1097,6 +1130,7 @@
 			}
 		}
 	});
+
 
 /***/ }
 /******/ ]);
