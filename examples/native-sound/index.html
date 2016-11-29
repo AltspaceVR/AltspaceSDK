@@ -10,7 +10,9 @@
 <a-scene debug altspace>
 	<a-entity id="chefloop"
 		n-sound="src: swedchef; volume: 0.5; loop: true; on: click"
-		geometry="primitive: box" material="color: green" position="-3 0 -2"></a-entity>
+		geometry="primitive: box" material="color: green" position="-3 1 -2">
+		<a-animation begin="click" attribute="position" dur="2000" to="3 1 -2" repeat="indefinite" direction="alternate"></a-animation>
+	</a-entity>
 	<a-entity
 		onclick="document.querySelector('#chefloop').components['n-sound'].pause()"
 		geometry="primitive: box" material="color: red" position="-1 0 -2"></a-entity>
