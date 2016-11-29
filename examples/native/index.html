@@ -12,7 +12,7 @@
 		
 	<a-entity id="trigger-0" n-sphere-collider="isTrigger:true; radius: 2" n-container="capacity:3" position="0 0 -20"></a-entity>
 	<script>
-		setTimeout(function(){
+		document.addEventListener('DOMContentLoaded', function(){
 			var trigger = document.querySelector('#trigger-0');
 
 			var fireworks = document.createElement("a-entity");
@@ -30,7 +30,7 @@
 					fireworks.setAttribute('n-object', 'effects/fireworks');
 				}
 			});
-			
+
 			trigger.addEventListener('stateremoved', function(){
 				if(event.detail.state === 'container-full'){
 					fireworks.removeAttribute('n-object');
@@ -40,7 +40,7 @@
 			trigger.addEventListener('container-count-changed', function(event){
 				label.setAttribute('n-text', 'text:' + event.detail.count);
 			});
-		}, 2000);
+		});
 	</script>
 
 	<a-entity n-spawner="asset:interactables/box" position="1 2 -18"></a-entity>
@@ -287,8 +287,6 @@ Has idque soluta id, mei ut minim fabellas constituam. Eu deleniti scaevola assu
 					<a-entity n-object="architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
 
 					<a-entity class="inner">
-						<!-- <a-animation attribute="rotation" dur="5000" to="0 360 0" repeat="indefinite"></a-animation>
-						<a-animation attribute="position" dur="5000" direction="alternate-reverse" to="0 -0.5 0" repeat="indefinite"></a-animation> -->
 
 						<a-entity n-object="architecture/wall-base-curve-convex-2r" position="2 0.25 0" rotation="0 270 0"></a-entity>
 						<a-entity n-object="architecture/wall-base-curve-convex-2r" position="0 0.25 -2"></a-entity>
