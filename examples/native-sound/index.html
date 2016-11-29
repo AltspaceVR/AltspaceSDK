@@ -18,13 +18,13 @@
 </head>
 <body>
 <a-scene debug altspace>
-	<a-entity id="chefloop"
+	<a-entity id="pingloop"
 		n-sound="res: ui/ping-enter; volume: 0.5; loop: true; on: click"
 		geometry="primitive: box" material="color: green" position="-3 1 -2">
 		<a-animation begin="click" attribute="position" dur="2000" to="2 1 -2" repeat="indefinite" direction="alternate"></a-animation>
 	</a-entity>
 	<a-entity
-		onclick="document.querySelector('#chefloop').components['n-sound'].pause()"
+		onclick="document.querySelector('#pingloop').components['n-sound'].pause()"
 		geometry="primitive: box" material="color: red" position="-1 0 -2"></a-entity>
 	<a-entity
 		n-sound="res: ui/pop; volume: 0.7; autoplay: true; oneshot: true; on: click"
