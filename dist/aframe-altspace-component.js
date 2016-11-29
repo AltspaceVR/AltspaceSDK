@@ -364,52 +364,28 @@
 			remove: nativeComponentRemove,
 		});
 
-		//TODO: Make this track object Ids or something to ensure we don't decrement when starting in the trigger, or let other weird things happen
-		AFRAME.registerComponent('container', {
+		AFRAME.registerComponent('n-container', {
 			init: function(){
-				var component = this;
+				nativeComponentInit.call(this);
+
 				var el = this.el;
+				var component = this;
 
-				component.capacity = component.data.capacity || 4;
-				component.count = 0;
-
-				component.onTriggerEnter = function(event){
-					var oldCount = component.count;
-					component.count++;
-
-					if(oldCount === 0){
-						el.removeState('container-empty');
-					}
-					if(component.count >= component.capacity){
-						el.addState('container-full');
+				el.addEventListener('stateadded', function(event){
+					if(event.detail.state === 'container-full'){
 						el.emit('container-full');
 					}
-					el.emit('container-count-changed', {count: component.count, oldCount: oldCount});
-				};
-
-				component.onTriggerExit = function(event){
-					var oldCount = component.count;
-					component.count--;
-
-					if(oldCount === component.capacity){
-						el.removeState('container-full');
-					}
-					if(component.count === 0){
-						el.addState('container-empty');
+					if(event.detail.state === 'container-empty'){
 						el.emit('container-empty');
 					}
-					el.emit('container-count-changed', {count: component.count, oldCount: oldCount});
-				};
+				});
 
-				el.addEventListener('triggerenter', component.onTriggerEnter);
-
-				el.addEventListener('triggerexit', component.onTriggerExit);
+				el.addEventListener('container-count-changed', function(event){
+					component.count = event.detail.count;
+				});
 			},
-			remove: function(){
-				el.removeEventListener('triggerenter', component.onTriggerEnter);
-
-				el.removeEventListener('triggerexit', component.onTriggerExit);
-			},
+			remove: nativeComponentRemove,
+			update: nativeComponentUpdate,
 			schema: {
 				capacity: { default: 4, type: 'number' },
 			}
