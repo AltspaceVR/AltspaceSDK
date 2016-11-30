@@ -6,7 +6,7 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The TrackJoints behavior dispatches a 'jointcolliding' event if
+ * The JointCollisionEvents behavior dispatches a 'jointcolliding' event if
  * joints collide with an object
  *
  * @class JointCollisionEvents
