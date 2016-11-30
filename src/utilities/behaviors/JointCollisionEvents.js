@@ -9,14 +9,14 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * The TrackJoints behavior dispatches a 'jointcolliding' event if
  * joints collide with an object
  *
- * @class TrackJoints
+ * @class JointCollisionEvents
  * @param {Object} [config]
- * @param // TODO: Add jointCube size option
+ * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint
  * @param // TODO: Add joint selection an option
  * @param // TODO: Add scale option?
  * @memberof module:altspace/utilities/behaviors
  **/
-altspace.utilities.behaviors.TrackJoints = function (config) {
+altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 	var object3d;
 
 	config = config || {};
@@ -65,7 +65,6 @@ altspace.utilities.behaviors.TrackJoints = function (config) {
 		joints[10] = skeleton.getJoint('Hand', 'Left');
 		joints[11] = skeleton.getJoint('Hand', 'Right');
 
-		// TODO: Get object3d's current rotation?
 		var objectBB = new THREE.Box3().setFromObject(object3d);
     
 		// Add up all colliding joint intersects
@@ -91,7 +90,7 @@ altspace.utilities.behaviors.TrackJoints = function (config) {
 		// Dispatch collision event
 		if(hasCollided) {
 			var event = new CustomEvent(
-				'jointcolliding', 
+				'jointcollision', 
 				{
 					detail: {
 						intersect: jointIntersectUnion
