@@ -21,17 +21,29 @@ altspace.utilities.behaviors.TrackJoints = function (config) {
 
 	config = config || {};
 
-	//if (config.jointCubeSize === undefined) config.jointCubeSize = ###;
+	if (config.jointCubeSize === undefined) config.jointCubeSize = 15;
 	//if (config.jointSelection === undefined) config.jointSelection = ###;
 	//if (config.scale === undefined) config.scale = ???;
 
-
+	var skeleton;
 	var jointCube;
+	var jointCubeSize = config.jointCubeSize;
+
+	// Get the tracking skeleton and the enclosure
+	var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
+	Promise.all(promises).then(function (array) {
+	  // Attach skeleton
+	  skeleton = array[0];
+	  sim.scene.add(skeleton);
+	  enclosure = array[1]; // TODO: Use enclosure for scale?
+	}).catch(function (err) {
+	  console.log('Failed to get Altspace browser properties', err);
+	});
 
 	function awake(o) {
 		object3d = o;
-		// TODO: Make jointCube size a scaled option
-		jointCube = new THREE.Vector3(15, 15, 15);
+		// TODO: Scale jointCubeSize?
+		jointCube = new THREE.Vector3(jointCubeSize, jointCubeSize, jointCubeSize);
 	}
 
 	function update(deltaTime) {
@@ -57,7 +69,6 @@ altspace.utilities.behaviors.TrackJoints = function (config) {
 		var objectBB = new THREE.Box3().setFromObject(object3d);
     
 		// Add up all colliding joint intersects
-		// TODO: Use scale?
 		var jointIntersectUnion;
 		var hasCollided = false;
 		for(var i = 0; i < 12; i++) { // TODO: Use jointSelection quantity
@@ -93,5 +104,5 @@ altspace.utilities.behaviors.TrackJoints = function (config) {
 		}
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'TrackJoints' };
 };

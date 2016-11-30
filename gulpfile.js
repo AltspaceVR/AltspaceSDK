@@ -112,7 +112,8 @@ gulp.task('altspace_js', ['transpile_es6'], function () {
 			'./src/utilities/behaviors/HoverScale.js',
 			'./src/utilities/behaviors/SceneSync.js',
 			'./src/utilities/behaviors/Spin.js',
-			'./src/utilities/behaviors/TouchpadRotate.js'
+			'./src/utilities/behaviors/TouchpadRotate.js',
+			'./src/utilities/behaviors/TrackJoints.js'
 		], { cwd: cwd }),
 		browserify(
 			'./src/utilities/behaviors/Layout.js'
