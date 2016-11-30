@@ -403,11 +403,13 @@ AFRAME.registerComponent('editor', {
 
 	AFRAME.registerComponent('n-sound', {
 		init: nativeComponentInit,
-		pause: function () {
+		pauseSound: function () {
 			callComponent.call(this, 'pause');
+			this.el.emit('sound-paused');
 		},
-		play: function () {
+		playSound: function () {
 			callComponent.call(this, 'play');
+			this.el.emit('sound-played');
 		},
 		remove: function () {
 			nativeComponentRemove.call(this);
@@ -421,7 +423,7 @@ AFRAME.registerComponent('editor', {
 			  this.el.removeEventListener(oldData.on, this.playHandler);
 			}
 			if (this.data.on) {
-			  this.playHandler = this.play.bind(this);
+			  this.playHandler = this.playSound.bind(this);
 			  this.el.addEventListener(this.data.on, this.playHandler);
 			}
 		},
@@ -1064,3 +1066,5 @@ AFRAME.registerComponent('sync-color',
 		}
 	}
 });
+
+require('./sync-n-sound');

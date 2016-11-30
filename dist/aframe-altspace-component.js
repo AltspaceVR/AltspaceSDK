@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	if (typeof AFRAME === 'undefined') {
 	  throw new Error('Component attempted to register before AFRAME was available.');
@@ -217,7 +217,7 @@
 		placeholderMaterial.visible = false;
 		var PlaceholderMesh = function () {
 			THREE.Mesh.call( this, placeholderGeometry, placeholderMaterial );
-			this.userData.altspace = {collider: {enabled: false}};
+			this.userData.altspace = {collider: {enabled: true}};
 		};
 		PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
 		PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
@@ -449,11 +449,13 @@
 
 		AFRAME.registerComponent('n-sound', {
 			init: nativeComponentInit,
-			pause: function () {
+			pauseSound: function () {
 				callComponent.call(this, 'pause');
+				this.el.emit('sound-paused');
 			},
-			play: function () {
+			playSound: function () {
 				callComponent.call(this, 'play');
+				this.el.emit('sound-played');
 			},
 			remove: function () {
 				nativeComponentRemove.call(this);
@@ -467,7 +469,7 @@
 				  this.el.removeEventListener(oldData.on, this.playHandler);
 				}
 				if (this.data.on) {
-				  this.playHandler = this.play.bind(this);
+				  this.playHandler = this.playSound.bind(this);
 				  this.el.addEventListener(this.data.on, this.playHandler);
 				}
 			},
@@ -1110,6 +1112,79 @@
 			}
 		}
 	});
+
+	__webpack_require__(1);
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	AFRAME.registerComponent('sync-n-sound',
+	{
+		dependencies: ['sync'],
+		schema: { },
+		init: function () {
+			var component = this;
+			var sync = component.el.components.sync;
+			var scene = document.querySelector('a-scene');
+			var syncSys = scene.systems['sync-system'];
+			if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
+
+			function start(){
+				component.soundStateRef = sync.dataRef.child('sound/state');
+				component.soundEventRef = sync.dataRef.child('sound/event');
+
+				function sendEvent(event) {
+					if (!sync.isMine) return;
+					var event = {
+						type: event.type,
+						sender: syncSys.clientId,
+						el: component.el.id,
+						time: Date.now()
+					};
+					component.soundEventRef.set(event);
+				}
+
+				component.el.addEventListener('sound-played', sendEvent);
+				component.el.addEventListener('sound-paused', sendEvent);
+
+				component.soundEventRef.on('value', function (snapshot) {
+					if (sync.isMine) return;
+					var event = snapshot.val();
+					if (!event) return;
+					if (event.el === component.el.id) {
+						var sound = component.el.components['n-sound'];
+						if (event.type === 'sound-played') {
+							sound.playSound();
+						}
+						else {
+							sound.pauseSound();
+						}
+					}
+				});
+
+				component.el.addEventListener('componentchanged', function (event) {
+					if (!sync.isMine) return;
+					var name = event.detail.name;
+					if (name !== 'n-sound') return;
+					component.soundStateRef.set(event.detail.newData);
+				});
+
+				component.soundStateRef.on('value', function (snapshot) {
+					if (sync.isMine) return;
+					var state = snapshot.val();
+					if (!state) return;
+					component.el.setAttribute('n-sound', state);
+				});
+			}
+		},
+		remove: function () {
+			this.soundStateRef.off('value');
+			this.soundEventRef.off('value');
+		}
+	});
+
 
 
 /***/ }
