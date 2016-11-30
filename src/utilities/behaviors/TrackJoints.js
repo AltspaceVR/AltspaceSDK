@@ -32,12 +32,12 @@ altspace.utilities.behaviors.TrackJoints = function (config) {
 	// Get the tracking skeleton and the enclosure
 	var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
 	Promise.all(promises).then(function (array) {
-	  // Attach skeleton
-	  skeleton = array[0];
-	  sim.scene.add(skeleton);
-	  enclosure = array[1]; // TODO: Use enclosure for scale?
+		// Attach skeleton
+		skeleton = array[0];
+		sim.scene.add(skeleton);
+		enclosure = array[1]; // TODO: Use enclosure for scale?
 	}).catch(function (err) {
-	  console.log('Failed to get Altspace browser properties', err);
+		console.log('Failed to get Altspace browser properties', err);
 	});
 
 	function awake(o) {
