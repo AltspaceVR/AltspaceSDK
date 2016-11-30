@@ -6,7 +6,7 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The JointCollisionEvents behavior dispatches a 'jointcolliding' event if
+ * The JointCollisionEvents behavior dispatches a 'jointcollision' event if
  * joints collide with an object
  *
  * @class JointCollisionEvents
