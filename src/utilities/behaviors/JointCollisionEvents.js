@@ -83,7 +83,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 				config.joints[i][1],
 				config.joints[i][2] ? config.joints[i][2] : 0
 			);
-		};
+		}
 
 		// Get bounding box of owner object
 		var objectBB = new THREE.Box3().setFromObject(object3d);
