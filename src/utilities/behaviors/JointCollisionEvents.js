@@ -10,24 +10,46 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * joints collide with an object
  *
  * @class JointCollisionEvents
- * @param {Object} [config]
+ * @param {String} [config.joints=[
+ *  ['Thumb', 'Left', 3],
+ *  ['Index', 'Left', 3],
+ *  ['Middle', 'Left', 3],
+ *  ['Ring', 'Left', 3],
+ *  ['Pinky', 'Left', 3],
+ *  ['Thumb', 'Right', 3],
+ *  ['Index', 'Right', 3],
+ *  ['Middle', 'Right', 3],
+ *  ['Ring', 'Right', 3],
+ *  ['Pinky', 'Right', 3],
+ *  ['Hand', 'Left', 0]
+ *  ['Hand', 'Right', 0]]] Body part names [bodyPart, side, subIndex] of joints to track
  * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint
- * @param // TODO: Add joint selection an option
- * @param // TODO: Add scale option?
  * @memberof module:altspace/utilities/behaviors
  **/
+ // TODO: Add scale option?
 altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 	var object3d;
 
 	config = config || {};
 
 	if (config.jointCubeSize === undefined) config.jointCubeSize = 15;
-	//if (config.jointSelection === undefined) config.jointSelection = ###;
-	//if (config.scale === undefined) config.scale = ???;
+	if (config.joints === undefined) config.joints = [
+		['Thumb', 'Left', 3],
+		['Index', 'Left', 3],
+		['Middle', 'Left', 3],
+		['Ring', 'Left', 3],
+		['Pinky', 'Left', 3],
+		['Thumb', 'Right', 3],
+		['Index', 'Right', 3],
+		['Middle', 'Right', 3],
+		['Ring', 'Right', 3],
+		['Pinky', 'Right', 3],
+		['Hand', 'Left', 0],
+		['Hand', 'Right', 0]
+	];
 
 	var skeleton;
 	var jointCube;
-	var jointCubeSize = config.jointCubeSize;
 
 	// Get the tracking skeleton and the enclosure
 	var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
@@ -43,34 +65,33 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 	function awake(o) {
 		object3d = o;
 		// TODO: Scale jointCubeSize?
-		jointCube = new THREE.Vector3(jointCubeSize, jointCubeSize, jointCubeSize);
+		jointCube = new THREE.Vector3(
+			config.jointCubeSize,
+			config.jointCubeSize,
+			config.jointCubeSize
+		);
 	}
 
 	function update(deltaTime) {
 		if(!skeleton) { return; }
 
-		// Collect joints
-		// TODO: Make jointSelection an option
+		// Collect joints based on joints config option
 		var joints = [];
-		joints[0] = skeleton.getJoint('Pinky',  'Left', 3);
-		joints[1] = skeleton.getJoint('Ring', 'Left', 3);
-		joints[2] = skeleton.getJoint('Middle', 'Left', 3);
-		joints[3] = skeleton.getJoint('Index',  'Left', 3);
-		joints[4] = skeleton.getJoint('Thumb',  'Left', 3);
-		joints[5] = skeleton.getJoint('Thumb',  'Right', 3);
-		joints[6] = skeleton.getJoint('Index',  'Right', 3);
-		joints[7] = skeleton.getJoint('Middle', 'Right', 3);
-		joints[8] = skeleton.getJoint('Ring', 'Right', 3);
-		joints[9] = skeleton.getJoint('Pinky',  'Right', 3);
-		joints[10] = skeleton.getJoint('Hand', 'Left');
-		joints[11] = skeleton.getJoint('Hand', 'Right');
+		for(var i = 0; i < config.joints.length; i++) {
+			joints[i] = skeleton.getJoint(
+				config.joints[i][0],
+				config.joints[i][1],
+				config.joints[i][2] ? config.joints[i][2] : 0
+			);
+		};
 
+		// Get bounding box of owner object
 		var objectBB = new THREE.Box3().setFromObject(object3d);
     
 		// Add up all colliding joint intersects
 		var jointIntersectUnion;
 		var hasCollided = false;
-		for(var i = 0; i < 12; i++) { // TODO: Use jointSelection quantity
+		for(var i = 0; i < config.joints.length; i++) {
 			var joint = joints[i];
 			if(joint && joint.confidence !== 0) {
 				var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, jointCube);
@@ -103,5 +124,5 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 		}
 	}
 
-	return { awake: awake, update: update, type: 'TrackJoints' };
+	return { awake: awake, update: update, type: 'JointCollisionEvents' };
 };
