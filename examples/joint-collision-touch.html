@@ -28,7 +28,7 @@ function createCube() {
 	var cube = new THREE.Mesh(geometry, material);
 	cube.addBehaviors(
 		altspace.utilities.behaviors.Object3DSync(),
-		altspace.utilities.behaviors.JointCollisionEvents({joints: [['Head', 'Center']], jointCubeSize: 100}),
+		altspace.utilities.behaviors.JointCollisionEvents({joints: [['Index', 'Right', 3]]}),
 		ChangeColor()
 	);
 
