@@ -2,15 +2,14 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Joint Collision Cube</title>
+<title>Joint Collision Touch</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="altspace.min.js"></script>
+<script src="../dist/altspace.min.js"></script>
 </head>
 <body>
 <script>
 
 var sim = altspace.utilities.Simulation();
-sim.camera.position.z = 5;
 var config = { authorId: 'AltspaceVR', appId: 'JointCollisionTouch' };
 var sceneSync;
 altspace.utilities.sync.connect(config).then(function(connection) {
@@ -49,6 +48,7 @@ function ChangeColor() {//define a custom behavior
 	var lastColor;
 	var colorRef;
 	var collisionIntersect;
+	var lastCollisionIntersect;
 
 	function awake(o) {
 		object3d = o;
@@ -76,17 +76,19 @@ function ChangeColor() {//define a custom behavior
 	}
 
 	function update(deltaTime) {
+		if (collisionIntersect === lastCollisionIntersect) { return; }
 		if(collisionIntersect) {
 			colorRef.set(0x00ff00);
 		} else {
 			colorRef.set(0xff0000);
 		}
+		lastCollisionIntersect = collisionIntersect;
 		collisionIntersect = null;
 	}
 
 	return { awake: awake, update: update };
 
-};
+}
 
 </script>
 </body>
