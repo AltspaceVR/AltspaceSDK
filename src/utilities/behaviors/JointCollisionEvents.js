@@ -10,22 +10,24 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * joints collide with an object
  *
  * @class JointCollisionEvents
- * @param {String} [config.joints] Array of body part names [bodyPart, side, subIndex] of
- *  joints to track.
- *  Defaults = [
- *		['Thumb', 'Left', 3],
- *		['Index', 'Left', 3],
- * 		['Middle', 'Left', 3],
- * 		['Ring', 'Left', 3],
- *		['Pinky', 'Left', 3],
- *		['Thumb', 'Right', 3],
- *		['Index', 'Right', 3],
- * 		['Middle', 'Right', 3],
- * 		['Ring', 'Right', 3],
- * 		['Pinky', 'Right', 3],
- * 		['Hand', 'Left', 0],
- *		['Hand', 'Right', 0]
- *  ].
+ * @param {String} [config.joints] Array of body part names [bodyPart, side, subIndex] of joints to track.<br>
+ * Defaults to:
+ *
+ *     [
+ *         ['Hand', 'Left', 0],
+ *         ['Thumb', 'Left', 3],
+ *         ['Index', 'Left', 3],
+ *         ['Middle', 'Left', 3],
+ *         ['Ring', 'Left', 3],
+ *         ['Pinky', 'Left', 3],
+ *
+ *         ['Hand', 'Right', 0],
+ *         ['Thumb', 'Right', 3],
+ *         ['Index', 'Right', 3],
+ *         ['Middle', 'Right', 3],
+ *         ['Ring', 'Right', 3],
+ *         ['Pinky', 'Right', 3],
+ *     ]
  * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint
  * @memberof module:altspace/utilities/behaviors
  **/
@@ -37,18 +39,19 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 
 	if (config.jointCubeSize === undefined) config.jointCubeSize = 15;
 	if (config.joints === undefined) config.joints = [
+		['Hand', 'Left', 0],
 		['Thumb', 'Left', 3],
 		['Index', 'Left', 3],
 		['Middle', 'Left', 3],
 		['Ring', 'Left', 3],
 		['Pinky', 'Left', 3],
+
+		['Hand', 'Right', 0],
 		['Thumb', 'Right', 3],
 		['Index', 'Right', 3],
 		['Middle', 'Right', 3],
 		['Ring', 'Right', 3],
 		['Pinky', 'Right', 3],
-		['Hand', 'Left', 0],
-		['Hand', 'Right', 0]
 	];
 
 	var skeleton;
@@ -90,7 +93,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 
 		// Get bounding box of owner object
 		var objectBB = new THREE.Box3().setFromObject(object3d);
-    
+
 		// Add up all colliding joint intersects
 		var jointIntersectUnion;
 		var hasCollided = false;
@@ -114,7 +117,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 		// Dispatch collision event
 		if(hasCollided) {
 			var event = new CustomEvent(
-				'jointcollision', 
+				'jointcollision',
 				{
 					detail: {
 						intersect: jointIntersectUnion
