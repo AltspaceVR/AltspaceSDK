@@ -28,7 +28,7 @@ function createCube() {
 	var cube = new THREE.Mesh(geometry, material);
 	cube.addBehaviors(
 		altspace.utilities.behaviors.Object3DSync(),
-		altspace.utilities.behaviors.JointCollisionEvents({joints: [['Index', 'Right', 3]]}),
+		altspace.utilities.behaviors.JointCollisionEvents({joints: [['Head', 'Center']], jointCubeSize: 100}),
 		ChangeColor()
 	);
 
@@ -48,6 +48,7 @@ function ChangeColor() {//define a custom behavior
 	var lastColor;
 	var colorRef;
 	var collisionIntersect;
+	var lastCollisionIntersect;
 
 	function awake(o) {
 		object3d = o;
@@ -75,11 +76,13 @@ function ChangeColor() {//define a custom behavior
 	}
 
 	function update(deltaTime) {
+		if (collisionIntersect === lastCollisionIntersect) { return; }
 		if(collisionIntersect) {
 			colorRef.set(0x00ff00);
 		} else {
 			colorRef.set(0xff0000);
 		}
+		lastCollisionIntersect = collisionIntersect;
 		collisionIntersect = null;
 	}
 

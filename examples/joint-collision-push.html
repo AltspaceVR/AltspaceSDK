@@ -60,7 +60,6 @@ function createCube() {
 		altspace.utilities.behaviors.Object3DSync(),
 		altspace.utilities.behaviors.JointCollisionEvents({
 			jointCubeSize: 15,
-			joints: [['Index', 'Right', 3]]
 		}),
 		UpdatePosition()
 	);
@@ -102,7 +101,8 @@ function UpdatePosition() {//define a custom behavior
 		cubePositionRef.on('value', function (snapshot) {
 			if(!snapshot.val()) {
 				cubePositionRef.set(new THREE.Vector3(0, -10, 0));
-
+			}
+			else {
 				// Set position
 				var cubePosition = snapshot.val();
 				object3d.position.x = cubePosition.x;
