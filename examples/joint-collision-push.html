@@ -10,11 +10,11 @@
 <script>
 
 var sim = altspace.utilities.Simulation();
-sim.camera.position.z = 5;
 var pushOffset = 2;
 var button;
 var cubePositionRef;
 var enclosure;
+var sceneSync;
 
 // Get the enclosure
 altspace.getEnclosure().then(function(e) {
@@ -88,7 +88,6 @@ function UpdatePosition() {//define a custom behavior
 
 	var object3d;
 	var sync;
-	//var cubePositionRef;
 	var collisionIntersect;
 	var objectBB;
 
