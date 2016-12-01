@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Scene - Documentation</title>
+    <title>JointCollisionEvents - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Scene</h1>
+    <h1 class="page-title">JointCollisionEvents</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="THREE.html">THREE</a>.</span>
+            <span class="ancestors"><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a>.</span>
         
-        Scene
+        JointCollisionEvents
         </h2>
         
     
@@ -56,14 +56,15 @@
 
     
 
-    <h4 class="name" id="Scene"><span class="type-signature"></span>new Scene<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="JointCollisionEvents"><span class="type-signature"></span>new JointCollisionEvents<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>The AltspaceSDK adds Behavior capabilites to Three.js' Scene class.</p>
+    <p>The JointCollisionEvents behavior dispatches a 'jointcollision' event if
+joints collide with an object</p>
 </div>
 
 
@@ -72,6 +73,128 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config.joints</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Array of body part names [bodyPart, side, subIndex] of joints to track.<br>
+Defaults to:</p>
+<pre class="prettyprint source"><code>[
+    ['Hand', 'Left', 0],
+    ['Thumb', 'Left', 3],
+    ['Index', 'Left', 3],
+    ['Middle', 'Left', 3],
+    ['Ring', 'Left', 3],
+    ['Pinky', 'Left', 3],
+
+    ['Hand', 'Right', 0],
+    ['Thumb', 'Right', 3],
+    ['Index', 'Right', 3],
+    ['Middle', 'Right', 3],
+    ['Ring', 'Right', 3],
+    ['Pinky', 'Right', 3],
+]</code></pre></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config.jointCubeSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    15
+                
+                </td>
+            
+
+            <td class="description last"><p>Size of dummy cube used to track each joint</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -144,182 +267,9 @@
     
 
     
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
 
     
 
-    <h4 class="name" id="updateAllBehaviors"><span class="type-signature"></span>updateAllBehaviors<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Update the behaviors of all the objects in this Scene.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-        <h3 class="subsection-title">Events</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="event:cursormove">cursormove</h4>
-
-    
-
-
-
-<div class="description">
-    <p>The cursormove event is fired from a <a href="THREE.Scene.html">THREE.Scene</a> when the user's cursor moves over
-or near an object</p>
-</div>
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="THREE.Object3D.html#ThreeJSCursorEvent">THREE.Object3D#ThreeJSCursorEvent</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 </article>
 
