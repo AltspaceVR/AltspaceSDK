@@ -18,20 +18,20 @@ var enclosure;
 
 // Get the enclosure
 altspace.getEnclosure().then(function(e) {
-  enclosure = e;
-  // Connect to sync server
-  altspace.utilities.sync.connect({
-    authorId: 'AltspaceVR',
-    appId: 'JointCollisionPush'
-  }).then(function(connection) {
-    // Retrieve SceneSync
-    sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
-      instantiators: {'Cube': createCube }, // create cube
-      ready: ready // call ready
-    });
-    // Add SceneSync to scene
-    sim.scene.addBehavior(sceneSync);
-  });
+	enclosure = e;
+	// Connect to sync server
+	altspace.utilities.sync.connect({
+		authorId: 'AltspaceVR',
+		appId: 'JointCollisionPush'
+	}).then(function(connection) {
+		// Retrieve SceneSync
+		sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+			instantiators: {'Cube': createCube }, // create cube
+			ready: ready // call ready
+		});
+		// Add SceneSync to scene
+		sim.scene.addBehavior(sceneSync);
+	});
 });
 
 //////////////////////////////////
@@ -39,45 +39,45 @@ altspace.getEnclosure().then(function(e) {
 //////////////////////////////////
 function createCube() {
 
-  // button
-  var geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-  var material = new THREE.MeshBasicMaterial({color: '#ff0000'});
-  var button = new THREE.Mesh(geometry, material);
-  button.position.x = -180;
-  button.scale.multiplyScalar(enclosure.pixelsPerMeter);
-  sim.scene.add(button);
-  // Reset position when button pressed
-  button.addEventListener('cursordown', function(e) {
-    console.log('cursordown');
-    cubePositionRef.set(new THREE.Vector3(0, -10, 0));
-  });
+	// button
+	var geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+	var material = new THREE.MeshBasicMaterial({color: '#ff0000'});
+	var button = new THREE.Mesh(geometry, material);
+	button.position.x = -180;
+	button.scale.multiplyScalar(enclosure.pixelsPerMeter);
+	sim.scene.add(button);
+	// Reset position when button pressed
+	button.addEventListener('cursordown', function(e) {
+		console.log('cursordown');
+		cubePositionRef.set(new THREE.Vector3(0, -10, 0));
+	});
 
-  //cube
-  geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-  material = new THREE.MeshBasicMaterial({color:'#00ccff'});
-  cube = new THREE.Mesh(geometry, material);
-  cube.addBehaviors(
-    altspace.utilities.behaviors.Object3DSync(),
-    altspace.utilities.behaviors.JointCollisionEvents({
-      jointCubeSize: 15,
-      joints: [['Index', 'Right', 3]]
-    }),
-    UpdatePosition()
-  );
-  cube.position.y = -180;
-  cube.scale.multiplyScalar(enclosure.pixelsPerMeter);
-  sim.scene.add(cube);
+	//cube
+	geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+	material = new THREE.MeshBasicMaterial({color:'#00ccff'});
+	cube = new THREE.Mesh(geometry, material);
+	cube.addBehaviors(
+		altspace.utilities.behaviors.Object3DSync(),
+		altspace.utilities.behaviors.JointCollisionEvents({
+			jointCubeSize: 15,
+			joints: [['Index', 'Right', 3]]
+		}),
+		UpdatePosition()
+	);
+	cube.position.y = -180;
+	cube.scale.multiplyScalar(enclosure.pixelsPerMeter);
+	sim.scene.add(cube);
 
-  return cube;
+	return cube;
 }
 
 //////////////////////////////////
 // Ready
 //////////////////////////////////
 function ready(firstInstance) {
-  if (firstInstance) {
-    sceneSync.instantiate('Cube');
-  }
+	if (firstInstance) {
+		sceneSync.instantiate('Cube');
+	}
 }
 
 
@@ -86,85 +86,85 @@ function ready(firstInstance) {
 //////////////////////////////////
 function UpdatePosition() {//define a custom behavior
 
-  var object3d;
-  var sync;
-  //var cubePositionRef;
-  var collisionIntersect;
-  var objectBB;
+	var object3d;
+	var sync;
+	//var cubePositionRef;
+	var collisionIntersect;
+	var objectBB;
 
-  function awake(o) {
-    // Attach object, sync and 'cubePosition' reference from Firebase
-    object3d = o;
-    objectBB = new THREE.Box3().setFromObject(object3d);
-    sync = object3d.getBehaviorByType('Object3DSync');
-    cubePositionRef = sync.dataRef.child('cubePosition');
+	function awake(o) {
+		// Attach object, sync and 'cubePosition' reference from Firebase
+		object3d = o;
+		objectBB = new THREE.Box3().setFromObject(object3d);
+		sync = object3d.getBehaviorByType('Object3DSync');
+		cubePositionRef = sync.dataRef.child('cubePosition');
 
-    // If 'cubePosition' is null, set it to 0, -10, 0
-    cubePositionRef.on('value', function (snapshot) {
-      if(!snapshot.val()) {
-        cubePositionRef.set(new THREE.Vector3(0, -10, 0));
+		// If 'cubePosition' is null, set it to 0, -10, 0
+		cubePositionRef.on('value', function (snapshot) {
+			if(!snapshot.val()) {
+				cubePositionRef.set(new THREE.Vector3(0, -10, 0));
 
-        // Set position
-        var cubePosition = snapshot.val();
-        object3d.position.x = cubePosition.x;
-        object3d.position.y = cubePosition.y;
-        object3d.position.z = cubePosition.z;
-      }
-    });
+				// Set position
+				var cubePosition = snapshot.val();
+				object3d.position.x = cubePosition.x;
+				object3d.position.y = cubePosition.y;
+				object3d.position.z = cubePosition.z;
+			}
+		});
 
-    // Attach joint collision event
-    object3d.addEventListener('jointcollision', function(e) {
-      collisionIntersect = e.detail.intersect;
-    });
+		// Attach joint collision event
+		object3d.addEventListener('jointcollision', function(e) {
+			collisionIntersect = e.detail.intersect;
+		});
 
-  }
+	}
 
-  function update(deltaTime) {
+	function update(deltaTime) {
 
-    // If pushing
-    if(collisionIntersect) {
-      var collisionCenter = collisionIntersect.center();
+		// If pushing
+		if(collisionIntersect) {
+			var collisionCenter = collisionIntersect.center();
 
-      // Initial push is 0,0,0
-      var offset = new THREE.Vector3(0, 0, 0);
+			// Initial push is 0,0,0
+			var offset = new THREE.Vector3(0, 0, 0);
 
-      // Push in x
-      if(collisionCenter.x > (object3d.position.x + 50)) {
-        offset.x = - pushOffset;
-      } else if (collisionCenter.x < (object3d.position.x - 50)){
-        offset.x = pushOffset;
-      }
+			// Push in x
+			if(collisionCenter.x > (object3d.position.x + 50)) {
+				offset.x = - pushOffset;
+			} else if (collisionCenter.x < (object3d.position.x - 50)){
+				offset.x = pushOffset;
+			}
 
-      // Push in y
-      if(collisionCenter.y > (object3d.position.y + 50)) {
-        offset.y = - pushOffset;
-      } else if (collisionCenter.y < (object3d.position.y - 50)){
-        offset.y = pushOffset;
-      }
+			// Push in y
+			if(collisionCenter.y > (object3d.position.y + 50)) {
+				offset.y = - pushOffset;
+			} else if (collisionCenter.y < (object3d.position.y - 50)){
+				offset.y = pushOffset;
+			}
 
-      //Push in z
-      if(collisionCenter.z > (object3d.position.z + 50)) {
-        offset.z = - pushOffset;
-      } else if (collisionCenter.z < (object3d.position.z - 50)){
-        offset.z = pushOffset;
-      }
+			//Push in z
+			if(collisionCenter.z > (object3d.position.z + 50)) {
+				offset.z = - pushOffset;
+			} else if (collisionCenter.z < (object3d.position.z - 50)){
+				offset.z = pushOffset;
+			}
 
-      // Set cube position based on new push
-      cubePositionRef.set(
-        new THREE.Vector3(
-          object3d.position.x + offset.x,
-          object3d.position.y + offset.y,
-          object3d.position.z + offset.z
-        )
-      );
+			// Set cube position based on new push
+			cubePositionRef.set(
+				new THREE.Vector3(
+					object3d.position.x + offset.x,
+					object3d.position.y + offset.y,
+					object3d.position.z + offset.z
+				)
+			);
 
-    }
+		}
 
-    collisionIntersect = null;
+		collisionIntersect = null;
 
-  }
+	}
 
-  return { awake: awake, update: update };
+	return { awake: awake, update: update };
 }
 
 
