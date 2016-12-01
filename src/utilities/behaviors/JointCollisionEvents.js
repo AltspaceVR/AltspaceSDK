@@ -10,7 +10,22 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * joints collide with an object
  *
  * @class JointCollisionEvents
- * @param {String} [config.joints=[['Thumb', 'Left', 3],['Index', 'Left', 3],['Middle', 'Left', 3],['Ring', 'Left', 3],['Pinky', 'Left', 3],['Thumb', 'Right', 3],['Index', 'Right', 3],['Middle', 'Right', 3],['Ring', 'Right', 3],['Pinky', 'Right', 3],['Hand', 'Left', 0]['Hand', 'Right', 0]]] Array of body part names [bodyPart, side, subIndex] of joints to track
+ * @param {String} [config.joints] Array of body part names [bodyPart, side, subIndex] of
+ *  joints to track.
+ *  Defaults = [
+ *		['Thumb', 'Left', 3],
+ *		['Index', 'Left', 3],
+ * 		['Middle', 'Left', 3],
+ * 		['Ring', 'Left', 3],
+ *		['Pinky', 'Left', 3],
+ *		['Thumb', 'Right', 3],
+ *		['Index', 'Right', 3],
+ * 		['Middle', 'Right', 3],
+ * 		['Ring', 'Right', 3],
+ * 		['Pinky', 'Right', 3],
+ * 		['Hand', 'Left', 0],
+ *		['Hand', 'Right', 0]
+ *  ].
  * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint
  * @memberof module:altspace/utilities/behaviors
  **/
