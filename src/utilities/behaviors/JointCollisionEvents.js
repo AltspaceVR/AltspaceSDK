@@ -7,7 +7,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
  * The JointCollisionEvents behavior dispatches a 'jointcollision' event if
- * joints collide with an object
+ * any of the specified joints collide with an object.  It returns a THREE.Box3
+ * representing the intersect union of all the colliding joints and the object.
  *
  * @class JointCollisionEvents
  * @param {String} [config.joints] Array of body part names [bodyPart, side, subIndex] of joints to track.<br>
