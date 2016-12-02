@@ -31,14 +31,12 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint
  * @memberof module:altspace/utilities/behaviors
  **/
- // TODO: Add scale option?
-altspace.utilities.behaviors.JointCollisionEvents = function (config) {
+altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 	var object3d;
+	var config = _config || {};
 
-	config = config || {};
-
-	if (config.jointCubeSize === undefined) config.jointCubeSize = 15;
-	if (config.joints === undefined) config.joints = [
+	config.jointCubeSize = config.jointCubeSize || 15;
+	config.joints = config.joints || [
 		['Hand', 'Left', 0],
 		['Thumb', 'Left', 3],
 		['Index', 'Left', 3],
@@ -56,30 +54,51 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 
 	var skeleton;
 	var jointCube;
+	var hasCollided = false;
 
-	// Get the tracking skeleton and the enclosure
-	var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
-	Promise.all(promises).then(function (array) {
-		// Attach skeleton
-		skeleton = array[0];
-		sim.scene.add(skeleton);
-		enclosure = array[1]; // TODO: Use enclosure for scale?
-	}).catch(function (err) {
-		console.log('Failed to get Altspace browser properties', err);
-	});
+    function initSkeleton(scene) {
+        return new Promise(function(resolve, reject) {
+            var skel = null;
 
-	function awake(o) {
+            // Attempt to use existing skeleton when available
+            scene.traverse(function(child) {
+                if(child.type === 'TrackingSkeleton') {
+                    skel = child;
+                    return;
+                }
+            });
+
+            if(skel) return resolve(skel);
+
+            // Skeleton has not been assigned to scene yet
+            altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
+                skel = trackingSkeleton;
+                scene.add(skel);
+                return resolve(skel);
+            });
+        });
+    }
+
+	function awake(o, s) {
 		object3d = o;
-		// TODO: Scale jointCubeSize?
-		jointCube = new THREE.Vector3(
-			config.jointCubeSize,
-			config.jointCubeSize,
-			config.jointCubeSize
-		);
+
+		// Get the tracking skeleton and the enclosure
+		initSkeleton(s).then(function(_skeleton) {
+			// Attach skeleton
+			skeleton = _skeleton;
+
+			jointCube = new THREE.Vector3(
+				config.jointCubeSize,
+				config.jointCubeSize,
+				config.jointCubeSize
+			);
+		}).catch(function (err) {
+			console.log('Failed to get Altspace browser properties', err);
+		});
 	}
 
 	function update(deltaTime) {
-		if(!skeleton) { return; }
+		if(!skeleton) return;
 
 		// Collect joints based on joints config option
 		var joints = [];
@@ -96,7 +115,9 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 
 		// Add up all colliding joint intersects
 		var jointIntersectUnion;
-		var hasCollided = false;
+		var collidedJoints = [];
+		var hasPrevCollided = hasCollided;
+		hasCollided = false;
 		for(var i = 0; i < config.joints.length; i++) {
 			var joint = joints[i];
 			if(joint && joint.confidence !== 0) {
@@ -109,9 +130,37 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 					} else {
 						jointIntersectUnion = intersectBB;
 					}
+
 					hasCollided = true;
+					collidedJoints.push(joint);
 				}
 			}
+		}
+
+		// Dispatch collision event
+		if(!hasPrevCollided && hasCollided) {
+			var event = new CustomEvent(
+				'jointcollisionenter',
+				{
+					detail: {
+						intersect: jointIntersectUnion,
+						joints: collidedJoints
+					},
+					bubbles: true,
+					cancelable: true
+				}
+			);
+			object3d.dispatchEvent(event);
+		}
+		else if(hasPrevCollided && !hasCollided) {
+			var event = new CustomEvent(
+				'jointcollisionleave',
+				{
+					bubbles: true,
+					cancelable: true
+				}
+			);
+			object3d.dispatchEvent(event);
 		}
 
 		// Dispatch collision event
@@ -120,7 +169,8 @@ altspace.utilities.behaviors.JointCollisionEvents = function (config) {
 				'jointcollision',
 				{
 					detail: {
-						intersect: jointIntersectUnion
+						intersect: jointIntersectUnion,
+						joints: collidedJoints
 					},
 					bubbles: true,
 					cancelable: true
