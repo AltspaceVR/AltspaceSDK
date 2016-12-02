@@ -6,8 +6,10 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The JointCollisionEvents behavior dispatches a 'jointcollision' event if
- * joints collide with an object
+ * The JointCollisionEvents behavior dispatches a 'jointcollision' event while
+ * any specified joints are colliding with an object, a 'jointcollisionenter' event
+ * when any specified joints initially collide with an object, and a
+ * 'jointcollisionleave' event once all joints have stopped colliding with an object.
  *
  * @class JointCollisionEvents
  * @param {String} [config.joints] Array of body part names [bodyPart, side, subIndex] of joints to track.<br>
@@ -82,7 +84,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 	function awake(o, s) {
 		object3d = o;
 
-		// Get the tracking skeleton and the enclosure
+		// Get the tracking skeleton
 		initSkeleton(s).then(function(_skeleton) {
 			// Attach skeleton
 			skeleton = _skeleton;
