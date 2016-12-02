@@ -366,7 +366,7 @@ AFRAME.registerComponent('editor', {
 			//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
 			this.worldPosition = new THREE.Vector3();
 			this.worldQuaternion = new THREE.Quaternion();
-			this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+			this.el.object3DMap.mesh.addEventListener('native-transform-update', function (event) {
 
 				this.worldPosition.x = event.worldPosition.x;
 				this.worldPosition.y = event.worldPosition.y;
