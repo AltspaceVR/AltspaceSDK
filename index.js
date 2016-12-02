@@ -239,7 +239,7 @@ AFRAME.registerComponent('editor', {
 
 	AFRAME.registerComponent('n-spawner', {
 		schema: {
-			asset: {type: 'string'}
+			res: {type: 'string'}
 		},
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
