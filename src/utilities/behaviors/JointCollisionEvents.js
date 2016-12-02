@@ -120,21 +120,23 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 		var collidedJoints = [];
 		var hasPrevCollided = hasCollided;
 		hasCollided = false;
-		for(var i = 0; i < config.joints.length; i++) {
-			var joint = joints[i];
-			if(joint && joint.confidence !== 0) {
-				var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, jointCube);
-				var collision = objectBB.intersectsBox(jointBB);
-				if(collision) {
-					var intersectBB = objectBB.intersect(jointBB);
-					if(jointIntersectUnion) {
-						jointIntersectUnion.union(intersectBB);
-					} else {
-						jointIntersectUnion = intersectBB;
-					}
+		if(object3d.visible && object3d.scale.x > Number.EPSILON && object3d.scale.y > Number.EPSILON && object3d.scale.z > Number.EPSILON) {
+			for(var i = 0; i < config.joints.length; i++) {
+				var joint = joints[i];
+				if(joint && joint.confidence !== 0) {
+					var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, jointCube);
+					var collision = objectBB.intersectsBox(jointBB);
+					if(collision) {
+						var intersectBB = objectBB.intersect(jointBB);
+						if(jointIntersectUnion) {
+							jointIntersectUnion.union(intersectBB);
+						} else {
+							jointIntersectUnion = intersectBB;
+						}
 
-					hasCollided = true;
-					collidedJoints.push(joint);
+						hasCollided = true;
+						collidedJoints.push(joint);
+					}
 				}
 			}
 		}
