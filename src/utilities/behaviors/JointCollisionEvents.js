@@ -141,44 +141,35 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 
 		// Dispatch collision event
 		if(!hasPrevCollided && hasCollided) {
-			var event = new CustomEvent(
-				'jointcollisionenter',
-				{
-					detail: {
-						intersect: jointIntersectUnion,
-						joints: collidedJoints
-					},
-					bubbles: true,
-					cancelable: true
-				}
-			);
-			object3d.dispatchEvent(event);
+			object3d.dispatchEvent({
+				type: 'jointcollisionenter',
+				detail: {
+					intersect: jointIntersectUnion,
+					joints: collidedJoints
+				},
+				bubbles: true,
+				target: object3d
+			});
 		}
 		else if(hasPrevCollided && !hasCollided) {
-			var event = new CustomEvent(
-				'jointcollisionleave',
-				{
-					bubbles: true,
-					cancelable: true
-				}
-			);
-			object3d.dispatchEvent(event);
+			object3d.dispatchEvent({
+				type: 'jointcollisionleave',
+				bubbles: true,
+				target: object3d
+			});
 		}
 
 		// Dispatch collision event
 		if(hasCollided) {
-			var event = new CustomEvent(
-				'jointcollision',
-				{
-					detail: {
-						intersect: jointIntersectUnion,
-						joints: collidedJoints
-					},
-					bubbles: true,
-					cancelable: true
-				}
-			);
-			object3d.dispatchEvent(event);
+			object3d.dispatchEvent({
+				type: 'jointcollision',
+				detail: {
+					intersect: jointIntersectUnion,
+					joints: collidedJoints
+				},
+				bubbles: true,
+				target: object3d
+			});
 		}
 	}
 
