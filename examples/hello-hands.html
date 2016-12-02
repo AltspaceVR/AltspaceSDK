@@ -8,7 +8,9 @@
 </head>
 <body>
 <script>
-if (!window.altspace) document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+if (!window.altspace || !window.altspace.inClient) {
+  document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+}
 
 var text = "HelloHands";//"AltspaceVR"
 

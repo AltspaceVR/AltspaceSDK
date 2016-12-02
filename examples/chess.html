@@ -12,10 +12,10 @@
 <script>
 
 ChessApp = (function(){
-	//Chess Board with draggable pieces and multiplayer sychronization.
+	//Chess Board with draggable pieces and multiplayer synchronization.
 	//Logic for 'responsive' chess board, which sizes itself based on boardSize.
 	//Pieces are placed in their initial positions when first loaded, but then
-	//can be dragged without restriction (no checking if the move is legal). 
+	//can be dragged without restriction (no checking if the move is legal).
 	var sim;
 	var instanceRef;
 	var sceneSync;
@@ -72,7 +72,7 @@ ChessApp = (function(){
 
 	function loadModels(onComplete){
 		//Models will take a couple seconds to download, so callback when done.
-		//Load only 7 different models, then clone and color as necessary. 
+		//Load only 7 different models, then clone and color as necessary.
 		console.log('Downloading chess models...');
 		altspace.utilities.multiloader.init({
 			crossOrigin: 'anonymous',
@@ -115,7 +115,7 @@ ChessApp = (function(){
 	function initBoard() {
 		//Make the board model same size as our boardSize constant.
 		board.scale.set(boardScale, boardScale, boardScale);
-		board.position.y = CONFIG.tableHeight + (CONFIG.board.height * boardScale / 2); 
+		board.position.y = CONFIG.tableHeight + (CONFIG.board.height * boardScale / 2);
 		var whiteTint = new THREE.Color(1, 1, 1);
 		var blackTint = new THREE.Color(0.2, 0.2, 0.2);
 		whitePieces = cloneModels(whitePieces, whiteTint);
@@ -243,7 +243,7 @@ ChessApp = (function(){
 				}
 				break;
 			default:
-				console.error('Unexpected piece type', object.userData.pieceType);	
+				console.error('Unexpected piece type', object.userData.pieceType);
 			}
 		}
 		//Black pieces mirror position of white ones.

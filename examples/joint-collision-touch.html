@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Joint Collision Touch</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+<script src="../dist/altspace.min.js"></script>
+</head>
+<body>
+<script>
+
+var sim = altspace.utilities.Simulation();
+var config = { authorId: 'AltspaceVR', appId: 'JointCollisionTouch' };
+var sceneSync;
+altspace.utilities.sync.connect(config).then(function(connection) {
+	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+		instantiators: {'Cube': createCube },
+		ready: ready
+	});
+	sim.scene.addBehavior(sceneSync);
+});
+
+var colliding;
+
+function createCube() {
+	var geometry = new THREE.BoxGeometry(1, 1, 1);
+	var material = new THREE.MeshBasicMaterial({color:'#ff0000'});
+	var cube = new THREE.Mesh(geometry, material);
+	cube.addBehaviors(
+		altspace.utilities.behaviors.Object3DSync(),
+		altspace.utilities.behaviors.JointCollisionEvents({joints: [['Index', 'Right', 3]]}),
+		ChangeColor()
+	);
+
+	sim.scene.add(cube);
+	return cube;
+}
+
+function ready(firstInstance) {
+	if (firstInstance) {
+		sceneSync.instantiate('Cube');
+	}
+}
+
+function ChangeColor() {//define a custom behavior
+
+	var object3d;
+	var lastColor;
+	var colorRef;
+	var collisionIntersect;
+	var lastCollisionIntersect;
+
+	function awake(o) {
+		object3d = o;
+		var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
+		colorRef = sync.dataRef.child('color');
+
+		colorRef.on('value', function (snapshot) {
+			var value = snapshot.val();
+			if (!value) return; //we are first to create the cube, no color set yet
+			object3d.material.color = new THREE.Color(value);
+			object3d.material.needsUpdate = true;//currently required in Altspace
+		});
+
+		object3d.addEventListener('jointcollision', function(e) {
+			collisionIntersect = e.detail.intersect;
+		});
+
+		if (altspace && altspace.inClient) {
+			altspace.getEnclosure().then(function(e) {
+				// scale cube so it's 1 meter in Altspace
+				object3d.scale.multiplyScalar(e.pixelsPerMeter);
+			});
+		}
+
+	}
+
+	function update(deltaTime) {
+		if (collisionIntersect === lastCollisionIntersect) { return; }
+		if(collisionIntersect) {
+			colorRef.set(0x00ff00);
+		} else {
+			colorRef.set(0xff0000);
+		}
+		lastCollisionIntersect = collisionIntersect;
+		collisionIntersect = null;
+	}
+
+	return { awake: awake, update: update };
+
+}
+
+</script>
+</body>
+</html>

@@ -14,12 +14,16 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  rotation.
  * @param {Boolean} [config.shouldMove=true] Whether the animation should
  *  include movement.
+ * @param {Number} [config.x=3] Amount of bob on the x axis.
+ * @param {Number} [config.y=5] Amount of bob on the y axis.
  * @memberof module:altspace/utilities/behaviors
  **/
 altspace.utilities.behaviors.Bob = function (config) {
 	var object3d;
 
 	config = config || {};
+	config.x = config.x || 3;
+	config.y = config.y || 5;
 
 	if (config.shouldRotate === undefined) config.shouldRotate = true;
 	if (config.shouldMove === undefined) config.shouldMove = true;
@@ -41,8 +45,8 @@ altspace.utilities.behaviors.Bob = function (config) {
 		if (config.shouldMove) {
 			if (!lastBobPosition.equals(object3d.position)) offsetPosition.copy(object3d.position);
 
-			object3d.position.y = offsetPosition.y + Math.sin(nowInt / 800) * 3;
-			object3d.position.x = offsetPosition.x + Math.sin(nowInt / 500) * 5;
+			object3d.position.y = offsetPosition.y + Math.sin(nowInt / 800) * config.x;
+			object3d.position.x = offsetPosition.x + Math.sin(nowInt / 500) * config.y;
 			lastBobPosition.copy(object3d.position);
 		}
 
@@ -51,5 +55,5 @@ altspace.utilities.behaviors.Bob = function (config) {
 		}
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'Bob' };
 };

@@ -2818,13 +2818,13 @@ U.prototype.We=function(a,b){x("Firebase.resetPassword",2,2,arguments.length);fg
 }());
 
 /**
- * The Sync utility is currently based on Firebase. It provides a quick way 
- * to synchronize apps between users (even when they are running outside of 
- * AltspaceVR). 
- * During the SDK beta, please consider all data stored with the sync 
- * utility to be ephemeral (it may be cleared or clobbered at any time). 
+ * The Sync utility is currently based on Firebase. It provides a quick way
+ * to synchronize apps between users (even when they are running outside of
+ * AltspaceVR).
+ * During the SDK beta, please consider all data stored with the sync
+ * utility to be ephemeral (it may be cleared or clobbered at any time).
  * You do not need a Firebase account to use the Sync utility.
- * 
+ *
  *
  * Refer to the [Firebase API documentation](https://www.firebase.com/docs/web/api/)
  * when working with the sync instance.
@@ -2906,7 +2906,7 @@ altspace.utilities.sync = (function () {
 			}, { remember: 'sessionOnly' });
 		});
 	}
-	
+
 	/**
 	 * Retreived
 	 * via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
@@ -2922,8 +2922,8 @@ altspace.utilities.sync = (function () {
 		*/
 
 	/**
-		* A Firebase reference to the current instance of the app. 
-		* This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons. 
+		* A Firebase reference to the current instance of the app.
+		* This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons.
 		* This can be used as an input to SceneSync
 		* @instance
 		* @member {Firebase} instance
@@ -2938,7 +2938,7 @@ altspace.utilities.sync = (function () {
 		*/
 
 	/**
-		* A Firebase reference for the app. 
+		* A Firebase reference for the app.
 		* This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.
 		* @instance
 		* @member {Firebase} app
@@ -2948,7 +2948,7 @@ altspace.utilities.sync = (function () {
 
 	/**
 	 * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
-	 * Returns a promise that will fufill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
+	 * Returns a promise that will fulfill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
 	 *
 	 * @method connect
 	 * @param {Object} config
@@ -3031,7 +3031,7 @@ altspace.utilities.sync = (function () {
 
 
 	/**
-	 * Returns a firebase instance, just as if you had called new Firebase()  
+	 * Returns a firebase instance, just as if you had called new Firebase()
 	 *
 	 * By using syncInstance.parent() you can store cross-instance data like high scores. Likewise you can store persistent user data at syncInstance.parent().child([userId).
 	 * @deprecated The connect function can do this and more! Please switch to using it instead. This function will be removed in the next major version
@@ -3046,11 +3046,11 @@ altspace.utilities.sync = (function () {
 	 * @memberof module:altspace/utilities/sync
 	 * @example
 	 *  var syncInstance = altspace.utilities.sync.getInstance({
-	 *      // All sync instances with the same instance id will share 
-	 *      // properties. 
-	 *      instanceId: yourInstanceId, 
+	 *      // All sync instances with the same instance id will share
+	 *      // properties.
+	 *      instanceId: yourInstanceId,
 	 *      // This helps to prevent collisions.
-	 *      authorId: yourAuthorId  
+	 *      authorId: yourAuthorId
 	 *  });
 	 */
 	return {
@@ -3058,7 +3058,7 @@ altspace.utilities.sync = (function () {
 		getInstance: getInstance,
 		authenticate: deprecatedAuthenticate
 	};
-	
+
 }());
 
 /**
@@ -3420,9 +3420,9 @@ altspace.utilities.multiloader = (function(){
  */
 
 /**
- * The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to 
+ * The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
  * Three.js.
- * It adds methods to Three.js' Scene and Object3D classes which allow you to 
+ * It adds methods to Three.js' Scene and Object3D classes which allow you to
  * add, remove, retrieve and use Behaviors.
  *
  * @namespace THREE
@@ -3437,7 +3437,7 @@ altspace.utilities.multiloader = (function(){
 /**
  * Update the behaviors of all the objects in this Scene.
  * @instance
- * @method updateAllBehaviors 
+ * @method updateAllBehaviors
  * @memberof THREE.Scene
  */
 THREE.Scene.prototype.updateAllBehaviors = function () {
@@ -3461,7 +3461,7 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 	});
 
 	for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
-		object3d = objectsWithBehaviors[i];
+		var object3d = objectsWithBehaviors[i];
 		object3d.updateBehaviors(deltaTime, self);
 	}
 
@@ -3478,7 +3478,7 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 /**
  * Adds the given behavior to this object.
  * @instance
- * @method addBehavior 
+ * @method addBehavior
  * @param {Behavior} behavior Behavior to add.
  * @memberof THREE.Object3D
  */
@@ -3505,12 +3505,14 @@ THREE.Object3D.prototype.addBehaviors = function()
  * Removes the given behavior from this object. The behavior is disposed if
  * possible.
  * @instance
- * @method removeBehavior 
+ * @method removeBehavior
  * @param {...Behavior} behavior Behavior to remove.
  * @memberof THREE.Object3D
  */
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
+	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+
 	var i = this.__behaviorList.indexOf(behavior);
 	if (i !== -1) {
 		this.__behaviorList.splice(i, 1);
@@ -3519,7 +3521,7 @@ THREE.Object3D.prototype.removeBehavior = function(behavior)
 			if (behavior.dispose) behavior.dispose.call(behavior, this);
 
 		} catch (error) {
-			
+
 			console.group();
 			(console.error || console.log).call(console, error.stack || error);
 			console.log('[Behavior]');
@@ -3562,13 +3564,15 @@ THREE.Object3D.prototype.removeAllBehaviors = function ()
 
 		}
 	}
+
+	this.__behaviorList.length = 0;
 }
 
 /**
  * Retrieve a behavior by type.
  * @instance
  * @method getBehaviorByType
- * @param {String} type 
+ * @param {String} type
  * @returns {Behavior}
  * @memberof THREE.Object3D
  */
@@ -3904,12 +3908,16 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  rotation.
  * @param {Boolean} [config.shouldMove=true] Whether the animation should
  *  include movement.
+ * @param {Number} [config.x=3] Amount of bob on the x axis.
+ * @param {Number} [config.y=5] Amount of bob on the y axis.
  * @memberof module:altspace/utilities/behaviors
  **/
 altspace.utilities.behaviors.Bob = function (config) {
 	var object3d;
 
 	config = config || {};
+	config.x = config.x || 3;
+	config.y = config.y || 5;
 
 	if (config.shouldRotate === undefined) config.shouldRotate = true;
 	if (config.shouldMove === undefined) config.shouldMove = true;
@@ -3931,8 +3939,8 @@ altspace.utilities.behaviors.Bob = function (config) {
 		if (config.shouldMove) {
 			if (!lastBobPosition.equals(object3d.position)) offsetPosition.copy(object3d.position);
 
-			object3d.position.y = offsetPosition.y + Math.sin(nowInt / 800) * 3;
-			object3d.position.x = offsetPosition.x + Math.sin(nowInt / 500) * 5;
+			object3d.position.y = offsetPosition.y + Math.sin(nowInt / 800) * config.x;
+			object3d.position.x = offsetPosition.x + Math.sin(nowInt / 500) * config.y;
 			lastBobPosition.copy(object3d.position);
 		}
 
@@ -3941,7 +3949,7 @@ altspace.utilities.behaviors.Bob = function (config) {
 		}
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'Bob' };
 };
 
 window.altspace = window.altspace || {};
@@ -4034,11 +4042,11 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 /**
  * A behavior that makes an object draggable along a plane.
  * @class Drag
- * @param {Object} [config] Specify the axes along which the object can be 
+ * @param {Object} [config] Specify the axes along which the object can be
  *  dragged.
- *  E.g. To constraint th object to an XY plane: `{x: true, y: true}`  
+ *  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
  *  Each axis can also be an object specifying the minimum and maximum limits
- *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`  
+ *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
  *  **Note:** Currently you must specify exactly two axes.
  * @memberof module:altspace/utilities/behaviors
  */
@@ -4123,7 +4131,7 @@ altspace.utilities.behaviors.Drag = function (config) {
 		} else if (axisCount === 1) {
 
 			throw new Error('Single axis dragging currently unsupported.');
-			//TODO: make possible, possibly via view-aligned plane 
+			//TODO: make possible, possibly via view-aligned plane
 
 		} else {
 			throw new Error('Invalid axis configuration');
@@ -4153,7 +4161,7 @@ altspace.utilities.behaviors.Drag = function (config) {
 		scene.addEventListener('cursorup', stopDrag);
 		scene.addEventListener('cursormove', moveDrag);
 
-		//Remember difference between center of object and drag point. 
+		//Remember difference between center of object and drag point.
 		//Otherwise, object appears to 'jump' when selected, moving so its
 		//center is directly until the cursor. We allow drag on edge of object.
 		raycaster.set(event.ray.origin, event.ray.direction);
@@ -4164,7 +4172,8 @@ altspace.utilities.behaviors.Drag = function (config) {
 		dragOffset.copy(dragPoint).sub(objectCenterPoint);
 
 		//Move to drag point (not object center), where raycast hits the object.
-		intersector.position.copy(dragPoint);
+		intersector.position.copy(intersector.parent.worldToLocal(dragPoint));
+		intersector.quaternion.copy(object3d.parent.quaternion);
 		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
 	}
 
@@ -4210,7 +4219,11 @@ altspace.utilities.behaviors.Drag = function (config) {
 		object3d.addEventListener('cursordown', startDrag);
 	}
 
-	return { awake: awake, start: start };
+	function dispose() {
+		object3d.removeEventListener('cursordown', startDrag);
+	}
+
+	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
 };
 
 /**
@@ -4226,7 +4239,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * Clicking left stick enters left alt mode, where movement is in X-Z plane.
  * Clicking left stick again exits left alt mode.
  * Right stick left / right rotates object clockwise / counterclockwise (y axis).
- * Rifht stick up / down rotates object away forwards / backwards (x axis).
+ * Right stick up / down rotates object away forwards / backwards (x axis).
  * Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
  * Clicking right stick again exits right alt mode.
  * D-pad up / down scales object.
@@ -4252,7 +4265,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 	var isInitialized = false;
 
 	var originalObj;//used to reset
-	var tolerance = 0.2;//ignore stick deadzone
+	var tolerance = 0.2;//ignore stick dead zone
 
 	config = config || {};
 	if (config.position === undefined) config.position = true;
@@ -4337,7 +4350,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		}
 		if (!gamepad) return;
 
-		//For axis and button numbers see: https://w3c.github.io/gamepad/  
+		//For axis and button numbers see: https://w3c.github.io/gamepad/
 		var isResetButton = gamepad.buttons[8].pressed;//reset / back button
 		if (isResetButton) {
 			if (!sync.isMine) sync.takeOwnership();
@@ -4417,7 +4430,7 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'GamepadControls' };
 };
 
 
@@ -4477,7 +4490,7 @@ altspace.utilities.behaviors.HoverColor = function(config){
 		//for example during a drag we don't want to change highlight
 		if (cursordownObject && cursordownObject !== object3d){
 			return;
-		} 
+		}
 		if (cursorenterObject){
 			unsetcolor(cursorenterObject);
 		}
@@ -4502,10 +4515,10 @@ altspace.utilities.behaviors.HoverColor = function(config){
 	function setColor(o){
 		if (o.material && o.material.color){
 			o.userData.origColor = o.material.color;
-			o.material.color = config.color;  
+			o.material.color = config.color;
 			//Not strictly needed but seems to make updating faster in Altspace.
 			if (o.material) o.material.needsUpdate = true;
-		} 
+		}
 		for (var i = 0; i < o.children.length; i++){
 			setColor(o.children[i], config.color);//recursively apply to children
 		}
@@ -4519,17 +4532,240 @@ altspace.utilities.behaviors.HoverColor = function(config){
 			}
 			o.material.color = o.userData.origColor;
 			if (o.material) o.material.needsUpdate = true;
-		} 
+		}
 		for (var i = 0; i < o.children.length; i++){
 			unsetColor(o.children[i]);
 		}
 	}
 
+	function dispose() {
+		object3d.removeEventListener('cursordown', cursordown);
+		scene.removeEventListener('cursorup', cursorupScene);
+		object3d.removeEventListener('cursorenter', cursorenter);
+		object3d.removeEventListener('cursorleave', cursorleave);
+	}
+
 	return {
-		awake: awake,
 		//no update method, event-driven
+		awake: awake,
+		dispose: dispose,
+		type: 'HoverColor'
 	};
 
+};
+
+//Change scale of an object when cursor hovers over it.
+window.altspace = window.altspace || {};
+window.altspace.utilities = window.altspace.utilities || {};
+window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+
+/**
+ * Changes the scale of an object when the cursor hovers over it, and restores the original scale when the cursor is no longer hovering over the object.
+ * @class HoverScale
+ * @param {Object} [config] Optional parameters.
+ * @param {Number} [config.scale=1.15] A scaling factor that will be applied to the object's initial scale when the cursor hovers over it.
+ * @param {Number} [config.duration=75] Duration the scaling effect is intended to take to complete, in milliseconds.
+ * @param {Boolean} [config.revertOnDispose=true] Specifies whether the object's original scale should be restored when the behavior has been destroyed.
+ * @memberof module:altspace/utilities/behaviors
+ */
+altspace.utilities.behaviors.HoverScale = function(config) {
+	config = config || {};
+	var scale = config.scale || 1.15;
+	var duration = config.duration || 75; // Milliseconds
+	var revertOnDispose = ((config.revertOnDispose !== undefined) ? config.revertOnDispose : true);
+
+	var object3d;
+	var originalScale;
+	var elapsedTime;
+	var progress;
+	var srcScale;
+	var destScale;
+
+	function awake(o, s) {
+		object3d = o;
+		originalScale = object3d.scale.clone();
+
+		srcScale = object3d.scale.clone();
+		srcScale.multiplyScalar(scale);
+
+		destScale = new THREE.Vector3();
+		destScale.copy(originalScale);
+
+		progress = 1;
+		elapsedTime = duration;
+
+		object3d.addEventListener('cursorenter', onHoverStateChange);
+		object3d.addEventListener('cursorleave', onHoverStateChange);
+	}
+
+	function update(deltaTime) {
+		if(progress < 1) {
+			elapsedTime += deltaTime;
+			elapsedTime = THREE.Math.clamp(elapsedTime, 0, duration);
+
+			progress = THREE.Math.clamp(elapsedTime / duration, 0, 1);
+			object3d.scale.lerpVectors(srcScale, destScale, progress);
+		}
+	}
+
+	function dispose() {
+		object3d.removeEventListener('cursorenter', onHoverStateChange);
+		object3d.removeEventListener('cursorleave', onHoverStateChange);
+
+		// Restore Original Object Scale Before Behavior Was Applied
+		if(revertOnDispose) object3d.scale.copy(originalScale);
+
+		originalScale = null;
+		srcScale = null;
+		destScale = null;
+		object3d = null;
+	}
+
+	function onHoverStateChange() {
+		var temp = srcScale;
+		srcScale = destScale;
+		destScale = temp;
+
+		progress = 1 - progress;
+		elapsedTime = duration - elapsedTime;
+	}
+
+	return { awake: awake, update: update, dispose: dispose, type: 'HoverScale' };
+};
+
+/**
+ * @module altspace/utilities/behaviors
+ */
+window.altspace = window.altspace || {};
+window.altspace.utilities = window.altspace.utilities || {};
+window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+
+/**
+ * The JointCollisionEvents behavior dispatches a 'jointcollision' event if
+ * joints collide with an object
+ *
+ * @class JointCollisionEvents
+ * @param {String} [config.joints] Array of body part names [bodyPart, side, subIndex] of joints to track.<br>
+ * Defaults to:
+ *
+ *     [
+ *         ['Hand', 'Left', 0],
+ *         ['Thumb', 'Left', 3],
+ *         ['Index', 'Left', 3],
+ *         ['Middle', 'Left', 3],
+ *         ['Ring', 'Left', 3],
+ *         ['Pinky', 'Left', 3],
+ *
+ *         ['Hand', 'Right', 0],
+ *         ['Thumb', 'Right', 3],
+ *         ['Index', 'Right', 3],
+ *         ['Middle', 'Right', 3],
+ *         ['Ring', 'Right', 3],
+ *         ['Pinky', 'Right', 3],
+ *     ]
+ * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint
+ * @memberof module:altspace/utilities/behaviors
+ **/
+ // TODO: Add scale option?
+altspace.utilities.behaviors.JointCollisionEvents = function (config) {
+	var object3d;
+
+	config = config || {};
+
+	if (config.jointCubeSize === undefined) config.jointCubeSize = 15;
+	if (config.joints === undefined) config.joints = [
+		['Hand', 'Left', 0],
+		['Thumb', 'Left', 3],
+		['Index', 'Left', 3],
+		['Middle', 'Left', 3],
+		['Ring', 'Left', 3],
+		['Pinky', 'Left', 3],
+
+		['Hand', 'Right', 0],
+		['Thumb', 'Right', 3],
+		['Index', 'Right', 3],
+		['Middle', 'Right', 3],
+		['Ring', 'Right', 3],
+		['Pinky', 'Right', 3],
+	];
+
+	var skeleton;
+	var jointCube;
+
+	// Get the tracking skeleton and the enclosure
+	var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
+	Promise.all(promises).then(function (array) {
+		// Attach skeleton
+		skeleton = array[0];
+		sim.scene.add(skeleton);
+		enclosure = array[1]; // TODO: Use enclosure for scale?
+	}).catch(function (err) {
+		console.log('Failed to get Altspace browser properties', err);
+	});
+
+	function awake(o) {
+		object3d = o;
+		// TODO: Scale jointCubeSize?
+		jointCube = new THREE.Vector3(
+			config.jointCubeSize,
+			config.jointCubeSize,
+			config.jointCubeSize
+		);
+	}
+
+	function update(deltaTime) {
+		if(!skeleton) { return; }
+
+		// Collect joints based on joints config option
+		var joints = [];
+		for(var i = 0; i < config.joints.length; i++) {
+			joints[i] = skeleton.getJoint(
+				config.joints[i][0],
+				config.joints[i][1],
+				config.joints[i][2] ? config.joints[i][2] : 0
+			);
+		}
+
+		// Get bounding box of owner object
+		var objectBB = new THREE.Box3().setFromObject(object3d);
+
+		// Add up all colliding joint intersects
+		var jointIntersectUnion;
+		var hasCollided = false;
+		for(var i = 0; i < config.joints.length; i++) {
+			var joint = joints[i];
+			if(joint && joint.confidence !== 0) {
+				var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, jointCube);
+				var collision = objectBB.intersectsBox(jointBB);
+				if(collision) {
+					var intersectBB = objectBB.intersect(jointBB);
+					if(jointIntersectUnion) {
+						jointIntersectUnion.union(intersectBB);
+					} else {
+						jointIntersectUnion = intersectBB;
+					}
+					hasCollided = true;
+				}
+			}
+		}
+
+		// Dispatch collision event
+		if(hasCollided) {
+			var event = new CustomEvent(
+				'jointcollision',
+				{
+					detail: {
+						intersect: jointIntersectUnion
+					},
+					bubbles: true,
+					cancelable: true
+				}
+			);
+			object3d.dispatchEvent(event);
+		}
+	}
+
+	return { awake: awake, update: update, type: 'JointCollisionEvents' };
 };
 
 window.altspace = window.altspace || {};
@@ -4803,7 +5039,7 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *
  * @class Spin
  * @param {Object} [config]
- * @param {Number} [config.speed=0.0001] Rotation speed in radians per 
+ * @param {Number} [config.speed=0.0001] Rotation speed in radians per
  *  millisecond
  * @memberof module:altspace/utilities/behaviors
  **/
@@ -4823,7 +5059,7 @@ altspace.utilities.behaviors.Spin = function (config) {
 		object3d.rotation.y += config.speed * deltaTime;
 	}
 
-	return { awake: awake, update: update };
+	return { awake: awake, update: update, type: 'Spin' };
 };
 
 window.altspace = window.altspace || {};
@@ -4881,7 +5117,7 @@ altspace.utilities.behaviors.TouchpadRotate = function (config) {
 	function start() {
 	}
 
-	return { awake: awake, start: start, update: update };
+	return { awake: awake, start: start, update: update, type: 'TouchpadRotate' };
 };
 
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -9745,28 +9981,28 @@ var containerMax = _Symbol('containerMax'),
     origParentBoundingBoxes = new _Map();
 
 /**
- * The Layout behavior allows you to position objects easily. You can 
- * position an object relative to its parent (either the Scene or a 
+ * The Layout behavior allows you to position objects easily. You can
+ * position an object relative to its parent (either the Scene or a
  * another object) by using a position specifier for each of the axes.
  * The position specifier can be one of 'min', 'center' or 'max'. The default
  * specifier is 'center'. You can also add a modifier to the position in pixels
- * ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can 
- * choose the location of the anchor on the object you are trying to position 
+ * ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can
+ * choose the location of the anchor on the object you are trying to position
  * by using the 'my' parameter.
  * You must specify at least one axis on the 'at' parameter.
  *
  * @example
  * // Position the top of the cube at 1.5 meters above the bottom of its parent.
  * cube.addBehavior(new altpsace.utilities.behaviors.Layout({
- *	   my: {y: 'max'}, 
+ *	   my: {y: 'max'},
  *	   at: {y: 'min+1.5m'}
  * });
  *
  * @class Layout
  * @memberof module:altspace/utilities/behaviors
  * @param {Object} config
- * @param {Object} config.at An object containing the axes and position 
- *  specifiers. At least one axis must be specificed. E.g. `{x: 'min', y: 'max-5%'}`
+ * @param {Object} config.at An object containing the axes and position
+ *  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
  * @param {Object} [config.my] An object containing the axes and position
  *  specifiers for the layout anchor.
  **/
@@ -9781,6 +10017,7 @@ var Layout = (function () {
 
 		this.my = my;
 		this.at = at;
+		this.type = 'Layout';
 	}
 
 	// TODO-BP Ideally these would be private methods.
@@ -9796,9 +10033,7 @@ var Layout = (function () {
 			if (offsetSetting && offsetSetting.endsWith('%')) {
 				offset = offset / 100 * (max[axis] - min[axis]);
 			} else if (offsetSetting && offsetSetting.endsWith('m')) {
-				console.log(offset, this[enclosure]);
 				offset = offset * this[enclosure].pixelsPerMeter;
-				console.log(offset);
 			}
 			return {
 				position: position,
@@ -10967,16 +11202,16 @@ var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default
 
 var _Promise = require('babel-runtime/core-js/promise')['default'];
 
-function getController(hand) {
+function getController(hand, config) {
 	var findGamepad = function findGamepad(resolve, reject) {
 		var gamepad = altspace.getGamepads().find(function (g) {
 			return g.mapping === 'steamvr' && g.hand === hand;
 		});
 		if (gamepad) {
-			console.log("SteamVR input device found", gamepad);
+			if (config.logging) console.log("SteamVR input device found", gamepad);
 			resolve(gamepad);
 		} else {
-			console.log("SteamVR input device not found trying again in 500ms...");
+			if (config.logging) console.log("SteamVR input device not found trying again in 500ms...");
 			setTimeout(findGamepad, 500, resolve, reject);
 		}
 	};
@@ -10989,6 +11224,8 @@ function getController(hand) {
  * to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
  *
  * @class SteamVRInput
+ * @param {Object} [config]
+ * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
  * @memberof module:altspace/utilities/behaviors
  *
  * @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
@@ -11001,10 +11238,12 @@ function getController(hand) {
  */
 
 var SteamVRInputBehavior = (function () {
-	function SteamVRInputBehavior() {
+	function SteamVRInputBehavior(config) {
 		_classCallCheck(this, SteamVRInputBehavior);
 
 		this.type = 'SteamVRInput';
+		this.config = config || {};
+		this.config.logging = this.config.logging || false;
 	}
 
 	_createClass(SteamVRInputBehavior, [{
@@ -11012,8 +11251,8 @@ var SteamVRInputBehavior = (function () {
 		value: function awake() {
 			var _this = this;
 
-			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER);
-			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER);
+			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
+			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
 			this.firstControllerPromise = _Promise.race([this.leftControllerPromise, this.rightControllerPromise]);
 
 			this.leftControllerPromise.then(function (controller) {
@@ -11146,6 +11385,7 @@ var SteamVRTrackedObjectBehavior = (function () {
 		_classCallCheck(this, SteamVRTrackedObjectBehavior);
 
 		this._hand = hand;
+		this.type = 'SteamVRTrackedObject';
 	}
 
 	_createClass(SteamVRTrackedObjectBehavior, [{
@@ -11189,7 +11429,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.20.0';
+	var version = '0.25.0';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);

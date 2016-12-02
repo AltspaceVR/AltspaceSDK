@@ -3,9 +3,9 @@
  */
 
 /**
- * The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to 
+ * The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
  * Three.js.
- * It adds methods to Three.js' Scene and Object3D classes which allow you to 
+ * It adds methods to Three.js' Scene and Object3D classes which allow you to
  * add, remove, retrieve and use Behaviors.
  *
  * @namespace THREE
@@ -20,7 +20,7 @@
 /**
  * Update the behaviors of all the objects in this Scene.
  * @instance
- * @method updateAllBehaviors 
+ * @method updateAllBehaviors
  * @memberof THREE.Scene
  */
 THREE.Scene.prototype.updateAllBehaviors = function () {
@@ -44,7 +44,7 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 	});
 
 	for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
-		object3d = objectsWithBehaviors[i];
+		var object3d = objectsWithBehaviors[i];
 		object3d.updateBehaviors(deltaTime, self);
 	}
 
@@ -61,7 +61,7 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 /**
  * Adds the given behavior to this object.
  * @instance
- * @method addBehavior 
+ * @method addBehavior
  * @param {Behavior} behavior Behavior to add.
  * @memberof THREE.Object3D
  */
@@ -88,12 +88,14 @@ THREE.Object3D.prototype.addBehaviors = function()
  * Removes the given behavior from this object. The behavior is disposed if
  * possible.
  * @instance
- * @method removeBehavior 
+ * @method removeBehavior
  * @param {...Behavior} behavior Behavior to remove.
  * @memberof THREE.Object3D
  */
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
+	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+
 	var i = this.__behaviorList.indexOf(behavior);
 	if (i !== -1) {
 		this.__behaviorList.splice(i, 1);
@@ -102,7 +104,7 @@ THREE.Object3D.prototype.removeBehavior = function(behavior)
 			if (behavior.dispose) behavior.dispose.call(behavior, this);
 
 		} catch (error) {
-			
+
 			console.group();
 			(console.error || console.log).call(console, error.stack || error);
 			console.log('[Behavior]');
@@ -145,13 +147,15 @@ THREE.Object3D.prototype.removeAllBehaviors = function ()
 
 		}
 	}
+
+	this.__behaviorList.length = 0;
 }
 
 /**
  * Retrieve a behavior by type.
  * @instance
  * @method getBehaviorByType
- * @param {String} type 
+ * @param {String} type
  * @returns {Behavior}
  * @memberof THREE.Object3D
  */
