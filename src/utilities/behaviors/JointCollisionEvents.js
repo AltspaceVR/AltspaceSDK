@@ -143,16 +143,16 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 
 		// Dispatch collision event
 		if(!hasPrevCollided && hasCollided) {
-		    /**
-		     * Fires a single event when any specified joints initially collide with the behavior's parent object.
-		     *
-		     * @event jointcollisionenter
-			 * @property {Object} [detail] Event details
-		     * @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which intersected with the behavior's parent object.
-		     * @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
-		     * @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
- 			 * @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-		     */
+			/**
+			* Fires a single event when any specified joints initially collide with the behavior's parent object.
+			*
+			* @event jointcollisionenter
+			* @property {Object} [detail] Event details
+			* @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which intersected with the behavior's parent object.
+			* @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
+			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
+			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+			*/
 			object3d.dispatchEvent({
 				type: 'jointcollisionenter',
 				detail: {
@@ -164,13 +164,13 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 			});
 		}
 		else if(hasPrevCollided && !hasCollided) {
-		    /**
-		     * Fires a single event when all joints are no longer colliding with the behavior's parent object.
-		     *
-		     * @event jointcollisionleave
-		     * @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
- 			 * @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-		     */
+			/**
+			* Fires a single event when all joints are no longer colliding with the behavior's parent object.
+			*
+			* @event jointcollisionleave
+			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
+			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+			*/
 			object3d.dispatchEvent({
 				type: 'jointcollisionleave',
 				bubbles: true,
@@ -180,16 +180,16 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 
 		// Dispatch collision event
 		if(hasCollided) {
-		    /**
-		     * Fires a continuous event while any joints are colliding with the behavior's parent object.
-		     *
-		     * @event jointcollision
-			 * @property {Object} [detail] Event details
-		     * @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which intersected with the behavior's parent object.
-		     * @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
-		     * @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
- 			 * @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-		     */
+			/**
+			* Fires a continuous event while any joints are colliding with the behavior's parent object.
+			*
+			* @event jointcollision
+			* @property {Object} [detail] Event details
+			* @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which intersected with the behavior's parent object.
+			* @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
+			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
+			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+			*/
 			object3d.dispatchEvent({
 				type: 'jointcollision',
 				detail: {
