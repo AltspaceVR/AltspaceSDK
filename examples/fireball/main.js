@@ -35,12 +35,14 @@
 
 		function initHighscore(){
 			var scene = document.querySelector('a-scene');
-			var syncSys = scene.systems['sync-system'];
-			runAfterConnected(syncSys, function(){
-				var highscoreRef = syncSys.connection.app.child('highscore');
-				window.game.highscoreRef = highscoreRef;
-				refreshHighscoreboard();
-			});
+			setTimeout(function(){
+				var syncSys = scene.systems['sync-system'];
+				runAfterConnected(syncSys, function(){
+					var highscoreRef = syncSys.connection.app.child('highscore');
+					window.game.highscoreRef = highscoreRef;
+					refreshHighscoreboard();
+				});
+			}, 500);
 		}
 
 		function refreshHighscoreboard(){
