@@ -57,6 +57,8 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 	var skeleton;
 	var jointCube;
 	var hasCollided = false;
+	var collidedJoints = [];
+	var jointIntersectUnion = THREE.Box3();
 
     function initSkeleton(scene) {
         return new Promise(function(resolve, reject) {
@@ -116,10 +118,14 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 		var objectBB = new THREE.Box3().setFromObject(object3d);
 
 		// Add up all colliding joint intersects
-		var jointIntersectUnion;
-		var collidedJoints = [];
+		var prevJointIntersectUnion = jointIntersectUnion;
+
+		var prevCollidedJoints = collidedJoints;
+		collidedJoints = [];
+
 		var hasPrevCollided = hasCollided;
 		hasCollided = false;
+
 		if(object3d.visible && object3d.scale.x > Number.EPSILON && object3d.scale.y > Number.EPSILON && object3d.scale.z > Number.EPSILON) {
 			for(var i = 0; i < config.joints.length; i++) {
 				var joint = joints[i];
@@ -168,11 +174,18 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 			* Fires a single event when all joints are no longer colliding with the behavior's parent object.
 			*
 			* @event jointcollisionleave
+			* @property {Object} [detail] Event details
+			* @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which last intersected with the behavior's parent object.
+			* @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
 			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
 			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
 			*/
 			object3d.dispatchEvent({
 				type: 'jointcollisionleave',
+				detail: {
+					intersect: prevJointIntersectUnion,
+					joints: prevCollidedJoints
+				},
 				bubbles: true,
 				target: object3d
 			});
