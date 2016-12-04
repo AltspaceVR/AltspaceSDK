@@ -58,7 +58,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 	var jointCube;
 	var hasCollided = false;
 	var collidedJoints = [];
-	var jointIntersectUnion = THREE.Box3();
+	var jointIntersectUnion = null;
 
     function initSkeleton(scene) {
         return new Promise(function(resolve, reject) {
@@ -119,6 +119,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 
 		// Add up all colliding joint intersects
 		var prevJointIntersectUnion = jointIntersectUnion;
+		jointIntersectUnion = null;
 
 		var prevCollidedJoints = collidedJoints;
 		collidedJoints = [];
@@ -183,7 +184,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 			object3d.dispatchEvent({
 				type: 'jointcollisionleave',
 				detail: {
-					intersect: prevJointIntersectUnion,
+					intersect: prevJointIntersectUnion || new THREE.Box3(),
 					joints: prevCollidedJoints
 				},
 				bubbles: true,
