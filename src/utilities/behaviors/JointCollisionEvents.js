@@ -60,28 +60,28 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 	var collidedJoints = [];
 	var jointIntersectUnion = null;
 
-    function initSkeleton(scene) {
-        return new Promise(function(resolve, reject) {
-            var skel = null;
+	function initSkeleton(scene) {
+		return new Promise(function(resolve, reject) {
+			var skel = null;
 
-            // Attempt to use existing skeleton when available
-            scene.traverse(function(child) {
-                if(child.type === 'TrackingSkeleton') {
-                    skel = child;
-                    return;
-                }
-            });
+			// Attempt to use existing skeleton when available
+			scene.traverse(function(child) {
+				if(child.type === 'TrackingSkeleton') {
+					skel = child;
+					return;
+				}
+			});
 
-            if(skel) return resolve(skel);
+			if(skel) return resolve(skel);
 
-            // Skeleton has not been assigned to scene yet
-            altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
-                skel = trackingSkeleton;
-                scene.add(skel);
-                return resolve(skel);
-            });
-        });
-    }
+			// Skeleton has not been assigned to scene yet
+			altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
+				skel = trackingSkeleton;
+				scene.add(skel);
+				return resolve(skel);
+			});
+		});
+	}
 
 	function awake(o, s) {
 		object3d = o;
