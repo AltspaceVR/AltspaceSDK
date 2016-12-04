@@ -1,5 +1,4 @@
 (function(){
-	var score = 0;
 	document.addEventListener('DOMContentLoaded', function(){
 		var TimeLimit = 60;
 		var countdownInterval;
@@ -100,7 +99,7 @@
 				console.log('scoring highscore' + game.score);
 				game.highscoreRef.set({
 					score: this.game.score,
-					name: game.username
+					name: game.username//race condition
 				})
 				refreshHighscoreboard();
 			}
