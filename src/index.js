@@ -239,7 +239,7 @@ AFRAME.registerComponent('editor', {
 
 	AFRAME.registerComponent('n-spawner', {
 		schema: {
-			asset: {type: 'string'}
+			res: {type: 'string'}
 		},
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
@@ -366,7 +366,7 @@ AFRAME.registerComponent('editor', {
 			//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
 			this.worldPosition = new THREE.Vector3();
 			this.worldQuaternion = new THREE.Quaternion();
-			this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+			this.el.object3DMap.mesh.addEventListener('native-transform-update', function (event) {
 
 				this.worldPosition.x = event.worldPosition.x;
 				this.worldPosition.y = event.worldPosition.y;
@@ -411,6 +411,9 @@ AFRAME.registerComponent('editor', {
 			callComponent.call(this, 'play');
 			this.el.emit('sound-played');
 		},
+		seek: function (time) {
+			callComponent.call(this, 'seek', {time: time});
+		},
 		remove: function () {
 			nativeComponentRemove.call(this);
 			if (this.playHandler) {
@@ -430,13 +433,15 @@ AFRAME.registerComponent('editor', {
 		schema: {
 			on: { type: 'string' },
 			res: { type: 'string' },
+			src: { type: 'string' },
 			loop: { type: 'boolean' },
 			volume: { type: 'number', default: 1 },
 			autoplay: { type: 'boolean' },
 			oneshot: { type: 'boolean' },
 			spatialBlend: { type: 'float', default: 1 },
-			time: { type: 'float' },
 			pitch: { type: 'float', default: 1 },
+			minDistance: { type: 'float', default: 1 },
+			maxDistance: { type: 'float', default: 12 },
 		}
 	});
 

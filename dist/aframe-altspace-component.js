@@ -217,7 +217,7 @@
 		placeholderMaterial.visible = false;
 		var PlaceholderMesh = function () {
 			THREE.Mesh.call( this, placeholderGeometry, placeholderMaterial );
-			this.userData.altspace = {collider: {enabled: true}};
+			this.userData.altspace = {collider: {enabled: false}};
 		};
 		PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
 		PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
@@ -285,7 +285,7 @@
 
 		AFRAME.registerComponent('n-spawner', {
 			schema: {
-				asset: {type: 'string'}
+				res: {type: 'string'}
 			},
 			init: nativeComponentInit,
 			update: nativeComponentUpdate,
@@ -412,7 +412,7 @@
 				//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
 				this.worldPosition = new THREE.Vector3();
 				this.worldQuaternion = new THREE.Quaternion();
-				this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+				this.el.object3DMap.mesh.addEventListener('native-transform-update', function (event) {
 
 					this.worldPosition.x = event.worldPosition.x;
 					this.worldPosition.y = event.worldPosition.y;
@@ -457,6 +457,9 @@
 				callComponent.call(this, 'play');
 				this.el.emit('sound-played');
 			},
+			seek: function (time) {
+				callComponent.call(this, 'seek', {time: time});
+			},
 			remove: function () {
 				nativeComponentRemove.call(this);
 				if (this.playHandler) {
@@ -476,13 +479,15 @@
 			schema: {
 				on: { type: 'string' },
 				res: { type: 'string' },
+				src: { type: 'string' },
 				loop: { type: 'boolean' },
 				volume: { type: 'number', default: 1 },
 				autoplay: { type: 'boolean' },
 				oneshot: { type: 'boolean' },
 				spatialBlend: { type: 'float', default: 1 },
-				time: { type: 'float' },
 				pitch: { type: 'float', default: 1 },
+				minDistance: { type: 'float', default: 1 },
+				maxDistance: { type: 'float', default: 12 },
 			}
 		});
 

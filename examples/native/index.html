@@ -5,12 +5,12 @@
 	<!--<script src="../build.js"></script>-->
 	<script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
-	<script src="http://sdk.altvr.com/libs/altspace.js/0.19.0/altspace.min.js"></script>
+	<script src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
 	</head>
 <body>
 <a-scene debug altspace>
 		
-	<a-entity id="trigger-0" n-sphere-collider="isTrigger:true; radius: 2" n-container="capacity:3" position="0 0 -20"></a-entity>
+	<a-sphere color="blue" scale="2 2 2" opacity="0.4" id="trigger-0" n-sphere-collider="isTrigger:true" n-container="capacity:3" position="0 1 -20"></a-sphere>
 	<script>
 		document.addEventListener('DOMContentLoaded', function(){
 			var trigger = document.querySelector('#trigger-0');
@@ -20,8 +20,9 @@
 
 			var label = document.createElement("a-entity");
 			trigger.appendChild(label); 
-			label.setAttribute('position', '0 2 0');
+			label.setAttribute('position', '0 1.5 0');
 			label.setAttribute('rotation', '0 180 0');
+			label.setAttribute('scale', '0.5 0.5 0.5');
 			label.setAttribute('n-text', 'text:' + 0);
 			label.setAttribute('n-billboard');
 
@@ -43,7 +44,16 @@
 		});
 	</script>
 
-	<a-entity n-spawner="asset:interactables/box" position="1 2 -18"></a-entity>
+	<a-entity n-spawner="res:interactables/box" position="1 2 -18"></a-entity>
+
+	<a-entity n-spawner="res:interactables/soccerball" position="0 2 -16"></a-entity>
+	<a-entity n-spawner="res:interactables/bowling pin" position="1 2 -16"></a-entity>
+	<a-entity n-spawner="res:interactables/gem" position="2 2 -16"></a-entity>
+
+	<a-entity n-object="objects/basketball net" position="-9 3 -14"></a-entity>
+	<a-entity n-spawner="res:interactables/basketball" position="-6 1 -14"></a-entity>
+
+	<a-entity n-object="objects/target archery" position="-2 3 -14"></a-entity>
 
 	<a-entity n-browser position="0 3 0"></a-entity>
 	<a-entity position="0 3 0">
