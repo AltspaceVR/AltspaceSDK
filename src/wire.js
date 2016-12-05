@@ -5,7 +5,10 @@ AFRAME.registerComponent('wire',
 		emit: {type: 'string'},
 		els: {type: 'selectorAll'}
 	},
-	init: function () {
+	update: function (oldData) {
+		if (oldData) {
+			this.el.removeEventListener(oldData.on, this.emitOnEls);
+		}
 		this.emitOnEls = function () {
 			this.data.els.forEach(function (el) {
 				el.emit(this.data.emit);
