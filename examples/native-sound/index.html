@@ -20,52 +20,46 @@
 <a-scene debug altspace>
 	<a-entity id="pingloop"
 		n-sound="res: ui/ping-enter; volume: 0.5; loop: true; on: click"
-		geometry="primitive: box" material="color: green" position="-3 1 -2">
-		<a-animation begin="click" attribute="position" dur="2000" to="2 1 -2" repeat="indefinite" direction="alternate"></a-animation>
+		geometry="primitive: box" material="color: green" position="-3 1 2">
+		<a-entity n-text="fontSize: 2; text: loop" position="0 1 0"></a-entity>
+		<a-animation begin="click" attribute="position" dur="2000" to="2 1 2" repeat="indefinite" direction="alternate"></a-animation>
 	</a-entity>
 	<a-entity
 		onclick="document.querySelector('#pingloop').components['n-sound'].pause()"
-		geometry="primitive: box" material="color: red" position="-1 0 -2"></a-entity>
+		geometry="primitive: box" material="color: red" position="-1 0 2">
+		<a-entity n-text="fontSize: 2; text: stop loop" position="0 1 0"></a-entity>
+	</a-entity>
 	<a-entity
-		n-sound="res: ui/pop; volume: 0.7; autoplay: true; oneshot: true; on: click"
-		geometry="primitive: box" material="color: blue" position="1 0 -2"></a-entity>
+		n-sound="res: ui/chime-high; volume: 0.7; autoplay: true; oneshot: true; on: click"
+		geometry="primitive: box" material="color: blue" position="1 0 2">
+		<a-entity n-text="fontSize: 2; text: oneshot" position="0 1 0"></a-entity>
+	</a-entity>
 	<a-entity
 		n-sound="res: ui/chime-notify; on: animationend"
-		n-sound="res: ui/chime-high; on: animationstart"
-		geometry="primitive: box" material="color: purple" position="3 0 -2">
-		<a-animation begin="click" attribute="position" dur="2000" to="3 1 -2" direction="alternate"></a-animation>
+		geometry="primitive: box" material="color: purple" position="3 0 2">
+		<a-entity n-text="fontSize: 2; text: animationend" position="0 1 0"></a-entity>
+		<a-animation begin="click" attribute="position" dur="2000" to="3 1 2" direction="alternate"></a-animation>
 	</a-entity>
 	<a-entity
-		n-sound="res: ui/chime-warn; spatialBlend: 0.5; time: 0.2" random-pitch-click
+		n-sound="res: ui/pop; spatialBlend: 0.2" random-pitch-click
 		geometry="primitive: box" material="color: orange" position="3 0 0">
+		<a-entity n-text="fontSize: 2; text: spatialBlend" position="0 1 0" rotation="0 90 0"></a-entity>
 	</a-entity>
-
-	<a-entity
-		n-sound="src: http://10.0.0.237:9966/examples/native-sound/mp3.mp3; on: click"
-		geometry="primitive: box" material="color: lightblue" position="-3 0 2">
-		<a-entity n-text="fontSize: 2; text: mp3" position="0 1 0"></a-entity>
-	</a-entity>
-	<a-entity
-		n-sound="src: http://10.0.0.237:9966/examples/native-sound/ogg.ogg; on: click"
-		geometry="primitive: box" material="color: lightblue" position="-1.5 0 2">
-		<a-entity n-text="fontSize: 2; text: ogg" position="0 1 0"></a-entity>
+	<a-entity id="wav"
+		n-sound="src: http://10.0.0.237:9966/examples/native-sound/wav.wav; maxDistance: 500; on: click"
+		geometry="primitive: box" material="color: lightblue" position="-3 1 0">
+		<a-entity n-text="fontSize: 2; text: wav" position="0 1 0" rotation="0 -90 0"></a-entity>
 	</a-entity>
 	<a-entity
-		n-sound="src: http://10.0.0.237:9966/examples/native-sound/opus.opus; on: click"
-		geometry="primitive: box" material="color: lightblue" position="-0 0 2">
-		<a-entity n-text="fontSize: 2; text: opus" position="0 1 0"></a-entity>
+		geometry="primitive: box" material="color: yellow" position="-3 3 0"
+		onclick="document.getElementById('wav').components['n-sound'].pause()">
+		<a-entity n-text="fontSize: 2; text: pause wav" position="0 1 0" rotation="0 -90 0"></a-entity>
 	</a-entity>
 	<a-entity
-		n-sound="src: http://10.0.0.237:9966/examples/native-sound/wav.wav; on: click"
-		geometry="primitive: box" material="color: lightblue" position="1.5 0 2">
-		<a-entity n-text="fontSize: 2; text: wav" position="0 1 0"></a-entity>
+		geometry="primitive: box" material="color: yellow" position="-3 1 -2"
+		onclick="document.getElementById('wav').components['n-sound'].seek(9)">
+		<a-entity n-text="fontSize: 2; text: seek wav" position="0 1 0" rotation="0 -90 0"></a-entity>
 	</a-entity>
-	<a-entity
-		n-sound="src: http://10.0.0.237:9966/examples/native-sound/weba.weba; on: click"
-		geometry="primitive: box" material="color: lightblue" position="3 0 2">
-		<a-entity n-text="fontSize: 2; text: weba" position="0 1 0"></a-entity>
-	</a-entity>
-</a-entity>
 </a-scene>
 </body>
 </html>

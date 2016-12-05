@@ -455,6 +455,9 @@
 			play: function () {
 				callComponent.call(this, 'play');
 			},
+			seek: function (time) {
+				callComponent.call(this, 'seek', {time: time});
+			},
 			remove: function () {
 				nativeComponentRemove.call(this);
 				if (this.playHandler) {
@@ -474,13 +477,15 @@
 			schema: {
 				on: { type: 'string' },
 				res: { type: 'string' },
+				src: { type: 'string' },
 				loop: { type: 'boolean' },
 				volume: { type: 'number', default: 1 },
 				autoplay: { type: 'boolean' },
 				oneshot: { type: 'boolean' },
 				spatialBlend: { type: 'float', default: 1 },
-				time: { type: 'float' },
 				pitch: { type: 'float', default: 1 },
+				minDistance: { type: 'float', default: 1 },
+				maxDistance: { type: 'float', default: 12 },
 			}
 		});
 
