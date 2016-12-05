@@ -1,0 +1,29 @@
+<html>
+<head>
+	<title>Wire Component</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script src="http://sdk.altvr.com/libs/altspace.js/0.24.4/altspace.js"></script>
+</head>
+<body>
+<a-scene debug altspace sync-system="author: altspacevr; app: sound-sync-test">
+	<a-entity
+		geometry="primitive: box" material="color: green" position="0 1 2"
+		wire="on: click; emit: gogogo; els: #chimeHigh, #chimeNotify, #pop">
+		<a-entity n-text="fontSize: 2; text: trigger" position="0 1 0"></a-entity>
+	</a-entity>
+	<a-entity id="chimeHigh"
+		geometry="primitive: box" material="color: blue" position="-2 1 0"
+		n-sound="res: ui/chime-high; volume: 0.7; autoplay: true; oneshot: true; on: gogogo">
+	</a-entity>
+	<a-entity id="chimeNotify"
+		geometry="primitive: box" material="color: purple" position="2 1 0"
+		n-sound="res: ui/chime-notify; on: gogogo">
+	</a-entity>
+	<a-entity id="pop" geometry="primitive: box" material="color: orange" position="-2 1 2">
+		<a-animation begin="gogogo" attribute="position" dur="2000" to="-2 2 2" direction="alternate"></a-animation>
+	</a-entity>
+</a-scene>
+</body>
+</html>
+

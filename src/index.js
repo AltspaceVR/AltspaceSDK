@@ -1088,3 +1088,4 @@ AFRAME.registerComponent('sync-color',
 });
 
 require('./sync-n-sound');
+require('./wire');
