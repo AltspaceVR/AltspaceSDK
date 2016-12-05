@@ -97,7 +97,7 @@
 				newGame();
 			}, 5000);
 
-			function scoreHighscore(){
+			function scoreHighscore(){//right now everyone in the space is going to do this at the same time
 				console.log('scoring highscore' + game.score);
 				game.highscoreRef.set({
 					score: this.game.score,
