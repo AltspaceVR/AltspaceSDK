@@ -448,7 +448,22 @@
 		});
 
 		AFRAME.registerComponent('n-sound', {
-			init: nativeComponentInit,
+			init: function () {
+				nativeComponentInit.call(this);
+				var src = this.data.src;
+				if (src && !src.startsWith('http')) {
+					if (src.startsWith('/')) {
+						this.data.src = location.origin + src;
+					}
+					else {
+						var currPath = location.pathname;
+						if (!currPath.endsWith('/')) {
+							currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+						}
+						this.data.src = location.origin + currPath + src;
+					}
+				}
+			},
 			pauseSound: function () {
 				callComponent.call(this, 'pause');
 				this.el.emit('sound-paused');
