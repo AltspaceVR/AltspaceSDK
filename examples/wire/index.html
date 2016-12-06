@@ -9,12 +9,15 @@
 <a-scene debug altspace>
 	<a-entity
 		geometry="primitive: box" material="color: green" position="0 1 2"
-		wire="on: click; emit: gogogo; targets: #chimeHigh, #chimeNotify, #pop">
+		wire="on: click; emit: gogogo; targets: #chimeNotify, #pop"
+		wire__high="on: mouseup; gain: mouse-off; targets: #chimeHigh"
+		wire__spin="gained: hovered; emit: spin; targets: #pop">
 		<a-entity n-text="fontSize: 2; text: trigger" position="0 1 0"></a-entity>
 	</a-entity>
 	<a-entity id="chimeHigh"
 		geometry="primitive: box" material="color: blue" position="-2 1 0"
-		n-sound="res: ui/chime-high; volume: 0.7; autoplay: true; oneshot: true; on: gogogo">
+		n-sound="res: ui/chime-high; volume: 0.7; autoplay: true; oneshot: true;">
+		<a-animation begin="mouse-off" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
 	</a-entity>
 	<a-entity id="chimeNotify"
 		geometry="primitive: box" material="color: purple" position="2 1 0"
@@ -22,7 +25,9 @@
 	</a-entity>
 	<a-entity id="pop" geometry="primitive: box" material="color: orange" position="-2 1 2">
 		<a-animation begin="gogogo" attribute="position" dur="2000" to="-2 2 2" direction="alternate"></a-animation>
+		<a-animation begin="spin" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
 	</a-entity>
+	<a-camera><a-cursor></a-cursor></a-camera>
 </a-scene>
 </body>
 </html>
