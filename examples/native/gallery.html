@@ -4,68 +4,60 @@
 	<title>Native Components</title>
 	<!--<script src="../build.js"></script>-->
 	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	<script src="../../index.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
 	<script src="http://sdk.altvr.com/libs/altspace.js/0.24.2/altspace.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/master/dist/kframe.min.js"></script>
 	<script>
 
-		AFRAME.registerComponent('next-preview', {
-			schema: {type: 'selector', default: '#preview'},
+		AFRAME.registerComponent('cycle-preview', {
+			schema: {
+				view: {type: 'selector', default: null},
+				label: {type: 'selector', default: null},
+				direction: {type: 'string', default: 'forward'},
+				library: {type: 'selector', default: null}
+			},
 			init: function()
 			{
-				this.el.object3D.addEventListener('cursorup', function(e)
+				this.el.object3D.addEventListener('cursorup', (function(e)
 				{
-					var curId = this.data.getAttribute('n-object');
-					var curElem = document.getElementById(curId);
-					var nextElem = curElem.nextElementSibling || curElem.parentElement.firstElementChild;
-					this.data.setAttribute('n-object', nextElem.id);
+					var curId, curElem, nextElem;
+					if(this.data.library && this.data.view){
+						curId = this.data.view.getAttribute('n-object');
+						curElem = this.data.library.querySelector('[id="'+curId+'"]');
+					}
+					else return;
 
-					var text = document.getElementById('previewText');
-					AFRAME.utils.entity.setComponentProperty(text, 'n-text.text', nextElem.id);
+					if(this.data.direction === 'forward')
+						nextElem = curElem.nextElementSibling || curElem.parentElement.firstElementChild;
+					else if(this.data.direction === 'backward')
+						nextElem = curElem.previousElementSibling || curElem.parentElement.lastElementChild;
+					else {
+						nextElem = curElem;
+					}
+					this.data.view.setAttribute('n-object', nextElem.id);
 
-				}.bind(this));
+					if(this.data.label){
+						AFRAME.utils.entity.setComponentProperty(this.data.label, 'n-text.text', nextElem.id);
+					}
+
+				}).bind(this));
 			}
 		});
 
-		AFRAME.registerComponent('back-preview', {
-			schema: {type: 'selector', default: '#preview'},
-			init: function()
-			{
-				this.el.object3D.addEventListener('cursorup', function(e)
-				{
-					console.log('go back');
-					var curId = this.data.getAttribute('n-object');
-					var curElem = document.getElementById(curId);
-					var prevElem = curElem.previousElementSibling || curElem.parentElement.lastElementChild;
-					this.data.setAttribute('n-object', prevElem.id);
-
-					var text = document.getElementById('previewText');
-					AFRAME.utils.entity.setComponentProperty(text, 'n-text.text', prevElem.id);
-
-				}.bind(this));
-			}
-		});
-		
-		AFRAME.registerComponent('array1d-data', {
+		AFRAME.registerComponent('array-data', {
 			schema: {
-				length: {type: 'number', default: '4'},
-				model: {type: 'string', default: 'architecture/wall-4w-4h'}
-			}
-		});
-		
-		AFRAME.registerComponent('array2d-data', {
-			schema: {
-				depth: {type: 'number', default: '4'},
-				width: {type: 'number', default: '4'},
-				model: {type: 'string', default: 'architecture/floor-4w-4l'}
+				depth: {type: 'number', default: '1'},
+				width: {type: 'number', default: '1'},
+				height: {type: 'number', default: '1'},
+				model: {type: 'string', default: 'effects/fire'}
 			}
 		});
 
 	</script>
 </head>
 <body>
-<ol id='asset-list' style='display: none'>
+<ol id='arch-list' style='display: none'>
 	<li id="architecture/ceiling-2w-2l" />
 	<li id="architecture/ceiling-2w-4l" />
 	<li id="architecture/ceiling-4w-2l" />
@@ -125,6 +117,8 @@
 	<li id="architecture/wall-window-gap-end-l-4w-4h" />
 	<li id="architecture/wall-window-gap-end-r-2w-4h" />
 	<li id="architecture/wall-window-gap-end-r-4w-4h" />
+</ol>
+<ol id='effects-list' style='display: none'>
 	<li id="effects/explosion" />
 	<li id="effects/fire" />
 	<li id="effects/fire-trail" />
@@ -134,16 +128,13 @@
 	<li id="effects/steam" />
 </ol>
 
-<script id='array2d' type='text/x-nunjucks-template'>
+<script id='array' type='text/x-nunjucks-template'>
 	{% for x in range(0, -width, -4) %}
-		{% for z in range(0, depth, 4) %}
-			<a-entity position='{{x}} 0 {{z}}' n-object='{{model}}'></a-entity>
+		{% for y in range(0, height, 4) %}
+			{% for z in range(0, depth, 4) %}
+				<a-entity position='{{x}} {{y}} {{z}}' n-object='{{model}}'></a-entity>
+			{% endfor %}
 		{% endfor %}
-	{% endfor %}
-</script>
-<script id='array1d' type='text/x-nunjucks-template'>
-	{% for z in range(0, length, 4) %}
-		<a-entity position='0 0 {{z}}' n-object='{{model}}'></a-entity>
 	{% endfor %}
 </script>
 
@@ -151,62 +142,72 @@
 
 	<!-- welcome message -->
 	<a-entity id='welcome' position='6 1.5 -8'>
-	
+
 		<a-entity position='0 0.9 0.1' rotation='0 180 0'
 			n-text='text: Native Objects; width: 20; fontSize: 15'></a-entity>
-			
+
 		<a-entity position='0 -0.7 0.1' rotation='0 180 0'
-			n-text='text: Welcome to the Gallery, the live showcase for our native objects library for A-Frame! Construct your own rooms using our collection of building blocks, complete with blocking volumes (things to stand on), interactables, particle effects, and more!; fontSize: 3;'></a-entity>
-			
+			n-text='text: Welcome to the Playground, the live showcase for our native objects library for A-Frame! Construct your own rooms using our collection of building blocks, complete with blocking volumes (things to stand on), interactables, particle effects, and more!; fontSize: 3;'></a-entity>
+
 		<a-plane position='0 0 -0.1' rotation='0 0 0' scale='11 4 1'
 			color=black transparent=false opacity=0.6></a-plane>
-			
+
 		<a-entity position='0 -2 -10' n-object='effects/fireworks'></a-entity>
 	</a-entity>
-	
+
 	<!-- preview room -->
 	<a-entity id='library' position='6 0 7'>
 		<a-sphere id='originMarker' position='0 0 0' radius=0.05></a-sphere>
 		<a-entity id="preview" position='0 0 0' n-object="architecture/ceiling-2w-2l"></a-entity>
-		<a-entity id='previewText' position='0 5 0' n-text='text: architecture/ceiling-2w-2l; width: 15; fontSize: 5;'></a-entity>
+		<a-entity id='previewText' position='0 2 4.5' n-text='text: architecture/ceiling-2w-2l; width: 15; fontSize: 5;'></a-entity>
 
-		<a-box id='next' position='-4 1 0' color='green' next-preview='#preview'
+		<a-box id='next' position='-4 1 0' color='green'
+			cycle-preview='view: #preview; label: #previewText; library: #arch-list; direction: forward;'
 			n-text='text: Next; height: 3; verticalAlign: top;'>
 		</a-box>
-		<a-box id='back' position='4 1 0' color='red' back-preview='#preview'
+		<a-box id='back' position='4 1 0' color='red'
+			cycle-preview='view: #preview; label: #previewText; library: #arch-list; direction: backward;'
 			n-text='text: Back; height: 3; verticalAlign: top;'>
 		</a-box>
 	</a-entity>
-	
+
 	<!-- architecture -->
 	<a-entity position='0 -.25 0'>
 
 		<!-- floor -->
 		<a-entity position='12 0 -4'
-			template='src: #array2d; data: array2d-data;' array2d-data='depth: 16; width: 44'></a-entity>
-		
+			template='src: #array; data: array-data;' array-data='depth: 16; width: 32; model: architecture/floor-4w-4l'></a-entity>
+
 		<!-- ceiling -->
-		<a-entity position='12 0 -4'
-			template='src: #array2d; data: array2d-data;' array2d-data='depth: 8; width: 20; model: architecture/ceiling-4w-4l'>
+		<a-entity position='12 2 -4'
+			template='src: #array; data: array-data;' array-data='depth: 16; width: 32; model: architecture/ceiling-4w-4l'>
 		</a-entity>
-		<a-entity position='12 4 4' rotation='0 270 0'
-			template='src:  #array1d; data: array1d-data; ' array1d-data='length: 16'></a-entity>
-		
-		<!-- walls -->
+
+		<!-- walls level 1 -->
 		<a-entity position='12 0 -4' rotation='0 0 0'
-			template='src:  #array1d; data: array1d-data; ' array1d-data='length: 16'></a-entity>
+			template='src:  #array; data: array-data; ' array-data='depth: 16; model: architecture/wall-4w-4h'></a-entity>
 		<a-entity position='12 0 12' rotation='0 270 0'
-			template='src:  #array1d; data: array1d-data; ' array1d-data='length: 32'></a-entity>
+			template='src:  #array; data: array-data; ' array-data='depth: 32; model: architecture/wall-4w-4h'></a-entity>
 		<a-entity position='12 0 -4' rotation='0 270 0'
-			template='src:  #array1d; data: array1d-data; ' array1d-data='length: 32; model: architecture/wall-base-4w'></a-entity>
+			template='src:  #array; data: array-data; ' array-data='depth: 32; model: architecture/wall-base-4w'></a-entity>
 		<a-entity position='12 0 -4' rotation='0 270 0'
-			template='src:  #array1d; data: array1d-data; ' array1d-data='length: 32; model: architecture/wall-bulkhead-4w'></a-entity>
-		
+			template='src:  #array; data: array-data; ' array-data='depth: 32; model: architecture/wall-bulkhead-4w'></a-entity>
+
+		<!-- walls level 2 -->
+		<a-entity position='12 4 12' rotation='270 0 0'
+			template='src: #array; data: array-data;' array-data='height: 16; model: architecture/wall-2w-4h'></a-entity>
+		<a-entity position='12 4 -4' rotation='270 90 0'
+			template='src: #array; data: array-data;' array-data='height: 32; model: architecture/wall-2w-4h'></a-entity>
+		<a-entity position='-20 4 12' rotation='270 270 0'
+			template='src: #array; data: array-data;' array-data='height: 32; model: architecture/wall-2w-4h'></a-entity>
+
 		<!-- dividers -->
 		<a-entity position='0 0 12' rotation='0 180 0'
-			template='src:  #array1d; data: array1d-data; ' array1d-data='length: 8; model: architecture/wall-window-4w-4h'></a-entity>
+			template='src:  #array; data: array-data; ' array-data='depth: 8; model: architecture/wall-window-4w-4h'></a-entity>
+		<a-entity position='-0.5 6 4' rotation='90 0 0'
+			template='src: #array; data: array-data;' array-data='height: 8; model: architecture/wall-2w-4h'></a-entity>
 
-		
+
 	</a-entity>
 
 </a-scene>
