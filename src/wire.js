@@ -3,20 +3,20 @@ AFRAME.registerComponent('wire',
 	schema: {
 		on: {type: 'string'},
 		emit: {type: 'string'},
-		els: {type: 'selectorAll'}
+		targets: {type: 'selectorAll'}
 	},
 	update: function (oldData) {
 		if (oldData) {
-			this.el.removeEventListener(oldData.on, this.emitOnEls);
+			this.el.removeEventListener(oldData.on, this.emitOnTargets);
 		}
-		this.emitOnEls = function () {
-			this.data.els.forEach(function (el) {
+		this.emitOnTargets = function () {
+			this.data.targets.forEach(function (el) {
 				el.emit(this.data.emit);
 			}.bind(this));
 		}.bind(this);
-		this.el.addEventListener(this.data.on, this.emitOnEls);
+		this.el.addEventListener(this.data.on, this.emitOnTargets);
 	},
 	remove: function () {
-		this.el.removeEventListener(this.data.on, this.emitOnEls);
+		this.el.removeEventListener(this.data.on, this.emitOnTargets);
 	}
 });
