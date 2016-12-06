@@ -6,12 +6,21 @@ window.altspace.utilities = window.altspace.utilities || {};
 window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
 
 /**
- * The JointCollisionEvents behavior dispatches collision events which have been triggered by TrackingJoints
- * intersecting with the behavior's parent object.
+ * An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
+ * E.g. `['Index', 'Left', 0]` identifies the first joint on the index finger of the left hand.
+ * See [TrackingSkeleton#getJoint]{@link module:altspace~TrackingSkeleton#getJoint} for available
+ * joint names.
+ * @typedef {Array.<String, String, Number>} module:altspace/utilities/behaviors.JointCollisionEvents~JointId
+ **/
+
+/**
+ * The JointCollisionEvents behavior dispatches collision events which have been triggered by
+ * [TrackingJoints]{@link module:altspace~TrackingJoint} intersecting with the object that has this behavior.
  *
  * @class JointCollisionEvents
  * @param {Object} [config] Optional parameters.
- * @param {Array.<Array.<String, String, Number>>} [config.joints] Array of body part names [bodyPart, side, subIndex] of joints to track.<br>
+ * @param {Array.<JointId>} [config.joints] Array of
+ * [JointIds]{@link module:altspace/utilities/behaviors.JointCollisionEvents~JointId} to track.<br>
  * Defaults to:
  *
  *     [
@@ -29,7 +38,8 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *         ['Ring', 'Right', 3],
  *         ['Pinky', 'Right', 3],
  *     ]
- * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.  For optimal results, it is recommended that the value 
+ * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.
+ * For optimal results, it is recommended that the value
  * provided is scaled according to your enclosure scaling factor.
  * @memberof module:altspace/utilities/behaviors
  **/
@@ -97,7 +107,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 				config.jointCubeSize
 			);
 		}).catch(function (err) {
-			console.log('Failed to get Altspace browser properties', err);
+			console.log('Failed to get tracking skeleton', err);
 		});
 	}
 
@@ -127,7 +137,12 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 		var hasPrevCollided = hasCollided;
 		hasCollided = false;
 
-		if(object3d.visible && object3d.scale.x > Number.EPSILON && object3d.scale.y > Number.EPSILON && object3d.scale.z > Number.EPSILON) {
+		if(
+			object3d.visible &&
+			object3d.scale.x > Number.EPSILON &&
+			object3d.scale.y > Number.EPSILON &&
+			object3d.scale.z > Number.EPSILON
+		) {
 			for(var i = 0; i < config.joints.length; i++) {
 				var joint = joints[i];
 				if(joint && joint.confidence !== 0) {
@@ -151,13 +166,13 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 		// Dispatch collision event
 		if(!hasPrevCollided && hasCollided) {
 			/**
-			* Fires a single event when any specified joints initially collide with the behavior's parent object.
+			* Fires a single event when any specified joints initially collide with the object.
 			*
 			* @event jointcollisionenter
-			* @property {Object} [detail] Event details
-			* @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which intersected with the behavior's parent object.
-			* @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
+			* @property {Object} detail Event details
+			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with object.
+			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+			* @property {THREE.Object3D} target - The object which was intersected.
 			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
 			*/
 			object3d.dispatchEvent({
@@ -172,13 +187,13 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 		}
 		else if(hasPrevCollided && !hasCollided) {
 			/**
-			* Fires a single event when all joints are no longer colliding with the behavior's parent object.
+			* Fires a single event when all joints are no longer colliding with the object.
 			*
 			* @event jointcollisionleave
-			* @property {Object} [detail] Event details
-			* @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which last intersected with the behavior's parent object.
-			* @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
+			* @property {Object} detail Event details
+			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which last intersected with the object.
+			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+			* @property {THREE.Object3D} target - The object which was intersected.
 			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
 			*/
 			object3d.dispatchEvent({
@@ -195,13 +210,13 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 		// Dispatch collision event
 		if(hasCollided) {
 			/**
-			* Fires a continuous event while any joints are colliding with the behavior's parent object.
+			* Fires a continuous event while any joints are colliding with the object.
 			*
 			* @event jointcollision
-			* @property {Object} [detail] Event details
-			* @property {THREE.Box3} [detail.intersect] - A union of all joint bounding boxes which intersected with the behavior's parent object.
-			* @property {TrackingJoint[]} [detail.joints] - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} [target] - The behavior's parent object which was intersected.
+			* @property {Object} detail Event details
+			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with the object.
+			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+			* @property {THREE.Object3D} target - The object which was intersected.
 			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
 			*/
 			object3d.dispatchEvent({
