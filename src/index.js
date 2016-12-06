@@ -711,7 +711,7 @@ AFRAME.registerSystem('sync-system',
 	init: function() {
 		var component = this;
 
-		if(!this.data){
+		if(!this.data || !this.app){
 			console.warn('The sync-system must be present on the scene and configured with required data.');
 			return;
 		}
@@ -1088,3 +1088,4 @@ AFRAME.registerComponent('sync-color',
 });
 
 require('./sync-n-sound');
+require('./wire');
