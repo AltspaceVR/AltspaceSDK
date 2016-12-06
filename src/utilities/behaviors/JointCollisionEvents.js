@@ -48,21 +48,7 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 	var config = _config || {};
 
 	config.jointCubeSize = config.jointCubeSize || 15;
-	config.joints = config.joints || [
-		['Hand', 'Left', 0],
-		['Thumb', 'Left', 3],
-		['Index', 'Left', 3],
-		['Middle', 'Left', 3],
-		['Ring', 'Left', 3],
-		['Pinky', 'Left', 3],
-
-		['Hand', 'Right', 0],
-		['Thumb', 'Right', 3],
-		['Index', 'Right', 3],
-		['Middle', 'Right', 3],
-		['Ring', 'Right', 3],
-		['Pinky', 'Right', 3],
-	];
+	config.joints = config.joints || altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS;
 
 	var skeleton;
 	var jointCube;
@@ -233,3 +219,18 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 
 	return { awake: awake, update: update, type: 'JointCollisionEvents' };
 };
+altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS = [
+	['Hand', 'Left', 0],
+	['Thumb', 'Left', 3],
+	['Index', 'Left', 3],
+	['Middle', 'Left', 3],
+	['Ring', 'Left', 3],
+	['Pinky', 'Left', 3],
+
+	['Hand', 'Right', 0],
+	['Thumb', 'Right', 3],
+	['Index', 'Right', 3],
+	['Middle', 'Right', 3],
+	['Ring', 'Right', 3],
+	['Pinky', 'Right', 3],
+];
