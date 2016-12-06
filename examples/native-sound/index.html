@@ -1,0 +1,71 @@
+<html>
+<head>
+	<title>Native Components</title>
+	<!--<script src="../build.js"></script>-->
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script src="http://sdk.altvr.com/libs/altspace.js/0.24.4/altspace.js"></script>
+	<script>
+		AFRAME.registerComponent('random-pitch-click', {
+			init: function (time) {
+				this.el.addEventListener('click', function () {
+					this.setAttribute('n-sound', 'pitch', Math.random() * 3 + 1);
+					this.components['n-sound'].playSound();
+				});
+			}
+		});
+	</script>
+</head>
+<body>
+<a-scene debug altspace sync-system="author: altspacevr; app: sound-sync-test">
+	<a-entity id="pingloop"
+		geometry="primitive: box" material="color: green" position="-3 1 2"
+		n-sound="res: ui/ping-enter; volume: 0.5; loop: true; on: click"
+		sync="own-on: mousedown" sync-n-sound>
+		<a-entity n-text="fontSize: 2; text: loop" position="0 1 0"></a-entity>
+		<a-animation begin="click" attribute="position" dur="2000" to="2 1 2" repeat="indefinite" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity
+		geometry="primitive: box" material="color: red" position="-1 0 2"
+		onclick="document.querySelector('#pingloop').components['n-sound'].pauseSound()">
+		<a-entity n-text="fontSize: 2; text: stop loop" position="0 1 0"></a-entity>
+	</a-entity>
+	<a-entity id="chimeHigh"
+		geometry="primitive: box" material="color: blue" position="1 0 2"
+		n-sound="res: ui/chime-high; volume: 0.7; autoplay: true; oneshot: true; on: click"
+		sync="own-on: mousedown" sync-n-sound>
+		<a-entity n-text="fontSize: 2; text: oneshot" position="0 1 0"></a-entity>
+	</a-entity>
+	<a-entity id="chimeNotify"
+		geometry="primitive: box" material="color: purple" position="3 0 2"
+		n-sound="res: ui/chime-notify; on: animationend"
+		sync="own-on: mousedown" sync-n-sound>
+		<a-entity n-text="fontSize: 2; text: animationend" position="0 1 0"></a-entity>
+		<a-animation begin="click" attribute="position" dur="2000" to="3 1 2" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity id="pop"
+		geometry="primitive: box" material="color: orange" position="3 0 0"
+		n-sound="res: ui/pop; spatialBlend: 0.2" random-pitch-click
+		sync="own-on: mousedown" sync-n-sound>
+		<a-entity n-text="fontSize: 2; text: spatialBlend" position="0 1 0" rotation="0 90 0"></a-entity>
+	</a-entity>
+
+	<a-entity id="wav"
+		geometry="primitive: box" material="color: lightblue" position="-3 1 0"
+		sync="own-on: mousedown" sync-n-sound
+		n-sound="src: big-buck-bunny-intro.wav; maxDistance: 500; on: click">
+		<a-entity n-text="fontSize: 2; text: wav" position="0 1 0" rotation="0 -90 0"></a-entity>
+	</a-entity>
+	<a-entity
+		geometry="primitive: box" material="color: yellow" position="-3 3 0"
+		onclick="document.getElementById('wav').components['n-sound'].pauseSound()">
+		<a-entity n-text="fontSize: 2; text: pause wav" position="0 1 0" rotation="0 -90 0"></a-entity>
+	</a-entity>
+	<a-entity
+		geometry="primitive: box" material="color: yellow" position="-3 1 -2"
+		onclick="document.getElementById('wav').components['n-sound'].seek(9)">
+		<a-entity n-text="fontSize: 2; text: seek wav" position="0 1 0" rotation="0 -90 0"></a-entity>
+	</a-entity>
+</a-scene>
+</body>
+</html>

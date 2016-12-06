@@ -237,6 +237,15 @@ AFRAME.registerComponent('editor', {
 		remove: nativeComponentRemove
 	});
 
+	AFRAME.registerComponent('n-spawner', {
+		schema: {
+			res: {type: 'string'}
+		},
+		init: nativeComponentInit,
+		update: nativeComponentUpdate,
+		remove: nativeComponentRemove
+	});
+
 	AFRAME.registerComponent('n-text', {
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
@@ -304,6 +313,38 @@ AFRAME.registerComponent('editor', {
 		}
 	});
 
+	AFRAME.registerComponent('n-billboard', {
+		init:nativeComponentInit,
+		remove: nativeComponentRemove,
+	});
+
+	AFRAME.registerComponent('n-container', {
+		init: function(){
+			nativeComponentInit.call(this);
+
+			var el = this.el;
+			var component = this;
+
+			el.addEventListener('stateadded', function(event){
+				if(event.detail.state === 'container-full'){
+					el.emit('container-full');
+				}
+				if(event.detail.state === 'container-empty'){
+					el.emit('container-empty');
+				}
+			});
+
+			el.addEventListener('container-count-changed', function(event){
+				component.count = event.detail.count;
+			});
+		},
+		remove: nativeComponentRemove,
+		update: nativeComponentUpdate,
+		schema: {
+			capacity: { default: 4, type: 'number' },
+		}
+	});
+
 	AFRAME.registerComponent('n-rigidbody', {
 		init: function() {
 			nativeComponentInit.call(this);
@@ -325,7 +366,7 @@ AFRAME.registerComponent('editor', {
 			//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
 			this.worldPosition = new THREE.Vector3();
 			this.worldQuaternion = new THREE.Quaternion();
-			this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+			this.el.object3DMap.mesh.addEventListener('native-transform-update', function (event) {
 
 				this.worldPosition.x = event.worldPosition.x;
 				this.worldPosition.y = event.worldPosition.y;
@@ -357,6 +398,65 @@ AFRAME.registerComponent('editor', {
 		schema: {
 			url: { type: 'string' },
 			controls: { default: 'above', type: 'string' },
+		}
+	});
+
+	AFRAME.registerComponent('n-sound', {
+		init: function () {
+			nativeComponentInit.call(this);
+			var src = this.data.src;
+			if (src && !src.startsWith('http')) {
+				if (src.startsWith('/')) {
+					this.data.src = location.origin + src;
+				}
+				else {
+					var currPath = location.pathname;
+					if (!currPath.endsWith('/')) {
+						currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+					}
+					this.data.src = location.origin + currPath + src;
+				}
+			}
+		},
+		pauseSound: function () {
+			callComponent.call(this, 'pause');
+			this.el.emit('sound-paused');
+		},
+		playSound: function () {
+			callComponent.call(this, 'play');
+			this.el.emit('sound-played');
+		},
+		seek: function (time) {
+			callComponent.call(this, 'seek', {time: time});
+		},
+		remove: function () {
+			nativeComponentRemove.call(this);
+			if (this.playHandler) {
+			  this.el.removeEventListener(oldData.on, this.playHandler);
+			}
+		},
+		update: function (oldData) {
+			nativeComponentUpdate.call(this, oldData);
+			if (this.playHandler) {
+			  this.el.removeEventListener(oldData.on, this.playHandler);
+			}
+			if (this.data.on) {
+			  this.playHandler = this.playSound.bind(this);
+			  this.el.addEventListener(this.data.on, this.playHandler);
+			}
+		},
+		schema: {
+			on: { type: 'string' },
+			res: { type: 'string' },
+			src: { type: 'string' },
+			loop: { type: 'boolean' },
+			volume: { type: 'number', default: 1 },
+			autoplay: { type: 'boolean' },
+			oneshot: { type: 'boolean' },
+			spatialBlend: { type: 'float', default: 1 },
+			pitch: { type: 'float', default: 1 },
+			minDistance: { type: 'float', default: 1 },
+			maxDistance: { type: 'float', default: 12 },
 		}
 	});
 
@@ -555,6 +655,14 @@ AFRAME.registerComponent('altspace', {
 		emit('collisionexit', event);
 	});
 
+	scene.addEventListener('triggerenter', function (event) {
+		emit('triggerenter', event);
+	});
+
+	scene.addEventListener('triggerexit', function (event) {
+		emit('triggerexit', event);
+	});
+
   }
 
 });
@@ -647,7 +755,7 @@ AFRAME.registerSystem('sync-system',
 				}, 0);
 			});
 
-			// add our client ID to the list of connected clients, 
+			// add our client ID to the list of connected clients,
 			// but have it be automatically removed by firebase if we disconnect for any reason
 			this.clientsRef.push(this.clientId).onDisconnect().remove();
 
@@ -686,7 +794,7 @@ AFRAME.registerComponent('sync',
 		var isMine = false;
 
 		var component = this;
-		
+
 		component.isConnected = false;
 
 		if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
@@ -744,7 +852,7 @@ AFRAME.registerComponent('sync',
 
 		function setupReceive() {
 
-			//if nobody has owned the object yet, we will. 
+			//if nobody has owned the object yet, we will.
 			ownerRef.transaction(function (owner) {
 				if (owner) return undefined;
 
@@ -968,7 +1076,7 @@ AFRAME.registerComponent('sync-color',
 			colorRef.on('value', function (snapshot) {
 				if (sync.isMine && !firstValue) return;
 				var color = snapshot.val();
-				
+
 				refChangedLocked = true;
 				component.el.setAttribute('material', 'color', color);
 				refChangedLocked = false;
@@ -978,3 +1086,5 @@ AFRAME.registerComponent('sync-color',
 		}
 	}
 });
+
+require('./sync-n-sound');

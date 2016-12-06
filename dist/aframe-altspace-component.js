@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	if (typeof AFRAME === 'undefined') {
 	  throw new Error('Component attempted to register before AFRAME was available.');
@@ -283,6 +283,15 @@
 			remove: nativeComponentRemove
 		});
 
+		AFRAME.registerComponent('n-spawner', {
+			schema: {
+				res: {type: 'string'}
+			},
+			init: nativeComponentInit,
+			update: nativeComponentUpdate,
+			remove: nativeComponentRemove
+		});
+
 		AFRAME.registerComponent('n-text', {
 			init: nativeComponentInit,
 			update: nativeComponentUpdate,
@@ -350,6 +359,38 @@
 			}
 		});
 
+		AFRAME.registerComponent('n-billboard', {
+			init:nativeComponentInit,
+			remove: nativeComponentRemove,
+		});
+
+		AFRAME.registerComponent('n-container', {
+			init: function(){
+				nativeComponentInit.call(this);
+
+				var el = this.el;
+				var component = this;
+
+				el.addEventListener('stateadded', function(event){
+					if(event.detail.state === 'container-full'){
+						el.emit('container-full');
+					}
+					if(event.detail.state === 'container-empty'){
+						el.emit('container-empty');
+					}
+				});
+
+				el.addEventListener('container-count-changed', function(event){
+					component.count = event.detail.count;
+				});
+			},
+			remove: nativeComponentRemove,
+			update: nativeComponentUpdate,
+			schema: {
+				capacity: { default: 4, type: 'number' },
+			}
+		});
+
 		AFRAME.registerComponent('n-rigidbody', {
 			init: function() {
 				nativeComponentInit.call(this);
@@ -371,7 +412,7 @@
 				//TODO: This might need to turn into a asyncronous function if sending every frame is too hard
 				this.worldPosition = new THREE.Vector3();
 				this.worldQuaternion = new THREE.Quaternion();
-				this.el.object3DMap.mesh.addEventListener('nativetransformupdate', function (event) {
+				this.el.object3DMap.mesh.addEventListener('native-transform-update', function (event) {
 
 					this.worldPosition.x = event.worldPosition.x;
 					this.worldPosition.y = event.worldPosition.y;
@@ -403,6 +444,65 @@
 			schema: {
 				url: { type: 'string' },
 				controls: { default: 'above', type: 'string' },
+			}
+		});
+
+		AFRAME.registerComponent('n-sound', {
+			init: function () {
+				nativeComponentInit.call(this);
+				var src = this.data.src;
+				if (src && !src.startsWith('http')) {
+					if (src.startsWith('/')) {
+						this.data.src = location.origin + src;
+					}
+					else {
+						var currPath = location.pathname;
+						if (!currPath.endsWith('/')) {
+							currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+						}
+						this.data.src = location.origin + currPath + src;
+					}
+				}
+			},
+			pauseSound: function () {
+				callComponent.call(this, 'pause');
+				this.el.emit('sound-paused');
+			},
+			playSound: function () {
+				callComponent.call(this, 'play');
+				this.el.emit('sound-played');
+			},
+			seek: function (time) {
+				callComponent.call(this, 'seek', {time: time});
+			},
+			remove: function () {
+				nativeComponentRemove.call(this);
+				if (this.playHandler) {
+				  this.el.removeEventListener(oldData.on, this.playHandler);
+				}
+			},
+			update: function (oldData) {
+				nativeComponentUpdate.call(this, oldData);
+				if (this.playHandler) {
+				  this.el.removeEventListener(oldData.on, this.playHandler);
+				}
+				if (this.data.on) {
+				  this.playHandler = this.playSound.bind(this);
+				  this.el.addEventListener(this.data.on, this.playHandler);
+				}
+			},
+			schema: {
+				on: { type: 'string' },
+				res: { type: 'string' },
+				src: { type: 'string' },
+				loop: { type: 'boolean' },
+				volume: { type: 'number', default: 1 },
+				autoplay: { type: 'boolean' },
+				oneshot: { type: 'boolean' },
+				spatialBlend: { type: 'float', default: 1 },
+				pitch: { type: 'float', default: 1 },
+				minDistance: { type: 'float', default: 1 },
+				maxDistance: { type: 'float', default: 12 },
 			}
 		});
 
@@ -601,6 +701,14 @@
 			emit('collisionexit', event);
 		});
 
+		scene.addEventListener('triggerenter', function (event) {
+			emit('triggerenter', event);
+		});
+
+		scene.addEventListener('triggerexit', function (event) {
+			emit('triggerexit', event);
+		});
+
 	  }
 
 	});
@@ -693,7 +801,7 @@
 					}, 0);
 				});
 
-				// add our client ID to the list of connected clients, 
+				// add our client ID to the list of connected clients,
 				// but have it be automatically removed by firebase if we disconnect for any reason
 				this.clientsRef.push(this.clientId).onDisconnect().remove();
 
@@ -732,7 +840,7 @@
 			var isMine = false;
 
 			var component = this;
-			
+
 			component.isConnected = false;
 
 			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
@@ -790,7 +898,7 @@
 
 			function setupReceive() {
 
-				//if nobody has owned the object yet, we will. 
+				//if nobody has owned the object yet, we will.
 				ownerRef.transaction(function (owner) {
 					if (owner) return undefined;
 
@@ -1014,7 +1122,7 @@
 				colorRef.on('value', function (snapshot) {
 					if (sync.isMine && !firstValue) return;
 					var color = snapshot.val();
-					
+
 					refChangedLocked = true;
 					component.el.setAttribute('material', 'color', color);
 					refChangedLocked = false;
@@ -1024,6 +1132,80 @@
 			}
 		}
 	});
+
+	__webpack_require__(1);
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	AFRAME.registerComponent('sync-n-sound',
+	{
+		dependencies: ['sync'],
+		schema: { },
+		init: function () {
+			var component = this;
+			var sync = component.el.components.sync;
+			var scene = document.querySelector('a-scene');
+			var syncSys = scene.systems['sync-system'];
+			if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
+
+			function start(){
+				component.soundStateRef = sync.dataRef.child('sound/state');
+				component.soundEventRef = sync.dataRef.child('sound/event');
+
+				function sendEvent(event) {
+					if (!sync.isMine) return;
+					var event = {
+						type: event.type,
+						sender: syncSys.clientId,
+						el: component.el.id,
+						time: Date.now()
+					};
+					component.soundEventRef.set(event);
+				}
+
+				component.el.addEventListener('sound-played', sendEvent);
+				component.el.addEventListener('sound-paused', sendEvent);
+
+				component.soundEventRef.on('value', function (snapshot) {
+					if (sync.isMine) return;
+					var event = snapshot.val();
+					if (!event) return;
+					if (event.el === component.el.id) {
+						var sound = component.el.components['n-sound'];
+						if (event.type === 'sound-played') {
+							sound.playSound();
+						}
+						else {
+							sound.pauseSound();
+						}
+					}
+				});
+
+				component.el.addEventListener('componentchanged', function (event) {
+					if (!sync.isMine) return;
+					var name = event.detail.name;
+					if (name !== 'n-sound') return;
+					component.soundStateRef.set(event.detail.newData);
+				});
+
+				component.soundStateRef.on('value', function (snapshot) {
+					if (sync.isMine) return;
+					var state = snapshot.val();
+					if (!state) return;
+					component.el.setAttribute('n-sound', state);
+				});
+			}
+		},
+		remove: function () {
+			this.soundStateRef.off('value');
+			this.soundEventRef.off('value');
+		}
+	});
+
+
 
 /***/ }
 /******/ ]);
