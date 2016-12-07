@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>Native Components</title>
-	<!--<script src="../build.js"></script>-->
 	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
 	<script src="http://sdk.altvr.com/libs/altspace.js/0.24.2/altspace.min.js"></script>
@@ -57,7 +56,7 @@
 	</script>
 </head>
 <body>
-<ol id='arch-list' style='display: none'>
+<ol id='obj-list' style='display: none'>
 	<li id="architecture/ceiling-2w-2l" />
 	<li id="architecture/ceiling-2w-4l" />
 	<li id="architecture/ceiling-4w-2l" />
@@ -117,8 +116,6 @@
 	<li id="architecture/wall-window-gap-end-l-4w-4h" />
 	<li id="architecture/wall-window-gap-end-r-2w-4h" />
 	<li id="architecture/wall-window-gap-end-r-4w-4h" />
-</ol>
-<ol id='effects-list' style='display: none'>
 	<li id="effects/explosion" />
 	<li id="effects/fire" />
 	<li id="effects/fire-trail" />
@@ -157,18 +154,46 @@
 
 	<!-- preview room -->
 	<a-entity id='library' position='6 0 7'>
+		<a-entity position='0 0.2 -2' n-text='text: Library of objects!'></a-entity>
+
 		<a-sphere id='originMarker' position='0 0 0' radius=0.05></a-sphere>
 		<a-entity id="preview" position='0 0 0' n-object="architecture/ceiling-2w-2l"></a-entity>
 		<a-entity id='previewText' position='0 2 4.5' n-text='text: architecture/ceiling-2w-2l; width: 15; fontSize: 5;'></a-entity>
 
 		<a-box id='next' position='-4 1 0' color='green'
-			cycle-preview='view: #preview; label: #previewText; library: #arch-list; direction: forward;'
+			cycle-preview='view: #preview; label: #previewText; library: #obj-list; direction: forward;'
 			n-text='text: Next; height: 3; verticalAlign: top;'>
 		</a-box>
 		<a-box id='back' position='4 1 0' color='red'
-			cycle-preview='view: #preview; label: #previewText; library: #arch-list; direction: backward;'
+			cycle-preview='view: #preview; label: #previewText; library: #obj-list; direction: backward;'
 			n-text='text: Back; height: 3; verticalAlign: top;'>
 		</a-box>
+
+	</a-entity>
+
+	<!-- colliders -->
+	<a-entity position='-5 0 7'>
+		<a-entity position='0 0.2 -2' n-text='text: Physical colliders!'></a-entity>
+
+		<a-box width=0.1 height=2.6 depth=4 position='-2 2 2' color='#4444ff'
+			n-box-collider='size: 0.1 2.6 4; center: 0 0 0'></a-box>
+		<a-box width=0.1 height=2.6 depth=4 position='2 2 2' color='#4444ff'
+			n-box-collider='size: 0.1 2.6 4; center: 0 0 0'></a-box>
+		<a-box depth=0.1 height=2.6 width=4 position='0 2 4' color='#4444ff'
+			n-box-collider='size: 4 2.6 0.1; center: 0 0 0'></a-box>
+		<a-box depth=0.1 height=2.6 width=1 position='1.5 2 0' color='#4444ff'
+			n-box-collider='size: 1 2.6 0.1; center: 0 0 0'></a-box>
+		<a-box depth=0.1 height=2.6 width=1 position='-1.5 2 0' color='#4444ff'
+			n-box-collider='size: 1 2.6 0.1; center: 0 0 0'></a-box>
+
+		<a-box depth=4 width=4 height=0.1 position='0 0.7 2' color='#a2948f'
+			n-box-collider='size: 4 0.1 4; center: 0 0 0'></a-box>
+		<a-box depth=1.4 width=2 height=0.1 position='0 0.35 -0.606' rotation='-30 0 0' color='#a2948f'
+			altspace-cursor-collider='enabled: false'
+			n-box-collider='size: 2 0.1 1.4; center: 0 0 0'></a-box>
+
+		<a-cylinder height=1 radius=0.25 position='0 1.2 2' color='#444444'
+			n-capsule-collider='height: 1; radius: 0.25; center: 0 0 0'></a-cylinder>
 	</a-entity>
 
 	<!-- architecture -->
