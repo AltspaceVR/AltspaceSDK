@@ -2,8 +2,8 @@ altspace = window.altspace || {};
 altspace.utilities = altspace.utilities || {};
 altspace.utilities.shims = altspace.utilities.shims || {};
 /**
- * Detects mouse move/up/down events, raycasts to find intersected objects, 
- * then dispatches cursor move/up/down/enter/leave events that mimics 
+ * Detects mouse move/up/down events, raycasts to find intersected objects,
+ * then dispatches cursor move/up/down/enter/leave events that mimics
  * Altspace events.
  * @module altspace/utilities/shims/cursor
  */
@@ -19,13 +19,13 @@ altspace.utilities.shims.cursor = (function () {
 	var raycaster = new THREE.Raycaster();
 
 	/**
-	 * Initializes the cursor module 
+	 * Initializes the cursor module
 	 * @static
 	 * @method init
 	 * @param {THREE.Scene} scene
 	 * @param {THREE.Camera} camera - Camera used for raycasting.
 	 * @param {Object} [options] - An options object
-	 * @param {THREE.WebGLRenderer} [options.renderer] - If supplied, applies cursor movement to render target 
+	 * @param {THREE.WebGLRenderer} [options.renderer] - If supplied, applies cursor movement to render target
 	 *	instead of entire client
 	 * @memberof module:altspace/utilities/shims/cursor
 	 */
@@ -111,8 +111,14 @@ altspace.utilities.shims.cursor = (function () {
 		raycaster.setFromCamera(mouse, camera);
 
 		var intersections = raycaster.intersectObjects(scene.children, true);
-		return intersections.length > 0 ? intersections[0] : null;
 
+		// return the first object with an enabled collider
+		return intersections.find(function(e){
+			return !e.object.userData
+				|| !e.object.userData.altspace
+				|| !e.object.userData.altspace.collider
+				|| e.object.userData.altspace.collider.enabled !== false;
+		}) || null;
 	}
 
 	return {
@@ -120,4 +126,3 @@ altspace.utilities.shims.cursor = (function () {
 	};
 
 }());
-
