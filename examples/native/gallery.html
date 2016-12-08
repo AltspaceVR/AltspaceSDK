@@ -154,7 +154,7 @@
 
 	<!-- preview room -->
 	<a-entity id='library' position='6 0 7'>
-		<a-entity position='0 0.2 -2' n-text='text: Library of objects!'></a-entity>
+		<a-entity position='0 3.2 -2' n-text='text: Library of objects!'></a-entity>
 
 		<a-sphere id='originMarker' position='0 0 0' radius=0.05></a-sphere>
 		<a-entity id="preview" position='0 0 0' n-object="architecture/ceiling-2w-2l"></a-entity>
@@ -172,32 +172,76 @@
 	</a-entity>
 
 	<!-- colliders -->
-	<a-entity position='-5 0 7'>
-		<a-entity position='0 0.2 -2' n-text='text: Physical colliders!'></a-entity>
+	<a-entity position='-4.75 0 7'>
+		<a-entity position='0 3.2 -2' n-text='text: Casa de Collider!'></a-entity>
 
-		<a-box width=0.1 height=2.6 depth=4 position='-2 2 2' color='#4444ff'
+		<a-box width=0.1 height=2.6 depth=4 position='-2 2 2' color='#793838'
 			n-box-collider='size: 0.1 2.6 4; center: 0 0 0'></a-box>
-		<a-box width=0.1 height=2.6 depth=4 position='2 2 2' color='#4444ff'
+		<a-box width=0.1 height=2.6 depth=4 position='2 2 2' color='#793838'
 			n-box-collider='size: 0.1 2.6 4; center: 0 0 0'></a-box>
-		<a-box depth=0.1 height=2.6 width=4 position='0 2 4' color='#4444ff'
+		<a-box depth=0.1 height=2.6 width=4 position='0 2 4' color='#793838'
 			n-box-collider='size: 4 2.6 0.1; center: 0 0 0'></a-box>
-		<a-box depth=0.1 height=2.6 width=1 position='1.5 2 0' color='#4444ff'
+		<a-box depth=0.1 height=2.6 width=1 position='1.5 2 0' color='#793838'
 			n-box-collider='size: 1 2.6 0.1; center: 0 0 0'></a-box>
-		<a-box depth=0.1 height=2.6 width=1 position='-1.5 2 0' color='#4444ff'
+		<a-box depth=0.1 height=2.6 width=1 position='-1.5 2 0' color='#793838'
 			n-box-collider='size: 1 2.6 0.1; center: 0 0 0'></a-box>
 
 		<a-box depth=4 width=4 height=0.1 position='0 0.7 2' color='#a2948f'
 			n-box-collider='size: 4 0.1 4; center: 0 0 0'></a-box>
-		<a-box depth=1.4 width=2 height=0.1 position='0 0.35 -0.606' rotation='-30 0 0' color='#a2948f'
+		<a-box depth=1.4 width=2 height=0.1 position='0 0.35 -0.606'
+			rotation='-30 0 0' color='#a2948f'
 			altspace-cursor-collider='enabled: false'
-			n-box-collider='size: 2 0.1 1.4; center: 0 0 0'></a-box>
+			n-box-collider='size: 2 0.1 1.4; center: 0 0 0'>
+		</a-box>
+
+		<a-cylinder height=4.1 radius=2.05 theta-start=90 theta-length=180
+			position='0 3.3 2' rotation='90 0 0' color='#444444'>
+		</a-cylinder>
+		<a-cylinder height=3.9 radius=1.95 theta-start=90 theta-length=180
+			position='0 3.3 2' rotation='90 0 0' color='#ab9455' side=back>
+		</a-cylinder>
 
 		<a-cylinder height=1 radius=0.25 position='0 1.2 2' color='#444444'
-			n-capsule-collider='height: 1; radius: 0.25; center: 0 0 0'></a-cylinder>
+			n-capsule-collider='height: 1; radius: 0.25; center: 0 0 0'>
+		</a-cylinder>
+		<a-sphere radius=0.2 position='0 1.9 2' color='white'></a-sphere>
+	</a-entity>
+
+	<!-- interactables -->
+	<a-entity position='-15 0 7'>
+		<a-entity position='0 3.2 -2' n-text='text: Interactables!'></a-entity>
+
+		<!-- goodies table -->
+		<a-box width=2 height=1 depth=0.5 position='2 0.25 0'
+			n-box-collider='size: 2 1 0.5; center: 0 0 0'>
+			<a-entity position='-0.5 0.75 0' n-spawner='res: Interactables/Soccerball'></a-entity>
+			<a-entity position='0 0.75 0' n-spawner='res: Interactables/Basketball'></a-entity>
+			<a-entity position='0.5 0.75 0' n-spawner='res: Interactables/Box'></a-entity>
+		</a-box>
+
+		<a-entity position='2 3 2.5' n-object='Objects/Basketball Net'>
+			<a-box width=2 height=1.5 depth=0.1 n-box-collider='size: 2 1.5 0.1; center: 0 0 0'
+				position='0 0.7 0.5' color=grey>
+			</a-box>
+		</a-entity>
+
+		<!-- bowling pins -->
+		<a-entity position='-2 -0.25 2'>
+			<a-entity position='   0 0     0' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position='-0.2 0 0.346' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position=' 0.2 0 0.346' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position='-0.4 0 0.692' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position= '0   0 0.692' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position= '0.4 0 0.692' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position='-0.6 0 1.038' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position='-0.2 0 1.038' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position=' 0.2 0 1.038' n-object='Interactables/Bowling Pin'></a-entity>
+			<a-entity position= '0.6 0 1.038' n-object='Interactables/Bowling Pin'></a-entity>
+		</a-entity>
 	</a-entity>
 
 	<!-- architecture -->
-	<a-entity position='0 -.25 0'>
+	<a-entity position='0 -0.25 0'>
 
 		<!-- floor -->
 		<a-entity position='12 0 -4'
@@ -217,6 +261,8 @@
 			template='src:  #array; data: array-data; ' array-data='depth: 32; model: architecture/wall-base-4w'></a-entity>
 		<a-entity position='12 0 -4' rotation='0 270 0'
 			template='src:  #array; data: array-data; ' array-data='depth: 32; model: architecture/wall-bulkhead-4w'></a-entity>
+		<a-entity position='-20.5 0 -4' rotation='0 0 0'
+			template='src:  #array; data: array-data; ' array-data='depth: 16; model: architecture/wall-4w-4h'></a-entity>
 
 		<!-- walls level 2 -->
 		<a-entity position='12 4 12' rotation='270 0 0'
@@ -225,11 +271,17 @@
 			template='src: #array; data: array-data;' array-data='height: 32; model: architecture/wall-2w-4h'></a-entity>
 		<a-entity position='-20 4 12' rotation='270 270 0'
 			template='src: #array; data: array-data;' array-data='height: 32; model: architecture/wall-2w-4h'></a-entity>
+		<a-entity position='-20 4 -4' rotation='270 180 0'
+			template='src: #array; data: array-data;' array-data='height: 16; model: architecture/wall-2w-4h'></a-entity>
 
 		<!-- dividers -->
 		<a-entity position='0 0 12' rotation='0 180 0'
 			template='src:  #array; data: array-data; ' array-data='depth: 8; model: architecture/wall-window-4w-4h'></a-entity>
 		<a-entity position='-0.5 6 4' rotation='90 0 0'
+			template='src: #array; data: array-data;' array-data='height: 8; model: architecture/wall-2w-4h'></a-entity>
+		<a-entity position='-9 0 12' rotation='0 180 0'
+			template='src:  #array; data: array-data; ' array-data='depth: 8; model: architecture/wall-window-4w-4h'></a-entity>
+		<a-entity position='-9.5 6 4' rotation='90 0 0'
 			template='src: #array; data: array-data;' array-data='height: 8; model: architecture/wall-2w-4h'></a-entity>
 
 
