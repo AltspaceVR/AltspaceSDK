@@ -1,5 +1,5 @@
 /**
- * The wire component allows you to trigger an event on another eneity when an event occurs on an entity
+ * The wire component allows you to trigger an event on another entity when an event occurs on an entity
  * @mixin wire
  * @property {string} on Name of an event to listen to
  * @property {string} gained Name of a state to watch for
