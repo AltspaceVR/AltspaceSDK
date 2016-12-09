@@ -285,7 +285,6 @@ AFRAME.registerComponent('editor', {
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
 			center: { type: 'vec3' },
-			radius: { default: '0', type: 'number' },
 			size: { type: 'vec3' }
 		}
 	});
