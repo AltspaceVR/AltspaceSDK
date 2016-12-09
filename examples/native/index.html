@@ -10,7 +10,7 @@
 <body>
 <a-scene debug altspace>
 		
-	<a-sphere color="blue" scale="2 2 2" opacity="0.4" id="trigger-0" n-sphere-collider="isTrigger:true" n-container="capacity:3" position="0 1 -20"></a-sphere>
+	<a-sphere color="blue" scale="3 3 3" opacity="0.4" id="trigger-0" n-sphere-collider="isTrigger:true" n-container="capacity:3" position="0 1 -20"></a-sphere>
 	<script>
 		document.addEventListener('DOMContentLoaded', function(){
 			var trigger = document.querySelector('#trigger-0');
@@ -453,6 +453,16 @@ Has idque soluta id, mei ut minim fabellas constituam. Eu deleniti scaevola assu
 		<a-entity position="4 3 -10" n-object="effects/smoke"></a-entity>
 		<a-entity position="5 3 -10" n-object="effects/sparkler"></a-entity>
 		<a-entity position="6 3 -10" n-object="effects/steam"></a-entity>
+
+		<a-entity position="0 3 -8" n-object="objects/basketball-net"></a-entity>
+		<a-entity position="1 3 -8" n-object="objects/target-archery"></a-entity>
+		<a-entity position="2 3 -8" n-object="objects/gem"></a-entity>
+		<a-entity position="3 3 -8" n-spawner="res:interactables/box"></a-entity>
+		<a-entity position="4 3 -8" n-spawner="res:interactables/basketball"></a-entity>
+		<a-entity position="5 3 -8" n-spawner="res:interactables/soccerball"></a-entity>
+		<a-entity position="6 3 -8" n-spawner="res:interactables/bowling-pin"></a-entity>
+		<a-entity position="7 3 -8" n-spawner="res:interactables/gem"></a-entity>
+
 	</a-entity>-->
 </a-scene>
 </body>

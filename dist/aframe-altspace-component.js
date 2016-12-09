@@ -228,6 +228,7 @@
 				MeshId: mesh.id,
 				Type: this.name
 			}, { argsType: 'JSTypeAddNativeComponent' });
+			this.update(this.data);//to pass defaults
 		}
 		function nativeComponentRemove() {
 			var mesh = this.el.getObject3D('mesh');
@@ -313,6 +314,9 @@
 			}
 		});
 
+		//object: collides against: objects / enviroment / cursor
+		//environment: can be teleported onto, and collides against: objects / environment / cursor
+		//hologram: collides against: cursor
 		AFRAME.registerComponent('n-sphere-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
@@ -320,7 +324,8 @@
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
 				center: { type: 'vec3' },
-				radius: { default: '0', type: 'number' }
+				radius: { default: '0', type: 'number' },
+				type: {default: 'object'}
 			}
 		});
 
@@ -331,8 +336,8 @@
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
 				center: { type: 'vec3' },
-				radius: { default: '0', type: 'number' },
-				size: { type: 'vec3' }
+				size: { type: 'vec3' },
+				type: {default: 'object'}
 			}
 		});
 
@@ -346,6 +351,7 @@
 				radius: { default: '0', type: 'number' },
 				height: { default: '0', type: 'number' },
 				direction: { default: 'y' },
+				type: {default: 'object'}
 			}
 		});
 
@@ -355,7 +361,8 @@
 			update: nativeComponentUpdate,
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
-				convex: { default: true, type: 'boolean' }
+				convex: { default: true, type: 'boolean' },
+				type: {default: 'object'}
 			}
 		});
 
