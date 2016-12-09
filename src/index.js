@@ -182,6 +182,7 @@ AFRAME.registerComponent('editor', {
 			MeshId: mesh.id,
 			Type: this.name
 		}, { argsType: 'JSTypeAddNativeComponent' });
+		this.update(this.data);//to pass defaults
 	}
 	function nativeComponentRemove() {
 		var mesh = this.el.getObject3D('mesh');
@@ -267,6 +268,9 @@ AFRAME.registerComponent('editor', {
 		}
 	});
 
+	//object: collides against: objects / enviroment / cursor
+	//environment: can be teleported onto, and collides against: objects / environment / cursor
+	//hologram: collides against: cursor / holograms
 	AFRAME.registerComponent('n-sphere-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -274,7 +278,8 @@ AFRAME.registerComponent('editor', {
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
 			center: { type: 'vec3' },
-			radius: { default: '0', type: 'number' }
+			radius: { default: '0', type: 'number' },
+			type: {default: 'object'}
 		}
 	});
 
@@ -285,7 +290,8 @@ AFRAME.registerComponent('editor', {
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
 			center: { type: 'vec3' },
-			size: { type: 'vec3' }
+			size: { type: 'vec3' },
+			type: {default: 'object'}
 		}
 	});
 
@@ -299,6 +305,7 @@ AFRAME.registerComponent('editor', {
 			radius: { default: '0', type: 'number' },
 			height: { default: '0', type: 'number' },
 			direction: { default: 'y' },
+			type: {default: 'object'}
 		}
 	});
 
@@ -308,7 +315,8 @@ AFRAME.registerComponent('editor', {
 		update: nativeComponentUpdate,
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
-			convex: { default: true, type: 'boolean' }
+			convex: { default: true, type: 'boolean' },
+			type: {default: 'object'}
 		}
 	});
 
