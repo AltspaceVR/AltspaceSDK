@@ -224,40 +224,19 @@
 
 		function nativeComponentInit() {
 			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-			altspace._internal.callClientFunction('AddNativeComponent', {
-				MeshId: mesh.id,
-				Type: this.name
-			}, { argsType: 'JSTypeAddNativeComponent' });
+			altspace.addNativeComponent(mesh, this.name);
 			this.update(this.data);//to pass defaults
 		}
 		function nativeComponentRemove() {
 			var mesh = this.el.getObject3D('mesh');
-			altspace._internal.callClientFunction('RemoveNativeComponent', {
-				MeshId: mesh.id,
-				Type: this.name
-			}, { argsType: 'JSTypeRemoveNativeComponent' });
+			altspace.removeNativeComponent(mesh, this.name);
 		}
 		function nativeComponentUpdate(oldData) {
-			var attributes;
-			if(this.data instanceof Object){
-				attributes = JSON.stringify(this.data);
-			} else {
-				attributes = JSON.stringify({singularProperty:this.data});
-			}
-			altspace._internal.callClientFunction('UpdateNativeComponent', {
-				MeshId: this.el.object3DMap.mesh.id,
-				ComponentName: this.name,
-				Attributes: attributes,
-			}, { argsType: 'JSTypeUpdateNativeComponent' });
+			altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
 		}
 
-		function callComponent(functionName, args) {
-			altspace._internal.callClientFunction('CallNativeComponent', {
-				MeshId: this.el.object3DMap.mesh.id,
-				ComponentName: this.name,
-				FunctionName: functionName,
-				Arguments: JSON.stringify(args)
-			}, { argsType: 'JSTypeCallNativeComponent' });
+		function callComponent(functionName, functionArguments) {
+			altspace.callNativeComponent(this.el.object3DMap.mesh, this.name, functionName, functionArguments)
 		}
 
 		function parseBool(boolString) {
@@ -316,7 +295,7 @@
 
 		//object: collides against: objects / enviroment / cursor
 		//environment: can be teleported onto, and collides against: objects / environment / cursor
-		//hologram: collides against: cursor
+		//hologram: collides against: cursor / holograms
 		AFRAME.registerComponent('n-sphere-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
