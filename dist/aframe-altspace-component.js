@@ -217,13 +217,16 @@
 		placeholderMaterial.visible = false;
 		var PlaceholderMesh = function () {
 			THREE.Mesh.call( this, placeholderGeometry, placeholderMaterial );
-			this.userData.altspace = {collider: {enabled: false}};
 		};
 		PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
 		PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
 
 		function nativeComponentInit() {
 			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+			mesh.userData.altspace = mesh.userData.altspace || {};
+			mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
+			mesh.userData.altspace.collider.enabled = false;
+
 			altspace.addNativeComponent(mesh, this.name);
 			this.update(this.data);//to pass defaults
 		}
