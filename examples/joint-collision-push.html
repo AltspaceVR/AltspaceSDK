@@ -11,6 +11,7 @@
 
 var sim = altspace.utilities.Simulation();
 var pushOffset = 2;
+var cubePos = 80;
 var button;
 var cubePositionRef;
 var enclosure;
@@ -49,7 +50,7 @@ function createCube() {
 	// Reset position when button pressed
 	button.addEventListener('cursordown', function(e) {
 		console.log('cursordown');
-		cubePositionRef.set(new THREE.Vector3(0, -10, 0));
+		cubePositionRef.set(new THREE.Vector3(0, cubePos, 0));
 	});
 
 	//cube
@@ -59,6 +60,9 @@ function createCube() {
 	cube.addBehaviors(
 		altspace.utilities.behaviors.Object3DSync(),
 		altspace.utilities.behaviors.JointCollisionEvents({
+			joints: altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS.concat(
+				[ ['Head', 'Center', 0] ]
+			),
 			jointCubeSize: 15,
 		}),
 		UpdatePosition()
@@ -97,10 +101,10 @@ function UpdatePosition() {//define a custom behavior
 		sync = object3d.getBehaviorByType('Object3DSync');
 		cubePositionRef = sync.dataRef.child('cubePosition');
 
-		// If 'cubePosition' is null, set it to 0, -10, 0
+		// If 'cubePosition' is null, set the default.
 		cubePositionRef.on('value', function (snapshot) {
 			if(!snapshot.val()) {
-				cubePositionRef.set(new THREE.Vector3(0, -10, 0));
+				cubePositionRef.set(new THREE.Vector3(0, cubePos, 0));
 			}
 			else {
 				// Set position
