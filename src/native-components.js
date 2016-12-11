@@ -32,6 +32,16 @@
 		altspace.callNativeComponent(this.el.object3DMap.mesh, this.name, functionName, functionArguments)
 	}
 
+	/**
+    * Spawn a Unity native object, and map its position/rotation/scale to this
+    * entity. The nature of these objects vary.
+    * @mixin n-object
+    * @prop {string} query - The identifier for the resource you want. This
+    * string can be either the identifier itself, or can be fuzzy-matched to
+    * one of the available identifiers. If fuzzy matching, provide space-separated
+    * keywords. If no match can be found, no entity is spawned.
+    * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
+    */
 	AFRAME.registerComponent('n-object', {
 		schema: {
 			type: 'string'
@@ -41,6 +51,16 @@
 		remove: nativeComponentRemove
 	});
 
+	/**
+    * Create an object that spawns additional non-spawning copies of itself
+    * when it's interacted with. Can be considered a "dispenser".
+    * @mixin n-spawner
+    * @prop {string} res - The identifier for the resource you want. This
+    * string can be either the identifier itself, or can be fuzzy-matched to
+    * one of the available identifiers. If fuzzy matching, provide space-separated
+    * keywords. If no match can be found, no entity is spawned.
+    * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
+    */
 	AFRAME.registerComponent('n-spawner', {
 		schema: {
 			res: {type: 'string'}
@@ -50,6 +70,21 @@
 		remove: nativeComponentRemove
 	});
 
+	/**
+    * Create dynamic wrapped text on the entity. This text will tend to be clearer
+    * than texture-based text at most distances.
+    * @mixin n-text
+    * @prop {string} text - The text to be drawn.
+    * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
+    * @prop {number} width=10 - The width of the text area in meters. If the
+    * text is wider than this value, the overflow will be wrapped to the next line.
+    * @prop {number} height=1 - The height of the text area in meters. If the
+    * text is taller than this value, the overflow will be cut off.
+    * @prop {string} horizontalAlign=middle - The horizontal anchor point for
+    * the text. Can be `left`, `middle`, or `right`.
+    * @prop {string} verticalAlign=middle - The vertical anchor point for the
+    * text. Can be `top`, `middle`, or `bottom`.
+    */
 	AFRAME.registerComponent('n-text', {
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
@@ -74,6 +109,14 @@
 	//object: collides against: objects / enviroment / cursor
 	//environment: can be teleported onto, and collides against: objects / environment / cursor
 	//hologram: collides against: cursor / holograms
+
+    /**
+    * Create a spherical blocking volume collider on this entity.
+    * @mixin n-sphere-collider
+    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+    * @prop {number} radius=1 - The size of the collider in meters.
+    * @prop {string} type=object - The type of collider: object | environment | cursor
+    */
 	AFRAME.registerComponent('n-sphere-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -86,6 +129,14 @@
 		}
 	});
 
+
+	/**
+    * Create a box-shaped blocking volume collider on this entity.
+    * @mixin n-box-collider
+    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+    * @prop {vec3} size=1,1,1 - The dimensions of the collider.
+    * @prop {string} type=object - The type of collider: object | environment | cursor
+    */
 	AFRAME.registerComponent('n-box-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -98,6 +149,16 @@
 		}
 	});
 
+	/**
+    * Create a capsule-shaped blocking volume collider on this entity. Capsules
+    * are cylinders whose caps are hemispheres.
+    * @mixin n-capsule-collider
+    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+    * @prop {number} radius=1 - The radius of the capsule in meters.
+    * @prop {number} height=1 - The height of the shaft of the capsule in meters.
+    * @prop {string} direction=y - The axis with which the capsule is aligned.
+    * One of `x`, `y`, or `z`.
+    */
 	AFRAME.registerComponent('n-capsule-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -112,6 +173,13 @@
 		}
 	});
 
+	/**
+    * Enable collision for the entire attached mesh without a separate proxy
+    * geometry. This is expensive to evaluate, so should only be used on
+    * low-poly meshes.
+    * @mixin n-mesh-collider
+    * @example <a-box n-mesh-collider></a-box>
+    */
 	AFRAME.registerComponent('n-mesh-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -123,11 +191,26 @@
 		}
 	});
 
+	/**
+    * Make the object always face the viewer. An object is always considered to
+    * be facing its negative z axis.
+    * @mixin n-billboard
+    * @example <a-plane n-billboard></a-plane>
+    */
 	AFRAME.registerComponent('n-billboard', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
 	});
 
+    /**
+    * A collider that, instead of blocking objects from passing through, tallies
+    * the enter and exit events, and keeps track of how many objects are within
+    * its bounds. Can fire three special events: `container-full`, `container-empty`,
+    * and `container-count-changed`.
+    * @mixin n-container
+    * @prop {number} capacity=4 - The value at which the container will fire the
+    * `container-full` event.
+    */
 	AFRAME.registerComponent('n-container', {
 		init: function(){
 			nativeComponentInit.call(this);
@@ -155,6 +238,11 @@
 		}
 	});
 
+    /**
+    * Play the sound given by the `src` property from the location of the entity.
+    * @mixin n-sound
+    *
+    */
 	AFRAME.registerComponent('n-sound', {
 		init: function () {
 			nativeComponentInit.call(this);

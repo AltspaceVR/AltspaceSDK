@@ -9,7 +9,8 @@
     "dist": "webpack src/index.js dist/aframe-altspace-component.js && webpack -p src/index.js dist/aframe-altspace-component.min.js",
     "postpublish": "npm run dist",
     "preghpages": "npm run build && rm -rf gh-pages && cp -r examples gh-pages",
-    "ghpages": "npm run preghpages && ghpages -p gh-pages"
+    "ghpages": "npm run preghpages && ghpages -p gh-pages",
+    "doc": "jsdoc -c .jsdoc.json src"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,8 @@
     "browserify-css": "0.9.2",
     "budo": "9.2.0",
     "ghpages": "0.0.3",
+    "jsdoc": "^3.4.3",
+    "minami": "github:altspacevr/minami",
     "webpack": "1.13.2"
   }
 }

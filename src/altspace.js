@@ -1,21 +1,35 @@
-/**
- * The altspace component makes A-Frame apps compatible with AltspaceVR.
- */
+/*
+* The altspace component makes A-Frame apps compatible with AltspaceVR.
+*
+* **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
+* @mixin altspace
+* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
+* This is the default behavior for three.js apps, but not for A-Frame apps.
+* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
+* or `top` of the Altspace enclosure.
+* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
+* enclosure is flat.
+*
+* @example
+* <head>
+*   <title>My A-Frame Scene</title>
+*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js"></script>
+* </head>
+* <body>
+*   <a-scene altspace>
+*     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
+*   </a-scene>
+* </body>
+*/
 AFRAME.registerComponent('altspace', {
-
-  /**
-   * usePixelScale will allow you to use A-Frame units as CSS pixels.
-   * This is the default behavior for three.js apps, but not for A-Frame apps.
-   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
-   * enclosuresOnly prevents the scene from being created if enclosure is flat.
-   */
   schema: {
 	usePixelScale: { type: 'boolean', default: 'false'},
 	verticalAlign: { type: 'string',  default: 'middle'},
 	enclosuresOnly:{ type: 'boolean', default: 'true'}
   },
 
-  /**
+  /*
    * Called once when component is attached. Generally for initial setup.
    */
   init: function () {
@@ -35,31 +49,31 @@ AFRAME.registerComponent('altspace', {
 
   },
 
-  /**
+  /*
    * Called when component is attached and when component data changes.
    * Generally modifies the entity based on the data.
    */
   update: function (oldData) {
   },
 
-  /**
+  /*
    * Called when a component is removed (e.g., via removeAttribute).
    * Generally undoes all modifications to the entity.
    */
   remove: function () { },
 
-  /**
+  /*
    * Called on each scene tick.
    */
   // tick: function (t) { },
 
-  /**
+  /*
    * Called when entity pauses.
    * Use to stop or remove any dynamic or background behavior such as events.
    */
   pause: function () { },
 
-  /**
+  /*
    * Called when entity resumes.
    * Use to continue or add any dynamic or background behavior such as events.
    */
@@ -68,7 +82,7 @@ AFRAME.registerComponent('altspace', {
 
   /********** Helper Methods **********/
 
-  /**
+  /*
    * Swap in Altspace renderer when running in AltspaceVR.
    */
   initRenderer: function () {
@@ -118,7 +132,7 @@ AFRAME.registerComponent('altspace', {
 
   },
 
-  /**
+  /*
    * Emulate A-Frame cursor events when running in altspaceVR.
    */
   initCursorEvents: function() {
