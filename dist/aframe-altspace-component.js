@@ -63,24 +63,38 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	/**
-	 * The altspace component makes A-Frame apps compatible with AltspaceVR.
-	 */
+	/*
+	* The altspace component makes A-Frame apps compatible with AltspaceVR.
+	*
+	* **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
+	* @mixin altspace
+	* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
+	* This is the default behavior for three.js apps, but not for A-Frame apps.
+	* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
+	* or `top` of the Altspace enclosure.
+	* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
+	* enclosure is flat.
+	*
+	* @example
+	* <head>
+	*   <title>My A-Frame Scene</title>
+	*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js"></script>
+	* </head>
+	* <body>
+	*   <a-scene altspace>
+	*     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
+	*   </a-scene>
+	* </body>
+	*/
 	AFRAME.registerComponent('altspace', {
-
-	  /**
-	   * usePixelScale will allow you to use A-Frame units as CSS pixels.
-	   * This is the default behavior for three.js apps, but not for A-Frame apps.
-	   * verticalAlign puts the origin at the bottom, middle (default), or top of the Altspace enclosure.
-	   * enclosuresOnly prevents the scene from being created if enclosure is flat.
-	   */
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
 		enclosuresOnly:{ type: 'boolean', default: 'true'}
 	  },
 
-	  /**
+	  /*
 	   * Called once when component is attached. Generally for initial setup.
 	   */
 	  init: function () {
@@ -100,31 +114,31 @@
 
 	  },
 
-	  /**
+	  /*
 	   * Called when component is attached and when component data changes.
 	   * Generally modifies the entity based on the data.
 	   */
 	  update: function (oldData) {
 	  },
 
-	  /**
+	  /*
 	   * Called when a component is removed (e.g., via removeAttribute).
 	   * Generally undoes all modifications to the entity.
 	   */
 	  remove: function () { },
 
-	  /**
+	  /*
 	   * Called on each scene tick.
 	   */
 	  // tick: function (t) { },
 
-	  /**
+	  /*
 	   * Called when entity pauses.
 	   * Use to stop or remove any dynamic or background behavior such as events.
 	   */
 	  pause: function () { },
 
-	  /**
+	  /*
 	   * Called when entity resumes.
 	   * Use to continue or add any dynamic or background behavior such as events.
 	   */
@@ -133,7 +147,7 @@
 
 	  /********** Helper Methods **********/
 
-	  /**
+	  /*
 	   * Swap in Altspace renderer when running in AltspaceVR.
 	   */
 	  initRenderer: function () {
@@ -183,7 +197,7 @@
 
 	  },
 
-	  /**
+	  /*
 	   * Emulate A-Frame cursor events when running in altspaceVR.
 	   */
 	  initCursorEvents: function() {
@@ -345,6 +359,13 @@
 			altspace.callNativeComponent(this.el.object3DMap.mesh, this.name, functionName, functionArguments)
 		}
 
+		/**
+	    * Creates a native object on this
+	    * entity. The nature of these objects vary.
+	    * @mixin n-object
+	    * @prop {string} query - The identifier for the resource you want. 
+	    * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
+	    */
 		AFRAME.registerComponent('n-object', {
 			schema: {
 				type: 'string'
@@ -354,6 +375,13 @@
 			remove: nativeComponentRemove
 		});
 
+		/**
+	    * Create an object that spawns additional non-spawning copies of itself. These copies will be physically interactive and automatically syncronized between users.
+	    * Only some native resources can be spawned.
+	    * @mixin n-spawner
+	    * @prop {string} res - The identifier for the resource you want.
+	    * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
+	    */
 		AFRAME.registerComponent('n-spawner', {
 			schema: {
 				res: {type: 'string'}
@@ -363,6 +391,21 @@
 			remove: nativeComponentRemove
 		});
 
+		/**
+	    * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
+	    * This text will be clearer than texture-based text and more performant than geometry-based test. 
+	    * @mixin n-text
+	    * @prop {string} text - The text to be drawn.
+	    * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
+	    * @prop {number} width=10 - The width of the text area in meters. If the
+	    * text is wider than this value, the overflow will be wrapped to the next line.
+	    * @prop {number} height=1 - The height of the text area in meters. If the
+	    * text is taller than this value, the overflow will be cut off.
+	    * @prop {string} horizontalAlign=middle - The horizontal anchor point for
+	    * the text. Can be `left`, `middle`, or `right`.
+	    * @prop {string} verticalAlign=middle - The vertical anchor point for the
+	    * text. Can be `top`, `middle`, or `bottom`.
+	    */
 		AFRAME.registerComponent('n-text', {
 			init: nativeComponentInit,
 			update: nativeComponentUpdate,
@@ -387,6 +430,14 @@
 		//object: collides against: objects / enviroment / cursor
 		//environment: can be teleported onto, and collides against: objects / environment / cursor
 		//hologram: collides against: cursor / holograms
+
+	    /**
+	    * Create a spherical collider on this entity.
+	    * @mixin n-sphere-collider
+	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	    * @prop {number} radius=1 - The size of the collider in meters.
+	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
+	    */
 		AFRAME.registerComponent('n-sphere-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
@@ -399,6 +450,14 @@
 			}
 		});
 
+
+		/**
+	    * Create a box-shaped collider on this entity.
+	    * @mixin n-box-collider
+	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	    * @prop {vec3} size=1,1,1 - The dimensions of the collider.
+	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
+	    */
 		AFRAME.registerComponent('n-box-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
@@ -411,6 +470,17 @@
 			}
 		});
 
+		/**
+	    * Create a capsule-shaped collider on this entity. Capsules
+	    * are a union of a cylinder and two spheres on top and bottom.
+	    * @mixin n-capsule-collider
+	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	    * @prop {number} radius=1 - The radius of the capsule in meters.
+	    * @prop {number} height=1 - The height of the shaft of the capsule in meters.
+	    * @prop {string} direction=y - The axis with which the capsule is aligned.
+	    * One of `x`, `y`, or `z`.
+	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
+	    */
 		AFRAME.registerComponent('n-capsule-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
@@ -425,6 +495,13 @@
 			}
 		});
 
+		/**
+	    * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
+	    * low-poly meshes. 
+	    * @mixin n-mesh-collider
+	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
+	    * @example <a-box n-mesh-collider></a-box>
+	    */
 		AFRAME.registerComponent('n-mesh-collider', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
@@ -436,11 +513,24 @@
 			}
 		});
 
+		/**
+	    * Make the object always face the viewer. 
+	    * @mixin n-billboard
+	    * @example <a-plane n-billboard></a-plane>
+	    */
 		AFRAME.registerComponent('n-billboard', {
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
 		});
 
+	    /**
+	    * A container keeps a running tally of how many objects are within
+	    * its bounds, and adds and removes the states `container-full` and `container-empty` based on the current count of objects. Can fire three special events: `container-full`, `container-empty`,
+	    * and `container-count-changed`.
+	    * @mixin n-container
+	    * @prop {number} capacity=4 - The value at which the container will fire the
+	    * `container-full` event.
+	    */
 		AFRAME.registerComponent('n-container', {
 			init: function(){
 				nativeComponentInit.call(this);
@@ -468,6 +558,11 @@
 			}
 		});
 
+	    /**
+	    * Play the sound given by the `src` or `res` property from the location of the entity.
+	    * @mixin n-sound
+	    *
+	    */
 		AFRAME.registerComponent('n-sound', {
 			init: function () {
 				nativeComponentInit.call(this);
@@ -1006,6 +1101,17 @@
 /* 9 */
 /***/ function(module, exports) {
 
+	/**
+	 * The wire component allows you to trigger an event on another entity when an event occurs on an entity
+	 * @mixin wire
+	 * @property {string} on Name of an event to listen to
+	 * @property {string} gained Name of a state to watch for
+	 * @property {string} lost Name of a state to watch for
+	 * @property {string} emit Name of an event to trigger on the targets
+	 * @property {string} gain Name of a state to add on the target
+	 * @property {string} lose Name of a state to remove on the target
+	 * @property {selector} targets A selector to pick which objects to wire to
+	 **/
 	AFRAME.registerComponent('wire',
 	{
 		multiple: true,
