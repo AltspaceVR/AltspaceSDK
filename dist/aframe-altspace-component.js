@@ -446,7 +446,7 @@
 				isTrigger: { default: false, type: 'boolean' },
 				center: { type: 'vec3' },
 				radius: { default: '0', type: 'number' },
-				type: {default: 'object'}
+				type: {default: 'hologram'}
 			}
 		});
 
@@ -466,7 +466,7 @@
 				isTrigger: { default: false, type: 'boolean' },
 				center: { type: 'vec3' },
 				size: { type: 'vec3' },
-				type: {default: 'object'}
+				type: {default: 'hologram'}
 			}
 		});
 
@@ -491,7 +491,7 @@
 				radius: { default: '0', type: 'number' },
 				height: { default: '0', type: 'number' },
 				direction: { default: 'y' },
-				type: {default: 'object'}
+				type: {default: 'hologram'}
 			}
 		});
 
@@ -509,7 +509,7 @@
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
 				convex: { default: true, type: 'boolean' },
-				type: {default: 'object'}
+				type: {default: 'hologram'}
 			}
 		});
 
@@ -1101,17 +1101,6 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	/**
-	 * The wire component allows you to trigger an event on another entity when an event occurs on an entity
-	 * @mixin wire
-	 * @property {string} on Name of an event to listen to
-	 * @property {string} gained Name of a state to watch for
-	 * @property {string} lost Name of a state to watch for
-	 * @property {string} emit Name of an event to trigger on the targets
-	 * @property {string} gain Name of a state to add on the target
-	 * @property {string} lose Name of a state to remove on the target
-	 * @property {selector} targets A selector to pick which objects to wire to
-	 **/
 	AFRAME.registerComponent('wire',
 	{
 		multiple: true,

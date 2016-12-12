@@ -119,7 +119,7 @@
 			isTrigger: { default: false, type: 'boolean' },
 			center: { type: 'vec3' },
 			radius: { default: '0', type: 'number' },
-			type: {default: 'object'}
+			type: {default: 'hologram'}
 		}
 	});
 
@@ -139,7 +139,7 @@
 			isTrigger: { default: false, type: 'boolean' },
 			center: { type: 'vec3' },
 			size: { type: 'vec3' },
-			type: {default: 'object'}
+			type: {default: 'hologram'}
 		}
 	});
 
@@ -164,7 +164,7 @@
 			radius: { default: '0', type: 'number' },
 			height: { default: '0', type: 'number' },
 			direction: { default: 'y' },
-			type: {default: 'object'}
+			type: {default: 'hologram'}
 		}
 	});
 
@@ -182,7 +182,7 @@
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
 			convex: { default: true, type: 'boolean' },
-			type: {default: 'object'}
+			type: {default: 'hologram'}
 		}
 	});
 
