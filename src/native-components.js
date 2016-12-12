@@ -17,6 +17,11 @@
 		mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
 		mesh.userData.altspace.collider.enabled = false;
 
+		//Unless the entity already had a geometry
+		if (!(mesh instanceof PlaceholderMesh)) {
+			mesh.userData.altspace.collider.enabled = true
+		}
+
 		altspace.addNativeComponent(mesh, this.name);
 		this.update(this.data);//to pass defaults
 	}
@@ -36,7 +41,7 @@
     * Creates a native object on this
     * entity. The nature of these objects vary.
     * @mixin n-object
-    * @prop {string} query - The identifier for the resource you want. 
+    * @prop {string} query - The identifier for the resource you want.
     * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
     */
 	AFRAME.registerComponent('n-object', {
@@ -66,7 +71,7 @@
 
 	/**
     * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
-    * This text will be clearer than texture-based text and more performant than geometry-based test. 
+    * This text will be clearer than texture-based text and more performant than geometry-based test.
     * @mixin n-text
     * @prop {string} text - The text to be drawn.
     * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
@@ -170,7 +175,7 @@
 
 	/**
     * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
-    * low-poly meshes. 
+    * low-poly meshes.
     * @mixin n-mesh-collider
     * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
     * @example <a-box n-mesh-collider></a-box>
@@ -187,7 +192,7 @@
 	});
 
 	/**
-    * Make the object always face the viewer. 
+    * Make the object always face the viewer.
     * @mixin n-billboard
     * @example <a-plane n-billboard></a-plane>
     */
@@ -238,7 +243,6 @@
     */
 	AFRAME.registerComponent('n-sound', {
 		init: function () {
-			nativeComponentInit.call(this);
 			var src = this.data.src;
 			if (src && !src.startsWith('http')) {
 				if (src.startsWith('/')) {
@@ -252,6 +256,7 @@
 					this.data.src = location.origin + currPath + src;
 				}
 			}
+			nativeComponentInit.call(this);
 		},
 		pauseSound: function () {
 			callComponent.call(this, 'pause');

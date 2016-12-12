@@ -18,34 +18,34 @@
 </head>
 <body>
 <a-scene debug altspace sync-system="author: altspacevr; app: sound-sync-test">
-	<a-entity id="pingloop"
+	<a-entity id="enterloop"
 		geometry="primitive: box" material="color: green" position="-3 1 2"
-		n-sound="res: ui/ping-enter; volume: 0.5; loop: true; on: click"
+		n-sound="res: ui/enter; volume: 0.5; loop: true; on: click"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: loop" position="0 1 0"></a-entity>
 		<a-animation begin="click" attribute="position" dur="2000" to="2 1 2" repeat="indefinite" direction="alternate"></a-animation>
 	</a-entity>
 	<a-entity
 		geometry="primitive: box" material="color: red" position="-1 0 2"
-		onclick="document.querySelector('#pingloop').components['n-sound'].pauseSound()">
+		onclick="document.querySelector('#enterloop').components['n-sound'].pauseSound()">
 		<a-entity n-text="fontSize: 2; text: stop loop" position="0 1 0"></a-entity>
 	</a-entity>
-	<a-entity id="chimeHigh"
+	<a-entity id="exit"
 		geometry="primitive: box" material="color: blue" position="1 0 2"
-		n-sound="res: ui/chime-high; volume: 0.7; autoplay: true; oneshot: true; on: click"
+		n-sound="res: ui/exit; volume: 0.7; autoplay: true; oneshot: true; on: click"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: oneshot" position="0 1 0"></a-entity>
 	</a-entity>
-	<a-entity id="chimeNotify"
+	<a-entity id="notification"
 		geometry="primitive: box" material="color: purple" position="3 0 2"
-		n-sound="res: ui/chime-notify; on: animationend"
+		n-sound="res: ui/notification-soft; on: animationend"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: animationend" position="0 1 0"></a-entity>
 		<a-animation begin="click" attribute="position" dur="2000" to="3 1 2" direction="alternate"></a-animation>
 	</a-entity>
-	<a-entity id="pop"
+	<a-entity id="over"
 		geometry="primitive: box" material="color: orange" position="3 0 0"
-		n-sound="res: ui/pop; spatialBlend: 0.2" random-pitch-click
+		n-sound="res: ui/over; spatialBlend: 0.2" random-pitch-click
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: spatialBlend" position="0 1 0" rotation="0 90 0"></a-entity>
 	</a-entity>
