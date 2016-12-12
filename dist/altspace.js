@@ -93,6 +93,7 @@ var OBJMTLLoader = (function () {
             var mtlLoader = new THREE.MTLLoader();
             var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
             mtlLoader.setBaseUrl(baseUrl + '/');
+            mtlLoader.setCrossOrigin(this.crossOrigin);
             mtlLoader.load(mtlFile, function (materials) {
                 var objLoader = new THREE.OBJLoader();
                 objLoader.setMaterials(materials);
@@ -11536,7 +11537,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.26.1';
+	var version = '0.26.2';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
