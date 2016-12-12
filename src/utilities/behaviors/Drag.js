@@ -142,6 +142,10 @@ altspace.utilities.behaviors.Drag = function (config) {
 		intersector.position.copy(intersector.parent.worldToLocal(dragPoint));
 		intersector.quaternion.copy(object3d.parent.quaternion);
 		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+
+		//Create and dispatch "dragstart" event
+		var dragEvent = createDragEvent('dragstart', object3d);
+		object3d.dispatchEvent(dragEvent);
 	}
 
 	function moveDrag(event) {
@@ -180,6 +184,10 @@ altspace.utilities.behaviors.Drag = function (config) {
 	function stopDrag() {
 		scene.removeEventListener('cursorup', stopDrag);
 		scene.removeEventListener('cursormove', moveDrag);
+
+		//Create and dispatch "dragstop" event
+		var dragEvent = createDragEvent('dragstop', object3d);
+		object3d.dispatchEvent(dragEvent);
 	}
 
 	function start() {
@@ -189,6 +197,20 @@ altspace.utilities.behaviors.Drag = function (config) {
 	function dispose() {
 		object3d.removeEventListener('cursordown', startDrag);
 	}
+
+	function createDragEvent(type, object) {
+		return {
+			type: type,
+			bubbles: true,
+			target: object ? object : null,
+			ray: {
+				origin: raycaster.ray.origin.clone(),
+				direction: raycaster.ray.direction.clone()
+			},
+			point: object ? object.position.clone() : null
+		}
+	}
+
 
 	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
 };
