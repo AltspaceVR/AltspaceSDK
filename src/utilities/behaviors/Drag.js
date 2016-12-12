@@ -211,6 +211,5 @@ altspace.utilities.behaviors.Drag = function (config) {
 		}
 	}
 
-
 	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
 };
