@@ -2,10 +2,9 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>Joint Collision Push</title>
+<title>Joint Collision Push Two Cubes</title>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
 <script src="../dist/altspace.min.js"></script>
-<script src="../src/utilities/behaviors/JointCollisionEvents.js"></script>
 </head>
 <body>
 <script>
@@ -22,7 +21,7 @@ altspace.getEnclosure().then(function(e) {
 	// Connect to sync server
 	altspace.utilities.sync.connect({
 		authorId: 'AltspaceVR',
-		appId: 'JointCollisionPushTwoCubes1'
+		appId: 'JointCollisionPushTwoCubesExample'
 	}).then(function(connection) {
 		// Retrieve SceneSync
 
@@ -48,10 +47,11 @@ function ready(firstInstance) {
 		sceneSync.instantiate('Cube1');
 		sceneSync.instantiate('Cube2');
 	}
+
 }
 
 //////////////////////////////////
-// Create Cube
+// Create Cubes
 //////////////////////////////////
 function createCube1() {
 
@@ -106,7 +106,6 @@ function UpdatePosition() {//define a custom behavior
 
 	function awake(o) {
 		// Attach object, sync and 'cubePosition' reference from Firebase
-
 		object3d = o;
 
 		sync = object3d.getBehaviorByType('Object3DSync');
@@ -115,9 +114,7 @@ function UpdatePosition() {//define a custom behavior
 		// If 'cubePosition' is null, set the default.
 		cubePositionRef.on('value', function (snapshot) {
 			
-			if (!snapshot.val()) {
-				cubePositionRef.set(new THREE.Vector3(0, cubePos, 0));
-			} else {
+			if (snapshot.val()) {
 				// Set position
 				var cubePosition = snapshot.val();
 				object3d.position.x = cubePosition.x;
@@ -127,9 +124,7 @@ function UpdatePosition() {//define a custom behavior
 		});
 
 		// Attach joint collision events
-		console.log(object3d);
 		object3d.addEventListener('jointcollision', function(e) {
-			console.log(e);
 			collisionIntersect = e.detail.intersect;
 		});
 
