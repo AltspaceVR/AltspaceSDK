@@ -13,6 +13,7 @@ Note that when running in Altspace, the scene will not be synchronized between u
 | `usePixelScale` | Treat a unit as a CSS Pixel, and have your scene scale with the scale of the AltspaceVR web browser. This is the default behavior in AltspaceVR for three.js apps. In A-Frame, however, the default value is `false`, as units are in meters by default. | `false`
 | `verticalAlign` | Puts the scene origin at the bottom, middle, or top of the Altspace enclosure.  If your scene seems to be floating in midair, try setting this to 'bottom'. | `middle`
 | `enclosuresOnly` | Turn off 3d rendering when loaded in flat displays (e.g. personal browsers) | `true`
+| `fullspace` | Request that the app take up the entire space. See [requestFullspace()](http://altspacevr.github.io/AltspaceSDK/doc/module-altspace-Enclosure.html#requestFullspace) | `false`
 
 ### Usage
 
@@ -49,4 +50,20 @@ Add the "altspace-tracked-controls" attribute to your tracked entity. For exampl
 
 ```html
 <a-entity hand-controls="right" altspace-tracked-controls></a-entity>
+```
+
+## altspace-cursor-collider
+
+Cause the attached object to be clickable, or else ignored by the cursor.
+
+### Properties
+
+| Property | Description | Default Value |
+| -------- | ----------- | ------------- |
+| `enabled` | Sets the object visibility to the cursor. | `true`
+
+### Example
+
+```html
+<a-box altspace-cursor-collider='enabled: false'></a-box>
 ```

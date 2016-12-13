@@ -25,11 +25,6 @@
 		mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
 		mesh.userData.altspace.collider.enabled = false;
 
-		//Unless the entity already had a geometry
-		if (!(mesh instanceof PlaceholderMesh)) {
-			mesh.userData.altspace.collider.enabled = true
-		}
-
 		altspace.addNativeComponent(mesh, this.name);
 		this.update(this.data);//to pass defaults
 	}

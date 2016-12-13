@@ -21,6 +21,7 @@
 	<a-entity id="enterloop"
 		geometry="primitive: box" material="color: green" position="-3 1 2"
 		n-sound="res: ui/enter; volume: 0.5; loop: true; on: click"
+		altspace-cursor-collider="enabled: true"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: loop" position="0 1 0"></a-entity>
 		<a-animation begin="click" attribute="position" dur="2000" to="2 1 2" repeat="indefinite" direction="alternate"></a-animation>
@@ -33,12 +34,14 @@
 	<a-entity id="exit"
 		geometry="primitive: box" material="color: blue" position="1 0 2"
 		n-sound="res: ui/exit; volume: 0.7; autoplay: true; oneshot: true; on: click"
+		altspace-cursor-collider="enabled: true"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: oneshot" position="0 1 0"></a-entity>
 	</a-entity>
 	<a-entity id="notification"
 		geometry="primitive: box" material="color: purple" position="3 0 2"
 		n-sound="res: ui/notification-soft; on: animationend"
+		altspace-cursor-collider="enabled: true"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: animationend" position="0 1 0"></a-entity>
 		<a-animation begin="click" attribute="position" dur="2000" to="3 1 2" direction="alternate"></a-animation>
@@ -46,6 +49,7 @@
 	<a-entity id="over"
 		geometry="primitive: box" material="color: orange" position="3 0 0"
 		n-sound="res: ui/over; spatialBlend: 0.2" random-pitch-click
+		altspace-cursor-collider="enabled: true"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: spatialBlend" position="0 1 0" rotation="0 90 0"></a-entity>
 	</a-entity>
@@ -53,7 +57,8 @@
 	<a-entity id="wav"
 		geometry="primitive: box" material="color: lightblue" position="-3 1 0"
 		sync="own-on: mousedown" sync-n-sound
-		n-sound="src: big-buck-bunny-intro.wav; maxDistance: 500; on: click">
+		n-sound="src: big-buck-bunny-intro.wav; maxDistance: 500; on: click"
+		altspace-cursor-collider="enabled: true">
 		<a-entity n-text="fontSize: 2; text: wav" position="0 1 0" rotation="0 -90 0"></a-entity>
 	</a-entity>
 	<a-entity
