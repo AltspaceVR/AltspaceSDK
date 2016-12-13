@@ -1,3 +1,10 @@
+/**
+* Sync the color property of the object between clients.
+* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+* {@link sync.sync} component on the target entity.
+* @mixin sync-color
+* @memberof sync
+*/
 AFRAME.registerComponent('sync-color',
 {
 	dependencies: ['sync'],

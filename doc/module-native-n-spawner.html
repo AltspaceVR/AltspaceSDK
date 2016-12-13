@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>n-container - Documentation</title>
+    <title>n-spawner - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -23,12 +23,12 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Mixins</h3><ul><li><a href="n-billboard.html">n-billboard</a></li><li><a href="n-box-collider.html">n-box-collider</a></li><li><a href="n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n-container.html">n-container</a></li><li><a href="n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n-object.html">n-object</a></li><li><a href="n-sound.html">n-sound</a></li><li><a href="n-spawner.html">n-spawner</a></li><li><a href="n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n-text.html">n-text</a></li><li><a href="wire.html">wire</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-native.html">native</a></li></ul><h3>Namespaces</h3><ul><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="module-native-n-billboard.html">n-billboard</a></li><li><a href="module-native-n-box-collider.html">n-box-collider</a></li><li><a href="module-native-n-capsule-collider.html">n-capsule-collider</a></li><li><a href="module-native-n-collider.html">n-collider</a></li><li><a href="module-native-n-container.html">n-container</a></li><li><a href="module-native-n-mesh-collider.html">n-mesh-collider</a></li><li><a href="module-native-n-object.html">n-object</a></li><li><a href="module-native-n-sound.html">n-sound</a></li><li><a href="module-native-n-spawner.html">n-spawner</a></li><li><a href="module-native-n-sphere-collider.html">n-sphere-collider</a></li><li><a href="module-native-n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">n-container</h1>
+    <h1 class="page-title">n-spawner</h1>
     
 
     
@@ -41,7 +41,9 @@
 <header>
     
         <h2>
-        n-container
+            <span class="ancestors"><a href="module-native.html">native</a>~</span>
+        
+        n-spawner
         </h2>
         
     
@@ -51,9 +53,9 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>A container keeps a running tally of how many objects are within
-its bounds, and adds and removes the states <code>container-full</code> and <code>container-empty</code> based on the current count of objects. Can fire three special events: <code>container-full</code>, <code>container-empty</code>,
-and <code>container-count-changed</code>.</p></div>
+            <div class="description"><p>Create an object that spawns additional non-spawning copies of itself.
+These copies will be physically interactive and automatically synchronized
+between users. Only some native resources can be spawned.</p></div>
         
 
         
@@ -75,8 +77,6 @@ and <code>container-count-changed</code>.</p></div>
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -87,13 +87,13 @@ and <code>container-count-changed</code>.</p></div>
 
         <tr>
             
-                <td class="name"><code>capacity</code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -102,15 +102,8 @@ and <code>container-count-changed</code>.</p></div>
             
 
             
-                <td class="default">
-                
-                    4
-                
-                </td>
-            
 
-            <td class="description last"><p>The value at which the container will fire the
-<code>container-full</code> event.</p></td>
+            <td class="description last"><p>The identifier for the resource you want.</p></td>
         </tr>
 
     
@@ -155,6 +148,11 @@ and <code>container-count-changed</code>.</p></div>
     
 </dl>
 
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>&lt;a-entity n-spawner='res: interactables/basketball'>&lt;/a-entity></code></pre>
 
         
     

@@ -1,3 +1,10 @@
+/**
+* Synchronize the playback state of an {@link n.n-sound} component between clients.
+* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+* {@link sync.sync} component on the target entity.
+* @mixin sync-n-sound
+* @memberof sync
+*/
 AFRAME.registerComponent('sync-n-sound',
 {
 	dependencies: ['sync'],
@@ -62,4 +69,3 @@ AFRAME.registerComponent('sync-n-sound',
 		this.soundEventRef.off('value');
 	}
 });
-

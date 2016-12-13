@@ -1,5 +1,13 @@
 //TODO: We need to figure out a way to recieve our first update without caring about ownership.
 // firstValue is probably not the right way to go, probably something about having sent yet. Need to change for both
+
+/**
+* Synchronize the position, rotation, and scale of this object with all clients.
+* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+* {@link sync.sync} component on the target entity.
+* @mixin sync-transform
+* @memberof sync
+*/
 AFRAME.registerComponent('sync-transform',
 {
 	dependencies: ['sync'],

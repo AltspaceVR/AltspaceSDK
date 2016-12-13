@@ -1,3 +1,16 @@
+/**
+* Connect to a remote Firebase server, and facilitate synchronization. These
+* options correspond exactly with the configuration options for
+* `altspace.utilities.sync.connect`. This component must be present on `a-scene`
+* for any other sync components to work.
+* @memberof sync
+* @mixin sync-system
+* @prop {string} author - A unique identifier for you or your organization.
+* @prop {string} app - The name of the app.
+* @prop {string} ref-url - Override the base reference. Set this to use your own Firebase.
+* @prop {string} instance - Override the instance ID. Can also be overridden with
+* a URL parameter.
+*/
 AFRAME.registerSystem('sync-system',
 {
 	schema: {
@@ -9,7 +22,7 @@ AFRAME.registerSystem('sync-system',
 	init: function() {
 		var component = this;
 
-		if(!this.data || !this.app){
+		if(!this.data || !this.data.app){
 			console.warn('The sync-system must be present on the scene and configured with required data.');
 			return;
 		}

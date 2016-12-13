@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>wire - Documentation</title>
+    <title>sync-system - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">wire</h1>
+    <h1 class="page-title">sync-system</h1>
     
 
     
@@ -41,7 +41,9 @@
 <header>
     
         <h2>
-        wire
+            <span class="ancestors"><a href="sync.html">sync</a>.</span>
+        
+        sync-system
         </h2>
         
     
@@ -51,7 +53,10 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The wire component allows you to trigger an event on another entity when an event occurs on an entity</p></div>
+            <div class="description"><p>Connect to a remote Firebase server, and facilitate synchronization. These
+options correspond exactly with the configuration options for
+<code>altspace.utilities.sync.connect</code>. This component must be present on <code>a-scene</code>
+for any other sync components to work.</p></div>
         
 
         
@@ -83,7 +88,7 @@
 
         <tr>
             
-                <td class="name"><code>on</code></td>
+                <td class="name"><code>author</code></td>
             
 
             <td class="type">
@@ -99,14 +104,14 @@
 
             
 
-            <td class="description last"><p>Name of an event to listen to</p></td>
+            <td class="description last"><p>A unique identifier for you or your organization.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>gained</code></td>
+                <td class="name"><code>app</code></td>
             
 
             <td class="type">
@@ -122,14 +127,14 @@
 
             
 
-            <td class="description last"><p>Name of a state to watch for</p></td>
+            <td class="description last"><p>The name of the app.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>lost</code></td>
+                <td class="name"><code>ref-url</code></td>
             
 
             <td class="type">
@@ -145,14 +150,14 @@
 
             
 
-            <td class="description last"><p>Name of a state to watch for</p></td>
+            <td class="description last"><p>Override the base reference. Set this to use your own Firebase.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>emit</code></td>
+                <td class="name"><code>instance</code></td>
             
 
             <td class="type">
@@ -168,76 +173,8 @@
 
             
 
-            <td class="description last"><p>Name of an event to trigger on the targets</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gain</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of a state to add on the target</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lose</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of a state to remove on the target</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>targets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">selector</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A selector to pick which objects to wire to</p></td>
+            <td class="description last"><p>Override the instance ID. Can also be overridden with
+a URL parameter.</p></td>
         </tr>
 
     

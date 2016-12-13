@@ -1,3 +1,20 @@
+/**
+* Some description text
+* @name sync
+* @namespace sync
+*/
+
+
+
+/**
+* Enables the synchronization of properties of the entity. Must be used in
+* conjuction with the {@link sync.sync-system} component and a component for a
+* specific property (e.g. {@link sync.sync-transform}).
+* @memberof sync
+* @mixin sync
+* @prop {string} ownOn - The name of the event that will cause the local client
+* to take ownership of this object.
+*/
 AFRAME.registerComponent('sync',
 {
 	schema: {

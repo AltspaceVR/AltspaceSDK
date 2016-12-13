@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>wire - Documentation</title>
+    <title>n-box-collider - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">wire</h1>
+    <h1 class="page-title">n-box-collider</h1>
     
 
     
@@ -41,7 +41,9 @@
 <header>
     
         <h2>
-        wire
+            <span class="ancestors"><a href="n.html">n</a>.</span>
+        
+        n-box-collider
         </h2>
         
     
@@ -51,7 +53,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The wire component allows you to trigger an event on another entity when an event occurs on an entity</p></div>
+            <div class="description"><p>Create a box-shaped collider on this entity.</p></div>
         
 
         
@@ -73,6 +75,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -83,13 +87,13 @@
 
         <tr>
             
-                <td class="name"><code>on</code></td>
+                <td class="name"><code>size</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">vec3</span>
 
 
             
@@ -98,146 +102,14 @@
             
 
             
-
-            <td class="description last"><p>Name of an event to listen to</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gained</code></td>
-            
-
-            <td class="type">
-            
+                <td class="default">
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of a state to watch for</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lost</code></td>
-            
-
-            <td class="type">
-            
+                    1,1,1
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
+                </td>
             
 
-            
-
-            <td class="description last"><p>Name of a state to watch for</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>emit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of an event to trigger on the targets</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gain</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of a state to add on the target</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lose</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of a state to remove on the target</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>targets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">selector</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A selector to pick which objects to wire to</p></td>
+            <td class="description last"><p>The dimensions of the collider.</p></td>
         </tr>
 
     
@@ -286,6 +158,17 @@
         
     
     </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="n.n-collider.html">n.n-collider</a></li>
+    </ul>
+
 
     
 

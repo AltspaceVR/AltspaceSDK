@@ -1,3 +1,11 @@
+
+/**
+* This set of components map to various objects and effects that are provided
+* natively by AltspaceVR. Your management of these objects may be limited to
+* some degree, but they will tend to be more performant than SDK equivalents,
+* or may provide some functionality not otherwise available to the SDK.
+* @namespace n
+*/
 (function () {
 
 	var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
@@ -41,6 +49,7 @@
     * Creates a native object on this
     * entity. The nature of these objects vary.
     * @mixin n-object
+	* @memberof n
     * @prop {string} query - The identifier for the resource you want.
     * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
     */
@@ -54,9 +63,11 @@
 	});
 
 	/**
-    * Create an object that spawns additional non-spawning copies of itself. These copies will be physically interactive and automatically syncronized between users.
-    * Only some native resources can be spawned.
+    * Create an object that spawns additional non-spawning copies of itself.
+	* These copies will be physically interactive and automatically synchronized
+	* between users. Only some native resources can be spawned.
     * @mixin n-spawner
+	* @memberof n
     * @prop {string} res - The identifier for the resource you want.
     * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
     */
@@ -73,6 +84,7 @@
     * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
     * This text will be clearer than texture-based text and more performant than geometry-based test.
     * @mixin n-text
+	* @memberof n
     * @prop {string} text - The text to be drawn.
     * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
     * @prop {number} width=10 - The width of the text area in meters. If the
@@ -109,12 +121,28 @@
 	//environment: can be teleported onto, and collides against: objects / environment / cursor
 	//hologram: collides against: cursor / holograms
 
+	/**
+	* Abstract base class for {@link n.n-sphere-collider}, {@link n.n-box-collider},
+	* {@link n.n-capsule-collider}, and {@link n.n-mesh-collider}. You cannot use
+	* this class directly, but instead you should add one of those components
+	* to your objects.
+	* @name n-collider
+	* @mixin n-collider
+	* @memberof n
+    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	* @prop {string} type=hologram - The type of collider, one of: `object` | `environment` | `hologram`.
+	* Object colliders collide with other objects, the environment, and the cursor.
+	* Environment colliders collide with everything objects do, but you can also
+	* teleport onto them. Hologram colliders only collide with other holograms and
+	* the cursor.
+	*/
+
     /**
     * Create a spherical collider on this entity.
     * @mixin n-sphere-collider
-    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	* @memberof n
+	* @extends n.n-collider
     * @prop {number} radius=1 - The size of the collider in meters.
-    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
     */
 	AFRAME.registerComponent('n-sphere-collider', {
 		init:nativeComponentInit,
@@ -132,9 +160,9 @@
 	/**
     * Create a box-shaped collider on this entity.
     * @mixin n-box-collider
-    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	* @memberof n
+	* @extends n.n-collider
     * @prop {vec3} size=1,1,1 - The dimensions of the collider.
-    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
     */
 	AFRAME.registerComponent('n-box-collider', {
 		init:nativeComponentInit,
@@ -152,12 +180,12 @@
     * Create a capsule-shaped collider on this entity. Capsules
     * are a union of a cylinder and two spheres on top and bottom.
     * @mixin n-capsule-collider
-    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	* @memberof n
+	* @extends n.n-collider
     * @prop {number} radius=1 - The radius of the capsule in meters.
     * @prop {number} height=1 - The height of the shaft of the capsule in meters.
     * @prop {string} direction=y - The axis with which the capsule is aligned.
     * One of `x`, `y`, or `z`.
-    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
     */
 	AFRAME.registerComponent('n-capsule-collider', {
 		init:nativeComponentInit,
@@ -177,7 +205,8 @@
     * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
     * low-poly meshes.
     * @mixin n-mesh-collider
-    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
+	* @memberof n
+	* @extends n.n-collider
     * @example <a-box n-mesh-collider></a-box>
     */
 	AFRAME.registerComponent('n-mesh-collider', {
@@ -192,8 +221,10 @@
 	});
 
 	/**
-    * Make the object always face the viewer.
+    * Make the object always face the viewer. An object's "forward" direction is
+	* its -Z axis.
     * @mixin n-billboard
+	* @memberof n
     * @example <a-plane n-billboard></a-plane>
     */
 	AFRAME.registerComponent('n-billboard', {
@@ -201,11 +232,13 @@
 		remove: nativeComponentRemove,
 	});
 
-    /**
+	/**
     * A container keeps a running tally of how many objects are within
-    * its bounds, and adds and removes the states `container-full` and `container-empty` based on the current count of objects. Can fire three special events: `container-full`, `container-empty`,
-    * and `container-count-changed`.
+    * its bounds, and adds and removes the states `container-full` and
+	* `container-empty` based on the current count of objects. Can fire three
+	* special events: `container-full`, `container-empty`, and `container-count-changed`.
     * @mixin n-container
+	* @memberof n
     * @prop {number} capacity=4 - The value at which the container will fire the
     * `container-full` event.
     */
@@ -237,9 +270,31 @@
 	});
 
     /**
-    * Play the sound given by the `src` or `res` property from the location of the entity.
+    * Play the sound given by the `src` or `res` property from the location
+	* of the entity.
     * @mixin n-sound
-    *
+	* @memberof n
+    * @prop {string} res - The resource identifier for a built-in sound clip.
+	* @prop {string} src - A URL to an external sound clip.
+	* @prop {string} on - The name of the event that will play this sound clip.
+	* @prop {boolean} loop=false - Tells the clip to loop back to the beginning of the clip
+	* once it's finished.
+	* @prop {boolean} autoplay=false - Tells the clip to start automatically when
+	* the scene loads, instead of waiting for `playSound()`.
+	* @prop {boolean} oneshot=false - Tells the clip to clean itself up when it
+	* finishes playing. Allows for overlapping instances of the sound.
+	* @prop {number} volume=1 - The volume of the clip, from [0,1].
+	* @prop {number} spatialBlend=1 - How spatialized a sound is, from [0,1].
+	* A value of 1 will be fully localized, and the sound will pan left and
+	* right as you turn your head. A value of 0 makes it non-spatialized, and
+	* it will always be heard in both ears.
+	* @prop {number} pitch=1 - The speed multiplier for the sound. 0.5 is one
+	* octave down, and 2 is one octave up.
+	* @prop {number} minDistance=1 - Inside this distance in meters,
+	* the sound volume is at full volume.
+	* @prop {number} maxDistance=12 - Beyond this distance in meters, the sound
+	* will rapidly fall off to silence.
+
     */
 	AFRAME.registerComponent('n-sound', {
 		init: function () {
@@ -258,14 +313,30 @@
 			}
 			nativeComponentInit.call(this);
 		},
+
+		/**
+		* Stop the playing sound, and preserve position in clip.
+		* @method n.n-sound#pauseSound
+		*/
 		pauseSound: function () {
 			callComponent.call(this, 'pause');
 			this.el.emit('sound-paused');
 		},
+
+		/**
+		* Start the sound playing.
+		* @method n.n-sound#playSound
+		*/
 		playSound: function () {
 			callComponent.call(this, 'play');
 			this.el.emit('sound-played');
 		},
+
+		/**
+		* Jump to a position in the clip.
+		* @method n.n-sound#seek
+		* @param {number} time - The time in milliseconds to jump to.
+		*/
 		seek: function (time) {
 			callComponent.call(this, 'seek', {time: time});
 		},

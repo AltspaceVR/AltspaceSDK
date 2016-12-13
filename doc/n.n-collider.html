@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>n-capsule-collider - Documentation</title>
+    <title>n-collider - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -23,12 +23,12 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Mixins</h3><ul><li><a href="n-billboard.html">n-billboard</a></li><li><a href="n-box-collider.html">n-box-collider</a></li><li><a href="n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n-container.html">n-container</a></li><li><a href="n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n-object.html">n-object</a></li><li><a href="n-sound.html">n-sound</a></li><li><a href="n-spawner.html">n-spawner</a></li><li><a href="n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n-text.html">n-text</a></li><li><a href="wire.html">wire</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="n.html">n</a></li><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="altspace.html">altspace</a></li><li><a href="altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="n.n-billboard.html">n-billboard</a></li><li><a href="n.n-box-collider.html">n-box-collider</a></li><li><a href="n.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n.n-collider.html">n-collider</a></li><li><a href="n.n-container.html">n-container</a></li><li><a href="n.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n.n-object.html">n-object</a></li><li><a href="n.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="n.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="n.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="n.n-sound.html#seek">seek</a></li></ul></li><li><a href="n.n-spawner.html">n-spawner</a></li><li><a href="n.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n.n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a></li><li><a href="sync.sync-color.html">sync-color</a></li><li><a href="sync.sync-n-sound.html">sync-n-sound</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync.sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">n-capsule-collider</h1>
+    <h1 class="page-title">n-collider</h1>
     
 
     
@@ -41,7 +41,9 @@
 <header>
     
         <h2>
-        n-capsule-collider
+            <span class="ancestors"><a href="n.html">n</a>.</span>
+        
+        n-collider
         </h2>
         
     
@@ -51,8 +53,10 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Create a capsule-shaped collider on this entity. Capsules
-are a union of a cylinder and two spheres on top and bottom.</p></div>
+            <div class="description"><p>Abstract base class for <a href="n.n-sphere-collider.html">n.n-sphere-collider</a>, <a href="n.n-box-collider.html">n.n-box-collider</a>,
+<a href="n.n-capsule-collider.html">n.n-capsule-collider</a>, and <a href="n.n-mesh-collider.html">n.n-mesh-collider</a>. You cannot use
+this class directly, but instead you should add one of those components
+to your objects.</p></div>
         
 
         
@@ -115,94 +119,6 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
 
         <tr>
             
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The radius of the capsule in meters.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The height of the shaft of the capsule in meters.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>direction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    y
-                
-                </td>
-            
-
-            <td class="description last"><p>The axis with which the capsule is aligned.
-One of <code>x</code>, <code>y</code>, or <code>z</code>.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>type</code></td>
             
 
@@ -220,12 +136,16 @@ One of <code>x</code>, <code>y</code>, or <code>z</code>.</p></td>
             
                 <td class="default">
                 
-                    object
+                    hologram
                 
                 </td>
             
 
-            <td class="description last"><p>The type of collider, one of: <code>object</code> | <code>environment</code> | <code>cursor</code></p></td>
+            <td class="description last"><p>The type of collider, one of: <code>object</code> | <code>environment</code> | <code>hologram</code>.
+Object colliders collide with other objects, the environment, and the cursor.
+Environment colliders collide with everything objects do, but you can also
+teleport onto them. Hologram colliders only collide with other holograms and
+the cursor.</p></td>
         </tr>
 
     

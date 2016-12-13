@@ -1,4 +1,4 @@
-/*
+/**
 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
