@@ -1,7 +1,13 @@
 /**
-* Some description text
+* Enables the synchronization of properties of entities. All property sync components
+* require both a {@link sync.sync-system} on `a-scene`, and a {@link sync.sync}
+* on the entity to be synced.
 * @name sync
 * @namespace sync
+* @example
+* <a-scene sync-system='app: example sync; author: altspacevr'>
+*   <a-entity sync='ownOn: cursordown' sync-color></a-entity>
+* </a-scene>
 */
 
 

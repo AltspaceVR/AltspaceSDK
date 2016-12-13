@@ -51,7 +51,9 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Some description text</p></div>
+            <div class="description"><p>Enables the synchronization of properties of entities. All property sync components
+require both a <a href="sync.sync-system.html">sync.sync-system</a> on <code>a-scene</code>, and a <a href="sync.sync.html">sync.sync</a>
+on the entity to be synced.</p></div>
         
 
         
@@ -92,6 +94,11 @@
     
 </dl>
 
+
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>&lt;a-scene sync-system='app: example sync; author: altspacevr'>  &lt;a-entity sync='ownOn: cursordown' sync-color>&lt;/a-entity>&lt;/a-scene></code></pre>
 
         
     
