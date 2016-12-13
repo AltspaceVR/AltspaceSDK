@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>sync - Documentation</title>
+    <title>altspace-cursor-collider - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">sync</h1>
+    <h1 class="page-title">altspace-cursor-collider</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="sync.html">sync</a>.</span>
+            <span class="ancestors"><a href="altspace.html">altspace</a>.</span>
         
-        sync
+        altspace-cursor-collider
         </h2>
         
     
@@ -53,9 +53,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Enables the synchronization of properties of the entity. Must be used in
-conjuction with the <a href="sync.sync-system.html">sync.sync-system</a> component and a component for a
-specific property (e.g. <a href="sync.sync-transform.html">sync.sync-transform</a>).</p></div>
+            <div class="description"><p>Enable or disable cursor collision on the object.</p></div>
         
 
         
@@ -77,6 +75,8 @@ specific property (e.g. <a href="sync.sync-transform.html">sync.sync-transform</
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -87,13 +87,13 @@ specific property (e.g. <a href="sync.sync-transform.html">sync.sync-transform</
 
         <tr>
             
-                <td class="name"><code>ownOn</code></td>
+                <td class="name"><code>enabled</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -102,9 +102,14 @@ specific property (e.g. <a href="sync.sync-transform.html">sync.sync-transform</
             
 
             
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
 
-            <td class="description last"><p>The name of the event that will cause the local client
-to take ownership of this object.</p></td>
+            <td class="description last"><p>The state of the cursor collider.</p></td>
         </tr>
 
     

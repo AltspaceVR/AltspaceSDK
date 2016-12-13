@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="n.html">n</a></li><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="altspace.html">altspace</a></li><li><a href="altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="n.n-billboard.html">n-billboard</a></li><li><a href="n.n-box-collider.html">n-box-collider</a></li><li><a href="n.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n.n-collider.html">n-collider</a></li><li><a href="n.n-container.html">n-container</a></li><li><a href="n.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n.n-object.html">n-object</a></li><li><a href="n.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="n.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="n.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="n.n-sound.html#seek">seek</a></li></ul></li><li><a href="n.n-spawner.html">n-spawner</a></li><li><a href="n.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n.n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a></li><li><a href="sync.sync-color.html">sync-color</a></li><li><a href="sync.sync-n-sound.html">sync-n-sound</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync.sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="altspace.html">altspace</a></li><li><a href="n.html">n</a></li><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="altspace.altspace.html">altspace</a></li><li><a href="altspace.altspace-cursor-collider.html">altspace-cursor-collider</a></li><li><a href="altspace.altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="n.n-billboard.html">n-billboard</a></li><li><a href="n.n-box-collider.html">n-box-collider</a></li><li><a href="n.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n.n-collider.html">n-collider</a></li><li><a href="n.n-container.html">n-container</a></li><li><a href="n.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n.n-object.html">n-object</a></li><li><a href="n.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="n.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="n.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="n.n-sound.html#seek">seek</a></li></ul></li><li><a href="n.n-spawner.html">n-spawner</a></li><li><a href="n.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n.n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a></li><li><a href="sync.sync-color.html">sync-color</a></li><li><a href="sync.sync-n-sound.html">sync-n-sound</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync.sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
 </nav>
 
 <div id="main">
@@ -51,132 +51,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The altspace component makes A-Frame apps compatible with AltspaceVR.</p>
-<p><strong>Note</strong>: If you use the <code>embedded</code> A-Frame component on your scene, you must include it <em>before</em> the <code>altspace</code> component, or your app will silently fail.</p></div>
-        
 
         
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>usePixelScale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    `false`
-                
-                </td>
-            
-
-            <td class="description last"><p>Allows you to use A-Frame units as CSS pixels.
-This is the default behavior for three.js apps, but not for A-Frame apps.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>verticalAlign</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    `middle`
-                
-                </td>
-            
-
-            <td class="description last"><p>Puts the origin at the <code>bottom</code>, <code>middle</code> (default),
-or <code>top</code> of the Altspace enclosure.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>enclosuresOnly</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    `true`
-                
-                </td>
-            
-
-            <td class="description last"><p>Prevents the scene from being created if
-enclosure is flat.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
 
 
 <dl class="details">
@@ -216,11 +92,6 @@ enclosure is flat.</p></td>
 
 
         
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>&lt;head>  &lt;title>My A-Frame Scene&lt;/title>  &lt;script src="https://aframe.io/releases/0.3.0/aframe.min.js">&lt;/script>  &lt;script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js">&lt;/script>&lt;/head>&lt;body>  &lt;a-scene altspace>    &lt;a-entity geometry="primitive: box" material="color: #C03546">&lt;/a-entity>  &lt;/a-scene>&lt;/body></code></pre>
-
-        
     
     </div>
 
@@ -231,6 +102,19 @@ enclosure is flat.</p></td>
     
 
      
+        <h3 class="subsection-title">Mixins</h3>
+
+        <dl>
+            <dt><a href="altspace.altspace.html">altspace</a></dt>
+            <dd></dd>
+        
+            <dt><a href="altspace.altspace-cursor-collider.html">altspace-cursor-collider</a></dt>
+            <dd></dd>
+        
+            <dt><a href="altspace.altspace-tracked-controls.html">altspace-tracked-controls</a></dt>
+            <dd></dd>
+        </dl>
+    
 
     
 

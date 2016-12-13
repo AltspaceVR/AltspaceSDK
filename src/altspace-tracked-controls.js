@@ -2,6 +2,7 @@
 * Enables tracked control support for A-Frame applications that use the built-in
 * `tracked-controls`, `vive-controls` or `hand-controls` components.
 * @mixin altspace-tracked-controls
+* @memberof altspace
 */
 AFRAME.registerComponent('altspace-tracked-controls', {
   init: function () {

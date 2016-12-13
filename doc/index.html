@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="n.html">n</a></li><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="altspace.html">altspace</a></li><li><a href="altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="n.n-billboard.html">n-billboard</a></li><li><a href="n.n-box-collider.html">n-box-collider</a></li><li><a href="n.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n.n-collider.html">n-collider</a></li><li><a href="n.n-container.html">n-container</a></li><li><a href="n.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n.n-object.html">n-object</a></li><li><a href="n.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="n.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="n.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="n.n-sound.html#seek">seek</a></li></ul></li><li><a href="n.n-spawner.html">n-spawner</a></li><li><a href="n.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n.n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a></li><li><a href="sync.sync-color.html">sync-color</a></li><li><a href="sync.sync-n-sound.html">sync-n-sound</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync.sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="altspace.html">altspace</a></li><li><a href="n.html">n</a></li><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="altspace.altspace.html">altspace</a></li><li><a href="altspace.altspace-cursor-collider.html">altspace-cursor-collider</a></li><li><a href="altspace.altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="n.n-billboard.html">n-billboard</a></li><li><a href="n.n-box-collider.html">n-box-collider</a></li><li><a href="n.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n.n-collider.html">n-collider</a></li><li><a href="n.n-container.html">n-container</a></li><li><a href="n.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n.n-object.html">n-object</a></li><li><a href="n.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="n.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="n.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="n.n-sound.html#seek">seek</a></li></ul></li><li><a href="n.n-spawner.html">n-spawner</a></li><li><a href="n.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n.n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a></li><li><a href="sync.sync-color.html">sync-color</a></li><li><a href="sync.sync-n-sound.html">sync-n-sound</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync.sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
 </nav>
 
 <div id="main">
@@ -74,6 +74,11 @@
 <td>Turn off 3d rendering when loaded in flat displays (e.g. personal browsers)</td>
 <td><code>true</code></td>
 </tr>
+<tr>
+<td><code>fullspace</code></td>
+<td>Request that the app take up the entire space. See <a href="http://altspacevr.github.io/AltspaceSDK/doc/module-altspace-Enclosure.html#requestFullspace">requestFullspace()</a></td>
+<td><code>false</code></td>
+</tr>
 </tbody>
 </table>
 <h3>Usage</h3><p>Add the &quot;altspace&quot; attribute on your <code>&lt;a-scene&gt;</code> like so: <code>&lt;a-scene altspace&gt;</code></p>
@@ -92,7 +97,24 @@
 &lt;/body></code></pre><h2>altspace-tracked-controls</h2><p>This library also includes an <code>altspace-tracked-controls</code> component that enables tracked control support for A-Frame
 applications that use the built-in <code>tracked-controls</code>, <code>vive-controls</code> or <code>hand-controls</code> components.</p>
 <h3>Usage</h3><p>Add the &quot;altspace-tracked-controls&quot; attribute to your tracked entity. For example:</p>
-<pre class="prettyprint source lang-html"><code>&lt;a-entity hand-controls=&quot;right&quot; altspace-tracked-controls>&lt;/a-entity></code></pre></article>
+<pre class="prettyprint source lang-html"><code>&lt;a-entity hand-controls=&quot;right&quot; altspace-tracked-controls>&lt;/a-entity></code></pre><h2>altspace-cursor-collider</h2><p>Cause the attached object to be clickable, or else ignored by the cursor.</p>
+<h3>Properties</h3><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td>Sets the object visibility to the cursor.</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Example</h3><pre class="prettyprint source lang-html"><code>&lt;a-box altspace-cursor-collider='enabled: false'>&lt;/a-box></code></pre></article>
     </section>
 
 

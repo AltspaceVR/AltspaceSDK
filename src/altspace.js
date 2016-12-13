@@ -1,8 +1,13 @@
 /**
+* @namespace altspace
+*/
+
+/**
 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
 * @mixin altspace
+* @memberof altspace
 * @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
 * This is the default behavior for three.js apps, but not for A-Frame apps.
 * @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
@@ -226,29 +231,3 @@ AFRAME.registerComponent('altspace', {
   }
 
 });
-
-(function(){
-
-  function setColliderFlag(obj, state) {
-    obj.userData.altspace = {collider: {enabled: state}};
-    obj.traverse(function (obj) {
-      if (obj instanceof THREE.Mesh) {
-        obj.userData.altspace = {collider: {enabled: state}};
-      }
-    })
-  }
-
-  AFRAME.registerComponent('altspace-cursor-collider', {
-    schema: { enabled: { default: true } },
-    init: function () {
-      setColliderFlag(this.el.object3D, this.data.enabled);
-      this.el.addEventListener('model-loaded', (function(){
-        setColliderFlag(this.el.object3D, this.data.enabled);
-      }).bind(this));
-    },
-    update: function () {
-      setColliderFlag(this.el.object3D, this.data.enabled);
-    }
-  });
-
-})();

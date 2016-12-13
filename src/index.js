@@ -3,6 +3,7 @@ if (typeof AFRAME === 'undefined') {
 }
 
 require('./altspace');
+require('./altspace-cursor-collider');
 require('./altspace-tracked-controls');
 require('./native-components');
 require('./sync');
