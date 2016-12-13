@@ -13,41 +13,41 @@
 		<a-entity id="game" position="1 -0.25 -5.5">
 
 			<a-entity id="scoring-area">
-				<a-box color="black" scale="3 0.1 2.5" opacity="0" id="trigger-0" rotation="90 0 0" n-box-collider="isTrigger:false"  position="-1 1.2 1.1"></a-box>
+				<a-box color="black" scale="3 0.1 2.5" opacity="0" id="trigger-0" rotation="90 0 0" n-box-collider position="-1 1.2 1.1"></a-box>
 
-				<a-box id="basket-container" color="yellowgreen" rotation="0 0 0" scale="1 0.25 1" opacity="0" n-box-collider="isTrigger:true" n-container="capacity:3" position="-1 2.1 0.5"></a-box>
+				<a-box id="basket-container" color="yellowgreen" rotation="0 0 0" scale="1 0.25 1" opacity="0" n-box-collider="isTrigger:true;" n-container="capacity:3" position="-1 2.1 0.5"></a-box>
 				
-				<a-entity n-object="basketball net" position="-1 2.5 0.5" rotation="0 90 0" scale="1.5 1.5 1.5">
+				<a-entity n-object="objects/basketball-net" position="-1 2.5 0.5" rotation="0 90 0" scale="1.5 1.5 1.5">
 					<a-entity  id="score-effect0" position="0 0 0">
 						<a-animation attribute="rotation" dur="1500" to="0 360 0" begin="score" easing="ease" repeat="0"></a-animation>
-						<a-entity position="0.5 0 0" n-object="fire trail"></a-entity>
+						<a-entity position="0.5 0 0" n-object="effects/fire-trail"></a-entity>
 					</a-entity>
 					<a-entity id="score-effect1" position="0 0 0">
 						<a-animation attribute="rotation" dur="1500" to="0 360 0" begin="score" direction="reverse" easing="ease" repeat="0"></a-animation>
-						<a-entity position="0.5 0 0" n-object="fire trail"></a-entity>
+						<a-entity position="0.5 0 0" n-object="effects/fire-trail"></a-entity>
 					</a-entity>
 				</a-entity>
 			</a-entity>
 
 			<a-entity id="backboard">
-				<a-entity n-object="wall 2w 4h" position="1 0.5 -1" rotation="0 -90 0"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="-1 0.5 -1" rotation="0 -90 0"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="1 0.5 -1" rotation="0 -90 0"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="-1 0.5 -1" rotation="0 -90 0"></a-entity>
 			</a-entity>
 			<a-entity id="floorboard">
-				<a-entity n-object="floor 2w 4l" position="1 0.5 3" rotation="0 -90 0"></a-entity>
-				<a-entity n-object="floor 2w 4l" position="-1 0.5 3" rotation="0 -90 0"></a-entity>
+				<a-entity n-object="architecture/floor-2w-4l" position="1 0.5 3" rotation="0 -90 0"></a-entity>
+				<a-entity n-object="architecture/floor-2w-4l" position="-1 0.5 3" rotation="0 -90 0"></a-entity>
 			</a-entity>
 
-			<a-entity n-spawner="res:basketball" position="0.5 1.25 3">
-				<a-entity position="0 0.5 0" n-object="fire"></a-entity>
+			<a-entity n-spawner="res:interactables/basketball" position="0.5 1.25 3">
+				<a-entity position="0 0.5 0" n-object="effects/fire"></a-entity>
 			</a-entity>
-			<a-entity n-spawner="res:basketball" position="-2.5 1.25 3">
-				<a-entity position="0 0.5 0" n-object="fire"></a-entity>
+			<a-entity n-spawner="res:interactables/basketball" position="-2.5 1.25 3">
+				<a-entity position="0 0.5 0" n-object="effects/fire"></a-entity>
 			</a-entity>
 
 			<a-entity id="info-area" position="0.5 0.5 0">
 				<a-entity rotation="0 90 15" position="-2.5 4.5 -0.5">
-					<a-entity n-object="wall 4h" scale="1 0.5 0.5"></a-entity>
+					<a-entity n-object="architecture/wall-4h" scale="1 0.5 0.5"></a-entity>
 					<a-entity rotation="0 90 0">
 						<a-entity n-text="text:SCORE;" scale="0.65 0.65 0.65" position="-1 1.5 -0.1"></a-entity>
 						<a-entity id="score-text" n-text="text:0" position="-1 0.65 -0.1"></a-entity>
@@ -55,7 +55,7 @@
 				</a-entity>
 
 				<a-entity rotation="0 45 0" position="1 2 0">
-					<a-entity n-object="wall 4w 4h" scale="1 0.5 0.5"></a-entity>
+					<a-entity n-object="architecture/wall-4w-4h" scale="1 0.5 0.5"></a-entity>
 					<a-entity rotation="0 90 0">
 						<a-entity n-text="text:HIGHSCORE;" scale="0.3 0.5 0.5" position="-1 1.55 -0.1"></a-entity>
 						<a-entity id="highscore-score-text"  n-text="" position="-1 0.85 -0.1" scale="0.75 0.75 0.75"></a-entity>
@@ -64,7 +64,7 @@
 				</a-entity>
 
 				<a-entity rotation="0 115 0" position="-6 2 0">
-					<a-entity n-object="wall 4w 4h" scale="1 0.5 0.5"></a-entity>
+					<a-entity n-object="architecture/wall-4w-4h" scale="1 0.5 0.5"></a-entity>
 					<a-entity rotation="0 90 0">
 						<a-entity n-text="text:CLOCK;" scale="0.5 0.5 0.5" position="-1 1.5 -0.1"></a-entity>
 						<a-entity id="clock-text" n-text="" position="-1 0.65 -0.1"></a-entity>
@@ -72,20 +72,20 @@
 				</a-entity>
 			</a-entity>
 			<a-entity class="wall" position="0.5 0.5 0">
-				<a-entity n-object="railing 4l" position="-0.125 2.5 -0.25" rotation="45 0 0" scale="1 0.5 1"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 -0.5" rotation="0 0 0" scale="1 1 0.25"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 0" rotation="0 0 0" scale="1 0.5 0.5"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 1" rotation="0 0 0" scale="1 0.25 0.5"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 2" rotation="0 0 0" scale="1 0.125 0.5"></a-entity>
+				<a-entity n-object="architecture/railing-4l" position="-0.125 2.5 -0.25" rotation="45 0 0" scale="1 0.5 1"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 -0.5" rotation="0 0 0" scale="1 1 0.25"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 0" rotation="0 0 0" scale="1 0.5 0.5"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 1" rotation="0 0 0" scale="1 0.25 0.5"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 2" rotation="0 0 0" scale="1 0.125 0.5"></a-entity>
 
 			</a-entity>
 
 			<a-entity class="wall" position="-3 0.5 0">
-				<a-entity n-object="railing 4l" position="0.5 2.5 -0.25" rotation="45 0 0" scale="1 0.5 1"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 -0.5" rotation="0 0 0" scale="1 1 0.25"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 0" rotation="0 0 0" scale="1 0.5 0.5"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 1" rotation="0 0 0" scale="1 0.25 0.5"></a-entity>
-				<a-entity n-object="wall 2w 4h" position="0 0 2" rotation="0 0 0" scale="1 0.125 0.5"></a-entity>
+				<a-entity n-object="architecture/railing-4l" position="0.5 2.5 -0.25" rotation="45 0 0" scale="1 0.5 1"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 -0.5" rotation="0 0 0" scale="1 1 0.25"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 0" rotation="0 0 0" scale="1 0.5 0.5"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 1" rotation="0 0 0" scale="1 0.25 0.5"></a-entity>
+				<a-entity n-object="architecture/wall-2w-4h" position="0 0 2" rotation="0 0 0" scale="1 0.125 0.5"></a-entity>
 			</a-entity>
 		</a-entity>
 	</a-scene>

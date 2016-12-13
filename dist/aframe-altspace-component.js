@@ -57,17 +57,24 @@
 	__webpack_require__(7);
 	__webpack_require__(8);
 	__webpack_require__(9);
+	__webpack_require__(10);
+	__webpack_require__(11);
 
 
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	/*
+	/**
+	* @namespace altspace
+	*/
+
+	/**
 	* The altspace component makes A-Frame apps compatible with AltspaceVR.
 	*
 	* **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
 	* @mixin altspace
+	* @memberof altspace
 	* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
 	* This is the default behavior for three.js apps, but not for A-Frame apps.
 	* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
@@ -292,37 +299,54 @@
 
 	});
 
-	(function(){
-
-	  function setColliderFlag(obj, state) {
-	    obj.userData.altspace = {collider: {enabled: state}};
-	    obj.traverse(function (obj) {
-	      if (obj instanceof THREE.Mesh) {
-	        obj.userData.altspace = {collider: {enabled: state}};
-	      }
-	    })
-	  }
-
-	  AFRAME.registerComponent('altspace-cursor-collider', {
-	    schema: { enabled: { default: true } },
-	    init: function () {
-	      setColliderFlag(this.el.object3D, this.data.enabled);
-	      this.el.addEventListener('model-loaded', (function(){
-	        setColliderFlag(this.el.object3D, this.data.enabled);
-	      }).bind(this));
-	    },
-	    update: function () {
-	      setColliderFlag(this.el.object3D, this.data.enabled);
-	    }
-	  });
-
-	})();
-
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
+	(function(){
+
+		function setColliderFlag(obj, state) {
+			obj.userData.altspace = {collider: {enabled: state}};
+			obj.traverse(function (obj) {
+				if (obj instanceof THREE.Mesh) {
+					obj.userData.altspace = {collider: {enabled: state}};
+				}
+			})
+		}
+
+		/**
+		* Enable or disable cursor collision on the object.
+		* @mixin altspace-cursor-collider
+		* @memberof altspace
+		* @prop {boolean} enabled=true - The state of the cursor collider.
+		*/
+		AFRAME.registerComponent('altspace-cursor-collider', {
+			schema: { enabled: { default: true } },
+			init: function () {
+				setColliderFlag(this.el.object3D, this.data.enabled);
+				this.el.addEventListener('model-loaded', (function(){
+					setColliderFlag(this.el.object3D, this.data.enabled);
+				}).bind(this));
+			},
+			update: function () {
+				setColliderFlag(this.el.object3D, this.data.enabled);
+			}
+		});
+
+	})();
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	/**
+	* Enables tracked control support for A-Frame applications that use the built-in
+	* `tracked-controls`, `vive-controls` or `hand-controls` components.
+	* @mixin altspace-tracked-controls
+	* @memberof altspace
+	*/
 	AFRAME.registerComponent('altspace-tracked-controls', {
 	  init: function () {
 		this.gamepadIndex = null;
@@ -358,9 +382,17 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
+	
+	/**
+	* This set of components map to various objects and effects that are provided
+	* natively by AltspaceVR. Your management of these objects may be limited to
+	* some degree, but they will tend to be more performant than SDK equivalents,
+	* or may provide some functionality not otherwise available to the SDK.
+	* @namespace n
+	*/
 	(function () {
 
 		var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
@@ -396,10 +428,11 @@
 		}
 
 		/**
-	    * Creates a native object on this
-	    * entity. The nature of these objects vary.
+	    * Pairs the given native object with this entity.
 	    * @mixin n-object
-	    * @prop {string} query - The identifier for the resource you want.
+		* @memberof n
+	    * @prop {string} query - The identifier for the resource you want. This component
+		* can only accept resources of type `architecture`, `objects`, or `effects`.
 	    * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
 	    */
 		AFRAME.registerComponent('n-object', {
@@ -412,10 +445,13 @@
 		});
 
 		/**
-	    * Create an object that spawns additional non-spawning copies of itself. These copies will be physically interactive and automatically syncronized between users.
-	    * Only some native resources can be spawned.
+	    * Create an object that spawns additional non-spawning copies of itself.
+		* These copies will be physically interactive and automatically synchronized
+		* between users.
 	    * @mixin n-spawner
-	    * @prop {string} res - The identifier for the resource you want.
+		* @memberof n
+	    * @prop {string} res - The identifier for the resource you want. This component
+		* can only accept resources of type `interactables`.
 	    * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
 	    */
 		AFRAME.registerComponent('n-spawner', {
@@ -431,6 +467,7 @@
 	    * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
 	    * This text will be clearer than texture-based text and more performant than geometry-based test.
 	    * @mixin n-text
+		* @memberof n
 	    * @prop {string} text - The text to be drawn.
 	    * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
 	    * @prop {number} width=10 - The width of the text area in meters. If the
@@ -467,12 +504,28 @@
 		//environment: can be teleported onto, and collides against: objects / environment / cursor
 		//hologram: collides against: cursor / holograms
 
+		/**
+		* Abstract base class for {@link n.n-sphere-collider}, {@link n.n-box-collider},
+		* {@link n.n-capsule-collider}, and {@link n.n-mesh-collider}. You cannot use
+		* this class directly, but instead you should add one of those components
+		* to your objects.
+		* @name n-collider
+		* @mixin n-collider
+		* @memberof n
+	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+		* @prop {string} type=hologram - The type of collider, one of: `object` | `environment` | `hologram`.
+		* Object colliders collide with other objects, the environment, and the cursor.
+		* Environment colliders collide with everything objects do, but you can also
+		* teleport onto them. Hologram colliders only collide with other holograms and
+		* the cursor.
+		*/
+
 	    /**
 	    * Create a spherical collider on this entity.
 	    * @mixin n-sphere-collider
-	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+		* @memberof n
+		* @extends n.n-collider
 	    * @prop {number} radius=1 - The size of the collider in meters.
-	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
 	    */
 		AFRAME.registerComponent('n-sphere-collider', {
 			init:nativeComponentInit,
@@ -482,7 +535,7 @@
 				isTrigger: { default: false, type: 'boolean' },
 				center: { type: 'vec3' },
 				radius: { default: '0', type: 'number' },
-				type: {default: 'hologram'}
+				type: {default: 'object'}
 			}
 		});
 
@@ -490,9 +543,9 @@
 		/**
 	    * Create a box-shaped collider on this entity.
 	    * @mixin n-box-collider
-	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+		* @memberof n
+		* @extends n.n-collider
 	    * @prop {vec3} size=1,1,1 - The dimensions of the collider.
-	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
 	    */
 		AFRAME.registerComponent('n-box-collider', {
 			init:nativeComponentInit,
@@ -502,7 +555,7 @@
 				isTrigger: { default: false, type: 'boolean' },
 				center: { type: 'vec3' },
 				size: { type: 'vec3' },
-				type: {default: 'hologram'}
+				type: {default: 'object'}
 			}
 		});
 
@@ -510,12 +563,12 @@
 	    * Create a capsule-shaped collider on this entity. Capsules
 	    * are a union of a cylinder and two spheres on top and bottom.
 	    * @mixin n-capsule-collider
-	    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+		* @memberof n
+		* @extends n.n-collider
 	    * @prop {number} radius=1 - The radius of the capsule in meters.
 	    * @prop {number} height=1 - The height of the shaft of the capsule in meters.
 	    * @prop {string} direction=y - The axis with which the capsule is aligned.
 	    * One of `x`, `y`, or `z`.
-	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
 	    */
 		AFRAME.registerComponent('n-capsule-collider', {
 			init:nativeComponentInit,
@@ -527,7 +580,7 @@
 				radius: { default: '0', type: 'number' },
 				height: { default: '0', type: 'number' },
 				direction: { default: 'y' },
-				type: {default: 'hologram'}
+				type: {default: 'object'}
 			}
 		});
 
@@ -535,7 +588,8 @@
 	    * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
 	    * low-poly meshes.
 	    * @mixin n-mesh-collider
-	    * @prop {string} type=object - The type of collider, one of: `object` | `environment` | `cursor`
+		* @memberof n
+		* @extends n.n-collider
 	    * @example <a-box n-mesh-collider></a-box>
 	    */
 		AFRAME.registerComponent('n-mesh-collider', {
@@ -545,13 +599,15 @@
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
 				convex: { default: true, type: 'boolean' },
-				type: {default: 'hologram'}
+				type: {default: 'object'}
 			}
 		});
 
 		/**
-	    * Make the object always face the viewer.
+	    * Make the object always face the viewer. An object's "forward" direction is
+		* its -Z axis.
 	    * @mixin n-billboard
+		* @memberof n
 	    * @example <a-plane n-billboard></a-plane>
 	    */
 		AFRAME.registerComponent('n-billboard', {
@@ -559,11 +615,13 @@
 			remove: nativeComponentRemove,
 		});
 
-	    /**
+		/**
 	    * A container keeps a running tally of how many objects are within
-	    * its bounds, and adds and removes the states `container-full` and `container-empty` based on the current count of objects. Can fire three special events: `container-full`, `container-empty`,
-	    * and `container-count-changed`.
+	    * its bounds, and adds and removes the states `container-full` and
+		* `container-empty` based on the current count of objects. Can fire three
+		* special events: `container-full`, `container-empty`, and `container-count-changed`.
 	    * @mixin n-container
+		* @memberof n
 	    * @prop {number} capacity=4 - The value at which the container will fire the
 	    * `container-full` event.
 	    */
@@ -595,9 +653,31 @@
 		});
 
 	    /**
-	    * Play the sound given by the `src` or `res` property from the location of the entity.
+	    * Play the sound given by the `src` or `res` property from the location
+		* of the entity.
 	    * @mixin n-sound
-	    *
+		* @memberof n
+	    * @prop {string} res - The resource identifier for a built-in sound clip.
+		* @prop {string} src - A URL to an external sound clip.
+		* @prop {string} on - The name of the event that will play this sound clip.
+		* @prop {boolean} loop=false - Tells the clip to loop back to the beginning of the clip
+		* once it's finished.
+		* @prop {boolean} autoplay=false - Tells the clip to start automatically when
+		* the scene loads, instead of waiting for `playSound()`.
+		* @prop {boolean} oneshot=false - Tells the clip to clean itself up when it
+		* finishes playing. Allows for overlapping instances of the sound.
+		* @prop {number} volume=1 - The volume of the clip, from [0,1].
+		* @prop {number} spatialBlend=1 - How spatialized a sound is, from [0,1].
+		* A value of 1 will be fully localized, and the sound will pan left and
+		* right as you turn your head. A value of 0 makes it non-spatialized, and
+		* it will always be heard in both ears.
+		* @prop {number} pitch=1 - The speed multiplier for the sound. 0.5 is one
+		* octave down, and 2 is one octave up.
+		* @prop {number} minDistance=1 - Inside this distance in meters,
+		* the sound volume is at full volume.
+		* @prop {number} maxDistance=12 - Beyond this distance in meters, the sound
+		* will rapidly fall off to silence.
+
 	    */
 		AFRAME.registerComponent('n-sound', {
 			init: function () {
@@ -616,14 +696,30 @@
 				}
 				nativeComponentInit.call(this);
 			},
+
+			/**
+			* Stop the playing sound, and preserve position in clip.
+			* @method n.n-sound#pauseSound
+			*/
 			pauseSound: function () {
 				callComponent.call(this, 'pause');
 				this.el.emit('sound-paused');
 			},
+
+			/**
+			* Start the sound playing.
+			* @method n.n-sound#playSound
+			*/
 			playSound: function () {
 				callComponent.call(this, 'play');
 				this.el.emit('sound-played');
 			},
+
+			/**
+			* Jump to a position in the clip.
+			* @method n.n-sound#seek
+			* @param {number} time - The time in milliseconds to jump to.
+			*/
 			seek: function (time) {
 				callComponent.call(this, 'seek', {time: time});
 			},
@@ -662,9 +758,155 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
+	// this file is just for good measure. didn't want native-components getting too cluttered.
+
+	/**
+	* This namespace describes strings that are valid inputs to the various native
+	* components. Some components can only take certain types of resources, i.e.
+	* {@link n.n-spawner} can only accept `interactables`.
+	* @namespace resources
+	* @example <a-entity n-object='architecture/ceiling-2w-2l'></a-entity>
+	*/
+
+	/**
+	* Generic modular building pieces. All pieces are aligned to one corner, such that
+	* the piece extends out toward -X and +Z.
+	* @name architecture
+	* @enum architecture
+	* @memberof resources
+	*
+	* @prop ceiling-2w-2l
+	* @prop ceiling-4w-4l
+	* @prop ceiling-4w-4l
+	* @prop ceiling-skylight-4w-4l
+	* @prop ceiling-skylight-corner-2w-2l
+	* @prop ceiling-skylight-edge-2w
+	* @prop ceiling-skylight-edge-4w
+	* @prop ceiling-skylight-filler-4w-4l-2
+	* @prop ceiling-skylight-filler-4w-4l
+	* @prop ceiling-slice-concave-2r
+	* @prop ceiling-slice-concave-4r
+	* @prop ceiling-slice-convex-2r
+	* @prop ceiling-slice-convex-4r
+	* @prop door-4w-4h
+	* @prop floor-2w-2l
+	* @prop floor-2w-4l
+	* @prop floor-4w-2l
+	* @prop floor-4w-4l
+	* @prop floor-slice-concave-2r
+	* @prop floor-slice-concave-4r
+	* @prop floor-slice-convex-2r
+	* @prop floor-slice-convex-4r
+	* @prop railing-2l
+	* @prop railing-4l
+	* @prop railing-curve-concave-2r
+	* @prop wall-2w-4h
+	* @prop wall-4w-4h
+	* @prop wall-base-2w
+	* @prop wall-base-4w
+	* @prop wall-base-curve-concave-2r
+	* @prop wall-base-curve-concave-4r
+	* @prop wall-base-curve-convex-2r
+	* @prop wall-base-curve-convex-4r
+	* @prop wall-bulkhead-2w
+	* @prop wall-bulkhead-4w
+	* @prop wall-bulkhead-curve-concave-2r
+	* @prop wall-bulkhead-curve-concave-4r
+	* @prop wall-bulkhead-curve-convex-2r
+	* @prop wall-bulkhead-curve-convex-4r
+	* @prop wall-curve-concave-2r-4h
+	* @prop wall-curve-concave-4r-4h
+	* @prop wall-curve-convex-2r-4h
+	* @prop wall-curve-convex-4r-4h
+	* @prop wall-curve-window-concave-4r-4h
+	* @prop wall-curve-window-concave-filler-4r-4h
+	* @prop wall-curve-window-gap-concave-4r-4h
+	* @prop wall-curve-window-gap-end-l-concave-4r-4h
+	* @prop wall-curve-window-gap-end-r-concave-4r-4h
+	* @prop wall-filler-corner-inner-4h
+	* @prop wall-filler-corner-outer-4h
+	* @prop wall-window-4w-4h
+	* @prop wall-window-filler-2
+	* @prop wall-window-gap-2w-4h
+	* @prop wall-window-gap-4w-4h
+	* @prop wall-window-gap-end-l-2w-4h
+	* @prop wall-window-gap-end-l-4w-4h
+	* @prop wall-window-gap-end-r-2w-4h
+	* @prop wall-window-gap-end-r-4w-4h
+	*/
+
+	/**
+	* Particle systems and other native effects
+	* @name effects
+	* @enum effects
+	* @memberof resources
+	*
+	* @prop explosion - A particle system with a central flash, then debris flying outward.
+	* This is a non-looping effect.
+	* @prop fire - An animated fire particle, suitable for a torch.
+	* @prop fire-trail - Fire that trails the entity through space as it moves.
+	* @prop fireworks - A compound particle system that shoots up from the entity,
+	* explodes into colored sparks, then transitions to gold streamers.
+	* @prop smoke - Billowing smoke particle system.
+	* @prop sparkler
+	* @prop steam
+	*/
+
+	/**
+	* Objects that can be picked up, thrown, and otherwise interacted with.
+	* @name interactables
+	* @enum interactables
+	* @memberof resources
+	*
+	* @prop box
+	* @prop basketball
+	* @prop soccerball
+	* @prop bowling-pin
+	* @prop gem
+	*/
+
+	/**
+	* Static models that you can place in your scene.
+	* @name objects
+	* @enum objects
+	* @memberof resources
+	*
+	* @prop basketball-net
+	* @prop target-archery
+	* @prop gem
+	*/
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	/**
+	* Enables the synchronization of properties of entities. All property sync components
+	* require both a {@link sync.sync-system} on `a-scene`, and a {@link sync.sync}
+	* on the entity to be synced.
+	* @name sync
+	* @namespace sync
+	* @example
+	* <a-scene sync-system='app: example sync; author: altspacevr'>
+	*   <a-entity sync='ownOn: cursordown' sync-color></a-entity>
+	* </a-scene>
+	*/
+
+
+
+	/**
+	* Enables the synchronization of properties of the entity. Must be used in
+	* conjuction with the {@link sync.sync-system} component and a component for a
+	* specific property (e.g. {@link sync.sync-transform}).
+	* @memberof sync
+	* @mixin sync
+	* @prop {string} ownOn - The name of the event that will cause the local client
+	* to take ownership of this object.
+	*/
 	AFRAME.registerComponent('sync',
 	{
 		schema: {
@@ -788,10 +1030,24 @@
 		}
 	});
 
+
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
+	/**
+	* Connect to a remote Firebase server, and facilitate synchronization. These
+	* options correspond exactly with the configuration options for
+	* `altspace.utilities.sync.connect`. This component must be present on `a-scene`
+	* for any other sync components to work.
+	* @memberof sync
+	* @mixin sync-system
+	* @prop {string} author - A unique identifier for you or your organization.
+	* @prop {string} app - The name of the app.
+	* @prop {string} ref-url - Override the base reference. Set this to use your own Firebase.
+	* @prop {string} instance - Override the instance ID. Can also be overridden with
+	* a URL parameter.
+	*/
 	AFRAME.registerSystem('sync-system',
 	{
 		schema: {
@@ -803,7 +1059,7 @@
 		init: function() {
 			var component = this;
 
-			if(!this.data || !this.app){
+			if(!this.data || !this.data.app){
 				console.warn('The sync-system must be present on the scene and configured with required data.');
 				return;
 			}
@@ -868,12 +1124,21 @@
 		}
 	});
 
+
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	//TODO: We need to figure out a way to recieve our first update without caring about ownership.
 	// firstValue is probably not the right way to go, probably something about having sent yet. Need to change for both
+
+	/**
+	* Synchronize the position, rotation, and scale of this object with all clients.
+	* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+	* {@link sync.sync} component on the target entity.
+	* @mixin sync-transform
+	* @memberof sync
+	*/
 	AFRAME.registerComponent('sync-transform',
 	{
 		dependencies: ['sync'],
@@ -1011,10 +1276,18 @@
 		}
 	});
 
+
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
+	/**
+	* Sync the color property of the object between clients.
+	* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+	* {@link sync.sync} component on the target entity.
+	* @mixin sync-color
+	* @memberof sync
+	*/
 	AFRAME.registerComponent('sync-color',
 	{
 		dependencies: ['sync'],
@@ -1063,10 +1336,18 @@
 		}
 	});
 
+
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
+	/**
+	* Synchronize the playback state of an {@link n.n-sound} component between clients.
+	* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+	* {@link sync.sync} component on the target entity.
+	* @mixin sync-n-sound
+	* @memberof sync
+	*/
 	AFRAME.registerComponent('sync-n-sound',
 	{
 		dependencies: ['sync'],
@@ -1133,9 +1414,8 @@
 	});
 
 
-
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/**
