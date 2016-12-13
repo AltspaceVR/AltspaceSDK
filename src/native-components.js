@@ -41,11 +41,11 @@
 	}
 
 	/**
-    * Creates a native object on this
-    * entity. The nature of these objects vary.
+    * Pairs the given native object with this entity.
     * @mixin n-object
 	* @memberof n
-    * @prop {string} query - The identifier for the resource you want.
+    * @prop {string} query - The identifier for the resource you want. This component
+	* can only accept resources of type `architecture`, `objects`, or `effects`.
     * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
     */
 	AFRAME.registerComponent('n-object', {
@@ -60,10 +60,11 @@
 	/**
     * Create an object that spawns additional non-spawning copies of itself.
 	* These copies will be physically interactive and automatically synchronized
-	* between users. Only some native resources can be spawned.
+	* between users.
     * @mixin n-spawner
 	* @memberof n
-    * @prop {string} res - The identifier for the resource you want.
+    * @prop {string} res - The identifier for the resource you want. This component
+	* can only accept resources of type `interactables`.
     * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
     */
 	AFRAME.registerComponent('n-spawner', {

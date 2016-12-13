@@ -6,6 +6,7 @@ require('./altspace');
 require('./altspace-cursor-collider');
 require('./altspace-tracked-controls');
 require('./native-components');
+require('./native-resources');
 require('./sync');
 require('./sync-system');
 require('./sync-transform');
