@@ -18,8 +18,9 @@
 * specific property (e.g. {@link sync.sync-transform}).
 * @memberof sync
 * @mixin sync
-* @prop {string} ownOn - The name of the event that will cause the local client
-* to take ownership of this object.
+* @prop {string} ownOn - The name of the event, or a list of events, that
+* will cause the local client to take ownership of this object. This field
+* cannot be updated after initialization.
 */
 AFRAME.registerComponent('sync',
 {
@@ -45,7 +46,8 @@ AFRAME.registerComponent('sync',
 		if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
 
 
-		if(component.data.ownOn){
+		if(component.data.ownOn)
+		{
 			var ownershipEvents = component.data.ownOn.split(/[ ,]+/);
 			for(var i = 0, max = ownershipEvents.length; i < max; i++){
 				component.el.addEventListener(ownershipEvents[i], function(){
