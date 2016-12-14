@@ -431,13 +431,13 @@
 	    * Pairs the given native object with this entity.
 	    * @mixin n-object
 		* @memberof n
-	    * @prop {string} query - The identifier for the resource you want. This component
+	    * @prop {string} res - The identifier for the resource you want. This component
 		* can only accept resources of type `architecture`, `objects`, or `effects`.
 	    * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
 	    */
 		AFRAME.registerComponent('n-object', {
 			schema: {
-				type: 'string'
+				res: {type: 'string'}
 			},
 			init: nativeComponentInit,
 			update: nativeComponentUpdate,
@@ -904,8 +904,9 @@
 	* specific property (e.g. {@link sync.sync-transform}).
 	* @memberof sync
 	* @mixin sync
-	* @prop {string} ownOn - The name of the event that will cause the local client
-	* to take ownership of this object.
+	* @prop {string} ownOn - The name of the event, or a list of events, that
+	* will cause the local client to take ownership of this object. This field
+	* cannot be updated after initialization.
 	*/
 	AFRAME.registerComponent('sync',
 	{
@@ -931,7 +932,8 @@
 			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
 
 
-			if(component.data.ownOn){
+			if(component.data.ownOn)
+			{
 				var ownershipEvents = component.data.ownOn.split(/[ ,]+/);
 				for(var i = 0, max = ownershipEvents.length; i < max; i++){
 					component.el.addEventListener(ownershipEvents[i], function(){
@@ -1014,6 +1016,11 @@
 					});
 			}
 
+			/**
+			* Tell sync to start pushing local property values instead of updating
+			* local from remote values.
+			* @method sync.sync#takeOwnership
+			*/
 			component.takeOwnership = function() {
 				ownerRef.set(syncSys.clientId);
 
@@ -1022,6 +1029,11 @@
 				ownerRef.onDisconnect().set(null);
 			}
 
+			/**
+			* Indicates whether the sync ownership is yours.
+			* @member sync.sync#isMine
+			* @readonly
+			*/
 			Object.defineProperty(component, 'isMine', {
 				get: function () {
 					return isMine;//TODO: Should this be state instead?
@@ -1038,8 +1050,8 @@
 	/**
 	* Connect to a remote Firebase server, and facilitate synchronization. These
 	* options correspond exactly with the configuration options for
-	* `altspace.utilities.sync.connect`. This component must be present on `a-scene`
-	* for any other sync components to work.
+	* [altspace.utilities.sync.connect]{@link http://altspacevr.github.io/AltspaceSDK/doc/module-altspace_utilities_sync.html#.connect}.
+	* This component must be present on `a-scene` for any other sync components to work.
 	* @memberof sync
 	* @mixin sync-system
 	* @prop {string} author - A unique identifier for you or your organization.
