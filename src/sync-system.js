@@ -7,7 +7,7 @@
 * @mixin sync-system
 * @prop {string} author - A unique identifier for you or your organization.
 * @prop {string} app - The name of the app.
-* @prop {string} ref-url - Override the base reference. Set this to use your own Firebase.
+* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
 * @prop {string} instance - Override the instance ID. Can also be overridden with
 * a URL parameter.
 */
@@ -17,7 +17,7 @@ AFRAME.registerSystem('sync-system',
 		author: { type: 'string', default: null },
 		app: { type: 'string', default: null },
 		instance: { type: 'string', default: null },
-		'ref-url': { type: 'string', default: null },
+		refUrl: { type: 'string', default: null },
 	},
 	init: function() {
 		var component = this;
@@ -33,7 +33,7 @@ AFRAME.registerSystem('sync-system',
 			authorId: this.data.author,
 			appId: this.data.app,
 			instanceId: this.data.instance,
-			baseRefUrl: this.data['ref-url']
+			baseRefUrl: this.data.refUrl
 		}).then(function(connection) {
 			this.connection = connection;
 

@@ -41,7 +41,7 @@
 	}
 
 	/**
-    * Pairs the given native object with this entity.
+    * Attach a given native object to this entity.
     * @mixin n-object
 	* @memberof n
     * @prop {string} res - The identifier for the resource you want. This component
@@ -58,7 +58,7 @@
 	});
 
 	/**
-    * Create an object that spawns additional non-spawning copies of itself.
+    * Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 	* These copies will be physically interactive and automatically synchronized
 	* between users.
     * @mixin n-spawner
@@ -217,8 +217,7 @@
 	});
 
 	/**
-    * Make the object always face the viewer. An object's "forward" direction is
-	* its -Z axis.
+    * Make the object's +Z always face the viewer. Currently will only directly apply to main mesh or native component on the attached entity, not any children or submeshes.
     * @mixin n-billboard
 	* @memberof n
     * @example <a-plane n-billboard></a-plane>
