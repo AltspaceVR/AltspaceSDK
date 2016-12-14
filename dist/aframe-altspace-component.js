@@ -1066,7 +1066,7 @@
 			author: { type: 'string', default: null },
 			app: { type: 'string', default: null },
 			instance: { type: 'string', default: null },
-			'ref-url': { type: 'string', default: null },
+			refUrl: { type: 'string', default: null }
 		},
 		init: function() {
 			var component = this;
@@ -1077,12 +1077,12 @@
 			}
 
 			component.isConnected = false;
-
+			console.log(this.data);
 			altspace.utilities.sync.connect({
 				authorId: this.data.author,
 				appId: this.data.app,
 				instanceId: this.data.instance,
-				baseRefUrl: this.data['ref-url']
+				baseRefUrl: this.data.refUrl
 			}).then(function(connection) {
 				this.connection = connection;
 

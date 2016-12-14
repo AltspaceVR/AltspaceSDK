@@ -75,7 +75,7 @@
 	<li id="interactables/soccerball" />
 	<li id="interactables/bowling-pin" />
 	<li id="interactables/gem" />
-	<li id="objects/basketball-net" />
+	<li id="objects/basketball-hoop" />
 	<li id="objects/target-archery" />
 	<li id="objects/gem" />
 	<li id="effects/explosion" />
@@ -91,7 +91,7 @@
 	{% for x in range(0, -width, -4) %}
 		{% for y in range(0, height, 4) %}
 			{% for z in range(0, depth, 4) %}
-				<a-entity position='{{x}} {{y}} {{z}}' n-object='{{model}}'></a-entity>
+				<a-entity position='{{x}} {{y}} {{z}}' n-object='res: {{model}}'></a-entity>
 			{% endfor %}
 		{% endfor %}
 	{% endfor %}
@@ -102,34 +102,37 @@
 	<!-- welcome message -->
 	<a-entity id='welcome' position='6 1.5 -8'>
 
-		<a-entity position='0 0.9 0.1' rotation='0 180 0'
+		<a-entity position='0 0.9 0.1'
 			n-text='text: Native Objects; width: 20; fontSize: 15'></a-entity>
 
-		<a-entity position='0 -0.7 0.1' rotation='0 180 0'
+		<a-entity position='0 -0.7 0.1'
 			n-text='text: Welcome to the Playground, the live showcase for our native objects library for A-Frame! Construct your own rooms using our collection of building blocks, complete with blocking volumes (things to stand on), interactables, particle effects, and more!; fontSize: 3;'></a-entity>
 
 		<a-plane position='0 0 -0.1' rotation='0 0 0' scale='11 4 1'
 			color=black transparent=false opacity=0.6></a-plane>
 
-		<a-entity position='0 -2 -10' n-object='effects/fireworks'></a-entity>
+		<a-entity position='0 -2 -10' n-object='res: effects/fireworks'></a-entity>
 	</a-entity>
 
 	<!-- preview room -->
 	<a-entity id='library' position='6 0 7'>
-		<a-entity position='0 3.2 -2' n-text='text: Library of objects!'></a-entity>
+		<a-entity position='0 3.2 -2' rotation='0 180 0'
+			n-text='text: Library of objects!'>
+		</a-entity>
 		<a-entity id="preview" sync='ownOn: itemcycle'
-			synced-resource='res: architecture/ceiling-2w-2l; label: #previewText'
-		>
+			synced-resource='res: architecture/ceiling-2w-2l; label: #previewText'>
 			<a-sphere radius=0.05></a-sphere>
 		</a-entity>
-		<a-entity id='previewText' position='0 2 4.5' n-text='text: architecture/ceiling-2w-2l; width: 15; fontSize: 5;'></a-entity>
+		<a-entity id='previewText' position='0 2 4.5' rotation='0 180 0'
+			n-text='text: architecture/ceiling-2w-2l; width: 15; fontSize: 5;'>
+		</a-entity>
 
 		<a-box id='next' position='-4 1 0' rotation='0 315 0'
 			color='green' height=0.5 n-mesh-collider
 			wire='on: cursordown; emit: itemcycle; targets: #preview'
 			cycle-preview='view: #preview; library: #obj-list; direction: forward;'>
 			<a-entity n-text='text: Next; fontSize: 4; width: 1; height: 0.5;
-				verticalAlign: center;' position='0 0 -0.51'>
+				verticalAlign: center;' position='0 0 -0.51' rotation='0 180 0'>
 			</a-entity>
 		</a-box>
 		<a-box id='back' position='4 1 0' rotation='0 45 0'
@@ -137,7 +140,7 @@
 			wire='on: cursordown; emit: itemcycle; targets: #preview'
 			cycle-preview='view: #preview; library: #obj-list; direction: backward;'>
 			<a-entity n-text='text: Back; fontSize: 4; width: 1; height: 0.5;
-				verticalAlign: center;' position='0 0 -0.51'>
+				verticalAlign: center;' position='0 0 -0.51' rotation='0 180 0'>
 			</a-entity>
 		</a-box>
 
@@ -145,14 +148,14 @@
 			color='#040' height=0.5 n-mesh-collider
 			cycle-preview='view: #preview; library: #obj-list; direction: category-forward;'>
 			<a-entity n-text='text: Next Category; fontSize: 2; width: 1; height: 0.5;
-				verticalAlign: center;' position='0 0 -0.51'>
+				verticalAlign: center;' position='0 0 -0.51' rotation='0 180 0'>
 			</a-entity>
 		</a-box>
 		<a-box id='backCat' position='4 0.2 0' rotation='0 45 0'
 			color='#800' height=0.5 n-mesh-collider
 			cycle-preview='view: #preview; library: #obj-list; direction: category-backward;'>
 			<a-entity n-text='text: Previous Category; fontSize: 2; width: 1; height: 0.5;
-				verticalAlign: center;' position='0 0 -0.51'>
+				verticalAlign: center;' position='0 0 -0.51' rotation='0 180 0'>
 			</a-entity>
 		</a-box>
 
@@ -160,7 +163,9 @@
 
 	<!-- colliders -->
 	<a-entity position='-4.75 0 7'>
-		<a-entity position='0 3.2 -2' n-text='text: Casa de Collider!'></a-entity>
+		<a-entity position='0 3.2 -2' rotation='0 180 0'
+			n-text='text: Casa de Collider!'>
+		</a-entity>
 
 		<a-box width=0.1 height=2.6 depth=4 position='-2 2 2' color='#793838'
 			n-box-collider='size: 0.1 2.6 4; type: environment'></a-box>
@@ -196,7 +201,9 @@
 
 	<!-- interactables -->
 	<a-entity position='-15 0 7'>
-		<a-entity position='0 3.2 -2' n-text='text: Interactables!'></a-entity>
+		<a-entity position='0 3.2 -2' rotation='0 180 0'
+			n-text='text: Interactables!'>
+		</a-entity>
 
 		<!-- goodies table -->
 		<a-box width=2 height=1 depth=0.5 position='2 0.25 0'
@@ -206,9 +213,9 @@
 			<a-entity position='0.5 0.75 0' n-spawner='res: interactables/gem'></a-entity>
 		</a-box>
 
-		<a-entity position='2 3 2.5' n-object='objects/basketball-net'>
-			<a-box width=2 height=1.5 depth=0.1 n-box-collider='size: 2 1.5 0.1'
-				position='0 0.7 0.5' color=grey>
+		<a-entity position='2 2 2.5' n-object='res: objects/basketball-hoop'>
+			<a-box width=1.5 height=1 depth=0.1 n-box-collider='size: 1.5 1 0.1'
+				position='0 0.5 0.3' color=grey>
 			</a-box>
 		</a-entity>
 

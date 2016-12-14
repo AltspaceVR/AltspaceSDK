@@ -108,7 +108,7 @@ AFRAME.registerComponent('synced-resource', {
         }
         else {
             this.el.removeAttribute('n-spawner');
-            this.el.setAttribute('n-object', id);
+            this.el.setAttribute('n-object', 'res', id);
         }
 
         // update the label if there is one
