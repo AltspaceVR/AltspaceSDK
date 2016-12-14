@@ -1,8 +1,8 @@
 /**
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
-* `altspace.utilities.sync.connect`. This component must be present on `a-scene`
-* for any other sync components to work.
+* [altspace.utilities.sync.connect]{@link http://altspacevr.github.io/AltspaceSDK/doc/module-altspace_utilities_sync.html#.connect}.
+* This component must be present on `a-scene` for any other sync components to work.
 * @memberof sync
 * @mixin sync-system
 * @prop {string} author - A unique identifier for you or your organization.

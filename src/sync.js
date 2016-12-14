@@ -128,6 +128,11 @@ AFRAME.registerComponent('sync',
 				});
 		}
 
+		/**
+		* Tell sync to start pushing local property values instead of updating
+		* local from remote values.
+		* @method sync.sync#takeOwnership
+		*/
 		component.takeOwnership = function() {
 			ownerRef.set(syncSys.clientId);
 
