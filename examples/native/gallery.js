@@ -66,7 +66,6 @@ AFRAME.registerComponent('synced-resource', {
 		var sync = this.el.components.sync;
 		self.firstUpdate = true;
 		self.refLock = false;
-		console.log('init');
 
 		if(sync.isConnected)
 			start();
@@ -75,14 +74,11 @@ AFRAME.registerComponent('synced-resource', {
 
 		function start()
 		{
-            console.log('registering fb listener');
             var resourceRef = sync.dataRef.child('resource');
 			resourceRef.on('value', function (snapshot)
 			{
-                console.log('fb update');
-				if (sync.isMine && !self.firstValue) return;
+                if (sync.isMine && !self.firstValue) return;
 				var val = snapshot.val();
-                console.log('fb value event:', val);
 
                 self.refLock = true;
                 self.data.res = val;
@@ -97,8 +93,7 @@ AFRAME.registerComponent('synced-resource', {
 		var sync = this.el.components.sync;
         var resourceRef = sync.dataRef ? sync.dataRef.child('resource') : null;
 
-        console.log('aframe update', sync.isMine, this.refLock, resourceRef);
-		if(sync.isMine && !this.refLock && resourceRef)
+        if(sync.isMine && !this.refLock && resourceRef)
 			resourceRef.set(this.data.res);
 
         this.setResource(this.data.res);
@@ -106,7 +101,6 @@ AFRAME.registerComponent('synced-resource', {
 
     setResource: function(id)
     {
-        console.log('setting resource to', id);
         if(/^interactables\//.test(id))
         {
             this.el.removeAttribute('n-object');
