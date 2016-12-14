@@ -4,6 +4,9 @@
 	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
 	<script src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
+	<script src="https://rawgit.com/ngokevin/kframe/master/dist/kframe.min.js"></script>
+	<script src="gallery.js"></script>
 	<script>
 
 	AFRAME.registerComponent('unfolding-path',
@@ -30,7 +33,7 @@
 					var z = -i * tileWidth - (tileWidth * gap);
 
 					var section = document.createElement("a-entity");
-					component.el.appendChild(section); 
+					component.el.appendChild(section);
 					section.setAttribute('rotation', '90 180 0');
 					section.setAttribute('position', '-2 -2 0');
 					section.setAttribute('scale', '1 1 ' + (1 - gap));
@@ -42,7 +45,7 @@
 					animation.setAttribute('to', '0 180 0');
 					animation.setAttribute('delay', duration * 0.8 * i);
 					animation.setAttribute('easing', 'ease');
-					section.appendChild(animation); 
+					section.appendChild(animation);
 
 					animation = document.createElement("a-animation");
 					animation.setAttribute('attribute', 'position');
@@ -50,7 +53,7 @@
 					animation.setAttribute('to', '-2 0 ' + z);
 					animation.setAttribute('delay', duration * 0.8 * i);
 					animation.setAttribute('easing', 'ease');
-					section.appendChild(animation); 
+					section.appendChild(animation);
 				}
 
 				for(var j = 0; j < secondHalfMax; j++){
@@ -58,7 +61,7 @@
 					var z = -(secondHalfMax - j) * tileWidth - (halfMax * tileWidth);
 
 					var section = document.createElement("a-entity");
-					component.el.appendChild(section); 
+					component.el.appendChild(section);
 					section.setAttribute('rotation', '90 0 0');
 					section.setAttribute('position', '2 -2 ' + max * -tileWidth);
 					section.setAttribute('scale', '1 1 ' + (1 - gap));
@@ -70,7 +73,7 @@
 					animation.setAttribute('to', '0 0 0');
 					animation.setAttribute('delay', duration * 0.8 * j);
 					animation.setAttribute('easing', 'ease');
-					section.appendChild(animation); 
+					section.appendChild(animation);
 
 					animation = document.createElement("a-animation");
 					animation.setAttribute('attribute', 'position');
@@ -78,7 +81,7 @@
 					animation.setAttribute('to', '2 0 ' + z);
 					animation.setAttribute('delay', duration * 0.8 * j);
 					animation.setAttribute('easing', 'ease');
-					section.appendChild(animation); 
+					section.appendChild(animation);
 				}
 			}
 
@@ -135,7 +138,7 @@
 
 	<a-entity position='0 0.1 -3.5' rotation="90 180 0"
 		n-text='text: ^ Welcome ^; fontSize:9'></a-entity>
-	
+
 	<a-entity id="path1" unfolding-path="length:20" position="0 0 -6"></a-entity>
 	<a-entity id="trigger1" position="0 0 -16" n-box-collider="isTrigger:true; type:environment; size: 8 4 27" n-container="capacity:1"
 	wire="targets:#path1; gained: container-full; gain: unfolded"
@@ -283,7 +286,11 @@
 		</a-entity>
 	</a-entity>
 
-	<!--<a-entity id="all">		
+	<a-entity position='6 0.25 -50' rotation='0 180 0' template='src: gallery.html'></a-entity>
+	<a-entity position='2 0 -46' n-object='res: architecture/floor-4w-4l'></a-entity>
+	<a-entity position='2 0 -42' n-object='res: architecture/floor-4w-4l'></a-entity>
+
+	<!--<a-entity id="all">
 		<a-entity n-object="res:architecture/ceiling-2w-2l" position="0 3 0"></a-entity>
 		<a-entity n-object="res:architecture/ceiling-2w-4l" position="0 3 0"></a-entity>
 		<a-entity n-object="res:architecture/ceiling-4w-2l" position="0 3 0"></a-entity>
@@ -343,7 +350,7 @@
 		<a-entity n-object="res:architecture/wall-window-gap-end-l-4w-4h" position="0 3 0"></a-entity>
 		<a-entity n-object="res:architecture/wall-window-gap-end-r-2w-4h" position="0 3 0"></a-entity>
 		<a-entity n-object="res:architecture/wall-window-gap-end-r-4w-4h" position="0 3 0"></a-entity>
-	
+
 		<a-entity position="0 3 -10" n-object="res:effects/explosion"></a-entity>
 		<a-entity position="1 3 -10" n-object="res:effects/fire"></a-entity>
 		<a-entity position="2 3 -10" n-object="res:effects/fire-trail"></a-entity>
