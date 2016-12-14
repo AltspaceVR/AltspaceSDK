@@ -84,12 +84,12 @@
 * @prop explosion - A particle system with a central flash, then debris flying outward.
 * This is a non-looping effect.
 * @prop fire - An animated fire particle, suitable for a torch.
-* @prop fire-trail - Fire that trails the entity through space as it moves.
+* @prop fire-trail - Fire that trails the entity through space as it moves. Only is visible while an object is in motion
 * @prop fireworks - A compound particle system that shoots up from the entity,
 * explodes into colored sparks, then transitions to gold streamers.
 * @prop smoke - Billowing smoke particle system.
-* @prop sparkler
-* @prop steam
+* @prop sparkler - Emits sparks in all directions
+* @prop steam - Small white steam rising upwards
 */
 
 /**

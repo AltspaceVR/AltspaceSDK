@@ -7,7 +7,7 @@
 * @mixin sync-system
 * @prop {string} author - A unique identifier for you or your organization.
 * @prop {string} app - The name of the app.
-* @prop {string} ref-url - Override the base reference. Set this to use your own Firebase.
+* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
 * @prop {string} instance - Override the instance ID. Can also be overridden with
 * a URL parameter.
 */

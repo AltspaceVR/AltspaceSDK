@@ -428,7 +428,7 @@
 		}
 
 		/**
-	    * Pairs the given native object with this entity.
+	    * Attach a given native object to this entity.
 	    * @mixin n-object
 		* @memberof n
 	    * @prop {string} res - The identifier for the resource you want. This component
@@ -445,7 +445,7 @@
 		});
 
 		/**
-	    * Create an object that spawns additional non-spawning copies of itself.
+	    * Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 		* These copies will be physically interactive and automatically synchronized
 		* between users.
 	    * @mixin n-spawner
@@ -604,8 +604,7 @@
 		});
 
 		/**
-	    * Make the object always face the viewer. An object's "forward" direction is
-		* its -Z axis.
+	    * Make the object's +Z always face the viewer. Currently will only directly apply to main mesh or native component on the attached entity, not any children or submeshes.
 	    * @mixin n-billboard
 		* @memberof n
 	    * @example <a-plane n-billboard></a-plane>
@@ -847,12 +846,12 @@
 	* @prop explosion - A particle system with a central flash, then debris flying outward.
 	* This is a non-looping effect.
 	* @prop fire - An animated fire particle, suitable for a torch.
-	* @prop fire-trail - Fire that trails the entity through space as it moves.
+	* @prop fire-trail - Fire that trails the entity through space as it moves. Only is visible while an object is in motion
 	* @prop fireworks - A compound particle system that shoots up from the entity,
 	* explodes into colored sparks, then transitions to gold streamers.
 	* @prop smoke - Billowing smoke particle system.
-	* @prop sparkler
-	* @prop steam
+	* @prop sparkler - Emits sparks in all directions
+	* @prop steam - Small white steam rising upwards
 	*/
 
 	/**
@@ -1056,7 +1055,7 @@
 	* @mixin sync-system
 	* @prop {string} author - A unique identifier for you or your organization.
 	* @prop {string} app - The name of the app.
-	* @prop {string} ref-url - Override the base reference. Set this to use your own Firebase.
+	* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
 	* @prop {string} instance - Override the instance ID. Can also be overridden with
 	* a URL parameter.
 	*/
