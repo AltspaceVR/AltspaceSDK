@@ -20,7 +20,7 @@
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/vAFRAME_ALTSPACE_VERSION/dist/aframe-altspace-component.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -29,6 +29,7 @@
 * </body>
 */
 AFRAME.registerComponent('altspace', {
+  version: 'AFRAME_ALTSPACE_VERSION',
   schema: {
 	usePixelScale: { type: 'boolean', default: 'false'},
 	verticalAlign: { type: 'string',  default: 'middle'},
@@ -129,7 +130,9 @@ AFRAME.registerComponent('altspace', {
 	}.bind(this));
 
 	var oldRenderer = this.el.renderer;
-	var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
+	var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer({
+	  aframeComponentVersion: this.version
+	});
 	var noop = function() {};
 	renderer.setSize = noop;
 	renderer.setPixelRatio = noop;
