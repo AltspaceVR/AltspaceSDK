@@ -143,6 +143,11 @@ AFRAME.registerComponent('sync',
 			ownerRef.onDisconnect().set(null);
 		}
 
+		/**
+		* Indicates whether the sync ownership is yours.
+		* @member sync.sync#isMine
+		* @readonly
+		*/
 		Object.defineProperty(component, 'isMine', {
 			get: function () {
 				return isMine;//TODO: Should this be state instead?
