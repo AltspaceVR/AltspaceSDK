@@ -44,13 +44,13 @@
     * Pairs the given native object with this entity.
     * @mixin n-object
 	* @memberof n
-    * @prop {string} query - The identifier for the resource you want. This component
+    * @prop {string} res - The identifier for the resource you want. This component
 	* can only accept resources of type `architecture`, `objects`, or `effects`.
     * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
     */
 	AFRAME.registerComponent('n-object', {
 		schema: {
-			type: 'string'
+			res: {type: 'string'}
 		},
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
