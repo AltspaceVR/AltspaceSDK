@@ -87,7 +87,7 @@
 	* <head>
 	*   <title>My A-Frame Scene</title>
 	*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js"></script>
+	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.1.1/dist/aframe-altspace-component.min.js"></script>
 	* </head>
 	* <body>
 	*   <a-scene altspace>
@@ -96,6 +96,7 @@
 	* </body>
 	*/
 	AFRAME.registerComponent('altspace', {
+	  version: '1.1.1',
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
@@ -196,7 +197,9 @@
 		}.bind(this));
 
 		var oldRenderer = this.el.renderer;
-		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer();
+		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer({
+		  aframeComponentVersion: this.version
+		});
 		var noop = function() {};
 		renderer.setSize = noop;
 		renderer.setPixelRatio = noop;
@@ -860,11 +863,14 @@
 	* @enum interactables
 	* @memberof resources
 	*
-	* @prop box
 	* @prop basketball
-	* @prop soccerball
+	* @prop bowlingball
 	* @prop bowling-pin
+	* @prop box
+	* @prop coin
 	* @prop gem
+	* @prop ring
+	* @prop soccerball
 	*/
 
 	/**
@@ -873,9 +879,37 @@
 	* @enum objects
 	* @memberof resources
 	*
-	* @prop basketball-net
-	* @prop target-archery
+	* @prop basketball-hoop
+	* @prop coin
+	* @prop cup
 	* @prop gem
+	* @prop hoop
+	* @prop ring
+	* @prop target-archery
+	*/
+
+	/**
+	* A selection of pipes/chutes/etc.
+	* @name pipes
+	* @enum pipes
+	* @memberof resources
+	*
+	* @prop full-elbow-1d
+	* @prop full-cap-1d
+	* @prop full-straight-1d-1l
+	* @prop full-straight-1d-2l
+	* @prop full-straight-1d-4l
+	* @prop full-tee-1d
+	* @prop full-cross-1d
+	* @prop full-split-1d
+	* @prop half-cap-1d
+	* @prop half-elbow-1d
+	* @prop half-straight-1d-1l
+	* @prop half-straight-1d-2l
+	* @prop half-straight-1d-4l
+	* @prop half-tee-1d
+	* @prop half-cross-1d
+	* @prop half-split-1d
 	*/
 
 
