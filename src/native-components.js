@@ -4,7 +4,7 @@
 * natively by AltspaceVR. Your management of these objects may be limited to
 * some degree, but they will tend to be more performant than SDK equivalents,
 * or may provide some functionality not otherwise available to the SDK.
-* @namespace n
+* @namespace native
 */
 (function () {
 
@@ -43,7 +43,7 @@
 	/**
     * Attach a given native object to this entity.
     * @mixin n-object
-	* @memberof n
+	* @memberof native
     * @prop {string} res - The identifier for the resource you want. This component
 	* can accept all resources except for `interactables`.
     * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
@@ -62,7 +62,7 @@
 	* These copies will be physically interactive and automatically synchronized
 	* between users.
     * @mixin n-spawner
-	* @memberof n
+	* @memberof native
     * @prop {string} res - The identifier for the resource you want. This component
 	* can only accept resources of type `interactables`.
     * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
@@ -80,7 +80,7 @@
     * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
     * This text will be clearer than texture-based text and more performant than geometry-based test.
     * @mixin n-text
-	* @memberof n
+	* @memberof native
     * @prop {string} text - The text to be drawn.
     * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
     * @prop {number} width=10 - The width of the text area in meters. If the
@@ -124,7 +124,7 @@
 	* to your objects.
 	* @name n-collider
 	* @mixin n-collider
-	* @memberof n
+	* @memberof native
     * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
 	* @prop {string} type=hologram - The type of collider, one of: `object` | `environment` | `hologram`.
 	* Object colliders collide with other objects, the environment, and the cursor.
@@ -136,8 +136,8 @@
     /**
     * Create a spherical collider on this entity.
     * @mixin n-sphere-collider
-	* @memberof n
-	* @extends n.n-collider
+	* @memberof native
+	* @extends native.n-collider
     * @prop {number} radius=1 - The size of the collider in meters.
     */
 	AFRAME.registerComponent('n-sphere-collider', {
@@ -156,8 +156,8 @@
 	/**
     * Create a box-shaped collider on this entity.
     * @mixin n-box-collider
-	* @memberof n
-	* @extends n.n-collider
+	* @memberof native
+	* @extends native.n-collider
     * @prop {vec3} size=1,1,1 - The dimensions of the collider.
     */
 	AFRAME.registerComponent('n-box-collider', {
@@ -176,8 +176,8 @@
     * Create a capsule-shaped collider on this entity. Capsules
     * are a union of a cylinder and two spheres on top and bottom.
     * @mixin n-capsule-collider
-	* @memberof n
-	* @extends n.n-collider
+	* @memberof native
+	* @extends native.n-collider
     * @prop {number} radius=1 - The radius of the capsule in meters.
     * @prop {number} height=1 - The height of the shaft of the capsule in meters.
     * @prop {string} direction=y - The axis with which the capsule is aligned.
@@ -201,8 +201,8 @@
     * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
     * low-poly meshes.
     * @mixin n-mesh-collider
-	* @memberof n
-	* @extends n.n-collider
+	* @memberof native
+	* @extends native.n-collider
     * @example <a-box n-mesh-collider></a-box>
     */
 	AFRAME.registerComponent('n-mesh-collider', {
@@ -219,7 +219,7 @@
 	/**
     * Make the object's +Z always face the viewer. Currently will only directly apply to main mesh or native component on the attached entity, not any children or submeshes.
     * @mixin n-billboard
-	* @memberof n
+	* @memberof native
     * @example <a-plane n-billboard></a-plane>
     */
 	AFRAME.registerComponent('n-billboard', {
@@ -233,7 +233,7 @@
 	* `container-empty` based on the current count of objects. Can fire three
 	* special events: `container-full`, `container-empty`, and `container-count-changed`.
     * @mixin n-container
-	* @memberof n
+	* @memberof native
     * @prop {number} capacity=4 - The value at which the container will fire the
     * `container-full` event.
     */
@@ -268,7 +268,7 @@
     * Play the sound given by the `src` or `res` property from the location
 	* of the entity.
     * @mixin n-sound
-	* @memberof n
+	* @memberof native
     * @prop {string} res - The resource identifier for a built-in sound clip.
 	* @prop {string} src - A URL to an external sound clip.
 	* @prop {string} on - The name of the event that will play this sound clip.
@@ -311,7 +311,7 @@
 
 		/**
 		* Stop the playing sound, and preserve position in clip.
-		* @method n.n-sound#pauseSound
+		* @method native.n-sound#pauseSound
 		*/
 		pauseSound: function () {
 			callComponent.call(this, 'pause');
@@ -320,7 +320,7 @@
 
 		/**
 		* Start the sound playing.
-		* @method n.n-sound#playSound
+		* @method native.n-sound#playSound
 		*/
 		playSound: function () {
 			callComponent.call(this, 'play');
@@ -329,7 +329,7 @@
 
 		/**
 		* Jump to a position in the clip.
-		* @method n.n-sound#seek
+		* @method native.n-sound#seek
 		* @param {number} time - The time in milliseconds to jump to.
 		*/
 		seek: function (time) {

@@ -6,15 +6,25 @@ The world is full of web developers though, so if you feel comfortable experimen
 
 In either case, you should join the [AltspaceVR SDK Slack channel](https://altspacevrsdk.slack.com/) ([register here](https://altspacevr-slackin.herokuapp.com/))! We love to see what you’re working on, and are always happy to answer questions. In addition, there are special activities available only for developers that may be better for apps. Just request developer status on Slack, and we’ll hook you up!
 
+## Resources
+
+* [A-Frame](https://aframe.io/docs/0.3.0/introduction/)
+* [AltspaceVR Developer Portal](https://developer.altvr.com/)
+* [Building Your First A-Frame App](https://developer.altvr.com/building-altspacevr-apps-with-a-frame/)
+* [Documentation](https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/doc/)
+* [Examples](https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/examples/)
+* [Native Components FAQ](https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/native.md)
+
 ## Quick Start
 
 This is a fully functional example of what A-Frame code looks like.
+[Live Demo](https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/examples/custom-component/index.html)
 
 ```html
 <!DOCTYPE html>
 <html><head>
 <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-<script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v0.3.0/dist/aframe-altspace-component.min.js"></script>
+<script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/dist/aframe-altspace-component.min.js"></script>
 <script>
 
 // an example custom component, that will change the color when clicked
@@ -45,4 +55,6 @@ AFRAME.registerComponent('color-cycle', {
 </body></html>
 ```
 
-## Resources
+## Native Components
+
+In addition to the normal power of A-Frame that AltspaceVR developers are used to, we now support attaching native AltspaceVR assets to entities via special A-Frame components. So you can spawn physical objects that you can stand on, interactables that users can pick up and throw, and much more! See the [native component documentation](https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/doc/native.html) and the [native component FAQ](https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.2.0/native.md) for the details.
