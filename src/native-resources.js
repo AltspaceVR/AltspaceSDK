@@ -129,22 +129,22 @@
 * @enum pipes
 * @memberof resources
 *
-* @prop full-elbow-1d
-* @prop full-cap-1d
-* @prop full-straight-1d-1l
-* @prop full-straight-1d-2l
-* @prop full-straight-1d-4l
-* @prop full-tee-1d
-* @prop full-cross-1d
-* @prop full-split-1d
-* @prop half-cap-1d
-* @prop half-elbow-1d
-* @prop half-straight-1d-1l
-* @prop half-straight-1d-2l
-* @prop half-straight-1d-4l
-* @prop half-tee-1d
-* @prop half-cross-1d
-* @prop half-split-1d
+* @prop pipe-full-cap-1d
+* @prop pipe-full-cross-1d
+* @prop pipe-full-elbow-1d
+* @prop pipe-full-fork-1d
+* @prop pipe-full-straight-1d-1l
+* @prop pipe-full-straight-1d-2l
+* @prop pipe-full-straight-1d-4l
+* @prop pipe-full-tee-1d
+* @prop pipe-half-cap-1d
+* @prop pipe-half-cross-1d
+* @prop pipe-half-elbow-1d
+* @prop pipe-half-fork-1d
+* @prop pipe-half-straight-1d-1l
+* @prop pipe-half-straight-1d-2l
+* @prop pipe-half-straight-1d-4l
+* @prop pipe-half-tee-1d
 */
 
 /**
@@ -153,22 +153,19 @@
 * @enum ui
 * @memberof resources
 *
-* @prop ui/altspacevr-logo - An image with the AltspaceVR logo
-* @prop ui/enter
-* @prop ui/exit
-* @prop ui/notification-soft
-* @prop ui/menu-close
-* @prop ui/menu-open
-* @prop ui/toggle-off
-* @prop ui/toggle-on
-* @prop ui/over
-* @prop ui/click
-* @prop ui/notification-error
-* @prop ui/notification
+* @prop altspacevr-logo - An image with the AltspaceVR logo
+* @prop error - A sound clip indicating an error occurred.
+* @prop select - A sound clip indicating a select action.
+* @prop toggle - A sound clip indicating a toggle action.
+* @prop click - A sound clip indicating a click action.
+* @prop complete - A sound clip indicating completion.
+* @prop notify - A sound clip indicating a notification.
+* @prop success - A sound clip indicating success.
+* @prop over - A sound clip indicating the experience is over.
 */
 
-/**
-* Stock sound files for your apps, including UI, foley, and effects. 
+/*
+* Stock sound files for your apps, including UI, foley, and effects.
 * @name sfx
 * @enum sfx
 * @memberof resources
@@ -213,4 +210,4 @@
 * @prop sfx/effects/Sad_Crowd.wav - A fun sound used in HaH for when a player wins, used ironically.
 * @prop sfx/effects/SFX/Explosion.wav - An explosion sound to be used for large artillery or weapons.
 * @prop sfx/Timer_10Sec.wav - a 10 second timer that triggers a bell at exactly 10 seconds. The bell lasts for 2 seconds. This allows for timer length changes.
-*/ 
+*/
