@@ -166,3 +166,51 @@
 * @prop ui/notification-error
 * @prop ui/notification
 */
+
+/**
+* Stock sound files for your apps, including UI, foley, and effects. 
+* @name sfx
+* @enum sfx
+* @memberof resources
+*
+* UI
+* This universal UI pack can be used for a general UI.
+* @prop sfx/ui/UI_Back.wav - A simple beep for navigating a menu in reverse.
+* @prop sfx/ui/UI_Cant_Do.wav - Designed to notify that a user cannot do something.
+* @prop sfx/ui/UI_Click_1.wav - A simple sound for clicking or selecting.
+* @prop sfx/ui/UI_Click_2.wav - Another simple sound for clicking or selecting.
+* @prop sfx/ui/UI_Confirm.wav - A cheerful confirm sound for menu's or game actions.
+* @prop sfx/ui/UI_Confirm.wav - Another cheerful confirm sound for menu's or game actions.
+*
+* Tech UI is designed for more modern or futuristic games
+* @prop sfx/ui/Tech_UI_Cant_Do.wav - Notify a user that they cannot do something.
+* @prop sfx/ui/Tech_UI_Click.wav - A modern click sound.
+* @prop sfx/ui/Tech_UI_Confirm.wav - A modern confirm sound.
+* @prop sfx/ui/Tech_UI_Confirm_2.wav - A more cheerful modern confirm sound
+* @prop sfx/ui/Tech_UI_Low_Notify.wav - A bass-heavy tone, designed with a notification in mind.
+* @prop sfx/ui/Tech_UI_Low_Success.wav - A bass-heavy success tone, to be used for items or user-completion.
+* @prop sfx/ui/Tech_UI_Notify.wav- A third notify sound for in game or UI.
+* @prop sfx/ui/Tech_UI_CoinPickup.wav- A sound used for when a user picks up a coin, or wins something.
+*
+* Foley
+* Foley sounds are real sounds designed for tangible, touchable objects as they are heard in the real world.
+* @prop sfx/foley/realFX_Box_Clank.wav - A sound for a box place-down.
+* @prop sfx/foley/realFX_Box_Shuffle.wav A sound for a box slide.
+* @prop sfx/foley/realFX_Box_Shuffle_2.wav A second sound for a box slide.
+* @prop sfx/foley/realFX_Coin_Box.wav - A sound for a coin box or metal pickup.
+* @prop sfx/foley/realFX_Metal_Shuffle.wav - A sound for a metal box slide.
+* @prop sfx/foley/realFX_Paper_Shuffle.wav - A sound for the shuffling of paper.
+* @prop sfx/foley/realFX_Plastic_Shuffle.wav - A plastic scuttle sound, could also be used for a reload sound.
+* @prop sfx/foley/tactile_Click.wav - A sound for a realistic button.
+* @prop sfx/foley/tactile_Click_2.wav - A sound for a second realistic button.
+*
+* Effects
+* Various sound effects for a variety of use cases.
+* @prop sfx/effects/HaH_Fanfare.wav - The "success!" sound from Holograms Against Humanity.
+* @prop sfx/effects/HaH_Game_Start.wav - The "Game has started!" sound from HaH.
+* @prop sfx/effects/HaH_Kick.wav - The "Player has been kicked" sound from HaH.
+* @prop sfx/effects/HaH_New_Player.wav - The sound used in HaH when a player joins the game.
+* @prop sfx/effects/Sad_Crowd.wav - A fun sound used in HaH for when a player wins, used ironically.
+* @prop sfx/effects/SFX/Explosion.wav - An explosion sound to be used for large artillery or weapons.
+* @prop sfx/Timer_10Sec.wav - a 10 second timer that triggers a bell at exactly 10 seconds. The bell lasts for 2 seconds. This allows for timer length changes.
+*/ 
