@@ -5,7 +5,7 @@
 * components. Some components can only take certain types of resources, i.e.
 * {@link n.n-spawner} can only accept `interactables`.
 * @namespace resources
-* @example <a-entity n-object='architecture/ceiling-2w-2l'></a-entity>
+* @example <a-entity n-object='res: architecture/ceiling-2w-2l'></a-entity>
 */
 
 /**

@@ -45,8 +45,8 @@
     * @mixin n-object
 	* @memberof n
     * @prop {string} res - The identifier for the resource you want. This component
-	* can only accept resources of type `architecture`, `objects`, or `effects`.
-    * @example <a-entity n-object='architecture/wall-4w-4h'></a-entity>
+	* can accept all resources except for `interactables`.
+    * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
     */
 	AFRAME.registerComponent('n-object', {
 		schema: {
