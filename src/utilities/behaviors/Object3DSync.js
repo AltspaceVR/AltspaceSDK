@@ -10,11 +10,11 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @class Object3DSync
  * @param {Object} [config]
  * @param {Boolean} [config.position=false] Whether object's position should
- *  be synced
+ *  be synced.
  * @param {Boolean} [config.rotation=false] Whether object's rotation should
- *  be synced
+ *  be synced.
  * @param {Boolean} [config.scale=false] Whether object's scale should
- *  be synced
+ *  be synced.
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
  *  automatically. Not currently recommended.
  * @param {Boolean} [config.world=false] Whether world coordiantes should
@@ -23,11 +23,11 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  *  is a child (e.g. of the tracking skeleton) only in the sender scene.
  * @param {Object} [config.lerp]
  * @param {Boolean} [config.lerp.position=true] Whether object's position should
- *  be linearly interpolated
+ *  be linearly interpolated.
  * @param {Boolean} [config.lerp.rotation=true] Whether object's rotation should
- *  be spherically interpolated
+ *  be spherically linearly interpolated.
  * @param {Boolean} [config.lerp.scale=true] Whether object's scale should
- *  be linearly interpolated
+ *  be linearly interpolated.
  * @param {Number} [config.lerp.duration=155] Duration that interpolation
  *  should be applied over, in milliseconds.
  * @memberof module:altspace/utilities/behaviors
@@ -56,15 +56,15 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 
 	var lerp = {
 		duration: config.lerp.duration || 155,
-		position: config.lerp.position ? {
+		position: (config.lerp.position === undefined || config.lerp.position) ? {
 			src: new THREE.Vector3(),
 			dest: new THREE.Vector3()
 		} : null,
-		quaternion: config.lerp.rotation ? {
+		quaternion: (config.lerp.rotation === undefined || config.lerp.rotation) ? {
 			src: new THREE.Quaternion(),
 			dest: new THREE.Quaternion()
 		} : null,
-		scale: config.lerp.scale ? {
+		scale: (config.lerp.scale === undefined || config.lerp.scale) ? {
 			src: new THREE.Vector3(),
 			dest: new THREE.Vector3()
 		} : null
