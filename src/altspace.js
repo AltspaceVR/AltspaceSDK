@@ -62,6 +62,8 @@ AFRAME.registerComponent('altspace', {
    * Generally modifies the entity based on the data.
    */
   update: function (oldData) {
+      if(this.el.object3D.updateAllBehaviors)
+        this.el.object3D.updateAllBehaviors();
   },
 
   /*
