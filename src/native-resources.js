@@ -122,3 +122,27 @@
 * @prop ring
 * @prop target-archery
 */
+
+/**
+* A selection of pipes/chutes/etc.
+* @name pipes
+* @enum pipes
+* @memberof resources
+*
+* @prop full-elbow-1d
+* @prop full-cap-1d
+* @prop full-straight-1d-1l
+* @prop full-straight-1d-2l
+* @prop full-straight-1d-4l
+* @prop full-tee-1d
+* @prop full-cross-1d
+* @prop full-split-1d
+* @prop half-cap-1d
+* @prop half-elbow-1d
+* @prop half-straight-1d-1l
+* @prop half-straight-1d-2l
+* @prop half-straight-1d-4l
+* @prop half-tee-1d
+* @prop half-cross-1d
+* @prop half-split-1d
+*/
