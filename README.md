@@ -1,69 +1,48 @@
 ## aframe-altspace-component
 
-Component to make an [A-Frame](https://aframe.io) scene compatible with [AltspaceVR](http://altvr.com). When loading your scene in Altspace, the Altspace Render is used instead of the WebGLRender. Behavior outside of Altspace is not affected.
+When it comes to building something quick in AltspaceVR, it’s hard to beat [A-Frame](https://aframe.io/). It has a simple HTML-based syntax, so anyone acquainted with web development will pick it up in no time. On the other hand, if you don’t know what an HTML tag is, or how to add an image to a page, you should go through MDN’s terrific [Introduction to HTML](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Introduction) before you continue.
 
-Live examples: http://altspacevr.github.io/aframe/examples/ (forked from [aframevr/aframe](https://github.com/aframevr/aframe))
+The world is full of web developers though, so if you feel comfortable experimenting on your own, you should jump right in with the [A-Frame Documentation](https://aframe.io/docs/0.3.0/introduction/). You just need to add the `altspace` component to your `<a-scene>` tag. Keep in mind though that development in AltspaceVR has a few [caveats](https://github.com/altspacevr/altspacesdk#threejs-feature-support).
 
-Note that when running in Altspace, the scene will not be synchronized between users.  In addition, some A-Frame features are currently not supported in Altspace, such as lighting and video.  For details, see the [Three.js Feature Support](http://github.com/AltspaceVR/AltspaceSDK#threejs-feature-support) section in the [AltspaceSDK](http://github.com/AltspaceVR/AltspaceSDK) repo.
+In either case, you should join the [AltspaceVR SDK Slack channel](https://altspacevrsdk.slack.com/) ([register here](https://altspacevr-slackin.herokuapp.com/))! We love to see what you’re working on, and are always happy to answer questions. In addition, there are special activities available only for developers that may be better for apps. Just request developer status on Slack, and we’ll hook you up!
 
-### Properties
+## Quick Start
 
-| Property  | Description | Default Value |
-| --------  | ----------- | ------------- |
-| `usePixelScale` | Treat a unit as a CSS Pixel, and have your scene scale with the scale of the AltspaceVR web browser. This is the default behavior in AltspaceVR for three.js apps. In A-Frame, however, the default value is `false`, as units are in meters by default. | `false`
-| `verticalAlign` | Puts the scene origin at the bottom, middle, or top of the Altspace enclosure.  If your scene seems to be floating in midair, try setting this to 'bottom'. | `middle`
-| `enclosuresOnly` | Turn off 3d rendering when loaded in flat displays (e.g. personal browsers) | `true`
-| `fullspace` | Request that the app take up the entire space. See [requestFullspace()](http://altspacevr.github.io/AltspaceSDK/doc/module-altspace-Enclosure.html#requestFullspace) | `false`
-
-### Usage
-
-Add the "altspace" attribute on your `<a-scene>` like so: `<a-scene altspace>`
-
-**Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
-
-#### Example
-
-Install and use by directly including the [browser files](dist):
+This is a fully functional example of what A-Frame code looks like.
 
 ```html
-<head>
-  <title>My A-Frame Scene</title>
-  <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-  <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js"></script>
+<!DOCTYPE html>
+<html><head>
+<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v0.3.0/dist/aframe-altspace-component.min.js"></script>
+<script>
+
+// an example custom component, that will change the color when clicked
+AFRAME.registerComponent('color-cycle', {
+    schema: {},
+    init: function(){
+        var self = this;
+        self.el.object3D.addEventListener('cursorup', function(){
+            var rgb = [
+                Math.floor(Math.random()*256),
+                Math.floor(Math.random()*256),
+                Math.floor(Math.random()*256)
+            ];
+            self.el.setAttribute('color', 'rgb('+rgb.join(',')+')');
+        });
+    }
+});
+
+</script>
 </head>
-
 <body>
-  <a-scene altspace>
-    <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
-  </a-scene>
-</body>
+
+<!-- set up the scene -->
+<a-scene altspace='vertical-align: bottom;'>
+    <a-box position='0 1 0' color-cycle></a-box>
+</a-scene>
+
+</body></html>
 ```
 
-## altspace-tracked-controls
-
-This library also includes an `altspace-tracked-controls` component that enables tracked control support for A-Frame
-applications that use the built-in `tracked-controls`, `vive-controls` or `hand-controls` components.
-
-### Usage
-
-Add the "altspace-tracked-controls" attribute to your tracked entity. For example:
-
-```html
-<a-entity hand-controls="right" altspace-tracked-controls></a-entity>
-```
-
-## altspace-cursor-collider
-
-Cause the attached object to be clickable, or else ignored by the cursor.
-
-### Properties
-
-| Property | Description | Default Value |
-| -------- | ----------- | ------------- |
-| `enabled` | Sets the object visibility to the cursor. | `true`
-
-### Example
-
-```html
-<a-box altspace-cursor-collider='enabled: false'></a-box>
-```
+## Resources

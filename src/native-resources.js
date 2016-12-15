@@ -146,3 +146,23 @@
 * @prop half-cross-1d
 * @prop half-split-1d
 */
+
+/**
+* Stock UI elements you can use in your apps.
+* @name ui
+* @enum ui
+* @memberof resources
+*
+* @prop ui/altspacevr-logo - An image with the AltspaceVR logo
+* @prop ui/enter
+* @prop ui/exit
+* @prop ui/notification-soft
+* @prop ui/menu-close
+* @prop ui/menu-open
+* @prop ui/toggle-off
+* @prop ui/toggle-on
+* @prop ui/over
+* @prop ui/click
+* @prop ui/notification-error
+* @prop ui/notification
+*/

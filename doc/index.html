@@ -47,74 +47,42 @@
 
 
     <section class="readme">
-        <article><h2>aframe-altspace-component</h2><p>Component to make an <a href="https://aframe.io">A-Frame</a> scene compatible with <a href="http://altvr.com">AltspaceVR</a>. When loading your scene in Altspace, the Altspace Render is used instead of the WebGLRender. Behavior outside of Altspace is not affected.</p>
-<p>Live examples: http://altspacevr.github.io/aframe/examples/ (forked from <a href="https://github.com/aframevr/aframe">aframevr/aframe</a>)</p>
-<p>Note that when running in Altspace, the scene will not be synchronized between users.  In addition, some A-Frame features are currently not supported in Altspace, such as lighting and video.  For details, see the <a href="http://github.com/AltspaceVR/AltspaceSDK#threejs-feature-support">Three.js Feature Support</a> section in the <a href="http://github.com/AltspaceVR/AltspaceSDK">AltspaceSDK</a> repo.</p>
-<h3>Properties</h3><table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-<th>Default Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>usePixelScale</code></td>
-<td>Treat a unit as a CSS Pixel, and have your scene scale with the scale of the AltspaceVR web browser. This is the default behavior in AltspaceVR for three.js apps. In A-Frame, however, the default value is <code>false</code>, as units are in meters by default.</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>verticalAlign</code></td>
-<td>Puts the scene origin at the bottom, middle, or top of the Altspace enclosure.  If your scene seems to be floating in midair, try setting this to 'bottom'.</td>
-<td><code>middle</code></td>
-</tr>
-<tr>
-<td><code>enclosuresOnly</code></td>
-<td>Turn off 3d rendering when loaded in flat displays (e.g. personal browsers)</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>fullspace</code></td>
-<td>Request that the app take up the entire space. See <a href="http://altspacevr.github.io/AltspaceSDK/doc/module-altspace-Enclosure.html#requestFullspace">requestFullspace()</a></td>
-<td><code>false</code></td>
-</tr>
-</tbody>
-</table>
-<h3>Usage</h3><p>Add the &quot;altspace&quot; attribute on your <code>&lt;a-scene&gt;</code> like so: <code>&lt;a-scene altspace&gt;</code></p>
-<p><strong>Note</strong>: If you use the <code>embedded</code> A-Frame component on your scene, you must include it <em>before</em> the <code>altspace</code> component, or your app will silently fail.</p>
-<h4>Example</h4><p>Install and use by directly including the <a href="dist">browser files</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;head>
-  &lt;title>My A-Frame Scene&lt;/title>
-  &lt;script src=&quot;https://aframe.io/releases/0.3.0/aframe.min.js&quot;>&lt;/script>
-  &lt;script src=&quot;https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.0.0/dist/aframe-altspace-component.min.js&quot;>&lt;/script>
-&lt;/head>
+        <article><h2>aframe-altspace-component</h2><p>When it comes to building something quick in AltspaceVR, it’s hard to beat <a href="https://aframe.io/">A-Frame</a>. It has a simple HTML-based syntax, so anyone acquainted with web development will pick it up in no time. On the other hand, if you don’t know what an HTML tag is, or how to add an image to a page, you should go through MDN’s terrific <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Introduction">Introduction to HTML</a> before you continue.</p>
+<p>The world is full of web developers though, so if you feel comfortable experimenting on your own, you should jump right in with the <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame Documentation</a>. You just need to add the <code>altspace</code> component to your <code>&lt;a-scene&gt;</code> tag. Keep in mind though that development in AltspaceVR has a few <a href="https://github.com/altspacevr/altspacesdk#threejs-feature-support">caveats</a>.</p>
+<p>In either case, you should join the <a href="https://altspacevrsdk.slack.com/">AltspaceVR SDK Slack channel</a> (<a href="https://altspacevr-slackin.herokuapp.com/">register here</a>)! We love to see what you’re working on, and are always happy to answer questions. In addition, there are special activities available only for developers that may be better for apps. Just request developer status on Slack, and we’ll hook you up!</p>
+<h2>Quick Start</h2><p>This is a fully functional example of what A-Frame code looks like.</p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html>&lt;head>
+&lt;script src=&quot;https://aframe.io/releases/0.3.0/aframe.min.js&quot;>&lt;/script>
+&lt;script src=&quot;https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v0.3.0/dist/aframe-altspace-component.min.js&quot;>&lt;/script>
+&lt;script>
 
+// an example custom component, that will change the color when clicked
+AFRAME.registerComponent('color-cycle', {
+    schema: {},
+    init: function(){
+        var self = this;
+        self.el.object3D.addEventListener('cursorup', function(){
+            var rgb = [
+                Math.floor(Math.random()*256),
+                Math.floor(Math.random()*256),
+                Math.floor(Math.random()*256)
+            ];
+            self.el.setAttribute('color', 'rgb('+rgb.join(',')+')');
+        });
+    }
+});
+
+&lt;/script>
+&lt;/head>
 &lt;body>
-  &lt;a-scene altspace>
-    &lt;a-entity geometry=&quot;primitive: box&quot; material=&quot;color: #C03546&quot;>&lt;/a-entity>
-  &lt;/a-scene>
-&lt;/body></code></pre><h2>altspace-tracked-controls</h2><p>This library also includes an <code>altspace-tracked-controls</code> component that enables tracked control support for A-Frame
-applications that use the built-in <code>tracked-controls</code>, <code>vive-controls</code> or <code>hand-controls</code> components.</p>
-<h3>Usage</h3><p>Add the &quot;altspace-tracked-controls&quot; attribute to your tracked entity. For example:</p>
-<pre class="prettyprint source lang-html"><code>&lt;a-entity hand-controls=&quot;right&quot; altspace-tracked-controls>&lt;/a-entity></code></pre><h2>altspace-cursor-collider</h2><p>Cause the attached object to be clickable, or else ignored by the cursor.</p>
-<h3>Properties</h3><table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-<th>Default Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>enabled</code></td>
-<td>Sets the object visibility to the cursor.</td>
-<td><code>true</code></td>
-</tr>
-</tbody>
-</table>
-<h3>Example</h3><pre class="prettyprint source lang-html"><code>&lt;a-box altspace-cursor-collider='enabled: false'>&lt;/a-box></code></pre></article>
+
+&lt;!-- set up the scene -->
+&lt;a-scene altspace='vertical-align: bottom;'>
+    &lt;a-box position='0 1 0' color-cycle>&lt;/a-box>
+&lt;/a-scene>
+
+&lt;/body>&lt;/html></code></pre><h2>Resources</h2></article>
     </section>
 
 
