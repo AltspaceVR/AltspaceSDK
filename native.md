@@ -4,7 +4,7 @@ The Playground is an activity where you can easily and quickly create, share, an
 
 ## How do I create an app for the Playground?
 
-All Playground applications are created in A-Frame. Creating something with A-Frame is very similar to creating a website with HTML, and is one of the simplest ways to create a VR application.  Our introduction tutorials can be found on the developer portal. A-Frame applications can be hosted anywhere on the web. We recommend GitHub pages as a great place to start hosting your app.
+All Playground applications are created in A-Frame. Creating something with A-Frame is very similar to creating a website with HTML, and is one of the simplest ways to create a VR application.  Our introduction tutorials can be found on the [AltspaceVR Developer Portal](https://developer.altvr.com/). A-Frame applications can be hosted anywhere on the web. We recommend GitHub pages as a great place to start hosting your app.
 
 ## What are native components?
 
