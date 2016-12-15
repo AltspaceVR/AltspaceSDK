@@ -98,11 +98,14 @@
 * @enum interactables
 * @memberof resources
 *
-* @prop box
 * @prop basketball
-* @prop soccerball
+* @prop bowlingball
 * @prop bowling-pin
+* @prop box
+* @prop coin
 * @prop gem
+* @prop ring
+* @prop soccerball
 */
 
 /**
@@ -111,7 +114,11 @@
 * @enum objects
 * @memberof resources
 *
-* @prop basketball-net
-* @prop target-archery
+* @prop basketball-hoop
+* @prop coin
+* @prop cup
 * @prop gem
+* @prop hoop
+* @prop ring
+* @prop target-archery
 */
