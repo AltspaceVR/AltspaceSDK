@@ -62,4 +62,4 @@ In addition to the normal power of A-Frame that AltspaceVR developers are used t
 
 ## Native Resources
 
-One of the biggest challenges in creating VR applications is gathering and optimizing art and sound content. We've gone ahead and built a bunch of resources to get you started! They can be invoked via the `n-object` native component and are automatically optimized for the individual platforms your users are on.
+One of the biggest challenges in creating VR applications is gathering and optimizing art and sound content. We've gone ahead and built a bunch of resources to get you started! They can be invoked via the `n-object`, `n-sound`, and `n-spawner` native components and are automatically optimized for the individual platform your user happens to be on.
