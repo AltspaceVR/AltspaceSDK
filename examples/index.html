@@ -1,0 +1,43 @@
+<!doctype html>
+<head>
+	<title>AltspaceSDK examples</title>
+	<meta charset="utf-8" />
+	<style>
+		body {
+			background: white;
+			font: bold 20pt sans-serif;
+			margin: 2em;
+		}
+	</style>
+</head>
+<body>
+<ol id="list"></ol>
+<script>
+[
+	'architecture/index.html',
+	'basic/index.html',
+	'custom-component/index.html',
+	'fireball/index.html',
+	'introduction/index.html',
+	'moon/index.html',
+	'native/index.html',
+	'native-sound/index.html',
+	'test-collider/index.html',
+	'test-cursor-events/index.html',
+	'test-fullspace/index.html',
+	'test-meter-scale/index.html',
+	'test-pixel-scale/index.html',
+	'test-sync/index.html',
+	'test-vertical-align/index.html',
+	'threejs/index.html',
+	'wire/index.html'
+].forEach(function (example) {
+	var li = document.createElement('li');
+	var a = document.createElement('a');
+	a.href = a.textContent = example;
+	li.appendChild(a);
+	list.appendChild(li);
+});
+</script>
+</body>
+</html>
