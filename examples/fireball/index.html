@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>Fireball</title>
-	<!--<script src="../build.js"></script>-->
 	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
 	<script src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
@@ -17,7 +16,7 @@
 				<a-box color="black" scale="3 0.1 2.5" opacity="0" id="trigger-0" rotation="90 0 0" n-box-collider position="-1 1.2 1.1"></a-box>
 
 				<a-box id="basket-container" color="yellowgreen" rotation="0 0 0" scale="1 0.25 1" material="visible:false" n-box-collider="isTrigger:true;" n-container="capacity:3" position="-1 2.1 0.5"></a-box>
-				
+
 				<a-entity n-object="res:objects/basketball-hoop" position="-1 2.5 0.5" rotation="0 90 0" scale="2.5 2.5 2.5">
 					<a-entity  id="score-effect0" position="0 0 0">
 						<a-animation attribute="rotation" dur="1500" to="0 360 0" begin="score" easing="ease" repeat="0"></a-animation>
