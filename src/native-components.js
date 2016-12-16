@@ -270,7 +270,8 @@
     * @mixin n-sound
 	* @memberof native
     * @prop {string} res - The resource identifier for a built-in sound clip.
-	* @prop {string} src - A URL to an external sound clip.
+	* @prop {string} src - A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+	* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
 	* @prop {string} on - The name of the event that will play this sound clip.
 	* @prop {boolean} loop=false - Tells the clip to loop back to the beginning of the clip
 	* once it's finished.
