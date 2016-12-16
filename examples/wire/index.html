@@ -9,20 +9,20 @@
 <a-scene debug altspace>
 	<a-entity
 		geometry="primitive: box" material="color: green" position="0 1 2"
-		wire="on: click; emit: gogogo; targets: #chimeNotify, #pop"
-		wire__high="on: mouseup; gain: mouse-off; targets: #enter"
+		wire="on: click; emit: gogogo; targets: #notify, #pop"
+		wire__high="on: mouseup; gain: mouse-off; targets: #error"
 		wire__spin="gained: hovered; emit: spin; targets: #pop">
 		<a-entity n-text="fontSize: 2; text: trigger" position="0 1 0"></a-entity>
 	</a-entity>
-	<a-entity id="enter"
+	<a-entity id="error"
 		geometry="primitive: box" material="color: blue" position="-2 1 0"
-		n-sound="res: ui/enter; volume: 0.7; autoplay: true; oneshot: true;"
+		n-sound="res: ui/error; volume: 0.7; autoplay: true; oneshot: true;"
 		altspace-cursor-collider="enabled: true">
 		<a-animation begin="mouse-off" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
 	</a-entity>
-	<a-entity id="chimeNotify"
+	<a-entity id="notify"
 		geometry="primitive: box" material="color: purple" position="2 1 0"
-		n-sound="res: ui/notification-soft; on: gogogo"
+		n-sound="res: ui/notify; on: gogogo"
 		altspace-cursor-collider="enabled: true">
 	</a-entity>
 	<a-entity id="pop" geometry="primitive: box" material="color: orange" position="-2 1 2">
