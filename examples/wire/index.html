@@ -1,0 +1,36 @@
+<html>
+<head>
+	<title>Wire Component</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script src="http://sdk.altvr.com/libs/altspace.js/0.24.4/altspace.js"></script>
+</head>
+<body>
+<a-scene debug altspace>
+	<a-entity
+		geometry="primitive: box" material="color: green" position="0 1 2"
+		wire="on: click; emit: gogogo; targets: #chimeNotify, #pop"
+		wire__high="on: mouseup; gain: mouse-off; targets: #enter"
+		wire__spin="gained: hovered; emit: spin; targets: #pop">
+		<a-entity n-text="fontSize: 2; text: trigger" position="0 1 0"></a-entity>
+	</a-entity>
+	<a-entity id="enter"
+		geometry="primitive: box" material="color: blue" position="-2 1 0"
+		n-sound="res: ui/enter; volume: 0.7; autoplay: true; oneshot: true;"
+		altspace-cursor-collider="enabled: true">
+		<a-animation begin="mouse-off" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity id="chimeNotify"
+		geometry="primitive: box" material="color: purple" position="2 1 0"
+		n-sound="res: ui/notification-soft; on: gogogo"
+		altspace-cursor-collider="enabled: true">
+	</a-entity>
+	<a-entity id="pop" geometry="primitive: box" material="color: orange" position="-2 1 2">
+		<a-animation begin="gogogo" attribute="position" dur="2000" to="-2 2 2" direction="alternate"></a-animation>
+		<a-animation begin="spin" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
+	</a-entity>
+	<a-camera><a-cursor></a-cursor></a-camera>
+</a-scene>
+</body>
+</html>
+

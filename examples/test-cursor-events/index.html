@@ -1,7 +1,11 @@
 <html>
   <head>
     <title>A-Frame Altspace Component - Test Cursor Events</title>
-    <script src="../build.js"></script>
+      <script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
+      <script src="../../dist/aframe-altspace-component.js"></script>
+      <script>
+          
+      </script>
   </head>
   <body>
     <a-scene altspace>
@@ -34,36 +38,36 @@
   </body>
   <script>
 
-    var changeColorRandom = function(el) {
-      var rand = function() { return Math.floor(Math.random() * 255)};
-      el.setAttribute('material', 'color', 'rgb('+rand()+','+rand()+','+rand()+')');
-    }
-
-    // Cone 1: Testing mousedown, listening on the entity.
-    var cone1El = document.querySelector('#cone1');
-    cone1El.addEventListener('mousedown', function(event) {
-      changeColorRandom(event.target);
-    });
-
-    // Cone 2: Testing click, listening on the cursor.
-    var cone2El = document.querySelector('#cone2');
-    var cursorEl = document.querySelector('a-cursor');
-    cursorEl.addEventListener('click', function(event) {
-      var el = event.detail.target;
-      if (el && el.object3D.uuid === cone2El.object3D.uuid) {
-        changeColorRandom(el);
+      var changeColorRandom = function(el) {
+          var rand = function() { return Math.floor(Math.random() * 255)};
+          el.setAttribute('material', 'color', 'rgb('+rand()+','+rand()+','+rand()+')');
       }
-    });
 
-    // Sphere: Testing mousedown/mouseup events.
-    var sphereEl = document.querySelector('#sphere');
-    sphereEl.addEventListener('mouseenter', function(event) {
-        changeColorRandom(event.target);
-    });
-    sphereEl.addEventListener('mouseleave', function(event) {
-      changeColorRandom(event.target);
-      event.target.setAttribute('material', 'color', 'grey');
-    });
+      // Cone 1: Testing mousedown, listening on the entity.
+      var cone1El = document.querySelector('#cone1');
+      cone1El.addEventListener('mousedown', function(event) {
+          changeColorRandom(event.target);
+      });
+
+      // Cone 2: Testing click, listening on the cursor.
+      var cone2El = document.querySelector('#cone2');
+      var cursorEl = document.querySelector('a-cursor');
+      cursorEl.addEventListener('click', function(event) {
+          var el = event.detail.target;
+          if (el && el.object3D.uuid === cone2El.object3D.uuid) {
+              changeColorRandom(el);
+          }
+      });
+
+      // Sphere: Testing mousedown/mouseup events.
+      var sphereEl = document.querySelector('#sphere');
+      sphereEl.addEventListener('mouseenter', function(event) {
+          changeColorRandom(event.target);
+      });
+      sphereEl.addEventListener('mouseleave', function(event) {
+          changeColorRandom(event.target);
+          event.target.setAttribute('material', 'color', 'grey');
+      });
 
   </script>
 </html>

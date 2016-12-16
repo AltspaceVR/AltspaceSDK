@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>n-collider - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="altspace.html">altspace</a></li><li><a href="native.html">native</a></li><li><a href="resources.html">resources</a></li><li><a href="sync.html">sync</a></li></ul><h3>Mixins</h3><ul><li><a href="altspace.altspace.html">altspace</a></li><li><a href="altspace.altspace-cursor-collider.html">altspace-cursor-collider</a></li><li><a href="altspace.altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="native.n-billboard.html">n-billboard</a></li><li><a href="native.n-box-collider.html">n-box-collider</a></li><li><a href="native.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="native.n-collider.html">n-collider</a></li><li><a href="native.n-container.html">n-container</a></li><li><a href="native.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="native.n-object.html">n-object</a></li><li><a href="native.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="native.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="native.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="native.n-sound.html#seek">seek</a></li></ul></li><li><a href="native.n-spawner.html">n-spawner</a></li><li><a href="native.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="native.n-text.html">n-text</a></li><li><a href="sync.sync.html">sync</a><ul class='methods'><li data-type='method'><a href="sync.sync.html#takeOwnership">takeOwnership</a></li></ul></li><li><a href="sync.sync-color.html">sync-color</a></li><li><a href="sync.sync-n-sound.html">sync-n-sound</a></li><li><a href="sync.sync-system.html">sync-system</a></li><li><a href="sync.sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">n-collider</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="native.html">native</a>.</span>
+        
+        n-collider
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Abstract base class for n.n-sphere-collider, n.n-box-collider,
+n.n-capsule-collider, and n.n-mesh-collider. You cannot use
+this class directly, but instead you should add one of those components
+to your objects.</p></div>
+        
+
+        
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>center</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">vec3</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0,0,0
+                
+                </td>
+            
+
+            <td class="description last"><p>The offset of the collider in local space.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    hologram
+                
+                </td>
+            
+
+            <td class="description last"><p>The type of collider, one of: <code>object</code> | <code>environment</code> | <code>hologram</code>.
+Object colliders collide with other objects, the environment, and the cursor.
+Environment colliders collide with everything objects do, but you can also
+teleport onto them. Hologram colliders only collide with other holograms and
+the cursor.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
