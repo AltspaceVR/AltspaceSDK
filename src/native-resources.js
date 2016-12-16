@@ -153,15 +153,15 @@
 * @enum sounds-ui
 * @memberof resources
 *
-* @prop ui/select
-* @prop ui/toggle
-* @prop ui/notify
-* @prop ui/error
-* @prop ui/complete
-* @prop ui/succeed
-* @prop ui/over
-* @prop ui/join
-* @prop ui/click
+* @prop select
+* @prop toggle
+* @prop notify
+* @prop error
+* @prop complete
+* @prop succeed
+* @prop over
+* @prop join
+* @prop click
 */
 
 /**
@@ -170,12 +170,12 @@
 * @enum sounds-foley
 * @memberof resources
 *
-* @prop foley/metal-scrape
-* @prop foley/metal-clack
-* @prop foley/metal-rattle
-* @prop foley/coin-jingle
-* @prop foley/paper-shuffle
-* @prop foley/explode
+* @prop metal-scrape
+* @prop metal-clack
+* @prop metal-rattle
+* @prop coin-jingle
+* @prop paper-shuffle
+* @prop explode
 */
 
 /**
@@ -184,10 +184,10 @@
 * @enum sounds-effects
 * @memberof resources
 *
-* @prop effects/fanfare-succeed - The "success!" sound from Holograms Against Humanity.
-* @prop effects/fanfare-start - The "Game has started!" sound from HaH.
-* @prop effects/fanfare-fail
-* @prop effects/timer-10s - a 10 second timer that triggers a bell at exactly 10 seconds.
+* @prop fanfare-succeed - The "success!" sound from Holograms Against Humanity.
+* @prop fanfare-start - The "Game has started!" sound from HaH.
+* @prop fanfare-fail
+* @prop timer-10s - a 10 second timer that triggers a bell at exactly 10 seconds.
 * The bell lasts for 2 seconds. This allows for timer length changes.
-* @prop effects/gain-coin
+* @prop gain-coin
 */
