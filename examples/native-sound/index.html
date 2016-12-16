@@ -47,10 +47,10 @@
 	</a-entity>
 	<a-entity id="over"
 		geometry="primitive: box" material="color: orange" position="3 0 0"
-		n-sound="res: ui/over; spatialBlend: 0.2" random-pitch-click
+		n-sound="res: ui/notify; spatialBlend: 0.2" random-pitch-click
 		altspace-cursor-collider="enabled: true"
 		sync="own-on: mousedown" sync-n-sound>
-		<a-entity n-text="fontSize: 2; text: spatialBlend" position="0 1 0" rotation="0 -90 0"></a-entity>
+		<a-entity n-text="fontSize: 2; text: spatialBlend & pitch" position="0 1 0" rotation="0 -90 0"></a-entity>
 	</a-entity>
 
 	<a-entity id="wav"
