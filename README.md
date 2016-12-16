@@ -58,3 +58,8 @@ AFRAME.registerComponent('color-cycle', {
 ## Native Components
 
 In addition to the normal power of A-Frame that AltspaceVR developers are used to, we now support attaching native AltspaceVR assets to entities via special A-Frame components. So you can spawn physical objects that you can stand on, interactables that users can pick up and throw, and much more! See the [native component documentation](https://altspacevr.github.io/aframe-altspace-component/doc/native.html) and the [native component FAQ](https://github.com/AltspaceVR/aframe-altspace-component/native.md) for the details.
+
+
+## Native Resources
+
+One of the biggest challenges in creating VR applications is gathering and optimizing art and sound content. We've gone ahead and built a bunch of resources to get you started! They can be invoked via the `n-object` native component and are automatically optimized for the individual platforms your users are on.
