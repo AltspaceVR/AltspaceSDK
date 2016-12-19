@@ -8,10 +8,10 @@ In either case, you should join the [AltspaceVR SDK Slack channel](https://altsp
 
 ## Resources
 
-* [A-Frame](https://aframe.io/docs/0.3.0/introduction/)
+* [SDK Documentation](https://altspacevr.github.io/aframe-altspace-component/doc/)
+* [A-Frame Overview](https://aframe.io/docs/0.3.0/introduction/)
 * [AltspaceVR Developer Portal](https://developer.altvr.com/)
 * [Building Your First A-Frame App](https://developer.altvr.com/building-altspacevr-apps-with-a-frame/)
-* [Documentation](https://altspacevr.github.io/aframe-altspace-component/doc/)
 * [Examples](https://altspacevr.github.io/aframe-altspace-component/examples/)
 * [Native Components FAQ](https://github.com/AltspaceVR/aframe-altspace-component/blob/master/native.md)
 
