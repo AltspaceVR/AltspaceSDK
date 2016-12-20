@@ -31,8 +31,9 @@
 
 			function createCube() {
 				//Create cube
-				var geometry = new THREE.BoxGeometry(enclosure.innerWidth / 10, enclosure.innerWidth / 10, enclosure.innerWidth / 10);
-				var material = new THREE.MeshBasicMaterial({color:'#ff0000'});
+				var cubeSize = enclosure.innerWidth / 10;
+				var geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+				var material = new THREE.MeshBasicMaterial({color:'green'});
 				var cube = new THREE.Mesh(geometry, material);
 				//Bring the cube down closer to the user
 				cube.position.y = (enclosure.innerHeight / 4) * -1;
@@ -40,7 +41,8 @@
 				cube.addBehaviors(
 					altspace.utilities.behaviors.Object3DSync({position: true}),
 					altspace.utilities.behaviors.Drag({
-						x: { min: (enclosure.innerWidth / 3) * -1, max: (enclosure.innerWidth / 3)},//Limit drag to within bounds of the enclosure
+						//Limit drag to within bounds of the enclosure
+						x: { min: (enclosure.innerWidth / 3) * -1, max: (enclosure.innerWidth / 3)},
 						z: { min: (enclosure.innerDepth / 3) * -1, max: (enclosure.innerDepth / 3)}
 					})
 				);
@@ -52,15 +54,13 @@
 			}
 
 			function addCubeListeners(cube){
-				//Add "Drag Start" event listener
+				//Add 'Drag Start' event listener
 				cube.addEventListener('dragstart', function (data) {
-					cube.material.color = new THREE.Color("blue");
-					cube.material.needsUpdate = true;
+					cube.material.color.setStyle('blue');
 				});
-				//Add "Drag Stop" event listener
+				//Add 'Drag Stop' event listener
 				cube.addEventListener('dragstop', function (data) {
-					cube.material.color = new THREE.Color("red");
-					cube.material.needsUpdate = true;
+					cube.material.color.setStyle('red');
 				});
 			}
 
