@@ -3205,7 +3205,7 @@ window.altspace.utilities = window.altspace.utilities || {};
  *
  * If all of your application logic is in behaviors, you do not need to create any additional requestAnimationFrame loops.
  *
- * It also automatically uses the WebGL renderer when running in a 
+ * It also automatically uses the WebGL renderer when running in a
  * desktop browser and emulates cursor events with mouse clicks.
  * @class Simulation
  * @param {Object} [config] Optional parameters.
@@ -3217,9 +3217,10 @@ altspace.utilities.Simulation = function (config) {
 	if (config.auto === undefined) config.auto = true;
 
 	var exports = {};
-	var scene = new THREE.Scene();
+	var scene;
 	var renderer;
 	var camera;
+	var usingAFrame = window.AFRAME && document.querySelector('a-scene');
 
 	setup();
 
@@ -3233,12 +3234,23 @@ altspace.utilities.Simulation = function (config) {
 	}
 
 	function setup() {
+		function setupAframe(){
+			var ascene = document.querySelector('a-scene');
+			scene = ascene.object3D;
+			renderer = ascene.renderer;
+
+			var acamera = document.querySelector('a-camera');
+			if(acamera)
+				camera = acamera.object3D;
+		}
 		function setupAltspace() {
+			scene = new THREE.Scene();
 			renderer = altspace.getThreeJSRenderer();
 			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
 		}
 
 		function setupWebGL() {
+			scene = new THREE.Scene();
 			renderer = new THREE.WebGLRenderer({antialias: true});
 			camera = new THREE.PerspectiveCamera();
 			camera.position.z = 500;
@@ -3268,14 +3280,16 @@ altspace.utilities.Simulation = function (config) {
 			if (shouldShimCursor) altspace.utilities.shims.cursor.init(scene, camera);
 		}
 
-		if (altspace && altspace.inClient) {
+		if(usingAFrame){
+			setupAframe();
+		} else if (window.altspace && altspace.inClient) {
 			setupAltspace();
 		} else {
 			setupWebGL();
 		}
 	}
 
-	if (config.auto) window.requestAnimationFrame(loop);
+	if (config.auto && !usingAFrame) window.requestAnimationFrame(loop);
 
 
 	/**
@@ -11537,7 +11551,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.26.2';
+	var version = '0.26.3';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
