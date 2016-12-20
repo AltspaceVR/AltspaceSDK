@@ -143,8 +143,14 @@ altspace.utilities.behaviors.Drag = function (config) {
 		intersector.quaternion.copy(object3d.parent.quaternion);
 		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
 
-		//Create and dispatch "dragstart" event
-		var dragEvent = createDragEvent('dragstart', object3d);
+		/**
+		* Fired on an object when a drag interaction begins.
+		*
+		* @event dragstart
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = createDragEvent('dragstart');
 		object3d.dispatchEvent(dragEvent);
 	}
 
@@ -185,8 +191,14 @@ altspace.utilities.behaviors.Drag = function (config) {
 		scene.removeEventListener('cursorup', stopDrag);
 		scene.removeEventListener('cursormove', moveDrag);
 
-		//Create and dispatch "dragstop" event
-		var dragEvent = createDragEvent('dragstop', object3d);
+		/**
+		* Fired on an object when a drag interaction ends
+		*
+		* @event dragstop
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = createDragEvent('dragstop');
 		object3d.dispatchEvent(dragEvent);
 	}
 
@@ -198,16 +210,19 @@ altspace.utilities.behaviors.Drag = function (config) {
 		object3d.removeEventListener('cursordown', startDrag);
 	}
 
-	function createDragEvent(type, object) {
+	/**
+	* Represents events emitted during drag interactions
+	*
+	* @typedef {Object} module:altspace/utilities/behaviors.Drag~DragEvent
+	* @property {THREE.Ray} ray - The raycaster ray at the time of the event.
+	* @property {THREE.Object3D} target - The object which was dragged.
+	*/
+	function createDragEvent(type) {
 		return {
 			type: type,
 			bubbles: true,
-			target: object ? object : null,
-			ray: {
-				origin: raycaster.ray.origin.clone(),
-				direction: raycaster.ray.direction.clone()
-			},
-			point: object ? object.position.clone() : null
+			target: object3d,
+			ray: raycaster.ray.clone()
 		}
 	}
 
