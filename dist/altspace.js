@@ -4195,6 +4195,16 @@ altspace.utilities.behaviors.Drag = function (config) {
 		intersector.position.copy(intersector.parent.worldToLocal(dragPoint));
 		intersector.quaternion.copy(object3d.parent.quaternion);
 		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+
+		/**
+		* Fired on an object when a drag interaction begins.
+		*
+		* @event dragstart
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = createDragEvent('dragstart');
+		object3d.dispatchEvent(dragEvent);
 	}
 
 	function moveDrag(event) {
@@ -4233,6 +4243,16 @@ altspace.utilities.behaviors.Drag = function (config) {
 	function stopDrag() {
 		scene.removeEventListener('cursorup', stopDrag);
 		scene.removeEventListener('cursormove', moveDrag);
+
+		/**
+		* Fired on an object when a drag interaction ends
+		*
+		* @event dragstop
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = createDragEvent('dragstop');
+		object3d.dispatchEvent(dragEvent);
 	}
 
 	function start() {
@@ -4241,6 +4261,22 @@ altspace.utilities.behaviors.Drag = function (config) {
 
 	function dispose() {
 		object3d.removeEventListener('cursordown', startDrag);
+	}
+
+	/**
+	* Represents events emitted during drag interactions
+	*
+	* @typedef {Object} module:altspace/utilities/behaviors.Drag~DragEvent
+	* @property {THREE.Ray} ray - The raycaster ray at the time of the event.
+	* @property {THREE.Object3D} target - The object which was dragged.
+	*/
+	function createDragEvent(type) {
+		return {
+			type: type,
+			bubbles: true,
+			target: object3d,
+			ray: raycaster.ray.clone()
+		}
 	}
 
 	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
@@ -11551,7 +11587,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.26.3';
+	var version = '0.27.0';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
