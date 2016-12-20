@@ -38,7 +38,7 @@
 				cube.position.y = (enclosure.innerHeight / 4) * -1;
 				//Add behaviors
 				cube.addBehaviors(
-					altspace.utilities.behaviors.Object3DSync(),
+					altspace.utilities.behaviors.Object3DSync({position: true}),
 					altspace.utilities.behaviors.Drag({
 						x: { min: (enclosure.innerWidth / 3) * -1, max: (enclosure.innerWidth / 3)},//Limit drag to within bounds of the enclosure
 						z: { min: (enclosure.innerDepth / 3) * -1, max: (enclosure.innerDepth / 3)}
