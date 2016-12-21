@@ -58,10 +58,9 @@ AFRAME.registerComponent('altspace', {
   },
 
   /*
-   * Called when component is attached and when component data changes.
-   * Generally modifies the entity based on the data.
+   * Called on every single tick or render loop of the scene.
    */
-  update: function (oldData) {
+  tick: function (t, dt) {
       if(this.el.object3D.updateAllBehaviors)
         this.el.object3D.updateAllBehaviors();
   },
