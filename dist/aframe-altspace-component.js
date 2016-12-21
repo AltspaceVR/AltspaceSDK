@@ -125,10 +125,9 @@
 	  },
 
 	  /*
-	   * Called when component is attached and when component data changes.
-	   * Generally modifies the entity based on the data.
+	   * Called on every single tick or render loop of the scene.
 	   */
-	  update: function (oldData) {
+	  tick: function (t, dt) {
 	      if(this.el.object3D.updateAllBehaviors)
 	        this.el.object3D.updateAllBehaviors();
 	  },
@@ -1524,6 +1523,7 @@
 	 * @property {string} gain Name of a state to add on the target
 	 * @property {string} lose Name of a state to remove on the target
 	 * @property {selector} targets A selector to pick which objects to wire to
+	 * @property {selector} target - A selector to pick a single object to wire to
 	 **/
 	AFRAME.registerComponent('wire',
 	{
@@ -1535,7 +1535,8 @@
 			lost: {type: 'string'},
 			gain: {type: 'string'},
 			lose: {type: 'string'},
-			targets: {type: 'selectorAll'}
+			targets: {type: 'selectorAll'},
+			target: {type: 'selector'}
 		},
 		update: function (oldData) {
 			if (oldData.on) {
@@ -1549,7 +1550,7 @@
 			}
 
 			this.actOnTargets = function () {
-				this.data.targets.forEach(function (el) {
+				function act(el) {
 					if (this.data.emit) {
 						el.emit(this.data.emit);
 					}
@@ -1559,7 +1560,9 @@
 					if (this.data.lose) {
 						el.removeState(this.data.lose);
 					}
-				}.bind(this));
+				}
+				this.data.targets.forEach(act.bind(this));
+				if(this.data.target) act.call(this, this.data.target);
 			}.bind(this);
 
 			this.actOnTargetsIfStateMatches = function (event) {

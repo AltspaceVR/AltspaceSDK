@@ -116,7 +116,7 @@
 			n-text='text: Library of objects!'>
 		</a-entity>
 		<a-entity id="preview" sync='ownOn: itemcycle'
-			synced-resource='res: architecture/ceiling-2w-2l; label: #previewText'>
+			sync-resource='res: architecture/ceiling-2w-2l; label: #previewText'>
 			<a-sphere radius=0.05></a-sphere>
 		</a-entity>
 		<a-entity id='previewText' position='0 2 4.5' rotation='0 180 0'
@@ -125,7 +125,7 @@
 
 		<a-box id='next' position='-4 1 0' rotation='0 315 0'
 			color='green' height=0.5 n-mesh-collider
-			wire='on: cursordown; emit: itemcycle; targets: #preview'
+			wire='on: click; emit: itemcycle; targets: #preview'
 			cycle-preview='view: #preview; library: #obj-list; direction: forward;'>
 			<a-entity n-text='text: Next; fontSize: 4; width: 1; height: 0.5;
 				verticalAlign: center;' position='0 0 -0.51' rotation='0 180 0'>
@@ -133,7 +133,7 @@
 		</a-box>
 		<a-box id='back' position='4 1 0' rotation='0 45 0'
 			color='red' height=0.5 n-mesh-collider
-			wire='on: cursordown; emit: itemcycle; targets: #preview'
+			wire='on: click; emit: itemcycle; targets: #preview'
 			cycle-preview='view: #preview; library: #obj-list; direction: backward;'>
 			<a-entity n-text='text: Back; fontSize: 4; width: 1; height: 0.5;
 				verticalAlign: center;' position='0 0 -0.51' rotation='0 180 0'>

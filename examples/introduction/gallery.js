@@ -12,7 +12,7 @@ AFRAME.registerComponent('cycle-preview', {
 	},
 	init: function()
 	{
-		this.el.object3D.addEventListener('cursorup', (function(e)
+		this.el.addEventListener('click', (function(e)
 		{
 			if(!this.data.library || !this.data.view)
 				return;
@@ -21,7 +21,7 @@ AFRAME.registerComponent('cycle-preview', {
 				return;
 
             var nextElem;
-            var curId = this.data.view.getAttribute('synced-resource').res;
+            var curId = this.data.view.getAttribute('sync-resource').res;
 			var curElem = this.data.library.querySelector('[id="'+curId+'"]');
 			var curCategory = /^[^\/]+/.exec(curId);
 			if(curCategory) curCategory = curCategory[0];
@@ -47,14 +47,13 @@ AFRAME.registerComponent('cycle-preview', {
 				}
 			}
 
-			console.log('setting preview to', nextElem.id);
-            this.data.view.setAttribute('synced-resource', 'res', nextElem.id);
+			this.data.view.setAttribute('sync-resource', 'res', nextElem.id);
 
 		}).bind(this));
 	}
 });
 
-AFRAME.registerComponent('synced-resource', {
+AFRAME.registerComponent('sync-resource', {
 	dependencies: ['sync'],
 	schema: {
         res: {type: 'string'},
@@ -81,7 +80,7 @@ AFRAME.registerComponent('synced-resource', {
 				var val = snapshot.val();
 
                 self.refLock = true;
-                self.data.res = val;
+                self.el.setAttribute('sync-resource', 'res', val);
                 self.refLock = false;
 				self.firstValue = false;
 			});
@@ -93,8 +92,9 @@ AFRAME.registerComponent('synced-resource', {
 		var sync = this.el.components.sync;
         var resourceRef = sync.dataRef ? sync.dataRef.child('resource') : null;
 
-        if(sync.isMine && !this.refLock && resourceRef)
-			resourceRef.set(this.data.res);
+        if(sync.isMine && !this.refLock && resourceRef){
+            resourceRef.set(this.data.res);
+        }
 
         this.setResource(this.data.res);
 	},
