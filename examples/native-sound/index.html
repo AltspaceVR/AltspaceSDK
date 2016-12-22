@@ -16,7 +16,7 @@
 	</script>
 </head>
 <body>
-<a-scene debug altspace sync-system="author: altspacevr; app: sound-sync-test">
+<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: sound-sync-test">
 	<a-entity id="loop"
 		geometry="primitive: box" material="color: green" position="-3 1 -2"
 		n-sound="res: ui/error; volume: 0.5; loop: true; on: click"
@@ -51,6 +51,34 @@
 		altspace-cursor-collider="enabled: true"
 		sync="own-on: mousedown" sync-n-sound>
 		<a-entity n-text="fontSize: 2; text: spatialBlend & pitch" position="0 1 0" rotation="0 -90 0"></a-entity>
+	</a-entity>
+
+	<a-entity
+		geometry="primitive: box" material="color: lightblue" position="-3 1 -4"
+		n-sound="src: big-buck-bunny-intro.wav; on: click; rolloff: linear; minDistance: 2; maxDistance: 5"
+		altspace-cursor-collider="enabled: true">
+		<a-entity n-text="fontSize: 2; text: linear" position="0 1 0"></a-entity>
+	</a-entity>
+
+	<a-entity
+		geometry="primitive: box" material="color: lightblue" position="0 1 -4"
+		n-sound="src: big-buck-bunny-intro.wav; autoplay: true; on: click; rolloff: logarithmic; minDistance: 2; maxDistance: 5"
+		altspace-cursor-collider="enabled: true">
+		<a-entity n-text="fontSize: 2; text: log" position="0 1 0"></a-entity>
+	</a-entity>
+
+	<a-entity
+		geometry="primitive: box" material="color: lightblue" position="0 1 -40"
+		n-sound="src: big-buck-bunny-intro.wav; on: click; rolloff: logarithmic; minDistance: 2; maxDistance: 5"
+		altspace-cursor-collider="enabled: true">
+		<a-entity n-text="fontSize: 2; text: log" position="0 1 0"></a-entity>
+	</a-entity>
+
+	<a-entity
+		geometry="primitive: box" material="color: lightblue" position="3 1 -4"
+		n-sound="src: big-buck-bunny-intro.wav; on: click; rolloff: cosine; minDistance: 2; maxDistance: 5"
+		altspace-cursor-collider="enabled: true">
+		<a-entity n-text="fontSize: 2; text: cosine" position="0 1 0"></a-entity>
 	</a-entity>
 
 	<a-entity id="wav"
