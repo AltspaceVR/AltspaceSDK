@@ -292,8 +292,11 @@
 	* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
 	* @prop {string} rolloff='logarithmic' - Set this to 'linear' or 'cosine' if you want to cut sounds off at a
 	* maxDistance.
-
     */
+	/**
+	* Fired when a sound has loaded and is ready to be played
+	* @event native.n-sound#n-sound-loaded
+	*/
 	AFRAME.registerComponent('n-sound', {
 		init: function () {
 			var src = this.data.src;
