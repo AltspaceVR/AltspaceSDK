@@ -679,10 +679,8 @@
 		* octave down, and 2 is one octave up.
 		* @prop {number} minDistance=1 - Inside this distance in meters,
 		* the sound volume is at full volume.
-		* @prop {number} maxDistance=12 - If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
-		* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
-		* @prop {string} rolloff='logarithmic' - Set this to 'linear' or 'cosine' if you want to cut sounds off at a
-		* maxDistance.
+		* @prop {number} maxDistance=12 - Beyond this distance in meters, the sound
+		* will rapidly fall off to silence.
 
 	    */
 		AFRAME.registerComponent('n-sound', {
@@ -757,7 +755,6 @@
 				pitch: { type: 'float', default: 1 },
 				minDistance: { type: 'float', default: 1 },
 				maxDistance: { type: 'float', default: 12 },
-				rolloff: { type: 'string', default: 'logarithmic' },
 			}
 		});
 
