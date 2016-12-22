@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "budo",
     "dist": "gulp dist",
-    "doc": "jsdoc -c .jsdoc.json src"
+    "doc": "npm run dist && jsdoc -c .jsdoc.json src"
   },
   "repository": {
     "type": "git",
