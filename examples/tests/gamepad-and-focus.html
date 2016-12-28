@@ -74,7 +74,8 @@
 					watch(() =>
 						['gamepad', i, 'hand', altspace.getGamepads()[i].hand]);
 					watch(() =>
-						['gamepad', i, 'buttons', altspace.getGamepads()[i].buttons.map(button=>+button.value.toFixed(2))]);
+						['gamepad', i, 'buttons', altspace.getGamepads()[i].buttons.map(button=>[
+							+button.nearTouch, +button.touched, +button.pressed, +button.value.toFixed(2)].join(' '))]);
 					watch(() =>
 						['gamepad', i, 'axes', altspace.getGamepads()[i].axes.map(axis=>axis.toFixed(2))]);
 					watch(() => {
