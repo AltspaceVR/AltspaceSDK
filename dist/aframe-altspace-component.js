@@ -408,16 +408,22 @@
 		PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
 		PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
 
-		function nativeComponentInit() {
-			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-
+		function meshInit(mesh) {
 			//If you attach native components to an entity, it will not use a default collider
 			mesh.userData.altspace = mesh.userData.altspace || {};
 			mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
 			mesh.userData.altspace.collider.enabled = false;
 
 			altspace.addNativeComponent(mesh, this.name);
-			this.update(this.data);//to pass defaults
+		}
+
+		function nativeComponentInit() {
+			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+
+			meshInit.call(this, mesh);
+
+			//to pass defaults
+			this.update(this.data);
 		}
 		function nativeComponentRemove() {
 			var mesh = this.el.getObject3D('mesh');
@@ -597,9 +603,50 @@
 	    * @example <a-box n-mesh-collider></a-box>
 	    */
 		AFRAME.registerComponent('n-mesh-collider', {
-			init:nativeComponentInit,
-			remove: nativeComponentRemove,
-			update: nativeComponentUpdate,
+			_forEachMesh: function (func) {
+				var obj = this.el.object3DMap.mesh;
+				if (!obj) { return; }
+				if (obj instanceof THREE.Mesh) {
+					func(obj);
+				} else {
+					obj.traverse(function (childObj) {
+						if (childObj instanceof THREE.Mesh) {
+							func(childObj);
+						}
+					}.bind(this));
+				}
+			},
+			_initObj: function () {
+				this._forEachMesh(function (mesh) {
+					meshInit.call(this, mesh);
+
+					//to pass defaults
+					altspace.updateNativeComponent(mesh, this.name, this.data);
+				}.bind(this));
+			},
+			init: function () {
+				// Allow a-frame to create a PlaceholderMesh if there isn't already one, so that the native collider is
+				// registered.
+				this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+
+				// Initialize the existing mesh
+				this._initObj();
+
+				this.el.addEventListener('model-loaded', function () {
+					// Re-initialize the collider if a new model is loaded
+					this._initObj();
+				}.bind(this));
+			},
+			remove: function () {
+				this._forEachMesh(function (mesh) {
+					altspace.removeNativeComponent(mesh, this.name);
+				}.bind(this));
+			},
+			update: function (oldData) {
+				this._forEachMesh(function (mesh) {
+					altspace.updateNativeComponent(mesh, this.name, this.data);
+				}.bind(this));
+			},
 			schema: {
 				isTrigger: { default: false, type: 'boolean' },
 				convex: { default: true, type: 'boolean' },

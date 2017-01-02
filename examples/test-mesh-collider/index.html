@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Mesh Collider Test</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+</head>
+
+<body>
+	<a-scene altspace="fullspace: true">
+		<a-sphere position="6 0 0" n-mesh-collider="type: environment; convex: false;"></a-sphere>
+		<a-obj-model src="power_lines.obj"
+			position="0 6 0" scale="0.1 0.1 0.1"
+			n-mesh-collider="type: environment; convex: true">
+		</a-obj-model>
+	</a-scene>
+</body>
+
+</html>
