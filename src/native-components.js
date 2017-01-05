@@ -7,6 +7,14 @@
 * @namespace native
 */
 (function () {
+	if (!window.altspace || !altspace.inClient) {
+		var noop = function () {};
+		window.altspace = {
+			addNativeComponent: noop,
+			updateNativeComponent: noop,
+			removeNativeComponent: noop
+		};
+	}
 
 	var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
 	var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
@@ -17,16 +25,22 @@
 	PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
 	PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
 
-	function nativeComponentInit() {
-		var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-
+	function meshInit(mesh) {
 		//If you attach native components to an entity, it will not use a default collider
 		mesh.userData.altspace = mesh.userData.altspace || {};
 		mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
 		mesh.userData.altspace.collider.enabled = false;
 
 		altspace.addNativeComponent(mesh, this.name);
-		this.update(this.data);//to pass defaults
+	}
+
+	function nativeComponentInit() {
+		var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+
+		meshInit.call(this, mesh);
+
+		//to pass defaults
+		this.update(this.data);
 	}
 	function nativeComponentRemove() {
 		var mesh = this.el.getObject3D('mesh');
@@ -41,13 +55,13 @@
 	}
 
 	/**
-    * Attach a given native object to this entity.
-    * @mixin n-object
+	* Attach a given native object to this entity.
+	* @mixin n-object
 	* @memberof native
-    * @prop {string} res - The identifier for the resource you want. This component
+	* @prop {string} res - The identifier for the resource you want. This component
 	* can accept all resources except for `interactables`.
-    * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
-    */
+	* @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
+	*/
 	AFRAME.registerComponent('n-object', {
 		schema: {
 			res: {type: 'string'}
@@ -58,15 +72,15 @@
 	});
 
 	/**
-    * Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
+	* Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 	* These copies will be physically interactive and automatically synchronized
 	* between users.
-    * @mixin n-spawner
+	* @mixin n-spawner
 	* @memberof native
-    * @prop {string} res - The identifier for the resource you want. This component
+	* @prop {string} res - The identifier for the resource you want. This component
 	* can only accept resources of type `interactables`.
-    * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
-    */
+	* @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
+	*/
 	AFRAME.registerComponent('n-spawner', {
 		schema: {
 			res: {type: 'string'}
@@ -77,21 +91,21 @@
 	});
 
 	/**
-    * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
-    * This text will be clearer than texture-based text and more performant than geometry-based test.
-    * @mixin n-text
+	* Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
+	* This text will be clearer than texture-based text and more performant than geometry-based test.
+	* @mixin n-text
 	* @memberof native
-    * @prop {string} text - The text to be drawn.
-    * @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
-    * @prop {number} width=10 - The width of the text area in meters. If the
-    * text is wider than this value, the overflow will be wrapped to the next line.
-    * @prop {number} height=1 - The height of the text area in meters. If the
-    * text is taller than this value, the overflow will be cut off.
-    * @prop {string} horizontalAlign=middle - The horizontal anchor point for
-    * the text. Can be `left`, `middle`, or `right`.
-    * @prop {string} verticalAlign=middle - The vertical anchor point for the
-    * text. Can be `top`, `middle`, or `bottom`.
-    */
+	* @prop {string} text - The text to be drawn.
+	* @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
+	* @prop {number} width=10 - The width of the text area in meters. If the
+	* text is wider than this value, the overflow will be wrapped to the next line.
+	* @prop {number} height=1 - The height of the text area in meters. If the
+	* text is taller than this value, the overflow will be cut off.
+	* @prop {string} horizontalAlign=middle - The horizontal anchor point for
+	* the text. Can be `left`, `middle`, or `right`.
+	* @prop {string} verticalAlign=middle - The vertical anchor point for the
+	* text. Can be `top`, `middle`, or `bottom`.
+	*/
 	AFRAME.registerComponent('n-text', {
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
@@ -125,7 +139,7 @@
 	* @name n-collider
 	* @mixin n-collider
 	* @memberof native
-    * @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+	* @prop {vec3} center=0,0,0 - The offset of the collider in local space.
 	* @prop {string} type=hologram - The type of collider, one of: `object` | `environment` | `hologram`.
 	* Object colliders collide with other objects, the environment, and the cursor.
 	* Environment colliders collide with everything objects do, but you can also
@@ -133,13 +147,13 @@
 	* the cursor.
 	*/
 
-    /**
-    * Create a spherical collider on this entity.
-    * @mixin n-sphere-collider
+	/**
+	* Create a spherical collider on this entity.
+	* @mixin n-sphere-collider
 	* @memberof native
 	* @extends native.n-collider
-    * @prop {number} radius=1 - The size of the collider in meters.
-    */
+	* @prop {number} radius=1 - The size of the collider in meters.
+	*/
 	AFRAME.registerComponent('n-sphere-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -154,12 +168,12 @@
 
 
 	/**
-    * Create a box-shaped collider on this entity.
-    * @mixin n-box-collider
+	* Create a box-shaped collider on this entity.
+	* @mixin n-box-collider
 	* @memberof native
 	* @extends native.n-collider
-    * @prop {vec3} size=1,1,1 - The dimensions of the collider.
-    */
+	* @prop {vec3} size=1,1,1 - The dimensions of the collider.
+	*/
 	AFRAME.registerComponent('n-box-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -173,16 +187,16 @@
 	});
 
 	/**
-    * Create a capsule-shaped collider on this entity. Capsules
-    * are a union of a cylinder and two spheres on top and bottom.
-    * @mixin n-capsule-collider
+	* Create a capsule-shaped collider on this entity. Capsules
+	* are a union of a cylinder and two spheres on top and bottom.
+	* @mixin n-capsule-collider
 	* @memberof native
 	* @extends native.n-collider
-    * @prop {number} radius=1 - The radius of the capsule in meters.
-    * @prop {number} height=1 - The height of the shaft of the capsule in meters.
-    * @prop {string} direction=y - The axis with which the capsule is aligned.
-    * One of `x`, `y`, or `z`.
-    */
+	* @prop {number} radius=1 - The radius of the capsule in meters.
+	* @prop {number} height=1 - The height of the shaft of the capsule in meters.
+	* @prop {string} direction=y - The axis with which the capsule is aligned.
+	* One of `x`, `y`, or `z`.
+	*/
 	AFRAME.registerComponent('n-capsule-collider', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
@@ -198,17 +212,60 @@
 	});
 
 	/**
-    * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
-    * low-poly meshes.
-    * @mixin n-mesh-collider
+	* Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
+	* low-poly meshes.
+	* @mixin n-mesh-collider
 	* @memberof native
 	* @extends native.n-collider
-    * @example <a-box n-mesh-collider></a-box>
-    */
+	* @example <a-box n-mesh-collider></a-box>
+	* @prop {bool} convex=true - Whether the collider should be convex or concave. Set this to false if you have holes
+	* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
+	* expensive comparet to conves colliders.
+	*/
 	AFRAME.registerComponent('n-mesh-collider', {
-		init:nativeComponentInit,
-		remove: nativeComponentRemove,
-		update: nativeComponentUpdate,
+		_forEachMesh: function (func) {
+			var obj = this.el.object3DMap.mesh;
+			if (!obj) { return; }
+			if (obj instanceof THREE.Mesh) {
+				func(obj);
+			}
+			obj.traverse(function (childObj) {
+				if (childObj instanceof THREE.Mesh) {
+					func(childObj);
+				}
+			}.bind(this));
+		},
+		_initObj: function () {
+			this._forEachMesh(function (mesh) {
+				meshInit.call(this, mesh);
+
+				//to pass defaults
+				altspace.updateNativeComponent(mesh, this.name, this.data);
+			}.bind(this));
+		},
+		init: function () {
+			// Allow a-frame to create a PlaceholderMesh if there isn't already one, so that the native collider is
+			// registered.
+			this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+
+			// Initialize the existing mesh
+			this._initObj();
+
+			this.el.addEventListener('model-loaded', function () {
+				// Re-initialize the collider if a new model is loaded
+				this._initObj();
+			}.bind(this));
+		},
+		remove: function () {
+			this._forEachMesh(function (mesh) {
+				altspace.removeNativeComponent(mesh, this.name);
+			}.bind(this));
+		},
+		update: function (oldData) {
+			this._forEachMesh(function (mesh) {
+				altspace.updateNativeComponent(mesh, this.name, this.data);
+			}.bind(this));
+		},
 		schema: {
 			isTrigger: { default: false, type: 'boolean' },
 			convex: { default: true, type: 'boolean' },
@@ -217,26 +274,26 @@
 	});
 
 	/**
-    * Make the object's +Z always face the viewer. Currently will only directly apply to main mesh or native component on the attached entity, not any children or submeshes.
-    * @mixin n-billboard
+	* Make the object's +Z always face the viewer. Currently will only directly apply to main mesh or native component on the attached entity, not any children or submeshes.
+	* @mixin n-billboard
 	* @memberof native
-    * @example <a-plane n-billboard></a-plane>
-    */
+	* @example <a-plane n-billboard></a-plane>
+	*/
 	AFRAME.registerComponent('n-billboard', {
 		init:nativeComponentInit,
 		remove: nativeComponentRemove,
 	});
 
 	/**
-    * A container keeps a running tally of how many objects are within
-    * its bounds, and adds and removes the states `container-full` and
+	* A container keeps a running tally of how many objects are within
+	* its bounds, and adds and removes the states `container-full` and
 	* `container-empty` based on the current count of objects. Can fire three
 	* special events: `container-full`, `container-empty`, and `container-count-changed`.
-    * @mixin n-container
+	* @mixin n-container
 	* @memberof native
-    * @prop {number} capacity=4 - The value at which the container will fire the
-    * `container-full` event.
-    */
+	* @prop {number} capacity=4 - The value at which the container will fire the
+	* `container-full` event.
+	*/
 	AFRAME.registerComponent('n-container', {
 		init: function(){
 			nativeComponentInit.call(this);
@@ -264,12 +321,12 @@
 		}
 	});
 
-    /**
-    * Play the sound given by the `src` or `res` property from the location
+	/**
+	* Play the sound given by the `src` or `res` property from the location
 	* of the entity.
-    * @mixin n-sound
+	* @mixin n-sound
 	* @memberof native
-    * @prop {string} res - The resource identifier for a built-in sound clip.
+	* @prop {string} res - The resource identifier for a built-in sound clip.
 	* @prop {string} src - A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
 	* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
 	* @prop {string} on - The name of the event that will play this sound clip.
@@ -292,7 +349,7 @@
 	* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
 	* @prop {string} rolloff='logarithmic' - Set this to 'linear' or 'cosine' if you want to cut sounds off at a
 	* maxDistance.
-    */
+	*/
 	/**
 	* Fired when a sound has loaded and is ready to be played
 	* @event native.n-sound#n-sound-loaded
