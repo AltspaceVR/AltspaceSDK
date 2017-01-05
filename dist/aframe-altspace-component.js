@@ -87,7 +87,7 @@
 	* <head>
 	*   <title>My A-Frame Scene</title>
 	*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.0/dist/aframe-altspace-component.min.js"></script>
+	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.1/dist/aframe-altspace-component.min.js"></script>
 	* </head>
 	* <body>
 	*   <a-scene altspace>
@@ -96,7 +96,7 @@
 	* </body>
 	*/
 	AFRAME.registerComponent('altspace', {
-	  version: '1.3.0',
+	  version: '1.3.1',
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
@@ -609,6 +609,8 @@
 		* @memberof native
 		* @extends native.n-collider
 	    * @example <a-box n-mesh-collider></a-box>
+	    * @prop {bool} convex=true - Whether the collider should be convex or concave. Set this to false if you have holes
+	    * in your mesh. Convex colliders are limited to 255 triangles.
 	    */
 		AFRAME.registerComponent('n-mesh-collider', {
 			_forEachMesh: function (func) {
