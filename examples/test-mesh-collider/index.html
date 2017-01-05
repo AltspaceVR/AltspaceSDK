@@ -9,7 +9,9 @@
 
 <body>
 	<a-scene altspace="fullspace: true">
-		<a-sphere position="0 0 -3" segments-width="8" segments-height="8"
+		<a-entity position="-3 1 0" n-spawner="res: interactables/basketball"></a-entity>
+
+		<a-sphere position="3 0 0" segments-width="8" segments-height="8"
 			n-mesh-collider="type: environment; convex: true;">
 		</a-sphere>
 
@@ -30,7 +32,9 @@
 		<a-collada-model src="models/test.dae"
 			position="0 0 12"
 			n-mesh-collider="type: environment; convex: false">
-		</a-obj-model>
+		</a-collada-model>
+
+		<a-entity position="0 1 14" n-spawner="res: interactables/basketball"></a-entity>
 	</a-scene>
 </body>
 
