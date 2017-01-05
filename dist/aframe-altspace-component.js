@@ -610,7 +610,8 @@
 		* @extends native.n-collider
 	    * @example <a-box n-mesh-collider></a-box>
 	    * @prop {bool} convex=true - Whether the collider should be convex or concave. Set this to false if you have holes
-	    * in your mesh. Convex colliders are limited to 255 triangles.
+	    * in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
+		* expensive comparet to conves colliders.
 	    */
 		AFRAME.registerComponent('n-mesh-collider', {
 			_forEachMesh: function (func) {
