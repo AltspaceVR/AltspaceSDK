@@ -3,16 +3,33 @@
 
 <head>
 	<title>Mesh Collider Test</title>
-	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
 </head>
 
 <body>
 	<a-scene altspace="fullspace: true">
-		<a-sphere position="6 0 0" n-mesh-collider="type: environment; convex: false;"></a-sphere>
-		<a-obj-model src="power_lines.obj"
-			position="0 6 0" scale="0.1 0.1 0.1"
+		<a-sphere position="0 0 -3" segments-width="8" segments-height="8"
+			n-mesh-collider="type: environment; convex: true;">
+		</a-sphere>
+
+		<a-sphere position="0 0 0" segments-width="8" segments-height="8"
+			n-mesh-collider="type: environment; convex: false;">
+		</a-sphere>
+
+		<a-obj-model src="models/test.obj" mtl="models/test.mtl"
+			position="0 0 4"
+			n-mesh-collider="type: environment; convex: false">
+		</a-obj-model>
+
+		<a-obj-model src="models/test.obj" mtl="models/test.mtl"
+			position="0 0 8"
 			n-mesh-collider="type: environment; convex: true">
+		</a-obj-model>
+
+		<a-collada-model src="models/test.dae"
+			position="0 0 12"
+			n-mesh-collider="type: environment; convex: false">
 		</a-obj-model>
 	</a-scene>
 </body>

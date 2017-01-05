@@ -398,6 +398,14 @@
 	* @namespace native
 	*/
 	(function () {
+		if (!window.altspace || !altspace.inClient) {
+			var noop = function () {};
+			window.altspace = {
+				addNativeComponent: noop,
+				updateNativeComponent: noop,
+				removeNativeComponent: noop
+			};
+		}
 
 		var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
 		var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
@@ -608,13 +616,12 @@
 				if (!obj) { return; }
 				if (obj instanceof THREE.Mesh) {
 					func(obj);
-				} else {
-					obj.traverse(function (childObj) {
-						if (childObj instanceof THREE.Mesh) {
-							func(childObj);
-						}
-					}.bind(this));
 				}
+				obj.traverse(function (childObj) {
+					if (childObj instanceof THREE.Mesh) {
+						func(childObj);
+					}
+				}.bind(this));
 			},
 			_initObj: function () {
 				this._forEachMesh(function (mesh) {
