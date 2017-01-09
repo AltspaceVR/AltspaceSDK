@@ -8,7 +8,8 @@ In either case, you should join the [AltspaceVR SDK Slack channel](https://altsp
 
 ## Resources
 
-* [SDK Documentation](https://altspacevr.github.io/aframe-altspace-component/doc/)
+* [API Documentation for A-Frame](https://altspacevr.github.io/aframe-altspace-component/doc/)
+* [API Documentation for Three.js](http://altspacevr.github.io/AltspaceSDK/doc/)
 * [A-Frame Overview](https://aframe.io/docs/0.3.0/introduction/)
 * [AltspaceVR Developer Portal](https://developer.altvr.com/)
 * [Building Your First A-Frame App](https://developer.altvr.com/building-altspacevr-apps-with-a-frame/)
