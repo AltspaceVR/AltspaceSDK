@@ -3205,7 +3205,7 @@ window.altspace.utilities = window.altspace.utilities || {};
  *
  * If all of your application logic is in behaviors, you do not need to create any additional requestAnimationFrame loops.
  *
- * It also automatically uses the WebGL renderer when running in a 
+ * It also automatically uses the WebGL renderer when running in a
  * desktop browser and emulates cursor events with mouse clicks.
  * @class Simulation
  * @param {Object} [config] Optional parameters.
@@ -3217,9 +3217,10 @@ altspace.utilities.Simulation = function (config) {
 	if (config.auto === undefined) config.auto = true;
 
 	var exports = {};
-	var scene = new THREE.Scene();
+	var scene;
 	var renderer;
 	var camera;
+	var usingAFrame = window.AFRAME && document.querySelector('a-scene');
 
 	setup();
 
@@ -3233,12 +3234,23 @@ altspace.utilities.Simulation = function (config) {
 	}
 
 	function setup() {
+		function setupAframe(){
+			var ascene = document.querySelector('a-scene');
+			scene = ascene.object3D;
+			renderer = ascene.renderer;
+
+			var acamera = document.querySelector('a-camera');
+			if(acamera)
+				camera = acamera.object3D;
+		}
 		function setupAltspace() {
+			scene = new THREE.Scene();
 			renderer = altspace.getThreeJSRenderer();
 			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
 		}
 
 		function setupWebGL() {
+			scene = new THREE.Scene();
 			renderer = new THREE.WebGLRenderer({antialias: true});
 			camera = new THREE.PerspectiveCamera();
 			camera.position.z = 500;
@@ -3268,14 +3280,16 @@ altspace.utilities.Simulation = function (config) {
 			if (shouldShimCursor) altspace.utilities.shims.cursor.init(scene, camera);
 		}
 
-		if (altspace && altspace.inClient) {
+		if(usingAFrame){
+			setupAframe();
+		} else if (window.altspace && altspace.inClient) {
 			setupAltspace();
 		} else {
 			setupWebGL();
 		}
 	}
 
-	if (config.auto) window.requestAnimationFrame(loop);
+	if (config.auto && !usingAFrame) window.requestAnimationFrame(loop);
 
 
 	/**
@@ -4181,6 +4195,16 @@ altspace.utilities.behaviors.Drag = function (config) {
 		intersector.position.copy(intersector.parent.worldToLocal(dragPoint));
 		intersector.quaternion.copy(object3d.parent.quaternion);
 		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+
+		/**
+		* Fired on an object when a drag interaction begins.
+		*
+		* @event dragstart
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = createDragEvent('dragstart');
+		object3d.dispatchEvent(dragEvent);
 	}
 
 	function moveDrag(event) {
@@ -4219,6 +4243,16 @@ altspace.utilities.behaviors.Drag = function (config) {
 	function stopDrag() {
 		scene.removeEventListener('cursorup', stopDrag);
 		scene.removeEventListener('cursormove', moveDrag);
+
+		/**
+		* Fired on an object when a drag interaction ends
+		*
+		* @event dragstop
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = createDragEvent('dragstop');
+		object3d.dispatchEvent(dragEvent);
 	}
 
 	function start() {
@@ -4227,6 +4261,22 @@ altspace.utilities.behaviors.Drag = function (config) {
 
 	function dispose() {
 		object3d.removeEventListener('cursordown', startDrag);
+	}
+
+	/**
+	* Represents events emitted during drag interactions
+	*
+	* @typedef {Object} module:altspace/utilities/behaviors.Drag~DragEvent
+	* @property {THREE.Ray} ray - The raycaster ray at the time of the event.
+	* @property {THREE.Object3D} target - The object which was dragged.
+	*/
+	function createDragEvent(type) {
+		return {
+			type: type,
+			bubbles: true,
+			target: object3d,
+			ray: raycaster.ray.clone()
+		}
 	}
 
 	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
@@ -11537,7 +11587,7 @@ window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectB
 
 (function () {
 
-	var version = '0.26.2';
+	var version = '0.28.1';
 
 	if (window.altspace && window.altspace.requestVersion) {
 		window.altspace.requestVersion(version);
