@@ -8,16 +8,20 @@
 <body>
 <a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: test">
 	<a-entity geometry="primitive: box" material="color: red" position="-1 0 -2"
-		n-skeleton-joint="part: upper-leg; side: left; index: 0; position-offset: 0 2 0; ">
+		n-skeleton-joint="part: hand; side: left; index: 0; position-offset: 0 2 0; rotation-offset: 0 45 0;">
 	</a-entity>
 
 	<a-entity id="loop" position="-3 1 -2" n-sound="res: ui/error; volume: 0.5; loop: true; autoplay: true;"
-		n-skeleton-joint="part: upper-leg; side: left; position-offset"></a-entity>
-	<a-entity geometry="primitive: box" material="color: red" position="-1 0 -2"> </a-entity>
-	<a-entity n-text="fontSize: 2; text: hi" position="0 1 0"></a-entity>
-	<a-entity position="0 0.5 0" n-object="res:effects/fire"></a-entity>
-	<a-entity position="0.25 0 0" n-object="res:effects/fire-trail"></a-entity>
-	<a-entity n-spawner="res:interactables/basketball" position="0.5 1.25 3"></a-entity>
+		n-skeleton-joint="part: spine;"></a-entity>
+	<a-entity n-text="fontSize: 2; text: hi" position="0 1 0"
+		n-skeleton-joint="part: head;"></a-entity>
+	<a-entity position="0 0.5 0" n-object="res:effects/fire"
+		n-skeleton-joint="part: head;"></a-entity>
+	<a-entity position="0.25 0 0" n-object="res:effects/fire-trail"
+		n-skeleton-joint="part: hand; side: right;"></a-entity>
+	<a-entity n-spawner="res:interactables/basketball" position="0.5 1.25 3"
+		n-skeleton-joint="part: spine; side: left;"></a-entity>
+	<a-box n-skeleton-joint="part: foot; side: left;"></a-box>
 </a-scene>
 </body>
 </html>

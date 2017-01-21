@@ -430,4 +430,17 @@
 		}
 	});
 
+	AFRAME.registerComponent('n-skeleton-joint', {
+		schema: {
+			part: {type: 'string'},
+			side: {type: 'string', default: 'center'},
+			index: {type: 'int', default: 0},
+			positionOffset: {type: 'vec3'},
+			positionRotation: {type: 'vec3'}
+		},
+		init: nativeComponentInit,
+		update: nativeComponentUpdate,
+		remove: nativeComponentRemove
+	});
+
 })();
