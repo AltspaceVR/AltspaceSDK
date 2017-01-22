@@ -1,9 +1,9 @@
 <html>
 <head>
 	<title>Native Skeleton Joints</title>
-	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="//aframe.io/releases/0.3.0/aframe.js"></script>
 	<script src="../../dist/aframe-altspace-component.js"></script>
-	<script src="http://sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
+	<script src="//sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
 </head>
 <body>
 <a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: test">
@@ -20,7 +20,7 @@
 	<a-entity position="0.25 0 0" n-object="res:effects/fire-trail"
 		n-skeleton-joint="part: hand; side: right;"></a-entity>
 	<a-entity n-spawner="res:interactables/basketball" position="0.5 1.25 3"
-		n-skeleton-joint="part: spine; side: left;"></a-entity>
+		n-skeleton-joint="part: spine;"></a-entity>
 	<a-box n-skeleton-joint="part: foot; side: left;"></a-box>
 </a-scene>
 </body>
