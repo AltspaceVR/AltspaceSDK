@@ -436,7 +436,8 @@
 			side: {type: 'string', default: 'center'},
 			index: {type: 'int', default: 0},
 			positionOffset: {type: 'vec3'},
-			positionRotation: {type: 'vec3'}
+			rotationOffset: {type: 'vec3'},
+			userId: {type: 'string'}
 		},
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
