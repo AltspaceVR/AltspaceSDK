@@ -430,18 +430,22 @@
 		}
 	});
 
-	AFRAME.registerComponent('n-skeleton-joint', {
+	AFRAME.registerComponent('n-skeleton-parent', {
 		schema: {
 			part: {type: 'string'},
 			side: {type: 'string', default: 'center'},
 			index: {type: 'int', default: 0},
-			positionOffset: {type: 'vec3'},
-			rotationOffset: {type: 'vec3'},
 			userId: {type: 'string'}
 		},
 		init: nativeComponentInit,
 		update: nativeComponentUpdate,
 		remove: nativeComponentRemove
 	});
+
+	AFRAME.registerComponent('n-cockpit-parent', {
+		init: nativeComponentInit,
+		remove: nativeComponentRemove
+	});
+
 
 })();

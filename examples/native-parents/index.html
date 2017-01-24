@@ -1,0 +1,84 @@
+<html>
+<head>
+	<title>Native Parent</title>
+	<script src="//aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script src="//sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
+</head>
+<body>
+<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: test">
+	<a-entity 
+		geometry="primitive: box" 
+		material="color: red"
+		n-skeleton-parent="part: hand; side: left; index: 0;" 
+		position="0 0.1 0" 
+		rotation="0 45 0" 
+		scale="0.1 0.1 0.1">
+	</a-entity>
+
+	<a-entity
+		position="0 0 -0.5" 
+		n-spawner="res:interactables/basketball"
+		n-skeleton-parent="part: spine;">
+	</a-entity>
+
+	<a-entity 
+		id="loop" 
+		n-sound="res: ui/error; volume: 0.5; loop: true; autoplay: true;"
+		n-skeleton-parent="part: spine;">		
+	</a-entity>
+
+	<a-entity
+		position="0 1 -1" 
+		scale="0.5 0.5 0.5"
+		n-text="fontSize: 2; text: text in the world">
+	</a-entity>
+
+	<a-entity 
+		position="0 1 0" 
+		rotation="0 180 0" 
+		scale="0.5 0.5 0.5"
+		n-text="fontSize: 2; text: text other people can read"
+		n-skeleton-parent="part: hips;"></a-entity>
+
+	<a-entity 
+		position="0 0 -0.7" 
+		scale="0.2 0.2 0.2"
+		rotation="-30 0 0"
+		n-text="fontSize: 2; text: text you can read comfortably"
+		n-cockpit-parent>
+	</a-entity>
+
+	<a-entity 
+		position="0.2 0.2 -0.5" 
+		scale="0.1 0.1 0.1"
+		n-text="fontSize: 2; text: avoid text on the head"
+		n-skeleton-parent="part: head;">
+	</a-entity>
+	<a-entity 
+		position="0.2 0.18 -0.5" 
+		scale="0.1 0.1 0.1"
+		n-text="fontSize: 2; text: annoying isn't it :-)"
+		n-skeleton-parent="part: head;">
+	</a-entity>
+
+	<a-entity 
+		n-object="res:effects/fire"
+		n-skeleton-parent="part: head;">		
+	</a-entity>
+
+	<a-entity 
+		geometry="primitive: box" 
+		material="color: red"
+		n-skeleton-parent="part: hand; side: left; index: 0; user-id: 16051030387065693" 
+		position="0 0.1 0" 
+		rotation="0 45 0" 
+		scale="0.1 0.1 0.1">
+	</a-entity>
+	
+	<a-entity n-object="res:effects/fire-trail"
+		n-skeleton-parent="part: hand; side: right; user-id: 16051030387065693"></a-entity>
+</a-scene>
+</body>
+</html>
+
