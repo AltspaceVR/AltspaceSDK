@@ -24,7 +24,7 @@ This is a fully functional example of what A-Frame code looks like.
 <!DOCTYPE html>
 <html><head>
 <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-<script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.1/dist/aframe-altspace-component.min.js"></script>
+<script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.2/dist/aframe-altspace-component.min.js"></script>
 <script>
 
 // an example custom component, that will change the color when clicked
