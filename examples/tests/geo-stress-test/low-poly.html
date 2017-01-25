@@ -2,38 +2,18 @@
 <html>
     <head>
         <title>Geometry Stress Test</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.js"></script>
-        <script src="https://cdn.rawgit.com/mrdoob/three.js/r83/examples/js/loaders/GLTFLoader.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
         <script src="https://cdn.rawgit.com/mrdoob/stats.js/066cb4e8/build/stats.min.js"></script>
-        <script src="http://sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
+        <script src="../../../dist/altspace.min.js"></script>
     </head>
     <body>
         <script>
-
-            function LoaderPromise(url){
-                return new Promise(function(resolve, reject){
-                    var loader = new THREE.GLTFLoader();
-                    loader.setCrossOrigin('anonymous');
-				    loader.load(url,
-                        function(result){
-                            var model = result.scene.children[0];
-        					model.matrixAutoUpdate = true;
-        					resolve(model);
-    				    },
-                        undefined,
-                        function(err){
-                            reject(err);
-                        }
-                    );
-                });
-            }
 
             var stats = new Stats();
             stats.showPanel(0);
             document.body.appendChild(stats.dom);
 
             var scene = new THREE.Scene();
-            scene.scale.setScalar(230);
             var renderer = altspace.getThreeJSRenderer();
 
             window.requestAnimationFrame(function animate(timestamp){
@@ -43,22 +23,27 @@
                 stats.end();
             });
 
+            altspace.getEnclosure().then(function(enc){
+                scene.scale.setScalar(enc.pixelsPerMeter);
+            });
+
             function randPos(){
                 return Math.random() * 3 - 1.5;
             }
 
             var box = new THREE.Mesh(new THREE.BoxBufferGeometry(0.05,0.05,0.05));
             var count = 0;
+            var batchSize = 500;
             var handle = setInterval(function(){
-                if(count < 15000){
-                    for(var i=0; i<1000; i++)
+                if(count < 9000){
+                    for(var i=0; i<batchSize; i++)
                     {
                         var item = box.clone();
                         item.material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
                         item.position.set(randPos(), randPos(), randPos());
                         scene.add(item);
                     }
-                    count += 1000;
+                    count += batchSize;
                 }
                 else {
                     clearInterval(handle);
