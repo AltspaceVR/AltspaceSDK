@@ -13,7 +13,7 @@ function versionAndPack(filename, webpackPlugins) {
 				filename: filename
 			},
 			plugins: webpackPlugins,
-			devtool: 'inline-source-map'
+			devtool: 'source-map'
 		}))
 		.pipe(replace('AFRAME_ALTSPACE_VERSION', version))
 		.pipe(gulp.dest('./dist/'));
