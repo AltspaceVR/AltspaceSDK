@@ -59,6 +59,8 @@
 	__webpack_require__(9);
 	__webpack_require__(10);
 	__webpack_require__(11);
+	__webpack_require__(12);
+	__webpack_require__(13);
 
 
 /***/ },
@@ -1079,9 +1081,6 @@
 			var scene = document.querySelector('a-scene');
 			var syncSys = scene.systems['sync-system'];
 
-			var ref;
-			var key;
-			var dataRef;
 			var ownerRef;
 			var ownerId;
 			var isMine = false;
@@ -1090,7 +1089,7 @@
 
 			component.isConnected = false;
 
-			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
+			if(syncSys.isConnected) { start(); } else { scene.addEventListener('connected', start); }
 
 
 			if(component.data.ownOn)
@@ -1121,9 +1120,6 @@
 						return;
 					}
 
-					console.log('syncSys: ' + syncSys);
-					console.log('syncSys.sceneRef: ' + syncSys.sceneRef);
-
 					link(syncSys.sceneRef.child(id));
 					setupReceive();
 
@@ -1137,9 +1133,8 @@
 			}
 
 			function link(entityRef) {
-				ref = entityRef;
-				key = ref.key();
-				dataRef = ref.child('data');
+				var ref = entityRef;
+				var dataRef = ref.child('data');
 				component.dataRef = dataRef;
 				ownerRef = ref.child('owner');
 			}
@@ -1280,6 +1275,9 @@
 				// but have it be automatically removed by firebase if we disconnect for any reason
 				this.clientsRef.push(this.clientId).onDisconnect().remove();
 
+				this.sceneRef.on('child_added', this.createElement.bind(this));
+				this.sceneRef.on('child_removed', this.removeElement.bind(this));
+				this.createdElements = new Map();
 
 				this.connection.instance.child('initialized').once('value', function (snapshot) {
 					var shouldInitialize = !snapshot.val();
@@ -1294,7 +1292,26 @@
 					get: function () { return masterClientId === this.clientId; }.bind(this)
 				});
 			}.bind(this));
-		}
+		},
+		instantiate: function (el, components) {
+			this.sceneRef.push({clientId: this.clientId, type: el.nodeName, components: components}).onDisconnect().remove();
+		},
+		createElement: function (snapshot) {
+			var elInfo = snapshot.val();
+			// TODO Not sure why we sometimes get a snapshot value with {owner: <uuid>}
+			if (!elInfo || !elInfo.type) { return; }
+			if (elInfo.clientId === this.clientId) { return; }
+			var el = document.createElement(elInfo.type);
+			this.sceneEl.appendChild(el);
+			elInfo.components.forEach(function (component) {
+				el.setAttribute(component.type, component.data);
+			});
+			this.createdElements.set(snapshot.key(), el);
+		},
+		removeElement: function (snapshot) {
+			var el = this.createdElements.get(snapshot.key());
+			this.sceneEl.removeChild(el);
+		},
 	});
 
 
@@ -1589,6 +1606,76 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+	AFRAME.registerComponent('sync-n-parent',
+	{
+		init: function () {
+			var scene = document.querySelector('a-scene');
+			this.syncSys = scene.systems['sync-system'];
+			altspace.getUser().then(function (user) {
+				this.userId = user.userId;
+				if(this.syncSys.isConnected) { this._start(); }
+				else { scene.addEventListener('connected', this._start.bind(this)); }
+			}.bind(this));
+		},
+		_start: function () {
+			var components = [];
+			Object.keys(this.el.components).forEach(function (componentName) {
+				// TODO We'd have to remove other sync components I think
+				if (['sync', 'sync-n-parent'].indexOf(componentName) !== -1) { return; }
+				var data = Object.assign({}, this.el.components[componentName].data);
+				if (componentName === 'n-skeleton-parent') {
+					data.userId = this.userId;
+				}
+				components.push({type: componentName, data: data});
+			}.bind(this));
+			this.syncSys.instantiate(this.el, components);
+		}
+	});
+
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	var parentCloneCounter = 1;
+	AFRAME.registerComponent('sync-n-parent-clone',
+	{
+		schema: {
+			part: {type: 'string'},
+			side: {type: 'string', default: 'center'},
+			index: {type: 'int', default: 0},
+			parentedPosition: {type: 'vec3'},
+			on: {type: 'string'}
+		},
+		init: function () {
+			this.el.addEventListener(this.data.on, function () {
+				var clone = document.createElement(this.el.nodeName);
+				clone.id = 'sync-n-parent-clone-' + parentCloneCounter++;
+				var scene = document.querySelector('a-scene');
+				scene.appendChild(clone);
+				Object.keys(this.el.components).forEach(function (componentName) {
+					if (['sync-n-parent-clone'].indexOf(componentName) !== -1) { return; }
+					clone.setAttribute(componentName, this.el.components[componentName].data);
+				}.bind(this));
+				clone.setAttribute('position', this.data.parentedPosition);
+				clone.setAttribute('n-skeleton-parent', {
+					part: this.data.part,
+					side: this.data.side,
+					index: this.data.index
+				});
+				clone.setAttribute('sync-n-parent', '');
+			}.bind(this));
+		}
+	});
+
+
+
+
+/***/ },
+/* 13 */
 /***/ function(module, exports) {
 
 	/**

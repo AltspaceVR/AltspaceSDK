@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Scene Sync Example</title>
+		<script src="//aframe.io/releases/0.3.0/aframe.js"></script>
+		<script src="//sdk.altvr.com/libs/altspace.js/0.28.1/altspace.js"></script>
+		<script src="../../dist/aframe-altspace-component.js"></script>
+	</head>
+	<body>
+		<a-scene altspace="fullspace: true" sync-system="author: altspacevr; app: test-scene-sync">
+			<a-entity
+				id="initial-box"
+				geometry="primitive: box"
+				material="color: red"
+				n-skeleton-parent="part: hand; side: left; index: 0;"
+				sync sync-n-parent
+				position="0 0.1 0"
+				rotation="0 45 0"
+				scale="0.1 0.1 0.1">
+			</a-entity>
+			<a-entity
+				id="clone-box"
+				geometry="primitive: box"
+				material="color: green"
+				sync sync-n-parent-clone="part: hand; side: right; index: 0; on: click; parented-position: 0 0.1 0;"
+				position="1 1 -5"
+				rotation="0 0 0"
+				scale="0.1 0.1 0.1">
+			</a-entity>
+			<a-entity
+				id="clone-hat"
+				geometry="primitive: box"
+				material="color: yellow"
+				sync sync-n-parent-clone="part: head; side: center; index: 0; on: click; parented-position: 0 0.5 0;"
+				position="2 1 -5"
+				rotation="0 0 0"
+				scale="0.1 0.1 0.1">
+			</a-entity>
+		</a-scene>
+	</body>
+</html>

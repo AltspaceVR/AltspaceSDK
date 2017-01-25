@@ -70,6 +70,9 @@ AFRAME.registerSystem('sync-system',
 			// but have it be automatically removed by firebase if we disconnect for any reason
 			this.clientsRef.push(this.clientId).onDisconnect().remove();
 
+			this.sceneRef.on('child_added', this.createElement.bind(this));
+			this.sceneRef.on('child_removed', this.removeElement.bind(this));
+			this.createdElements = new Map();
 
 			this.connection.instance.child('initialized').once('value', function (snapshot) {
 				var shouldInitialize = !snapshot.val();
@@ -84,5 +87,24 @@ AFRAME.registerSystem('sync-system',
 				get: function () { return masterClientId === this.clientId; }.bind(this)
 			});
 		}.bind(this));
-	}
+	},
+	instantiate: function (el, components) {
+		this.sceneRef.push({clientId: this.clientId, type: el.nodeName, components: components}).onDisconnect().remove();
+	},
+	createElement: function (snapshot) {
+		var elInfo = snapshot.val();
+		// TODO Not sure why we sometimes get a snapshot value with {owner: <uuid>}
+		if (!elInfo || !elInfo.type) { return; }
+		if (elInfo.clientId === this.clientId) { return; }
+		var el = document.createElement(elInfo.type);
+		this.sceneEl.appendChild(el);
+		elInfo.components.forEach(function (component) {
+			el.setAttribute(component.type, component.data);
+		});
+		this.createdElements.set(snapshot.key(), el);
+	},
+	removeElement: function (snapshot) {
+		var el = this.createdElements.get(snapshot.key());
+		this.sceneEl.removeChild(el);
+	},
 });
