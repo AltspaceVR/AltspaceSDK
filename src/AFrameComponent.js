@@ -20,13 +20,18 @@ function flatten(obj)
 {
 	let ret = {};
 	if(!obj.prototype){
-		ret = Object.assign( {schema: {}}, obj );
+		ret = Object.assign( {schema: {}, dependencies: []}, obj );
 	}
 	else {
 		ret = Object.assign( flatten(obj.prototype), obj );
 	}
 
-	Object.assign(ret.schema, obj.schema);
+	if(obj.schema)
+		Object.assign(ret.schema, obj.schema);
+		
+	if(obj.dependencies)
+		ret.dependencies.push(...obj.dependencies);
+
 	return ret;
 }
 
