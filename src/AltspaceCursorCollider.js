@@ -7,14 +7,14 @@
 
 'use strict';
 
-import AFrameComponent from './AFrameComponent';
+import {AFrameComponent} from './AFrameComponent';
 import {safeDeepSet} from './utilities';
 
 
 export default class AltspaceCursorCollider extends AFrameComponent
 {
-	constructor(){
-		this.schema = {enabled: {type: 'boolean', default: 'true'}};
+	get schema(){
+		return {enabled: {type: 'boolean', default: 'true'}};
 	}
 
 	init()

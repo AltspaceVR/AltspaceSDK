@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "budo",
     "dist": "gulp dist",
+    "build": "rollup -c rollup.basic.js && rollup -c rollup.min.js",
     "doc": "npm run dist && jsdoc -c .jsdoc.json src"
   },
   "repository": {
