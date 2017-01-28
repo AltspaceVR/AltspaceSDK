@@ -1,5 +1,6 @@
 AFRAME.registerComponent('sync-n-parent',
 {
+	dependencies: ['sync'],
 	init: function () {
 		var scene = document.querySelector('a-scene');
 		this.syncSys = scene.systems['sync-system'];
@@ -20,7 +21,7 @@ AFRAME.registerComponent('sync-n-parent',
 			}
 			components.push({type: componentName, data: data});
 		}.bind(this));
-		this.syncSys.instantiate(this.el, components);
+		this.syncSys.instantiateRemotely(this.el, components, true);
 	}
 });
 

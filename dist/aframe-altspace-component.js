@@ -1081,6 +1081,9 @@
 			var scene = document.querySelector('a-scene');
 			var syncSys = scene.systems['sync-system'];
 
+			var ref;
+			var key;
+			var dataRef;
 			var ownerRef;
 			var ownerId;
 			var isMine = false;
@@ -1089,7 +1092,7 @@
 
 			component.isConnected = false;
 
-			if(syncSys.isConnected) { start(); } else { scene.addEventListener('connected', start); }
+			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
 
 
 			if(component.data.ownOn)
@@ -1120,6 +1123,9 @@
 						return;
 					}
 
+					console.log('syncSys: ' + syncSys);
+					console.log('syncSys.sceneRef: ' + syncSys.sceneRef);
+
 					link(syncSys.sceneRef.child(id));
 					setupReceive();
 
@@ -1133,8 +1139,9 @@
 			}
 
 			function link(entityRef) {
-				var ref = entityRef;
-				var dataRef = ref.child('data');
+				ref = entityRef;
+				key = ref.key();
+				dataRef = ref.child('data');
 				component.dataRef = dataRef;
 				ownerRef = ref.child('owner');
 			}
@@ -1275,8 +1282,9 @@
 				// but have it be automatically removed by firebase if we disconnect for any reason
 				this.clientsRef.push(this.clientId).onDisconnect().remove();
 
-				this.sceneRef.on('child_added', this.createElement.bind(this));
-				this.sceneRef.on('child_removed', this.removeElement.bind(this));
+				this.remoteElementsRef = this.sceneRef.child('remoteElements')
+				this.remoteElementsRef.on('child_added', this.createElement.bind(this));
+				this.remoteElementsRef.on('child_removed', this.removeElement.bind(this));
 				this.createdElements = new Map();
 
 				this.connection.instance.child('initialized').once('value', function (snapshot) {
@@ -1293,12 +1301,15 @@
 				});
 			}.bind(this));
 		},
-		instantiate: function (el, components) {
-			this.sceneRef.push({clientId: this.clientId, type: el.nodeName, components: components}).onDisconnect().remove();
+		instantiateRemotely: function (el, components, removeOnDisconnect) {
+			var ref = this.remoteElementsRef.push({clientId: this.clientId, type: el.nodeName, components: components});
+			if (removeOnDisconnect) {
+				ref.onDisconnect().remove();
+			}
+			return ref;
 		},
 		createElement: function (snapshot) {
 			var elInfo = snapshot.val();
-			// TODO Not sure why we sometimes get a snapshot value with {owner: <uuid>}
 			if (!elInfo || !elInfo.type) { return; }
 			if (elInfo.clientId === this.clientId) { return; }
 			var el = document.createElement(elInfo.type);
@@ -1309,6 +1320,8 @@
 			this.createdElements.set(snapshot.key(), el);
 		},
 		removeElement: function (snapshot) {
+			var elInfo = snapshot.val();
+			if (!elInfo || !elInfo.type) { return; }
 			var el = this.createdElements.get(snapshot.key());
 			this.sceneEl.removeChild(el);
 		},
@@ -1610,6 +1623,7 @@
 
 	AFRAME.registerComponent('sync-n-parent',
 	{
+		dependencies: ['sync'],
 		init: function () {
 			var scene = document.querySelector('a-scene');
 			this.syncSys = scene.systems['sync-system'];
@@ -1630,7 +1644,7 @@
 				}
 				components.push({type: componentName, data: data});
 			}.bind(this));
-			this.syncSys.instantiate(this.el, components);
+			this.syncSys.instantiateRemotely(this.el, components, true);
 		}
 	});
 
@@ -1640,33 +1654,21 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	var parentCloneCounter = 1;
-	AFRAME.registerComponent('sync-n-parent-clone',
+	var instantiatorCounter = 0;
+	AFRAME.registerComponent('instantiator',
 	{
 		schema: {
-			part: {type: 'string'},
-			side: {type: 'string', default: 'center'},
-			index: {type: 'int', default: 0},
-			parentedPosition: {type: 'vec3'},
-			on: {type: 'string'}
+			on: {type: 'string'},
+			mixin: {type: 'string'}
 		},
 		init: function () {
 			this.el.addEventListener(this.data.on, function () {
-				var clone = document.createElement(this.el.nodeName);
-				clone.id = 'sync-n-parent-clone-' + parentCloneCounter++;
+				var entity = document.createElement('a-entity');
+				entity.id = this.el.id + '-instance-' + instantiatorCounter++;
+
 				var scene = document.querySelector('a-scene');
-				scene.appendChild(clone);
-				Object.keys(this.el.components).forEach(function (componentName) {
-					if (['sync-n-parent-clone'].indexOf(componentName) !== -1) { return; }
-					clone.setAttribute(componentName, this.el.components[componentName].data);
-				}.bind(this));
-				clone.setAttribute('position', this.data.parentedPosition);
-				clone.setAttribute('n-skeleton-parent', {
-					part: this.data.part,
-					side: this.data.side,
-					index: this.data.index
-				});
-				clone.setAttribute('sync-n-parent', '');
+				scene.appendChild(entity);
+				entity.setAttribute('mixin', this.data.mixin);
 			}.bind(this));
 		}
 	});

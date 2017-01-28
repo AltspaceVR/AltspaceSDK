@@ -10,6 +10,16 @@
 	</head>
 	<body>
 		<a-scene altspace="fullspace: true" sync-system="author: altspacevr; app: test-scene-sync">
+			<a-assets>
+				<a-mixin id="dunce-hat"
+					geometry="primitive: cone; radius-top: 0.001; height: 4"
+					material="color: yellow"
+					scale="0.1 0.1 0.1"></a-mixin>
+				 <a-mixin id="parent-to-head"
+					position="0 0.35 -1"
+					n-skeleton-parent="part: head;"
+					sync sync-n-parent></a-mixin>
+			</a-assets>
 			<a-entity
 				id="initial-box"
 				geometry="primitive: box"
@@ -21,22 +31,10 @@
 				scale="0.1 0.1 0.1">
 			</a-entity>
 			<a-entity
-				id="clone-box"
-				geometry="primitive: box"
-				material="color: green"
-				sync sync-n-parent-clone="part: hand; side: right; index: 0; on: click; parented-position: 0 0.1 0;"
-				position="1 1 -5"
-				rotation="0 0 0"
-				scale="0.1 0.1 0.1">
-			</a-entity>
-			<a-entity
-				id="clone-hat"
-				geometry="primitive: box"
-				material="color: yellow"
-				sync sync-n-parent-clone="part: head; side: center; index: 0; on: click; parented-position: 0 0.5 0;"
-				position="2 1 -5"
-				rotation="0 0 0"
-				scale="0.1 0.1 0.1">
+				id="instantiate-me"
+				mixin="dunce-hat"
+				instantiator="on: click; mixin: dunce-hat parent-to-head"
+				position="0 1 -5">
 			</a-entity>
 		</a-scene>
 	</body>

@@ -6,11 +6,12 @@
 	<script src="//sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
 </head>
 <body>
-<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: test">
+<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: native-parents">
 	<a-entity 
 		geometry="primitive: box" 
 		material="color: red"
 		n-skeleton-parent="part: hand; side: left; index: 0;" 
+		sync sync-n-parent
 		position="0 0.1 0" 
 		rotation="0 45 0" 
 		scale="0.1 0.1 0.1">
@@ -19,13 +20,15 @@
 	<a-entity
 		position="0 0 -0.5" 
 		n-spawner="res:interactables/basketball"
-		n-skeleton-parent="part: spine;">
+		n-skeleton-parent="part: spine;"
+		sync sync-n-parent>
 	</a-entity>
 
 	<a-entity 
 		id="loop" 
 		n-sound="res: ui/error; volume: 0.5; loop: true; autoplay: true;"
-		n-skeleton-parent="part: spine;">		
+		n-skeleton-parent="part: spine;"
+		sync sync-n-parent>		
 	</a-entity>
 
 	<a-entity
@@ -39,7 +42,8 @@
 		rotation="0 180 0" 
 		scale="0.5 0.5 0.5"
 		n-text="fontSize: 2; text: text other people can read"
-		n-skeleton-parent="part: hips;"></a-entity>
+		n-skeleton-parent="part: hips;"
+		sync sync-n-parent></a-entity>
 
 	<a-entity 
 		position="0 0 -0.7" 
@@ -53,31 +57,36 @@
 		position="0.2 0.2 -0.5" 
 		scale="0.1 0.1 0.1"
 		n-text="fontSize: 2; text: avoid text on the head"
-		n-skeleton-parent="part: head;">
+		n-skeleton-parent="part: head;"
+		sync sync-n-parent>
 	</a-entity>
 	<a-entity 
 		position="0.2 0.18 -0.5" 
 		scale="0.1 0.1 0.1"
 		n-text="fontSize: 2; text: annoying isn't it :-)"
-		n-skeleton-parent="part: head;">
+		n-skeleton-parent="part: head;"
+		sync sync-n-parent>
 	</a-entity>
 
 	<a-entity 
 		n-object="res:effects/fire"
-		n-skeleton-parent="part: head;">		
+		n-skeleton-parent="part: head;"		
+		sync sync-n-parent>
 	</a-entity>
 
 	<a-entity 
 		geometry="primitive: box" 
 		material="color: red"
-		n-skeleton-parent="part: hand; side: left; index: 0; user-id: 16051030387065693" 
+		n-skeleton-parent="part: hand; side: left; index: 0"
+		sync sync-n-parent
 		position="0 0.1 0" 
 		rotation="0 45 0" 
 		scale="0.1 0.1 0.1">
 	</a-entity>
 	
 	<a-entity n-object="res:effects/fire-trail"
-		n-skeleton-parent="part: hand; side: right; user-id: 16051030387065693"></a-entity>
+		n-skeleton-parent="part: hand; side: right"
+		sync sync-n-parent></a-entity>
 </a-scene>
 </body>
 </html>
