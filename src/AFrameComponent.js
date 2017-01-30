@@ -28,16 +28,16 @@ function flatten(obj)
 
 	if(obj.schema)
 		Object.assign(ret.schema, obj.schema);
-		
+
 	if(obj.dependencies)
 		ret.dependencies.push(...obj.dependencies);
 
 	return ret;
 }
 
-function registerComponent(name, cls)
+function registerComponentClass(name, cls)
 {
-	AFRAME.registerComponent(name, flatten(cls));
+	AFRAME.registerComponent(name, flatten(new cls(true)));
 }
 
-export { AFrameComponent, registerComponent };
+export { AFrameComponent, registerComponentClass };

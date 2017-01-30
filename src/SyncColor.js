@@ -5,6 +5,7 @@
 * @mixin sync-color
 * @memberof sync
 */
+'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
 
