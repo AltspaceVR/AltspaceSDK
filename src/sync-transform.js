@@ -144,3 +144,5 @@ AFRAME.registerComponent('sync-transform',
 		}
 	}
 });
+
+export default null;

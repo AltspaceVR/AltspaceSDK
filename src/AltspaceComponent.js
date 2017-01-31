@@ -34,10 +34,6 @@ import {AFrameComponent} from './AFrameComponent';
 
 export default class AltspaceComponent extends AFrameComponent
 {
-	get version(){
-		return 'AFRAME_ALTSPACE_VERSION';
-	}
-
 	get schema(){
 		return {
 			usePixelScale: { type: 'boolean', default: 'false'},
@@ -49,6 +45,7 @@ export default class AltspaceComponent extends AFrameComponent
 
 	init()
 	{
+		this.version = 'AFRAME_ALTSPACE_VERSION';
 		if(!this.el.object3D instanceof THREE.Scene){
 			console.warn('aframe-altspace-component can only be attached to a-scene');
 			return;

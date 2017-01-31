@@ -4,7 +4,7 @@ export default {
 	entry: 'src/index.js',
 	dest: 'dist/aframe-altspace-component.js',
 	format: 'iife',
-	moduleName: 'altspace',
+	moduleName: 'ALTSPACE',
 	sourceMap: true,
 	plugins: [buble()]
 };

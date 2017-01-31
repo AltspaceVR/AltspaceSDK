@@ -73,3 +73,5 @@ AFRAME.registerComponent('wire',
 		this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
 	}
 });
+
+export default null;

@@ -431,3 +431,5 @@
 	});
 
 })();
+
+export default null;

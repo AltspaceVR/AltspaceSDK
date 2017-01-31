@@ -5,6 +5,17 @@
 * @mixin sync-n-sound
 * @memberof sync
 */
+'use strict';
+
+import {AFrameComponent} from './AFrameComponent';
+
+export default class SyncNSound extends AFrameComponent
+{
+	get dependencies(){
+		return ['sync'];
+	}
+}
+
 AFRAME.registerComponent('sync-n-sound',
 {
 	dependencies: ['sync'],

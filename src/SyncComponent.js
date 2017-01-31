@@ -21,16 +21,16 @@
 * cannot be updated after initialization.
 */
 
-import AFrameComponent from './AFrameComponent';
+import {AFrameComponent} from './AFrameComponent';
 
-export default class SyncComponent
+export default class SyncComponent extends AFrameComponent
 {
 	constructor(isComponent = false)
 	{
 		this._isComponent = isComponent;
-		this.scene = document.querySelector('a-scene');
-		this.syncSys = scene.systems['sync-system'];
 
+		this.scene = undefined;
+		this.syncSys = undefined;
 		this.ref = undefined;
 		this.key = undefined;
 		this.dataRef = undefined;
@@ -56,9 +56,8 @@ export default class SyncComponent
 
 	init()
 	{
-		// shim in the ability to directly instantiate this class
-		if(this._isComponent)
-			SyncComponent.prototype.constructor.call(this, this._isComponent);
+		this.scene = this.el.sceneEl;
+		this.syncSys = this.scene.systems['sync-system'];
 
 		if(this.syncSys.isConnected)
 			start();
@@ -137,7 +136,7 @@ export default class SyncComponent
 		//if nobody has owned the object yet, we will.
 		this.ownerRef.transaction((owner => {
 			if (owner) return undefined;
-			ownerRef.onDisconnect().set(null);
+			this.ownerRef.onDisconnect().set(null);
 			return this.syncSys.clientId;
 		}).bind(this));
 
