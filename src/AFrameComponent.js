@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+* Stubs out the A-Frame "system" concept.
+* @see {@link https://aframe.io/docs/0.3.0/core/systems.html}
+*/
 class AFrameSystem
 {
 	get schema(){
@@ -12,6 +16,11 @@ class AFrameSystem
 	play(){ }
 }
 
+/**
+* Stubs out the A-Frame "component" concept.
+* @extends AFrameSystem
+* @see {@link https://aframe.io/docs/0.3.0/core/component.html}
+*/
 class AFrameComponent extends AFrameSystem
 {
 	update(oldData){ }

@@ -1,23 +1,24 @@
+'use strict';
+
+import {AFrameSystem} from './AFrameComponent';
+
 /**
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
 * [altspace.utilities.sync.connect]{@link http://altspacevr.github.io/AltspaceSDK/doc/module-altspace_utilities_sync.html#.connect}.
 * This component must be present on `a-scene` for any other sync components to work.
-* @memberof sync
-* @mixin sync-system
-* @prop {string} author - A unique identifier for you or your organization.
-* @prop {string} app - The name of the app.
-* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
-* @prop {string} instance - Override the instance ID. Can also be overridden with
-* a URL parameter.
-* @method {boolean} isMasterClient - Returns true if the local client is the master client.
+* @extends AFrameSystem
+* @memberof module:altspace/components
 */
-'use strict';
-
-import {AFrameSystem} from './AFrameComponent';
-
-export default class SyncSystem extends AFrameSystem
+class SyncSystem extends AFrameSystem
 {
+	/**
+	* @prop {string} author - A unique identifier for you or your organization.
+	* @prop {string} app - The name of the app.
+	* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
+	* @prop {string} instance - Override the instance ID. Can also be overridden with
+	* a URL parameter.
+	*/
 	get schema(){
 		return {
 			author: { type: 'string', default: null },
@@ -95,6 +96,9 @@ export default class SyncSystem extends AFrameSystem
 		});
 	}
 
+	/**
+	* Returns true if the local client is the master client.
+	*/
 	isMasterClient()
 	{
 		return this.masterClientId === this.clientId;

@@ -1,3 +1,7 @@
+/**
+* @module altspace/components
+*/
+
 'use strict';
 
 if (typeof AFRAME === 'undefined') {
@@ -21,6 +25,11 @@ registerComponentClass('sync-color', SyncColor);
 import SyncComponent from './SyncComponent';
 registerComponentClass('sync', SyncComponent);
 
+/**
+* @mixin sync-system
+* @memberof module:altspace/components
+* @see {@link module:altspace/components.SyncSystem}
+*/
 import SyncSystem from './SyncSystem';
 registerSystemClass('sync-system', SyncSystem);
 

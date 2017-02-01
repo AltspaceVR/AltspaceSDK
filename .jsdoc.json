@@ -1,15 +1,18 @@
 {
-  "opts": {
-    "recurse": true,
-    "destination": "doc",
-    "readme": "README.md",
-    "template": "./node_modules/minami"
-  },
-  "plugins": ["plugins/markdown"],
-  "templates": {
-    "default": {
-      "outputSourceFiles": false,
-      "layoutFile": "./node_modules/minami/tmpl/layout.tmpl"
+    "source": {
+        "include": "src/"
+    },
+    "opts": {
+        "recurse": true,
+        "destination": "doc",
+        "readme": "README.md",
+        "template": "./node_modules/minami"
+    },
+    "plugins": ["plugins/markdown"],
+    "templates": {
+        "default": {
+            "outputSourceFiles": false,
+            "layoutFile": "./node_modules/minami/tmpl/layout.tmpl"
+        }
     }
-  }
 }
