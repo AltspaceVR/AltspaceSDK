@@ -1,7 +1,7 @@
 .DS_Store
 *.swp
 prepros.cfg
-README.html
+README*.html
 lib/README.html
 CHANGELOG.html
 
