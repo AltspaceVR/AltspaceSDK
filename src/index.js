@@ -5,12 +5,14 @@
 * @module altspace
 */
 
-import components from './components/index';
-
 // make sure that the core uses the correct version of the SDK
 let version = VERSION;
 if (window.altspace && window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
 
-export { components };
+// include source packages
+import * as components from './components/index';
+import * as utilities from './utilities/index';
+
+export { components, utilities };
