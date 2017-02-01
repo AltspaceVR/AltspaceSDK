@@ -1,16 +1,16 @@
 # AltspaceVR SDK
 
-The AltspaceVR SDK can be used together with [three.js] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift DK2.
+The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, and Samsung GearVR.
 
 **Latest Version: vVERSION -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/vVERSION)**
 
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
+THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
 
-[Three.js](http://threejs.org/) is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.
+[Three.js] is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. [A-Frame] is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
 
 ## Resources
 
@@ -135,7 +135,8 @@ Altspace's browser is based on Chromium version 40.
 * WebRTC
 * ES6
 
-[three.js]: http://threejs.org/
+[Three.js]: http://threejs.org/
+[A-Frame]: https://aframe.io/docs/0.3.0/introduction/
 
 [Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues

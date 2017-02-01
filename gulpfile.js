@@ -202,7 +202,7 @@ gulp.task('bump', function () {
 gulp.task('bump-readme', function (done) {
 	version = JSON.parse(fs.readFileSync('./package.json')).version;
 	del('README.md').then(function () {
-		gulp.src('README.md.template')
+		gulp.src('README.template.md')
 			.pipe(replace('VERSION', version))
 			.pipe(rename('README.md'))
 			.pipe(gulp.dest('.'))
@@ -324,7 +324,7 @@ gulp.task('publish', function (done) {
 		'publish-npm',
 		'publish-aws',
 		done);
-		
+
 /************** A-Frame gulp script (deprecated)
 var
 	fs = require('fs'),
