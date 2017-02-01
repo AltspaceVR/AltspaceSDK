@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Aframe Altspace Component - Test Vertical Align</title>
+    <meta name="description" content="Models — A-Frame">
+    <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+    <script src="../../dist/aframe-altspace-component.js"></script>
+  </head>
+  <body>
+    <!-- This scene based on Aframe examples/primitives-models/ -->
+    <a-scene altspace="verticalAlign: bottom">
+      <a-assets>
+        <a-asset-item id="tree1" src="models/tree1/tree1.dae"></a-asset-item>
+        <a-asset-item id="tree2" src="models/tree2/tree2.dae"></a-asset-item>
+        <a-asset-item id="crate-mtl" src="models/crate/crate.mtl"></a-asset-item>
+        <a-asset-item id="crate-obj" src="models/crate/crate.obj"></a-asset-item>
+        <img id="sky" src="peach-gradient.jpg">
+      </a-assets>
+
+      <a-obj-model src="#crate-obj" mtl="#crate-mtl" position="0 1 0"></a-obj-model>
+
+      <a-collada-model src="#tree1" position="2.5 0 -2.5" rotation="0 30 0"
+                       scale="1.4 1.4 1.4"></a-collada-model>
+      <a-collada-model src="#tree2" position="2.5 0 2.5" rotation="0 60 0"
+                       scale="1.4 1.4 1.4"></a-collada-model>
+
+      <a-collada-model src="#tree2" position="-2.5 0 -2.5" rotation="0 10 0"
+                       scale="1.4 1.4 1.4"></a-collada-model>
+      <a-collada-model src="#tree1" position="-2.5 0 2.5" rotation="0 25 0"
+                       scale="1.4 1.4 1.4"></a-collada-model>
+
+      <a-sky radius="100" src="#sky"></a-sky>
+
+      <a-light type="ambient" color="#ccc"></a-light>
+      <a-light color="#ddf" distance="100" intensity="0.4" type="point"></a-light>
+    </a-scene>
+  </body>
+</html>

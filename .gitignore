@@ -13,3 +13,7 @@ node_modules
 *.suo
 obj
 *.webinfo
+.sw[ponm]
+examples/build.js
+examples/node_modules/
+gh-pages

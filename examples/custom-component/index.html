@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head>
+    <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+    <script src="../../dist/aframe-altspace-component.min.js"></script>
+    <script>
+
+        // an example custom component, that will change the color when clicked
+        AFRAME.registerComponent('color-cycle', {
+            schema: {},
+            init: function(){
+                var self = this;
+                self.el.object3D.addEventListener('cursorup', function(){
+                    var rgb = [
+                        Math.floor(Math.random()*256),
+                        Math.floor(Math.random()*256),
+                        Math.floor(Math.random()*256)
+                    ];
+                    self.el.setAttribute('color', 'rgb('+rgb.join(',')+')');
+                });
+            }
+        });
+
+    </script>
+</head>
+<body>
+
+    <!-- set up the scene -->
+    <a-scene altspace='vertical-align: bottom;'>
+        <a-box position='0 1 0' color-cycle></a-box>
+    </a-scene>
+
+</body></html>
