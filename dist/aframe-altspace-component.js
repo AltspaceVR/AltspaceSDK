@@ -1,6 +1,10 @@
 (function (exports) {
 'use strict';
 
+/**
+* Stubs out the A-Frame "system" concept.
+* @see {@link https://aframe.io/docs/0.3.0/core/systems.html}
+*/
 var AFrameSystem = function AFrameSystem () {};
 
 var prototypeAccessors = { schema: {} };
@@ -16,6 +20,11 @@ AFrameSystem.prototype.play = function play (){ };
 
 Object.defineProperties( AFrameSystem.prototype, prototypeAccessors );
 
+/**
+* Stubs out the A-Frame "component" concept.
+* @extends AFrameSystem
+* @see {@link https://aframe.io/docs/0.3.0/core/component.html}
+*/
 var AFrameComponent = (function (AFrameSystem) {
 	function AFrameComponent () {
 		AFrameSystem.apply(this, arguments);
@@ -679,14 +688,8 @@ var SyncComponent = (function (AFrameComponent$$1) {
 * options correspond exactly with the configuration options for
 * [altspace.utilities.sync.connect]{@link http://altspacevr.github.io/AltspaceSDK/doc/module-altspace_utilities_sync.html#.connect}.
 * This component must be present on `a-scene` for any other sync components to work.
-* @memberof sync
-* @mixin sync-system
-* @prop {string} author - A unique identifier for you or your organization.
-* @prop {string} app - The name of the app.
-* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
-* @prop {string} instance - Override the instance ID. Can also be overridden with
-* a URL parameter.
-* @method {boolean} isMasterClient - Returns true if the local client is the master client.
+* @extends AFrameSystem
+* @memberof module:altspace/components
 */
 var SyncSystem = (function (AFrameSystem$$1) {
 	function SyncSystem () {
@@ -776,6 +779,9 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		});
 	};
 
+	/**
+	* Returns true if the local client is the master client.
+	*/
 	SyncSystem.prototype.isMasterClient = function isMasterClient ()
 	{
 		return this.masterClientId === this.clientId;
@@ -1534,6 +1540,10 @@ AFRAME.registerComponent('wire',
 	}
 });
 
+/**
+* @module altspace/components
+*/
+
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
@@ -1548,6 +1558,11 @@ registerComponentClass('sync-color', SyncColor);
 
 registerComponentClass('sync', SyncComponent);
 
+/**
+* @mixin sync-system
+* @memberof module:altspace/components
+* @see {@link module:altspace/components.SyncSystem}
+*/
 registerSystemClass('sync-system', SyncSystem);
 
 exports.AltspaceComponent = AltspaceComponent;

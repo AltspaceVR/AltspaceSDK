@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "budo",
     "dist": "gulp dist",
-    "build": "rollup -c rollup.basic.js && rollup -c rollup.min.js",
-    "doc": "npm run build && jsdoc -c .jsdoc.json",
-    "just-doc": "jsdoc -c .jsdoc.json"
+    "build": "npm run compile && npm run doc",
+    "compile": "rollup -c rollup.basic.js && rollup -c rollup.min.js",
+    "doc": "jsdoc -c .jsdoc.json"
   },
   "repository": {
     "type": "git",

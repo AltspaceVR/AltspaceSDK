@@ -104,3 +104,5 @@ class SyncSystem extends AFrameSystem
 		return this.masterClientId === this.clientId;
 	}
 }
+
+export default SyncSystem;
