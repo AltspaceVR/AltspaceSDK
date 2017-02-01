@@ -1,10 +1,11 @@
 import buble from 'rollup-plugin-buble';
 
 export default {
-	entry: 'src/components.js',
-	dest: 'dist/aframe-altspace-component.js',
+	entry: 'src/index.js',
+	dest: 'dist/altspace.js',
 	format: 'iife',
-	moduleName: 'ALTSPACE',
+	moduleName: 'altspace',
 	sourceMap: true,
+	sourceMapFile: 'dist/maps/altspace.js.map',
 	plugins: [buble()]
 };

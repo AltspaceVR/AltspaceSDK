@@ -17,46 +17,45 @@ export default class SyncColor extends AFrameComponent
 
 	init()
 	{
-		let component = this;
-		let sync = component.el.components.sync;
+		this.sync = this.el.components.sync;
 
 		// wait for firebase connection to start sync routine
-		if(sync.isConnected)
+		if(this.sync.isConnected)
 			start();
 		else
-			component.el.addEventListener('connected', start);
+			this.el.addEventListener('connected', this.start.bind(this));
+	}
 
-		function start()
+	start()
+	{
+		let colorRef = this.sync.dataRef.child('material/color');
+		let refChangedLocked = false;
+		let firstValue = true;
+
+		component.el.addEventListener('componentchanged', event =>
 		{
-			let colorRef = sync.dataRef.child('material/color');
-			let refChangedLocked = false;
-			let firstValue = true;
+			let name = event.detail.name;
+			let oldData = event.detail.oldData;
+			let newData = event.detail.newData;
 
-			component.el.addEventListener('componentchanged', event =>
+			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && sync.isMine)
 			{
-				let name = event.detail.name;
-				let oldData = event.detail.oldData;
-				let newData = event.detail.newData;
+				//For some reason A-Frame has a misconfigured material reference if we do this too early
+				setTimeout(() => colorRef.set(newData.color), 0);
+			}
+		});
 
-				if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && sync.isMine)
-				{
-					//For some reason A-Frame has a misconfigured material reference if we do this too early
-					setTimeout(() => colorRef.set(newData.color), 0);
-				}
-			});
+		colorRef.on('value', snapshot => {
+			if(!sync.isMine || firstValue)
+			{
+				let color = snapshot.val();
 
-			colorRef.on('value', snapshot => {
-				if(!sync.isMine || firstValue)
-				{
-					let color = snapshot.val();
+				refChangedLocked = true;
+				component.el.setAttribute('material', 'color', color);
+				refChangedLocked = false;
 
-					refChangedLocked = true;
-					component.el.setAttribute('material', 'color', color);
-					refChangedLocked = false;
-
-					firstValue = false;
-				}
-			});
-		}
+				firstValue = false;
+			}
+		});
 	}
 }

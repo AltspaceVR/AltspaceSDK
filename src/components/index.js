@@ -4,38 +4,34 @@
 
 'use strict';
 
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
 import {registerComponentClass, registerSystemClass, flatten} from './AFrameComponent';
-
 import AltspaceCursorCollider from './AltspaceCursorCollider';
-registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
-
 import AltspaceTrackedControls from './AltspaceTrackedControls';
-registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
-
 import AltspaceComponent from './AltspaceComponent';
-registerComponentClass('altspace', AltspaceComponent);
-
 import SyncColor from './SyncColor';
-registerComponentClass('sync-color', SyncColor);
-
 import SyncComponent from './SyncComponent';
-registerComponentClass('sync', SyncComponent);
-
-/**
-* @mixin sync-system
-* @memberof module:altspace/components
-* @see {@link module:altspace/components.SyncSystem}
-*/
 import SyncSystem from './SyncSystem';
-registerSystemClass('sync-system', SyncSystem);
-
 import SyncTransform from './sync-transform';
 import SyncNSound from './sync-n-sound';
 import NativeComponents from './native-components';
 import Wire from './wire';
+
+// TODO: finish porting aframe components to es6
+if (window.AFRAME)
+{
+    /**
+    * @mixin sync-system
+    * @memberof module:altspace/components
+    * @see {@link module:altspace/components.SyncSystem}
+    */
+    registerSystemClass('sync-system', SyncSystem);
+
+    registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
+    registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
+    registerComponentClass('altspace', AltspaceComponent);
+    registerComponentClass('sync-color', SyncColor);
+    registerComponentClass('sync', SyncComponent);
+
+}
 
 export {AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem, SyncComponent, SyncColor, flatten };
