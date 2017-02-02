@@ -5,4 +5,6 @@ import Simulation from './simulation';
 import * as multiloader from './multiloader';
 import * as codePen from './codepen';
 
-export { sync, multiloader, codePen, Simulation };
+import * as shims from './shims/index';
+
+export { shims, sync, multiloader, codePen, Simulation };

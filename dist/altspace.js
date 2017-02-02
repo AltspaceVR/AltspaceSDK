@@ -1,7 +1,5 @@
-(function (exports,CursorShim) {
+(function (exports) {
 'use strict';
-
-CursorShim = 'default' in CursorShim ? CursorShim['default'] : CursorShim;
 
 /**
 * Stubs out the A-Frame "system" concept.
@@ -1738,6 +1736,130 @@ var sync$1 = Object.freeze({
 	connect: connect
 });
 
+/**
+* Detects mouse move/up/down events, raycasts to find intersected objects,
+* then dispatches cursor move/up/down/enter/leave events that mimics
+* Altspace events.
+* @module altspace/utilities/shims/cursor
+*/
+var scene;
+var camera;
+var domElem;
+
+var overObject;
+
+var raycaster = new THREE.Raycaster();
+
+/**
+ * Initializes the cursor module
+ * @static
+ * @method init
+ * @param {THREE.Scene} scene
+ * @param {THREE.Camera} camera - Camera used for raycasting.
+ * @param {Object} [options] - An options object
+ * @param {THREE.WebGLRenderer} [options.renderer] - If supplied, applies cursor movement to render target
+ *	instead of entire client
+ * @memberof module:altspace/utilities/shims/cursor
+ */
+function init(_scene, _camera, _params) {
+	if (!_scene || !_scene instanceof THREE.Scene) {
+		throw new TypeError('Requires THREE.Scene argument');
+	}
+	if (!_camera || !_camera instanceof THREE.Camera) {
+		throw new TypeError('Requires THREE.Camera argument');
+	}
+	scene = _scene;
+	camera = _camera;
+
+	p = _params || {};
+	domElem = p.renderer && p.renderer.domElement || window;
+
+	domElem.addEventListener('mousedown', mouseDown, false);
+	domElem.addEventListener('mouseup', mouseUp, false);
+	domElem.addEventListener('mousemove', mouseMove, false);
+}
+
+function mouseDown(event) {
+
+	var intersection = findIntersection(event);
+	if (!intersection || !intersection.point) { return; }
+
+	var cursorEvent = createCursorEvent('cursordown', intersection);
+	intersection.object.dispatchEvent(cursorEvent);
+}
+
+function mouseUp(event) {
+	var intersection = findIntersection(event);
+
+	var cursorEvent = createCursorEvent('cursorup', intersection);
+
+	if (intersection) {
+		intersection.object.dispatchEvent(cursorEvent);
+	} else {
+		scene.dispatchEvent(cursorEvent);
+	}
+}
+
+function mouseMove(event) {
+	var intersection = findIntersection(event);
+
+	var cursorEvent = createCursorEvent('cursormove', intersection);//TODO improve and don't fire only on scene
+	scene.dispatchEvent(cursorEvent);
+
+	var object = intersection ? intersection.object : null;
+	if (overObject != object) {
+		if (overObject) {
+			cursorEvent = createCursorEvent('cursorleave', intersection);
+			overObject.dispatchEvent(cursorEvent);
+		}
+
+		if (object) {
+			cursorEvent = createCursorEvent('cursorenter', intersection);
+			object.dispatchEvent(cursorEvent);
+		}
+
+		overObject = object;
+	}
+}
+
+function createCursorEvent(type, intersection) {
+	return {
+		type: type,
+		bubbles: true,
+		target: intersection ? intersection.object : null,
+		ray: {
+			origin: raycaster.ray.origin.clone(),
+			direction: raycaster.ray.direction.clone()
+		},
+		point: intersection ? intersection.point.clone() : null
+	}
+}
+
+function findIntersection(mouseEvent) {
+	var mouse = new THREE.Vector2();
+	mouse.x = (mouseEvent.offsetX / (domElem.width || domElem.innerWidth)) * 2 - 1;
+	mouse.y = -(mouseEvent.offsetY / (domElem.height || domElem.innerHeight)) * 2 + 1;
+
+	raycaster.setFromCamera(mouse, camera);
+
+	var intersections = raycaster.intersectObjects(scene.children, true);
+
+	// return the first object with an enabled collider
+	return intersections.find(function(e){
+		return !e.object.userData
+			|| !e.object.userData.altspace
+			|| !e.object.userData.altspace.collider
+			|| e.object.userData.altspace.collider.enabled !== false;
+	}) || null;
+}
+
+
+
+
+var cursor = Object.freeze({
+	init: init
+});
+
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 
@@ -1824,7 +1946,7 @@ Simulation.prototype._setupWebGL = function _setupWebGL ()
 	scene.add(new THREE.AmbientLight('white'));
 
 	// shim cursor
-	this.cursor = new CursorShim(scene, camera);
+	this.cursor = init(scene, camera);
 };
 
 /**
@@ -1893,7 +2015,7 @@ function LoadRequest(){
 
 }//end of LoadRequest
 
-function init(params){
+function init$1(params){
 	var p = params || {};
 	TRACE = p.TRACE || false;
 	if (p.crossOrigin) { crossOrigin = p.crossOrigin; }
@@ -1954,7 +2076,7 @@ function onProgress(xhr){
 
 
 var multiloader = Object.freeze({
-	init: init,
+	init: init$1,
 	load: load,
 	LoadRequest: LoadRequest
 });
@@ -2090,9 +2212,374 @@ var codepen = Object.freeze({
 	printDebugInfo: printDebugInfo
 });
 
+/**
+* Load an OBJ file and its material definition in one pass.
+* @class OBJMTLLoader
+* @memberof module:altspace/utilities/shims
+*/
+var OBJMTLLoader = function OBJMTLLoader () {};
+
+OBJMTLLoader.prototype.load = function load (objFile, mtlFile, callback)
+{
+    var mtlLoader = new THREE.MTLLoader();
+    var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
+    mtlLoader.setBaseUrl(baseUrl + '/');
+    mtlLoader.setCrossOrigin(this.crossOrigin);
+    mtlLoader.load(mtlFile, function (materials) {
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials(materials);
+        objLoader.load(objFile, callback);
+    });
+};
+
+/**
+* The Altspace SDK adds event bubbling to Three.js' events system.
+* Simply include the SDK in your app and add a bubbling property to your event to take advantage of this feature.
+*
+* AltspaceVR cursor events always make use of this bubbling shim.
+*
+* @example
+* var parent = new THREE.Object3D();
+* parent.addEventListener('custom', function () {
+*     console.log('received custom event');
+* });
+* var child = new THREE.Object3D();
+* parent.add(child);
+* child.dispatchEvent({type: 'custom', bubbles: true});
+* // Console log shows 'received custom event'
+*
+* @module altspace/utilities/shims/bubbling
+*/
+
+if(THREE && !altspace.inClient)
+{
+	THREE.EventDispatcher.prototype.dispatchEvent = dispatchEvent;
+	THREE.Object3D.prototype.dispatchEvent = dispatchEvent;
+}
+
+function dispatchEvent( event ) {
+	var this$1 = this;
+
+
+	var shouldStopPropagation;
+	var shouldStopPropagationImmediately;
+
+	if ( event.bubbles ) {
+		event.currentTarget = this;
+		event.stopPropagation = function () {
+			shouldStopPropagation = true;
+		};
+
+		event.stopImmediatePropagation = function () {
+			shouldStopPropagationImmediately = true;
+		};
+
+	}
+
+	if ( this._listeners ) {
+
+		var listeners = this._listeners;
+		var listenerArray = listeners[ event.type ];
+
+		if ( listenerArray ) {
+			event.target = event.target || this;
+
+			var array = [];
+			var length = listenerArray.length;
+
+			for ( var i = 0; i < length; i ++ ) {
+				array[ i ] = listenerArray[ i ];
+			}
+
+			for ( var i = 0; i < length; i ++ ) {
+				array[ i ].call( this$1, event );
+				if ( shouldStopPropagationImmediately ) { return; }
+			}
+		}
+	}
+
+	if ( event.bubbles && this.parent && this.parent.dispatchEvent && ! shouldStopPropagation ) {
+		dispatchEvent.call( this.parent, event );
+	}
+}
+
+/**
+* @author gavanwilhite / http://gavanwilhite.com
+*/
+
+/**
+* The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
+* Three.js.
+* It adds methods to Three.js' Scene and Object3D classes which allow you to
+* add, remove, retrieve and use Behaviors.
+*
+* @namespace THREE
+*/
+
+/**
+* The AltspaceSDK adds Behavior capabilites to Three.js' Scene class.
+* @class Scene
+* @memberof THREE
+*/
+
+/**
+* Update the behaviors of all the objects in this Scene.
+* @instance
+* @method updateAllBehaviors
+* @memberof THREE.Scene
+*/
+THREE.Scene.prototype.updateAllBehaviors = function () {
+
+	var now = performance.now();
+	var lastNow = this.__lastNow || now;
+
+	var deltaTime = now - lastNow;
+
+	var self = this;
+
+	//gather objects first so that behaviors can change the hierarchy during traversal without incident
+	var objectsWithBehaviors = [];
+
+	this.traverse(function (object3d) {
+
+		if (object3d.__behaviorList) {
+			objectsWithBehaviors.push(object3d);
+		}
+
+	});
+
+	for (var i = 0, max = objectsWithBehaviors.length; i < max; i++) {
+		var object3d = objectsWithBehaviors[i];
+		object3d.updateBehaviors(deltaTime, self);
+	}
+
+	this.__lastNow = now;
+
+};
+
+/**
+* The AltspaceSDK adds Behavior capabilites to Three.js' Object3D class.
+* @class Object3D
+* @memberof THREE
+*/
+
+/**
+* Adds the given behavior to this object.
+* @instance
+* @method addBehavior
+* @param {Behavior} behavior Behavior to add.
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.addBehavior = function()
+{
+	this.__behaviorList = this.__behaviorList || [];
+	Array.prototype.push.apply(this.__behaviorList, arguments);
+};
+
+/**
+* Adds the given behaviors to this object.
+* @instance
+* @method addBehaviors
+* @param {...Behavior} behavior Behavior to add.
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.addBehaviors = function()
+{
+	this.__behaviorList = this.__behaviorList || [];
+	Array.prototype.push.apply(this.__behaviorList, arguments);
+};
+
+/**
+* Removes the given behavior from this object. The behavior is disposed if
+* possible.
+* @instance
+* @method removeBehavior
+* @param {...Behavior} behavior Behavior to remove.
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.removeBehavior = function(behavior)
+{
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return null; }
+
+	var i = this.__behaviorList.indexOf(behavior);
+	if (i !== -1) {
+		this.__behaviorList.splice(i, 1);
+		try {
+
+			if (behavior.dispose) { behavior.dispose.call(behavior, this); }
+
+		} catch (error) {
+
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this);
+			console.groupEnd();
+
+		}
+	}
+};
+
+/**
+* Removes all behaviors from this object. The behaviors are disposed if
+* possible.
+* @instance
+* @method removeAllBehaviors
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.removeAllBehaviors = function ()
+{
+	var this$1 = this;
+
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return null; }
+
+	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+		var behavior = this$1.__behaviorList[i];
+
+		try {
+
+			if (behavior.dispose) { behavior.dispose.call(behavior, this$1); }
+
+		} catch (error) {
+
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this$1);
+			console.groupEnd();
+
+		}
+	}
+
+	this.__behaviorList.length = 0;
+};
+
+/**
+* Retrieve a behavior by type.
+* @instance
+* @method getBehaviorByType
+* @param {String} type
+* @returns {Behavior}
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.getBehaviorByType = function(type) {
+	var this$1 = this;
+
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return null; }
+
+	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+		if (this$1.__behaviorList[i].type === type)
+			{ return this$1.__behaviorList[i]; }
+	}
+};
+
+/**
+* Update behaviors on this object.
+* @instance
+* @method updateBehaviors
+* @param {Number} deltaTime Elapsed time in milliseconds
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
+	var this$1 = this;
+
+
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return; }
+
+	var toInit = [];
+	var toUpdate = this.__behaviorList.slice(); // prevent mutation of the behavior list during this loop
+
+	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
+
+		var behavior = this$1.__behaviorList[i];
+		if (!behavior.__isInitialized) { toInit.push(behavior); }
+
+	}
+
+	//Awake
+	for (var i = 0, max = toInit.length; i < max; i++) {
+
+		var behavior = toInit[i];
+		try {
+
+			if (behavior.awake) { behavior.awake.call(behavior, this$1, scene); }
+
+		} catch (error) {
+
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this$1);
+			console.groupEnd();
+
+		}
+
+	}
+
+	//Start
+	for (var i = 0, max = toInit.length; i < max; i++) {
+
+		var behavior = toInit[i];
+		try {
+
+			if (behavior.start) { behavior.start.call(behavior); }
+
+		} catch (error) {
+
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this$1);
+			console.groupEnd();
+
+		}
+		behavior.__isInitialized = true;
+
+	}
+
+	//Update
+	for (var i = 0, max = toUpdate.length; i < max; i++) {
+
+		var behavior = toUpdate[i];
+		try {
+
+			if (behavior.update) { behavior.update.call(behavior, deltaTime); }
+
+		} catch (error) {
+
+			console.group();
+			(console.error || console.log).call(console, error.stack || error);
+			console.log('[Behavior]');
+			console.log(behavior);
+			console.log('[Object3D]');
+			console.log(this$1);
+			console.groupEnd();
+
+		}
+
+	}
+
+};
+
+
+
+var index$2 = Object.freeze({
+	OBJMTLLoader: OBJMTLLoader,
+	cursor: cursor
+});
+
 
 
 var index$1 = Object.freeze({
+	shims: index$2,
 	sync: sync$1,
 	multiloader: multiloader,
 	codePen: codepen,
@@ -2115,5 +2602,5 @@ if (window.altspace && window.altspace.requestVersion) {
 exports.components = index;
 exports.utilities = index$1;
 
-}((this.altspace = this.altspace || {}),CursorShim));
+}((this.altspace = this.altspace || {})));
 //# sourceMappingURL=altspace.js.map

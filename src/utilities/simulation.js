@@ -1,7 +1,7 @@
 window.altspace = window.altspace || {};
 window.altspace.utilities = window.altspace.utilities || {};
 
-import CursorShim from 'shims/cursor';
+import * as CursorShim from './shims/cursor';
 
 /**
 * @module altspace/utilities
@@ -84,7 +84,7 @@ class Simulation
 		scene.add(new THREE.AmbientLight('white'));
 
 		// shim cursor
-		this.cursor = new CursorShim(scene, camera);
+		this.cursor = CursorShim.init(scene, camera);
 	}
 
 	/**
