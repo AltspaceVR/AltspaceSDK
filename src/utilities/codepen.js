@@ -3,8 +3,8 @@
  * @module altspace/utilities/codePen
  */
 
-var Please = window.Please;
-var Url = window.Url;
+import Please from 'please';
+import Url from 'urllib';
 
 var name = 'VR CodePen';
 var inTile = window.name && window.name.slice(0, 4) === 'pen-';

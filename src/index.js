@@ -11,6 +11,11 @@ if (window.altspace && window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
 
+// copy aframe's bundled version of THREE to global namespace
+if(window.AFRAME && !window.THREE){
+	window.THREE = window.AFRAME.THREE;
+}
+
 // include source packages
 import * as components from './components/index';
 import * as utilities from './utilities/index';
