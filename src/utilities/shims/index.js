@@ -1,3 +1,6 @@
+/**
+* @module altspace/utilities/shims
+*/
 'use strict';
 
 import OBJMTLLoader from './OBJMTLLoader';

@@ -65,10 +65,9 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 * @param {Behavior} behavior Behavior to add.
 * @memberof THREE.Object3D
 */
-THREE.Object3D.prototype.addBehavior = function()
+THREE.Object3D.prototype.addBehavior = function(behavior)
 {
-	this.__behaviorList = this.__behaviorList || [];
-	Array.prototype.push.apply(this.__behaviorList, arguments);
+	this.addBehaviors(behavior);
 }
 
 /**
@@ -78,10 +77,10 @@ THREE.Object3D.prototype.addBehavior = function()
 * @param {...Behavior} behavior Behavior to add.
 * @memberof THREE.Object3D
 */
-THREE.Object3D.prototype.addBehaviors = function()
+THREE.Object3D.prototype.addBehaviors = function(...behaviors)
 {
 	this.__behaviorList = this.__behaviorList || [];
-	Array.prototype.push.apply(this.__behaviorList, arguments);
+	this.__behaviorList.push(...behaviors);
 }
 
 /**

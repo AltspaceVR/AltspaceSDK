@@ -6,5 +6,6 @@ import * as multiloader from './multiloader';
 import * as codePen from './codepen';
 
 import * as shims from './shims/index';
+import * as behaviors from './behaviors/index';
 
-export { shims, sync, multiloader, codePen, Simulation };
+export { sync, Simulation, multiloader, codePen, shims, behaviors };

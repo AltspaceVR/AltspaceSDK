@@ -6,7 +6,7 @@
 */
 
 // make sure that the core uses the correct version of the SDK
-let version = VERSION;
+let version = '<SDK_VERSION>';
 if (window.altspace && window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
@@ -15,4 +15,4 @@ if (window.altspace && window.altspace.requestVersion) {
 import * as components from './components/index';
 import * as utilities from './utilities/index';
 
-export { components, utilities };
+export { components, utilities, version };

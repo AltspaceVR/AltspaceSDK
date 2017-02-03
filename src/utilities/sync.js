@@ -12,7 +12,7 @@
  * @module altspace/utilities/sync
  */
 
-let Firebase = window.Firebase;
+
 let inAltspace = altspace && altspace.inClient;
 let canonicalUrl = getCanonicalUrl();
 

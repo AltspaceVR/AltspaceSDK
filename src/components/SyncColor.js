@@ -32,7 +32,7 @@ export default class SyncColor extends AFrameComponent
 		let refChangedLocked = false;
 		let firstValue = true;
 
-		component.el.addEventListener('componentchanged', event =>
+		this.el.addEventListener('componentchanged', event =>
 		{
 			let name = event.detail.name;
 			let oldData = event.detail.oldData;
@@ -45,13 +45,14 @@ export default class SyncColor extends AFrameComponent
 			}
 		});
 
+		let self = this;
 		colorRef.on('value', snapshot => {
-			if(!sync.isMine || firstValue)
+			if(!self.sync.isMine || firstValue)
 			{
 				let color = snapshot.val();
 
 				refChangedLocked = true;
-				component.el.setAttribute('material', 'color', color);
+				self.el.setAttribute('material', 'color', color);
 				refChangedLocked = false;
 
 				firstValue = false;

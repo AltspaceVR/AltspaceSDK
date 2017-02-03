@@ -13,7 +13,7 @@ import SyncComponent from './SyncComponent';
 import SyncSystem from './SyncSystem';
 import SyncTransform from './sync-transform';
 import SyncNSound from './sync-n-sound';
-import NativeComponents from './native-components';
+//import NativeComponents from './native-components';
 import Wire from './wire';
 
 // TODO: finish porting aframe components to es6
