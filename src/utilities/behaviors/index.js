@@ -9,5 +9,7 @@
 
 import Behavior from './Behavior';
 import Bob from './Bob';
+import ButtonStateStyle from './ButtonStateStyle';
+import Drag from './Drag';
 
-export { Behavior, Bob };
+export { Behavior, Bob, ButtonStateStyle, Drag };

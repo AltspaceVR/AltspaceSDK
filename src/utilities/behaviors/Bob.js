@@ -16,6 +16,8 @@ import Behavior from './Behavior';
 **/
 class Bob extends Behavior
 {
+	get type(){ return 'Bob'; }
+	
 	constructor(config)
 	{
 		this.config = Object.assign({x:3, y:5, shouldRotate:true, shouldMove:true}, config);

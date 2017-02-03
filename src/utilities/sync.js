@@ -12,6 +12,8 @@
  * @module altspace/utilities/sync
  */
 
+import Firebase from 'firebase';
+import Url from 'urllib';
 
 let inAltspace = altspace && altspace.inClient;
 let canonicalUrl = getCanonicalUrl();
