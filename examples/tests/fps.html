@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>FPS Test</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../dist/altspace.js"></script>
+		<script src="https://cdn.rawgit.com/spite/rstats/19379cb7aa21b27dba32cd640425a35012997859/src/rStats.js"></script>
+		<style>
+			html, body { overflow: hidden; }
+			ol {
+				list-style-type: none;
+				font: bold 2em sans-serif;
+				line-height: 2.2em;
+				margin-left: 4em;
+				margin-top: 3em;
+			}
+		</style>
+	</head>
+	<body>
+		<ol>
+			<li>10</li>
+			<li>20</li>
+			<li>30</li>
+			<li>60</li>
+			<li>90</li>
+			<li>120</li>
+			<li>200</li>
+		</ol>
+		<script>
+			altspace.getEnclosure().then(function (enc) {
+				var sim = new altspace.utilities.Simulation({auto: false});
+
+				var y = 0;
+				function cube() {
+					var cube = new THREE.Mesh(
+						new THREE.BoxGeometry(1, 1, 1),
+						new THREE.MeshBasicMaterial()
+					);
+					cube.scale.multiplyScalar(0.25);
+					cube.position.x = -1;
+					y -= 0.3;
+					cube.position.y = y;
+					var pivot = new THREE.Group();
+					pivot.add(cube);
+					sim.scene.add(pivot);
+					return pivot;
+				}
+				sim.scene.scale.multiplyScalar(enc.pixelsPerMeter);
+				var cubes = [
+					{ rate: 120, obj: cube(), last: 0 },
+				];
+
+				function animate(elapsed) {
+					requestAnimationFrame(animate);
+					cubes.forEach(function (cube, i) {
+						if (i === cubes.length - 1) {
+							cube.obj.position.x = Math.sin(elapsed / 500) + 1;
+						} else if ((elapsed - cube.last) > 1000 / cube.rate) {
+							cube.last = elapsed;
+							cube.obj.position.x = Math.sin(elapsed / 1000) + 1;
+						}
+					});
+					sim.renderer.render(sim.scene, sim.camera);
+				}
+				animate(0);
+			});
+		</script>
+	</body>
+</html>
