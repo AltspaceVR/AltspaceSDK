@@ -13,5 +13,8 @@ import ButtonStateStyle from './ButtonStateStyle';
 import Drag from './Drag';
 import GamepadControls from './GamepadControls';
 import HoverColor from './HoverColor';
+import HoverScale from './HoverScale';
+import JointCollisionEvents from './JointCollisionEvents';
 
-export { Behavior, Bob, ButtonStateStyle, Drag, GamepadControls, HoverColor };
+export { Behavior, Bob, ButtonStateStyle, Drag, GamepadControls, HoverColor,
+	HoverScale, JointCollisionEvents };
