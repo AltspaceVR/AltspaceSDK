@@ -1,15 +1,24 @@
 'use strict';
 
 /**
-* Base class for all behaviors.
+* Base class for all behaviors. Use this class as a pattern, but do not use
+* directly.
 * @memberof module:altspace/utilities/behaviors
-* @prop {string} type=Behavior - The name of this class
+* @prop {string} type - The name of this class
 */
 class Behavior
 {
 	constructor(){}
 
-	get type(){ return 'Behavior'; }
+	get type(){
+		if(!this._typeWarning){
+			console.warn('Behavior', this, 'does not expose type information!',
+				'It will not be queryable by getBehaviorByType, which will break',
+				'some built-in behaviors.');
+			this._typeWarning = true;
+		}
+		return null; // is normally the name of the type, i.e. "Behavior"
+	}
 
 	/**
 	* Called when the behavior is attached to an object. Any setup that requires

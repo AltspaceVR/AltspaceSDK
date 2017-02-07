@@ -1,79 +1,88 @@
-/**
- * @module altspace/utilities/behaviors
- */
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+'use strict';
+
+import Behavior from './Behavior';
+
+// ignore stick dead zone
+let tolerance = 0.2;
 
 /**
- * Allows an object to be moved, rotated, and scaled using a gamepad controller.
- * Left stick left / right and up / down moves object in the X-Y plane.
- * Clicking left stick enters left alt mode, where movement is in X-Z plane.
- * Clicking left stick again exits left alt mode.
- * Right stick left / right rotates object clockwise / counterclockwise (y axis).
- * Right stick up / down rotates object away forwards / backwards (x axis).
- * Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
- * Clicking right stick again exits right alt mode.
- * D-pad up / down scales object.
- * Back / reset button resets object to its original position and rotation.
- *
- * @param {Boolean} [config.position=true] Whether object's position can be changed.
- * @param {Boolean} [config.rotation=true] Whether object's rotation can be changed.
- * @param {Boolean} [config.scale=true] Whether object's scale can be changed.
- *
- * @class GamepadControls
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.GamepadControls = function (config) {
-	var object3d;
-	var gamepad;
-	var scene;
-	var sync;
+* Allows an object to be moved, rotated, and scaled using a gamepad controller.
+* Left stick left / right and up / down moves object in the X-Y plane.
+* Clicking left stick enters left alt mode, where movement is in X-Z plane.
+* Clicking left stick again exits left alt mode.
+* Right stick left / right rotates object clockwise / counterclockwise (y axis).
+* Right stick up / down rotates object away forwards / backwards (x axis).
+* Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
+* Clicking right stick again exits right alt mode.
+* D-pad up / down scales object.
+* Back / reset button resets object to its original position and rotation.
+*
+* @param {Boolean} [config.position=true] Whether object's position can be changed.
+* @param {Boolean} [config.rotation=true] Whether object's rotation can be changed.
+* @param {Boolean} [config.scale=true] Whether object's scale can be changed.
+*
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+**/
 
-	var isAltModeR= false;
-	var isAltModeL= false;
-	var prevAltButtonR = false;
-	var prevAltButtonL = false;
-	var isInitialized = false;
+class GamepadControls extends Behavior
+{
+	get type(){ return 'GamepadControls'; }
 
-	var originalObj;//used to reset
-	var tolerance = 0.2;//ignore stick dead zone
+	constructor(config)
+	{
+		this.config = Object.assign(
+			{position: true, rotation: true, scale: true},
+			config
+		);
 
-	config = config || {};
-	if (config.position === undefined) config.position = true;
-	if (config.rotation === undefined) config.rotation = true;
-	if (config.scale === undefined) config.scale = true;
+		this.object3d = null;
+		this.gamepad = null;
+		this.scene = null;
+		this.sync = null;
 
-	function awake(o, s) {
+		this.isAltModeR = false;
+		this.isAltModeL = false;
+		this.prevAltButtonR = false;
+		this.prevAltButtonL = false;
+		this.isInitialized = false;
 
-		object3d = o;
-		scene = s;
-		sync = object3d.getBehaviorByType('Object3DSync');
-		originalObj = object3d.clone();
-		gamepad = getGamepad();
-		if (gamepad) {
-			console.log('Gamepad detected: ' + gamepad.id);
+		this.originalObj = null;//used to reset
+	}
+
+	awake(o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.sync = this.object3d.getBehaviorByType('Object3DSync');
+		this.originalObj = object3d.clone();
+		this.gamepad = this.getGamepad();
+		if (this.gamepad) {
+			console.log('Gamepad detected: ' + this.gamepad.id);
 		} else {
-			var intervalID = setInterval(function() {
-				gamepad = getGamepad();
-				if (gamepad) {
-					console.log('Gamepad connected: ' + gamepad.id);
+			let intervalID = setInterval((() => {
+				this.gamepad = this.getGamepad();
+				if (this.gamepad) {
+					console.log('Gamepad connected: ' + this.gamepad.id);
 					clearInterval(intervalID);
 				}
-			}, 500);
+			}).bind(this), 500);
 		}
 
-		scene.addEventListener('cursordown', function(e) {
+		this.scene.addEventListener('cursordown', (e => {
 			//preventDefault only works when app has focus, so call after initial click
-			if (gamepad && !isInitialized) {
-				preventDefault(gamepad);
-				isInitialized = true;
+			if (this.gamepad && !this.isInitialized) {
+				this.preventDefault(this.gamepad);
+				this.isInitialized = true;
 			}
-		});
+		}).bind(this));
 
 	}
 
-	function getGamepad() {
+	// utility function to fetch correct type of gamepad
+	getGamepad()
+	{
+		let gamepads = [];
 		if (altspace && altspace.inClient) {
 			gamepads = altspace.getGamepads();
 		} else {
@@ -81,11 +90,12 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 			//https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
 			gamepads = navigator.getGamepads();
 		}
+
 		if (gamepads.length > 0) {
 			for (var i=0; i < gamepads.length; i++) {
 				var g = gamepads[i];
 				if (g && g.axes  && g.axes.length === 4 && g.buttons && g.buttons.length === 16) {
-					if (altspace && altspace.inClient) preventDefault(g);
+					if (altspace && altspace.inClient) this.preventDefault(g);
 					return g;//return first valid gamepad
 				}
 			}
@@ -93,22 +103,21 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		return undefined;
 	}
 
-	function preventDefault(g) {
-		var axes = [];
-		var buttons = [];
-		for (var i=0; i > g.buttons; i++) buttons[i] = false;
-		for (var i=0; i > g.axes; i++) axes[i] = false;
-		if (config.position) {
+	preventDefault(g)
+	{
+		let axes = (new Array(4)).fill(false);
+		let buttons = (new Array(16)).fill(false);
+		if (this.config.position) {
 			axes[0] = true;
 			axes[1] = true;
 			buttons[10] = true;
 		}
-		if (config.rotation) {
+		if (this.config.rotation) {
 			axes[2] = true;
 			axes[3] = true;
 			buttons[11] = true;
 		}
-		if (config.scale) {
+		if (this.config.scale) {
 			buttons[12] = true;
 			buttons[13] = true;
 		}
@@ -116,92 +125,108 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 		g.preventDefault(axes, buttons);
 	}
 
-	function update(deltaTime) {
-		if ((!altspace || !altspace.inClient) && window.chrome && gamepad) {
-			gamepad = getGamepad();//On Chrome, need to poll for updates.
+	update(deltaTime)
+	{
+		if ((!altspace || !altspace.inClient) && window.chrome && this.gamepad) {
+			this.gamepad = this.getGamepad();//On Chrome, need to poll for updates.
 		}
-		if (!gamepad) return;
+		if (!this.gamepad)
+			return;
 
 		//For axis and button numbers see: https://w3c.github.io/gamepad/
-		var isResetButton = gamepad.buttons[8].pressed;//reset / back button
-		if (isResetButton) {
-			if (!sync.isMine) sync.takeOwnership();
-			object3d.position.copy(originalObj.position);
-			object3d.rotation.copy(originalObj.rotation);
-			object3d.scale.copy(originalObj.scale);
+		let isResetButton = this.gamepad.buttons[8].pressed;//reset / back button
+		if (isResetButton)
+		{
+			if (!this.sync.isMine)
+				this.sync.takeOwnership();
+			this.object3d.position.copy(this.originalObj.position);
+			this.object3d.rotation.copy(this.originalObj.rotation);
+			this.object3d.scale.copy(this.originalObj.scale);
 			return;
 		}
 
-		if (config.position) {
-			var isAltButtonL = gamepad.buttons[10].pressed;//left stick button
-			if (prevAltButtonL && !isAltButtonL) isAltModeL = !isAltModeL;//button released
-			prevAltButtonL = isAltButtonL;
+		if (this.config.position)
+		{
+			let isAltButtonL = this.gamepad.buttons[10].pressed;//left stick button
+			if (this.prevAltButtonL && !isAltButtonL)
+				this.isAltModeL = !this.isAltModeL;//button released
+			this.prevAltButtonL = isAltButtonL;
 
-			var leftStickX = gamepad.axes[0];//left / right
-			var leftStickY = gamepad.axes[1];//up / down
+			let leftStickX = gamepad.axes[0];//left / right
+			let leftStickY = gamepad.axes[1];//up / down
 
-			var isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
-			if (isMove && !sync.isMine) sync.takeOwnership();
+			let isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
+			if (isMove && !this.sync.isMine)
+				this.sync.takeOwnership();
 
-			var moveDistance = 200 * (deltaTime/1000);// 200 units per second
-			if (!isAltModeL && Math.abs(leftStickX) > tolerance) {
-				object3d.position.x += moveDistance * leftStickX;
+			let moveDistance = 200 * (deltaTime/1000);// 200 units per second
+
+			// left stick X always controls X movement
+			if (Math.abs(leftStickX) > tolerance){
+				this.object3d.position.x += moveDistance * leftStickX;
 			}
-			if (!isAltModeL && Math.abs(leftStickY) > tolerance) {
-				object3d.position.z += moveDistance * leftStickY;
-			}
-			if (isAltModeL && Math.abs(leftStickX) > tolerance) {
-				object3d.position.x += moveDistance * leftStickX;
-			}
-			if (isAltModeL && Math.abs(leftStickY) > tolerance) {
-				object3d.position.y += moveDistance * -leftStickY;
-			}
-		}
 
-		if (config.rotation) {
-			var isAltButtonR = gamepad.buttons[11].pressed;//right stick button
-			if (prevAltButtonR && !isAltButtonR) isAltModeR = !isAltModeR;//button released
-			prevAltButtonR = isAltButtonR;
-
-			var rightStickX = gamepad.axes[2];//left / right
-			var rightStickY = gamepad.axes[3];//up / down
-
-			var isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
-			if (isRotate && !sync.isMine) sync.takeOwnership();
-
-			var rotateAngle = Math.PI * (deltaTime/1000);// 180 degrees per second
-			if (!isAltModeR && Math.abs(rightStickX) > tolerance) {
-				object3d.rotation.y += rotateAngle * rightStickX;
-			}
-			if (!isAltModeR && Math.abs(rightStickY) > tolerance) {
-				object3d.rotation.x += rotateAngle * rightStickY;
-			}
-			if (isAltModeR && Math.abs(rightStickX) > tolerance) {
-				object3d.rotation.z += rotateAngle * -rightStickX;
-			}
-		}
-
-		if (config.scale) {
-			var scaleChange = 10 * (deltaTime/1000);// 10 units per second
-			var dpadUp = gamepad.buttons[12].pressed;//d-pad up
-			var dpadDown = gamepad.buttons[13].pressed;//d-pad down
-
-			var isScale = gamepad.buttons[12].pressed || gamepad.buttons[13].pressed;
-			if (isScale && !sync.isMine) sync.takeOwnership();
-
-			var prev = object3d.scale;
-			var v3 = new THREE.Vector3(1, 1, 1);
-			v3.multiplyScalar(scaleChange);
-			if (dpadUp) object3d.scale.add(v3);
-			if (dpadDown) {
-				if (prev.x > v3.x && prev.y > v3.y && prev.z > v3.z) {//Don't go negative.
-					object3d.scale.sub(v3);
+			// left stick Y controls Z movement in normal mode, Y movement in alt mode
+			if(Math.abs(leftStickY) > tolerance)
+			{
+				if (this.isAltModeL){
+					this.object3d.position.y += moveDistance * -leftStickY;
+				}
+				else {
+					this.object3d.position.z += moveDistance * leftStickY;
 				}
 			}
 		}
 
+		if (this.config.rotation)
+		{
+			let isAltButtonR = this.gamepad.buttons[11].pressed;//right stick button
+			if (this.prevAltButtonR && !isAltButtonR)
+				this.isAltModeR = !this.isAltModeR;//button released
+			prevAltButtonR = isAltButtonR;
+
+			let rightStickX = gamepad.axes[2];//left / right
+			let rightStickY = gamepad.axes[3];//up / down
+
+			let isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
+			if (isRotate && !this.sync.isMine)
+				this.sync.takeOwnership();
+
+			let rotateAngle = Math.PI * (deltaTime/1000);// 180 degrees per second
+
+			if (!this.isAltModeR && Math.abs(rightStickY) > tolerance) {
+				this.object3d.rotation.x += rotateAngle * rightStickY;
+			}
+
+			if (Math.abs(rightStickX) > tolerance) {
+				if(this.isAltModeR)
+					this.object3d.rotation.z += rotateAngle * -rightStickX;
+				else
+					this.object3d.rotation.y += rotateAngle * rightStickX;
+			}
+		}
+
+		if (this.config.scale)
+		{
+			let scaleChange = 10 * (deltaTime/1000);// 10 units per second
+			let dpadUp = this.gamepad.buttons[12].pressed;//d-pad up
+			let dpadDown = this.gamepad.buttons[13].pressed;//d-pad down
+
+			let isScale = this.gamepad.buttons[12].pressed || this.gamepad.buttons[13].pressed;
+			if (isScale && !this.sync.isMine)
+				this.sync.takeOwnership();
+
+			let prev = this.object3d.scale;
+			let v3 = new THREE.Vector3(1, 1, 1);
+			v3.multiplyScalar(scaleChange);
+			if (dpadUp) this.object3d.scale.add(v3);
+			if (dpadDown) {
+				if (prev.x > v3.x && prev.y > v3.y && prev.z > v3.z) {//Don't go negative.
+					this.object3d.scale.sub(v3);
+				}
+			}
+		}
 	}
+}
 
-	return { awake: awake, update: update, type: 'GamepadControls' };
-};
-
+export default GamepadControls;

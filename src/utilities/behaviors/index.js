@@ -11,5 +11,7 @@ import Behavior from './Behavior';
 import Bob from './Bob';
 import ButtonStateStyle from './ButtonStateStyle';
 import Drag from './Drag';
+import GamepadControls from './GamepadControls';
+import HoverColor from './HoverColor';
 
-export { Behavior, Bob, ButtonStateStyle, Drag };
+export { Behavior, Bob, ButtonStateStyle, Drag, GamepadControls, HoverColor };

@@ -19,16 +19,16 @@ function vec2str(vec) {
 }
 
 /**
- * A behavior that makes an object draggable along a plane.
- * @param {Object} [config] Specify the axes along which the object can be
- *  dragged.
- *  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
- *  Each axis can also be an object specifying the minimum and maximum limits
- *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
- *  **Note:** Currently you must specify exactly two axes.
- * @memberof module:altspace/utilities/behaviors
- * @extends module:altspace/utilities/behaviors.Behavior
- */
+* A behavior that makes an object draggable along a plane.
+* @param {Object} [config] Specify the axes along which the object can be
+*  dragged.
+*  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
+*  Each axis can also be an object specifying the minimum and maximum limits
+*  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
+*  **Note:** Currently you must specify exactly two axes.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
 class Drag extends Behavior
 {
 	get type(){ return 'Drag'; }
