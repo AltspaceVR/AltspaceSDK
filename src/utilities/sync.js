@@ -1,3 +1,4 @@
+/* global Url */
 /**
  * The Sync utility is currently based on Firebase. It provides a quick way
  * to synchronize apps between users (even when they are running outside of
@@ -159,7 +160,6 @@ altspace.utilities.sync = (function () {
 		var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
 		refs.app = baseRef.child(projectId).child('app');
 		var instancesRef = refs.app.child('instances');
-		var instanceRef;
 		if (instanceId) {
 			refs.instance = instancesRef.child(instanceId);
 		}
