@@ -1,10 +1,8 @@
-if (!window.altspace) { window.altspace = {}; }
-if (!window.altspace.utilities) { window.altspace.utilities = {}; }
-if (!window.altspace.utilities.behaviors) { window.altspace.utilities.behaviors = {}; }
+'use strict';
 
-require('babel/polyfill');
-let
-	containerMax = Symbol('containerMax'),
+import Behavior from './Behavior';
+
+let	containerMax = Symbol('containerMax'),
 	containerMin = Symbol('containerMin'),
 	object3D = Symbol('object3D'),
 	boundingBox = Symbol('boundingBox'),
@@ -15,37 +13,38 @@ let
 	origParentBoundingBoxes = new Map();
 
 /**
- * The Layout behavior allows you to position objects easily. You can
- * position an object relative to its parent (either the Scene or a
- * another object) by using a position specifier for each of the axes.
- * The position specifier can be one of 'min', 'center' or 'max'. The default
- * specifier is 'center'. You can also add a modifier to the position in pixels
- * ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can
- * choose the location of the anchor on the object you are trying to position
- * by using the 'my' parameter.
- * You must specify at least one axis on the 'at' parameter.
- *
- * @example
- * // Position the top of the cube at 1.5 meters above the bottom of its parent.
- * cube.addBehavior(new altpsace.utilities.behaviors.Layout({
- *	   my: {y: 'max'},
- *	   at: {y: 'min+1.5m'}
- * });
- *
- * @class Layout
- * @memberof module:altspace/utilities/behaviors
- * @param {Object} config
- * @param {Object} config.at An object containing the axes and position
- *  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
- * @param {Object} [config.my] An object containing the axes and position
- *  specifiers for the layout anchor.
- **/
-class Layout {
+* The Layout behavior allows you to position objects easily. You can
+* position an object relative to its parent (either the Scene or a
+* another object) by using a position specifier for each of the axes.
+* The position specifier can be one of 'min', 'center' or 'max'. The default
+* specifier is 'center'. You can also add a modifier to the position in pixels
+* ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can
+* choose the location of the anchor on the object you are trying to position
+* by using the 'my' parameter.
+* You must specify at least one axis on the 'at' parameter.
+*
+* @example
+* // Position the top of the cube at 1.5 meters above the bottom of its parent.
+* cube.addBehavior(new altpsace.utilities.behaviors.Layout({
+*	   my: {y: 'max'},
+*	   at: {y: 'min+1.5m'}
+* });
+*
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+* @param {Object} config
+* @param {Object} config.at An object containing the axes and position
+*  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
+* @param {Object} [config.my] An object containing the axes and position
+*  specifiers for the layout anchor.
+**/
+class Layout extends Behavior {
+
+	get type(){ return 'Layout'; }
 
 	constructor ({ my = {}, at }) {
 		this.my = my;
 		this.at = at;
-		this.type = 'Layout';
 	}
 
 	// TODO-BP Ideally these would be private methods.
@@ -166,4 +165,5 @@ class Layout {
 		});
 	}
 }
-window.altspace.utilities.behaviors.Layout = Layout;
+
+export default Layout;

@@ -15,6 +15,8 @@ import GamepadControls from './GamepadControls';
 import HoverColor from './HoverColor';
 import HoverScale from './HoverScale';
 import JointCollisionEvents from './JointCollisionEvents';
+import Layout from './Layout';
+import Object3DSync from './Object3DSync';
 
 export { Behavior, Bob, ButtonStateStyle, Drag, GamepadControls, HoverColor,
-	HoverScale, JointCollisionEvents };
+	HoverScale, JointCollisionEvents, Layout, Object3DSync };

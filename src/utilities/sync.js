@@ -36,7 +36,7 @@ function getProjectId(appId, authorId, canonicalUrl) {
 
 /**
 * Retreived
-* via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
+* via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
 * @class module:altspace/utilities/sync~Connection
 * @memberof module:altspace/utilities/sync
 */
