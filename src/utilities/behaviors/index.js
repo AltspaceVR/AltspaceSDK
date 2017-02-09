@@ -17,6 +17,12 @@ import HoverScale from './HoverScale';
 import JointCollisionEvents from './JointCollisionEvents';
 import Layout from './Layout';
 import Object3DSync from './Object3DSync';
+import SceneSync from './SceneSync';
+import Spin from './Spin';
+import SteamVRInput from './SteamVRInput';
+import SteamVRTrackedObject from './SteamVRTrackedObject';
+import TouchpadRotate from './TouchpadRotate';
 
 export { Behavior, Bob, ButtonStateStyle, Drag, GamepadControls, HoverColor,
-	HoverScale, JointCollisionEvents, Layout, Object3DSync };
+	HoverScale, JointCollisionEvents, Layout, Object3DSync, SceneSync, Spin,
+ 	SteamVRInput, SteamVRTrackedObject, TouchpadRotate };

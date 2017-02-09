@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>altspace/utilities/shims/cursor - Documentation</title>
+    <title>SteamVRInputBehavior - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">altspace/utilities/shims/cursor</h1>
+    <h1 class="page-title">SteamVRInputBehavior</h1>
     
 
     
@@ -40,8 +40,14 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a>.</span>
         
-            
+        SteamVRInputBehavior
+        </h2>
+        
+            <div class="class-description"><p>The SteamVRInput behavior manages SteamVR input devices. It should be added
+to the ThreeJS scene and is required to use <a href="module-altspace_utilities_behaviors.SteamVRTrackedObject.html">SteamVRTrackedObject</a></p></div>
         
     
 </header>
@@ -50,111 +56,16 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Detects mouse move/up/down events, raycasts to find intersected objects,
-then dispatches cursor move/up/down/enter/leave events that mimics
-Altspace events.</p></div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
 
     
-
+    <h2>Constructor</h2>
     
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id=".init"><span class="type-signature">(static) </span>init<span class="signature">(scene, camera, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="SteamVRInputBehavior"><span class="type-signature"></span>new SteamVRInputBehavior<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
-
-<div class="description">
-    <p>Initializes the cursor module</p>
-</div>
 
 
 
@@ -191,69 +102,7 @@ Altspace events.</p></div>
 
         <tr>
             
-                <td class="name"><code>scene</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="THREE.Scene.html">THREE.Scene</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>camera</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">THREE.Camera</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Camera used for raycasting.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
@@ -279,7 +128,7 @@ Altspace events.</p></div>
 
             
 
-            <td class="description last"><p>An options object</p>
+            <td class="description last">
                 <h6>Properties</h6>
                 
 
@@ -297,6 +146,8 @@ Altspace events.</p></div>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -307,13 +158,13 @@ Altspace events.</p></div>
 
         <tr>
             
-                <td class="name"><code>renderer</code></td>
+                <td class="name"><code>logging</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">THREE.WebGLRenderer</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -332,9 +183,14 @@ Altspace events.</p></div>
             
 
             
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
 
-            <td class="description last"><p>If supplied, applies cursor movement to render target
-    instead of entire client</p></td>
+            <td class="description last"><p>Display console log output during SteamVR input device detection</p></td>
         </tr>
 
     
@@ -349,6 +205,173 @@ Altspace events.</p></div>
 </table>
 
 
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>leftController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Gamepad</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the left SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a> or undefined if one has not yet been found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rightController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Gamepad</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the right SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a> or undefined if one has not yet been found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>firstController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Gamepad</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the first SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a>  or undefined if none have yet been found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>leftControllerPromise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a promise that resolves once the left SteamVR input device is found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rightControllerPromise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a promise that resolves once the right SteamVR input device is found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>firstControllerPromise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a promise that resolves once any SteamVR input device is found</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -402,6 +425,35 @@ Altspace events.</p></div>
 
 
 
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="module-altspace_utilities_behaviors.Behavior.html">module:altspace/utilities/behaviors.Behavior</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
     

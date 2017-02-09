@@ -1,23 +1,26 @@
 'use strict';
 
-/**
- * The SteamVRTrackedObject behavior updates an objects position and rotation to
- * match the location of a SteamVR input device.
- *
- * A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
- * must be on the scene containing this object for it to function properly.
- *
- * @class SteamVRTrackedObject
- *
- * @param {Object} [config]
- * @param {string} [config.hand="first"] the input device to track. Eitehr SteamVRInput.LEFT_CONTROLLER, SteamVRInput.RIGHT_CONTROLLER, or SteamVRInput.FIRST_CONTROLLER
- * @memberof module:altspace/utilities/behaviors
- */
+import Behavior from './Behavior';
 
-class SteamVRTrackedObjectBehavior {
+/**
+* The SteamVRTrackedObject behavior updates an objects position and rotation to
+* match the location of a SteamVR input device.
+*
+* A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
+* must be on the scene containing this object for it to function properly.
+*
+* @param {Object} [config]
+* @param {string} [config.hand="first"] the input device to track. Eitehr SteamVRInput.LEFT_CONTROLLER, SteamVRInput.RIGHT_CONTROLLER, or SteamVRInput.FIRST_CONTROLLER
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+
+class SteamVRTrackedObject extends Behavior {
+
+	get type(){ return 'SteamVRTrackedObject'; }
+
 	constructor({ hand = 'first' }) {
 		this._hand = hand;
-		this.type = 'SteamVRTrackedObject';
 	}
 
 	awake(object3d, scene) {
@@ -41,4 +44,4 @@ class SteamVRTrackedObjectBehavior {
 	}
 }
 
-window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectBehavior;
+export default SteamVRTrackedObject;

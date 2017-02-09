@@ -141,7 +141,7 @@ class Object3DSync extends Behavior
 		this.sceneSync = sS;
 	}
 
-	send()
+	autoSend()
 	{
 		if (!this.isMine)
 			return;

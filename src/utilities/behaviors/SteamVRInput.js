@@ -1,5 +1,7 @@
 'use strict';
 
+import Behavior from './Behavior';
+
 // Returns a Promise that resovles static when a steamvr controller is found
 function getController(hand, config) {
 	const findGamepad = (resolve, reject) => {
@@ -17,27 +19,28 @@ function getController(hand, config) {
 }
 
 /**
- * The SteamVRInput behavior manages SteamVR input devices. It should be added
- * to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
- *
- * @class SteamVRInput
- * @param {Object} [config]
- * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
- * @memberof module:altspace/utilities/behaviors
- *
- * @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
- * @prop {Gamepad} rightController the right SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
- * @prop {Gamepad} firstController the first SteamVR [Gamepad]{@link module:altspace~Gamepad}  or undefined if none have yet been found
- *
- * @prop {Promise} leftControllerPromise a promise that resolves once the left SteamVR input device is found
- * @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
- * @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
- */
-class SteamVRInputBehavior {
+* The SteamVRInput behavior manages SteamVR input devices. It should be added
+* to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
+*
+* @param {Object} [config]
+* @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*
+* @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
+* @prop {Gamepad} rightController the right SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
+* @prop {Gamepad} firstController the first SteamVR [Gamepad]{@link module:altspace~Gamepad}  or undefined if none have yet been found
+*
+* @prop {Promise} leftControllerPromise a promise that resolves once the left SteamVR input device is found
+* @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
+* @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
+*/
+class SteamVRInputBehavior extends Behavior {
+
+	get type(){ return 'SteamVRInput'; }
+
 	constructor(config) {
-		this.type = 'SteamVRInput';
-		this.config = config || {};
-		this.config.logging = this.config.logging || false;
+		this.config = Object.assign({logging: false}, config);
 	}
 
 	awake() {
@@ -83,4 +86,4 @@ SteamVRInputBehavior.FIRST_CONTROLLER = 'first';
 SteamVRInputBehavior.LEFT_CONTROLLER = 'left';
 SteamVRInputBehavior.RIGHT_CONTROLLER = 'right';
 
-window.altspace.utilities.behaviors.SteamVRInput = SteamVRInputBehavior;
+export default SteamVRInputBehavior;

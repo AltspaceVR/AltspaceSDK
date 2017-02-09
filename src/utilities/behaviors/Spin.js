@@ -1,31 +1,36 @@
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+'use strict';
+
+import Behavior from './Behavior';
 
 /**
- * The Spin behavior adds a spinning animation to an object.
- *
- * @class Spin
- * @param {Object} [config]
- * @param {Number} [config.speed=0.0001] Rotation speed in radians per
- *  millisecond
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.Spin = function (config) {
-
-	config = config || {};
-
-	if (config.speed === undefined) config.speed = 0.0001;
-
-	var object3d;
-
-	function awake(o) {
-		object3d = o;
+* The Spin behavior adds a spinning animation to an object.
+* @param {Object} [config]
+* @param {Number} [config.speed=0.0001] Rotation speed in radians per
+*  millisecond
+* @param {Vector3} [config.axis={0,1,0}] - The axis of rotation
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+class Spin extends Behavior
+{
+	get type(){ return 'Spin'; }
+	
+	constructor(config) {
+		this.config = Object.assign(
+			{speed: 1e-4, axis: new THREE.Vector3(0,1,0)},
+			config
+		);
+		this.config.axis.normalize();
+		this.object3d = null;
 	}
 
-	function update(deltaTime) {
-		object3d.rotation.y += config.speed * deltaTime;
+	awake(o) {
+		this.object3d = o;
 	}
 
-	return { awake: awake, update: update, type: 'Spin' };
+	update(deltaTime) {
+		this.object3d.rotateOnAxis(this.config.axis, this.config.speed * deltaTime);
+	}
 };
+
+export default Spin;

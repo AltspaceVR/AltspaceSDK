@@ -266,11 +266,12 @@ U.prototype.We=function(a,b){x("Firebase.resetPassword",2,2,arguments.length);fg
 var Url=function(){"use strict";var t={protocol:"protocol",host:"hostname",port:"port",path:"pathname",query:"search",hash:"hash"},r={ftp:21,gopher:70,http:80,https:443,ws:80,wss:443},o=function(o,e){var a=document,i=a.createElement("a"),e=e||a.location.href,n=e.match(/\/\/(.*?)(?::(.*?))?@/)||[];i.href=e;for(var h in t)o[h]=i[t[h]]||"";if(o.protocol=o.protocol.replace(/:$/,""),o.query=o.query.replace(/^\?/,""),o.hash=o.hash.replace(/^#/,""),o.user=n[1]||"",o.pass=n[2]||"",o.port=r[o.protocol]==o.port||0==o.port?"":o.port,o.protocol||/^([a-z]+:)?\/\//.test(e))o.path=o.path.replace(/^\/?/,"/");else{var p=new Url(a.location.href.match(/(.*\/)/)[0]),c=p.path.split("/"),f=o.path.split("/");c.pop();for(var h=0,u=["protocol","user","pass","host","port"],l=u.length;h<l;h++)o[u[h]]=p[u[h]];for(;".."==f[0];)c.pop(),f.shift();o.path=("/"!=e.substring(0,1)?c.join("/"):"")+"/"+f.join("/")}s(o)},e=function(t){return t=t.replace(/\+/g," "),t=t.replace(/%([ef][0-9a-f])%([89ab][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o,e){var s=parseInt(r,16)-224,a=parseInt(o,16)-128;if(0==s&&a<32)return t;var i=parseInt(e,16)-128,n=(s<<12)+(a<<6)+i;return n>65535?t:String.fromCharCode(n)}),t=t.replace(/%([cd][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o){var e=parseInt(r,16)-192;if(e<2)return t;var s=parseInt(o,16)-128;return String.fromCharCode((e<<6)+s)}),t=t.replace(/%([0-7][0-9a-f])/gi,function(t,r){return String.fromCharCode(parseInt(r,16))})},s=function(t){var r=t.query;t.query=new function(t){for(var r,o=/([^=&]+)(=([^&]*))?/g;r=o.exec(t);){var s=decodeURIComponent(r[1].replace(/\+/g," ")),a=r[3]?e(r[3]):"";null!=this[s]?(this[s]instanceof Array||(this[s]=[this[s]]),this[s].push(a)):this[s]=a}this.clear=function(){for(s in this)this[s]instanceof Function||delete this[s]},this.toString=function(){var t="",r=encodeURIComponent;for(var o in this)if(!(this[o]instanceof Function))if(this[o]instanceof Array){var e=this[o].length;if(e)for(var s=0;s<e;s++)t+=t?"&":"",t+=r(o)+"="+r(this[o][s]);else t+=(t?"&":"")+r(o)+"="}else t+=t?"&":"",t+=r(o)+"="+r(this[o]);return t}}(r)};return function(t){this.toString=function(){return(this.protocol&&this.protocol+"://")+(this.user&&this.user+(this.pass&&":"+this.pass)+"@")+(this.host&&this.host)+(this.port&&":"+this.port)+(this.path&&this.path)+(this.query.toString()&&"?"+this.query)+(this.hash&&"#"+this.hash)},o(this,t)}}();
 /*!Please JS v0.4.2, Jordan Checkman 2014, Checkman.io, MIT License, Have fun.*/
 !function(e,r,a){"function"==typeof define&&define.amd?define([],a):"object"==typeof exports?module.exports=a():r[e]=a()}("Please",this,function(){"use strict";function e(){function e(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),Math.floor(o()*(r-e+1))+e}function r(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),o()*(r-e)+e}function a(e,r,a){return Math.max(r,Math.min(e,a))}function o(e,r){var a;switch(e){case"hex":for(a=0;a<r.length;a++)r[a]=F.HSV_to_HEX(r[a]);break;case"rgb":for(a=0;a<r.length;a++)r[a]=F.HSV_to_RGB(r[a]);break;case"rgb-string":for(a=0;a<r.length;a++){var o=F.HSV_to_RGB(r[a]);r[a]="rgb("+o.r+","+o.g+","+o.b+")"}break;case"hsv":break;default:console.error("Format not recognized.")}return r}function n(e){var r=F.HSV_to_RGB(e),a=(299*r.r+587*r.g+114*r.b)/1e3;return a>=128?"dark":"light"}function t(e){var r={};for(var a in e)e.hasOwnProperty(a)&&(r[a]=e[a]);return r}function l(e){function r(){o=(o+1)%256,n=(n+a[o])%256;var e=a[o];return a[o]=a[n],a[n]=e,a[(a[o]+a[n])%256]}for(var a=[],o=0,n=0,t=0;256>t;t++)a[t]=t;for(var l=0,F=0;256>l;l++){F=(F+a[l]+e.charCodeAt(l%e.length))%256;var s=a[l];a[l]=a[F],a[F]=s}this.random=function(){for(var e=0,a=0,o=1;8>e;e++)a+=r()*o,o*=256;return a/0x10000000000000000}}var F={},s={aliceblue:"F0F8FF",antiquewhite:"FAEBD7",aqua:"00FFFF",aquamarine:"7FFFD4",azure:"F0FFFF",beige:"F5F5DC",bisque:"FFE4C4",black:"000000",blanchedalmond:"FFEBCD",blue:"0000FF",blueviolet:"8A2BE2",brown:"A52A2A",burlywood:"DEB887",cadetblue:"5F9EA0",chartreuse:"7FFF00",chocolate:"D2691E",coral:"FF7F50",cornflowerblue:"6495ED",cornsilk:"FFF8DC",crimson:"DC143C",cyan:"00FFFF",darkblue:"00008B",darkcyan:"008B8B",darkgoldenrod:"B8860B",darkgray:"A9A9A9",darkgrey:"A9A9A9",darkgreen:"006400",darkkhaki:"BDB76B",darkmagenta:"8B008B",darkolivegreen:"556B2F",darkorange:"FF8C00",darkorchid:"9932CC",darkred:"8B0000",darksalmon:"E9967A",darkseagreen:"8FBC8F",darkslateblue:"483D8B",darkslategray:"2F4F4F",darkslategrey:"2F4F4F",darkturquoise:"00CED1",darkviolet:"9400D3",deeppink:"FF1493",deepskyblue:"00BFFF",dimgray:"696969",dimgrey:"696969",dodgerblue:"1E90FF",firebrick:"B22222",floralwhite:"FFFAF0",forestgreen:"228B22",fuchsia:"FF00FF",gainsboro:"DCDCDC",ghostwhite:"F8F8FF",gold:"FFD700",goldenrod:"DAA520",gray:"808080",grey:"808080",green:"008000",greenyellow:"ADFF2F",honeydew:"F0FFF0",hotpink:"FF69B4",indianred:"CD5C5C",indigo:"4B0082",ivory:"FFFFF0",khaki:"F0E68C",lavender:"E6E6FA",lavenderblush:"FFF0F5",lawngreen:"7CFC00",lemonchiffon:"FFFACD",lightblue:"ADD8E6",lightcoral:"F08080",lightcyan:"E0FFFF",lightgoldenrodyellow:"FAFAD2",lightgray:"D3D3D3",lightgrey:"D3D3D3",lightgreen:"90EE90",lightpink:"FFB6C1",lightsalmon:"FFA07A",lightseagreen:"20B2AA",lightskyblue:"87CEFA",lightslategray:"778899",lightslategrey:"778899",lightsteelblue:"B0C4DE",lightyellow:"FFFFE0",lime:"00FF00",limegreen:"32CD32",linen:"FAF0E6",magenta:"FF00FF",maroon:"800000",mediumaquamarine:"66CDAA",mediumblue:"0000CD",mediumorchid:"BA55D3",mediumpurple:"9370D8",mediumseagreen:"3CB371",mediumslateblue:"7B68EE",mediumspringgreen:"00FA9A",mediumturquoise:"48D1CC",mediumvioletred:"C71585",midnightblue:"191970",mintcream:"F5FFFA",mistyrose:"FFE4E1",moccasin:"FFE4B5",navajowhite:"FFDEAD",navy:"000080",oldlace:"FDF5E6",olive:"808000",olivedrab:"6B8E23",orange:"FFA500",orangered:"FF4500",orchid:"DA70D6",palegoldenrod:"EEE8AA",palegreen:"98FB98",paleturquoise:"AFEEEE",palevioletred:"D87093",papayawhip:"FFEFD5",peachpuff:"FFDAB9",peru:"CD853F",pink:"FFC0CB",plum:"DDA0DD",powderblue:"B0E0E6",purple:"800080",rebeccapurple:"663399",red:"FF0000",rosybrown:"BC8F8F",royalblue:"4169E1",saddlebrown:"8B4513",salmon:"FA8072",sandybrown:"F4A460",seagreen:"2E8B57",seashell:"FFF5EE",sienna:"A0522D",silver:"C0C0C0",skyblue:"87CEEB",slateblue:"6A5ACD",slategray:"708090",slategrey:"708090",snow:"FFFAFA",springgreen:"00FF7F",steelblue:"4682B4",tan:"D2B48C",teal:"008080",thistle:"D8BFD8",tomato:"FF6347",turquoise:"40E0D0",violet:"EE82EE",wheat:"F5DEB3",white:"FFFFFF",whitesmoke:"F5F5F5",yellow:"FFFF00",yellowgreen:"9ACD32"},i=.618033988749895,u={hue:null,saturation:null,value:null,base_color:"",greyscale:!1,grayscale:!1,golden:!0,full_random:!1,colors_returned:1,format:"hex",seed:null},c={scheme_type:"analogous",format:"hex"},h={golden:!1,format:"hex"};return F.NAME_to_HEX=function(e){return e=e.toLowerCase(),e in s?s[e]:(console.error("Color name not recognized."),void 0)},F.NAME_to_RGB=function(e){return F.HEX_to_RGB(F.NAME_to_HEX(e))},F.NAME_to_HSV=function(e){return F.HEX_to_HSV(F.NAME_to_HEX(e))},F.HEX_to_RGB=function(e){var r=/^#?([a-f\d])([a-f\d])([a-f\d])$/i;e=e.replace(r,function(e,r,a,o){return r+r+a+a+o+o});var a=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);return a?{r:parseInt(a[1],16),g:parseInt(a[2],16),b:parseInt(a[3],16)}:null},F.RGB_to_HEX=function(e){return"#"+((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},F.HSV_to_RGB=function(e){var r,a,o,n,t,l,F,s,i=e.h,u=e.s,c=e.v;if(0===u)return{r:c,g:c,b:c};switch(i/=60,n=Math.floor(i),t=i-n,l=c*(1-u),F=c*(1-u*t),s=c*(1-u*(1-t)),n){case 0:r=c,a=s,o=l;break;case 1:r=F,a=c,o=l;break;case 2:r=l,a=c,o=s;break;case 3:r=l,a=F,o=c;break;case 4:r=s,a=l,o=c;break;case 5:r=c,a=l,o=F}return{r:Math.floor(255*r),g:Math.floor(255*a),b:Math.floor(255*o)}},F.RGB_to_HSV=function(e){var r=e.r/255,a=e.g/255,o=e.b/255,n=0,t=0,l=0,F=Math.min(r,Math.min(a,o)),s=Math.max(r,Math.max(a,o));if(F===s)return l=F,{h:0,s:0,v:l};var i=r===F?a-o:o===F?r-a:o-r,u=r===F?3:o===F?1:5;return n=60*(u-i/(s-F)),t=(s-F)/s,l=s,{h:n,s:t,v:l}},F.HSV_to_HEX=function(e){return F.RGB_to_HEX(F.HSV_to_RGB(e))},F.HEX_to_HSV=function(e){return F.RGB_to_HSV(F.HEX_to_RGB(e))},F.make_scheme=function(e,r){function n(e){return{h:e.h,s:e.s,v:e.v}}var l,F,s,i,u,h=t(c);if(null!==r)for(var d in r)r.hasOwnProperty(d)&&(h[d]=r[d]);var g=[e];switch(h.scheme_type.toLowerCase()){case"monochromatic":case"mono":for(u=1;2>=u;u++)l=n(e),s=l.s+.1*u,s=a(s,0,1),i=l.v+.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);for(u=1;2>=u;u++)l=n(e),s=l.s-.1*u,s=a(s,0,1),i=l.v-.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);break;case"complementary":case"complement":case"comp":l=n(e),l.h=(l.h+180)%360,g.push(l);break;case"split-complementary":case"split-complement":case"split":l=n(e),l.h=(l.h+165)%360,g.push(l),l=n(e),l.h=Math.abs((l.h-165)%360),g.push(l);break;case"double-complementary":case"double-complement":case"double":l=n(e),l.h=(l.h+180)%360,g.push(l),l.h=(l.h+30)%360,F=n(l),g.push(l),l.h=(l.h+180)%360,g.push(F);break;case"analogous":case"ana":for(u=1;5>=u;u++)l=n(e),l.h=(l.h+20*u)%360,g.push(l);break;case"triadic":case"triad":case"tri":for(u=1;3>u;u++)l=n(e),l.h=(l.h+120*u)%360,g.push(l);break;default:console.error("Color scheme not recognized.")}return o(h.format.toLowerCase(),g),g},F.make_color=function(n){var s=[],c=t(u),h=null;if(null!==n)for(var d in n)n.hasOwnProperty(d)&&(c[d]=n[d]);var g=null;"string"==typeof c.seed&&(g=new l(c.seed)),c.base_color.length>0&&(h=c.base_color.match(/^#?([0-9a-f]{3})([0-9a-f]{3})?$/i)?F.HEX_to_HSV(c.base_color):F.NAME_to_HSV(c.base_color));for(var m=0;m<c.colors_returned;m++){var f,E,b,p=e(0,360,g);null!==h?(f=a(e(h.h-5,h.h+5,g),0,360),E=0===h.s?0:r(.4,.85,g),b=r(.4,.85,g),s.push({h:f,s:E,v:b})):(f=c.greyscale===!0||c.grayscale===!0?0:c.golden===!0?(p+p/i)%360:null===c.hue||c.full_random===!0?p:a(c.hue,0,360),E=c.greyscale===!0||c.grayscale===!0?0:c.full_random===!0?r(0,1,g):null===c.saturation?.4:a(c.saturation,0,1),b=c.full_random===!0?r(0,1,g):c.greyscale===!0||c.grayscale===!0?r(.15,.75,g):null===c.value?.75:a(c.value,0,1),s.push({h:f,s:E,v:b}))}return o(c.format.toLowerCase(),s),s},F.make_contrast=function(e,r){var l=t(h);if(null!==r)for(var s in r)r.hasOwnProperty(s)&&(l[s]=r[s]);var u,c,d=n(e);if(l.golden===!0)c=e.h*(1+i)%360;else{var g=F.make_scheme(e,{scheme_type:"complementary",format:"hsv"})[1];c=a(g.h-30,0,360)}var m;return"dark"===d?m=a(e.v-.25,0,1):"light"===d&&(m=a(e.v+.25,0,1)),u=[{h:c,s:e.s,v:m}],o(l.format.toLowerCase(),u),u[0]},F}return e()});
-(function (exports,Please,Url$1) {
+(function (exports,Firebase,Url,Please) {
 'use strict';
 
+Firebase = 'default' in Firebase ? Firebase['default'] : Firebase;
+Url = 'default' in Url ? Url['default'] : Url;
 Please = 'default' in Please ? Please['default'] : Please;
-Url$1 = 'default' in Url$1 ? Url$1['default'] : Url$1;
 
 /**
 * Stubs out the A-Frame "system" concept.
@@ -1428,7 +1429,6 @@ var index = Object.freeze({
  * @module altspace/utilities/sync
  */
 
-
 var inAltspace = altspace && altspace.inClient;
 var canonicalUrl = getCanonicalUrl();
 
@@ -1448,7 +1448,7 @@ function getProjectId(appId, authorId, canonicalUrl) {
 
 /**
 * Retreived
-* via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
+* via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
 * @class module:altspace/utilities/sync~Connection
 * @memberof module:altspace/utilities/sync
 */
@@ -1588,7 +1588,7 @@ var domElem;
 
 var overObject;
 
-var raycaster = new THREE.Raycaster();
+var raycaster$1 = new THREE.Raycaster();
 
 /**
  * Initializes the cursor module
@@ -1668,8 +1668,8 @@ function createCursorEvent(type, intersection) {
 		bubbles: true,
 		target: intersection ? intersection.object : null,
 		ray: {
-			origin: raycaster.ray.origin.clone(),
-			direction: raycaster.ray.direction.clone()
+			origin: raycaster$1.ray.origin.clone(),
+			direction: raycaster$1.ray.direction.clone()
 		},
 		point: intersection ? intersection.point.clone() : null
 	}
@@ -1680,9 +1680,9 @@ function findIntersection(mouseEvent) {
 	mouse.x = (mouseEvent.offsetX / (domElem.width || domElem.innerWidth)) * 2 - 1;
 	mouse.y = -(mouseEvent.offsetY / (domElem.height || domElem.innerHeight)) * 2 + 1;
 
-	raycaster.setFromCamera(mouse, camera);
+	raycaster$1.setFromCamera(mouse, camera);
 
-	var intersections = raycaster.intersectObjects(scene.children, true);
+	var intersections = raycaster$1.intersectObjects(scene.children, true);
 
 	// return the first object with an enabled collider
 	return intersections.find(function(e){
@@ -2004,7 +2004,7 @@ function setName(n) {//TODO: A better method for this would be awesome
 function getParsedUrl() {
 	var canonicalElement = document.querySelector('link[rel=canonical]');
 	var fullUrl = canonicalElement ? canonicalElement.href : window.location.href;
-	return new Url$1(fullUrl);
+	return new Url(fullUrl);
 }
 
 
@@ -2421,15 +2421,24 @@ var index$2 = Object.freeze({
 });
 
 /**
-* Base class for all behaviors.
+* Base class for all behaviors. Use this class as a pattern, but do not use
+* directly.
 * @memberof module:altspace/utilities/behaviors
-* @prop {string} type=Behavior - The name of this class
+* @prop {string} type - The name of this class
 */
 var Behavior = function Behavior(){};
 
 var prototypeAccessors$2 = { type: {} };
 
-prototypeAccessors$2.type.get = function (){ return 'Behavior'; };
+prototypeAccessors$2.type.get = function (){
+	if(!this._typeWarning){
+		console.warn('Behavior', this, 'does not expose type information!',
+			'It will not be queryable by getBehaviorByType, which will break',
+			'some built-in behaviors.');
+		this._typeWarning = true;
+	}
+	return null; // is normally the name of the type, i.e. "Behavior"
+};
 
 /**
 * Called when the behavior is attached to an object. Any setup that requires
@@ -2489,6 +2498,10 @@ var Bob = (function (Behavior$$1) {
 	Bob.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
 	Bob.prototype.constructor = Bob;
 
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'Bob'; };
+
 	Bob.prototype.awake = function awake (o)
 	{
 		this.object3d = o;
@@ -2514,7 +2527,1960 @@ var Bob = (function (Behavior$$1) {
 		}
 	};
 
+	Object.defineProperties( Bob.prototype, prototypeAccessors );
+
 	return Bob;
+}(Behavior));
+
+/**
+* A behavior that changes the color of an object when the cursor interacts with it.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+* @param {Object} [config] Optional parameters.
+* @param {THREE.Color} [config.originalColor] Base material color.
+* @param {Number} [config.overBrightness=1.5] Material brightness when cursor
+*	is over button.
+* @param {Number} [config.downBrightness=0.5] Material brightness when cursor
+*	is clicked.
+*/
+var ButtonStateStyle = (function (Behavior$$1) {
+	function ButtonStateStyle(config)
+	{
+		this.config = Object.assign({overBrightness: 1.5, downBrightness: 0.5}, config);
+		this.object3d = null;
+		this.scene = null;
+		this.originalColor = null;
+		this.modifiedColor = new THREE.Color();
+
+		this._cbs = {
+			cursorenter: this.cursorEnter.bind(this),
+			cursordown: this.cursorDown.bind(this),
+			cursorup: this.cursorUp.bind(this),
+			cursorleave: this.cursorLeave.bind(this)
+		};
+	}
+
+	if ( Behavior$$1 ) ButtonStateStyle.__proto__ = Behavior$$1;
+	ButtonStateStyle.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	ButtonStateStyle.prototype.constructor = ButtonStateStyle;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'ButtonStateStyle'; };
+
+	ButtonStateStyle.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.originalColor = this.config.originalColor || object3d.material.color;
+		this.object3d.addEventListener('cursorenter', this._cbs.cursorenter);
+		this.object3d.addEventListener('cursordown', this._cbs.cursordown);
+	};
+
+	ButtonStateStyle.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursorenter', this._cbs.cursorenter);
+		this.object3d.removeEventListener('cursorleave', this._cbs.cursorleave);
+		this.object3d.removeEventListener('cursorup', this._cbs.cursorup);
+		this.object3d.removeEventListener('cursordown', this._cbs.cursordown);
+	};
+
+	ButtonStateStyle.prototype.changeBrightness = function changeBrightness (brightness)
+	{
+		this.modifiedColor.set(this.originalColor);
+		this.modifiedColor.multiplyScalar(brightness);
+		this.modifiedColor.r = THREE.Math.clamp(this.modifiedColor.r, 0, 1);
+		this.modifiedColor.g = THREE.Math.clamp(this.modifiedColor.g, 0, 1);
+		this.modifiedColor.b = THREE.Math.clamp(this.modifiedColor.b, 0, 1);
+		this.object3d.material.color = this.modifiedColor;
+	};
+
+	ButtonStateStyle.prototype.cursorLeave = function cursorLeave ()
+	{
+		this.object3d.removeEventListener('cursorleave', this._cbs.cursorleave);
+		this.changeBrightness(1.0);
+	};
+
+	ButtonStateStyle.prototype.cursorEnter = function cursorEnter ()
+	{
+		this.changeBrightness(this.config.overBrightness);
+		object3d.addEventListener('cursorleave', this._cbs.cursorleave);
+	};
+
+	ButtonStateStyle.prototype.cursorUp = function cursorUp (event)
+	{
+		this.scene.removeEventListener('cursorup', this._cbs.cursorup);
+		this.object3d.addEventListener('cursorenter', this._cbs.cursorenter);
+		if (event.target === this.object3d) {
+			this.changeBrightness(this.config.overBrightness);
+			this.object3d.addEventListener('cursorleave', this._cbs.cursorleave);
+		} else {
+			this.changeBrightness(1.0);
+		}
+	};
+
+	ButtonStateStyle.prototype.cursorDown = function cursorDown ()
+	{
+		this.scene.addEventListener('cursorup', this._cbs.cursorup);
+		this.object3d.removeEventListener('cursorleave', this._cbs.cursorleave);
+		this.object3d.removeEventListener('cursorenter', this._cbs.cursorenter);
+		this.changeBrightness(this.config.downBrightness);
+	};
+
+	Object.defineProperties( ButtonStateStyle.prototype, prototypeAccessors );
+
+	return ButtonStateStyle;
+}(Behavior));
+
+//idea: API for symbolic camera from altspace? altspace.getThreeJSCenterCamera();
+//idea: offset (drag from bottom of piece). Workaround if you reparent
+
+//TODO: GSAP Draggable
+
+function getWorldPosition(obj) {
+	obj.updateMatrixWorld();
+	var vec = new THREE.Vector3();
+	vec.setFromMatrixPosition(obj.matrixWorld);
+	return vec;
+}
+
+/**
+* A behavior that makes an object draggable along a plane.
+* @param {Object} [config] Specify the axes along which the object can be
+*  dragged.
+*  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
+*  Each axis can also be an object specifying the minimum and maximum limits
+*  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
+*  **Note:** Currently you must specify exactly two axes.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+var Drag = (function (Behavior$$1) {
+	function Drag(config)
+	{
+		//space: view, local, world, sphere
+		//gridSnap, cursorSnap
+		//config: x: true, y: true, z: false, defaultDistance: 1000
+		this.config = config = Object.assign(
+			{space: 'world', x: false, y: false, z: false, cursorSnap: true},
+			config
+		);
+
+		this.min = new THREE.Vector3(
+			config.x.min !== undefined ? config.x.min : Number.NEGATIVE_INFINITY,
+			config.y.min !== undefined ? config.y.min : Number.NEGATIVE_INFINITY,
+			config.z.min !== undefined ? config.z.min : Number.NEGATIVE_INFINITY
+		);
+		this.max = new THREE.Vector3(
+			config.x.max !== undefined ? config.x.max : Number.POSITIVE_INFINITY,
+			config.y.max !== undefined ? config.y.max : Number.POSITIVE_INFINITY,
+			config.z.max !== undefined ? config.z.max : Number.POSITIVE_INFINITY
+		);
+
+		//if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72'); //TODO: Do we need a revision check?
+
+		this.object3d = null;
+		this.scene = null;
+		this.sync = null;
+		this.intersector = null;
+		this.dragOffset = new THREE.Vector3();
+		this.raycaster = new THREE.Raycaster();
+		this.raycaster.linePrecision = 3;
+
+		this._cbs = {
+			startDrag: this.startDrag.bind(this),
+			moveDrag: this.moveDrag.bind(this),
+			stopDrag: this.stopDrag.bind(this)
+		};
+	}
+
+	if ( Behavior$$1 ) Drag.__proto__ = Behavior$$1;
+	Drag.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Drag.prototype.constructor = Drag;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'Drag'; };
+
+	Drag.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.sync = o.getBehaviorByType('Object3DSync');
+		this.makeIntersector();
+		this.scene.add(this.intersector);//TODO: see if I can remove it from the scene. Might not req 72.
+	};
+
+	Drag.prototype.start = function start ()
+	{
+		this.object3d.addEventListener('cursordown', this._cbs.startDrag);
+	};
+
+	Drag.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursordown', this._cbs.startDrag);
+	};
+
+	Drag.prototype.makeIntersector = function makeIntersector ()
+	{
+		var extent = 10000;
+		var plane = new THREE.PlaneGeometry(extent, extent);
+
+		function makeXY() {
+			plane.rotateY(Math.PI);
+		}
+		function makeXZ() {
+			plane.rotateX(Math.PI / 2);
+		}
+		function makeYZ() {
+			plane.rotateY(Math.PI / 2);
+		}
+		var inX = !!this.config.x, inY = !!this.config.y, inZ = !!this.config.z;
+		var axisCount = inX + inY + inZ; // implicit cast to integers
+
+		if (axisCount === 3) {
+			throw new Error('Arbitrary dragging currently unsupported. Please lock at least one axis.');
+		}
+		else if (axisCount === 2) {
+			if (inX && inY) {
+				makeXY();
+			} else if (inX && inZ) {
+				makeXZ();
+			} else if (inY && inZ) {
+				makeYZ();
+			}
+		}
+		else if (axisCount === 1) {
+			throw new Error('Single axis dragging currently unsupported.');
+			//TODO: make possible, possibly via view-aligned plane
+		}
+		else {
+			throw new Error('Invalid axis configuration');
+		}
+
+		var material = new THREE.MeshBasicMaterial({ color: 'purple' });
+		material.side = THREE.DoubleSide;
+		this.intersector = new THREE.Mesh(plane, material);
+		this.intersector.visible = false;// ensures other raycasters don't hit our intersector
+		this.intersector.material.visible = false;// ensures we never see flicker during temp visibility
+	};
+
+	Drag.prototype.startDrag = function startDrag (event)
+	{
+		this.scene.addEventListener('cursorup', this._cbs.stopDrag);
+		this.scene.addEventListener('cursormove', this._cbs.moveDrag);
+
+		//Remember difference between center of object and drag point.
+		//Otherwise, object appears to 'jump' when selected, moving so its
+		//center is directly until the cursor. We allow drag on edge of object.
+		this.raycaster.set(event.ray.origin, event.ray.direction);
+		var hit = raycaster.intersectObject(object3d, true)[0];
+		if (!hit)
+			{ return; }
+
+		var dragPoint = hit.point.clone();
+		var objectCenterPoint = getWorldPosition(this.object3d).clone();
+		this.dragOffset.copy(dragPoint).sub(objectCenterPoint);
+
+		//Move to drag point (not object center), where raycast hits the object.
+		this.intersector.position.copy(this.intersector.parent.worldToLocal(dragPoint));
+		this.intersector.quaternion.copy(this.object3d.parent.quaternion);
+		this.intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+
+		/**
+		* Fired on an object when a drag interaction begins.
+		*
+		* @event dragstart
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+	 	var dragEvent = this.createDragEvent('dragstart');
+		this.object3d.dispatchEvent(dragEvent);
+	};
+
+	Drag.prototype.moveDrag = function moveDrag (event)
+	{
+		if (this.sync && !this.sync.isMine)
+			{ this.sync.takeOwnership(); }
+
+		//find intersection
+		this.intersector.visible = true;// allow our intersector to be intersected
+		this.raycaster.set(event.ray.origin, event.ray.direction);
+		var intersection = this.raycaster.intersectObject(this.intersector, true)[0];
+		this.intersector.visible = false;// disallow our intersector to be intersected
+
+		if (!intersection)
+			{ return; }
+
+		//New position is intersection point minus offset. Need offset since
+		//user probably won't click on exact center of object to drag it.
+		var targetWorldPosition = new THREE.Vector3();
+		targetWorldPosition.copy(intersection.point).sub(this.dragOffset);
+
+		//But maintain the original locked positions of the object.
+		var self = this;
+		var objWorldPos = getWorldPosition(this.object3d);
+		['x','y','z'].filter(function (i) { return !self.config[i]; }).forEach(function (i) {
+			targetWorldPosition[i] = objWorldPos[i];
+		});
+
+		//constrain target position
+		targetWorldPosition.clamp(min, max);
+
+		//move object
+		this.object3d.parent.updateMatrixWorld();
+		var targetLocalPosition = this.object3d.parent.worldToLocal(targetWorldPosition);//TODO: Test with nested objects
+		this.object3d.position.set(
+			this.config.x ? targetLocalPosition.x : this.object3d.position.x,
+			this.config.y ? targetLocalPosition.y : this.object3d.position.y,
+			this.config.z ? targetLocalPosition.z : this.object3d.position.z
+		);
+
+	};
+
+	Drag.prototype.stopDrag = function stopDrag ()
+	{
+		this.scene.removeEventListener('cursorup', this._cbs.stopDrag);
+		this.scene.removeEventListener('cursormove', this._cbs.moveDrag);
+
+		/**
+		* Fired on an object when a drag interaction ends
+		*
+		* @event dragstop
+		* @type module:altspace/utilities/behaviors.Drag~DragEvent
+		* @memberof module:altspace/utilities/behaviors.Drag
+		*/
+		var dragEvent = this.createDragEvent('dragstop');
+		this.object3d.dispatchEvent(dragEvent);
+	};
+
+	/**
+	* Represents events emitted during drag interactions
+	*
+	* @typedef {Object} module:altspace/utilities/behaviors.Drag~DragEvent
+	* @property {THREE.Ray} ray - The raycaster ray at the time of the event.
+	* @property {THREE.Object3D} target - The object which was dragged.
+	*/
+	Drag.prototype.createDragEvent = function createDragEvent (type)
+	{
+		return {
+			type: type,
+			bubbles: true,
+			target: this.object3d,
+			ray: this.raycaster.ray.clone()
+		}
+	};
+
+	Object.defineProperties( Drag.prototype, prototypeAccessors );
+
+	return Drag;
+}(Behavior));
+
+// ignore stick dead zone
+var tolerance = 0.2;
+
+/**
+* Allows an object to be moved, rotated, and scaled using a gamepad controller.
+* Left stick left / right and up / down moves object in the X-Y plane.
+* Clicking left stick enters left alt mode, where movement is in X-Z plane.
+* Clicking left stick again exits left alt mode.
+* Right stick left / right rotates object clockwise / counterclockwise (y axis).
+* Right stick up / down rotates object away forwards / backwards (x axis).
+* Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
+* Clicking right stick again exits right alt mode.
+* D-pad up / down scales object.
+* Back / reset button resets object to its original position and rotation.
+*
+* @param {Boolean} [config.position=true] Whether object's position can be changed.
+* @param {Boolean} [config.rotation=true] Whether object's rotation can be changed.
+* @param {Boolean} [config.scale=true] Whether object's scale can be changed.
+*
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+**/
+
+var GamepadControls = (function (Behavior$$1) {
+	function GamepadControls(config)
+	{
+		this.config = Object.assign(
+			{position: true, rotation: true, scale: true},
+			config
+		);
+
+		this.object3d = null;
+		this.gamepad = null;
+		this.scene = null;
+		this.sync = null;
+
+		this.isAltModeR = false;
+		this.isAltModeL = false;
+		this.prevAltButtonR = false;
+		this.prevAltButtonL = false;
+		this.isInitialized = false;
+
+		this.originalObj = null;//used to reset
+	}
+
+	if ( Behavior$$1 ) GamepadControls.__proto__ = Behavior$$1;
+	GamepadControls.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	GamepadControls.prototype.constructor = GamepadControls;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'GamepadControls'; };
+
+	GamepadControls.prototype.awake = function awake (o, s)
+	{
+		var this$1 = this;
+
+		this.object3d = o;
+		this.scene = s;
+		this.sync = this.object3d.getBehaviorByType('Object3DSync');
+		this.originalObj = object3d.clone();
+		this.gamepad = this.getGamepad();
+		if (this.gamepad) {
+			console.log('Gamepad detected: ' + this.gamepad.id);
+		} else {
+			var intervalID = setInterval((function () {
+				this$1.gamepad = this$1.getGamepad();
+				if (this$1.gamepad) {
+					console.log('Gamepad connected: ' + this$1.gamepad.id);
+					clearInterval(intervalID);
+				}
+			}).bind(this), 500);
+		}
+
+		this.scene.addEventListener('cursordown', (function (e) {
+			//preventDefault only works when app has focus, so call after initial click
+			if (this$1.gamepad && !this$1.isInitialized) {
+				this$1.preventDefault(this$1.gamepad);
+				this$1.isInitialized = true;
+			}
+		}).bind(this));
+
+	};
+
+	// utility function to fetch correct type of gamepad
+	GamepadControls.prototype.getGamepad = function getGamepad ()
+	{
+		var this$1 = this;
+
+		var gamepads = [];
+		if (altspace && altspace.inClient) {
+			gamepads = altspace.getGamepads();
+		} else {
+			//Gamepad API works in Chrome and Firefox browsers only
+			//https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
+			gamepads = navigator.getGamepads();
+		}
+
+		if (gamepads.length > 0) {
+			for (var i=0; i < gamepads.length; i++) {
+				var g = gamepads[i];
+				if (g && g.axes  && g.axes.length === 4 && g.buttons && g.buttons.length === 16) {
+					if (altspace && altspace.inClient) { this$1.preventDefault(g); }
+					return g;//return first valid gamepad
+				}
+			}
+		}
+		return undefined;
+	};
+
+	GamepadControls.prototype.preventDefault = function preventDefault (g)
+	{
+		var axes = (new Array(4)).fill(false);
+		var buttons = (new Array(16)).fill(false);
+		if (this.config.position) {
+			axes[0] = true;
+			axes[1] = true;
+			buttons[10] = true;
+		}
+		if (this.config.rotation) {
+			axes[2] = true;
+			axes[3] = true;
+			buttons[11] = true;
+		}
+		if (this.config.scale) {
+			buttons[12] = true;
+			buttons[13] = true;
+		}
+		buttons[8] = true;
+		g.preventDefault(axes, buttons);
+	};
+
+	GamepadControls.prototype.update = function update (deltaTime)
+	{
+		if ((!altspace || !altspace.inClient) && window.chrome && this.gamepad) {
+			this.gamepad = this.getGamepad();//On Chrome, need to poll for updates.
+		}
+		if (!this.gamepad)
+			{ return; }
+
+		//For axis and button numbers see: https://w3c.github.io/gamepad/
+		var isResetButton = this.gamepad.buttons[8].pressed;//reset / back button
+		if (isResetButton)
+		{
+			if (!this.sync.isMine)
+				{ this.sync.takeOwnership(); }
+			this.object3d.position.copy(this.originalObj.position);
+			this.object3d.rotation.copy(this.originalObj.rotation);
+			this.object3d.scale.copy(this.originalObj.scale);
+			return;
+		}
+
+		if (this.config.position)
+		{
+			var isAltButtonL = this.gamepad.buttons[10].pressed;//left stick button
+			if (this.prevAltButtonL && !isAltButtonL)
+				{ this.isAltModeL = !this.isAltModeL; }//button released
+			this.prevAltButtonL = isAltButtonL;
+
+			var leftStickX = gamepad.axes[0];//left / right
+			var leftStickY = gamepad.axes[1];//up / down
+
+			var isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
+			if (isMove && !this.sync.isMine)
+				{ this.sync.takeOwnership(); }
+
+			var moveDistance = 200 * (deltaTime/1000);// 200 units per second
+
+			// left stick X always controls X movement
+			if (Math.abs(leftStickX) > tolerance){
+				this.object3d.position.x += moveDistance * leftStickX;
+			}
+
+			// left stick Y controls Z movement in normal mode, Y movement in alt mode
+			if(Math.abs(leftStickY) > tolerance)
+			{
+				if (this.isAltModeL){
+					this.object3d.position.y += moveDistance * -leftStickY;
+				}
+				else {
+					this.object3d.position.z += moveDistance * leftStickY;
+				}
+			}
+		}
+
+		if (this.config.rotation)
+		{
+			var isAltButtonR = this.gamepad.buttons[11].pressed;//right stick button
+			if (this.prevAltButtonR && !isAltButtonR)
+				{ this.isAltModeR = !this.isAltModeR; }//button released
+			prevAltButtonR = isAltButtonR;
+
+			var rightStickX = gamepad.axes[2];//left / right
+			var rightStickY = gamepad.axes[3];//up / down
+
+			var isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
+			if (isRotate && !this.sync.isMine)
+				{ this.sync.takeOwnership(); }
+
+			var rotateAngle = Math.PI * (deltaTime/1000);// 180 degrees per second
+
+			if (!this.isAltModeR && Math.abs(rightStickY) > tolerance) {
+				this.object3d.rotation.x += rotateAngle * rightStickY;
+			}
+
+			if (Math.abs(rightStickX) > tolerance) {
+				if(this.isAltModeR)
+					{ this.object3d.rotation.z += rotateAngle * -rightStickX; }
+				else
+					{ this.object3d.rotation.y += rotateAngle * rightStickX; }
+			}
+		}
+
+		if (this.config.scale)
+		{
+			var scaleChange = 10 * (deltaTime/1000);// 10 units per second
+			var dpadUp = this.gamepad.buttons[12].pressed;//d-pad up
+			var dpadDown = this.gamepad.buttons[13].pressed;//d-pad down
+
+			var isScale = this.gamepad.buttons[12].pressed || this.gamepad.buttons[13].pressed;
+			if (isScale && !this.sync.isMine)
+				{ this.sync.takeOwnership(); }
+
+			var prev = this.object3d.scale;
+			var v3 = new THREE.Vector3(1, 1, 1);
+			v3.multiplyScalar(scaleChange);
+			if (dpadUp) { this.object3d.scale.add(v3); }
+			if (dpadDown) {
+				if (prev.x > v3.x && prev.y > v3.y && prev.z > v3.z) {//Don't go negative.
+					this.object3d.scale.sub(v3);
+				}
+			}
+		}
+	};
+
+	Object.defineProperties( GamepadControls.prototype, prototypeAccessors );
+
+	return GamepadControls;
+}(Behavior));
+
+/**
+* Changes the color of an object when cursor hovers over it.
+* @param {Object} [config] Optional parameters.
+* @param {String} [config.event='cursorenter'] Specify the name of event which
+*  triggers the color change.  Default is 'cursorenter' for a hover effect.
+* @param {THREE.Color} [config.color=THREE.Color('yellow')] A THREE.Color value that will be applied to the object's
+*  material.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+var HoverColor = (function (Behavior$$1) {
+	function HoverColor(config)
+	{
+		var this$1 = this;
+
+		this.config = Object.assign(
+			{event: 'cursorenter', color: new THREE.Color('yellow')},
+			config
+		);
+
+		// Default is to trigger color change on cursorenter/cursorleave events,
+		// also support triggering on cursordown/cursorup events.
+		if (config.event !== 'cursorenter' && config.event !== 'cursordown') {
+			throw Error('Expected config.event "cursorenter" or "cursordown"');
+		}
+
+		this.object3d = null;
+		this.cursordownObject = null;
+		this.cursorenterObject = null;
+		this.scene = null;
+
+		/*
+		* These are here and not in the prototype because we need references
+		* to the bound versions of these functions for "dispose".
+		*/
+
+		this.cursordown = (function (event) {
+			this$1.cursordownObject = this$1.object3d;
+			if (this$1.config.event === 'cursordown' ){
+				this$1.setColor(cursordownObject);
+			}
+		}).bind(this);
+
+		this.cursorenter = (function (event) {
+			//ignore hover events if a different object is selected,
+			//for example during a drag we don't want to change highlight
+			if (this$1.cursordownObject && this$1.cursordownObject !== this$1.object3d){
+				return;
+			}
+			if (this$1.cursorenterObject){
+				this$1.unsetColor(this$1.cursorenterObject);
+			}
+			this$1.cursorenterObject = this$1.object3d;
+			this$1.setColor(this$1.object3d);
+		}).bind(this);
+
+		this.cursorleave = (function (event) {
+			if (this$1.cursorenterObject === this$1.object3d){
+				this$1.cursorenterObject = null;
+				this$1.unsetColor(this$1.object3d);
+			}
+		}).bind(this);
+
+		this.cursorupScene = (function (event) {
+			if (this$1.config.event === 'cursordown' && this$1.cursordownObject ){
+				this$1.unsetColor(this$1.cursordownObject);
+			}
+			this$1.cursordownObject = null;
+		}).bind(this);
+	}
+
+	if ( Behavior$$1 ) HoverColor.__proto__ = Behavior$$1;
+	HoverColor.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	HoverColor.prototype.constructor = HoverColor;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'HoverColor'; };
+
+	HoverColor.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.object3d.addEventListener('cursordown', this.cursordown);
+		this.scene.addEventListener('cursorup', this.cursorupScene);
+		if (this.config.event === 'cursorenter') {
+			this.object3d.addEventListener('cursorenter', this.cursorenter);
+			this.object3d.addEventListener('cursorleave', this.cursorleave);
+		}
+	};
+
+	HoverColor.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursordown', this.cursordown);
+		this.scene.removeEventListener('cursorup', this.cursorupScene);
+		this.object3d.removeEventListener('cursorenter', this.cursorenter);
+		this.object3d.removeEventListener('cursorleave', this.cursorleave);
+	};
+
+	HoverColor.prototype.setColor = function setColor (o)
+	{
+		if (o.material && o.material.color){
+			o.userData.origColor = o.material.color;
+			o.material.color = this.config.color;
+			//Not strictly needed but seems to make updating faster in Altspace.
+			if (o.material) { o.material.needsUpdate = true; }
+		}
+		o.children.forEach(this.setColor.bind(this));
+	};
+
+	HoverColor.prototype.unsetColor = function unsetColor (o)
+	{
+		if (o.material && o.material.color){
+			if (!o.userData.origColor){
+				console.error('Cannot unsetColor, no userData.origColor for object', o);
+				return;
+			}
+			o.material.color = o.userData.origColor;
+			if (o.material) { o.material.needsUpdate = true; }
+		}
+		o.children.forEach(this.unsetColor.bind(this));
+	};
+
+	Object.defineProperties( HoverColor.prototype, prototypeAccessors );
+
+	return HoverColor;
+}(Behavior));
+
+/**
+* Changes the scale of an object when the cursor hovers over it, and restores the original scale when the cursor is no longer hovering over the object.
+* @class HoverScale
+* @param {Object} [config] Optional parameters.
+* @param {Number} [config.scale=1.15] A scaling factor that will be applied to the object's initial scale when the cursor hovers over it.
+* @param {Number} [config.duration=75] Duration the scaling effect is intended to take to complete, in milliseconds.
+* @param {Boolean} [config.revertOnDispose=true] Specifies whether the object's original scale should be restored when the behavior has been destroyed.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+var HoverScale = (function (Behavior$$1) {
+	function HoverScale(config)
+	{
+		var this$1 = this;
+
+		this.config = Object.assign(
+			{scale: 1.15, duration: 75, revertOnDispose: true},
+			config
+		);
+
+		this.object3d = null;
+		this.originalScale = null;
+		this.elapsedTime = null;
+		this.progress = null;
+		this.srcScale = null;
+		this.destScale = null;
+
+		this.onHoverStateChange = (function () {
+			var assign;
+			(assign = [this$1.destScale, this$1.srcScale], this$1.srcScale = assign[0], this$1.destScale = assign[1]);
+			this$1.progress = 1 - this$1.progress;
+			this$1.elapsedTime = this$1.duration - this$1.elapsedTime;
+		}).bind(this);
+	}
+
+	if ( Behavior$$1 ) HoverScale.__proto__ = Behavior$$1;
+	HoverScale.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	HoverScale.prototype.constructor = HoverScale;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'HoverScale'; };
+
+	HoverScale.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.originalScale = this.object3d.scale.clone();
+
+		this.srcScale = this.object3d.scale.clone();
+		this.srcScale.multiplyScalar(this.config.scale);
+
+		this.destScale = new THREE.Vector3();
+		this.destScale.copy(this.originalScale);
+
+		this.progress = 1;
+		this.elapsedTime = this.config.duration;
+
+		this.object3d.addEventListener('cursorenter', this.onHoverStateChange);
+		this.object3d.addEventListener('cursorleave', this.onHoverStateChange);
+	};
+
+	HoverScale.prototype.update = function update (deltaTime)
+	{
+		if(this.progress < 1) {
+			this.elapsedTime = THREE.Math.clamp(
+				this.elapsedTime + deltaTime, 0, this.config.duration
+			);
+
+			this.progress = THREE.Math.clamp(this.elapsedTime / this.config.duration, 0, 1);
+			this.object3d.scale.lerpVectors(this.srcScale, this.destScale, this.progress);
+		}
+	};
+
+	HoverScale.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursorenter', this.onHoverStateChange);
+		this.object3d.removeEventListener('cursorleave', this.onHoverStateChange);
+
+		// Restore Original Object Scale Before Behavior Was Applied
+		if(this.config.revertOnDispose)
+			{ this.object3d.scale.copy(this.originalScale); }
+
+		this.originalScale = null;
+		this.srcScale = null;
+		this.destScale = null;
+		this.object3d = null;
+	};
+
+	Object.defineProperties( HoverScale.prototype, prototypeAccessors );
+
+	return HoverScale;
+}(Behavior));
+
+/**
+* An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
+* E.g. `['Index', 'Left', 0]` identifies the first joint on the index finger of the left hand.
+* See [TrackingSkeleton#getJoint]{@link module:altspace~TrackingSkeleton#getJoint} for available
+* joint names.
+* @typedef {Array.<String, String, Number>} module:altspace/utilities/behaviors.JointCollisionEvents~JointId
+**/
+
+// helper function to guarantee skeleton presence, and fetch if available
+function initSkeleton(scene) {
+	return new Promise(function (resolve, reject) {
+		var skel = null;
+
+		// Attempt to use existing skeleton when available
+		scene.traverse(function (child) {
+			if(child.type === 'TrackingSkeleton') {
+				skel = child;
+				return;
+			}
+		});
+
+		if(skel)
+			{ return resolve(skel); }
+
+		// Skeleton has not been assigned to scene yet
+		altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
+			skel = trackingSkeleton;
+			scene.add(skel);
+			return resolve(skel);
+		});
+	});
+}
+
+/**
+* The JointCollisionEvents behavior dispatches collision events which have been triggered by
+* [TrackingJoints]{@link module:altspace~TrackingJoint} intersecting with the object that has this behavior.
+*
+* @param {Object} [config] Optional parameters.
+* @param {Array.<JointId>} [config.joints=HAND_JOINTS] Array of
+* [JointIds]{@link module:altspace/utilities/behaviors.JointCollisionEvents~JointId} to track.
+* @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.
+* For optimal results, it is recommended that the value
+* provided is scaled according to your enclosure scaling factor.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+var JointCollisionEvents = (function (Behavior$$1) {
+	function JointCollisionEvents(config)
+	{
+		this.config = Object.assign(
+			{jointCubeSize: 15, joints: JointCollisionEvents.HAND_JOINTS},
+			config
+		);
+
+		this.object3d = null;
+		this.skeleton = null;
+		this.jointCube = null;
+		this.hasCollided = false;
+		this.collidedJoints = [];
+		this.jointIntersectUnion = null;
+	}
+
+	if ( Behavior$$1 ) JointCollisionEvents.__proto__ = Behavior$$1;
+	JointCollisionEvents.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	JointCollisionEvents.prototype.constructor = JointCollisionEvents;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'JointCollisionEvents'; };
+
+	JointCollisionEvents.prototype.awake = function awake (o, s) {
+		this.object3d = o;
+		var self = this;
+		// Get the tracking skeleton
+		initSkeleton(s).then(function (_skeleton) {
+			// Attach skeleton
+			self.skeleton = _skeleton;
+
+			self.jointCube = new THREE.Vector3(
+				self.config.jointCubeSize,
+				self.config.jointCubeSize,
+				self.config.jointCubeSize
+			);
+		}).catch(function (err) {
+			console.log('Failed to get tracking skeleton', err);
+		});
+	};
+
+	JointCollisionEvents.prototype.update = function update (deltaTime)
+	{
+		var this$1 = this;
+
+		if(!this.skeleton)
+			{ return; }
+
+		// Collect joints based on joints config option
+		var joints = [];
+		for(var i = 0; i < this.config.joints.length; i++) {
+			joints[i] = this$1.skeleton.getJoint(
+				this$1.config.joints[i][0],
+				this$1.config.joints[i][1],
+				this$1.config.joints[i][2] || 0
+			);
+		}
+
+		// Get bounding box of owner object
+		var objectBB = new THREE.Box3().setFromObject(this.object3d);
+
+		// Add up all colliding joint intersects
+		var prevJointIntersectUnion = this.jointIntersectUnion;
+		this.jointIntersectUnion = null;
+
+		var prevCollidedJoints = this.collidedJoints;
+		this.collidedJoints = [];
+
+		var hasPrevCollided = this.hasCollided;
+		this.hasCollided = false;
+
+		if(
+			this.object3d.visible &&
+			this.object3d.scale.x > Number.EPSILON &&
+			this.object3d.scale.y > Number.EPSILON &&
+			this.object3d.scale.z > Number.EPSILON
+		) {
+			for(var i$1 = 0; i$1 < this.config.joints.length; i$1++)
+			{
+				var joint = joints[i$1];
+				if(joint && joint.confidence !== 0) {
+					var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, this$1.jointCube);
+					var collision = objectBB.intersectsBox(jointBB);
+					if(collision) {
+						var intersectBB = objectBB.intersect(jointBB);
+						if(this$1.jointIntersectUnion) {
+							this$1.jointIntersectUnion.union(intersectBB);
+						} else {
+							this$1.jointIntersectUnion = intersectBB;
+						}
+
+						this$1.hasCollided = true;
+						this$1.collidedJoints.push(joint);
+					}
+				}
+			}
+		}
+
+		// Dispatch collision event
+		if(!hasPrevCollided && this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new EnterEvent(
+				this.jointIntersectUnion,
+				this.collidedJoints,
+				this.object3d
+			));
+		}
+		else if(hasPrevCollided && !this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new LeaveEvent(
+				this.prevJointIntersectUnion || new THREE.Box3(),
+				this.prevCollidedJoints,
+				this.object3d
+			));
+		}
+
+		// Dispatch collision event
+		if(this.hasCollided)
+		{
+			object3d.dispatchEvent(new CollsionEvent(
+				this.jointIntersectUnion,
+				this.collidedJoints,
+				this.object3d
+			));
+		}
+	};
+
+	Object.defineProperties( JointCollisionEvents.prototype, prototypeAccessors );
+
+	return JointCollisionEvents;
+}(Behavior));
+
+var JointCollisionEvent = function JointCollisionEvent(type, union, joints, target)
+{
+	this.type = type;
+	this.detail = {
+		intersect: union,
+		joints: joints
+	};
+	this.bubbles = true;
+	this.target = target;
+};
+
+/**
+* Fires a single event when any specified joints initially collide with the object.
+*
+* @event jointcollisionenter
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+var EnterEvent = (function (JointCollisionEvent) {
+	function EnterEvent(){
+		var args = [], len = arguments.length;
+		while ( len-- ) args[ len ] = arguments[ len ];
+
+		JointCollisionEvent.apply(this, [ 'jointcollisionenter' ].concat( args ));
+	}
+
+	if ( JointCollisionEvent ) EnterEvent.__proto__ = JointCollisionEvent;
+	EnterEvent.prototype = Object.create( JointCollisionEvent && JointCollisionEvent.prototype );
+	EnterEvent.prototype.constructor = EnterEvent;
+
+	return EnterEvent;
+}(JointCollisionEvent));
+
+/**
+* Fires a single event when all joints are no longer colliding with the object.
+*
+* @event jointcollisionleave
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which last intersected with the object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+var LeaveEvent = (function (JointCollisionEvent) {
+	function LeaveEvent(){
+		var args = [], len = arguments.length;
+		while ( len-- ) args[ len ] = arguments[ len ];
+
+		JointCollisionEvent.apply(this, [ 'jointcollisionleave' ].concat( args ));
+	}
+
+	if ( JointCollisionEvent ) LeaveEvent.__proto__ = JointCollisionEvent;
+	LeaveEvent.prototype = Object.create( JointCollisionEvent && JointCollisionEvent.prototype );
+	LeaveEvent.prototype.constructor = LeaveEvent;
+
+	return LeaveEvent;
+}(JointCollisionEvent));
+
+/**
+* An array of JointIds describing the tip of every finger on both hands.
+* @constant {Array.<JointId>} HAND_JOINTS
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+JointCollisionEvents.HAND_JOINTS = [
+	['Hand', 'Left', 0],
+	['Thumb', 'Left', 3],
+	['Index', 'Left', 3],
+	['Middle', 'Left', 3],
+	['Ring', 'Left', 3],
+	['Pinky', 'Left', 3],
+
+	['Hand', 'Right', 0],
+	['Thumb', 'Right', 3],
+	['Index', 'Right', 3],
+	['Middle', 'Right', 3],
+	['Ring', 'Right', 3],
+	['Pinky', 'Right', 3]
+];
+
+var containerMax = Symbol('containerMax');
+var containerMin = Symbol('containerMin');
+var object3D$1 = Symbol('object3D');
+var boundingBox = Symbol('boundingBox');
+var origMatrix = Symbol('origMatrix');
+var origMatrixAutoUpdate = Symbol('origMatrixAutoUpdate');
+var parent = Symbol('parent');
+var enclosure = Symbol('enclosure');
+var origParentBoundingBoxes = new Map();
+
+/**
+* The Layout behavior allows you to position objects easily. You can
+* position an object relative to its parent (either the Scene or a
+* another object) by using a position specifier for each of the axes.
+* The position specifier can be one of 'min', 'center' or 'max'. The default
+* specifier is 'center'. You can also add a modifier to the position in pixels
+* ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can
+* choose the location of the anchor on the object you are trying to position
+* by using the 'my' parameter.
+* You must specify at least one axis on the 'at' parameter.
+*
+* @example
+* // Position the top of the cube at 1.5 meters above the bottom of its parent.
+* cube.addBehavior(new altpsace.utilities.behaviors.Layout({
+*	   my: {y: 'max'},
+*	   at: {y: 'min+1.5m'}
+* });
+*
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+* @param {Object} config
+* @param {Object} config.at An object containing the axes and position
+*  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
+* @param {Object} [config.my] An object containing the axes and position
+*  specifiers for the layout anchor.
+**/
+var Layout = (function (Behavior$$1) {
+	function Layout (ref) {
+		var my = ref.my; if ( my === void 0 ) my = {};
+		var at = ref.at;
+
+		this.my = my;
+		this.at = at;
+	}
+
+	if ( Behavior$$1 ) Layout.__proto__ = Behavior$$1;
+	Layout.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Layout.prototype.constructor = Layout;
+
+	var prototypeAccessors = { type: {} };
+
+	// TODO-BP Ideally these would be private methods.
+	prototypeAccessors.type.get = function (){ return 'Layout'; };
+
+	Layout.prototype.getAxisSettings = function getAxisSettings (axis, axisValue, min, max) {
+		axisValue = axisValue || 'center';
+		axisValue = /(\w+)([-+].+)?/.exec(axisValue);
+		var position = axisValue[1];
+		var offsetSetting = axisValue[2];
+		var offset = parseFloat(offsetSetting) || 0;
+		if (offsetSetting && offsetSetting.endsWith('%')) {
+			offset = offset / 100 * (max[axis] - min[axis]);
+		}
+		else if (offsetSetting && offsetSetting.endsWith('m')) {
+			offset = offset * this[enclosure].pixelsPerMeter;
+		}
+		return {
+			position: position,
+			offset: offset
+		}
+	};
+
+	Layout.prototype.getAnchorOffset = function getAnchorOffset (axis, axisValue) {
+		var max = this[boundingBox].max;
+		var min = this[boundingBox].min;
+		var ref = this.getAxisSettings(
+			axis, axisValue, min, max);
+		var position = ref.position;
+		var offset = ref.offset;
+		if (position === 'max') {
+			return -max[axis] + offset
+		}
+		else if (position === 'min') {
+			return -min[axis] + offset
+		}
+		else if (position === 'center') {
+			return offset;
+		}
+		else {
+			throw new Error(
+				(axisValue + " is an invalid layout position for " + axis)
+			);
+		}
+	};
+
+	Layout.prototype.doLayout = function doLayout () {
+		var this$1 = this;
+
+		Array.from('xyz').forEach(function (axis) {
+			var ref = this$1.getAxisSettings(
+				axis, this$1.at[axis], this$1[containerMin], this$1[containerMax]);
+			var position = ref.position;
+			var offset = ref.offset;
+			var anchorOffset = this$1.getAnchorOffset(axis, this$1.my[axis]);
+			if (position === 'max') {
+				this$1[object3D$1].position[axis] = this$1[containerMax][axis] + offset + anchorOffset;
+			}
+			else if (position === 'min') {
+				this$1[object3D$1].position[axis] = this$1[containerMin][axis] + offset + anchorOffset;
+			}
+			else if (position === 'center') {
+				this$1[object3D$1].position[axis] = offset + anchorOffset;
+			}
+			else {
+				throw new Error(
+					((this$1.at[axis]) + " is an invalid layout position for " + axis)
+				);
+			}
+		});
+
+		if (this[parent]) {
+			// Restore the original parent transform
+			this[parent].matrix = this[origMatrix];
+			this[parent].updateMatrixWorld(true);
+			this[parent].matrixAutoUpdate = this[origMatrixAutoUpdate];
+		}
+	};
+
+	Layout.prototype.awake = function awake (_object3D) {
+		var this$1 = this;
+
+		this[object3D$1] = _object3D;
+		this[boundingBox] = new THREE.Box3().setFromObject(this[object3D$1]);
+
+		// TODO Listen for resize events on the enclosure
+		altspace.getEnclosure().then(function (_enclosure) {
+			this$1[enclosure] = _enclosure;
+			if (this$1[object3D$1].parent instanceof THREE.Scene) {
+				var
+					hw = this$1[enclosure].innerWidth / 2,
+					hh = this$1[enclosure].innerHeight / 2,
+					hd = this$1[enclosure].innerDepth / 2;
+				this$1[containerMax] = new THREE.Vector3(hw, hh, hd);
+				this$1[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
+				this$1.doLayout();
+			}
+			else {
+				var objWorldScale = this$1[object3D$1].getWorldScale();
+				this$1[boundingBox].min.divide(objWorldScale);
+				this$1[boundingBox].max.divide(objWorldScale);
+
+				this$1[parent] = this$1[object3D$1].parent;
+
+				this$1[origMatrix] = this$1[parent].matrix.clone();
+				this$1[origMatrixAutoUpdate] = this$1[parent].matrixAutoUpdate;
+
+				// We want to use the un-transormed anchor of the parent.
+				// Reset the parent matrix so that we can get the original bounding box.
+				this$1[parent].matrixAutoUpdate = false;
+				this$1[parent].matrix.identity();
+
+				var parentBoundingBox;
+				if (origParentBoundingBoxes.has(this$1[parent].uuid)) {
+					parentBoundingBox = origParentBoundingBoxes.get(this$1[parent].uuid);
+				}
+				else {
+					this$1[parent].remove(this$1[object3D$1]);
+					parentBoundingBox = new THREE.Box3().setFromObject(this$1[parent]);
+					this$1[parent].add(this$1[object3D$1]);
+					origParentBoundingBoxes.set(this$1[parent].uuid, parentBoundingBox);
+				}
+
+				this$1[containerMax] = parentBoundingBox.max;
+				this$1[containerMin] = parentBoundingBox.min;
+				this$1.doLayout();
+			}
+		});
+	};
+
+	Object.defineProperties( Layout.prototype, prototypeAccessors );
+
+	return Layout;
+}(Behavior));
+
+// deep object comparison
+function isEqual(a, b)
+{
+	// objects are directly equal
+	if(a === b){
+		return true;
+	}
+	// recurse for each pair of array items
+	else if( Array.isArray(a) && Array.isArray(b) && a.length === b.length ){
+		return a.every( function (v,i) { return isEqual(a[i], b[i]); } );
+	}
+	// recurse for every key/val pair in objects
+	else if( a instanceof Object && b instanceof Object
+		&& isEqual(Object.keys(a).sort(), Object.keys(b).sort()) )
+	{
+		for(var k in a){
+			if( !isEqual(a[k], b[k]) )
+				{ return false; }
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+/**
+* The Object3DSync behavior syncs an object's transform and data.
+* **Note:** Object3DSync must be used in conjunction with
+* [SceneSync]{@link module:altspace/utilities/behaviors.SceneSync}
+*
+* @param {Object} [config]
+* @param {Boolean} [config.position=false] Whether object's position should
+*  be synced
+* @param {Boolean} [config.rotation=false] Whether object's rotation should
+*  be synced
+* @param {Boolean} [config.scale=false] Whether object's scale should
+*  be synced
+* @param {Boolean} [config.auto=false] Whether the object should be synced
+*  automatically. Not currently recommended.
+* @param {Boolean} [config.world=false] Whether world coordiantes should
+*  be sent when synchronizing position and rotation, instead of the
+*  transformation relative to the object's parent.  Use if synced object
+*  is a child (e.g. of the tracking skeleton) only in the sender scene.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+**/
+var Object3DSync = (function (Behavior$$1) {
+	function Object3DSync(config)
+	{
+		this.config = Object.assign(
+			{position: false, rotation: false, scale: false, auto: false, world: false},
+			config
+		);
+
+		this.object3d = null;
+		this.scene = null;
+		this.ref = null;
+		this.key = null;
+		this.dataRef = null;
+		this.ownerRef = null;
+		this.transformRef = null;
+
+		this.sceneSync = null;
+		this.isMine = false;
+
+		this.position = new THREE.Vector3();
+		this.quaternion = new THREE.Quaternion();
+		this.scale = new THREE.Vector3();
+	}
+
+	if ( Behavior$$1 ) Object3DSync.__proto__ = Behavior$$1;
+	Object3DSync.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Object3DSync.prototype.constructor = Object3DSync;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'Object3DSync'; };
+
+	Object3DSync.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+
+		this.setupReceive();
+	};
+
+	//TODO: lerp
+	Object3DSync.prototype.setupReceive = function setupReceive ()
+	{
+		var this$1 = this;
+
+		this.transformRef.on('value', (function (snapshot) {
+			var value = snapshot.val();
+
+			if( !this$1.isMine && value )
+			{
+				if (this$1.config.position) {
+					this$1.object3d.position.set(value.position.x, value.position.y, value.position.z);
+				}
+				if (this$1.config.rotation) {
+					this$1.object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
+				}
+				if (this$1.config.scale) {
+					this$1.object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
+				}
+			}
+		}).bind(this));
+
+		this.ownerRef.on('value', (function (snapshot) {
+			var newOwnerId = snapshot.val();
+			if (newOwnerId === this$1.sceneSync.clientId && !this$1.isMine)
+			{
+				/**
+				* Fired when a synced object's ownership is transferred to the local client.
+				* @event ownershipgained
+				* @memberof module:altspace/utilities/behaviors.Object3DSync
+				*/
+				this$1.object3d.dispatchEvent({ type: 'ownershipgained' });
+			}
+
+			if (newOwnerId !== this$1.sceneSync.clientId && this$1.isMine)
+			{
+				/**
+				* Fired when a synced object's ownership is transferred to someone else.
+				* @event ownershiplost
+				* @memberof module:altspace/utilities/behaviors.Object3DSync
+				*/
+				this$1.object3d.dispatchEvent({ type: 'ownershiplost' });
+			}
+
+			this$1.isMine = newOwnerId === this$1.sceneSync.clientId;
+		}).bind(this));
+	};
+
+	Object3DSync.prototype.link = function link (objectRef, sS)
+	{
+		this.ref = objectRef;
+		this.key = this.ref.key();
+		this.transformRef = this.ref.child('batch');
+		this.dataRef = this.ref.child('data');
+		this.ownerRef = this.ref.child('owner');
+		this.sceneSync = sS;
+	};
+
+	Object3DSync.prototype.autoSend = function autoSend ()
+	{
+		if (!this.isMine)
+			{ return; }
+
+		var transform = {};
+		if (this.config.world) {
+			this.object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
+			this.object3d.matrixWorld.decompose(this.position, this.quaternion, this.scale);
+		} else {
+			this.position = this.object3d.position;
+			this.quaternion = this.object3d.quaternion;
+			this.scale = this.object3d.scale;
+		}
+		if (this.config.position) {
+			transform.position = {
+				x: this.position.x,
+				y: this.position.y,
+				z: this.position.z
+			};
+		}
+		if (this.config.rotation) {
+			transform.quaternion = {
+				x: this.quaternion.x,
+				y: this.quaternion.y,
+				z: this.quaternion.z,
+				w: this.quaternion.w
+			};
+		}
+		if (this.config.scale) {
+			transform.scale = {
+				x: this.scale.x,
+				y: this.scale.y,
+				z: this.scale.z
+			};
+		}
+		if (Object.keys(transform).length > 0) {
+			if (isEqual(transform, this.lastTransform)) { return; }
+			this.transformRef.set(transform);
+			this.lastTransform = transform;
+		}
+	};
+
+	/**
+	* Take ownership of this object. The client that instantiates an object owns it,
+	* afterwards changes in ownership must be managed by the app. Manual modifications
+	* to the Firebase ref's will not obey ownership status.
+	* @instance
+	* @method takeOwnership
+	* @memberof module:altspace/utilities/behaviors.Object3DSync
+	*/
+	Object3DSync.prototype.takeOwnership = function takeOwnership () {
+		this.ownerRef.set(this.sceneSync.clientId);
+	};
+
+	Object.defineProperties( Object3DSync.prototype, prototypeAccessors );
+
+	return Object3DSync;
+}(Behavior));
+
+// common maps between identifiers and objects
+var syncBehaviors = [];
+var objectForKey = {};
+var keyForUuid = {};
+
+function autoSendAll() {
+	syncBehaviors.forEach(function (s) { return s.autoSend(); });
+}
+
+/**
+* The SceneSync behavior manages the synchronization of an entire scene.
+* @param {Firebase} syncInstance - Obtain this by calling [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}
+* @param {Object} [config]
+* @param {Object} [config.instantiators] A dictionary of instantiation
+* callbacks by syncType. Instantiators are called on every client whenever an
+* instantiation call is made. Instantiators are passed an initialization
+* data object and the syncType. They should return an Object3D with an
+* Object3DSync behavior.
+* @param {Object} [config.destroyers] (Optional) A dictionary of destroy
+* callbacks by syncType. Destroyers are called on every client whenever a
+* destroy call is made. If no destroyer is provided, a default one will be use
+* which will remove the object from its parent and dispose its geometry, material, and texture.
+* If you return true from a custom destroyer, the default destroyer will also be called.
+* @param {Function} [config.ready] A callback that is called after
+* checking to see if the instance has already been initialized. The callback is passed a boolean that
+* is true if this is the first callback that has been called for this sync instance.
+* This is primarily useful for setting up any objects that should only be created
+* once for an instance, and is not necessary otherwise.
+* @param {integer} [config.autoSendRateMS=100] - The rate updates are published
+* to other clients, in milliseconds. This can usually be left default.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+**/
+var SceneSync = (function (Behavior$$1) {
+	function SceneSync(instanceRef, config)
+	{
+		this.config = Object.assign(
+			{instantiators: {}, destroyers: {}, ready: null, autoSendRateMS: 100},
+			config
+		);
+
+		this.instanceRef = instanceRef;
+		this.sceneRef = instanceRef.child('scene');
+		this.clientsRef = instanceRef.child('clients');
+
+		this.clientId = null;
+		// there should always be one master client in the room. For now it will be the longest person online.
+		this.masterClientId = null;
+
+	}
+
+	if ( Behavior$$1 ) SceneSync.__proto__ = Behavior$$1;
+	SceneSync.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SceneSync.prototype.constructor = SceneSync;
+
+	var prototypeAccessors = { type: {},isMasterClient: {} };
+
+	prototypeAccessors.type.get = function (){ return 'SceneSync'; };
+
+	SceneSync.prototype.awake = function awake (o, s)
+	{
+		var this$1 = this;
+
+		setInterval(autoSendAll, this.config.autoSendRateMS);
+
+		var scene = s;
+
+		// temporary way of having unique identifiers for each client
+		this.clientId = scene.uuid;
+		this.clientsRef.on("value", (function (snapshot) {
+			var clientIds = snapshot.val();
+			if (!clientIds) { return; }
+
+			var masterClientKey = Object.keys(clientIds)[0];
+			this$1.masterClientId = clientIds[masterClientKey];
+		}).bind(this));
+
+		// add our client ID to the list of connected clients,
+		// but have it be automatically removed by firebase if we disconnect for any reason
+		this.clientsRef.push(clientId).onDisconnect().remove();
+
+		this.instanceRef.child('initialized').once('value', (function (snapshot) {
+			var shouldInitialize = !snapshot.val();
+			snapshot.ref().set(true);
+			if (this$1.config.ready) {
+				this$1.config.ready(shouldInitialize);
+			}
+		}).bind(this));
+
+		this.sceneRef.on('child_added', this.onInstantiate.bind(this));
+		this.sceneRef.on('child_removed', this.onDestroy.bind(this));
+	};
+
+	/**
+	* Instantiate an object by syncType.
+	* @param {String} syncType Type of object to instantiate.
+	* @param {Object} initData An object containing initialization data, passed
+	* to the instantiator.
+	* @param {Boolean} destroyOnDisconnect If the object should be destroyed
+	* across all synced instance when the instantiating instance disconnects.
+	* @returns {Object3DSync}
+	*/
+	SceneSync.prototype.instantiate = function instantiate (syncType, initData, destroyOnDisconnect)
+	{
+		if ( initData === void 0 ) initData = {};
+
+		var objectRef = this.sceneRef.push({ syncType: syncType, initData: initData },
+			function (error) { if (error) { throw Error('Failed to save to Firebase', error); } }
+		);
+
+		if(destroyOnDisconnect){
+			objectRef.onDisconnect().remove();//send remvoe_child to remote clients
+		}
+
+		//instantiation done, local child_added callback happens syncronously with push
+		var object = objectForKey[objectRef.key()];
+		object.getBehaviorByType('Object3DSync').takeOwnership();
+		return object;
+	};
+
+	SceneSync.prototype.onInstantiate = function onInstantiate (snapshot)
+	{
+		var data = snapshot.val();
+		var key = snapshot.key();
+		var instantiator = this.instantiators[data.syncType];
+
+		if (!instantiator) {
+			console.warn('No instantiator found for syncType: ' + data.syncType);
+			return;
+		}
+
+		var object3d = instantiator(data.initData, data.syncType);
+		if (!object3d) {
+			console.error(data.syncType + '.create must return an Object3D');
+			return;
+		}
+		objectForKey[key] = object3d;
+		keyForUuid[object3d.uuid] = key;
+
+		var syncBehavior = object3d.getBehaviorByType('Object3DSync');
+		if (!syncBehavior) {
+			console.error(data.syncType + ' instantiator must return an Object3D with an Object3DSync behavior');
+			return;
+		}
+
+		syncBehaviors.push(syncBehavior);
+		syncBehavior.link(snapshot.ref(), this);
+	};
+
+	/**
+	* Destroy a synced object across instances.
+	* @param {Object} object3d The object to destroy.
+	*/
+	SceneSync.prototype.destroy = function destroy (object3d)
+	{
+		var key = keyForUuid[object3d.uuid];
+		if (!key) {
+			console.warn('Failed to find key for object3d to be destroyed', object3d);
+			return;
+		}
+		this.sceneRef.child(key).remove( function (error) {
+			if (error) { console.warn('Failed to remove from Firebase', error); }
+		});
+		this.sceneRef.child(key).off();//detach all callbacks
+	};
+
+	SceneSync.prototype.onDestroy = function onDestroy (snapshot)
+	{
+		var data = snapshot.val();
+		var key = snapshot.key();
+		var object3d = objectForKey[key];
+		if (!object3d) {
+			console.warn('Failed to find object matching deleted key', key);
+			return;
+		}
+		var syncType = data.syncType;
+		if (!syncType) {
+			console.warn('No syncType found for object being destroyed', object3d);
+			return;
+		}
+
+		function defaultDestroyer(object3d)
+		{
+			// remove all behaviors including this one
+			object3d.removeAllBehaviors();
+
+			// remove from scene or parent
+			if (object3d.parent) {
+				object3d.parent.remove(object3d);
+			}
+
+			if (object3d.geometry) {
+				object3d.geometry.dispose();
+			}
+
+			if (object3d.material) {
+				if (object3d.material.map) {
+					object3d.material.map.dispose();
+				}
+				object3d.material.dispose();
+			}
+		}
+
+		var customDestroyer = this.config.destroyers[syncType];
+		var shouldDefaultDestroy = !customDestroyer;
+
+		if (customDestroyer){
+			// returning true from a destroyer will additionally invoke the default destroyer
+			shouldDefaultDestroy = customDestroyer(object3d);
+		}
+
+		if (shouldDefaultDestroy)
+			{ defaultDestroyer(object3d); }
+
+		//remove from our local bookkeeping
+		delete objectForKey[key];
+		delete keyForUuid[object3d.uuid];
+	};
+
+	/**
+	* True if this client is the master, false otherwise. Master is generally the client that
+	* has been in the room the longest.
+	* @member {boolean} isMasterClient
+	* @memberof module:altspace/utilities/behaviors.SceneSync
+	*/
+	prototypeAccessors.isMasterClient.get = function (){ return this.masterClientId === this.clientId; };
+
+	Object.defineProperties( SceneSync.prototype, prototypeAccessors );
+
+	return SceneSync;
+}(Behavior));
+
+/**
+* The Spin behavior adds a spinning animation to an object.
+* @param {Object} [config]
+* @param {Number} [config.speed=0.0001] Rotation speed in radians per
+*  millisecond
+* @param {Vector3} [config.axis={0,1,0}] - The axis of rotation
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+var Spin = (function (Behavior$$1) {
+	function Spin(config) {
+		this.config = Object.assign(
+			{speed: 1e-4, axis: new THREE.Vector3(0,1,0)},
+			config
+		);
+		this.config.axis.normalize();
+		this.object3d = null;
+	}
+
+	if ( Behavior$$1 ) Spin.__proto__ = Behavior$$1;
+	Spin.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Spin.prototype.constructor = Spin;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'Spin'; };
+
+	Spin.prototype.awake = function awake (o) {
+		this.object3d = o;
+	};
+
+	Spin.prototype.update = function update (deltaTime) {
+		this.object3d.rotateOnAxis(this.config.axis, this.config.speed * deltaTime);
+	};
+
+	Object.defineProperties( Spin.prototype, prototypeAccessors );
+
+	return Spin;
+}(Behavior));
+
+// Returns a Promise that resovles static when a steamvr controller is found
+function getController(hand, config) {
+	var findGamepad = function (resolve, reject) {
+		var gamepad = altspace.getGamepads().find(function (g) { return g.mapping === 'steamvr' && g.hand === hand; });
+		if (gamepad) {
+			if(config.logging) { console.log("SteamVR input device found", gamepad); }
+			resolve(gamepad);
+		} else {
+			if(config.logging) { console.log("SteamVR input device not found trying again in 500ms..."); }
+			setTimeout(findGamepad, 500, resolve, reject);
+		}
+	};
+
+	return new Promise(findGamepad);
+}
+
+/**
+* The SteamVRInput behavior manages SteamVR input devices. It should be added
+* to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
+*
+* @param {Object} [config]
+* @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*
+* @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
+* @prop {Gamepad} rightController the right SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
+* @prop {Gamepad} firstController the first SteamVR [Gamepad]{@link module:altspace~Gamepad}  or undefined if none have yet been found
+*
+* @prop {Promise} leftControllerPromise a promise that resolves once the left SteamVR input device is found
+* @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
+* @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
+*/
+var SteamVRInputBehavior = (function (Behavior$$1) {
+	function SteamVRInputBehavior(config) {
+		this.config = Object.assign({logging: false}, config);
+	}
+
+	if ( Behavior$$1 ) SteamVRInputBehavior.__proto__ = Behavior$$1;
+	SteamVRInputBehavior.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SteamVRInputBehavior.prototype.constructor = SteamVRInputBehavior;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'SteamVRInput'; };
+
+	SteamVRInputBehavior.prototype.awake = function awake () {
+		var this$1 = this;
+
+		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
+		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
+		this.firstControllerPromise = Promise.race([
+			this.leftControllerPromise,
+			this.rightControllerPromise ]);
+
+		this.leftControllerPromise.then(function (controller) {
+			this$1.leftController = controller;
+		});
+		this.rightControllerPromise.then(function (controller) {
+			this$1.rightController = controller;
+		});
+		this.firstControllerPromise.then(function (controller) {
+			this$1.firstController = controller;
+
+			var blockedAxes = controller.axes.map(function () { return false; });
+			var blockedButtons = controller.buttons.map(function () { return false; });
+
+			blockedButtons[SteamVRInputBehavior.BUTTON_TRIGGER] = true;
+			blockedButtons[SteamVRInputBehavior.BUTTON_TOUCHPAD] = true;
+
+			controller.preventDefault(blockedAxes, blockedButtons);
+		});
+	};
+
+	Object.defineProperties( SteamVRInputBehavior.prototype, prototypeAccessors );
+
+	return SteamVRInputBehavior;
+}(Behavior));
+
+SteamVRInputBehavior.BUTTON_TRIGGER = 0;
+SteamVRInputBehavior.BUTTON_GRIP = 1;
+SteamVRInputBehavior.BUTTON_TOUCHPAD = 2;
+SteamVRInputBehavior.BUTTON_DPAD_UP = 3;
+SteamVRInputBehavior.BUTTON_DPAD_RIGHT = 4;
+SteamVRInputBehavior.BUTTON_DPAD_DOWN = 5;
+SteamVRInputBehavior.BUTTON_DPAD_LEFT = 6;
+
+SteamVRInputBehavior.AXIS_TOUCHPAD_X = 0;
+SteamVRInputBehavior.AXIS_TOUCHPAD_Y = 1;
+
+SteamVRInputBehavior.FIRST_CONTROLLER = 'first';
+SteamVRInputBehavior.LEFT_CONTROLLER = 'left';
+SteamVRInputBehavior.RIGHT_CONTROLLER = 'right';
+
+/**
+* The SteamVRTrackedObject behavior updates an objects position and rotation to
+* match the location of a SteamVR input device.
+*
+* A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
+* must be on the scene containing this object for it to function properly.
+*
+* @param {Object} [config]
+* @param {string} [config.hand="first"] the input device to track. Eitehr SteamVRInput.LEFT_CONTROLLER, SteamVRInput.RIGHT_CONTROLLER, or SteamVRInput.FIRST_CONTROLLER
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+
+var SteamVRTrackedObject = (function (Behavior$$1) {
+	function SteamVRTrackedObject(ref) {
+		var hand = ref.hand; if ( hand === void 0 ) hand = 'first';
+
+		this._hand = hand;
+	}
+
+	if ( Behavior$$1 ) SteamVRTrackedObject.__proto__ = Behavior$$1;
+	SteamVRTrackedObject.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SteamVRTrackedObject.prototype.constructor = SteamVRTrackedObject;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'SteamVRTrackedObject'; };
+
+	SteamVRTrackedObject.prototype.awake = function awake (object3d, scene) {
+		this._object3d = object3d;
+		this._scene = scene;
+
+		this._steamVRInput = this._scene.getBehaviorByType('SteamVRInput');
+	};
+
+	SteamVRTrackedObject.prototype.update = function update () {
+		var controller = this._steamVRInput[this._hand + "Controller"];
+		var object3d = this._object3d;
+
+		if (controller) {
+			var ref = controller.position;
+			var x = ref.x;
+			var y = ref.y;
+			var z = ref.z;
+			object3d.position.set(x, y, z);
+
+			var ref$1 = controller.rotation;
+			var x = ref$1.x;
+			var y = ref$1.y;
+			var z = ref$1.z;
+			var w = ref$1.w;
+			object3d.quaternion.set(x, y, z, w);
+		}
+	};
+
+	Object.defineProperties( SteamVRTrackedObject.prototype, prototypeAccessors );
+
+	return SteamVRTrackedObject;
+}(Behavior));
+
+/**
+* Spin an object with the GearVR touchpad
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+var TouchpadRotate = (function (Behavior$$1) {
+	function TouchpadRotate(config)
+	{
+		if ( config === void 0 ) config = {};
+
+		this.object3d = null;
+		this.scene = null;
+		this.startingRotation = null;
+		this.activelyRotating = false;
+		this.lastDisplacementX = 0;
+		this.runningCount = 5;
+		this.runningAverageVelocityX = 0;
+	}
+
+	if ( Behavior$$1 ) TouchpadRotate.__proto__ = Behavior$$1;
+	TouchpadRotate.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	TouchpadRotate.prototype.constructor = TouchpadRotate;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'TouchpadRotate'; };
+
+	TouchpadRotate.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+
+		altspace.addEventListener('touchpadup', this.onTouchpadUp.bind(this));
+		altspace.addEventListener('touchpaddown', this.onTouchpadDown.bind(this));
+		altspace.addEventListener('touchpadmove', this.onTouchpadMove.bind(this));
+	};
+
+	TouchpadRotate.prototype.update = function update (deltaTime) {
+		if (!this.activelyRotating && Math.abs(this.runningAverageVelocityX) > 0.01) {
+			this.object3d.rotation.y += this.runningAverageVelocityX;
+			this.runningAverageVelocityX *= 0.97;
+		}
+	};
+
+	TouchpadRotate.prototype.onTouchpadUp = function onTouchpadUp (event) {
+		this.activelyRotating = false;
+	};
+
+	TouchpadRotate.prototype.onTouchpadDown = function onTouchpadDown (event) {
+		this.activelyRotating = true;
+		this.startingRotation = this.object3d.rotation.clone();
+	};
+
+	TouchpadRotate.prototype.onTouchpadMove = function onTouchpadMove (event) {
+		var deltaX = event.displacementX - this.lastDisplacementX;
+		this.object3d.rotation.set(
+			this.startingRotation.x,
+			this.startingRotation.y + event.displacementX / 300,
+			this.startingRotation.z
+		);
+
+		this.runningAverageVelocityX = (this.runningAverageVelocityX * this.runningCount + deltaX/300) / (this.runningCount + 1);
+		this.lastDisplacementX = event.displacementX;
+	};
+
+	Object.defineProperties( TouchpadRotate.prototype, prototypeAccessors );
+
+	return TouchpadRotate;
 }(Behavior));
 
 /**
@@ -2529,7 +4495,20 @@ var Bob = (function (Behavior$$1) {
 
 var index$3 = Object.freeze({
 	Behavior: Behavior,
-	Bob: Bob
+	Bob: Bob,
+	ButtonStateStyle: ButtonStateStyle,
+	Drag: Drag,
+	GamepadControls: GamepadControls,
+	HoverColor: HoverColor,
+	HoverScale: HoverScale,
+	JointCollisionEvents: JointCollisionEvents,
+	Layout: Layout,
+	Object3DSync: Object3DSync,
+	SceneSync: SceneSync,
+	Spin: Spin,
+	SteamVRInput: SteamVRInputBehavior,
+	SteamVRTrackedObject: SteamVRTrackedObject,
+	TouchpadRotate: TouchpadRotate
 });
 
 
@@ -2565,4 +4544,4 @@ exports.components = index;
 exports.utilities = index$1;
 exports.version = version;
 
-}((this.altspace = this.altspace || {}),Please,Url));
+}((this.altspace = this.altspace || {}),Firebase,Url,Please));

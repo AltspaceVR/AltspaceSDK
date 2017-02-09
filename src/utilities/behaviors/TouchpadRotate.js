@@ -1,57 +1,64 @@
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+'use strict';
 
-altspace.utilities.behaviors.TouchpadRotate = function (config) {
-	config = config || {};
+import Behavior from './Behavior';
 
-	var object3d;
-	var scene;
+/**
+* Spin an object with the GearVR touchpad
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+class TouchpadRotate extends Behavior
+{
+	get type(){ return 'TouchpadRotate'; }
 
-	var startingRotation;
-
-	var activelyRotating = false;
-
-	function awake(o, s) {
-		object3d = o;
-		scene = s;
-
-		altspace.addEventListener('touchpadup', onTouchpadUp);
-		altspace.addEventListener('touchpaddown', onTouchpadDown);
-		altspace.addEventListener('touchpadmove', onTouchpadMove);
+	constructor(config = {})
+	{
+		this.object3d = null;
+		this.scene = null;
+		this.startingRotation = null;
+		this.activelyRotating = false;
+		this.lastDisplacementX = 0;
+		this.runningCount = 5;
+		this.runningAverageVelocityX = 0;
 	}
 
-	function onTouchpadUp(event) {
-		activelyRotating = false;
+	awake(o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+
+		altspace.addEventListener('touchpadup', this.onTouchpadUp.bind(this));
+		altspace.addEventListener('touchpaddown', this.onTouchpadDown.bind(this));
+		altspace.addEventListener('touchpadmove', this.onTouchpadMove.bind(this));
 	}
 
-	function onTouchpadDown(event) {
-		activelyRotating = true;
-		startingRotation = object3d.rotation.clone();
-	}
-
-	var lastDisplacementX = 0;
-
-	var runningCount = 5;
-	var runningAverageVelocityX = 0;
-
-	function onTouchpadMove(event) {
-		var deltaX = event.displacementX - lastDisplacementX;
-		object3d.rotation.set(startingRotation.x, startingRotation.y + event.displacementX / 300, startingRotation.z);
-
-		runningAverageVelocityX = ((runningAverageVelocityX * runningCount) + deltaX / 300) / (runningCount + 1);
-		lastDisplacementX = event.displacementX;
-	}
-
-	function update(deltaTime) {
-		if (!activelyRotating && Math.abs(runningAverageVelocityX) > 0.01) {
-			object3d.rotation.y += runningAverageVelocityX;
-			runningAverageVelocityX *= 0.97;
+	update(deltaTime) {
+		if (!this.activelyRotating && Math.abs(this.runningAverageVelocityX) > 0.01) {
+			this.object3d.rotation.y += this.runningAverageVelocityX;
+			this.runningAverageVelocityX *= 0.97;
 		}
 	}
 
-	function start() {
+	onTouchpadUp(event) {
+		this.activelyRotating = false;
 	}
 
-	return { awake: awake, start: start, update: update, type: 'TouchpadRotate' };
-};
+	onTouchpadDown(event) {
+		this.activelyRotating = true;
+		this.startingRotation = this.object3d.rotation.clone();
+	}
+
+	onTouchpadMove(event) {
+		var deltaX = event.displacementX - this.lastDisplacementX;
+		this.object3d.rotation.set(
+			this.startingRotation.x,
+			this.startingRotation.y + event.displacementX / 300,
+			this.startingRotation.z
+		);
+
+		this.runningAverageVelocityX = (this.runningAverageVelocityX * this.runningCount + deltaX/300) / (this.runningCount + 1);
+		this.lastDisplacementX = event.displacementX;
+	}
+}
+
+export default TouchpadRotate;
