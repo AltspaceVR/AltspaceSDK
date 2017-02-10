@@ -4,7 +4,7 @@
 
 'use strict';
 
-import {registerComponentClass, registerSystemClass, flatten} from './AFrameComponent';
+import {registerComponentClass, registerSystemClass} from './AFrameComponent';
 import AltspaceCursorCollider from './AltspaceCursorCollider';
 import AltspaceTrackedControls from './AltspaceTrackedControls';
 import AltspaceComponent from './AltspaceComponent';
@@ -19,13 +19,6 @@ import Wire from './wire';
 // TODO: finish porting aframe components to es6
 if (window.AFRAME)
 {
-    /**
-    * @mixin sync-system
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.SyncSystem
-    */
-    registerSystemClass('sync-system', SyncSystem);
-
     /**
     * @mixin altspace-cursor-collider
     * @memberof module:altspace/components
@@ -48,6 +41,13 @@ if (window.AFRAME)
     registerComponentClass('altspace', AltspaceComponent);
 
     /**
+    * @mixin sync-system
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.SyncSystem
+    */
+    registerSystemClass('sync-system', SyncSystem);
+
+    /**
     * @mixin sync-color
     * @memberof module:altspace/components
     * @extends module:altspace/components.SyncColor
@@ -61,6 +61,21 @@ if (window.AFRAME)
     */
     registerComponentClass('sync', SyncComponent);
 
+    /**
+    * @mixin sync-n-sound
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.SyncNSound
+    */
+    registerComponentClass('sync-n-sound', SyncNSound);
+
+    /**
+    * @mixin wire
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.Wire
+    */
+    registerComponentClass('wire', Wire);
 }
 
-export {AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem, SyncComponent, SyncColor, flatten };
+export {
+    AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
+    SyncComponent, SyncColor, SyncNSound, Wire };

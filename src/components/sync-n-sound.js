@@ -1,82 +1,93 @@
-/**
-* Synchronize the playback state of an {@link n.n-sound} component between clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
-* @mixin sync-n-sound
-* @memberof sync
-*/
 'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
 
-export default class SyncNSound extends AFrameComponent
+/**
+* Synchronize the playback state of an {@link n.n-sound} component between clients.
+* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
+* {@link sync.sync} component on the target entity.
+* @extends module:altspace/components.AFrameComponent
+* @memberof module:altspace/components
+*/
+class SyncNSound extends AFrameComponent
 {
 	get dependencies(){
 		return ['sync'];
 	}
-}
 
-AFRAME.registerComponent('sync-n-sound',
-{
-	dependencies: ['sync'],
-	schema: { },
-	init: function () {
-		var component = this;
-		var sync = component.el.components.sync;
-		var scene = document.querySelector('a-scene');
-		var syncSys = scene.systems['sync-system'];
-		if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
+	init()
+	{
+		this.sync = this.el.components.sync;
+		this.scene = this.el.sceneEl;
+		this.syncSys = this.scene.systems['sync-system'];
 
-		function start(){
-			component.soundStateRef = sync.dataRef.child('sound/state');
-			component.soundEventRef = sync.dataRef.child('sound/event');
+		this.soundStateRef = null;
+		this.soundEventRef = null;
 
-			function sendEvent(event) {
-				if (!sync.isMine) return;
-				var event = {
-					type: event.type,
-					sender: syncSys.clientId,
-					el: component.el.id,
-					time: Date.now()
-				};
-				component.soundEventRef.set(event);
-			}
+		if(this.sync.isConnected)
+			this.start();
+		else
+			this.el.addEventListener('connected', this.start.bind(this));
+	}
 
-			component.el.addEventListener('sound-played', sendEvent);
-			component.el.addEventListener('sound-paused', sendEvent);
-
-			component.soundEventRef.on('value', function (snapshot) {
-				if (sync.isMine) return;
-				var event = snapshot.val();
-				if (!event) return;
-				if (event.el === component.el.id) {
-					var sound = component.el.components['n-sound'];
-					if (event.type === 'sound-played') {
-						sound.playSound();
-					}
-					else {
-						sound.pauseSound();
-					}
-				}
-			});
-
-			component.el.addEventListener('componentchanged', function (event) {
-				if (!sync.isMine) return;
-				var name = event.detail.name;
-				if (name !== 'n-sound') return;
-				component.soundStateRef.set(event.detail.newData);
-			});
-
-			component.soundStateRef.on('value', function (snapshot) {
-				if (sync.isMine) return;
-				var state = snapshot.val();
-				if (!state) return;
-				component.el.setAttribute('n-sound', state);
-			});
-		}
-	},
-	remove: function () {
+	remove()
+	{
 		this.soundStateRef.off('value');
 		this.soundEventRef.off('value');
 	}
-});
+
+	start()
+	{
+		this.soundStateRef = this.sync.dataRef.child('sound/state');
+		this.soundEventRef = this.sync.dataRef.child('sound/event');
+
+		function sendEvent(event) {
+			if (!this.sync.isMine) return;
+			var event = {
+				type: event.type,
+				sender: this.syncSys.clientId,
+				el: this.el.id,
+				time: Date.now()
+			};
+			this.soundEventRef.set(event);
+		}
+
+		this.el.addEventListener('sound-played', sendEvent.bind(this));
+		this.el.addEventListener('sound-paused', sendEvent.bind(this));
+
+		this.soundEventRef.on('value', (snapshot => {
+			if (this.sync.isMine)
+				return;
+
+			let event = snapshot.val();
+			if (!event)
+				return;
+
+			if (event.el === this.el.id) {
+				let sound = this.el.components['n-sound'];
+				if (event.type === 'sound-played') {
+					sound.playSound();
+				}
+				else {
+					sound.pauseSound();
+				}
+			}
+		}).bind(this));
+
+		this.el.addEventListener('componentchanged', (event => {
+			if (!this.sync.isMine) return;
+			let name = event.detail.name;
+			if (name !== 'n-sound') return;
+			this.soundStateRef.set(event.detail.newData);
+		}).bind(this));
+
+		this.soundStateRef.on('value', (snapshot => {
+			if (this.sync.isMine) return;
+			let state = snapshot.val();
+			if (!state) return;
+			this.el.setAttribute('n-sound', state);
+		}).bind(this));
+	}
+}
+
+export default SyncNSound;
