@@ -10,21 +10,31 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @class Object3DSync
  * @param {Object} [config]
  * @param {Boolean} [config.position=false] Whether object's position should
- *  be synced
+ *  be synced.
  * @param {Boolean} [config.rotation=false] Whether object's rotation should
- *  be synced
+ *  be synced.
  * @param {Boolean} [config.scale=false] Whether object's scale should
- *  be synced
+ *  be synced.
  * @param {Boolean} [config.auto=false] Whether the object should be synced 
  *  automatically. Not currently recommended.
  * @param {Boolean} [config.world=false] Whether world coordiantes should
  *  be sent when synchronizing position and rotation, instead of the
  *  transformation relative to the object's parent.  Use if synced object
  *  is a child (e.g. of the tracking skeleton) only in the sender scene.
+ * @param {Object} [config.lerp]
+ * @param {Boolean} [config.lerp.position=true] Whether object's position should
+ *  be linearly interpolated.
+ * @param {Boolean} [config.lerp.rotation=true] Whether object's rotation should
+ *  be spherically linearly interpolated.
+ * @param {Boolean} [config.lerp.scale=true] Whether object's scale should
+ *  be linearly interpolated.
+ * @param {Number} [config.lerp.duration=155] Duration that interpolation
+ *  should be applied over, in milliseconds.
  * @memberof module:altspace/utilities/behaviors
  **/
 window.altspace.utilities.behaviors.Object3DSync = function (config){
 	config = config || {};
+	config.lerp = config.lerp || {};
 	/*if (config.position === undefined) config.position = true;
 	if (config.rotation === undefined) config.rotation = true;
 	if (config.scale === undefined) config.scale = true; */
@@ -44,6 +54,21 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 	var scale = new THREE.Vector3();
 	var isEqual = require('lodash.isequal');
 
+	var lerp = {
+		duration: config.lerp.duration || 155,
+		position: (config.lerp.position === undefined || config.lerp.position) ? {
+			src: new THREE.Vector3(),
+			dest: new THREE.Vector3()
+		} : null,
+		quaternion: (config.lerp.rotation === undefined || config.lerp.rotation) ? {
+			src: new THREE.Quaternion(),
+			dest: new THREE.Quaternion()
+		} : null,
+		scale: (config.lerp.scale === undefined || config.lerp.scale) ? {
+			src: new THREE.Vector3(),
+			dest: new THREE.Vector3()
+		} : null
+	};
 
 	function link(objectRef, sS) {
 		ref = objectRef;
@@ -54,7 +79,6 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 		sceneSync = sS;
 	}
 
-	//TODO: lerp
 	function setupReceive() {
 		transformRef.on('value', function (snapshot) {
 
@@ -64,13 +88,69 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 			if (!value) return;
 
 			if (config.position) {
-				object3d.position.set(value.position.x, value.position.y, value.position.z);
+				if (lerp.position) {
+					var lerpPosition = lerp.position;
+
+					lerpPosition.src.copy(object3d.position);
+					lerpPosition.dest.set(value.position.x, value.position.y, value.position.z);
+
+					if (lerpPosition.progress === undefined) {
+						object3d.position.copy(lerpPosition.dest);
+						lerpPosition.progress = 1;
+						lerpPosition.elapsedTime = lerp.duration;
+					}
+					else {
+						lerpPosition.progress = 0;
+						lerpPosition.elapsedTime = 0;
+					}
+				}
+				else {
+					object3d.position.set(value.position.x, value.position.y, value.position.z);
+				}
 			}
+
 			if (config.rotation) {
-				object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
+				if(lerp.quaternion) {
+					var lerpQuaternion = lerp.quaternion;
+
+					lerpQuaternion.src.copy(object3d.quaternion);
+					lerpQuaternion.dest.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
+
+					if (lerpQuaternion.progress === undefined) {
+						object3d.quaternion.copy(lerpQuaternion.dest);
+						lerpQuaternion.progress = 1;
+						lerpQuaternion.elapsedTime = lerp.duration;
+					}
+					else {
+						lerpQuaternion.progress = 0;
+						lerpQuaternion.elapsedTime = 0;
+					}
+				}
+				else {
+					object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
+				}
 			}
+
 			if (config.scale) {
-				object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
+				if(lerp.scale) {
+					var lerpScale = lerp.scale;
+
+					lerpScale.src.copy(object3d.scale);
+					lerpScale.dest.set(value.scale.x, value.scale.y, value.scale.z);
+
+					if (lerpScale.progress === undefined) {
+						object3d.scale.copy(lerpScale.dest);
+						lerpScale.progress = 1;
+						lerpScale.elapsedTime = lerp.duration;
+					}
+					else {
+						lerpScale.progress = 0;
+						lerpScale.elapsedTime = 0;
+					}
+				}
+				else {
+					object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
+				}
 			}
 		});
 
@@ -136,7 +216,38 @@ window.altspace.utilities.behaviors.Object3DSync = function (config){
 	}
 
 	function update(deltaTime) {
-		
+		if (config.rotation && lerp.quaternion) {
+			var lerpQuaternion = lerp.quaternion;
+
+			if (lerpQuaternion.progress !== undefined && lerpQuaternion.progress < 1) {
+				lerpQuaternion.elapsedTime = THREE.Math.clamp(lerpQuaternion.elapsedTime + deltaTime, 0, lerp.duration);
+				lerpQuaternion.progress = THREE.Math.clamp(lerpQuaternion.elapsedTime / lerp.duration, 0, 1);
+
+				THREE.Quaternion.slerp(lerpQuaternion.src, lerpQuaternion.dest, object3d.quaternion, lerpQuaternion.progress);
+			}
+		}
+
+		if (config.position && lerp.position) {
+			var lerpPosition = lerp.position;
+
+			if (lerpPosition.progress !== undefined && lerpPosition.progress < 1) {
+				lerpPosition.elapsedTime = THREE.Math.clamp(lerpPosition.elapsedTime + deltaTime, 0, lerp.duration);
+				lerpPosition.progress = THREE.Math.clamp(lerpPosition.elapsedTime / lerp.duration, 0, 1);
+
+				object3d.position.lerpVectors(lerpPosition.src, lerpPosition.dest, lerpPosition.progress);
+			}
+		}
+
+		if (config.scale && lerp.scale) {
+			var lerpScale = lerp.scale;
+
+			if (lerpScale.progress !== undefined && lerpScale.progress < 1) {
+				lerpScale.elapsedTime = THREE.Math.clamp(lerpScale.elapsedTime + deltaTime, 0, lerp.duration);
+				lerpScale.progress = THREE.Math.clamp(lerpScale.elapsedTime / lerp.duration, 0, 1);
+
+				object3d.scale.lerpVectors(lerpScale.src, lerpScale.dest, lerpScale.progress);
+			}
+		}
 	}
 
 	/**
