@@ -3,8 +3,8 @@
 /**
 * This namespace describes strings that are valid inputs to the various native
 * components. Some components can only take certain types of resources, i.e.
-* {@link n.n-spawner} can only accept `interactables`.
-* @namespace resources
+* [n-spawner]{@link module:altspace/components.n-spawner} can only accept `interactables`.
+* @module altspace/resources
 * @example <a-entity n-object='res: architecture/ceiling-2w-2l'></a-entity>
 */
 
@@ -13,7 +13,7 @@
 * the piece extends out toward -X and +Z.
 * @name architecture
 * @enum architecture
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop architecture/ceiling-2w-2l
 * @prop architecture/ceiling-4w-4l
@@ -79,7 +79,7 @@
 * Particle systems and other native effects
 * @name effects
 * @enum effects
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop effects/explosion - A particle system with a central flash, then debris flying outward.
 * This is a non-looping effect.
@@ -96,7 +96,7 @@
 * Objects that can be picked up, thrown, and otherwise interacted with.
 * @name interactables
 * @enum interactables
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop interactables/basketball
 * @prop interactables/bowlingball
@@ -112,7 +112,7 @@
 * Static models that you can place in your scene.
 * @name objects
 * @enum objects
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop objects/basketball-hoop
 * @prop objects/coin
@@ -127,7 +127,7 @@
 * A selection of pipes/chutes/etc.
 * @name pipes
 * @enum pipes
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop pipes/pipe-full-cap-1d
 * @prop pipes/pipe-full-cross-1d
@@ -151,7 +151,7 @@
 * Common UI sounds can be used for a consistent UI experience.
 * @name sounds-ui
 * @enum sounds-ui
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop ui/select
 * @prop ui/toggle
@@ -168,7 +168,7 @@
 * Foley sounds are real sounds designed for tangible, touchable objects as they are heard in the real world.
 * @name sounds-foley
 * @enum sounds-foley
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop foley/metal-scrape
 * @prop foley/metal-clack
@@ -182,7 +182,7 @@
 * Effect sounds for a variety of use cases.
 * @name sounds-effects
 * @enum sounds-effects
-* @memberof resources
+* @memberof module:altspace/resources
 *
 * @prop effects/fanfare-succeed - The "success!" sound from Holograms Against Humanity.
 * @prop effects/fanfare-start - The "Game has started!" sound from HaH.
