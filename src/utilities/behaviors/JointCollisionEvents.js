@@ -44,12 +44,13 @@ window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
  * @memberof module:altspace/utilities/behaviors
  **/
 altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
-	var object3d;
 	var config = _config || {};
 
 	config.jointCubeSize = config.jointCubeSize || 15;
 	config.joints = config.joints || altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS;
 
+	var object3d;
+	var scene;
 	var skeleton;
 	var jointCube;
 	var hasCollided = false;
@@ -68,37 +69,47 @@ altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
 				}
 			});
 
-			if(skel) return resolve(skel);
-
-			// Skeleton has not been assigned to scene yet
-			altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
-				skel = trackingSkeleton;
-				scene.add(skel);
+			if (skel) {
 				return resolve(skel);
-			});
+			} else {
+				// Skeleton has not been assigned to scene yet
+				altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
+					scene.add(trackingSkeleton);
+					skeleton = trackingSkeleton;
+					return resolve(skeleton);
+				});
+			}
+
 		});
 	}
 
 	function awake(o, s) {
 		object3d = o;
+		scene = s;
 
-		// Get the tracking skeleton
-		initSkeleton(s).then(function(_skeleton) {
-			// Attach skeleton
-			skeleton = _skeleton;
+		jointCube = new THREE.Vector3(
+			config.jointCubeSize,
+			config.jointCubeSize,
+			config.jointCubeSize
+		);
 
-			jointCube = new THREE.Vector3(
-				config.jointCubeSize,
-				config.jointCubeSize,
-				config.jointCubeSize
-			);
-		}).catch(function (err) {
-			console.log('Failed to get tracking skeleton', err);
-		});
 	}
 
 	function update(deltaTime) {
-		if(!skeleton) return;
+
+		if(!skeleton) {
+			// Get the tracking skeleton
+			initSkeleton(scene).then(function(_skeleton) {
+
+				// Attach skeleton
+				skeleton = _skeleton;
+
+			}).catch(function(err) {
+				console.log('Failed to get tracking skeleton', err);
+			});
+
+			return;
+		}
 
 		// Collect joints based on joints config option
 		var joints = [];
