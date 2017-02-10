@@ -9,7 +9,7 @@
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
 <script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
 <script src="https://cdn.rawgit.com/schteppe/cannon.js/v0.6.2/build/cannon.min.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="../dist/altspace.js"></script>
 </head>
 
 <body>
@@ -20,21 +20,28 @@ sim.camera.position.z = 30;
 var physicsWorld = new CANNON.World();
 physicsWorld.gravity.set(0, -9.82 * 5, 0);
 
-var modelPromise = new Promise(function (resolve, reject) {
-	var loader = new altspace.utilities.shims.OBJMTLLoader();
-	loader.load('models/dice/d6_high.obj', 'models/dice/d6_high.mtl', resolve);
-});
-
 var config = { authorId: 'AltspaceVR', appId: 'SyncedDice' };
-Promise.all([
-	modelPromise,
-	altspace.utilities.sync.connect(config),
-	altspace.inClient ? altspace.getEnclosure() : Promise.resolve()
-]).then(function(results) {
-	var dieModel = results.shift();
+
+altspace.utilities.sync.connect(config).then(initApp);
+
+function initApp(connection) {
+	var modelPromise = new Promise(function (resolve, reject) {
+		var loader = new altspace.utilities.shims.OBJMTLLoader();
+		loader.load('models/dice/d6_high.obj', 'models/dice/d6_high.mtl', resolve);
+	});
+
+	Promise.all([
+		modelPromise,
+		altspace.inClient ? altspace.getEnclosure() : Promise.resolve()
+	]).then(function(resources) {
+		startApp(connection, resources);
+	});
+}
+
+function startApp(connection, resources) {
+	var dieModel = resources.shift();
 	dieModel.scale.multiplyScalar(0.2);
-	var connection = results.shift();
-	var enclosure = results.shift();
+	var enclosure = resources.shift();
 
 	var controls;
 	if (altspace.inClient) {
@@ -46,7 +53,7 @@ Promise.all([
 
 	function createFloor() {
 		var bottom = -10;
-		var floor = new CANNON.Body({ 
+		var floor = new CANNON.Body({
 			mass: 0,
 			shape: new CANNON.Plane(),
 			position: new CANNON.Vec3(0, bottom, 0)
@@ -143,10 +150,7 @@ Promise.all([
 	createRollButton();
 
 	loop(0);
-
-}).catch(function (err) {
-	console.error(err.toString(), err);
-});
+}
 </script>
 </body>
 </html>

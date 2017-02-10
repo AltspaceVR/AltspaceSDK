@@ -1,3 +1,4 @@
+/* global Url */
 /**
  * The Sync utility is currently based on Firebase. It provides a quick way
  * to synchronize apps between users (even when they are running outside of
@@ -131,6 +132,11 @@ altspace.utilities.sync = (function () {
 	 * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
 	 * Returns a promise that will fulfill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
 	 *
+	 * Note: Calling this method will cause a reload of the app, since it adds an 'altspace-sync-instance' query
+	 * parameter to the app's url. Best practice is to establish a sync connection first, before you load any resources
+	 * or render anything in your app. The promise returned by this method will be rejected the first time it is called,
+	 * while the app reloads with the new sync instance id.
+	 *
 	 * @method connect
 	 * @param {Object} config
 	 * @param {String} config.authorId A unique identifier for yourself or your organization
@@ -154,6 +160,23 @@ altspace.utilities.sync = (function () {
 
 		// Gather query paramaters (some may only be used as testing overrides)
 		var instanceId = config.instanceId || url.query['altspace-sync-instance'];
+
+		var refs = {};
+		var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
+		refs.app = baseRef.child(projectId).child('app');
+		var instancesRef = refs.app.child('instances');
+		if (instanceId) {
+			refs.instance = instancesRef.child(instanceId);
+		}
+		else {
+			refs.instance = instancesRef.push();
+			instanceId = refs.instance.key();
+			url.query['altspace-sync-instance'] = instanceId;
+			window.location.href = url.toString();
+			// bail early and allow the page to reload
+			return Promise.reject(new Error('Sync instance id not found. Reloading app with new sync id.'));
+		}
+
 		var spaceId = config.spaceId || url.query['altspace-sync-space'];
 		var userId = config.userId || url.query['altspace-sync-user'];
 
@@ -167,31 +190,6 @@ altspace.utilities.sync = (function () {
 			if (!userId) tasks.unshift(altspace.getUser());
 		}
 
-		function getRefs() {
-			var refs = {};
-
-			var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
-			refs.app = baseRef.child(projectId).child('app');
-			refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
-			refs.user = userId ? refs.app.child('users').child(userId) : null;
-
-			var instancesRef = refs.app.child('instances');
-			if (instanceId) {
-				refs.instance = instancesRef.child(instanceId);
-			} else {
-				refs.instance = instancesRef.push();
-				instanceId = refs.instance.key();
-			}
-			return refs;
-		}
-
-		function updateUrl() {
-			if (!url.query['altspace-sync-instance']) {
-				url.query['altspace-sync-instance'] = instanceId;
-				window.location.href = url.toString();
-			}
-		}
-
 		return Promise.all(tasks).then(function (results) {
 			if (inAltspace) {
 				if (!spaceId) spaceId = results.pop().sid;
@@ -202,9 +200,10 @@ altspace.utilities.sync = (function () {
 			userId = dashEscape(userId);
 			instanceId = dashEscape(instanceId);
 
-			var connection = getRefs();
+			refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
+			refs.user = userId ? refs.app.child('users').child(userId) : null;
 
-			updateUrl();
+			var connection = refs;
 
 			return connection;
 		});
