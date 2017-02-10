@@ -16,66 +16,97 @@ import SyncNSound from './sync-n-sound';
 //import NativeComponents from './native-components';
 import Wire from './wire';
 
-// TODO: finish porting aframe components to es6
+import {NObject, NSpawner, NText, NBillboard} from './NSmallComponents';
+
 if (window.AFRAME)
 {
-    /**
-    * @mixin altspace-cursor-collider
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.AltspaceCursorCollider
-    */
-    registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
+	/**
+	* @mixin altspace-cursor-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.AltspaceCursorCollider
+	*/
+	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
 
-    /**
-    * @mixin altspace-tracked-controls
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.AltspaceTrackedControls
-    */
-    registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
+	/**
+	* @mixin altspace-tracked-controls
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.AltspaceTrackedControls
+	*/
+	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
 
-    /**
-    * @mixin altspace
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.AltspaceComponent
-    */
-    registerComponentClass('altspace', AltspaceComponent);
+	/**
+	* @mixin altspace
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.AltspaceComponent
+	*/
+	registerComponentClass('altspace', AltspaceComponent);
 
-    /**
-    * @mixin sync-system
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.SyncSystem
-    */
-    registerSystemClass('sync-system', SyncSystem);
+	/**
+	* @mixin sync-system
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncSystem
+	*/
+	registerSystemClass('sync-system', SyncSystem);
 
-    /**
-    * @mixin sync-color
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.SyncColor
-    */
-    registerComponentClass('sync-color', SyncColor);
+	/**
+	* @mixin sync-color
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncColor
+	*/
+	registerComponentClass('sync-color', SyncColor);
 
-    /**
-    * @mixin sync
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.SyncComponent
-    */
-    registerComponentClass('sync', SyncComponent);
+	/**
+	* @mixin sync
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncComponent
+	*/
+	registerComponentClass('sync', SyncComponent);
 
-    /**
-    * @mixin sync-n-sound
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.SyncNSound
-    */
-    registerComponentClass('sync-n-sound', SyncNSound);
+	/**
+	* @mixin sync-n-sound
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncNSound
+	*/
+	registerComponentClass('sync-n-sound', SyncNSound);
 
-    /**
-    * @mixin wire
-    * @memberof module:altspace/components
-    * @extends module:altspace/components.Wire
-    */
-    registerComponentClass('wire', Wire);
+	/**
+	* @mixin wire
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.Wire
+	*/
+	registerComponentClass('wire', Wire);
+
+	/**
+	* @mixin n-object
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NObject
+	*/
+	registerComponentClass('n-object', NObject);
+
+	/**
+	* @mixin n-spawner
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NSpawner
+	*/
+	registerComponentClass('n-spawner', NSpawner);
+
+	/**
+	* @mixin n-text
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NText
+	*/
+	registerComponentClass('n-text', NText);
+
+	/**
+	* @mixin n-billboard
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NBillboard
+	*/
+	registerComponentClass('n-billboard', NBillboard);
 }
 
 export {
-    AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
-    SyncComponent, SyncColor, SyncNSound, Wire };
+	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
+	SyncComponent, SyncColor, SyncNSound, Wire,
+	NObject, NSpawner, NText, NBillboard
+};
