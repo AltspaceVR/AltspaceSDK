@@ -15,25 +15,24 @@
 GamepadCube = (function(){
 
 	var sim;
+	var connection;
 	var sceneSync;
 	var cube;
 	var cubeModel;
 
 	// Setup
-	function main() {
+	function main(_connection) {
+		connection = _connection
 		sim = altspace.utilities.Simulation();
 		loadCubeModel();//must load model before creating synced cube
 	}
 
 	function onModelReady() {
-		var config = { authorId: 'AltspaceVR', appId: 'GamepadCube' };
-		altspace.utilities.sync.connect(config).then(function(connection) {
-			sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
-				instantiators: {'Cube': createCube },
-				ready: ready
-			});
-			sim.scene.addBehavior(sceneSync);
+		sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+			instantiators: {'Cube': createCube },
+			ready: ready
 		});
+		sim.scene.addBehavior(sceneSync);
 	}
 
 	function loadCubeModel() {
@@ -67,7 +66,7 @@ GamepadCube = (function(){
 		}
 	}
 
-	return { 
+	return {
 		main: main,
 		getCube: function(){ return cube; },
 	};
@@ -75,7 +74,10 @@ GamepadCube = (function(){
 }());
 
 
-GamepadCube.main();
+var config = { authorId: 'AltspaceVR', appId: 'GamepadCube' };
+altspace.utilities.sync.connect(config).then(function(connection) {
+	GamepadCube.main(connection);
+});
 
 </script>
 </html>

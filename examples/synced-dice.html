@@ -28,15 +28,17 @@ function initApp(connection) {
 	var modelPromise = new Promise(function (resolve, reject) {
 		var loader = new altspace.utilities.shims.OBJMTLLoader();
 		loader.load('models/dice/d6_high.obj', 'models/dice/d6_high.mtl', resolve);
-	}); 
+	});
 
 	Promise.all([
-		modelPromise(),
+		modelPromise,
 		altspace.inClient ? altspace.getEnclosure() : Promise.resolve()
-	]).then(startApp);
+	]).then(function(resources) {
+		startApp(connection, resources);
+	});
 }
 
-function startApp(resources) {
+function startApp(connection, resources) {
 	var dieModel = resources.shift();
 	dieModel.scale.multiplyScalar(0.2);
 	var enclosure = resources.shift();
@@ -51,7 +53,7 @@ function startApp(resources) {
 
 	function createFloor() {
 		var bottom = -10;
-		var floor = new CANNON.Body({ 
+		var floor = new CANNON.Body({
 			mass: 0,
 			shape: new CANNON.Plane(),
 			position: new CANNON.Vec3(0, bottom, 0)
