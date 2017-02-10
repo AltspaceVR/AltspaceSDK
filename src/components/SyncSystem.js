@@ -5,9 +5,9 @@ import {AFrameSystem} from './AFrameComponent';
 /**
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
-* [altspace.utilities.sync.connect]{@link http://altspacevr.github.io/AltspaceSDK/doc/module-altspace_utilities_sync.html#.connect}.
+* [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
 * This component must be present on `a-scene` for any other sync components to work.
-* @extends AFrameSystem
+* @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
 class SyncSystem extends AFrameSystem

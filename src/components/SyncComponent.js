@@ -1,29 +1,15 @@
-/**
-* Enables the synchronization of properties of entities. All property sync components
-* require both a {@link sync.sync-system} on `a-scene`, and a {@link sync.sync}
-* on the entity to be synced.
-* @name sync
-* @namespace sync
-* @example
-* <a-scene sync-system='app: example sync; author: altspacevr'>
-*   <a-entity sync='ownOn: cursordown' sync-color></a-entity>
-* </a-scene>
-*/
-
-/**
-* Enables the synchronization of properties of the entity. Must be used in
-* conjuction with the {@link sync.sync-system} component and a component for a
-* specific property (e.g. {@link sync.sync-transform}).
-* @memberof sync
-* @mixin sync
-* @prop {string} ownOn - The name of the event, or a list of events, that
-* will cause the local client to take ownership of this object. This field
-* cannot be updated after initialization.
-*/
+'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
 
-export default class SyncComponent extends AFrameComponent
+/**
+* Enables the synchronization of properties of the entity. Must be used in
+* conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
+* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}).
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+class SyncComponent extends AFrameComponent
 {
 	constructor(isComponent = false)
 	{
@@ -47,6 +33,11 @@ export default class SyncComponent extends AFrameComponent
 		this.isMine = false;
 	}
 
+	/**
+	* @prop {string} ownOn - The name of the event, or a list of events, that
+	* will cause the local client to take ownership of this object. This field
+	* cannot be updated after initialization.
+	*/
 	get schema(){
 		return {
 			mode: { default: 'link' },
@@ -162,3 +153,5 @@ export default class SyncComponent extends AFrameComponent
 		}).bind(this));
 	}
 }
+
+export default SyncComponent;

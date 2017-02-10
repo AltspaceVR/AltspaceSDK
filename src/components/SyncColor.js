@@ -1,15 +1,16 @@
-/**
-* Sync the color property of the object between clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
-* @mixin sync-color
-* @memberof sync
-*/
 'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
 
-export default class SyncColor extends AFrameComponent
+/**
+* Sync the color property of the object between clients.
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity.
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+
+class SyncColor extends AFrameComponent
 {
 	get dependencies(){
 		return ['sync'];
@@ -60,3 +61,5 @@ export default class SyncColor extends AFrameComponent
 		});
 	}
 }
+
+export default SyncColor;

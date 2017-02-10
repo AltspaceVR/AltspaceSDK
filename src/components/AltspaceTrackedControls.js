@@ -1,14 +1,14 @@
-/**
-* Enables tracked control support for A-Frame applications that use the built-in
-* `tracked-controls`, `vive-controls` or `hand-controls` components.
-* @mixin altspace-tracked-controls
-* @memberof altspace
-*/
 'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
 
-export default class AltspaceTrackedControls extends AFrameComponent
+/**
+* Enables tracked control support for A-Frame applications that use the built-in
+* `tracked-controls`, `vive-controls` or `hand-controls` components.
+* @extends module:altspace/components.AFrameComponent
+* @memberof module:altspace/components
+*/
+class AltspaceTrackedControls extends AFrameComponent
 {
 	init()
 	{
@@ -48,3 +48,5 @@ export default class AltspaceTrackedControls extends AFrameComponent
 		}
 	}
 }
+
+export default AltspaceTrackedControls;

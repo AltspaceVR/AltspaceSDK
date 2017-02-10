@@ -22,14 +22,43 @@ if (window.AFRAME)
     /**
     * @mixin sync-system
     * @memberof module:altspace/components
-    * @see {@link module:altspace/components.SyncSystem}
+    * @extends module:altspace/components.SyncSystem
     */
     registerSystemClass('sync-system', SyncSystem);
 
+    /**
+    * @mixin altspace-cursor-collider
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.AltspaceCursorCollider
+    */
     registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
+
+    /**
+    * @mixin altspace-tracked-controls
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.AltspaceTrackedControls
+    */
     registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
+
+    /**
+    * @mixin altspace
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.AltspaceComponent
+    */
     registerComponentClass('altspace', AltspaceComponent);
+
+    /**
+    * @mixin sync-color
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.SyncColor
+    */
     registerComponentClass('sync-color', SyncColor);
+
+    /**
+    * @mixin sync
+    * @memberof module:altspace/components
+    * @extends module:altspace/components.SyncComponent
+    */
     registerComponentClass('sync', SyncComponent);
 
 }

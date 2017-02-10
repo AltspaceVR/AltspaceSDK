@@ -1,20 +1,11 @@
-/**
-* @namespace altspace
-*/
+'use strict';
+
+import {AFrameComponent} from './AFrameComponent';
 
 /**
 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
-* @mixin altspace
-* @memberof altspace
-* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
-* This is the default behavior for three.js apps, but not for A-Frame apps.
-* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
-* or `top` of the Altspace enclosure.
-* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
-* enclosure is flat.
-* @property {boolean} fullspace=`false` - Puts the app into fullspace mode.
 *
 * @example
 * <head>
@@ -27,13 +18,21 @@
 *     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
 *   </a-scene>
 * </body>
+*
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
 */
-'use strict';
-
-import {AFrameComponent} from './AFrameComponent';
-
-export default class AltspaceComponent extends AFrameComponent
+class AltspaceComponent extends AFrameComponent
 {
+	/**
+	* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
+	* This is the default behavior for three.js apps, but not for A-Frame apps.
+	* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
+	* or `top` of the Altspace enclosure.
+	* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
+	* enclosure is flat.
+	* @property {boolean} fullspace=`false` - Puts the app into fullspace mode.
+	*/
 	get schema(){
 		return {
 			usePixelScale: { type: 'boolean', default: 'false'},
@@ -227,3 +226,5 @@ export default class AltspaceComponent extends AFrameComponent
 
     }
 }
+
+export default AltspaceComponent;

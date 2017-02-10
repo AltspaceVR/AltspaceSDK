@@ -1,18 +1,20 @@
-/**
-* Enable or disable cursor collision on the object.
-* @mixin altspace-cursor-collider
-* @memberof altspace
-* @prop {boolean} enabled=true - The state of the cursor collider.
-*/
-
 'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
 import {safeDeepSet} from './utilities';
 
 
-export default class AltspaceCursorCollider extends AFrameComponent
+/**
+* Enable or disable cursor collision on the object.
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+
+class AltspaceCursorCollider extends AFrameComponent
 {
+	/**
+	* @prop {boolean} enabled=true - The state of the cursor collider.
+	*/
 	get schema(){
 		return {enabled: {type: 'boolean', default: 'true'}};
 	}
@@ -44,3 +46,5 @@ export default class AltspaceCursorCollider extends AFrameComponent
 		}
 	}
 };
+
+export default AltspaceCursorCollider;
