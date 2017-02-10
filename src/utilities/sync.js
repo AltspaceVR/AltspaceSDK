@@ -132,6 +132,11 @@ altspace.utilities.sync = (function () {
 	 * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
 	 * Returns a promise that will fulfill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
 	 *
+	 * Note: Calling this method will cause a reload of the app, since it adds an 'altspace-sync-instance' query
+	 * parameter to the app's url. Best practice is to establish a sync connection first, before you load any resources
+	 * or render anything in your app. The promise returned by this method will be rejected the first time it is called,
+	 * while the app reloads with the new sync instance id.
+	 *
 	 * @method connect
 	 * @param {Object} config
 	 * @param {String} config.authorId A unique identifier for yourself or your organization
