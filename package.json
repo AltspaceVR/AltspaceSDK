@@ -1,6 +1,6 @@
 {
   "name": "aframe-altspace-component",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "aframe-altspace-component makes A-frame apps compatible with AltspaceVR.",
   "main": "src/index.js",
   "scripts": {

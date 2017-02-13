@@ -46,7 +46,7 @@ AFRAME.registerComponent('wire',
 					el.removeState(this.data.lose);
 				}
 			}
-			this.data.targets.forEach(act.bind(this));
+			if(this.data.targets) this.data.targets.forEach(act.bind(this));
 			if(this.data.target) act.call(this, this.data.target);
 		}.bind(this);
 
