@@ -61,6 +61,7 @@
 	__webpack_require__(11);
 	__webpack_require__(12);
 	__webpack_require__(13);
+	__webpack_require__(14);
 
 
 /***/ },
@@ -1654,30 +1655,87 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	var instantiatorCounter = 0;
-	AFRAME.registerComponent('instantiator',
-	{
-		schema: {
-			on: {type: 'string'},
-			mixin: {type: 'string'}
-		},
+	AFRAME.registerSystem('instantiator', {
 		init: function () {
-			this.el.addEventListener(this.data.on, function () {
-				var entity = document.createElement('a-entity');
-				entity.id = this.el.id + '-instance-' + instantiatorCounter++;
+			this.instantiatorCounter = 0;
+			this.groupNameToEntityEls = new Map();
+		},
+		instantiate: function (instantiatorId, groupName, mixin, parent) {
+			if (!this.groupNameToEntityEls.get(groupName)) {
+				this.groupNameToEntityEls.set(groupName, []);
+			}
+			var entityEls = this.groupNameToEntityEls.get(groupName);
 	
-				var scene = document.querySelector('a-scene');
-				scene.appendChild(entity);
-				entity.setAttribute('mixin', this.data.mixin);
-			}.bind(this));
-		}
+			var entityEl = document.createElement('a-entity');
+			entityEl.id = groupName + '-instance-' + this.instantiatorCounter++;
+			entityEl.dataset.instantiatorId = instantiatorId;
+	
+			parent.appendChild(entityEl);
+			entityEl.setAttribute('mixin', mixin);
+	
+			entityEls.push(entityEl);
+		},
+		removeLast: function (groupName) {
+			var entityEls = this.groupNameToEntityEls.get(groupName);
+			if (!entityEls) { return; }
+			var entityEl = entityEls.pop();
+			if (!entityEl) { return; }
+			entityEl.parentNode.removeChild(entityEl);
+			return entityEl;
+		},
 	});
-	
-	
 
 
 /***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	/**
+	* Instantiates objects on an event trigger and adds them to the scene. The instantiated objects are built using
+	* the specified mixins.
+	* @mixin instantiator
+	* @prop {string} on - An event that triggers the instantiation
+	* @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.
+	* @prop {string} parent='a-scene' - A selector that determines which object the instantiated object will be added to.
+	* @prop {string} group='main' - An identifier which can be used to group instantiated objects.
+	* @prop {boolean} removeLast=true - Whether the last object instantiated in this group should be removed when a new
+	*	object is instantiated.
+	* @prop {boolean} toggleExisting=true - Whether the object should be removed if the same instantiator is triggered twice.
+	*/
+	AFRAME.registerComponent('instantiator', {
+		schema: {
+			on: {type: 'string'},
+			mixin: {type: 'string'},
+			parent: {type: 'selector', default: 'a-scene'},
+			group: {type: 'string', default: 'main'},
+			removeLast: {type: 'boolean', default: 'true'},
+			toggleExisting: {type: 'boolean', default: 'true'}
+		},
+		init: function () {
+			this.onHandler = this.instantiateOrToggle.bind(this);
+			this.el.addEventListener(this.data.on, this.onHandler);
+		},
+		instantiateOrToggle: function () {
+			var lastEntityEl;
+			if (this.data.removeLast) {
+				lastEntityEl = this.system.removeLast(this.data.group);
+			}
+			var lastInstantiatorId;
+			if (lastEntityEl) {
+				lastInstantiatorId = lastEntityEl.dataset.instantiatorId;
+			}
+			if (!this.data.toggleExisting || !lastInstantiatorId || lastInstantiatorId !== this.el.id) {
+				this.system.instantiate(this.el.id, this.data.group, this.data.mixin, this.data.parent)
+			}
+		},
+		remove: function () {
+			this.el.removeEventListener(this.data.on, this.onHandler);
+		}
+	});
+
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	/**

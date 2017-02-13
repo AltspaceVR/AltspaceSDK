@@ -13,5 +13,6 @@ require('./sync-transform');
 require('./sync-color');
 require('./sync-n-sound');
 require('./sync-n-parent');
+require('./instantiator-system');
 require('./sync-n-parent-clone');
 require('./wire');
