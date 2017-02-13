@@ -1,41 +1,41 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -47,7 +47,7 @@
 	if (typeof AFRAME === 'undefined') {
 	  throw new Error('Component attempted to register before AFRAME was available.');
 	}
-
+	
 	__webpack_require__(1);
 	__webpack_require__(2);
 	__webpack_require__(3);
@@ -70,7 +70,7 @@
 	/**
 	* @namespace altspace
 	*/
-
+	
 	/**
 	* The altspace component makes A-Frame apps compatible with AltspaceVR.
 	*
@@ -89,7 +89,7 @@
 	* <head>
 	*   <title>My A-Frame Scene</title>
 	*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.1/dist/aframe-altspace-component.min.js"></script>
+	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.2/dist/aframe-altspace-component.min.js"></script>
 	* </head>
 	* <body>
 	*   <a-scene altspace>
@@ -98,14 +98,14 @@
 	* </body>
 	*/
 	AFRAME.registerComponent('altspace', {
-	  version: '1.3.1',
+	  version: '1.3.2',
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
 		enclosuresOnly:{ type: 'boolean', default: 'true'},
 		fullspace:     { type: 'boolean', default: 'false'}
 	  },
-
+	
 	  /*
 	   * Called once when component is attached. Generally for initial setup.
 	   */
@@ -114,7 +114,7 @@
 		  console.warn('aframe-altspace-component can only be attached to a-scene');
 		  return;
 		}
-
+	
 		if (window.altspace && window.altspace.inClient) {
 		  this.el.setAttribute('vr-mode-ui', {enabled: false});
 		  this.initRenderer();
@@ -123,9 +123,9 @@
 		} else {
 		  console.warn('aframe-altspace-component only works inside of AltspaceVR');
 		}
-
+	
 	  },
-
+	
 	  /*
 	   * Called on every single tick or render loop of the scene.
 	   */
@@ -133,38 +133,38 @@
 	      if(this.el.object3D.updateAllBehaviors)
 	        this.el.object3D.updateAllBehaviors();
 	  },
-
+	
 	  /*
 	   * Called when a component is removed (e.g., via removeAttribute).
 	   * Generally undoes all modifications to the entity.
 	   */
 	  remove: function () { },
-
+	
 	  /*
 	   * Called on each scene tick.
 	   */
 	  // tick: function (t) { },
-
+	
 	  /*
 	   * Called when entity pauses.
 	   * Use to stop or remove any dynamic or background behavior such as events.
 	   */
 	  pause: function () { },
-
+	
 	  /*
 	   * Called when entity resumes.
 	   * Use to continue or add any dynamic or background behavior such as events.
 	   */
 	  play: function () { },
-
-
+	
+	
 	  /********** Helper Methods **********/
-
+	
 	  /*
 	   * Swap in Altspace renderer when running in AltspaceVR.
 	   */
 	  initRenderer: function () {
-
+	
 		var scene = this.el.object3D;
 		altspace.getEnclosure().then(function(e)
 		{
@@ -174,11 +174,11 @@
 					scene.scale.setScalar(e.pixelsPerMeter);
 				});
 			}
-
+	
 			if (!this.data.usePixelScale || this.data.fullspace){
 				scene.scale.setScalar(e.pixelsPerMeter);
 			}
-
+	
 		  switch (this.data.verticalAlign) {
 			case 'bottom':
 			  scene.position.y -= e.innerHeight / 2;
@@ -191,14 +191,14 @@
 			default:
 			  console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
 		  }
-
+	
 		  if(this.data.enclosuresOnly && e.innerDepth === 1){
 			this.el.renderer.render(new THREE.Scene());
 			this.el.renderer = this.el.effect = oldRenderer;
-
+	
 		  }
 		}.bind(this));
-
+	
 		var oldRenderer = this.el.renderer;
 		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer({
 		  aframeComponentVersion: this.version
@@ -216,14 +216,14 @@
 		renderer.setFaceCulling = noop;
 		renderer.context = {canvas: {}};
 		renderer.shadowMap = {};
-
+	
 	  },
-
+	
 	  /*
 	   * Emulate A-Frame cursor events when running in altspaceVR.
 	   */
 	  initCursorEvents: function() {
-
+	
 		var scene = this.el.object3D;
 		var cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
 		if (cursorEl) {
@@ -231,20 +231,20 @@
 		  cursorEl.setAttribute('material', 'transparent', true);
 		  cursorEl.setAttribute('material', 'opacity', 0.0);
 		}
-
+	
 		var emit = function (eventName, event) {
 			// Fire events on intersected object and A-Frame cursor.
 			var targetEl = event.target.el;
 			if (cursorEl) cursorEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
 			if (targetEl) targetEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
 		} ;
-
+	
 		var cursordownObj = null;
 		scene.addEventListener('cursordown', function(event) {
 		  cursordownObj = event.target;
 		  emit('mousedown', event);
 		});
-
+	
 		scene.addEventListener('cursorup', function(event) {
 		  emit('mouseup', event);
 		  if (event.target.uuid === cursordownObj.uuid) {
@@ -252,31 +252,31 @@
 		  }
 		  cursordownObj = null;
 		});
-
+	
 		scene.addEventListener('cursorenter', function(event) {
 		  if (!event.target.el) { return; }
 		  event.target.el.addState('hovered');
 		  if (cursorEl) cursorEl.addState('hovering');
 		  emit('mouseenter', event);
 		});
-
+	
 		scene.addEventListener('cursorleave', function(event) {
 		  if (!event.target.el) { return; }
 		  event.target.el.removeState('hovered');
 		  if (cursorEl) cursorEl.removeState('hovering');
 		  emit('mouseleave', event);
 		});
-
+	
 	  },
-
+	
 	  initCollisionEvents: function () {
-
+	
 		var scene = this.el.object3D;
-
+	
 		var emit = function (eventName, event) {
 			var targetEl = event.target.el;
 			if (!targetEl) return;
-
+	
 			//remap target and other from object3Ds to aframe element
 			event.target = targetEl;
 			if (event.other && event.other.el) {
@@ -284,25 +284,25 @@
 			}
 			targetEl.emit(eventName, event);
 		};
-
+	
 		scene.addEventListener('collisionenter', function (event) {
 			emit('collisionenter', event);
 		});
-
+	
 		scene.addEventListener('collisionexit', function (event) {
 			emit('collisionexit', event);
 		});
-
+	
 		scene.addEventListener('triggerenter', function (event) {
 			emit('triggerenter', event);
 		});
-
+	
 		scene.addEventListener('triggerexit', function (event) {
 			emit('triggerexit', event);
 		});
-
+	
 	  }
-
+	
 	});
 
 
@@ -311,7 +311,7 @@
 /***/ function(module, exports) {
 
 	(function(){
-
+	
 		function setColliderFlag(obj, state) {
 			obj.userData.altspace = {collider: {enabled: state}};
 			obj.traverse(function (obj) {
@@ -320,7 +320,7 @@
 				}
 			})
 		}
-
+	
 		/**
 		* Enable or disable cursor collision on the object.
 		* @mixin altspace-cursor-collider
@@ -339,7 +339,7 @@
 				setColliderFlag(this.el.object3D, this.data.enabled);
 			}
 		});
-
+	
 	})();
 
 
@@ -408,7 +408,7 @@
 				removeNativeComponent: noop
 			};
 		}
-
+	
 		var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
 		var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
 		placeholderMaterial.visible = false;
@@ -417,21 +417,21 @@
 		};
 		PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
 		PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
-
+	
 		function meshInit(mesh) {
 			//If you attach native components to an entity, it will not use a default collider
 			mesh.userData.altspace = mesh.userData.altspace || {};
 			mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
 			mesh.userData.altspace.collider.enabled = false;
-
+	
 			altspace.addNativeComponent(mesh, this.name);
 		}
-
+	
 		function nativeComponentInit() {
 			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-
+	
 			meshInit.call(this, mesh);
-
+	
 			//to pass defaults
 			this.update(this.data);
 		}
@@ -442,11 +442,11 @@
 		function nativeComponentUpdate(oldData) {
 			altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
 		}
-
+	
 		function callComponent(functionName, functionArguments) {
 			altspace.callNativeComponent(this.el.object3DMap.mesh, this.name, functionName, functionArguments)
 		}
-
+	
 		/**
 		* Attach a given native object to this entity.
 		* @mixin n-object
@@ -463,7 +463,7 @@
 			update: nativeComponentUpdate,
 			remove: nativeComponentRemove
 		});
-
+	
 		/**
 		* Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 		* These copies will be physically interactive and automatically synchronized
@@ -482,7 +482,7 @@
 			update: nativeComponentUpdate,
 			remove: nativeComponentRemove
 		});
-
+	
 		/**
 		* Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
 		* This text will be clearer than texture-based text and more performant than geometry-based test.
@@ -519,11 +519,11 @@
 				verticalAlign: { default: 'middle'}
 			}
 		});
-
+	
 		//object: collides against: objects / enviroment / cursor
 		//environment: can be teleported onto, and collides against: objects / environment / cursor
 		//hologram: collides against: cursor / holograms
-
+	
 		/**
 		* Abstract base class for {@link n.n-sphere-collider}, {@link n.n-box-collider},
 		* {@link n.n-capsule-collider}, and {@link n.n-mesh-collider}. You cannot use
@@ -539,7 +539,7 @@
 		* teleport onto them. Hologram colliders only collide with other holograms and
 		* the cursor.
 		*/
-
+	
 		/**
 		* Create a spherical collider on this entity.
 		* @mixin n-sphere-collider
@@ -558,8 +558,8 @@
 				type: {default: 'object'}
 			}
 		});
-
-
+	
+	
 		/**
 		* Create a box-shaped collider on this entity.
 		* @mixin n-box-collider
@@ -578,7 +578,7 @@
 				type: {default: 'object'}
 			}
 		});
-
+	
 		/**
 		* Create a capsule-shaped collider on this entity. Capsules
 		* are a union of a cylinder and two spheres on top and bottom.
@@ -603,7 +603,7 @@
 				type: {default: 'object'}
 			}
 		});
-
+	
 		/**
 		* Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
 		* low-poly meshes.
@@ -631,7 +631,7 @@
 			_initObj: function () {
 				this._forEachMesh(function (mesh) {
 					meshInit.call(this, mesh);
-
+	
 					//to pass defaults
 					altspace.updateNativeComponent(mesh, this.name, this.data);
 				}.bind(this));
@@ -640,10 +640,10 @@
 				// Allow a-frame to create a PlaceholderMesh if there isn't already one, so that the native collider is
 				// registered.
 				this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-
+	
 				// Initialize the existing mesh
 				this._initObj();
-
+	
 				this.el.addEventListener('model-loaded', function () {
 					// Re-initialize the collider if a new model is loaded
 					this._initObj();
@@ -665,7 +665,7 @@
 				type: {default: 'object'}
 			}
 		});
-
+	
 		/**
 		* Make the object's +Z always face the viewer. Currently will only directly apply to main mesh or native component on the attached entity, not any children or submeshes.
 		* @mixin n-billboard
@@ -676,7 +676,7 @@
 			init:nativeComponentInit,
 			remove: nativeComponentRemove,
 		});
-
+	
 		/**
 		* A container keeps a running tally of how many objects are within
 		* its bounds, and adds and removes the states `container-full` and
@@ -690,10 +690,10 @@
 		AFRAME.registerComponent('n-container', {
 			init: function(){
 				nativeComponentInit.call(this);
-
+	
 				var el = this.el;
 				var component = this;
-
+	
 				el.addEventListener('stateadded', function(event){
 					if(event.detail.state === 'container-full'){
 						el.emit('container-full');
@@ -702,7 +702,7 @@
 						el.emit('container-empty');
 					}
 				});
-
+	
 				el.addEventListener('container-count-changed', function(event){
 					component.count = event.detail.count;
 				});
@@ -713,7 +713,7 @@
 				capacity: { default: 4, type: 'number' },
 			}
 		});
-
+	
 		/**
 		* Play the sound given by the `src` or `res` property from the location
 		* of the entity.
@@ -764,7 +764,7 @@
 				}
 				nativeComponentInit.call(this);
 			},
-
+	
 			/**
 			* Stop the playing sound, and preserve position in clip.
 			* @method native.n-sound#pauseSound
@@ -773,7 +773,7 @@
 				callComponent.call(this, 'pause');
 				this.el.emit('sound-paused');
 			},
-
+	
 			/**
 			* Start the sound playing.
 			* @method native.n-sound#playSound
@@ -782,7 +782,7 @@
 				callComponent.call(this, 'play');
 				this.el.emit('sound-played');
 			},
-
+	
 			/**
 			* Jump to a position in the clip.
 			* @method native.n-sound#seek
@@ -822,7 +822,7 @@
 				rolloff: { type: 'string', default: 'logarithmic' },
 			}
 		});
-
+	
 		AFRAME.registerComponent('n-skeleton-parent', {
 			schema: {
 				part: {type: 'string'},
@@ -834,13 +834,13 @@
 			update: nativeComponentUpdate,
 			remove: nativeComponentRemove
 		});
-
+	
 		AFRAME.registerComponent('n-cockpit-parent', {
 			init: nativeComponentInit,
 			remove: nativeComponentRemove
 		});
-
-
+	
+	
 	})();
 
 
@@ -849,7 +849,7 @@
 /***/ function(module, exports) {
 
 	// this file is just for good measure. didn't want native-components getting too cluttered.
-
+	
 	/**
 	* This namespace describes strings that are valid inputs to the various native
 	* components. Some components can only take certain types of resources, i.e.
@@ -857,7 +857,7 @@
 	* @namespace resources
 	* @example <a-entity n-object='res: architecture/ceiling-2w-2l'></a-entity>
 	*/
-
+	
 	/**
 	* Generic modular building pieces. All pieces are aligned to one corner, such that
 	* the piece extends out toward -X and +Z.
@@ -924,7 +924,7 @@
 	* @prop architecture/wall-window-gap-end-r-2w-4h
 	* @prop architecture/wall-window-gap-end-r-4w-4h
 	*/
-
+	
 	/**
 	* Particle systems and other native effects
 	* @name effects
@@ -941,7 +941,7 @@
 	* @prop effects/sparkler - Emits sparks in all directions
 	* @prop effects/steam - Small white steam rising upwards
 	*/
-
+	
 	/**
 	* Objects that can be picked up, thrown, and otherwise interacted with.
 	* @name interactables
@@ -957,7 +957,7 @@
 	* @prop interactables/ring
 	* @prop interactables/soccerball
 	*/
-
+	
 	/**
 	* Static models that you can place in your scene.
 	* @name objects
@@ -972,7 +972,7 @@
 	* @prop objects/ring
 	* @prop objects/target-archery
 	*/
-
+	
 	/**
 	* A selection of pipes/chutes/etc.
 	* @name pipes
@@ -996,7 +996,7 @@
 	* @prop pipes/pipe-half-straight-1d-4l
 	* @prop pipes/pipe-half-tee-1d
 	*/
-
+	
 	/**
 	* Common UI sounds can be used for a consistent UI experience.
 	* @name sounds-ui
@@ -1013,7 +1013,7 @@
 	* @prop ui/join
 	* @prop ui/click
 	*/
-
+	
 	/**
 	* Foley sounds are real sounds designed for tangible, touchable objects as they are heard in the real world.
 	* @name sounds-foley
@@ -1027,7 +1027,7 @@
 	* @prop foley/paper-shuffle
 	* @prop foley/explode
 	*/
-
+	
 	/**
 	* Effect sounds for a variety of use cases.
 	* @name sounds-effects
@@ -1058,9 +1058,9 @@
 	*   <a-entity sync='ownOn: cursordown' sync-color></a-entity>
 	* </a-scene>
 	*/
-
-
-
+	
+	
+	
 	/**
 	* Enables the synchronization of properties of the entity. Must be used in
 	* conjuction with the {@link sync.sync-system} component and a component for a
@@ -1080,21 +1080,21 @@
 		init: function () {
 			var scene = document.querySelector('a-scene');
 			var syncSys = scene.systems['sync-system'];
-
+	
 			var ref;
 			var key;
 			var dataRef;
 			var ownerRef;
 			var ownerId;
 			var isMine = false;
-
+	
 			var component = this;
-
+	
 			component.isConnected = false;
-
+	
 			if(syncSys.isConnected) start(); else scene.addEventListener('connected', start);
-
-
+	
+	
 			if(component.data.ownOn)
 			{
 				var ownershipEvents = component.data.ownOn.split(/[ ,]+/);
@@ -1106,38 +1106,38 @@
 					});
 				}
 			}
-
+	
 			function start(){
 				//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
 				//This ensures, for example, that synced animations keep playing
 				scene.addEventListener('clientleft', function(event){
 					var shouldTakeOwnership = (!ownerId || ownerId === event.detail.id) && syncSys.isMasterClient;
-
+	
 					if(shouldTakeOwnership) component.takeOwnership();
 				});
-
+	
 				if (component.data.mode === 'link') {
 					var id = component.el.id;
 					if (!id) {
 						console.error('Entities cannot be synced using link mode without an id.');
 						return;
 					}
-
+	
 					console.log('syncSys: ' + syncSys);
 					console.log('syncSys.sceneRef: ' + syncSys.sceneRef);
-
+	
 					link(syncSys.sceneRef.child(id));
 					setupReceive();
-
+	
 				} else {
 					console.error('Unsupported sync mode: ' + component.data.mode);
 					return;
 				}
-
+	
 				component.isConnected = true;
 				component.el.emit('connected', null, false);
 			}
-
+	
 			function link(entityRef) {
 				ref = entityRef;
 				key = ref.key();
@@ -1145,40 +1145,40 @@
 				component.dataRef = dataRef;
 				ownerRef = ref.child('owner');
 			}
-
+	
 			function setupReceive() {
-
+	
 				//if nobody has owned the object yet, we will.
 				ownerRef.transaction(function (owner) {
 					if (owner) return undefined;
-
+	
 					ownerRef.onDisconnect().set(null);
 					return syncSys.clientId;
 				});
-
+	
 				ownerRef.on('value',
 					function(snapshot) {
 						var newOwnerId = snapshot.val();
-
+	
 						var gained = newOwnerId === syncSys.clientId && !isMine;
 						if (gained) component.el.emit('ownershipgained', null, false);
-
-
+	
+	
 						//note this also fires when we start up without ownership
 						var lost = newOwnerId !== syncSys.clientId && isMine;
 						if (lost){
 							component.el.emit('ownershiplost', null, false);
-
+	
 							//we no longer have to clear our ownership when we disconnect
 							ownerRef.onDisconnect().cancel();
 						}
-
+	
 						ownerId = newOwnerId;
-
+	
 						isMine = newOwnerId === syncSys.clientId;
 					});
 			}
-
+	
 			/**
 			* Tell sync to start pushing local property values instead of updating
 			* local from remote values.
@@ -1186,12 +1186,12 @@
 			*/
 			component.takeOwnership = function() {
 				ownerRef.set(syncSys.clientId);
-
+	
 				//clear our ownership if we disconnect
 				//this is needed if we are the last user in the room, but we expect people to join later
 				ownerRef.onDisconnect().set(null);
 			}
-
+	
 			/**
 			* Indicates whether the sync ownership is yours.
 			* @member sync.sync#isMine
@@ -1233,12 +1233,12 @@
 		},
 		init: function() {
 			var component = this;
-
+	
 			if(!this.data || !this.data.app){
 				console.warn('The sync-system must be present on the scene and configured with required data.');
 				return;
 			}
-
+	
 			component.isConnected = false;
 			console.log(this.data);
 			altspace.utilities.sync.connect({
@@ -1248,20 +1248,20 @@
 				baseRefUrl: this.data.refUrl
 			}).then(function(connection) {
 				this.connection = connection;
-
+	
 				this.sceneRef = this.connection.instance.child('scene');
 				this.clientsRef = this.connection.instance.child('clients');
-
+	
 				// temporary way of having unique identifiers for each client
 				this.clientId = this.sceneEl.object3D.uuid;
 				var masterClientId;
 				this.clientsRef.on("value", function (snapshot) {
 					var clientIds = snapshot.val();
-
+	
 					var masterClientKey = Object.keys(clientIds)[0];
 					masterClientId = clientIds[masterClientKey];
 				});
-
+	
 				this.clientsRef.on('child_added', function(childSnapshot) {
 					var joinedClientId = childSnapshot.val();
 					//let the master client flag get set first
@@ -1269,7 +1269,7 @@
 						component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
 					}, 0);
 				});
-
+	
 				this.clientsRef.on('child_removed', function(childSnapshot) {
 					var leftClientId = childSnapshot.val();
 					//let the master client flag get set first
@@ -1277,25 +1277,25 @@
 						component.sceneEl.emit('clientleft', {id: leftClientId}, false);
 					}, 0);
 				});
-
+	
 				// add our client ID to the list of connected clients,
 				// but have it be automatically removed by firebase if we disconnect for any reason
 				this.clientsRef.push(this.clientId).onDisconnect().remove();
-
+	
 				this.remoteElementsRef = this.sceneRef.child('remoteElements')
 				this.remoteElementsRef.on('child_added', this.createElement.bind(this));
 				this.remoteElementsRef.on('child_removed', this.removeElement.bind(this));
 				this.createdElements = new Map();
-
+	
 				this.connection.instance.child('initialized').once('value', function (snapshot) {
 					var shouldInitialize = !snapshot.val();
 					snapshot.ref().set(true);
-
+	
 					component.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
 					component.isConnected = true;
 				}.bind(this));
-
-
+	
+	
 				Object.defineProperty(this, 'isMasterClient', {
 					get: function () { return masterClientId === this.clientId; }.bind(this)
 				});
@@ -1334,7 +1334,7 @@
 
 	//TODO: We need to figure out a way to recieve our first update without caring about ownership.
 	// firstValue is probably not the right way to go, probably something about having sent yet. Need to change for both
-
+	
 	/**
 	* Synchronize the position, rotation, and scale of this object with all clients.
 	* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
@@ -1351,15 +1351,15 @@
 			var component = this;
 			var sync = component.el.components.sync;
 			if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
-
+	
 			function start(){
-
+	
 				var positionRef = sync.dataRef.child('position');
 				var rotationRef = sync.dataRef.child('rotation');
 				var scaleRef = sync.dataRef.child('scale');
-
+	
 				component.updateRate = 100;
-
+	
 				var stoppedAnimations = [];
 				//pause all animations on ownership loss
 				component.el.addEventListener('ownershiplost', function() {
@@ -1379,46 +1379,46 @@
 					}
 					stoppedAnimations = [];
 				});
-
+	
 				function onTransform(snapshot, componentName) {
 					if (sync.isMine) return;
-
+	
 					var value = snapshot.val();
 					if (!value) return;
-
+	
 					component.el.setAttribute(componentName, value);
 				}
-
+	
 				positionRef.on('value', function (snapshot) {
 					onTransform(snapshot, 'position');
 				});
-
+	
 				rotationRef.on('value', function (snapshot) {
 					onTransform(snapshot, 'rotation');
 				});
-
+	
 				scaleRef.on('value', function (snapshot) {
 					onTransform(snapshot, 'scale');
 				});
-
+	
 				var sendPosition = throttle(function(value){
 					positionRef.set(value);
 				}, component.updateRate);
-
+	
 				var sendRotation = throttle(function(value){
 					rotationRef.set(value);
 				}, component.updateRate);
-
+	
 				var sendScale = throttle(function(value){
 					scaleRef.set(value);
 				}, component.updateRate);
-
+	
 				function onComponentChanged(event){
 					if (!sync.isMine) return;
-
+	
 					var name = event.detail.name;
 					var newData = event.detail.newData;
-
+	
 					if (name === 'position') {
 						sendPosition(newData);
 					} else if (name === 'rotation') {
@@ -1428,22 +1428,22 @@
 					} else {
 						return;
 					}
-
+	
 				}
-
+	
 				//from underscore.js
 				function throttle(func, wait, options) {
 					var timeout, context, args, result;
 					var previous = 0;
 					if (!options) options = {};
-
+	
 					var later = function() {
 					  previous = options.leading === false ? 0 : Date.now();
 					  timeout = null;
 					  result = func.apply(context, args);
 					  if (!timeout) context = args = null;
 					};
-
+	
 					var throttled = function() {
 					  var now = Date.now();
 					  if (!previous && options.leading === false) previous = now;
@@ -1463,17 +1463,17 @@
 					  }
 					  return result;
 					};
-
+	
 					throttled.cancel = function() {
 					  clearTimeout(timeout);
 					  previous = 0;
 					  timeout = context = args = null;
 					};
-
+	
 					return throttled;
 				  };
-
-
+	
+	
 				component.el.addEventListener('componentchanged', onComponentChanged);
 			}
 		}
@@ -1500,22 +1500,22 @@
 			var component = this;
 			var sync = component.el.components.sync;
 			if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
-
+	
 			function start(){
 				var colorRef = sync.dataRef.child('material/color');
-
+	
 				var refChangedLocked = false;
-
+	
 				var firstValue = true;
-
+	
 				component.el.addEventListener('componentchanged', function (event) {
 					var name = event.detail.name;
 					var oldData = event.detail.oldData;
 					var newData = event.detail.newData;
-
+	
 					if (name !== 'material') return;
 					if (refChangedLocked) return;
-
+	
 					if (oldData.color !== newData.color) {
 						if(sync.isMine){
 							setTimeout(function() {//For some reason A-Frame has a misconfigured material reference if we do this too early
@@ -1524,15 +1524,15 @@
 						}
 					}
 				});
-
+	
 				colorRef.on('value', function (snapshot) {
 					if (sync.isMine && !firstValue) return;
 					var color = snapshot.val();
-
+	
 					refChangedLocked = true;
 					component.el.setAttribute('material', 'color', color);
 					refChangedLocked = false;
-
+	
 					firstValue = false;
 				});
 			}
@@ -1561,11 +1561,11 @@
 			var scene = document.querySelector('a-scene');
 			var syncSys = scene.systems['sync-system'];
 			if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
-
+	
 			function start(){
 				component.soundStateRef = sync.dataRef.child('sound/state');
 				component.soundEventRef = sync.dataRef.child('sound/event');
-
+	
 				function sendEvent(event) {
 					if (!sync.isMine) return;
 					var event = {
@@ -1576,10 +1576,10 @@
 					};
 					component.soundEventRef.set(event);
 				}
-
+	
 				component.el.addEventListener('sound-played', sendEvent);
 				component.el.addEventListener('sound-paused', sendEvent);
-
+	
 				component.soundEventRef.on('value', function (snapshot) {
 					if (sync.isMine) return;
 					var event = snapshot.val();
@@ -1594,14 +1594,14 @@
 						}
 					}
 				});
-
+	
 				component.el.addEventListener('componentchanged', function (event) {
 					if (!sync.isMine) return;
 					var name = event.detail.name;
 					if (name !== 'n-sound') return;
 					component.soundStateRef.set(event.detail.newData);
 				});
-
+	
 				component.soundStateRef.on('value', function (snapshot) {
 					if (sync.isMine) return;
 					var state = snapshot.val();
@@ -1647,7 +1647,7 @@
 			this.syncSys.instantiateRemotely(this.el, components, true);
 		}
 	});
-
+	
 
 
 /***/ },
@@ -1665,15 +1665,15 @@
 			this.el.addEventListener(this.data.on, function () {
 				var entity = document.createElement('a-entity');
 				entity.id = this.el.id + '-instance-' + instantiatorCounter++;
-
+	
 				var scene = document.querySelector('a-scene');
 				scene.appendChild(entity);
 				entity.setAttribute('mixin', this.data.mixin);
 			}.bind(this));
 		}
 	});
-
-
+	
+	
 
 
 /***/ },
@@ -1715,7 +1715,7 @@
 			if (oldData.lost) {
 				this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
 			}
-
+	
 			this.actOnTargets = function () {
 				function act(el) {
 					if (this.data.emit) {
@@ -1728,17 +1728,17 @@
 						el.removeState(this.data.lose);
 					}
 				}
-				this.data.targets.forEach(act.bind(this));
+				if(this.data.targets) this.data.targets.forEach(act.bind(this));
 				if(this.data.target) act.call(this, this.data.target);
 			}.bind(this);
-
+	
 			this.actOnTargetsIfStateMatches = function (event) {
 				var state = event.detail.state;
 				if (state === this.data.gained || state === this.data.lost) {
 					this.actOnTargets();
 				}
 			}.bind(this);
-
+	
 			if (this.data.on) {
 				this.el.addEventListener(this.data.on, this.actOnTargets);
 			}
@@ -1759,3 +1759,4 @@
 
 /***/ }
 /******/ ]);
+//# sourceMappingURL=aframe-altspace-component.js.map

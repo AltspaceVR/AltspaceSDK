@@ -10,8 +10,8 @@
 	<a-entity
 		geometry="primitive: box" material="color: green" position="0 1 2"
 		wire="on: click; emit: gogogo; targets: #notify, #pop"
-		wire__high="on: mouseup; gain: mouse-off; targets: #error"
-		wire__spin="gained: hovered; emit: spin; targets: #pop">
+		wire__high="on: mouseup; gain: mouse-off; target: #error"
+		wire__spin="gained: hovered; emit: spin; target: #pop">
 		<a-entity n-text="fontSize: 2; text: trigger" position="0 1 0"></a-entity>
 	</a-entity>
 	<a-entity id="error"
@@ -33,4 +33,3 @@
 </a-scene>
 </body>
 </html>
-
