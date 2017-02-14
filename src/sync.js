@@ -33,7 +33,6 @@ AFRAME.registerComponent('sync',
 		var syncSys = scene.systems['sync-system'];
 
 		var ref;
-		var key;
 		var dataRef;
 		var ownerRef;
 		var ownerId;
@@ -91,7 +90,6 @@ AFRAME.registerComponent('sync',
 
 		function link(entityRef) {
 			ref = entityRef;
-			key = ref.key();
 			dataRef = ref.child('data');
 			component.dataRef = dataRef;
 			ownerRef = ref.child('owner');
@@ -101,15 +99,17 @@ AFRAME.registerComponent('sync',
 
 			//if nobody has owned the object yet, we will.
 			ownerRef.transaction(function (owner) {
+				console.log('BPDEBUG ownerRef transaction', owner, syncSys.clientId);
 				if (owner) return undefined;
 
 				ownerRef.onDisconnect().set(null);
 				return syncSys.clientId;
-			});
-
-			ownerRef.on('value',
-				function(snapshot) {
+			}, function (error, committed, snapshot) {
+				// Return since transaction will be called again
+				if (!committed) { return; }
+				ownerRef.on('value', function(snapshot) {
 					var newOwnerId = snapshot.val();
+					console.log('BPDEBUG ownerRef', newOwnerId);
 
 					var gained = newOwnerId === syncSys.clientId && !isMine;
 					if (gained) component.el.emit('ownershipgained', null, false);
@@ -128,6 +128,7 @@ AFRAME.registerComponent('sync',
 
 					isMine = newOwnerId === syncSys.clientId;
 				});
+			});
 		}
 
 		/**
@@ -136,6 +137,7 @@ AFRAME.registerComponent('sync',
 		* @method sync.sync#takeOwnership
 		*/
 		component.takeOwnership = function() {
+			console.log('BPDEBUG takeOwnership', syncSys.clientId);
 			ownerRef.set(syncSys.clientId);
 
 			//clear our ownership if we disconnect

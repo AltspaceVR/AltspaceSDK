@@ -62,6 +62,7 @@
 	__webpack_require__(12);
 	__webpack_require__(13);
 	__webpack_require__(14);
+	__webpack_require__(15);
 
 
 /***/ },
@@ -1083,7 +1084,6 @@
 			var syncSys = scene.systems['sync-system'];
 	
 			var ref;
-			var key;
 			var dataRef;
 			var ownerRef;
 			var ownerId;
@@ -1141,7 +1141,6 @@
 	
 			function link(entityRef) {
 				ref = entityRef;
-				key = ref.key();
 				dataRef = ref.child('data');
 				component.dataRef = dataRef;
 				ownerRef = ref.child('owner');
@@ -1151,15 +1150,17 @@
 	
 				//if nobody has owned the object yet, we will.
 				ownerRef.transaction(function (owner) {
+					console.log('BPDEBUG ownerRef transaction', owner, syncSys.clientId);
 					if (owner) return undefined;
 	
 					ownerRef.onDisconnect().set(null);
 					return syncSys.clientId;
-				});
-	
-				ownerRef.on('value',
-					function(snapshot) {
+				}, function (error, committed, snapshot) {
+					// Return since transaction will be called again
+					if (!committed) { return; }
+					ownerRef.on('value', function(snapshot) {
 						var newOwnerId = snapshot.val();
+						console.log('BPDEBUG ownerRef', newOwnerId);
 	
 						var gained = newOwnerId === syncSys.clientId && !isMine;
 						if (gained) component.el.emit('ownershipgained', null, false);
@@ -1178,6 +1179,7 @@
 	
 						isMine = newOwnerId === syncSys.clientId;
 					});
+				});
 			}
 	
 			/**
@@ -1186,6 +1188,7 @@
 			* @method sync.sync#takeOwnership
 			*/
 			component.takeOwnership = function() {
+				console.log('BPDEBUG takeOwnership', syncSys.clientId);
 				ownerRef.set(syncSys.clientId);
 	
 				//clear our ownership if we disconnect
@@ -1255,6 +1258,7 @@
 	
 				// temporary way of having unique identifiers for each client
 				this.clientId = this.sceneEl.object3D.uuid;
+				console.log('BPDEBUG clientId', this.clientId);
 				var masterClientId;
 				this.clientsRef.on("value", function (snapshot) {
 					var clientIds = snapshot.val();
@@ -1628,24 +1632,44 @@
 		init: function () {
 			var scene = document.querySelector('a-scene');
 			this.syncSys = scene.systems['sync-system'];
+			this.sync = this.el.components.sync;
 			altspace.getUser().then(function (user) {
 				this.userId = user.userId;
 				if(this.syncSys.isConnected) { this._start(); }
 				else { scene.addEventListener('connected', this._start.bind(this)); }
 			}.bind(this));
 		},
+		getDataRef: function (propertyName) {
+			return this.sync.dataRef.child('n-skeleton-parent/' + propertyName);
+		},
 		_start: function () {
-			var components = [];
-			Object.keys(this.el.components).forEach(function (componentName) {
-				// TODO We'd have to remove other sync components I think
-				if (['sync', 'sync-n-parent'].indexOf(componentName) !== -1) { return; }
-				var data = Object.assign({}, this.el.components[componentName].data);
-				if (componentName === 'n-skeleton-parent') {
-					data.userId = this.userId;
-				}
-				components.push({type: componentName, data: data});
+			this.attributeRef = this.sync.dataRef.child('n-skeleton-parent');
+			this.attributeRef.on('value', function (snapshot) {
+				var val = snapshot.val();
+				if (!val) { return; }
+				console.log('BPDEBUG setAttribute', val);
+				this.el.setAttribute('n-skeleton-parent', val);
 			}.bind(this));
-			this.syncSys.instantiateRemotely(this.el, components, true);
+	
+			// immediately sync this entity's parent userId to the owner's
+			if (this.sync.isMine) {
+				console.log('BPDEBUG isMine', this.userId);
+				this.attributeRef.set(Object.assign(
+					{}, this.el.components['n-skeleton-parent'].data, {userId: this.userId}));
+			}
+			this.el.addEventListener('componentchanged', function (event) {
+				if (!this.sync.isMine) return;
+				var name = event.detail.name;
+				if (name === 'n-skeleton-parent') {
+					console.log('BPDEBUG newData', event.detail.newData);
+					this.attributeRef.set(event.detail.newData);
+				}
+			}.bind(this));
+	
+			this.el.addEventListener('ownershipgained', function () {
+				this.attributeRef.set(Object.assign(
+					{}, this.el.components['n-skeleton-parent'].data, {userId: this.userId}));
+			}.bind(this));
 		}
 	});
 	
@@ -1653,6 +1677,27 @@
 
 /***/ },
 /* 12 */
+/***/ function(module, exports) {
+
+	AFRAME.registerComponent('one-per-user',
+	{
+		dependencies: ['sync'],
+		schema: {
+			mixin: {type: 'string'},
+			parent: {type: 'selector', default: 'a-scene'}
+		},
+		init: function () {
+			var scene = document.querySelector('a-scene');
+			this.instantiatorSys = scene.systems['instantiator'];
+			this.instantiatorSys.instantiate(this.el.id, this.el.id, this.data.mixin, this.data.parent)
+		}
+	});
+	
+	
+
+
+/***/ },
+/* 13 */
 /***/ function(module, exports) {
 
 	AFRAME.registerSystem('instantiator', {
@@ -1687,7 +1732,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/**
@@ -1735,7 +1780,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/**

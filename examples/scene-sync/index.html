@@ -22,7 +22,8 @@
 				<a-mixin id="parent-to-head"
 					position="0 0.35 -1"
 					n-skeleton-parent="part: head;"
-					sync sync-n-parent></a-mixin>
+					></a-mixin>
+
 				<a-mixin id="leather-armor"
 					geometry="primitive: box; width: 0.5; depth: 0.2;"
 					material="color: brown; shader: flat;"></a-mixin>
@@ -32,7 +33,13 @@
 				<a-mixin id="parent-to-chest"
 					position="0 0.35 -1"
 					n-skeleton-parent="part: spine;"
-					sync sync-n-parent></a-mixin>
+					></a-mixin>
+
+				<a-mixin id="parent-to-left-hand"
+					position="0 0.1 0"
+					rotation="0 45 0"
+					n-skeleton-parent="part: hand; side: left;"
+					></a-mixin>
 			</a-assets>
 
 			<!-- 
@@ -44,7 +51,7 @@
 				id="initial-local-box"
 				geometry="primitive: box"
 				material="color: green"
-				n-skeleton-parent="part: hand; side: right; index: 0;"
+				n-skeleton-parent="part: hand; side: right;"
 				position="0 0.1 0"
 				rotation="0 45 0"
 				scale="0.1 0.1 0.1">
@@ -57,13 +64,7 @@
 			-->
 			<a-entity
 				id="initial-synced-box"
-				geometry="primitive: box"
-				material="color: red"
-				n-skeleton-parent="part: hand; side: left; index: 0;"
-				sync sync-n-parent
-				position="0 0.1 0"
-				rotation="0 45 0"
-				scale="0.1 0.1 0.1">
+				sync one-per-user="mixin: box-hat parent-to-left-hand">
 			</a-entity>
 
 			<!-- 

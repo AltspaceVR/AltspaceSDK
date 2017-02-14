@@ -42,6 +42,7 @@ AFRAME.registerSystem('sync-system',
 
 			// temporary way of having unique identifiers for each client
 			this.clientId = this.sceneEl.object3D.uuid;
+			console.log('BPDEBUG clientId', this.clientId);
 			var masterClientId;
 			this.clientsRef.on("value", function (snapshot) {
 				var clientIds = snapshot.val();
