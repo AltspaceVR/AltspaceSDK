@@ -6,9 +6,6 @@
 * @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.
 * @prop {string} parent='a-scene' - A selector that determines which object the instantiated object will be added to.
 * @prop {string} group='main' - An identifier which can be used to group instantiated objects.
-* @prop {boolean} removeLast=true - Whether the last object instantiated in this group should be removed when a new
-*	object is instantiated.
-* @prop {boolean} toggleExisting=true - Whether the object should be removed if the same instantiator is triggered twice.
 */
 AFRAME.registerComponent('instantiator', {
 	schema: {
@@ -24,17 +21,11 @@ AFRAME.registerComponent('instantiator', {
 		this.el.addEventListener(this.data.on, this.onHandler);
 	},
 	instantiateOrToggle: function () {
-		var lastEntityEl;
-		if (this.data.removeLast) {
-			lastEntityEl = this.system.removeLast(this.data.group);
-		}
-		var lastInstantiatorId;
-		if (lastEntityEl) {
-			lastInstantiatorId = lastEntityEl.dataset.instantiatorId;
-		}
-		if (!this.data.toggleExisting || !lastInstantiatorId || lastInstantiatorId !== this.el.id) {
-			this.system.instantiate(this.el.id, this.data.group, this.data.mixin, this.data.parent)
-		}
+		this.system.removeLast(this.data.group).then(function (lastInstantiatorId) {
+			if (lastInstantiatorId !== this.el.id) {
+				this.system.instantiate(this.el.id, this.data.group, this.data.mixin, this.data.parent)
+			}
+		}.bind(this));
 	},
 	remove: function () {
 		this.el.removeEventListener(this.data.on, this.onHandler);

@@ -20,14 +20,14 @@ AFRAME.registerSystem('sync-system',
 		refUrl: { type: 'string', default: null }
 	},
 	init: function() {
-		var component = this;
+		var system = this;
 
 		if(!this.data || !this.data.app){
 			console.warn('The sync-system must be present on the scene and configured with required data.');
 			return;
 		}
 
-		component.isConnected = false;
+		system.isConnected = false;
 		console.log(this.data);
 		altspace.utilities.sync.connect({
 			authorId: this.data.author,
@@ -55,7 +55,7 @@ AFRAME.registerSystem('sync-system',
 				var joinedClientId = childSnapshot.val();
 				//let the master client flag get set first
 				setTimeout(function(){
-					component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
+					system.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
 				}, 0);
 			});
 
@@ -63,7 +63,7 @@ AFRAME.registerSystem('sync-system',
 				var leftClientId = childSnapshot.val();
 				//let the master client flag get set first
 				setTimeout(function(){
-					component.sceneEl.emit('clientleft', {id: leftClientId}, false);
+					system.sceneEl.emit('clientleft', {id: leftClientId}, false);
 				}, 0);
 			});
 
@@ -71,17 +71,12 @@ AFRAME.registerSystem('sync-system',
 			// but have it be automatically removed by firebase if we disconnect for any reason
 			this.clientsRef.push(this.clientId).onDisconnect().remove();
 
-			this.remoteElementsRef = this.sceneRef.child('remoteElements')
-			this.remoteElementsRef.on('child_added', this.createElement.bind(this));
-			this.remoteElementsRef.on('child_removed', this.removeElement.bind(this));
-			this.createdElements = new Map();
-
 			this.connection.instance.child('initialized').once('value', function (snapshot) {
 				var shouldInitialize = !snapshot.val();
 				snapshot.ref().set(true);
 
-				component.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
-				component.isConnected = true;
+				system.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
+				system.isConnected = true;
 			}.bind(this));
 
 
@@ -89,29 +84,5 @@ AFRAME.registerSystem('sync-system',
 				get: function () { return masterClientId === this.clientId; }.bind(this)
 			});
 		}.bind(this));
-	},
-	instantiateRemotely: function (el, components, removeOnDisconnect) {
-		var ref = this.remoteElementsRef.push({clientId: this.clientId, type: el.nodeName, components: components});
-		if (removeOnDisconnect) {
-			ref.onDisconnect().remove();
-		}
-		return ref;
-	},
-	createElement: function (snapshot) {
-		var elInfo = snapshot.val();
-		if (!elInfo || !elInfo.type) { return; }
-		if (elInfo.clientId === this.clientId) { return; }
-		var el = document.createElement(elInfo.type);
-		this.sceneEl.appendChild(el);
-		elInfo.components.forEach(function (component) {
-			el.setAttribute(component.type, component.data);
-		});
-		this.createdElements.set(snapshot.key(), el);
-	},
-	removeElement: function (snapshot) {
-		var elInfo = snapshot.val();
-		if (!elInfo || !elInfo.type) { return; }
-		var el = this.createdElements.get(snapshot.key());
-		this.sceneEl.removeChild(el);
 	},
 });

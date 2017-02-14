@@ -1,5 +1,4 @@
-AFRAME.registerComponent('sync-n-parent',
-{
+AFRAME.registerComponent('sync-n-parent', {
 	dependencies: ['sync'],
 	init: function () {
 		var scene = document.querySelector('a-scene');

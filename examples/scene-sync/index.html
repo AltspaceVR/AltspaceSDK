@@ -9,7 +9,7 @@
 		<script src="../../dist/aframe-altspace-component.js"></script>
 	</head>
 	<body>
-		<a-scene altspace="fullspace: true" sync-system="author: altspacevr; app: test-scene-sync">
+		<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: test-scene-sync">
 			<a-assets>
 				<a-mixin id="box-hat"
 					geometry="primitive: box;"
@@ -22,7 +22,7 @@
 				<a-mixin id="parent-to-head"
 					position="0 0.35 -1"
 					n-skeleton-parent="part: head;"
-					></a-mixin>
+					sync sync-n-parent></a-mixin>
 
 				<a-mixin id="leather-armor"
 					geometry="primitive: box; width: 0.5; depth: 0.2;"
@@ -33,13 +33,13 @@
 				<a-mixin id="parent-to-chest"
 					position="0 0.35 -1"
 					n-skeleton-parent="part: spine;"
-					></a-mixin>
+					sync sync-n-parent></a-mixin>
 
 				<a-mixin id="parent-to-left-hand"
 					position="0 0.1 0"
 					rotation="0 45 0"
 					n-skeleton-parent="part: hand; side: left;"
-					></a-mixin>
+					sync sync-n-parent></a-mixin>
 			</a-assets>
 
 			<!-- 
