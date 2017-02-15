@@ -1,6 +1,6 @@
 'use strict';
 
-import AFrameComponent from './AFrameComponent';
+import {AFrameComponent} from './AFrameComponent';
 import {safeDeepSet} from './utilities';
 
 // graceful fallback in web browsers
@@ -66,3 +66,5 @@ class NativeComponent extends AFrameComponent
 		altspace.callNativeComponent(mesh, this.name, name, args);
 	}
 }
+
+export default NativeComponent;

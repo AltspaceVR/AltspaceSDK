@@ -276,6 +276,7 @@ Please = 'default' in Please ? Please['default'] : Please;
 /**
 * Stubs out the A-Frame "system" concept.
 * @see {@link https://aframe.io/docs/0.3.0/core/systems.html}
+* @memberof module:altspace/components
 */
 var AFrameSystem = function AFrameSystem () {};
 
@@ -294,8 +295,9 @@ Object.defineProperties( AFrameSystem.prototype, prototypeAccessors );
 
 /**
 * Stubs out the A-Frame "component" concept.
-* @extends AFrameSystem
 * @see {@link https://aframe.io/docs/0.3.0/core/component.html}
+* @extends module:altspace/components.AFrameSystem
+* @memberof module:altspace/components
 */
 var AFrameComponent = (function (AFrameSystem) {
 	function AFrameComponent () {
@@ -355,9 +357,8 @@ function safeDeepSet(obj, keys, value)
 
 /**
 * Enable or disable cursor collision on the object.
-* @mixin altspace-cursor-collider
-* @memberof altspace
-* @prop {boolean} enabled=true - The state of the cursor collider.
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
 */
 
 var AltspaceCursorCollider = (function (AFrameComponent$$1) {
@@ -412,8 +413,8 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 /**
 * Enables tracked control support for A-Frame applications that use the built-in
 * `tracked-controls`, `vive-controls` or `hand-controls` components.
-* @mixin altspace-tracked-controls
-* @memberof altspace
+* @extends module:altspace/components.AFrameComponent
+* @memberof module:altspace/components
 */
 var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 	function AltspaceTrackedControls () {
@@ -466,22 +467,9 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
-* @namespace altspace
-*/
-
-/**
 * The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
-* @mixin altspace
-* @memberof altspace
-* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
-* This is the default behavior for three.js apps, but not for A-Frame apps.
-* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
-* or `top` of the Altspace enclosure.
-* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
-* enclosure is flat.
-* @property {boolean} fullspace=`false` - Puts the app into fullspace mode.
 *
 * @example
 * <head>
@@ -494,6 +482,9 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 *     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
 *   </a-scene>
 * </body>
+*
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
 */
 var AltspaceComponent = (function (AFrameComponent$$1) {
 	function AltspaceComponent () {
@@ -707,11 +698,12 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 
 /**
 * Sync the color property of the object between clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
-* @mixin sync-color
-* @memberof sync
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity.
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
 */
+
 var SyncColor = (function (AFrameComponent$$1) {
 	function SyncColor () {
 		AFrameComponent$$1.apply(this, arguments);
@@ -777,28 +769,12 @@ var SyncColor = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
-* Enables the synchronization of properties of entities. All property sync components
-* require both a {@link sync.sync-system} on `a-scene`, and a {@link sync.sync}
-* on the entity to be synced.
-* @name sync
-* @namespace sync
-* @example
-* <a-scene sync-system='app: example sync; author: altspacevr'>
-*   <a-entity sync='ownOn: cursordown' sync-color></a-entity>
-* </a-scene>
-*/
-
-/**
 * Enables the synchronization of properties of the entity. Must be used in
-* conjuction with the {@link sync.sync-system} component and a component for a
-* specific property (e.g. {@link sync.sync-transform}).
-* @memberof sync
-* @mixin sync
-* @prop {string} ownOn - The name of the event, or a list of events, that
-* will cause the local client to take ownership of this object. This field
-* cannot be updated after initialization.
+* conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
+* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}).
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
 */
-
 var SyncComponent = (function (AFrameComponent$$1) {
 	function SyncComponent(isComponent)
 	{
@@ -830,6 +806,11 @@ var SyncComponent = (function (AFrameComponent$$1) {
 
 	var prototypeAccessors = { schema: {} };
 
+	/**
+	* @prop {string} ownOn - The name of the event, or a list of events, that
+	* will cause the local client to take ownership of this object. This field
+	* cannot be updated after initialization.
+	*/
 	prototypeAccessors.schema.get = function (){
 		return {
 			mode: { default: 'link' },
@@ -958,9 +939,9 @@ var SyncComponent = (function (AFrameComponent$$1) {
 /**
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
-* [altspace.utilities.sync.connect]{@link http://altspacevr.github.io/AltspaceSDK/doc/module-altspace_utilities_sync.html#.connect}.
+* [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
 * This component must be present on `a-scene` for any other sync components to work.
-* @extends AFrameSystem
+* @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
 var SyncSystem = (function (AFrameSystem$$1) {
@@ -1215,8 +1196,8 @@ AFRAME.registerComponent('sync-transform',
 * Synchronize the playback state of an {@link n.n-sound} component between clients.
 * Requires both a {@link sync.sync-system} component on the `a-scene`, and a
 * {@link sync.sync} component on the target entity.
-* @mixin sync-n-sound
-* @memberof sync
+* @extends module:altspace/components.AFrameComponent
+* @memberof module:altspace/components
 */
 var SyncNSound = (function (AFrameComponent$$1) {
 	function SyncNSound () {
@@ -1233,113 +1214,100 @@ var SyncNSound = (function (AFrameComponent$$1) {
 		return ['sync'];
 	};
 
+	SyncNSound.prototype.init = function init ()
+	{
+		this.sync = this.el.components.sync;
+		this.scene = this.el.sceneEl;
+		this.syncSys = this.scene.systems['sync-system'];
+
+		this.soundStateRef = null;
+		this.soundEventRef = null;
+
+		if(this.sync.isConnected)
+			{ this.start(); }
+		else
+			{ this.el.addEventListener('connected', this.start.bind(this)); }
+	};
+
+	SyncNSound.prototype.remove = function remove ()
+	{
+		this.soundStateRef.off('value');
+		this.soundEventRef.off('value');
+	};
+
+	SyncNSound.prototype.start = function start ()
+	{
+		var this$1 = this;
+
+		this.soundStateRef = this.sync.dataRef.child('sound/state');
+		this.soundEventRef = this.sync.dataRef.child('sound/event');
+
+		function sendEvent(event) {
+			if (!this.sync.isMine) { return; }
+			var event = {
+				type: event.type,
+				sender: this.syncSys.clientId,
+				el: this.el.id,
+				time: Date.now()
+			};
+			this.soundEventRef.set(event);
+		}
+
+		this.el.addEventListener('sound-played', sendEvent.bind(this));
+		this.el.addEventListener('sound-paused', sendEvent.bind(this));
+
+		this.soundEventRef.on('value', (function (snapshot) {
+			if (this$1.sync.isMine)
+				{ return; }
+
+			var event = snapshot.val();
+			if (!event)
+				{ return; }
+
+			if (event.el === this$1.el.id) {
+				var sound = this$1.el.components['n-sound'];
+				if (event.type === 'sound-played') {
+					sound.playSound();
+				}
+				else {
+					sound.pauseSound();
+				}
+			}
+		}).bind(this));
+
+		this.el.addEventListener('componentchanged', (function (event) {
+			if (!this$1.sync.isMine) { return; }
+			var name = event.detail.name;
+			if (name !== 'n-sound') { return; }
+			this$1.soundStateRef.set(event.detail.newData);
+		}).bind(this));
+
+		this.soundStateRef.on('value', (function (snapshot) {
+			if (this$1.sync.isMine) { return; }
+			var state = snapshot.val();
+			if (!state) { return; }
+			this$1.el.setAttribute('n-sound', state);
+		}).bind(this));
+	};
+
 	Object.defineProperties( SyncNSound.prototype, prototypeAccessors );
 
 	return SyncNSound;
 }(AFrameComponent));
 
-AFRAME.registerComponent('sync-n-sound',
-{
-	dependencies: ['sync'],
-	schema: { },
-	init: function () {
-		var component = this;
-		var sync = component.el.components.sync;
-		var scene = document.querySelector('a-scene');
-		var syncSys = scene.systems['sync-system'];
-		if(sync.isConnected) { start(); } else { component.el.addEventListener('connected', start); }
-
-		function start(){
-			component.soundStateRef = sync.dataRef.child('sound/state');
-			component.soundEventRef = sync.dataRef.child('sound/event');
-
-			function sendEvent(event) {
-				if (!sync.isMine) { return; }
-				var event = {
-					type: event.type,
-					sender: syncSys.clientId,
-					el: component.el.id,
-					time: Date.now()
-				};
-				component.soundEventRef.set(event);
-			}
-
-			component.el.addEventListener('sound-played', sendEvent);
-			component.el.addEventListener('sound-paused', sendEvent);
-
-			component.soundEventRef.on('value', function (snapshot) {
-				if (sync.isMine) { return; }
-				var event = snapshot.val();
-				if (!event) { return; }
-				if (event.el === component.el.id) {
-					var sound = component.el.components['n-sound'];
-					if (event.type === 'sound-played') {
-						sound.playSound();
-					}
-					else {
-						sound.pauseSound();
-					}
-				}
-			});
-
-			component.el.addEventListener('componentchanged', function (event) {
-				if (!sync.isMine) { return; }
-				var name = event.detail.name;
-				if (name !== 'n-sound') { return; }
-				component.soundStateRef.set(event.detail.newData);
-			});
-
-			component.soundStateRef.on('value', function (snapshot) {
-				if (sync.isMine) { return; }
-				var state = snapshot.val();
-				if (!state) { return; }
-				component.el.setAttribute('n-sound', state);
-			});
-		}
-	},
-	remove: function () {
-		this.soundStateRef.off('value');
-		this.soundEventRef.off('value');
-	}
-});
-
 /**
- * The wire component allows you to trigger an event on another entity when an event occurs on an entity
- * @mixin wire
- * @property {string} on Name of an event to listen to
- * @property {string} gained Name of a state to watch for
- * @property {string} lost Name of a state to watch for
- * @property {string} emit Name of an event to trigger on the targets
- * @property {string} gain Name of a state to add on the target
- * @property {string} lose Name of a state to remove on the target
- * @property {selector} targets A selector to pick which objects to wire to
- * @property {selector} target - A selector to pick a single object to wire to
+ * The wire component allows you to trigger an event on another entity when an event occurs on an entity.
+ * @memberof module:altspace/components
+ * @extends module:altspace/components.AFrameComponent
  **/
-AFRAME.registerComponent('wire',
-{
-	multiple: true,
-	schema: {
-		on: {type: 'string'},
-		emit: {type: 'string'},
-		gained: {type: 'string'},
-		lost: {type: 'string'},
-		gain: {type: 'string'},
-		lose: {type: 'string'},
-		targets: {type: 'selectorAll'},
-		target: {type: 'selector'}
-	},
-	update: function (oldData) {
-		if (oldData.on) {
-			this.el.removeEventListener(oldData.on, this.actOnTargets);
-		}
-		if (oldData.gained) {
-			this.el.removeEventListener('stateadded', this.actOnTargetsIfStateMatches);
-		}
-		if (oldData.lost) {
-			this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
-		}
 
-		this.actOnTargets = function () {
+var Wire = (function (AFrameComponent$$1) {
+	function Wire()
+	{
+		this.multiple = true;
+
+		this.actOnTargets = function()
+		{
 			function act(el) {
 				if (this.data.emit) {
 					el.emit(this.data.emit);
@@ -1351,8 +1319,12 @@ AFRAME.registerComponent('wire',
 					el.removeState(this.data.lose);
 				}
 			}
-			if(this.data.targets) { this.data.targets.forEach(act.bind(this)); }
-			if(this.data.target) { act.call(this, this.data.target); }
+
+			if(this.data.targets)
+				{ this.data.targets.forEach(act.bind(this)); }
+
+			if(this.data.target)
+				{ act.call(this, this.data.target); }
 		}.bind(this);
 
 		this.actOnTargetsIfStateMatches = function (event) {
@@ -1361,6 +1333,38 @@ AFRAME.registerComponent('wire',
 				this.actOnTargets();
 			}
 		}.bind(this);
+	}
+
+	if ( AFrameComponent$$1 ) Wire.__proto__ = AFrameComponent$$1;
+	Wire.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Wire.prototype.constructor = Wire;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			on: {type: 'string'},
+			emit: {type: 'string'},
+			gained: {type: 'string'},
+			lost: {type: 'string'},
+			gain: {type: 'string'},
+			lose: {type: 'string'},
+			targets: {type: 'selectorAll'},
+			target: {type: 'selector'}
+		};
+	};
+
+	Wire.prototype.update = function update (oldData)
+	{
+		if (oldData.on) {
+			this.el.removeEventListener(oldData.on, this.actOnTargets);
+		}
+		if (oldData.gained) {
+			this.el.removeEventListener('stateadded', this.actOnTargetsIfStateMatches);
+		}
+		if (oldData.lost) {
+			this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
+		}
 
 		if (this.data.on) {
 			this.el.addEventListener(this.data.on, this.actOnTargets);
@@ -1371,35 +1375,737 @@ AFRAME.registerComponent('wire',
 		if (this.data.lost) {
 			this.el.addEventListener('stateremoved', this.actOnTargetsIfStateMatches);
 		}
-	},
-	remove: function () {
+	};
+
+	Wire.prototype.remove = function remove () {
 		this.el.removeEventListener(this.data.on, this.actOnTargets);
 		this.el.removeEventListener('stateadded', this.actOnTargetsIfStateMatches);
 		this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
+	};
+
+	Object.defineProperties( Wire.prototype, prototypeAccessors );
+
+	return Wire;
+}(AFrameComponent));
+
+// graceful fallback in web browsers
+if (!window.altspace || !altspace.inClient)
+{
+	var noop = function () {};
+	safeDeepSet(window, ['altspace','addNativeComponent'], noop);
+	safeDeepSet(window, ['altspace','updateNativeComponent'], noop);
+	safeDeepSet(window, ['altspace','removeNativeComponent'], noop);
+}
+
+// create js-side dummy meshes so things are processed correctly
+var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
+var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+placeholderMaterial.visible = false;
+var PlaceholderMesh = (function (superclass) {
+	function PlaceholderMesh(){
+		superclass.call(this, placeholderGeometry, placeholderMaterial);
 	}
-});
+
+	if ( superclass ) PlaceholderMesh.__proto__ = superclass;
+	PlaceholderMesh.prototype = Object.create( superclass && superclass.prototype );
+	PlaceholderMesh.prototype.constructor = PlaceholderMesh;
+
+	return PlaceholderMesh;
+}(THREE.Mesh));
+
+/**
+* Native components represent Unity-native game objects that offer extended functionality
+* only in AltspaceVR, with added caveats. This is the abstract base class for all
+* native components. Do not use this class directly.
+*
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var NativeComponent = (function (AFrameComponent$$1) {
+	function NativeComponent(name){
+		this.name = name;
+	}
+
+	if ( AFrameComponent$$1 ) NativeComponent.__proto__ = AFrameComponent$$1;
+	NativeComponent.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	NativeComponent.prototype.constructor = NativeComponent;
+
+	NativeComponent.prototype.init = function init ()
+	{
+		var mesh = this.mesh || this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+
+		//If you attach native components to an entity, it will not use a default collider
+		mesh.userData.altspace = mesh.userData.altspace || {};
+		mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
+		mesh.userData.altspace.collider.enabled = false;
+
+		altspace.addNativeComponent(mesh, this.name);
+
+		//to pass defaults
+		this.update(this.data);
+	};
+
+	NativeComponent.prototype.update = function update (){
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.updateNativeComponent(mesh, this.name, this.data);
+	};
+
+	NativeComponent.prototype.remove = function remove (){
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.removeNativeComponent(mesh, this.name);
+	};
+
+	NativeComponent.prototype.callComponent = function callComponent (name){
+		var args = [], len = arguments.length - 1;
+		while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.callNativeComponent(mesh, this.name, name, args);
+	};
+
+	return NativeComponent;
+}(AFrameComponent));
+
+/**
+* Attach a given native object to this entity.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+* @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
+*/
+var NObject = (function (NativeComponent$$1) {
+	function NObject(){ NativeComponent$$1.call(this, 'n-object'); }
+
+	if ( NativeComponent$$1 ) NObject.__proto__ = NativeComponent$$1;
+	NObject.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NObject.prototype.constructor = NObject;
+
+	var prototypeAccessors = { schema: {} };
+
+	/**
+	* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
+	* can accept all resource types except for `interactables`.
+	*/
+	prototypeAccessors.schema.get = function (){
+		return {res: {type: 'string'}};
+	};
+
+	Object.defineProperties( NObject.prototype, prototypeAccessors );
+
+	return NObject;
+}(NativeComponent));
+
+/**
+* Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
+* These copies will be physically interactive and automatically synchronized
+* between users.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+* @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
+*/
+var NSpawner = (function (NativeComponent$$1) {
+	function NSpawner(){ NativeComponent$$1.call(this, 'n-spawner'); }
+
+	if ( NativeComponent$$1 ) NSpawner.__proto__ = NativeComponent$$1;
+	NSpawner.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NSpawner.prototype.constructor = NSpawner;
+
+	var prototypeAccessors$1 = { schema: {} };
+
+	/**
+	* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
+	* can only accept resources of type `interactables`.
+	*/
+	prototypeAccessors$1.schema.get = function (){
+		return {res: {type: 'string'}};
+	};
+
+	Object.defineProperties( NSpawner.prototype, prototypeAccessors$1 );
+
+	return NSpawner;
+}(NativeComponent));
+
+/**
+* Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
+* This text will be clearer than texture-based text and more performant than geometry-based test.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NText = (function (NativeComponent$$1) {
+	function NText(){ NativeComponent$$1.call(this, 'n-text'); }
+
+	if ( NativeComponent$$1 ) NText.__proto__ = NativeComponent$$1;
+	NText.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NText.prototype.constructor = NText;
+
+	var prototypeAccessors$2 = { schema: {} };
+
+	/**
+	* @prop {string} text - The text to be drawn.
+	* @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
+	* @prop {number} width=10 - The width of the text area in meters. If the
+	* text is wider than this value, the overflow will be wrapped to the next line.
+	* @prop {number} height=1 - The height of the text area in meters. If the
+	* text is taller than this value, the overflow will be cut off.
+	* @prop {string} horizontalAlign=middle - The horizontal anchor point for
+	* the text. Can be `left`, `middle`, or `right`.
+	* @prop {string} verticalAlign=middle - The vertical anchor point for the
+	* text. Can be `top`, `middle`, or `bottom`.
+	*/
+	prototypeAccessors$2.schema.get = function (){
+		return {
+			text: { default: '', type: 'string' },
+			/*color: { default: 'white',
+				parse: function(value) {
+					return parseFloat(value, 10);
+				},
+				stringify: function(value) {
+					return value.toString();
+				}},*/
+			fontSize: { default: '10', type: 'int' },//roughly a meter tall
+			width: { default: '10', type: 'number' },//in meters
+			height: { default: '1', type: 'number' },//in meters
+			horizontalAlign: { default: 'middle'},
+			verticalAlign: { default: 'middle'}
+		};
+	};
+
+	Object.defineProperties( NText.prototype, prototypeAccessors$2 );
+
+	return NText;
+}(NativeComponent));
+
+/**
+* Make the object's +Z always face the viewer. Currently will only directly apply
+* to main mesh or native component on the attached entity, not any children or submeshes.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NBillboard = (function (NativeComponent$$1) {
+	function NBillboard(){ NativeComponent$$1.call(this, 'n-billboard'); }
+
+	if ( NativeComponent$$1 ) NBillboard.__proto__ = NativeComponent$$1;
+	NBillboard.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NBillboard.prototype.constructor = NBillboard;
+
+	return NBillboard;
+}(NativeComponent));
+
+/**
+* Abstract base class for [NSphereCollider]{@link module:altspace/components.NSphereCollider},
+* [NBoxCollider]{@link module:altspace/components.NBoxCollider},
+* [NCapsuleCollider]{@link module:altspace/components.NCapsuleCollider},
+* and [NMeshCollider]{@link module:altspace/components.NMeshCollider}. You cannot use
+* this class directly, but instead you should add one of those components
+* to your objects.
+* @prop {vec3} center=0,0,0 - The offset of the collider in local space.
+* @prop {string} type=hologram - The type of collider, one of: `object` | `environment` | `hologram`.
+* Object colliders collide with other objects, the environment, and the cursor.
+* Environment colliders collide with everything objects do, but you can also
+* teleport onto them. Hologram colliders only collide with other holograms and
+* the cursor.
+* @prop {boolean} isTrigger=false - If true, this collider will not block
+* other objects, but instead fire a `triggerenter` event when an object comes
+* into contact with it, and a `triggerexit` when it leaves contact.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NCollider = (function (NativeComponent$$1) {
+	function NCollider () {
+		NativeComponent$$1.apply(this, arguments);
+	}
+
+	if ( NativeComponent$$1 ) NCollider.__proto__ = NativeComponent$$1;
+	NCollider.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NCollider.prototype.constructor = NCollider;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			center: { type: 'vec3' },
+			type: { type: 'string', default: 'object' },
+			isTrigger: { default: false, type: 'boolean' }
+		};
+	};
+
+	Object.defineProperties( NCollider.prototype, prototypeAccessors );
+
+	return NCollider;
+}(NativeComponent));
+
+/**
+* A sphere-shaped collider.
+* @prop {Number} radius=0.001 - The radius of the sphere collider in meters
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NSphereCollider = (function (NCollider) {
+	function NSphereCollider(){ NCollider.call(this, 'n-sphere-collider'); }
+
+	if ( NCollider ) NSphereCollider.__proto__ = NCollider;
+	NSphereCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NSphereCollider.prototype.constructor = NSphereCollider;
+
+	var prototypeAccessors$1 = { schema: {} };
+	prototypeAccessors$1.schema.get = function (){
+		return {
+			radius: { default: '0.001', type: 'number' },
+		};
+	};
+
+	Object.defineProperties( NSphereCollider.prototype, prototypeAccessors$1 );
+
+	return NSphereCollider;
+}(NCollider));
+
+/**
+* Create a box-shaped collider on this entity.
+* @prop {vec3} size=1,1,1 - The dimensions of the collider.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NBoxCollider = (function (NCollider) {
+	function NBoxCollider(){ NCollider.call(this, 'n-box-collider'); }
+
+	if ( NCollider ) NBoxCollider.__proto__ = NCollider;
+	NBoxCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NBoxCollider.prototype.constructor = NBoxCollider;
+
+	var prototypeAccessors$2 = { schema: {} };
+	prototypeAccessors$2.schema.get = function (){
+		return {
+			size: { type: 'vec3', default: '1 1 1' }
+		};
+	};
+
+	Object.defineProperties( NBoxCollider.prototype, prototypeAccessors$2 );
+
+	return NBoxCollider;
+}(NCollider));
+
+/**
+* Create a capsule-shaped collider on this entity. Capsules
+* are a union of a cylinder and two spheres on top and bottom.
+* @prop {number} radius=1 - The radius of the capsule in meters.
+* @prop {number} height=1 - The height of the shaft of the capsule in meters.
+* @prop {string} direction=y - The axis with which the capsule is aligned.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NCapsuleCollider = (function (NCollider) {
+	function NCapsuleCollider(){ NCollider.call(this, 'n-capsule-collider'); }
+
+	if ( NCollider ) NCapsuleCollider.__proto__ = NCollider;
+	NCapsuleCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NCapsuleCollider.prototype.constructor = NCapsuleCollider;
+
+	var prototypeAccessors$3 = { schema: {} };
+	prototypeAccessors$3.schema.get = function (){
+		return {
+			radius: { default: '0', type: 'number' },
+			height: { default: '0', type: 'number' },
+			direction: { default: 'y' }
+		};
+	};
+
+	Object.defineProperties( NCapsuleCollider.prototype, prototypeAccessors$3 );
+
+	return NCapsuleCollider;
+}(NCollider));
+
+/**
+* Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
+* low-poly meshes.
+* @example <a-box n-mesh-collider></a-box>
+* @prop {boolean} convex=true - Whether the collider should be convex or concave. Set this to false if you have holes
+* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
+* expensive comparet to conves colliders.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NMeshCollider = (function (NCollider) {
+	function NMeshCollider(mesh){
+		if ( mesh === void 0 ) mesh = null;
+
+		NCollider.call(this, 'n-mesh-collider');
+		this.mesh = mesh;
+		this.subcomponents = [];
+	}
+
+	if ( NCollider ) NMeshCollider.__proto__ = NCollider;
+	NMeshCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NMeshCollider.prototype.constructor = NMeshCollider;
+
+	var prototypeAccessors$4 = { schema: {} };
+
+	prototypeAccessors$4.schema.get = function (){
+		return {
+			convex: { type: 'boolean', default: 'true' }
+		};
+	};
+
+	NMeshCollider.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		if(this.mesh){
+			NCollider.prototype.init.call(this);
+		}
+		else
+		{
+			this.subcomponents = [];
+			var mesh = this.el.object3DMap.mesh;
+			mesh.traverse((function (o) {
+				if(o instanceof THREE.Mesh){
+					var subcomp = new NMeshCollider(o);
+					this$1.subcomponents.push(subcomp);
+					subcomp.init();
+				}
+			}).bind(this));
+
+			this.el.addEventListener('model-loaded', this.init.bind(this));
+		}
+	};
+
+	NMeshCollider.prototype.update = function update (oldData)
+	{
+		var this$1 = this;
+
+		if(this.mesh){
+			NCollider.prototype.update.call(this, oldData);
+		}
+		else {
+			this.subcomponents.forEach((function (sub) {
+				sub.data = this$1.data;
+				sub.update(oldData);
+			}).bind(this));
+		}
+	};
+
+	NMeshCollider.prototype.remove = function remove ()
+	{
+		if(this.mesh){
+			NCollider.prototype.remove.call(this);
+		}
+		else {
+			this.subcomponents.forEach((function (sub) {
+				sub.remove();
+			}).bind(this));
+		}
+	};
+
+	Object.defineProperties( NMeshCollider.prototype, prototypeAccessors$4 );
+
+	return NMeshCollider;
+}(NCollider));
+
+/**
+* A container keeps a running tally of how many objects are within
+* its bounds, and adds and removes the states `container-full` and
+* `container-empty` based on the current count of objects. Can fire three
+* special events: `container-full`, `container-empty`, and `container-count-changed`.
+* @prop {number} capacity=4 - The value at which the container will fire the
+* `container-full` event.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NContainer = (function (NativeComponent$$1) {
+	function NContainer(){ NativeComponent$$1.call(this, 'n-container'); }
+
+	if ( NativeComponent$$1 ) NContainer.__proto__ = NativeComponent$$1;
+	NContainer.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NContainer.prototype.constructor = NContainer;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){ return {capacity: { default: 4, type: 'number' }}; };
+	NContainer.prototype.init = function init ()
+	{
+		NativeComponent$$1.prototype.init.call(this);
+
+		var el = this.el;
+		var component = this;
+
+		el.addEventListener('stateadded', function (event) {
+			if(event.detail.state === 'container-full'){
+				el.emit('container-full');
+			}
+			if(event.detail.state === 'container-empty'){
+				el.emit('container-empty');
+			}
+		});
+
+		el.addEventListener('container-count-changed', function (event) {
+			component.count = event.detail.count;
+		});
+	};
+
+	Object.defineProperties( NContainer.prototype, prototypeAccessors );
+
+	return NContainer;
+}(NativeComponent));
+
+/**
+* Play the sound given by the `src` or `res` property from the location
+* of the entity.
+* @prop {string} res - The resource identifier for a built-in sound clip.
+* @prop {string} src - A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
+* @prop {string} on - The name of the event that will play this sound clip.
+* @prop {boolean} loop=false - Tells the clip to loop back to the beginning of the clip
+* once it's finished.
+* @prop {boolean} autoplay=false - Tells the clip to start automatically when
+* the scene loads, instead of waiting for `playSound()`.
+* @prop {boolean} oneshot=false - Tells the clip to clean itself up when it
+* finishes playing. Allows for overlapping instances of the sound.
+* @prop {number} volume=1 - The volume of the clip, from [0,1].
+* @prop {number} spatialBlend=1 - How spatialized a sound is, from [0,1].
+* A value of 1 will be fully localized, and the sound will pan left and
+* right as you turn your head. A value of 0 makes it non-spatialized, and
+* it will always be heard in both ears.
+* @prop {number} pitch=1 - The speed multiplier for the sound. 0.5 is one
+* octave down, and 2 is one octave up.
+* @prop {number} minDistance=1 - Inside this distance in meters,
+* the sound volume is at full volume.
+* @prop {number} maxDistance=12 - If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
+* @prop {string} rolloff='logarithmic' - Set this to 'linear' or 'cosine' if you want to cut sounds off at a
+* maxDistance.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NSound = (function (NativeComponent$$1) {
+	function NSound(){ NativeComponent$$1.call(this, 'n-sound'); }
+
+	if ( NativeComponent$$1 ) NSound.__proto__ = NativeComponent$$1;
+	NSound.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NSound.prototype.constructor = NSound;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			on: { type: 'string' },
+			res: { type: 'string' },
+			src: { type: 'string' },
+			loop: { type: 'boolean' },
+			volume: { type: 'number', default: 1 },
+			autoplay: { type: 'boolean' },
+			oneshot: { type: 'boolean' },
+			spatialBlend: { type: 'float', default: 1 },
+			pitch: { type: 'float', default: 1 },
+			minDistance: { type: 'float', default: 1 },
+			maxDistance: { type: 'float', default: 12 },
+			rolloff: { type: 'string', default: 'logarithmic' },
+		};
+	};
+
+	NSound.prototype.init = function init ()
+	{
+		var src = this.data.src;
+		if (src && !src.startsWith('http')) {
+			if (src.startsWith('/')) {
+				this.data.src = location.origin + src;
+			}
+			else {
+				var currPath = location.pathname;
+				if (!currPath.endsWith('/')) {
+					currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+				}
+				this.data.src = location.origin + currPath + src;
+			}
+		}
+		NativeComponent$$1.prototype.init.call(this);
+	};
+
+	NSound.prototype.update = function update (oldData)
+	{
+		NativeComponent$$1.prototype.update.call(this, oldData);
+		if (this.playHandler) {
+		  this.el.removeEventListener(oldData.on, this.playHandler);
+		}
+		if (this.data.on) {
+		  this.playHandler = this.playSound.bind(this);
+		  this.el.addEventListener(this.data.on, this.playHandler);
+		}
+	};
+
+	NSound.prototype.remove = function remove ()
+	{
+		NativeComponent$$1.prototype.remove.call(this);
+		if (this.playHandler) {
+		  this.el.removeEventListener(oldData.on, this.playHandler);
+		}
+	};
+
+	/**
+	* Stop the playing sound, and preserve position in clip.
+	*/
+	NSound.prototype.pauseSound = function pauseSound () {
+		this.callComponent('pause');
+
+		/**
+		* @event sound-paused
+		* @memberof module:altspace/components
+		*/
+		this.el.emit('sound-paused');
+	};
+
+	/**
+	* Start the sound playing.
+	*/
+	NSound.prototype.playSound = function playSound () {
+		this.callComponent('play');
+
+		/**
+		* @event sound-played
+		* @memberof module:altspace/components
+		*/
+		this.el.emit('sound-played');
+	};
+
+	/**
+	* Jump to a position in the clip.
+	* @param {number} time - The time in milliseconds to jump to.
+	*/
+	NSound.prototype.seek = function seek (time) {
+		this.callComponent('seek', {time: time});
+	};
+
+	Object.defineProperties( NSound.prototype, prototypeAccessors );
+
+	return NSound;
+}(NativeComponent));
 
 /**
 * @module altspace/components
 */
 
-//import NativeComponents from './native-components';
-// TODO: finish porting aframe components to es6
 if (window.AFRAME)
 {
-    /**
-    * @mixin sync-system
-    * @memberof module:altspace/components
-    * @see {@link module:altspace/components.SyncSystem}
-    */
-    registerSystemClass('sync-system', SyncSystem);
+	/**
+	* @mixin altspace-cursor-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.AltspaceCursorCollider
+	*/
+	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
 
-    registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
-    registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
-    registerComponentClass('altspace', AltspaceComponent);
-    registerComponentClass('sync-color', SyncColor);
-    registerComponentClass('sync', SyncComponent);
+	/**
+	* @mixin altspace-tracked-controls
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.AltspaceTrackedControls
+	*/
+	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
 
+	/**
+	* @mixin altspace
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.AltspaceComponent
+	*/
+	registerComponentClass('altspace', AltspaceComponent);
+
+	/**
+	* @mixin sync-system
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncSystem
+	*/
+	registerSystemClass('sync-system', SyncSystem);
+
+	/**
+	* @mixin sync-color
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncColor
+	*/
+	registerComponentClass('sync-color', SyncColor);
+
+	/**
+	* @mixin sync
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncComponent
+	*/
+	registerComponentClass('sync', SyncComponent);
+
+	/**
+	* @mixin sync-n-sound
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.SyncNSound
+	*/
+	registerComponentClass('sync-n-sound', SyncNSound);
+
+	/**
+	* @mixin wire
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.Wire
+	*/
+	registerComponentClass('wire', Wire);
+
+	/**
+	* @mixin n-object
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NObject
+	*/
+	registerComponentClass('n-object', NObject);
+
+	/**
+	* @mixin n-spawner
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NSpawner
+	*/
+	registerComponentClass('n-spawner', NSpawner);
+
+	/**
+	* @mixin n-text
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NText
+	*/
+	registerComponentClass('n-text', NText);
+
+	/**
+	* @mixin n-billboard
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NBillboard
+	*/
+	registerComponentClass('n-billboard', NBillboard);
+
+	/**
+	* @mixin n-container
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NContainer
+	*/
+	registerComponentClass('n-container', NContainer);
+
+	/**
+	* @mixin n-sound
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NSound
+	*/
+	registerComponentClass('n-sound', NSound);
+
+	/**
+	* @mixin n-sphere-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NSphereCollider
+	*/
+	registerComponentClass('n-sphere-collider', NSphereCollider);
+
+	/**
+	* @mixin n-box-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NBoxCollider
+	*/
+	registerComponentClass('n-box-collider', NBoxCollider);
+
+	/**
+	* @mixin n-capsule-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NCapsuleCollider
+	*/
+	registerComponentClass('n-capsule-collider', NCapsuleCollider);
+
+	/**
+	* @mixin n-mesh-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NMeshCollider
+	*/
+	registerComponentClass('n-mesh-collider', NMeshCollider);
 }
 
 
@@ -1412,7 +2118,18 @@ var index = Object.freeze({
 	SyncSystem: SyncSystem,
 	SyncComponent: SyncComponent,
 	SyncColor: SyncColor,
-	flatten: flatten
+	SyncNSound: SyncNSound,
+	Wire: Wire,
+	NObject: NObject,
+	NSpawner: NSpawner,
+	NText: NText,
+	NBillboard: NBillboard,
+	NContainer: NContainer,
+	NSound: NSound,
+	NSphereCollider: NSphereCollider,
+	NBoxCollider: NBoxCollider,
+	NCapsuleCollider: NCapsuleCollider,
+	NMeshCollider: NMeshCollider
 });
 
 /**

@@ -81,11 +81,6 @@ class NCapsuleCollider extends NCollider {
 	}
 }
 
-function forEachMesh(mesh, executor)
-{
-
-}
-
 /**
 * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
 * low-poly meshes.
@@ -98,7 +93,9 @@ function forEachMesh(mesh, executor)
 */
 class NMeshCollider extends NCollider {
 	get schema(){
-		convex: { type: 'boolean', default: 'true' }
+		return {
+			convex: { type: 'boolean', default: 'true' }
+		};
 	}
 
 	constructor(mesh = null){
@@ -153,3 +150,5 @@ class NMeshCollider extends NCollider {
 		}
 	}
 }
+
+export { NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider };

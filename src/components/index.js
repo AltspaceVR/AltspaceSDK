@@ -13,10 +13,12 @@ import SyncComponent from './SyncComponent';
 import SyncSystem from './SyncSystem';
 import SyncTransform from './sync-transform';
 import SyncNSound from './sync-n-sound';
-//import NativeComponents from './native-components';
 import Wire from './wire';
 
 import {NObject, NSpawner, NText, NBillboard} from './NSmallComponents';
+import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
+import NContainer from './NContainer';
+import NSound from './NSound';
 
 if (window.AFRAME)
 {
@@ -103,10 +105,53 @@ if (window.AFRAME)
 	* @extends module:altspace/components.NBillboard
 	*/
 	registerComponentClass('n-billboard', NBillboard);
+
+	/**
+	* @mixin n-container
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NContainer
+	*/
+	registerComponentClass('n-container', NContainer);
+
+	/**
+	* @mixin n-sound
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NSound
+	*/
+	registerComponentClass('n-sound', NSound);
+
+	/**
+	* @mixin n-sphere-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NSphereCollider
+	*/
+	registerComponentClass('n-sphere-collider', NSphereCollider);
+
+	/**
+	* @mixin n-box-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NBoxCollider
+	*/
+	registerComponentClass('n-box-collider', NBoxCollider);
+
+	/**
+	* @mixin n-capsule-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NCapsuleCollider
+	*/
+	registerComponentClass('n-capsule-collider', NCapsuleCollider);
+
+	/**
+	* @mixin n-mesh-collider
+	* @memberof module:altspace/components
+	* @extends module:altspace/components.NMeshCollider
+	*/
+	registerComponentClass('n-mesh-collider', NMeshCollider);
 }
 
 export {
 	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
 	SyncComponent, SyncColor, SyncNSound, Wire,
-	NObject, NSpawner, NText, NBillboard
+	NObject, NSpawner, NText, NBillboard, NContainer, NSound,
+	NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider
 };
