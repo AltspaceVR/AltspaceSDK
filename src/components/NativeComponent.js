@@ -38,7 +38,7 @@ class NativeComponent extends AFrameComponent
 
 	init()
 	{
-		let mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+		let mesh = this.mesh || this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
 
 		//If you attach native components to an entity, it will not use a default collider
 		mesh.userData.altspace = mesh.userData.altspace || {};
@@ -52,15 +52,17 @@ class NativeComponent extends AFrameComponent
 	}
 
 	update(){
-		altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
+		let mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.updateNativeComponent(mesh, this.name, this.data);
 	}
 
 	remove(){
-		let mesh = this.el.getObject3D('mesh');
+		let mesh = this.mesh || this.el.object3DMap.mesh;
 		altspace.removeNativeComponent(mesh, this.name);
 	}
 
 	callComponent(name, ...args){
-		altspace.callNativeComponent(this.el.object3DMap.mesh, this.name, name, args);
+		let mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.callNativeComponent(mesh, this.name, name, args);
 	}
 }
