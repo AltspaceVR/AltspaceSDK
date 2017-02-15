@@ -14,7 +14,6 @@ AFRAME.registerComponent('instantiator', {
 		parent: {type: 'selector', default: 'a-scene'},
 		group: {type: 'string', default: 'main'},
 		removeLast: {type: 'boolean', default: 'true'},
-		toggleExisting: {type: 'boolean', default: 'true'}
 	},
 	init: function () {
 		this.onHandler = this.instantiateOrToggle.bind(this);

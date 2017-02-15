@@ -23,11 +23,11 @@ AFRAME.registerComponent('sync-n-parent', {
 		}.bind(this));
 
 		// immediately sync this entity's parent userId to the owner's
-		if (this.sync.isMine) {
-			console.log('BPDEBUG isMine', this.userId);
-			this.attributeRef.set(Object.assign(
-				{}, this.el.components['n-skeleton-parent'].data, {userId: this.userId}));
-		}
+		// if (this.sync.isMine) {
+		// 	console.log('BPDEBUG isMine', this.userId);
+		// 	this.attributeRef.set(Object.assign(
+		// 		{}, this.el.components['n-skeleton-parent'].data, {userId: this.userId}));
+		// }
 		this.el.addEventListener('componentchanged', function (event) {
 			if (!this.sync.isMine) return;
 			var name = event.detail.name;

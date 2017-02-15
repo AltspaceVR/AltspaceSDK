@@ -22,8 +22,7 @@
 * will cause the local client to take ownership of this object. This field
 * cannot be updated after initialization.
 */
-AFRAME.registerComponent('sync',
-{
+AFRAME.registerComponent('sync', {
 	schema: {
 		mode: { default: 'link' },
 		ownOn: { type: 'string' } //cannot be changed after creation
@@ -104,7 +103,7 @@ AFRAME.registerComponent('sync',
 
 				ownerRef.onDisconnect().set(null);
 				return syncSys.clientId;
-			}, function (error, committed, snapshot) {
+			}, function (error, committed) {
 				// Return since transaction will be called again
 				if (!committed) { return; }
 				ownerRef.on('value', function(snapshot) {
