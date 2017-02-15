@@ -19,20 +19,18 @@ import {AFrameComponent} from './AFrameComponent';
 *   </a-scene>
 * </body>
 *
+* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
+* This is the default behavior for three.js apps, but not for A-Frame apps.
+* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
+* or `top` of the Altspace enclosure.
+* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
+* enclosure is flat.
+* @property {boolean} fullspace=`false` - Puts the app into fullspace mode.
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
 class AltspaceComponent extends AFrameComponent
 {
-	/**
-	* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
-	* This is the default behavior for three.js apps, but not for A-Frame apps.
-	* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
-	* or `top` of the Altspace enclosure.
-	* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
-	* enclosure is flat.
-	* @property {boolean} fullspace=`false` - Puts the app into fullspace mode.
-	*/
 	get schema(){
 		return {
 			usePixelScale: { type: 'boolean', default: 'false'},

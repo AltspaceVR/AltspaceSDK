@@ -6,6 +6,9 @@ import {AFrameComponent} from './AFrameComponent';
 * Enables the synchronization of properties of the entity. Must be used in
 * conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
 * specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}).
+* @prop {string} ownOn - The name of the event, or a list of events, that
+* will cause the local client to take ownership of this object. This field
+* cannot be updated after initialization.
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
@@ -33,11 +36,6 @@ class SyncComponent extends AFrameComponent
 		this.isMine = false;
 	}
 
-	/**
-	* @prop {string} ownOn - The name of the event, or a list of events, that
-	* will cause the local client to take ownership of this object. This field
-	* cannot be updated after initialization.
-	*/
 	get schema(){
 		return {
 			mode: { default: 'link' },

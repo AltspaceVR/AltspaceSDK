@@ -3,23 +3,21 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
- * The wire component allows you to trigger an event on another entity when an event occurs on an entity.
- * @memberof module:altspace/components
- * @extends module:altspace/components.AFrameComponent
- **/
+* The wire component allows you to trigger an event on another entity when an event occurs on an entity.
+* @property {string} on Name of an event to listen to
+* @property {string} gained Name of a state to watch for
+* @property {string} lost Name of a state to watch for
+* @property {string} emit Name of an event to trigger on the targets
+* @property {string} gain Name of a state to add on the target
+* @property {string} lose Name of a state to remove on the target
+* @property {selector} targets A selector to pick which objects to wire to
+* @property {selector} target - A selector to pick a single object to wire to
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+**/
 
 class Wire extends AFrameComponent
 {
-	/**
-    * @property {string} on Name of an event to listen to
-    * @property {string} gained Name of a state to watch for
-    * @property {string} lost Name of a state to watch for
-    * @property {string} emit Name of an event to trigger on the targets
-    * @property {string} gain Name of a state to add on the target
-    * @property {string} lose Name of a state to remove on the target
-    * @property {selector} targets A selector to pick which objects to wire to
-    * @property {selector} target - A selector to pick a single object to wire to
-	*/
 	get schema(){
 		return {
 			on: {type: 'string'},
