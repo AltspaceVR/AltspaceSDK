@@ -72,7 +72,7 @@
     "gulp-wrap-umd": "^0.2.1",
     "jsdoc": "^3.4.3",
     "merge-stream": "^1.0.1",
-    "minami": "^1.1.1",
+    "minami": "github:altspacevr/minami",
     "mz": "^2.6.0",
     "ordered-merge-stream": "0.0.0",
     "rollup": "^0.41.4",
