@@ -1,148 +1,143 @@
-//TODO: We need to figure out a way to recieve our first update without caring about ownership.
-// firstValue is probably not the right way to go, probably something about having sent yet. Need to change for both
+'use strict';
+
+import {AFrameComponent} from './AFrameComponent';
+
+//from underscore.js
+function throttle(func, wait, options) {
+	var timeout, context, args, result;
+	var previous = 0;
+	if (!options) options = {};
+
+	var later = function() {
+		previous = options.leading === false ? 0 : Date.now();
+		timeout = null;
+		result = func.apply(context, args);
+		if (!timeout) context = args = null;
+	};
+
+	var throttled = function() {
+		var now = Date.now();
+		if (!previous && options.leading === false) previous = now;
+		var remaining = wait - (now - previous);
+		context = this;
+		args = arguments;
+		if (remaining <= 0 || remaining > wait) {
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = null;
+			}
+			previous = now;
+			result = func.apply(context, args);
+			if (!timeout) context = args = null;
+		} else if (!timeout && options.trailing !== false) {
+			timeout = setTimeout(later, remaining);
+		}
+		return result;
+	};
+
+	throttled.cancel = function() {
+		clearTimeout(timeout);
+		previous = 0;
+		timeout = context = args = null;
+	};
+
+	return throttled;
+};
+
 
 /**
 * Synchronize the position, rotation, and scale of this object with all clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
-* @mixin sync-transform
-* @memberof sync
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity.
+* @alias sync-transform
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+* @example
+* <a-scene sync-system='app: myapp; author: name'>
+*     <a-box move-it-around sync='ownOn: click' sync-transform></a-box>
+* </a-scene>
 */
-AFRAME.registerComponent('sync-transform',
+class SyncTransform extends AFrameComponent
 {
 	dependencies: ['sync'],
-	schema: {
-	},
-	init: function () {
-		var component = this;
-		var sync = component.el.components.sync;
-		if(sync.isConnected) start(); else component.el.addEventListener('connected', start);
-
-		function start(){
-
-			var positionRef = sync.dataRef.child('position');
-			var rotationRef = sync.dataRef.child('rotation');
-			var scaleRef = sync.dataRef.child('scale');
-
-			component.updateRate = 100;
-
-			var stoppedAnimations = [];
-			//pause all animations on ownership loss
-			component.el.addEventListener('ownershiplost', function() {
-				var children = component.el.children;
-				for (var i = 0; i < children.length; i++) {
-					var tagName = children[i].tagName.toLowerCase();
-					if (tagName === "a-animation") {
-						stoppedAnimations.push(children[i]);
-						children[i].stop();
-					}
-				}
-			});
-			component.el.addEventListener('ownershipgained', function () {
-				for (var i = 0; i < stoppedAnimations.length; i++) {
-					var animation = stoppedAnimations[i];
-					animation.start();
-				}
-				stoppedAnimations = [];
-			});
-
-			function onTransform(snapshot, componentName) {
-				if (sync.isMine) return;
-
-				var value = snapshot.val();
-				if (!value) return;
-
-				component.el.setAttribute(componentName, value);
-			}
-
-			positionRef.on('value', function (snapshot) {
-				onTransform(snapshot, 'position');
-			});
-
-			rotationRef.on('value', function (snapshot) {
-				onTransform(snapshot, 'rotation');
-			});
-
-			scaleRef.on('value', function (snapshot) {
-				onTransform(snapshot, 'scale');
-			});
-
-			var sendPosition = throttle(function(value){
-				positionRef.set(value);
-			}, component.updateRate);
-
-			var sendRotation = throttle(function(value){
-				rotationRef.set(value);
-			}, component.updateRate);
-
-			var sendScale = throttle(function(value){
-				scaleRef.set(value);
-			}, component.updateRate);
-
-			function onComponentChanged(event){
-				if (!sync.isMine) return;
-
-				var name = event.detail.name;
-				var newData = event.detail.newData;
-
-				if (name === 'position') {
-					sendPosition(newData);
-				} else if (name === 'rotation') {
-					sendRotation(newData);
-				} else if (name === 'scale') {
-					sendScale(newData);
-				} else {
-					return;
-				}
-
-			}
-
-			//from underscore.js
-			function throttle(func, wait, options) {
-				var timeout, context, args, result;
-				var previous = 0;
-				if (!options) options = {};
-
-				var later = function() {
-				  previous = options.leading === false ? 0 : Date.now();
-				  timeout = null;
-				  result = func.apply(context, args);
-				  if (!timeout) context = args = null;
-				};
-
-				var throttled = function() {
-				  var now = Date.now();
-				  if (!previous && options.leading === false) previous = now;
-				  var remaining = wait - (now - previous);
-				  context = this;
-				  args = arguments;
-				  if (remaining <= 0 || remaining > wait) {
-					if (timeout) {
-					  clearTimeout(timeout);
-					  timeout = null;
-					}
-					previous = now;
-					result = func.apply(context, args);
-					if (!timeout) context = args = null;
-				  } else if (!timeout && options.trailing !== false) {
-					timeout = setTimeout(later, remaining);
-				  }
-				  return result;
-				};
-
-				throttled.cancel = function() {
-				  clearTimeout(timeout);
-				  previous = 0;
-				  timeout = context = args = null;
-				};
-
-				return throttled;
-			  };
-
-
-			component.el.addEventListener('componentchanged', onComponentChanged);
-		}
+	init()
+	{
+		this.sync = this.el.components.sync;
+		if(this.sync.isConnected)
+			start();
+		else
+			this.el.addEventListener('connected', this.start.bind(this));
 	}
-});
 
-export default null;
+	start()
+	{
+		let sync = this.sync, component = this;
+		let positionRef = sync.dataRef.child('position');
+		let rotationRef = sync.dataRef.child('rotation');
+		let scaleRef = sync.dataRef.child('scale');
+
+		component.updateRate = 100;
+		let stoppedAnimations = [];
+
+		//pause all animations on ownership loss
+		component.el.addEventListener('ownershiplost', () => {
+			component.el.children.forEach(child => {
+				let tagName = child.tagName.toLowerCase();
+				if (tagName === "a-animation") {
+					stoppedAnimations.push(child);
+					child.stop();
+				}
+			});
+		});
+
+		component.el.addEventListener('ownershipgained', () => {
+			stoppedAnimations.forEach(a => a.start());
+			stoppedAnimations = [];
+		});
+
+		function onTransform(snapshot, componentName) {
+			if (sync.isMine) return;
+
+			let value = snapshot.val();
+			if (!value) return;
+
+			component.el.setAttribute(componentName, value);
+		}
+
+		positionRef.on('value', snapshot => onTransform(snapshot, 'position'));
+		rotationRef.on('value', snapshot => onTransform(snapshot, 'rotation'));
+		scaleRef.on('value', snapshot => onTransform(snapshot, 'scale'));
+
+		let sendPosition = throttle(function(value){
+			positionRef.set(value);
+		}, component.updateRate);
+
+		let sendRotation = throttle(function(value){
+			rotationRef.set(value);
+		}, component.updateRate);
+
+		let sendScale = throttle(function(value){
+			scaleRef.set(value);
+		}, component.updateRate);
+
+		function onComponentChanged(event)
+		{
+			if (!sync.isMine) return;
+
+			let name = event.detail.name;
+			let newData = event.detail.newData;
+
+			if (name === 'position') {
+				sendPosition(newData);
+			} else if (name === 'rotation') {
+				sendRotation(newData);
+			} else if (name === 'scale') {
+				sendScale(newData);
+			}
+		}
+
+		component.el.addEventListener('componentchanged', onComponentChanged);
+	}
+}
+
+export default SyncTransform;
