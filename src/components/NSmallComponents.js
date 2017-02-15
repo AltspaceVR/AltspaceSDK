@@ -4,17 +4,14 @@ import NativeComponent from './NativeComponent';
 
 /**
 * Attach a given native object to this entity.
+* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
+* can accept all resource types except for `interactables`.
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
 */
 class NObject extends NativeComponent {
 	constructor(){ super('n-object'); }
-
-	/**
-	* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
-	* can accept all resource types except for `interactables`.
-	*/
 	get schema(){
 		return {res: {type: 'string'}};
 	}
@@ -24,17 +21,14 @@ class NObject extends NativeComponent {
 * Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 * These copies will be physically interactive and automatically synchronized
 * between users.
+* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
+* can only accept resources of type `interactables`.
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
 */
 class NSpawner extends NativeComponent {
 	constructor(){ super('n-spawner'); }
-
-	/**
-	* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
-	* can only accept resources of type `interactables`.
-	*/
 	get schema(){
 		return {res: {type: 'string'}};
 	}
@@ -49,8 +43,8 @@ class NSpawner extends NativeComponent {
 class NText extends NativeComponent {
 	constructor(){ super('n-text'); }
 
+
 	/**
-	* @prop {string} text - The text to be drawn.
 	* @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
 	* @prop {number} width=10 - The width of the text area in meters. If the
 	* text is wider than this value, the overflow will be wrapped to the next line.
@@ -63,6 +57,12 @@ class NText extends NativeComponent {
 	*/
 	get schema(){
 		return {
+			/**
+			* The text to be drawn.
+			* @instance
+			* @member {string} text
+			* @memberof module:altspace/components.NText
+			*/
 			text: { default: '', type: 'string' },
 			/*color: { default: 'white',
 				parse: function(value) {
