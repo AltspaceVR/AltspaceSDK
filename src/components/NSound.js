@@ -96,8 +96,9 @@ class NSound extends NativeComponent
 		this.callComponent('pause');
 
 		/**
+		* Emitted when the sound stops playing
 		* @event sound-paused
-		* @memberof module:altspace/components
+		* @memberof module:altspace/components.NSound
 		*/
 		this.el.emit('sound-paused');
 	}
@@ -109,8 +110,9 @@ class NSound extends NativeComponent
 		this.callComponent('play');
 
 		/**
+		* Emitted when the sound starts playing
 		* @event sound-played
-		* @memberof module:altspace/components
+		* @memberof module:altspace/components.NSound
 		*/
 		this.el.emit('sound-played');
 	}
@@ -127,7 +129,7 @@ class NSound extends NativeComponent
 /**
 * Fired when a sound has loaded and is ready to be played
 * @event n-sound-loaded
-* @memberof module:altspace/components
+* @memberof module:altspace/components.NSound
 */
 
 export default NSound;
