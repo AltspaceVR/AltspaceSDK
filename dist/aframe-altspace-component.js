@@ -1258,6 +1258,10 @@
 	
 				this.sceneRef = this.connection.instance.child('scene');
 				this.clientsRef = this.connection.instance.child('clients');
+				this.instantiatedElementsRef = this.connection.instance.child('instantiatedElements')
+	
+				this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
+				this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
 	
 				// temporary way of having unique identifiers for each client
 				this.clientId = this.sceneEl.object3D.uuid;
@@ -1293,7 +1297,7 @@
 					var shouldInitialize = !snapshot.val();
 					snapshot.ref().set(true);
 	
-					system.initializeInstantiationRef();
+					this.processQueuedInstantiations();
 	
 					system.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
 					system.isConnected = true;
@@ -1304,12 +1308,6 @@
 					get: function () { return masterClientId === this.clientId; }.bind(this)
 				});
 			}.bind(this));
-		},
-		initializeInstantiationRef: function () {
-			this.instantiatedElementsRef = this.sceneRef.child('instantiatedElements')
-			this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
-			this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
-			this.processQueuedInstantiations();
 		},
 		listenToInstantiationGroup: function (snapshot) {
 			snapshot.ref().on('child_added', this.createElement.bind(this));
@@ -1327,6 +1325,7 @@
 					push(instantiationProps).
 					onDisconnect().remove();
 			}.bind(this));
+			// Clear queue.
 			this.queuedInstantiations.length = 0;
 		},
 		instantiate: function (instantiatorId, groupName, mixin, parent) {
@@ -1670,7 +1669,7 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	AFRAME.registerComponent('sync-n-parent', {
+	AFRAME.registerComponent('sync-n-skeleton-parent', {
 		dependencies: ['sync'],
 		init: function () {
 			var scene = document.querySelector('a-scene');
