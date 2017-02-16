@@ -431,15 +431,23 @@
 	
 		function nativeComponentInit() {
 			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-	
+			this.currentMesh = mesh;
 			meshInit.call(this, mesh);
-	
 			//to pass defaults
 			this.update(this.data);
+	
+			this.el.addEventListener('object3dset', function (event) {
+				if (event.detail.type !== 'mesh') { return; }
+				altspace.removeNativeComponent(this.currentMesh, this.name);
+	
+				this.currentMesh = this.el.object3DMap.mesh;
+				meshInit.call(this, this.currentMesh);
+				//to pass defaults
+				this.update(this.data);
+			}.bind(this));
 		}
 		function nativeComponentRemove() {
-			var mesh = this.el.getObject3D('mesh');
-			altspace.removeNativeComponent(mesh, this.name);
+			altspace.removeNativeComponent(this.el.object3DMap.mesh, this.name);
 		}
 		function nativeComponentUpdate(oldData) {
 			altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
@@ -1253,7 +1261,6 @@
 	
 				// temporary way of having unique identifiers for each client
 				this.clientId = this.sceneEl.object3D.uuid;
-				console.log('BPDEBUG userId', this.userInfo.userId, this.clientId);
 				var masterClientId;
 				this.clientsRef.on("value", function (snapshot) {
 					var clientIds = snapshot.val();
@@ -1612,14 +1619,12 @@
 				this.el.setAttribute('n-skeleton-parent', val);
 			}.bind(this));
 	
-			// immediately sync this entity's parent userId to the owner's
-			var haveUserId = this.el.dataset.creatorUserId || this.sync.isMine;
-			var userId = this.el.dataset.creatorUserId || this.syncSys.userInfo.userId;
-			if (haveUserId) {
-				console.log('BPDEBUG isMine', this.el.dataset.creatorUserId, this.sync.isMine, this.el.id, userId);
+			// dataset.creatorUserId is defined when the entity is instantiated via the sync system.
+			if (this.el.dataset.creatorUserId) {
 				this.attributeRef.set(Object.assign(
-					{}, this.el.components['n-skeleton-parent'].data, {userId: userId}));
+					{}, this.el.components['n-skeleton-parent'].data, {userId: this.el.dataset.creatorUserId}));
 			}
+	
 			this.el.addEventListener('componentchanged', function (event) {
 				if (!this.sync.isMine) return;
 				var name = event.detail.name;
@@ -1627,14 +1632,6 @@
 					this.attributeRef.set(event.detail.newData);
 				}
 			}.bind(this));
-	
-			if (!haveUserId) {
-				this.el.addEventListener('ownershipgained', function () {
-					console.log('BPDEBUG ownershipgained', this.el.id, this.syncSys.userInfo.userId);
-					this.attributeRef.set(Object.assign(
-						{}, this.el.components['n-skeleton-parent'].data, {userId: this.syncSys.userInfo.userId}));
-				}.bind(this));
-			}
 		}
 	});
 	
@@ -1681,7 +1678,6 @@
 			this.processQueuedInstantiations();
 		},
 		listenToGroup: function (snapshot) {
-			console.log('BPDEBUG listening to group', snapshot.key());
 			snapshot.ref().on('child_added', this.createElement.bind(this));
 			snapshot.ref().on('child_removed', this.removeElement.bind(this));
 		},
@@ -1689,7 +1685,6 @@
 			this.queuedInstantiations.forEach(function (instantiationProps) {
 				instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
 				instantiationProps.clientId = this.syncSys.clientId;
-				console.log('BPDEBUG pushing instantiation', this.syncSys.clientId, instantiationProps.instantiatorId);
 				this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps).onDisconnect().remove();
 			}.bind(this));
 			this.queuedInstantiations.length = 0;
@@ -1730,22 +1725,12 @@
 		createElement: function (snapshot) {
 			var val = snapshot.val();
 			var key = snapshot.key();
-			console.log('BPDEBUG createElement', key, val.clientId);
 			var entityEl = document.createElement('a-entity');
 			entityEl.id = val.groupName + '-instance-' + key;
 			entityEl.dataset.instantiatorId = val.instantiatorId;
 			document.querySelector(val.parent).appendChild(entityEl);
 			entityEl.setAttribute('mixin', val.mixin);
 			entityEl.dataset.creatorUserId = val.creatorUserId;
-			/*
-			if (val.clientId === this.syncSys.clientId) {
-				entityEl.addEventListener('loaded', function () {
-					if (!entityEl.components.sync) { return; }
-					console.log('BPDEBUG taking ownership', key, this.syncSys.userInfo.userId);
-					entityEl.components.sync.takeOwnership();
-				}.bind(this));
-			}
-		   */
 		},
 		removeElement: function (snapshot) {
 			var val = snapshot.val();
@@ -1762,8 +1747,8 @@
 /***/ function(module, exports) {
 
 	/**
-	* Instantiates objects on an event trigger and adds them to the scene. The instantiated objects are built using
-	* the specified mixins.
+	* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients. 
+	* The instantiated objects are built using the specified mixins.
 	* @mixin instantiator
 	* @prop {string} on - An event that triggers the instantiation
 	* @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.

@@ -1,6 +1,6 @@
 /**
-* Instantiates objects on an event trigger and adds them to the scene. The instantiated objects are built using
-* the specified mixins.
+* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients. 
+* The instantiated objects are built using the specified mixins.
 * @mixin instantiator
 * @prop {string} on - An event that triggers the instantiation
 * @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.

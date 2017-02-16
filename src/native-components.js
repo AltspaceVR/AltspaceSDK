@@ -36,15 +36,23 @@
 
 	function nativeComponentInit() {
 		var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-
+		this.currentMesh = mesh;
 		meshInit.call(this, mesh);
-
 		//to pass defaults
 		this.update(this.data);
+
+		this.el.addEventListener('object3dset', function (event) {
+			if (event.detail.type !== 'mesh') { return; }
+			altspace.removeNativeComponent(this.currentMesh, this.name);
+
+			this.currentMesh = this.el.object3DMap.mesh;
+			meshInit.call(this, this.currentMesh);
+			//to pass defaults
+			this.update(this.data);
+		}.bind(this));
 	}
 	function nativeComponentRemove() {
-		var mesh = this.el.getObject3D('mesh');
-		altspace.removeNativeComponent(mesh, this.name);
+		altspace.removeNativeComponent(this.el.object3DMap.mesh, this.name);
 	}
 	function nativeComponentUpdate(oldData) {
 		altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
