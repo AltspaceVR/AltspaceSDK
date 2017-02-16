@@ -6,6 +6,8 @@
 * @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.
 * @prop {string} parent='a-scene' - A selector that determines which object the instantiated object will be added to.
 * @prop {string} group='main' - An identifier which can be used to group instantiated objects.
+* @prop {boolean} removeLast=true - Whether the last object instantiated in a group should be removed before
+*	instantiating a new object.
 */
 AFRAME.registerComponent('instantiator', {
 	schema: {
@@ -22,11 +24,16 @@ AFRAME.registerComponent('instantiator', {
 	},
 	instantiateOrToggle: function () {
 		var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
-		this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
-			if (lastInstantiatorId !== this.el.id) {
-				this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
-			}
-		}.bind(this));
+		if (this.data.removeLast) {
+			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
+				if (lastInstantiatorId !== this.el.id) {
+					this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+				}
+			}.bind(this));
+		}
+		else {
+			this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+		}
 	},
 	remove: function () {
 		this.el.removeEventListener(this.data.on, this.onHandler);
