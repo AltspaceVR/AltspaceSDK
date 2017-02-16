@@ -14,6 +14,5 @@ require('./sync-color');
 require('./sync-n-sound');
 require('./sync-n-parent');
 require('./one-per-user');
-require('./instantiator-system');
 require('./instantiator');
 require('./wire');

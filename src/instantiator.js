@@ -1,5 +1,5 @@
 /**
-* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients. 
+* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
 * The instantiated objects are built using the specified mixins.
 * @mixin instantiator
 * @prop {string} on - An event that triggers the instantiation
@@ -22,9 +22,9 @@ AFRAME.registerComponent('instantiator', {
 	},
 	instantiateOrToggle: function () {
 		var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
-		this.system.removeLast(userGroup).then(function (lastInstantiatorId) {
+		this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
 			if (lastInstantiatorId !== this.el.id) {
-				this.system.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+				this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
 			}
 		}.bind(this));
 	},

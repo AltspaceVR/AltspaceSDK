@@ -62,7 +62,6 @@
 	__webpack_require__(12);
 	__webpack_require__(13);
 	__webpack_require__(14);
-	__webpack_require__(15);
 
 
 /***/ },
@@ -1244,6 +1243,7 @@
 			}
 	
 			system.isConnected = false;
+			system.queuedInstantiations = [];
 			Promise.all([
 				altspace.utilities.sync.connect({
 					authorId: this.data.author,
@@ -1293,6 +1293,8 @@
 					var shouldInitialize = !snapshot.val();
 					snapshot.ref().set(true);
 	
+					system.initializeInstantiationRef();
+	
 					system.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
 					system.isConnected = true;
 				}.bind(this));
@@ -1303,6 +1305,75 @@
 				});
 			}.bind(this));
 		},
+		initializeInstantiationRef: function () {
+			this.instantiatedElementsRef = this.sceneRef.child('instantiatedElements')
+			this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
+			this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
+			this.processQueuedInstantiations();
+		},
+		listenToInstantiationGroup: function (snapshot) {
+			snapshot.ref().on('child_added', this.createElement.bind(this));
+			snapshot.ref().on('child_removed', this.removeElement.bind(this));
+		},
+		stopListeningToInstantiationGroup: function (snapshot) {
+			snapshot.ref().off('child_added');
+			snapshot.ref().off('child_removed');
+		},
+		processQueuedInstantiations: function () {
+			this.queuedInstantiations.forEach(function (instantiationProps) {
+				instantiationProps.creatorUserId = this.userInfo.userId;
+				instantiationProps.clientId = this.clientId;
+				this.instantiatedElementsRef.child(instantiationProps.groupName).
+					push(instantiationProps).
+					onDisconnect().remove();
+			}.bind(this));
+			this.queuedInstantiations.length = 0;
+		},
+		instantiate: function (instantiatorId, groupName, mixin, parent) {
+			// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't
+			// return a proper selector for a-scene.
+			var parentSelector = parent.nodeName === 'A-SCENE' ? 'a-scene' : '#' + parent.id;
+			var instantiationProps = {
+				instantiatorId: instantiatorId,
+				groupName: groupName,
+				mixin: mixin,
+				parent: parentSelector
+			};
+			this.queuedInstantiations.push(instantiationProps);
+			if (this.isConnected) {
+				this.processQueuedInstantiations();
+			}
+		},
+		removeLast: function (groupName) {
+			return new Promise(function (resolve) {
+				this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
+					'value',
+					function (snapshot) {
+						if (!snapshot.hasChildren()) { resolve(); return; }
+						var val = snapshot.val();
+						var key = Object.keys(val)[0];
+						resolve(val[key].instantiatorId);
+						snapshot.ref().child(key).remove();
+					});
+			}.bind(this));
+		},
+		createElement: function (snapshot) {
+			var val = snapshot.val();
+			var key = snapshot.key();
+			var entityEl = document.createElement('a-entity');
+			entityEl.id = val.groupName + '-instance-' + key;
+			entityEl.dataset.instantiatorId = val.instantiatorId;
+			document.querySelector(val.parent).appendChild(entityEl);
+			entityEl.setAttribute('mixin', val.mixin);
+			entityEl.dataset.creatorUserId = val.creatorUserId;
+		},
+		removeElement: function (snapshot) {
+			var val = snapshot.val();
+			var key = snapshot.key();
+			var id = val.groupName + '-instance-' + key;
+			var el = document.querySelector('#' + id);
+			el.parentNode.removeChild(el);
+		}
 	});
 
 
@@ -1648,8 +1719,8 @@
 		},
 		init: function () {
 			var scene = document.querySelector('a-scene');
-			this.instantiatorSys = scene.systems['instantiator'];
-			this.instantiatorSys.instantiate(this.el.id, this.el.id, this.data.mixin, this.data.parent)
+			this.syncSys = scene.systems['sync-system'];
+			this.syncSys.instantiate(this.el.id, this.el.id, this.data.mixin, this.data.parent)
 		}
 	});
 
@@ -1658,100 +1729,8 @@
 /* 13 */
 /***/ function(module, exports) {
 
-	AFRAME.registerSystem('instantiator', {
-		init: function () {
-			this.queuedInstantiations = [];
-			this.initialized = false;
-			var syncSys = this.sceneEl.systems['sync-system'];
-			if (syncSys && syncSys.isConnected) {
-				this.initializeRef();
-			}
-			else {
-				this.sceneEl.addEventListener('connected', this.initializeRef.bind(this));
-			}
-		},
-		initializeRef: function () {
-			this.syncSys = this.sceneEl.systems['sync-system'];
-			this.instantiatedElementsRef = this.syncSys.sceneRef.child('instantiatedElements')
-			this.instantiatedElementsRef.on('child_added', this.listenToGroup.bind(this));
-			this.instantiatedElementsRef.on('child_removed', this.stopListeningToGroup.bind(this));
-			this.initialized = true;
-			this.processQueuedInstantiations();
-		},
-		listenToGroup: function (snapshot) {
-			console.log('BPDEBUG listenToGroup', snapshot.key());
-			snapshot.ref().on('child_added', this.createElement.bind(this));
-			snapshot.ref().on('child_removed', this.removeElement.bind(this));
-		},
-		stopListeningToGroup: function (snapshot) {
-			snapshot.ref().off('child_added');
-			snapshot.ref().off('child_removed');
-		},
-		processQueuedInstantiations: function () {
-			this.queuedInstantiations.forEach(function (instantiationProps) {
-				instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
-				instantiationProps.clientId = this.syncSys.clientId;
-				console.log('BPDEBUG pushing', instantiationProps.groupName, instantiationProps.instantiatorId);
-				this.instantiatedElementsRef.child(instantiationProps.groupName).
-					push(instantiationProps).
-					onDisconnect().remove();
-			}.bind(this));
-			this.queuedInstantiations.length = 0;
-		},
-		instantiate: function (instantiatorId, groupName, mixin, parent) {
-			// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't
-			// return a proper selector for a-scene.
-			var parentSelector = parent.nodeName === 'A-SCENE' ? 'a-scene' : '#' + parent.id;
-			var instantiationProps = {
-				instantiatorId: instantiatorId,
-				groupName: groupName,
-				mixin: mixin,
-				parent: parentSelector
-			};
-			this.queuedInstantiations.push(instantiationProps);
-			if (this.initialized) {
-				this.processQueuedInstantiations();
-			}
-		},
-		removeLast: function (groupName) {
-			return new Promise(function (resolve) {
-				this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
-					'value',
-					function (snapshot) {
-						if (!snapshot.hasChildren()) { resolve(); return; }
-						var val = snapshot.val();
-						var key = Object.keys(val)[0];
-						resolve(val[key].instantiatorId);
-						snapshot.ref().child(key).remove();
-					});
-			}.bind(this));
-		},
-		createElement: function (snapshot) {
-			var val = snapshot.val();
-			var key = snapshot.key();
-			var entityEl = document.createElement('a-entity');
-			entityEl.id = val.groupName + '-instance-' + key;
-			entityEl.dataset.instantiatorId = val.instantiatorId;
-			document.querySelector(val.parent).appendChild(entityEl);
-			entityEl.setAttribute('mixin', val.mixin);
-			entityEl.dataset.creatorUserId = val.creatorUserId;
-		},
-		removeElement: function (snapshot) {
-			var val = snapshot.val();
-			var key = snapshot.key();
-			var id = val.groupName + '-instance-' + key;
-			var el = document.querySelector('#' + id);
-			el.parentNode.removeChild(el);
-		}
-	});
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
 	/**
-	* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients. 
+	* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
 	* The instantiated objects are built using the specified mixins.
 	* @mixin instantiator
 	* @prop {string} on - An event that triggers the instantiation
@@ -1774,9 +1753,9 @@
 		},
 		instantiateOrToggle: function () {
 			var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
-			this.system.removeLast(userGroup).then(function (lastInstantiatorId) {
+			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
 				if (lastInstantiatorId !== this.el.id) {
-					this.system.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+					this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
 				}
 			}.bind(this));
 		},
@@ -1787,7 +1766,7 @@
 
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/**
