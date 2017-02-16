@@ -31,7 +31,7 @@
 				<a-mixin id="parent-to-head"
 					position="0 0.05 0.03"
 					n-skeleton-parent="part: head;"
-					sync sync-n-parent></a-mixin>
+					sync sync-n-skeleton-parent></a-mixin>
 
 				<a-mixin id="metal-armor"
 					obj-model="obj: url(./models/armor.obj); mtl: url(./models/armor.mtl)" collapse-model
@@ -42,7 +42,7 @@
 				<a-mixin id="parent-to-chest"
 					position="0 0.35 0"
 					n-skeleton-parent="part: spine;"
-					sync sync-n-parent></a-mixin>
+					sync sync-n-skeleton-parent></a-mixin>
 
 				<a-mixin id="voxel-axe"
 					obj-model="obj: url(./models/vaxe.obj); mtl: url(./models/vaxe.mtl)" collapse-model
@@ -51,10 +51,10 @@
 					position="0 0 0"
 					rotation="0 0 0"
 					n-skeleton-parent="part: hand; side: left;"
-					sync sync-n-parent></a-mixin>
+					sync sync-n-skeleton-parent></a-mixin>
 			</a-assets>
 
-			<!-- 
+			<!--
 			   Demonstrates an object that is attached to the skeleton and is synced across clients.
 			   Each user will see an axe attached to their left hand and all users will see each other
 			   with an axe in their hands.
@@ -64,7 +64,7 @@
 				one-per-user="mixin: voxel-axe parent-to-left-hand">
 			</a-entity>
 
-			<!-- 
+			<!--
 			   Demonstrates instantiators that instantiate synced objects attached to users' heads.
 			-->
 			<a-entity
@@ -80,8 +80,8 @@
 				position="0 1.5 -6">
 			</a-entity>
 
-			<!-- 
-			   Demonstrates a separate 'armor' group of instantiators that instantiate synced objects attached to 
+			<!--
+			   Demonstrates a separate 'armor' group of instantiators that instantiate synced objects attached to
 			   users' chests.
 			-->
 			<a-entity

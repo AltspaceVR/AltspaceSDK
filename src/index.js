@@ -12,7 +12,7 @@ require('./sync-system');
 require('./sync-transform');
 require('./sync-color');
 require('./sync-n-sound');
-require('./sync-n-parent');
+require('./sync-n-skeleton-parent');
 require('./one-per-user');
 require('./instantiator');
 require('./wire');
