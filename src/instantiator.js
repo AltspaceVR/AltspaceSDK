@@ -18,11 +18,13 @@ AFRAME.registerComponent('instantiator', {
 	init: function () {
 		this.onHandler = this.instantiateOrToggle.bind(this);
 		this.el.addEventListener(this.data.on, this.onHandler);
+		this.syncSys = this.el.sceneEl.systems['sync-system'];
 	},
 	instantiateOrToggle: function () {
-		this.system.removeLast(this.data.group).then(function (lastInstantiatorId) {
+		var userGroup = this.data.group + this.syncSys.userInfo.userId;
+		this.system.removeLast(userGroup).then(function (lastInstantiatorId) {
 			if (lastInstantiatorId !== this.el.id) {
-				this.system.instantiate(this.el.id, this.data.group, this.data.mixin, this.data.parent)
+				this.system.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
 			}
 		}.bind(this));
 	},

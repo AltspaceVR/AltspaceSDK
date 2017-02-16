@@ -1123,9 +1123,6 @@
 						return;
 					}
 	
-					console.log('syncSys: ' + syncSys);
-					console.log('syncSys.sceneRef: ' + syncSys.sceneRef);
-	
 					link(syncSys.sceneRef.child(id));
 					setupReceive();
 	
@@ -1149,7 +1146,6 @@
 	
 				//if nobody has owned the object yet, we will.
 				ownerRef.transaction(function (owner) {
-					console.log('BPDEBUG ownerRef transaction', owner, syncSys.clientId);
 					if (owner) return undefined;
 	
 					ownerRef.onDisconnect().set(null);
@@ -1159,7 +1155,6 @@
 					if (!committed) { return; }
 					ownerRef.on('value', function(snapshot) {
 						var newOwnerId = snapshot.val();
-						console.log('BPDEBUG ownerRef', newOwnerId);
 	
 						var gained = newOwnerId === syncSys.clientId && !isMine;
 						if (gained) component.el.emit('ownershipgained', null, false);
@@ -1187,7 +1182,6 @@
 			* @method sync.sync#takeOwnership
 			*/
 			component.takeOwnership = function() {
-				console.log('BPDEBUG takeOwnership', syncSys.clientId);
 				ownerRef.set(syncSys.clientId);
 	
 				//clear our ownership if we disconnect
@@ -1242,21 +1236,24 @@
 			}
 	
 			system.isConnected = false;
-			console.log(this.data);
-			altspace.utilities.sync.connect({
-				authorId: this.data.author,
-				appId: this.data.app,
-				instanceId: this.data.instance,
-				baseRefUrl: this.data.refUrl
-			}).then(function(connection) {
-				this.connection = connection;
+			Promise.all([
+				altspace.utilities.sync.connect({
+					authorId: this.data.author,
+					appId: this.data.app,
+					instanceId: this.data.instance,
+					baseRefUrl: this.data.refUrl
+				}),
+				altspace.getUser()
+			]).then(function(results) {
+				this.connection = results.shift();
+				this.userInfo = results.shift();
 	
 				this.sceneRef = this.connection.instance.child('scene');
 				this.clientsRef = this.connection.instance.child('clients');
 	
 				// temporary way of having unique identifiers for each client
 				this.clientId = this.sceneEl.object3D.uuid;
-				console.log('BPDEBUG clientId', this.clientId);
+				console.log('BPDEBUG userId', this.userInfo.userId, this.clientId);
 				var masterClientId;
 				this.clientsRef.on("value", function (snapshot) {
 					var clientIds = snapshot.val();
@@ -1601,11 +1598,8 @@
 			var scene = document.querySelector('a-scene');
 			this.syncSys = scene.systems['sync-system'];
 			this.sync = this.el.components.sync;
-			altspace.getUser().then(function (user) {
-				this.userId = user.userId;
-				if(this.syncSys.isConnected) { this._start(); }
-				else { scene.addEventListener('connected', this._start.bind(this)); }
-			}.bind(this));
+			if(this.syncSys.isConnected) { this._start(); }
+			else { scene.addEventListener('connected', this._start.bind(this)); }
 		},
 		getDataRef: function (propertyName) {
 			return this.sync.dataRef.child('n-skeleton-parent/' + propertyName);
@@ -1615,29 +1609,32 @@
 			this.attributeRef.on('value', function (snapshot) {
 				var val = snapshot.val();
 				if (!val) { return; }
-				console.log('BPDEBUG setAttribute', val);
 				this.el.setAttribute('n-skeleton-parent', val);
 			}.bind(this));
 	
 			// immediately sync this entity's parent userId to the owner's
-			// if (this.sync.isMine) {
-			// 	console.log('BPDEBUG isMine', this.userId);
-			// 	this.attributeRef.set(Object.assign(
-			// 		{}, this.el.components['n-skeleton-parent'].data, {userId: this.userId}));
-			// }
+			var haveUserId = this.el.dataset.creatorUserId || this.sync.isMine;
+			var userId = this.el.dataset.creatorUserId || this.syncSys.userInfo.userId;
+			if (haveUserId) {
+				console.log('BPDEBUG isMine', this.el.dataset.creatorUserId, this.sync.isMine, this.el.id, userId);
+				this.attributeRef.set(Object.assign(
+					{}, this.el.components['n-skeleton-parent'].data, {userId: userId}));
+			}
 			this.el.addEventListener('componentchanged', function (event) {
 				if (!this.sync.isMine) return;
 				var name = event.detail.name;
 				if (name === 'n-skeleton-parent') {
-					console.log('BPDEBUG newData', event.detail.newData);
 					this.attributeRef.set(event.detail.newData);
 				}
 			}.bind(this));
 	
-			this.el.addEventListener('ownershipgained', function () {
-				this.attributeRef.set(Object.assign(
-					{}, this.el.components['n-skeleton-parent'].data, {userId: this.userId}));
-			}.bind(this));
+			if (!haveUserId) {
+				this.el.addEventListener('ownershipgained', function () {
+					console.log('BPDEBUG ownershipgained', this.el.id, this.syncSys.userInfo.userId);
+					this.attributeRef.set(Object.assign(
+						{}, this.el.components['n-skeleton-parent'].data, {userId: this.syncSys.userInfo.userId}));
+				}.bind(this));
+			}
 		}
 	});
 	
@@ -1656,7 +1653,6 @@
 			var scene = document.querySelector('a-scene');
 			this.instantiatorSys = scene.systems['instantiator'];
 			this.instantiatorSys.instantiate(this.el.id, this.el.id, this.data.mixin, this.data.parent)
-			console.log('BPDEBUG instantiated one-per-user');
 		}
 	});
 
@@ -1685,14 +1681,16 @@
 			this.processQueuedInstantiations();
 		},
 		listenToGroup: function (snapshot) {
+			console.log('BPDEBUG listening to group', snapshot.key());
 			snapshot.ref().on('child_added', this.createElement.bind(this));
 			snapshot.ref().on('child_removed', this.removeElement.bind(this));
 		},
 		processQueuedInstantiations: function () {
 			this.queuedInstantiations.forEach(function (instantiationProps) {
+				instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
 				instantiationProps.clientId = this.syncSys.clientId;
-				console.log('BPDEBUG instantiationProps clientId', instantiationProps.clientId);
-				this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps);
+				console.log('BPDEBUG pushing instantiation', this.syncSys.clientId, instantiationProps.instantiatorId);
+				this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps).onDisconnect().remove();
 			}.bind(this));
 			this.queuedInstantiations.length = 0;
 		},
@@ -1713,36 +1711,41 @@
 		},
 		removeLast: function (groupName) {
 			return new Promise(function (resolve) {
-				this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once('value', function (snapshot) {
-					if (!snapshot.hasChildren()) { resolve(); return; }
+				this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
+					'value', 
+					function (snapshot) {
+						if (!snapshot.hasChildren()) { resolve(); return; }
 	
-					var ref = snapshot.ref();
-					ref.once('value', function () {
-						var val = snapshot.val();
-						var key = Object.keys(val)[0];
-						var props = val[key];
-						resolve(props.instantiatorId);
+						var ref = snapshot.ref();
+						ref.once('value', function () {
+							var val = snapshot.val();
+							var key = Object.keys(val)[0];
+							var props = val[key];
+							resolve(props.instantiatorId);
+						});
+						ref.remove();
 					});
-					ref.remove();
-				});
 			}.bind(this));
 		},
 		createElement: function (snapshot) {
 			var val = snapshot.val();
 			var key = snapshot.key();
-			console.log('BPDEBUG createElement', key);
+			console.log('BPDEBUG createElement', key, val.clientId);
 			var entityEl = document.createElement('a-entity');
 			entityEl.id = val.groupName + '-instance-' + key;
 			entityEl.dataset.instantiatorId = val.instantiatorId;
 			document.querySelector(val.parent).appendChild(entityEl);
 			entityEl.setAttribute('mixin', val.mixin);
+			entityEl.dataset.creatorUserId = val.creatorUserId;
+			/*
 			if (val.clientId === this.syncSys.clientId) {
 				entityEl.addEventListener('loaded', function () {
 					if (!entityEl.components.sync) { return; }
-					console.log('BPDEBUG taking ownership', key);
+					console.log('BPDEBUG taking ownership', key, this.syncSys.userInfo.userId);
 					entityEl.components.sync.takeOwnership();
-				});
+				}.bind(this));
 			}
+		   */
 		},
 		removeElement: function (snapshot) {
 			var val = snapshot.val();
@@ -1778,11 +1781,13 @@
 		init: function () {
 			this.onHandler = this.instantiateOrToggle.bind(this);
 			this.el.addEventListener(this.data.on, this.onHandler);
+			this.syncSys = this.el.sceneEl.systems['sync-system'];
 		},
 		instantiateOrToggle: function () {
-			this.system.removeLast(this.data.group).then(function (lastInstantiatorId) {
+			var userGroup = this.data.group + this.syncSys.userInfo.userId;
+			this.system.removeLast(userGroup).then(function (lastInstantiatorId) {
 				if (lastInstantiatorId !== this.el.id) {
-					this.system.instantiate(this.el.id, this.data.group, this.data.mixin, this.data.parent)
+					this.system.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
 				}
 			}.bind(this));
 		},

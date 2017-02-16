@@ -64,7 +64,7 @@
 			-->
 			<a-entity
 				id="initial-synced-box"
-				sync one-per-user="mixin: box-hat parent-to-left-hand">
+				one-per-user="mixin: box-hat parent-to-left-hand">
 			</a-entity>
 
 			<!-- 
@@ -84,7 +84,7 @@
 				geometry="primitive: cylinder;"
 				material="color: green"
 				scale="0.1 0.1 0.1"
-				instantiator="on: click; mixin: box-hat parent-to-head; toggleExisting: false"
+				instantiator="on: click; mixin: box-hat parent-to-head;"
 				position="0 1 -6">
 			</a-entity>
 

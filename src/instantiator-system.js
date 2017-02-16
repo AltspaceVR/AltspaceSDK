@@ -23,9 +23,9 @@ AFRAME.registerSystem('instantiator', {
 	},
 	processQueuedInstantiations: function () {
 		this.queuedInstantiations.forEach(function (instantiationProps) {
+			instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
 			instantiationProps.clientId = this.syncSys.clientId;
-			console.log('BPDEBUG instantiationProps clientId', instantiationProps.clientId);
-			this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps);
+			this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps).onDisconnect().remove();
 		}.bind(this));
 		this.queuedInstantiations.length = 0;
 	},
@@ -46,36 +46,31 @@ AFRAME.registerSystem('instantiator', {
 	},
 	removeLast: function (groupName) {
 		return new Promise(function (resolve) {
-			this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once('value', function (snapshot) {
-				if (!snapshot.hasChildren()) { resolve(); return; }
+			this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
+				'value', 
+				function (snapshot) {
+					if (!snapshot.hasChildren()) { resolve(); return; }
 
-				var ref = snapshot.ref();
-				ref.once('value', function () {
-					var val = snapshot.val();
-					var key = Object.keys(val)[0];
-					var props = val[key];
-					resolve(props.instantiatorId);
+					var ref = snapshot.ref();
+					ref.once('value', function () {
+						var val = snapshot.val();
+						var key = Object.keys(val)[0];
+						var props = val[key];
+						resolve(props.instantiatorId);
+					});
+					ref.remove();
 				});
-				ref.remove();
-			});
 		}.bind(this));
 	},
 	createElement: function (snapshot) {
 		var val = snapshot.val();
 		var key = snapshot.key();
-		console.log('BPDEBUG createElement', key);
 		var entityEl = document.createElement('a-entity');
 		entityEl.id = val.groupName + '-instance-' + key;
 		entityEl.dataset.instantiatorId = val.instantiatorId;
 		document.querySelector(val.parent).appendChild(entityEl);
 		entityEl.setAttribute('mixin', val.mixin);
-		if (val.clientId === this.syncSys.clientId) {
-			entityEl.addEventListener('loaded', function () {
-				if (!entityEl.components.sync) { return; }
-				console.log('BPDEBUG taking ownership', key);
-				entityEl.components.sync.takeOwnership();
-			});
-		}
+		entityEl.dataset.creatorUserId = val.creatorUserId;
 	},
 	removeElement: function (snapshot) {
 		var val = snapshot.val();

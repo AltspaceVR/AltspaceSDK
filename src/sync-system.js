@@ -27,21 +27,23 @@ AFRAME.registerSystem('sync-system', {
 		}
 
 		system.isConnected = false;
-		console.log(this.data);
-		altspace.utilities.sync.connect({
-			authorId: this.data.author,
-			appId: this.data.app,
-			instanceId: this.data.instance,
-			baseRefUrl: this.data.refUrl
-		}).then(function(connection) {
-			this.connection = connection;
+		Promise.all([
+			altspace.utilities.sync.connect({
+				authorId: this.data.author,
+				appId: this.data.app,
+				instanceId: this.data.instance,
+				baseRefUrl: this.data.refUrl
+			}),
+			altspace.getUser()
+		]).then(function(results) {
+			this.connection = results.shift();
+			this.userInfo = results.shift();
 
 			this.sceneRef = this.connection.instance.child('scene');
 			this.clientsRef = this.connection.instance.child('clients');
 
 			// temporary way of having unique identifiers for each client
 			this.clientId = this.sceneEl.object3D.uuid;
-			console.log('BPDEBUG clientId', this.clientId);
 			var masterClientId;
 			this.clientsRef.on("value", function (snapshot) {
 				var clientIds = snapshot.val();

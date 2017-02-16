@@ -7,6 +7,5 @@ AFRAME.registerComponent('one-per-user', {
 		var scene = document.querySelector('a-scene');
 		this.instantiatorSys = scene.systems['instantiator'];
 		this.instantiatorSys.instantiate(this.el.id, this.el.id, this.data.mixin, this.data.parent)
-		console.log('BPDEBUG instantiated one-per-user');
 	}
 });
