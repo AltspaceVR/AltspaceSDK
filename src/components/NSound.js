@@ -3,31 +3,9 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* Play the sound given by the `src` or `res` property from the location
-* of the entity.
-* @prop {string} res - The resource identifier for a built-in sound clip.
-* @prop {string} src - A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
-* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
-* @prop {string} on - The name of the event that will play this sound clip.
-* @prop {boolean} loop=false - Tells the clip to loop back to the beginning of the clip
-* once it's finished.
-* @prop {boolean} autoplay=false - Tells the clip to start automatically when
-* the scene loads, instead of waiting for `playSound()`.
-* @prop {boolean} oneshot=false - Tells the clip to clean itself up when it
-* finishes playing. Allows for overlapping instances of the sound.
-* @prop {number} volume=1 - The volume of the clip, from [0,1].
-* @prop {number} spatialBlend=1 - How spatialized a sound is, from [0,1].
-* A value of 1 will be fully localized, and the sound will pan left and
-* right as you turn your head. A value of 0 makes it non-spatialized, and
-* it will always be heard in both ears.
-* @prop {number} pitch=1 - The speed multiplier for the sound. 0.5 is one
-* octave down, and 2 is one octave up.
-* @prop {number} minDistance=1 - Inside this distance in meters,
-* the sound volume is at full volume.
-* @prop {number} maxDistance=12 - If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
-* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
-* @prop {string} rolloff='logarithmic' - Set this to 'linear' or 'cosine' if you want to cut sounds off at a
-* maxDistance.
+* Play a sound from a particular location. Limiting sound duration to 5 seconds
+* or less is recommended to prevent hitching when the sound loads. @aframe
+* @alias n-sound
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 */
@@ -36,17 +14,118 @@ class NSound extends NativeComponent
 	constructor(){ super('n-sound'); }
 	get schema(){
 		return {
-			on: { type: 'string' },
+
+			/**
+			* Play the sound given by the `src` or `res` property from the location
+			* of the entity. @aframe
+			* The resource identifier for a built-in sound clip.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-sound
+			*/
 			res: { type: 'string' },
+
+			/**
+			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+			* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
+			* @instance
+			* @member {string} src
+			* @memberof module:altspace/components.n-sound
+			*/
 			src: { type: 'string' },
+
+			/**
+			* The name of the event that will play this sound clip.
+			* @instance
+			* @member {string} on
+			* @memberof module:altspace/components.n-sound
+			*/
+			on: { type: 'string' },
+
+			/**
+			* Tells the clip to loop back to the beginning of the clip once it's finished.
+			* @instance
+			* @member {boolean} loop
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
 			loop: { type: 'boolean' },
+
+			/**
+			* The volume of the clip, from [0,1].
+			* @instance
+			* @member {number} volume
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			volume: { type: 'number', default: 1 },
+
+			/**
+			* Tells the clip to start automatically when the scene loads, instead of waiting for `playSound()`.
+			* @instance
+			* @member {boolean} autoplay
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
 			autoplay: { type: 'boolean' },
+
+			/**
+			* Tells the clip to clean itself up when it
+			* finishes playing. Allows for overlapping instances of the sound.
+			* @instance
+			* @member {boolean} oneshot
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
 			oneshot: { type: 'boolean' },
+
+			/**
+			* How spatialized a sound is, from [0,1].
+			* A value of 1 will be fully localized, and the sound will pan left and
+			* right as you turn your head. A value of 0 makes it non-spatialized, and
+			* it will always be heard in both ears.
+			* @instance
+			* @member {number} spatialBlend
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			spatialBlend: { type: 'float', default: 1 },
+
+			/**
+			* The speed multiplier for the sound. 0.5 is one octave down, and 2 is one octave up.
+			* @instance
+			* @member {number} pitch
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			pitch: { type: 'float', default: 1 },
+
+			/**
+			* Inside this distance in meters, the sound volume is at full volume.
+			* @instance
+			* @member {number} minDistance
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			minDistance: { type: 'float', default: 1 },
+
+			/**
+			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+			* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
+			* @instance
+			* @member {number} maxDistance
+			* @default 12
+			* @memberof module:altspace/components.n-sound
+			*/
 			maxDistance: { type: 'float', default: 12 },
+
+			/**
+			* Set this to 'linear' or 'cosine' if you want to cut sounds off at a maxDistance.
+			* @instance
+			* @member {string} rolloff
+			* @default "logarithmic"
+			* @memberof module:altspace/components.n-sound
+			*/
 			rolloff: { type: 'string', default: 'logarithmic' },
 		};
 	}

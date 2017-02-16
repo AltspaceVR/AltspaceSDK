@@ -3,9 +3,10 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Synchronize the playback state of an {@link n.n-sound} component between clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
+* Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-n-sound
 * @extends module:altspace/components.AFrameComponent
 * @memberof module:altspace/components
 */

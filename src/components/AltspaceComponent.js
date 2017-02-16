@@ -3,7 +3,7 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* The altspace component makes A-Frame apps compatible with AltspaceVR.
+* The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
 *
 * **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
 *
@@ -19,13 +19,7 @@ import {AFrameComponent} from './AFrameComponent';
 *   </a-scene>
 * </body>
 *
-* @property {boolean} usePixelScale=`false` - Allows you to use A-Frame units as CSS pixels.
-* This is the default behavior for three.js apps, but not for A-Frame apps.
-* @property {string} verticalAlign=`middle` - Puts the origin at the `bottom`, `middle` (default),
-* or `top` of the Altspace enclosure.
-* @property {boolean} enclosuresOnly=`true` - Prevents the scene from being created if
-* enclosure is flat.
-* @property {boolean} fullspace=`false` - Puts the app into fullspace mode.
+* @alias altspace
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
@@ -33,10 +27,43 @@ class AltspaceComponent extends AFrameComponent
 {
 	get schema(){
 		return {
+
+			/**
+			* Allows you to use A-Frame units as CSS pixels.
+			* This is the default behavior for three.js apps, but not for A-Frame apps.
+			* @instance
+			* @member {boolean} usePixelScale
+			* @default false
+			* @memberof module:altspace/components.altspace
+			*/
 			usePixelScale: { type: 'boolean', default: 'false'},
+
+			/**
+			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
+			* @instance
+			* @member {string} verticalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.altspace
+			*/
 			verticalAlign: { type: 'string',  default: 'middle'},
-			enclosuresOnly:{ type: 'boolean', default: 'true'},
-			fullspace:     { type: 'boolean', default: 'false'}
+
+			/**
+			* Prevents the scene from being created if enclosure is flat.
+			* @instance
+			* @member {boolean} enclosuresOnly
+			* @default true
+			* @memberof module:altspace/components.altspace
+			*/
+			enclosuresOnly: { type: 'boolean', default: 'true'},
+
+			/**
+			* Puts the app into fullspace mode.
+			* @instance
+			* @member {boolean} fullspace
+			* @default false
+			* @memberof module:altspace/components.altspace
+			*/
+			fullspace: { type: 'boolean', default: 'false'}
 		}
 	}
 

@@ -5,17 +5,24 @@ import {safeDeepSet} from './utilities';
 
 
 /**
-* Enable or disable cursor collision on the object.
-* @prop {boolean} enabled=true - The state of the cursor collider.
+* Enable or disable cursor collision on the object. @aframe
+* @alias altspace-cursor-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
-
 class AltspaceCursorCollider extends AFrameComponent
 {
-
 	get schema(){
-		return {enabled: {type: 'boolean', default: 'true'}};
+		return {
+			/**
+			* The state of the cursor collider.
+			* @instance
+			* @member {boolean} enabled
+			* @default true
+			* @memberof module:altspace/components/altspace-cursor-collider
+			*/
+			enabled: {type: 'boolean', default: 'true'}
+		};
 	}
 
 	init()

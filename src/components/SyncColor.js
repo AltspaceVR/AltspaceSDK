@@ -5,7 +5,8 @@ import {AFrameComponent} from './AFrameComponent';
 /**
 * Sync the color property of the object between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
-* [sync]{@link module:altspace/components.sync} component on the target entity.
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-color
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */

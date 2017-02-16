@@ -4,7 +4,8 @@ import {AFrameComponent} from './AFrameComponent';
 
 /**
 * Enables tracked control support for A-Frame applications that use the built-in
-* `tracked-controls`, `vive-controls` or `hand-controls` components.
+* `tracked-controls`, `vive-controls` or `hand-controls` components. @aframe
+* @alias altspace-tracked-controls
 * @extends module:altspace/components.AFrameComponent
 * @memberof module:altspace/components
 */

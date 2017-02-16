@@ -6,24 +6,45 @@ import {AFrameSystem} from './AFrameComponent';
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
 * [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
-* This component must be present on `a-scene` for any other sync components to work.
+* This component must be present on `a-scene` for any other sync components to work. @aframe
+* @alias sync-system
 * @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
 class SyncSystem extends AFrameSystem
 {
-	/**
-	* @prop {string} author - A unique identifier for you or your organization.
-	* @prop {string} app - The name of the app.
-	* @prop {string} refUrl - Override the base reference. Set this to use your own Firebase.
-	* @prop {string} instance - Override the instance ID. Can also be overridden with
-	* a URL parameter.
-	*/
 	get schema(){
 		return {
+			/**
+			* A unique identifier for you or your organization.
+			* @instance
+			* @member {string} author
+			* @memberof module:altspace/components.sync-system
+			*/
 			author: { type: 'string', default: null },
+
+			/**
+			* The name of the app.
+			* @instance
+			* @member {string} app
+			* @memberof module:altspace/components.sync-system
+			*/
 			app: { type: 'string', default: null },
+
+			/**
+			* Override the instance ID. Can also be overridden with a URL parameter.
+			* @instance
+			* @member {string} instance
+			* @memberof module:altspace/components.sync-system
+			*/
 			instance: { type: 'string', default: null },
+
+			/**
+			* Override the base reference. Set this to use your own Firebase.
+			* @instance
+			* @member {string} refUrl
+			* @memberof module:altspace/components.sync-system
+			*/
 			refUrl: { type: 'string', default: null }
 		};
 	}
@@ -98,6 +119,10 @@ class SyncSystem extends AFrameSystem
 
 	/**
 	* Returns true if the local client is the master client.
+	* @instance
+	* @method isMasterClient
+	* @memberof module:altspace/components.sync-system
+	* @returns {boolean}
 	*/
 	isMasterClient()
 	{

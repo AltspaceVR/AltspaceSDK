@@ -5,10 +5,8 @@ import {AFrameComponent} from './AFrameComponent';
 /**
 * Enables the synchronization of properties of the entity. Must be used in
 * conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
-* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}).
-* @prop {string} ownOn - The name of the event, or a list of events, that
-* will cause the local client to take ownership of this object. This field
-* cannot be updated after initialization.
+* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
+* @alias sync
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
@@ -30,7 +28,9 @@ class SyncComponent extends AFrameComponent
 
 		/**
 		* Indicates whether the sync ownership is yours.
-		* @member sync.sync#isMine
+		* @instance
+		* @member {boolean} isMine
+		* @memberof module:altspace/components.sync
 		* @readonly
 		*/
 		this.isMine = false;
@@ -39,6 +39,15 @@ class SyncComponent extends AFrameComponent
 	get schema(){
 		return {
 			mode: { default: 'link' },
+
+			/**
+			* The name of the event, or a list of events, that
+			* will cause the local client to take ownership of this object. This field
+			* cannot be updated after initialization.
+			* @instance
+			* @member {string} ownOn
+			* @memberof module:altspace/components.sync
+			*/
 			ownOn: { type: 'string' } //cannot be changed after creation
 		};
 	}
@@ -69,7 +78,9 @@ class SyncComponent extends AFrameComponent
 	/**
 	* Tell sync to start pushing local property values instead of updating
 	* local from remote values.
-	* @method sync.sync#takeOwnership
+	* @instance
+	* @method takeOwnership
+	* @memberof module:altspace/components.sync
 	*/
 	takeOwnership()
 	{
