@@ -111,6 +111,7 @@ AFRAME.registerSystem('sync-system', {
 				push(instantiationProps).
 				onDisconnect().remove();
 		}.bind(this));
+		// Clear queue.
 		this.queuedInstantiations.length = 0;
 	},
 	instantiate: function (instantiatorId, groupName, mixin, parent) {
