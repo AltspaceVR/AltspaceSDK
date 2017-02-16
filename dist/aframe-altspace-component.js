@@ -1685,12 +1685,15 @@
 			this.queuedInstantiations.forEach(function (instantiationProps) {
 				instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
 				instantiationProps.clientId = this.syncSys.clientId;
-				this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps).onDisconnect().remove();
+				console.log('BPDEBUG pushing', instantiationProps.groupName, instantiationProps.instantiatorId);
+				this.instantiatedElementsRef.child(instantiationProps.groupName).
+					push(instantiationProps).
+					onDisconnect().remove();
 			}.bind(this));
 			this.queuedInstantiations.length = 0;
 		},
 		instantiate: function (instantiatorId, groupName, mixin, parent) {
-			// Bit of a hack since we need to pass a string to instantiate() and this.stringify doesn't 
+			// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't 
 			// return a proper selector for a-scene.
 			var parentSelector = parent.nodeName === 'A-SCENE' ? 'a-scene' : '#' + parent.id;
 			var instantiationProps = {
@@ -1769,7 +1772,7 @@
 			this.syncSys = this.el.sceneEl.systems['sync-system'];
 		},
 		instantiateOrToggle: function () {
-			var userGroup = this.data.group + this.syncSys.userInfo.userId;
+			var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
 			this.system.removeLast(userGroup).then(function (lastInstantiatorId) {
 				if (lastInstantiatorId !== this.el.id) {
 					this.system.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)

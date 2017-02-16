@@ -25,12 +25,15 @@ AFRAME.registerSystem('instantiator', {
 		this.queuedInstantiations.forEach(function (instantiationProps) {
 			instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
 			instantiationProps.clientId = this.syncSys.clientId;
-			this.instantiatedElementsRef.child(instantiationProps.groupName).push(instantiationProps).onDisconnect().remove();
+			console.log('BPDEBUG pushing', instantiationProps.groupName, instantiationProps.instantiatorId);
+			this.instantiatedElementsRef.child(instantiationProps.groupName).
+				push(instantiationProps).
+				onDisconnect().remove();
 		}.bind(this));
 		this.queuedInstantiations.length = 0;
 	},
 	instantiate: function (instantiatorId, groupName, mixin, parent) {
-		// Bit of a hack since we need to pass a string to instantiate() and this.stringify doesn't 
+		// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't 
 		// return a proper selector for a-scene.
 		var parentSelector = parent.nodeName === 'A-SCENE' ? 'a-scene' : '#' + parent.id;
 		var instantiationProps = {

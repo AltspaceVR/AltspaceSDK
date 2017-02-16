@@ -21,7 +21,7 @@ AFRAME.registerComponent('instantiator', {
 		this.syncSys = this.el.sceneEl.systems['sync-system'];
 	},
 	instantiateOrToggle: function () {
-		var userGroup = this.data.group + this.syncSys.userInfo.userId;
+		var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
 		this.system.removeLast(userGroup).then(function (lastInstantiatorId) {
 			if (lastInstantiatorId !== this.el.id) {
 				this.system.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
