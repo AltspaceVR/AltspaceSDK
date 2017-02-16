@@ -14,6 +14,7 @@ AFRAME.registerSystem('instantiator', {
 		this.syncSys = this.sceneEl.systems['sync-system'];
 		this.instantiatedElementsRef = this.syncSys.sceneRef.child('instantiatedElements')
 		this.instantiatedElementsRef.on('child_added', this.listenToGroup.bind(this));
+		this.instantiatedElementsRef.on('child_removed', this.stopListeningToGroup.bind(this));
 		this.initialized = true;
 		this.processQueuedInstantiations();
 	},
@@ -21,11 +22,14 @@ AFRAME.registerSystem('instantiator', {
 		snapshot.ref().on('child_added', this.createElement.bind(this));
 		snapshot.ref().on('child_removed', this.removeElement.bind(this));
 	},
+	stopListeningToGroup: function (snapshot) {
+		snapshot.ref().off('child_added');
+		snapshot.ref().off('child_removed');
+	},
 	processQueuedInstantiations: function () {
 		this.queuedInstantiations.forEach(function (instantiationProps) {
 			instantiationProps.creatorUserId = this.syncSys.userInfo.userId;
 			instantiationProps.clientId = this.syncSys.clientId;
-			console.log('BPDEBUG pushing', instantiationProps.groupName, instantiationProps.instantiatorId);
 			this.instantiatedElementsRef.child(instantiationProps.groupName).
 				push(instantiationProps).
 				onDisconnect().remove();
@@ -33,7 +37,7 @@ AFRAME.registerSystem('instantiator', {
 		this.queuedInstantiations.length = 0;
 	},
 	instantiate: function (instantiatorId, groupName, mixin, parent) {
-		// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't 
+		// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't
 		// return a proper selector for a-scene.
 		var parentSelector = parent.nodeName === 'A-SCENE' ? 'a-scene' : '#' + parent.id;
 		var instantiationProps = {
@@ -50,18 +54,13 @@ AFRAME.registerSystem('instantiator', {
 	removeLast: function (groupName) {
 		return new Promise(function (resolve) {
 			this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
-				'value', 
+				'value',
 				function (snapshot) {
 					if (!snapshot.hasChildren()) { resolve(); return; }
-
-					var ref = snapshot.ref();
-					ref.once('value', function () {
-						var val = snapshot.val();
-						var key = Object.keys(val)[0];
-						var props = val[key];
-						resolve(props.instantiatorId);
-					});
-					ref.remove();
+					var val = snapshot.val();
+					var key = Object.keys(val)[0];
+					resolve(val[key].instantiatorId);
+					snapshot.ref().child(key).remove();
 				});
 		}.bind(this));
 	},
