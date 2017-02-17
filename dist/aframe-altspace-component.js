@@ -1790,7 +1790,9 @@
 /***/ function(module, exports) {
 
 	/**
-	 * Instantiates an entity for each user using [sync-system]{@link native.sync-system}.
+	 * Instantiates an entity for each user using [sync-system]{@link sync.sync-system}.
+	 * @mixin one-per-user
+	 * @memberof sync
 	 * @prop {string} mixin - A comma-separated list of mixin ids that are used to instantiate the object.
 	 * @prop {string} [parent] - A selector specifying which element should be the parent of the instantiated entity.
 	 *	Defaults to the parent node.
@@ -1816,6 +1818,7 @@
 	* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
 	* The instantiated objects are built using the specified mixins.
 	* @mixin instantiator
+	* @memberof sync
 	* @prop {string} on - An event that triggers the instantiation
 	* @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.
 	* @prop {string} parent='a-scene' - A selector that determines which object the instantiated object will be added to.

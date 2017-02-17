@@ -1,5 +1,7 @@
 /**
- * Instantiates an entity for each user using [sync-system]{@link native.sync-system}.
+ * Instantiates an entity for each user using [sync-system]{@link sync.sync-system}.
+ * @mixin one-per-user
+ * @memberof sync
  * @prop {string} mixin - A comma-separated list of mixin ids that are used to instantiate the object.
  * @prop {string} [parent] - A selector specifying which element should be the parent of the instantiated entity.
  *	Defaults to the parent node.

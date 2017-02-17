@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>n-capsule-collider - Documentation</title>
+    <title>one-per-user - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-capsule-collider</h1>
+    <h1 class="page-title">one-per-user</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="native.html">native</a>.</span>
+            <span class="ancestors"><a href="sync.html">sync</a>.</span>
         
-        n-capsule-collider
+        one-per-user
         </h2>
         
     
@@ -53,8 +53,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Create a capsule-shaped collider on this entity. Capsules
-are a union of a cylinder and two spheres on top and bottom.</p></div>
+            <div class="description"><p>Instantiates an entity for each user using <a href="sync.sync-system.html">sync-system</a>.</p></div>
         
 
         
@@ -74,9 +73,9 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
         <th>Type</th>
 
         
-
+        <th>Attributes</th>
         
-        <th>Default</th>
+
         
 
         <th class="last">Description</th>
@@ -88,65 +87,7 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
 
         <tr>
             
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The radius of the capsule in meters.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The height of the shaft of the capsule in meters.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>direction</code></td>
+                <td class="name"><code>mixin</code></td>
             
 
             <td class="type">
@@ -159,17 +100,48 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
             </td>
 
             
-
-            
-                <td class="default">
+                <td class="attributes">
                 
-                    y
+
                 
                 </td>
             
 
-            <td class="description last"><p>The axis with which the capsule is aligned.
-One of <code>x</code>, <code>y</code>, or <code>z</code>.</p></td>
+            
+
+            <td class="description last"><p>A comma-separated list of mixin ids that are used to instantiate the object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A selector specifying which element should be the parent of the instantiated entity.
+    Defaults to the parent node.</p></td>
         </tr>
 
     
@@ -218,17 +190,6 @@ One of <code>x</code>, <code>y</code>, or <code>z</code>.</p></td>
         
     
     </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="native.n-collider.html">native.n-collider</a></li>
-    </ul>
-
 
     
 
