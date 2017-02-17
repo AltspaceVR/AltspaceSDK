@@ -90,7 +90,7 @@
 	* <head>
 	*   <title>My A-Frame Scene</title>
 	*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.2/dist/aframe-altspace-component.min.js"></script>
+	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.4.0/dist/aframe-altspace-component.min.js"></script>
 	* </head>
 	* <body>
 	*   <a-scene altspace>
@@ -99,7 +99,7 @@
 	* </body>
 	*/
 	AFRAME.registerComponent('altspace', {
-	  version: '1.3.2',
+	  version: '1.4.0',
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
