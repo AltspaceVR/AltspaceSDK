@@ -1,11 +1,10 @@
 {
     "source": {
-        "include": ["src/"],
-        "exclude": ["src/components/"]
+        "include": "src/components/"
     },
     "opts": {
         "recurse": true,
-        "destination": "doc/js",
+        "destination": "doc/aframe",
         "readme": "README.template.md",
         "template": "./node_modules/minami"
     },

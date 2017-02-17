@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>AFrameSystem - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script>
+        function saveVerticalScrollPosition(evt){
+            window.localStorage.setItem('navscrollpos', evt.target.scrollTop);
+        }
+        function loadVerticalScrollPosition(){
+            var nav = document.querySelector('nav');
+            nav.scrollTop = window.localStorage.getItem('navscrollpos');
+        }
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav onscroll='saveVerticalScrollPosition(event)'>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-altspace_components.html">altspace/components</a></li><li><a href="module-altspace_resources.html">altspace/resources</a></li></ul><h3>Classes</h3><ul><li><a href="module-altspace_components.AFrameComponent.html">AFrameComponent</a></li><li><a href="module-altspace_components.AFrameSystem.html">AFrameSystem</a></li><li><a href="module-altspace_components.altspace.html">altspace</a></li><li><a href="module-altspace_components.altspace-cursor-collider.html">altspace-cursor-collider</a></li><li><a href="module-altspace_components.altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="module-altspace_components.n-billboard.html">n-billboard</a></li><li><a href="module-altspace_components.n-box-collider.html">n-box-collider</a></li><li><a href="module-altspace_components.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="module-altspace_components.n-container.html">n-container</a></li><li><a href="module-altspace_components.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="module-altspace_components.n-object.html">n-object</a></li><li><a href="module-altspace_components.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="module-altspace_components.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="module-altspace_components.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="module-altspace_components.n-sound.html#seek">seek</a></li></ul></li><li><a href="module-altspace_components.n-spawner.html">n-spawner</a></li><li><a href="module-altspace_components.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="module-altspace_components.n-text.html">n-text</a></li><li><a href="module-altspace_components.NativeComponent.html">NativeComponent</a></li><li><a href="module-altspace_components.NCollider.html">NCollider</a></li><li><a href="module-altspace_components.sync.html">sync</a><ul class='methods'><li data-type='method'><a href="module-altspace_components.sync.html#takeOwnership">takeOwnership</a></li></ul></li><li><a href="module-altspace_components.sync-color.html">sync-color</a></li><li><a href="module-altspace_components.sync-n-sound.html">sync-n-sound</a></li><li><a href="module-altspace_components.sync-system.html">sync-system</a><ul class='methods'><li data-type='method'><a href="module-altspace_components.sync-system.html#isMasterClient">isMasterClient</a></li></ul></li><li><a href="module-altspace_components.sync-transform.html">sync-transform</a></li><li><a href="module-altspace_components.wire.html">wire</a></li></ul><h3>Events</h3><ul><li><a href="module-altspace_components.n-container.html#.event:container-count-changed">container-count-changed</a></li><li><a href="module-altspace_components.n-container.html#.event:container-empty">container-empty</a></li><li><a href="module-altspace_components.n-container.html#.event:container-full">container-full</a></li><li><a href="module-altspace_components.NSound.html#.event:n-sound-loaded">n-sound-loaded</a></li><li><a href="module-altspace_components.NSound.html#.event:sound-paused">sound-paused</a></li><li><a href="module-altspace_components.NSound.html#.event:sound-played">sound-played</a></li><li><a href="module-altspace_components.NCollider.html#.event:triggerenter">triggerenter</a></li><li><a href="module-altspace_components.NCollider.html#.event:triggerexit">triggerexit</a></li></ul>
+</nav>
+<script>loadVerticalScrollPosition()</script>
+
+<div id="main">
+    
+    <h1 class="page-title">AFrameSystem</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a>.</span>
+        
+        AFrameSystem
+        </h2>
+        
+            <div class="class-description"><p>Stubs out the A-Frame &quot;system&quot; concept.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="AFrameSystem"><span class="type-signature"></span>new AFrameSystem<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://aframe.io/docs/0.3.0/core/systems.html">https://aframe.io/docs/0.3.0/core/systems.html</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

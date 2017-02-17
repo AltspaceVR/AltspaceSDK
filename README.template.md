@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, and Samsung GearVR.
 
-**Latest Version: vVERSION -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/vVERSION)**
+**Latest Version: v{{SDK_VERSION}} -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v{{SDK_VERSION}})**
 
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -15,7 +15,7 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 ## Resources
 
 - **[Getting Started] - If you're new to the SDK, start here!**
-- **[API Reference] - Reference for built in API functions, utilities, and more**
+- **[API Reference] - Reference for built-in API functions, utilities, and more**
 - **[Developer Portal] - Tutorials, projects, initiative program, and app submission**
 - **[Local Dev Setup] - Instructions for setting up a local dev environment**
 - **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
@@ -24,15 +24,15 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 
 ## altspace.js
 
-`altspace.js` should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.
+`altspace.js` should be included whenever you use the SDK. It contains core utilities and APIs, and is useful both inside and outside of the client.
 
 Many APIs are present in the client without loading `altspace.js`, but please still include it, as this may change in the future.
 
 **The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.** This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js` we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
 
-Include the latest version of Altspace in your app with:
+Include the latest version of the SDK in your app with:
 
-`<script src="http://sdk.altvr.com/libs/altspace.js/VERSION/altspace.min.js"></script>`
+`<script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
