@@ -1328,13 +1328,24 @@
 			// Clear queue.
 			this.queuedInstantiations.length = 0;
 		},
-		instantiate: function (instantiatorId, groupName, mixin, parent) {
-			// Bit of a hack since we need to store a string to in firebase and parent.stringify doesn't
-			// return a proper selector for a-scene.
-			var parentSelector = parent.nodeName === 'A-SCENE' ? 'a-scene' : '#' + parent.id;
+		instantiate: function (el, mixin, parent, groupName, instantiatorId) {
+			// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those 
+			// correctly.
+			if (!mixin) {
+				console.error('AltspaceVR: Instantiation requires a mixin value.', el);
+				return;
+			}
+			var parentWithId = parent && parent.id;
+			var parentIsScene = parent.nodeName === 'A-SCENE';
+			if (!parentWithId && !parentIsScene) {
+				console.error('AltspaceVR: Instantiation requires a parent with an id.', el);
+				return;
+			}
+	
+			var parentSelector = parent.id ? '#' + parent.id : 'a-scene';
 			var instantiationProps = {
-				instantiatorId: instantiatorId,
-				groupName: groupName,
+				instantiatorId: instantiatorId || '',
+				groupName: groupName || 'main',
 				mixin: mixin,
 				parent: parentSelector
 			};
@@ -1361,7 +1372,6 @@
 			var key = snapshot.key();
 			var entityEl = document.createElement('a-entity');
 			entityEl.id = val.groupName + '-instance-' + key;
-			entityEl.dataset.instantiatorId = val.instantiatorId;
 			document.querySelector(val.parent).appendChild(entityEl);
 			entityEl.setAttribute('mixin', val.mixin);
 			entityEl.dataset.creatorUserId = val.creatorUserId;
@@ -1714,12 +1724,12 @@
 	AFRAME.registerComponent('one-per-user', {
 		schema: {
 			mixin: {type: 'string'},
-			parent: {type: 'selector', default: 'a-scene'}
+			parent: {type: 'selector'}
 		},
 		init: function () {
 			var scene = document.querySelector('a-scene');
 			this.syncSys = scene.systems['sync-system'];
-			this.syncSys.instantiate(this.el.id, this.el.id, this.data.mixin, this.data.parent)
+			this.syncSys.instantiate(this.el, this.data.mixin, this.data.parent || this.el.parentNode)
 		}
 	});
 
@@ -1757,7 +1767,7 @@
 			if (this.data.removeLast) {
 				this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
 					if (lastInstantiatorId !== this.el.id) {
-						this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+						this.syncSys.instantiate(this.el, this.data.mixin, this.data.parent, userGroup, this.el.id)
 					}
 				}.bind(this));
 			}
