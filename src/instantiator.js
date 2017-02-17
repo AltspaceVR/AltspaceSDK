@@ -27,7 +27,7 @@ AFRAME.registerComponent('instantiator', {
 		if (this.data.removeLast) {
 			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
 				if (lastInstantiatorId !== this.el.id) {
-					this.syncSys.instantiate(this.el, this.data.mixin, this.data.parent, userGroup, this.el.id)
+					this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id)
 				}
 			}.bind(this));
 		}

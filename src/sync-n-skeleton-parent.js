@@ -1,3 +1,8 @@
+/**
+ * Syncs the attributes of an n-skeleton-parent component across clients
+ * @mixin sync-n-skeleton-parent
+ * @memberof sync
+ */
 AFRAME.registerComponent('sync-n-skeleton-parent', {
 	dependencies: ['sync'],
 	init: function () {

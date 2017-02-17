@@ -448,7 +448,7 @@
 		function nativeComponentRemove() {
 			altspace.removeNativeComponent(this.el.object3DMap.mesh, this.name);
 		}
-		function nativeComponentUpdate(oldData) {
+		function nativeComponentUpdate() {
 			altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
 		}
 	
@@ -663,7 +663,7 @@
 					altspace.removeNativeComponent(mesh, this.name);
 				}.bind(this));
 			},
-			update: function (oldData) {
+			update: function () {
 				this._forEachMesh(function (mesh) {
 					altspace.updateNativeComponent(mesh, this.name, this.data);
 				}.bind(this));
@@ -803,17 +803,17 @@
 			remove: function () {
 				nativeComponentRemove.call(this);
 				if (this.playHandler) {
-				  this.el.removeEventListener(oldData.on, this.playHandler);
+					this.el.removeEventListener(this.data.on, this.playHandler);
 				}
 			},
 			update: function (oldData) {
 				nativeComponentUpdate.call(this, oldData);
 				if (this.playHandler) {
-				  this.el.removeEventListener(oldData.on, this.playHandler);
+					this.el.removeEventListener(oldData.on, this.playHandler);
 				}
 				if (this.data.on) {
-				  this.playHandler = this.playSound.bind(this);
-				  this.el.addEventListener(this.data.on, this.playHandler);
+					this.playHandler = this.playSound.bind(this);
+					this.el.addEventListener(this.data.on, this.playHandler);
 				}
 			},
 			schema: {
@@ -832,6 +832,16 @@
 			}
 		});
 	
+		/**
+		* Parents an entity to a joint on the avatar skeleton.
+		* @mixin n-skeleton-parent
+		* @memberof native
+		* @prop {string} part - One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg', 'foot', 'toes', 
+		*	'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb', 'index', 'middle', 'ring' or 'pinky'.
+		* @prop {string} [side='center'] - Side of the body. Either 'left', 'center' or 'right'
+		* @prop {int} [index=0] - Bone index. e.g. Which knuckle joint to attach to.
+		* @prop {string} [userId] - Id of the user to which the entity should be attached. Defaults to the local user.
+		*/
 		AFRAME.registerComponent('n-skeleton-parent', {
 			schema: {
 				part: {type: 'string'},
@@ -844,6 +854,11 @@
 			remove: nativeComponentRemove
 		});
 	
+		/**
+		* Parents an entity to the cockpit.
+		* @mixin n-cockpit-parent
+		* @memberof native
+		*/
 		AFRAME.registerComponent('n-cockpit-parent', {
 			init: nativeComponentInit,
 			remove: nativeComponentRemove
@@ -1227,6 +1242,36 @@
 	* @prop {string} instance - Override the instance ID. Can also be overridden with
 	* a URL parameter.
 	*/
+	
+	/**
+	* True if the sync system is connected and ready for syncing.
+	* @member sync.sync-system#isConnected
+	* @readonly
+	*/
+	
+	/**
+	* True if this client is currently the master client.
+	* @member sync.sync-system#isMasterClient
+	* @readonly
+	*/
+	
+	/**
+	* Fired when a connection is established and the sync system is fully initialized.
+	* @event sync.sync-system#connected
+	* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
+	*/
+	
+	/**
+	* Fired when a client joins.
+	* @event sync.sync-system#clientjoined
+	* @property {string} id - Guid identifying the client.
+	*/
+	
+	/**
+	* Fired when a client leaves.
+	* @event sync.sync-system#clientleft
+	* @property {string} id - Guid identifying the client.
+	*/
 	AFRAME.registerSystem('sync-system', {
 		schema: {
 			author: { type: 'string', default: null },
@@ -1328,7 +1373,18 @@
 			// Clear queue.
 			this.queuedInstantiations.length = 0;
 		},
-		instantiate: function (el, mixin, parent, groupName, instantiatorId) {
+		/**
+		* Instantiate an entity with the given mixins.
+		* @method sync.sync-system#instantiate
+		* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
+		* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
+		* @param {Element} [el] - The element responsible for instantiating this entity.
+		* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with 
+		*	[removeLast]{@link sync.sync-system#removeLast}.
+		* @param {string} [instantiatorId] - Used by [removeLast]{@link sync.sync-system#removeLast} to indicate who was 
+		*	responsible for the removed entity.
+		*/
+		instantiate: function (mixin, parent, el, groupName, instantiatorId) {
 			// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those 
 			// correctly.
 			if (!mixin) {
@@ -1342,7 +1398,7 @@
 				return;
 			}
 	
-			var parentSelector = parent.id ? '#' + parent.id : 'a-scene';
+			var parentSelector = parentWithId ? '#' + parent.id : 'a-scene';
 			var instantiationProps = {
 				instantiatorId: instantiatorId || '',
 				groupName: groupName || 'main',
@@ -1354,6 +1410,13 @@
 				this.processQueuedInstantiations();
 			}
 		},
+		/**
+		* Remove the last entity instantiated in the given group.
+		* Returns a Promise which resolves with the instantiatorId associated with the removed entity.
+		* @method sync.sync-system#removeLast
+		* @param {string} groupName - Name of the group from which to remove the entity.
+		* @returns {Promise} 
+		*/
 		removeLast: function (groupName) {
 			return new Promise(function (resolve) {
 				this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
@@ -1679,6 +1742,11 @@
 /* 11 */
 /***/ function(module, exports) {
 
+	/**
+	 * Syncs the attributes of an n-skeleton-parent component across clients
+	 * @mixin sync-n-skeleton-parent
+	 * @memberof sync
+	 */
 	AFRAME.registerComponent('sync-n-skeleton-parent', {
 		dependencies: ['sync'],
 		init: function () {
@@ -1721,6 +1789,12 @@
 /* 12 */
 /***/ function(module, exports) {
 
+	/**
+	 * Instantiates an entity for each user using [sync-system]{@link native.sync-system}.
+	 * @prop {string} mixin - A comma-separated list of mixin ids that are used to instantiate the object.
+	 * @prop {string} [parent] - A selector specifying which element should be the parent of the instantiated entity.
+	 *	Defaults to the parent node.
+	 */
 	AFRAME.registerComponent('one-per-user', {
 		schema: {
 			mixin: {type: 'string'},
@@ -1729,7 +1803,7 @@
 		init: function () {
 			var scene = document.querySelector('a-scene');
 			this.syncSys = scene.systems['sync-system'];
-			this.syncSys.instantiate(this.el, this.data.mixin, this.data.parent || this.el.parentNode)
+			this.syncSys.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el)
 		}
 	});
 
@@ -1767,7 +1841,7 @@
 			if (this.data.removeLast) {
 				this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
 					if (lastInstantiatorId !== this.el.id) {
-						this.syncSys.instantiate(this.el, this.data.mixin, this.data.parent, userGroup, this.el.id)
+						this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id)
 					}
 				}.bind(this));
 			}

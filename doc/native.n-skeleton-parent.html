@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>n-collider - Documentation</title>
+    <title>n-skeleton-parent - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-collider</h1>
+    <h1 class="page-title">n-skeleton-parent</h1>
     
 
     
@@ -43,7 +43,7 @@
         <h2>
             <span class="ancestors"><a href="native.html">native</a>.</span>
         
-        n-collider
+        n-skeleton-parent
         </h2>
         
     
@@ -53,10 +53,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Abstract base class for n.n-sphere-collider, n.n-box-collider,
-n.n-capsule-collider, and n.n-mesh-collider. You cannot use
-this class directly, but instead you should add one of those components
-to your objects.</p></div>
+            <div class="description"><p>Parents an entity to a joint on the avatar skeleton.</p></div>
         
 
         
@@ -76,6 +73,8 @@ to your objects.</p></div>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
         <th>Default</th>
@@ -90,36 +89,7 @@ to your objects.</p></div>
 
         <tr>
             
-                <td class="name"><code>center</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">vec3</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    0,0,0
-                
-                </td>
-            
-
-            <td class="description last"><p>The offset of the collider in local space.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
+                <td class="name"><code>part</code></td>
             
 
             <td class="type">
@@ -132,20 +102,130 @@ to your objects.</p></div>
             </td>
 
             
-
-            
-                <td class="default">
+                <td class="attributes">
                 
-                    hologram
+
                 
                 </td>
             
 
-            <td class="description last"><p>The type of collider, one of: <code>object</code> | <code>environment</code> | <code>hologram</code>.
-Object colliders collide with other objects, the environment, and the cursor.
-Environment colliders collide with everything objects do, but you can also
-teleport onto them. Hologram colliders only collide with other holograms and
-the cursor.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg', 'foot', 'toes', 
+    'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb', 'index', 'middle', 'ring' or 'pinky'.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>side</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    'center'
+                
+                </td>
+            
+
+            <td class="description last"><p>Side of the body. Either 'left', 'center' or 'right'</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Bone index. e.g. Which knuckle joint to attach to.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Id of the user to which the entity should be attached. Defaults to the local user.</p></td>
         </tr>
 
     

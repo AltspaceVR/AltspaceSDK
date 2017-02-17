@@ -11,6 +11,36 @@
 * @prop {string} instance - Override the instance ID. Can also be overridden with
 * a URL parameter.
 */
+
+/**
+* True if the sync system is connected and ready for syncing.
+* @member sync.sync-system#isConnected
+* @readonly
+*/
+
+/**
+* True if this client is currently the master client.
+* @member sync.sync-system#isMasterClient
+* @readonly
+*/
+
+/**
+* Fired when a connection is established and the sync system is fully initialized.
+* @event sync.sync-system#connected
+* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
+*/
+
+/**
+* Fired when a client joins.
+* @event sync.sync-system#clientjoined
+* @property {string} id - Guid identifying the client.
+*/
+
+/**
+* Fired when a client leaves.
+* @event sync.sync-system#clientleft
+* @property {string} id - Guid identifying the client.
+*/
 AFRAME.registerSystem('sync-system', {
 	schema: {
 		author: { type: 'string', default: null },
@@ -112,7 +142,18 @@ AFRAME.registerSystem('sync-system', {
 		// Clear queue.
 		this.queuedInstantiations.length = 0;
 	},
-	instantiate: function (el, mixin, parent, groupName, instantiatorId) {
+	/**
+	* Instantiate an entity with the given mixins.
+	* @method sync.sync-system#instantiate
+	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
+	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
+	* @param {Element} [el] - The element responsible for instantiating this entity.
+	* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with 
+	*	[removeLast]{@link sync.sync-system#removeLast}.
+	* @param {string} [instantiatorId] - Used by [removeLast]{@link sync.sync-system#removeLast} to indicate who was 
+	*	responsible for the removed entity.
+	*/
+	instantiate: function (mixin, parent, el, groupName, instantiatorId) {
 		// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those 
 		// correctly.
 		if (!mixin) {
@@ -126,7 +167,7 @@ AFRAME.registerSystem('sync-system', {
 			return;
 		}
 
-		var parentSelector = parent.id ? '#' + parent.id : 'a-scene';
+		var parentSelector = parentWithId ? '#' + parent.id : 'a-scene';
 		var instantiationProps = {
 			instantiatorId: instantiatorId || '',
 			groupName: groupName || 'main',
@@ -138,6 +179,13 @@ AFRAME.registerSystem('sync-system', {
 			this.processQueuedInstantiations();
 		}
 	},
+	/**
+	* Remove the last entity instantiated in the given group.
+	* Returns a Promise which resolves with the instantiatorId associated with the removed entity.
+	* @method sync.sync-system#removeLast
+	* @param {string} groupName - Name of the group from which to remove the entity.
+	* @returns {Promise} 
+	*/
 	removeLast: function (groupName) {
 		return new Promise(function (resolve) {
 			this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(

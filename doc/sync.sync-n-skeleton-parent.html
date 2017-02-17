@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>n-collider - Documentation</title>
+    <title>sync-n-skeleton-parent - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-collider</h1>
+    <h1 class="page-title">sync-n-skeleton-parent</h1>
     
 
     
@@ -41,9 +41,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="native.html">native</a>.</span>
+            <span class="ancestors"><a href="sync.html">sync</a>.</span>
         
-        n-collider
+        sync-n-skeleton-parent
         </h2>
         
     
@@ -53,106 +53,10 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Abstract base class for n.n-sphere-collider, n.n-box-collider,
-n.n-capsule-collider, and n.n-mesh-collider. You cannot use
-this class directly, but instead you should add one of those components
-to your objects.</p></div>
+            <div class="description"><p>Syncs the attributes of an n-skeleton-parent component across clients</p></div>
         
 
         
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>center</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">vec3</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    0,0,0
-                
-                </td>
-            
-
-            <td class="description last"><p>The offset of the collider in local space.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    hologram
-                
-                </td>
-            
-
-            <td class="description last"><p>The type of collider, one of: <code>object</code> | <code>environment</code> | <code>hologram</code>.
-Object colliders collide with other objects, the environment, and the cursor.
-Environment colliders collide with everything objects do, but you can also
-teleport onto them. Hologram colliders only collide with other holograms and
-the cursor.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
 
 
 <dl class="details">
