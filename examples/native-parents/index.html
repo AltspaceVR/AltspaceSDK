@@ -1,0 +1,93 @@
+<html>
+<head>
+	<title>Native Parent</title>
+	<script src="//aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../dist/aframe-altspace-component.js"></script>
+	<script src="//sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js"></script>
+</head>
+<body>
+<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: native-parents">
+	<a-assets>
+		<a-mixin id="left-box"
+			geometry="primitive: box"
+			material="color: red"
+			n-skeleton-parent="part: hand; side: left; index: 0;"
+			sync sync-n-skeleton-parent
+			position="0 0.1 0"
+			rotation="0 45 0"
+			scale="0.1 0.1 0.1">
+		</a-mixin>
+
+		<a-mixin id="body-ball"
+			position="0 0.25 -0.25"
+			n-spawner="res:interactables/basketball"
+			n-skeleton-parent="part: spine;"
+			sync sync-n-skeleton-parent>
+		</a-mixin>
+
+		<a-mixin id="spinal-tap"
+			n-sound="res: ui/error; volume: 0.5; loop: true; autoplay: true;"
+			n-skeleton-parent="part: spine;"
+			sync sync-n-skeleton-parent>
+		</a-mixin>
+
+		<a-mixin id="other-text"
+			position="0 1.5 0"
+			rotation="0 180 0"
+			scale="0.5 0.5 0.5"
+			n-text="fontSize: 2; text: text other people can read"
+			n-skeleton-parent="part: hips;"
+			sync sync-n-skeleton-parent>
+		</a-mixin>
+
+		<a-mixin id="head-text"
+			position="0.2 0.2 -0.5"
+			scale="0.1 0.1 0.1"
+			n-text="fontSize: 2; text: avoid text on the head \n annoying isn't it :-)"
+			n-skeleton-parent="part: head;"
+			sync sync-n-skeleton-parent>
+		</a-mixin>
+
+		<a-mixin id="headache"
+			n-object="res:effects/fire"
+			n-skeleton-parent="part: head;"
+			sync sync-n-skeleton-parent>
+		</a-mixin>
+
+		<a-mixin id="fire-fist"
+			n-object="res:effects/fire-trail"
+			n-skeleton-parent="part: hand; side: right"
+			sync sync-n-skeleton-parent>
+		</a-mixin>
+	</a-assets>
+	<a-entity one-per-user="mixin: left-box"></a-entity>
+
+	<a-entity one-per-user="mixin: body-ball"></a-entity>
+
+	<a-entity one-per-user="mixin: spinal-tap"></a-entity>
+
+	<a-entity
+		position="0 1 -1"
+		scale="0.5 0.5 0.5"
+		n-text="fontSize: 2; text: text in the world">
+	</a-entity>
+
+	<a-entity one-per-user="mixin: other-text"></a-entity>
+
+	<a-entity
+		position="0 0 -0.7"
+		scale="0.2 0.2 0.2"
+		rotation="-30 0 0"
+		n-text="fontSize: 2; text: text you can read comfortably"
+		n-cockpit-parent>
+	</a-entity>
+
+	<a-entity one-per-user="mixin: head-text"></a-entity>
+
+	<a-entity one-per-user="mixin: headache"></a-entity>
+
+	<a-entity one-per-user="mixin: fire-fist"></a-entity>
+</a-scene>
+</body>
+</html>
+

@@ -59,6 +59,9 @@
 	__webpack_require__(9);
 	__webpack_require__(10);
 	__webpack_require__(11);
+	__webpack_require__(12);
+	__webpack_require__(13);
+	__webpack_require__(14);
 
 
 /***/ },
@@ -87,7 +90,7 @@
 	* <head>
 	*   <title>My A-Frame Scene</title>
 	*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.2/dist/aframe-altspace-component.min.js"></script>
+	*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.4.0/dist/aframe-altspace-component.min.js"></script>
 	* </head>
 	* <body>
 	*   <a-scene altspace>
@@ -96,7 +99,7 @@
 	* </body>
 	*/
 	AFRAME.registerComponent('altspace', {
-	  version: '1.3.2',
+	  version: '1.4.0',
 	  schema: {
 		usePixelScale: { type: 'boolean', default: 'false'},
 		verticalAlign: { type: 'string',  default: 'middle'},
@@ -427,17 +430,25 @@
 	
 		function nativeComponentInit() {
 			var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-	
+			this.currentMesh = mesh;
 			meshInit.call(this, mesh);
-	
 			//to pass defaults
 			this.update(this.data);
+	
+			this.el.addEventListener('object3dset', function (event) {
+				if (event.detail.type !== 'mesh') { return; }
+				altspace.removeNativeComponent(this.currentMesh, this.name);
+	
+				this.currentMesh = this.el.object3DMap.mesh;
+				meshInit.call(this, this.currentMesh);
+				//to pass defaults
+				this.update(this.data);
+			}.bind(this));
 		}
 		function nativeComponentRemove() {
-			var mesh = this.el.getObject3D('mesh');
-			altspace.removeNativeComponent(mesh, this.name);
+			altspace.removeNativeComponent(this.el.object3DMap.mesh, this.name);
 		}
-		function nativeComponentUpdate(oldData) {
+		function nativeComponentUpdate() {
 			altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
 		}
 	
@@ -652,7 +663,7 @@
 					altspace.removeNativeComponent(mesh, this.name);
 				}.bind(this));
 			},
-			update: function (oldData) {
+			update: function () {
 				this._forEachMesh(function (mesh) {
 					altspace.updateNativeComponent(mesh, this.name, this.data);
 				}.bind(this));
@@ -792,17 +803,17 @@
 			remove: function () {
 				nativeComponentRemove.call(this);
 				if (this.playHandler) {
-				  this.el.removeEventListener(oldData.on, this.playHandler);
+					this.el.removeEventListener(this.data.on, this.playHandler);
 				}
 			},
 			update: function (oldData) {
 				nativeComponentUpdate.call(this, oldData);
 				if (this.playHandler) {
-				  this.el.removeEventListener(oldData.on, this.playHandler);
+					this.el.removeEventListener(oldData.on, this.playHandler);
 				}
 				if (this.data.on) {
-				  this.playHandler = this.playSound.bind(this);
-				  this.el.addEventListener(this.data.on, this.playHandler);
+					this.playHandler = this.playSound.bind(this);
+					this.el.addEventListener(this.data.on, this.playHandler);
 				}
 			},
 			schema: {
@@ -820,6 +831,39 @@
 				rolloff: { type: 'string', default: 'logarithmic' },
 			}
 		});
+	
+		/**
+		* Parents an entity to a joint on the avatar skeleton.
+		* @mixin n-skeleton-parent
+		* @memberof native
+		* @prop {string} part - One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg', 'foot', 'toes', 
+		*	'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb', 'index', 'middle', 'ring' or 'pinky'.
+		* @prop {string} [side='center'] - Side of the body. Either 'left', 'center' or 'right'
+		* @prop {int} [index=0] - Bone index. e.g. Which knuckle joint to attach to.
+		* @prop {string} [userId] - Id of the user to which the entity should be attached. Defaults to the local user.
+		*/
+		AFRAME.registerComponent('n-skeleton-parent', {
+			schema: {
+				part: {type: 'string'},
+				side: {type: 'string', default: 'center'},
+				index: {type: 'int', default: 0},
+				userId: {type: 'string'}
+			},
+			init: nativeComponentInit,
+			update: nativeComponentUpdate,
+			remove: nativeComponentRemove
+		});
+	
+		/**
+		* Parents an entity to the cockpit.
+		* @mixin n-cockpit-parent
+		* @memberof native
+		*/
+		AFRAME.registerComponent('n-cockpit-parent', {
+			init: nativeComponentInit,
+			remove: nativeComponentRemove
+		});
+	
 	
 	})();
 
@@ -1051,8 +1095,7 @@
 	* will cause the local client to take ownership of this object. This field
 	* cannot be updated after initialization.
 	*/
-	AFRAME.registerComponent('sync',
-	{
+	AFRAME.registerComponent('sync', {
 		schema: {
 			mode: { default: 'link' },
 			ownOn: { type: 'string' } //cannot be changed after creation
@@ -1062,7 +1105,6 @@
 			var syncSys = scene.systems['sync-system'];
 	
 			var ref;
-			var key;
 			var dataRef;
 			var ownerRef;
 			var ownerId;
@@ -1103,9 +1145,6 @@
 						return;
 					}
 	
-					console.log('syncSys: ' + syncSys);
-					console.log('syncSys.sceneRef: ' + syncSys.sceneRef);
-	
 					link(syncSys.sceneRef.child(id));
 					setupReceive();
 	
@@ -1120,7 +1159,6 @@
 	
 			function link(entityRef) {
 				ref = entityRef;
-				key = ref.key();
 				dataRef = ref.child('data');
 				component.dataRef = dataRef;
 				ownerRef = ref.child('owner');
@@ -1134,10 +1172,10 @@
 	
 					ownerRef.onDisconnect().set(null);
 					return syncSys.clientId;
-				});
-	
-				ownerRef.on('value',
-					function(snapshot) {
+				}, function (error, committed) {
+					// Return since transaction will be called again
+					if (!committed) { return; }
+					ownerRef.on('value', function(snapshot) {
 						var newOwnerId = snapshot.val();
 	
 						var gained = newOwnerId === syncSys.clientId && !isMine;
@@ -1157,6 +1195,7 @@
 	
 						isMine = newOwnerId === syncSys.clientId;
 					});
+				});
 			}
 	
 			/**
@@ -1203,8 +1242,37 @@
 	* @prop {string} instance - Override the instance ID. Can also be overridden with
 	* a URL parameter.
 	*/
-	AFRAME.registerSystem('sync-system',
-	{
+	
+	/**
+	* True if the sync system is connected and ready for syncing.
+	* @member sync.sync-system#isConnected
+	* @readonly
+	*/
+	
+	/**
+	* True if this client is currently the master client.
+	* @member sync.sync-system#isMasterClient
+	* @readonly
+	*/
+	
+	/**
+	* Fired when a connection is established and the sync system is fully initialized.
+	* @event sync.sync-system#connected
+	* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
+	*/
+	
+	/**
+	* Fired when a client joins.
+	* @event sync.sync-system#clientjoined
+	* @property {string} id - Guid identifying the client.
+	*/
+	
+	/**
+	* Fired when a client leaves.
+	* @event sync.sync-system#clientleft
+	* @property {string} id - Guid identifying the client.
+	*/
+	AFRAME.registerSystem('sync-system', {
 		schema: {
 			author: { type: 'string', default: null },
 			app: { type: 'string', default: null },
@@ -1212,25 +1280,33 @@
 			refUrl: { type: 'string', default: null }
 		},
 		init: function() {
-			var component = this;
+			var system = this;
 	
 			if(!this.data || !this.data.app){
 				console.warn('The sync-system must be present on the scene and configured with required data.');
 				return;
 			}
 	
-			component.isConnected = false;
-			console.log(this.data);
-			altspace.utilities.sync.connect({
-				authorId: this.data.author,
-				appId: this.data.app,
-				instanceId: this.data.instance,
-				baseRefUrl: this.data.refUrl
-			}).then(function(connection) {
-				this.connection = connection;
+			system.isConnected = false;
+			system.queuedInstantiations = [];
+			Promise.all([
+				altspace.utilities.sync.connect({
+					authorId: this.data.author,
+					appId: this.data.app,
+					instanceId: this.data.instance,
+					baseRefUrl: this.data.refUrl
+				}),
+				altspace.getUser()
+			]).then(function(results) {
+				this.connection = results.shift();
+				this.userInfo = results.shift();
 	
 				this.sceneRef = this.connection.instance.child('scene');
 				this.clientsRef = this.connection.instance.child('clients');
+				this.instantiatedElementsRef = this.connection.instance.child('instantiatedElements')
+	
+				this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
+				this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
 	
 				// temporary way of having unique identifiers for each client
 				this.clientId = this.sceneEl.object3D.uuid;
@@ -1246,7 +1322,7 @@
 					var joinedClientId = childSnapshot.val();
 					//let the master client flag get set first
 					setTimeout(function(){
-						component.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
+						system.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
 					}, 0);
 				});
 	
@@ -1254,7 +1330,7 @@
 					var leftClientId = childSnapshot.val();
 					//let the master client flag get set first
 					setTimeout(function(){
-						component.sceneEl.emit('clientleft', {id: leftClientId}, false);
+						system.sceneEl.emit('clientleft', {id: leftClientId}, false);
 					}, 0);
 				});
 	
@@ -1262,13 +1338,14 @@
 				// but have it be automatically removed by firebase if we disconnect for any reason
 				this.clientsRef.push(this.clientId).onDisconnect().remove();
 	
-	
 				this.connection.instance.child('initialized').once('value', function (snapshot) {
 					var shouldInitialize = !snapshot.val();
 					snapshot.ref().set(true);
 	
-					component.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
-					component.isConnected = true;
+					this.processQueuedInstantiations();
+	
+					system.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
+					system.isConnected = true;
 				}.bind(this));
 	
 	
@@ -1276,6 +1353,98 @@
 					get: function () { return masterClientId === this.clientId; }.bind(this)
 				});
 			}.bind(this));
+		},
+		listenToInstantiationGroup: function (snapshot) {
+			snapshot.ref().on('child_added', this.createElement.bind(this));
+			snapshot.ref().on('child_removed', this.removeElement.bind(this));
+		},
+		stopListeningToInstantiationGroup: function (snapshot) {
+			snapshot.ref().off('child_added');
+			snapshot.ref().off('child_removed');
+		},
+		processQueuedInstantiations: function () {
+			this.queuedInstantiations.forEach(function (instantiationProps) {
+				instantiationProps.creatorUserId = this.userInfo.userId;
+				instantiationProps.clientId = this.clientId;
+				this.instantiatedElementsRef.child(instantiationProps.groupName).
+					push(instantiationProps).
+					onDisconnect().remove();
+			}.bind(this));
+			// Clear queue.
+			this.queuedInstantiations.length = 0;
+		},
+		/**
+		* Instantiate an entity with the given mixins.
+		* @method sync.sync-system#instantiate
+		* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
+		* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
+		* @param {Element} [el] - The element responsible for instantiating this entity.
+		* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with 
+		*	[removeLast]{@link sync.sync-system#removeLast}.
+		* @param {string} [instantiatorId] - Used by [removeLast]{@link sync.sync-system#removeLast} to indicate who was 
+		*	responsible for the removed entity.
+		*/
+		instantiate: function (mixin, parent, el, groupName, instantiatorId) {
+			// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those 
+			// correctly.
+			if (!mixin) {
+				console.error('AltspaceVR: Instantiation requires a mixin value.', el);
+				return;
+			}
+			var parentWithId = parent && parent.id;
+			var parentIsScene = parent.nodeName === 'A-SCENE';
+			if (!parentWithId && !parentIsScene) {
+				console.error('AltspaceVR: Instantiation requires a parent with an id.', el);
+				return;
+			}
+	
+			var parentSelector = parentWithId ? '#' + parent.id : 'a-scene';
+			var instantiationProps = {
+				instantiatorId: instantiatorId || '',
+				groupName: groupName || 'main',
+				mixin: mixin,
+				parent: parentSelector
+			};
+			this.queuedInstantiations.push(instantiationProps);
+			if (this.isConnected) {
+				this.processQueuedInstantiations();
+			}
+		},
+		/**
+		* Remove the last entity instantiated in the given group.
+		* Returns a Promise which resolves with the instantiatorId associated with the removed entity.
+		* @method sync.sync-system#removeLast
+		* @param {string} groupName - Name of the group from which to remove the entity.
+		* @returns {Promise} 
+		*/
+		removeLast: function (groupName) {
+			return new Promise(function (resolve) {
+				this.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
+					'value',
+					function (snapshot) {
+						if (!snapshot.hasChildren()) { resolve(); return; }
+						var val = snapshot.val();
+						var key = Object.keys(val)[0];
+						resolve(val[key].instantiatorId);
+						snapshot.ref().child(key).remove();
+					});
+			}.bind(this));
+		},
+		createElement: function (snapshot) {
+			var val = snapshot.val();
+			var key = snapshot.key();
+			var entityEl = document.createElement('a-entity');
+			entityEl.id = val.groupName + '-instance-' + key;
+			document.querySelector(val.parent).appendChild(entityEl);
+			entityEl.setAttribute('mixin', val.mixin);
+			entityEl.dataset.creatorUserId = val.creatorUserId;
+		},
+		removeElement: function (snapshot) {
+			var val = snapshot.val();
+			var key = snapshot.key();
+			var id = val.groupName + '-instance-' + key;
+			var el = document.querySelector('#' + id);
+			el.parentNode.removeChild(el);
 		}
 	});
 
@@ -1571,6 +1740,126 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+	/**
+	 * Syncs the attributes of an n-skeleton-parent component across clients
+	 * @mixin sync-n-skeleton-parent
+	 * @memberof sync
+	 */
+	AFRAME.registerComponent('sync-n-skeleton-parent', {
+		dependencies: ['sync'],
+		init: function () {
+			var scene = document.querySelector('a-scene');
+			this.syncSys = scene.systems['sync-system'];
+			this.sync = this.el.components.sync;
+			if(this.syncSys.isConnected) { this._start(); }
+			else { scene.addEventListener('connected', this._start.bind(this)); }
+		},
+		getDataRef: function (propertyName) {
+			return this.sync.dataRef.child('n-skeleton-parent/' + propertyName);
+		},
+		_start: function () {
+			this.attributeRef = this.sync.dataRef.child('n-skeleton-parent');
+			this.attributeRef.on('value', function (snapshot) {
+				var val = snapshot.val();
+				if (!val) { return; }
+				this.el.setAttribute('n-skeleton-parent', val);
+			}.bind(this));
+	
+			// dataset.creatorUserId is defined when the entity is instantiated via the sync system.
+			if (this.el.dataset.creatorUserId) {
+				this.attributeRef.set(Object.assign(
+					{}, this.el.components['n-skeleton-parent'].data, {userId: this.el.dataset.creatorUserId}));
+			}
+	
+			this.el.addEventListener('componentchanged', function (event) {
+				if (!this.sync.isMine) return;
+				var name = event.detail.name;
+				if (name === 'n-skeleton-parent') {
+					this.attributeRef.set(event.detail.newData);
+				}
+			}.bind(this));
+		}
+	});
+	
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	/**
+	 * Instantiates an entity for each user using [sync-system]{@link sync.sync-system}.
+	 * @mixin one-per-user
+	 * @memberof sync
+	 * @prop {string} mixin - A comma-separated list of mixin ids that are used to instantiate the object.
+	 * @prop {string} [parent] - A selector specifying which element should be the parent of the instantiated entity.
+	 *	Defaults to the parent node.
+	 */
+	AFRAME.registerComponent('one-per-user', {
+		schema: {
+			mixin: {type: 'string'},
+			parent: {type: 'selector'}
+		},
+		init: function () {
+			var scene = document.querySelector('a-scene');
+			this.syncSys = scene.systems['sync-system'];
+			this.syncSys.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el)
+		}
+	});
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	/**
+	* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
+	* The instantiated objects are built using the specified mixins.
+	* @mixin instantiator
+	* @memberof sync
+	* @prop {string} on - An event that triggers the instantiation
+	* @prop {string} mixin - A space-separated list of mixins that should be used to instantiate the object.
+	* @prop {string} parent='a-scene' - A selector that determines which object the instantiated object will be added to.
+	* @prop {string} group='main' - An identifier which can be used to group instantiated objects.
+	* @prop {boolean} removeLast=true - Whether the last object instantiated in a group should be removed before
+	*	instantiating a new object.
+	*/
+	AFRAME.registerComponent('instantiator', {
+		schema: {
+			on: {type: 'string'},
+			mixin: {type: 'string'},
+			parent: {type: 'selector', default: 'a-scene'},
+			group: {type: 'string', default: 'main'},
+			removeLast: {type: 'boolean', default: 'true'},
+		},
+		init: function () {
+			this.onHandler = this.instantiateOrToggle.bind(this);
+			this.el.addEventListener(this.data.on, this.onHandler);
+			this.syncSys = this.el.sceneEl.systems['sync-system'];
+		},
+		instantiateOrToggle: function () {
+			var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
+			if (this.data.removeLast) {
+				this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
+					if (lastInstantiatorId !== this.el.id) {
+						this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id)
+					}
+				}.bind(this));
+			}
+			else {
+				this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+			}
+		},
+		remove: function () {
+			this.el.removeEventListener(this.data.on, this.onHandler);
+		}
+	});
+
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	/**
