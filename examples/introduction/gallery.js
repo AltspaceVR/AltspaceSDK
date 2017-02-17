@@ -1,7 +1,7 @@
 'use strict';
 
 if (typeof AFRAME === 'undefined') {
-  throw new Error('Component attempted to register before AFRAME was available.');
+	throw new Error('Component attempted to register before AFRAME was available.');
 }
 
 AFRAME.registerComponent('cycle-preview', {
@@ -12,7 +12,7 @@ AFRAME.registerComponent('cycle-preview', {
 	},
 	init: function()
 	{
-		this.el.addEventListener('click', (function(e)
+		this.el.addEventListener('click', (function()
 		{
 			if(!this.data.library || !this.data.view)
 				return;
@@ -20,8 +20,8 @@ AFRAME.registerComponent('cycle-preview', {
 			if( !/^(category-)?(for|back)ward$/.test(this.data.direction) )
 				return;
 
-            var nextElem;
-            var curId = this.data.view.getAttribute('sync-resource').res;
+			var nextElem;
+			var curId = this.data.view.getAttribute('sync-resource').res;
 			var curElem = this.data.library.querySelector('[id="'+curId+'"]');
 			var curCategory = /^[^\/]+/.exec(curId);
 			if(curCategory) curCategory = curCategory[0];
@@ -56,9 +56,9 @@ AFRAME.registerComponent('cycle-preview', {
 AFRAME.registerComponent('sync-resource', {
 	dependencies: ['sync'],
 	schema: {
-        res: {type: 'string'},
-        label: {type: 'selector'}
-    },
+		res: {type: 'string'},
+		label: {type: 'selector'}
+	},
 	init: function()
 	{
 		var self = this;
@@ -73,49 +73,49 @@ AFRAME.registerComponent('sync-resource', {
 
 		function start()
 		{
-            var resourceRef = sync.dataRef.child('resource');
+			var resourceRef = sync.dataRef.child('resource');
 			resourceRef.on('value', function (snapshot)
 			{
-                if (sync.isMine && !self.firstValue) return;
+				if (sync.isMine && !self.firstValue) return;
 				var val = snapshot.val();
 
-                self.refLock = true;
-                self.el.setAttribute('sync-resource', 'res', val);
-                self.refLock = false;
+				self.refLock = true;
+				self.el.setAttribute('sync-resource', 'res', val);
+				self.refLock = false;
 				self.firstValue = false;
 			});
 		}
 	},
 
-	update: function(oldData)
+	update: function()
 	{
 		var sync = this.el.components.sync;
-        var resourceRef = sync.dataRef ? sync.dataRef.child('resource') : null;
+		var resourceRef = sync.dataRef ? sync.dataRef.child('resource') : null;
 
-        if(sync.isMine && !this.refLock && resourceRef){
-            resourceRef.set(this.data.res);
-        }
+		if(sync.isMine && !this.refLock && resourceRef){
+			resourceRef.set(this.data.res);
+		}
 
-        this.setResource(this.data.res);
+		this.setResource(this.data.res);
 	},
 
-    setResource: function(id)
-    {
-        if(/^interactables\//.test(id))
-        {
-            this.el.removeAttribute('n-object');
-            this.el.setAttribute('n-spawner', 'res', id);
-        }
-        else {
-            this.el.removeAttribute('n-spawner');
-            this.el.setAttribute('n-object', 'res', id);
-        }
+	setResource: function(id)
+	{
+		if(/^interactables\//.test(id))
+		{
+			this.el.removeAttribute('n-object');
+			this.el.setAttribute('n-spawner', 'res', id);
+		}
+		else {
+			this.el.removeAttribute('n-spawner');
+			this.el.setAttribute('n-object', 'res', id);
+		}
 
-        // update the label if there is one
-        if(this.data.label){
-            this.data.label.setAttribute('n-text', 'text', id);
-        }
-    }
+		// update the label if there is one
+		if(this.data.label){
+			this.data.label.setAttribute('n-text', 'text', id);
+		}
+	}
 });
 
 AFRAME.registerComponent('array-data', {
