@@ -5,7 +5,7 @@
     "opts": {
         "recurse": true,
         "destination": "doc/aframe",
-        "readme": "README.template.md",
+        "readme": "README-AFRAME.md",
         "template": "./node_modules/minami"
     },
     "plugins": ["plugins/markdown"],

@@ -58,125 +58,53 @@
 
 
     <section class="readme">
-        <article><h1>AltspaceVR SDK</h1><p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">Three.js</a> or <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="http://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, and Samsung GearVR.</p>
-<p><strong>Latest Version: v{{SDK_VERSION}} -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v{{SDK_VERSION}}">See Changes</a></strong></p>
-<!--
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--->
-<p><a href="http://threejs.org/">Three.js</a> is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a> is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.</p>
+        <article><h2>aframe-altspace-component</h2><p>When it comes to building something quick in AltspaceVR, it’s hard to beat <a href="https://aframe.io/">A-Frame</a>. It has a simple HTML-based syntax, so anyone acquainted with web development will pick it up in no time. On the other hand, if you don’t know what an HTML tag is, or how to add an image to a page, you should go through MDN’s terrific <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Introduction">Introduction to HTML</a> before you continue.</p>
+<p>The world is full of web developers though, so if you feel comfortable experimenting on your own, you should jump right in with the <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame Documentation</a>. You just need to add the <code>altspace</code> component to your <code>&lt;a-scene&gt;</code> tag. Keep in mind though that development in AltspaceVR has a few <a href="https://github.com/altspacevr/altspacesdk#threejs-feature-support">caveats</a>.</p>
+<p>In either case, you should join the <a href="https://altspacevrsdk.slack.com/">AltspaceVR SDK Slack channel</a> (<a href="https://altspacevr-slackin.herokuapp.com/">register here</a>)! We love to see what you’re working on, and are always happy to answer questions. In addition, there are special activities available only for developers that may be better for apps. Just request developer status on Slack, and we’ll hook you up!</p>
 <h2>Resources</h2><ul>
-<li><strong><a href="https://developer.altvr.com/get-started/">Getting Started</a> - If you're new to the SDK, start here!</strong></li>
-<li><strong><a href="http://altspacevr.github.io/AltspaceSDK/doc/">API Reference</a> - Reference for built-in API functions, utilities, and more</strong></li>
-<li><strong><a href="http://developer.altvr.com">Developer Portal</a> - Tutorials, projects, initiative program, and app submission</strong></li>
-<li><strong><a href="https://developer.altvr.com/local-dev/">Local Dev Setup</a> - Instructions for setting up a local dev environment</strong></li>
-<li><strong><a href="https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f">App Guidelines</a> - Suggestions for building apps that work well in Altspace and Gear VR</strong></li>
-<li><strong><a href="https://altspacevrsdk.slack.com">Slack</a> - Chat with other members of the community and AltspaceVR devs.  <a href="http://altspacevr-slackin.herokuapp.com">Register for Slack</a></strong></li>
+<li><a href="https://altspacevr.github.io/aframe-altspace-component/doc/">API Documentation for A-Frame</a></li>
+<li><a href="http://altspacevr.github.io/AltspaceSDK/doc/">API Documentation for Three.js</a></li>
+<li><a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame Overview</a></li>
+<li><a href="https://developer.altvr.com/">AltspaceVR Developer Portal</a></li>
+<li><a href="https://developer.altvr.com/building-altspacevr-apps-with-a-frame/">Building Your First A-Frame App</a></li>
+<li><a href="https://altspacevr.github.io/aframe-altspace-component/examples/">Examples</a></li>
+<li><a href="https://github.com/AltspaceVR/aframe-altspace-component/blob/master/native.md">Native Components FAQ</a></li>
 </ul>
-<h2>altspace.js</h2><p><code>altspace.js</code> should be included whenever you use the SDK. It contains core utilities and APIs, and is useful both inside and outside of the client.</p>
-<p>Many APIs are present in the client without loading <code>altspace.js</code>, but please still include it, as this may change in the future.</p>
-<p><strong>The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.</strong> This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of <code>altspace.js</code> we will try to return legacy behavior appropriate to your version of <code>altspace.js</code>. Versioning will follow <a href="http://semver.org/">SEMVER</a> as closely as possible. Details for each version can be found in the <a href="https://github.com/AltspaceVR/AltspaceSDK/releases">Release Notes</a>.</p>
-<p>Include the latest version of the SDK in your app with:</p>
-<p><code>&lt;script src=&quot;https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
-<p>If you use npm, you can install altspace.js with:</p>
-<p><code>npm install altspace</code></p>
-<h2>API Overview</h2><p><strong>See the <a href="http://altspacevr.github.io/AltspaceSDK/doc">API Reference</a> for full details and a complete list of APIs and utilities.</strong></p>
-<blockquote>
-<p>Note that many of our APIs make use of Promises. Learn about how they work over at <a href="http://www.html5rocks.com/en/tutorials/es6/promises/">HTML5 Rocks</a></p>
-</blockquote>
-<h4>Holographic Rendering</h4><ul>
-<li><p><code>var renderer = altspace.getThreeJSRenderer();</code>
-returns a renderer that can be used to render three.js scenes as holographic objects</p>
-<blockquote>
-<p>Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)</p>
-</blockquote>
-</li>
-</ul>
-<h4>Cursor Events</h4><p>The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners.</p>
-<blockquote>
-<p>Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that significantly concave objects (buckets, etc) will block contained objects from being clicked on.</p>
-</blockquote>
-<ul>
-<li><p><code>mesh.addEventListener('cursorup' / 'cursordown', callback);</code>
-listen for cursor events on a specific mesh.</p>
-<blockquote>
-<p>These events will bubble up the three.js hierarchy. <code>stopPropagation</code> and <code>stopImmediatePropagation</code> are supported and work similarly to DOM events</p>
-</blockquote>
-</li>
-<li><code>scene.addEventListner('cursormove', callback)</code>
-listen for cursor move events</li>
-</ul>
-<h4>Enclosure Properties</h4><ul>
-<li><code>altspace.getEnclosure().then(callback)</code>
-returns a promise that will fulfill with a description of the enclosure, including its size and <code>pixelsPerMeter</code> which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.</li>
-</ul>
-<h4>User Data</h4><ul>
-<li><code>altspace.getUser().then(callback)</code>
-returns a promise that will fulfill with information about the local user</li>
-</ul>
-<h4>Tracking Skeleton</h4><ul>
-<li><code>altspace.getThreeJSTrackingSkeleton().then(callback)</code>
-returns a promise that will fulfill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. <strong>Make sure to add the skeleton to your scene after receiving it</strong></li>
-</ul>
-<h2>Debugger</h2><p>The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.</p>
-<p><strong><a href="http://sdk.altvr.com/debugger/DebuggerMacOSX.zip">OSX Debugger</a> - <a href="http://sdk.altvr.com/debugger/DebuggerWindows.zip">Windows Debugger</a></strong></p>
-<blockquote>
-<p>Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.</p>
-</blockquote>
-<h2>Three.js Feature Support</h2><p>Altspace supports Three.js r73 to r74. r74 is recommended.</p>
-<p><strong>Currently supported:</strong></p>
-<ul>
-<li>Object3D transformation and hierarchy</li>
-<li>Most Geometries</li>
-<li>MeshBasicMaterial</li>
-<li>Face and vertex colors</li>
-</ul>
-<p><strong>Not currently supported:</strong></p>
-<ul>
-<li>Three.js r75</li>
-<li>Lighting, custom shaders, screen space effects.</li>
-<li>Texture filter, format, anisotropy, flip, THREE.MirroredRepeatWrapping.</li>
-<li>Using GIF images for textures</li>
-<li>VideoTexture</li>
-<li>Material blending, depthTest, depthWrite, alphaTest, clippingPlanes</li>
-<li>Wireframes</li>
-<li>Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial</li>
-<li>Line Geometries</li>
-<li>Quad faces</li>
-<li>Dynamic meshes, skinned meshes</li>
-<li>Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)</li>
-</ul>
-<p><strong>Habits of Successful AltspaceVR Web Apps:</strong></p>
-<ul>
-<li>If you're loading a texture from a URL, make sure its dimensions are a power-of-two for improved performance.</li>
-<li>Mind your texture sizes. Large textures can cause frame locking in the client.</li>
-<li>If your app requires many different textures and geometries, add them to a scene incrementally.</li>
-<li>Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.</li>
-<li>Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.</li>
-<li>Limit the number of objects per scene and polygons per object.</li>
-<li>Bake ambient occlusion and other lighting into your models. All models currently render as unlit.</li>
-<li>Avoid adding too many transparent objects to your scene. Transparency is GPU-intensive, especially on the Gear VR.</li>
-</ul>
-<p><strong>Known Issues:</strong></p>
-<ul>
-<li>Object visibility does not propagate to child objects in the scene graph.
-You can work around this by recursively setting the visibility on an object and its children.</li>
-<li>Texture wrap mode is ignored on the <code>wrapT</code> property. The value of <code>wrapS</code> is used for both axes.</li>
-</ul>
-<h2>Browser Feature Support</h2><p>Altspace's browser is based on Chromium version 40.</p>
-<p><strong>Currently supported:</strong></p>
-<ul>
-<li>Libre audio and video codecs (ogg, webm)</li>
-</ul>
-<p><strong>Not currently supported:</strong></p>
-<ul>
-<li>Proprietary audio and video codecs (h.264, mp4, mp3)</li>
-<li>WebRTC</li>
-<li>ES6</li>
-</ul>
-<hr>
-<p><a href="https://david-dm.org/AltspaceVR/AltspaceSDK/#info=devDependencies"><img src="https://david-dm.org/AltspaceVR/AltspaceSDK/dev-status.svg" alt="dev dependency status"></a></p></article>
+<h2>Quick Start</h2><p>This is a fully functional example of what A-Frame code looks like.
+<a href="https://altspacevr.github.io/aframe-altspace-component/examples/custom-component/index.html">Live Demo</a></p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html>&lt;head>
+&lt;script src=&quot;https://aframe.io/releases/0.3.0/aframe.min.js&quot;>&lt;/script>
+&lt;script src=&quot;https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/v1.3.2/dist/aframe-altspace-component.min.js&quot;>&lt;/script>
+&lt;script>
+
+// an example custom component, that will change the color when clicked
+AFRAME.registerComponent('color-cycle', {
+    schema: {},
+    init: function(){
+        var self = this;
+        self.el.object3D.addEventListener('cursorup', function(){
+            var rgb = [
+                Math.floor(Math.random()*256),
+                Math.floor(Math.random()*256),
+                Math.floor(Math.random()*256)
+            ];
+            self.el.setAttribute('color', 'rgb('+rgb.join(',')+')');
+        });
+    }
+});
+
+&lt;/script>
+&lt;/head>
+&lt;body>
+
+&lt;!-- set up the scene -->
+&lt;a-scene altspace='vertical-align: bottom;'>
+    &lt;a-box position='0 1 0' color-cycle>&lt;/a-box>
+&lt;/a-scene>
+
+&lt;/body>&lt;/html></code></pre><h2>Native Components</h2><p>In addition to the normal power of A-Frame that AltspaceVR developers are used to, we now support attaching native AltspaceVR assets to entities via special A-Frame components. So you can spawn physical objects that you can stand on, interactables that users can pick up and throw, and much more! See the <a href="https://altspacevr.github.io/aframe-altspace-component/doc/native.html">native component documentation</a> and the <a href="https://github.com/AltspaceVR/aframe-altspace-component/blob/master/native.md">native component FAQ</a> for the details.</p>
+<h2>Native Resources</h2><p>One of the biggest challenges in creating VR applications is gathering and optimizing art and sound content. We've gone ahead and built a bunch of resources to get you started! They can be invoked via the <code>n-object</code>, <code>n-sound</code>, and <code>n-spawner</code> native components and are automatically optimized for the individual platform your user happens to be on. See the <a href="https://altspacevr.github.io/aframe-altspace-component/doc/resources.html">resource list</a> for the complete list of resources available.</p></article>
     </section>
 
 

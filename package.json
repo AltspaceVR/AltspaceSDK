@@ -18,7 +18,7 @@
     "dist": "gulp dist",
     "build": "npm run compile && npm run doc",
     "compile": "node scripts/bundle.js",
-    "doc": "jsdoc -c .jsdoc.json -c .jsdoc-aframe.json"
+    "doc": "jsdoc -c .jsdoc.json && jsdoc -c .jsdoc-aframe.json"
   },
   "keywords": [
     "aframe",
@@ -71,6 +71,7 @@
     "gulp-uglify": "1.4.1",
     "gulp-wrap-umd": "^0.2.1",
     "jsdoc": "^3.4.3",
+    "jsdoc-api": "^3.0.0",
     "merge-stream": "^1.0.1",
     "minami": "github:altspacevr/minami",
     "mz": "^2.6.0",
