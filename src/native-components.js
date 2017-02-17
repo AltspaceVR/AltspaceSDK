@@ -36,17 +36,25 @@
 
 	function nativeComponentInit() {
 		var mesh = this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
-
+		this.currentMesh = mesh;
 		meshInit.call(this, mesh);
-
 		//to pass defaults
 		this.update(this.data);
+
+		this.el.addEventListener('object3dset', function (event) {
+			if (event.detail.type !== 'mesh') { return; }
+			altspace.removeNativeComponent(this.currentMesh, this.name);
+
+			this.currentMesh = this.el.object3DMap.mesh;
+			meshInit.call(this, this.currentMesh);
+			//to pass defaults
+			this.update(this.data);
+		}.bind(this));
 	}
 	function nativeComponentRemove() {
-		var mesh = this.el.getObject3D('mesh');
-		altspace.removeNativeComponent(mesh, this.name);
+		altspace.removeNativeComponent(this.el.object3DMap.mesh, this.name);
 	}
-	function nativeComponentUpdate(oldData) {
+	function nativeComponentUpdate() {
 		altspace.updateNativeComponent(this.el.object3DMap.mesh, this.name, this.data);
 	}
 
@@ -261,7 +269,7 @@
 				altspace.removeNativeComponent(mesh, this.name);
 			}.bind(this));
 		},
-		update: function (oldData) {
+		update: function () {
 			this._forEachMesh(function (mesh) {
 				altspace.updateNativeComponent(mesh, this.name, this.data);
 			}.bind(this));
@@ -401,17 +409,17 @@
 		remove: function () {
 			nativeComponentRemove.call(this);
 			if (this.playHandler) {
-			  this.el.removeEventListener(oldData.on, this.playHandler);
+				this.el.removeEventListener(this.data.on, this.playHandler);
 			}
 		},
 		update: function (oldData) {
 			nativeComponentUpdate.call(this, oldData);
 			if (this.playHandler) {
-			  this.el.removeEventListener(oldData.on, this.playHandler);
+				this.el.removeEventListener(oldData.on, this.playHandler);
 			}
 			if (this.data.on) {
-			  this.playHandler = this.playSound.bind(this);
-			  this.el.addEventListener(this.data.on, this.playHandler);
+				this.playHandler = this.playSound.bind(this);
+				this.el.addEventListener(this.data.on, this.playHandler);
 			}
 		},
 		schema: {
@@ -430,6 +438,16 @@
 		}
 	});
 
+	/**
+	* Parents an entity to a joint on the avatar skeleton.
+	* @mixin n-skeleton-parent
+	* @memberof native
+	* @prop {string} part - One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg', 'foot', 'toes', 
+	*	'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb', 'index', 'middle', 'ring' or 'pinky'.
+	* @prop {string} [side='center'] - Side of the body. Either 'left', 'center' or 'right'
+	* @prop {int} [index=0] - Bone index. e.g. Which knuckle joint to attach to.
+	* @prop {string} [userId] - Id of the user to which the entity should be attached. Defaults to the local user.
+	*/
 	AFRAME.registerComponent('n-skeleton-parent', {
 		schema: {
 			part: {type: 'string'},
@@ -442,6 +460,11 @@
 		remove: nativeComponentRemove
 	});
 
+	/**
+	* Parents an entity to the cockpit.
+	* @mixin n-cockpit-parent
+	* @memberof native
+	*/
 	AFRAME.registerComponent('n-cockpit-parent', {
 		init: nativeComponentInit,
 		remove: nativeComponentRemove
