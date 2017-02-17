@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 
 * {
   box-sizing: border-box
@@ -248,6 +248,10 @@ footer {
   font-family: Consolas, Monaco, 'Andale Mono', monospace
 }
 
+h4.name {
+  border-bottom: 1px solid grey;
+}
+
 .details {
   margin-top: 14px;
   border-left: 2px solid #DDD;
@@ -314,6 +318,10 @@ footer {
   margin: 0 30px;
   background-color: #fff;
   color: #4D4E53;
+}
+
+.prettyprint code:empty:before {
+  content: '';
 }
 
 .prettyprint > code {
@@ -586,5 +594,16 @@ dl.param-type {
 
   footer {
     margin-left: 0;
+  }
+}
+
+@media only print {
+  nav {
+    display: none;
+  }
+
+  #main {
+    float: none;
+    width: 100%;
   }
 }

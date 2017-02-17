@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>SteamVRTrackedObject - Documentation</title>
+    <title>SteamVRInput - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -39,7 +39,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">SteamVRTrackedObject</h1>
+    <h1 class="page-title">SteamVRInput</h1>
     
 
     
@@ -54,12 +54,11 @@
         <h2>
             <span class="ancestors"><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a>.</span>
         
-        SteamVRTrackedObject
+        SteamVRInput
         </h2>
         
-            <div class="class-description"><p>The SteamVRTrackedObject behavior updates an objects position and rotation to
-match the location of a SteamVR input device. A <a href="module-altspace_utilities_behaviors.SteamVRInput.html">SteamVRInput</a> behavior
-must be on the scene containing this object for it to function properly.</p></div>
+            <div class="class-description"><p>The SteamVRInput behavior manages SteamVR input devices. It should be added
+to the ThreeJS scene and is a requirement of <a href="module-altspace_utilities_behaviors.SteamVRTrackedObject.html">SteamVRTrackedObject</a>.</p></div>
         
     
 </header>
@@ -73,7 +72,7 @@ must be on the scene containing this object for it to function properly.</p></di
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="SteamVRTrackedObject"><span class="type-signature"></span>new SteamVRTrackedObject<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="SteamVRInput"><span class="type-signature"></span>new SteamVRInput<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -170,13 +169,13 @@ must be on the scene containing this object for it to function properly.</p></di
 
         <tr>
             
-                <td class="name"><code>hand</code></td>
+                <td class="name"><code>logging</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -197,12 +196,12 @@ must be on the scene containing this object for it to function properly.</p></di
             
                 <td class="default">
                 
-                    "first"
+                    false
                 
                 </td>
             
 
-            <td class="description last"><p>the input device to track. Eitehr SteamVRInput.LEFT_CONTROLLER, SteamVRInput.RIGHT_CONTROLLER, or SteamVRInput.FIRST_CONTROLLER</p></td>
+            <td class="description last"><p>Display console log output during SteamVR input device detection</p></td>
         </tr>
 
     
@@ -217,6 +216,173 @@ must be on the scene containing this object for it to function properly.</p></di
 </table>
 
 
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>leftController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Gamepad</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the left SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a> or undefined if one has not yet been found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rightController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Gamepad</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the right SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a> or undefined if one has not yet been found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>firstController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Gamepad</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the first SteamVR <a href="module-altspace-Gamepad.html">Gamepad</a>  or undefined if none have yet been found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>leftControllerPromise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a promise that resolves once the left SteamVR input device is found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rightControllerPromise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a promise that resolves once the right SteamVR input device is found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>firstControllerPromise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a promise that resolves once any SteamVR input device is found</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 

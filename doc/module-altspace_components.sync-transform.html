@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>altspace - Documentation</title>
+    <title>sync-transform - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -39,7 +39,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">altspace</h1>
+    <h1 class="page-title">sync-transform</h1>
     
 
     
@@ -54,11 +54,12 @@
         <h2>
             <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a>.</span>
         
-        altspace
+        sync-transform
         </h2>
         
-            <div class="class-description"><p>The altspace component makes A-Frame apps compatible with AltspaceVR.</p>
-<p><strong>Note</strong>: If you use the <code>embedded</code> A-Frame component on your scene, you must include it <em>before</em> the <code>altspace</code> component, or your app will silently fail.</p></div>
+            <div class="class-description"><p>Synchronize the position, rotation, and scale of this object with all clients.
+Requires both a <a href="module-altspace_components.sync-system.html">sync-system</a> component on the <code>a-scene</code>, and a
+<a href="module-altspace_components.sync.html">sync</a> component on the target entity.</p></div>
         
     
 </header>
@@ -133,7 +134,7 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>&lt;head>  &lt;title>My A-Frame Scene&lt;/title>  &lt;script src="https://aframe.io/releases/0.3.0/aframe.min.js">&lt;/script>  &lt;script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v{{SDK_VERSION}}/dist/altspace.min.js">&lt;/script>&lt;/head>&lt;body>  &lt;a-scene altspace>    &lt;a-entity geometry="primitive: box" material="color: #C03546">&lt;/a-entity>  &lt;/a-scene>&lt;/body></code></pre>
+    <pre class="prettyprint"><code>&lt;a-scene sync-system='app: myapp; author: name'>    &lt;a-box move-it-around sync sync-transform>&lt;/a-box>&lt;/a-scene></code></pre>
 
 
 
@@ -161,259 +162,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="enclosuresOnly"><span class="type-signature"></span>enclosuresOnly<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    <p>Prevents the scene from being created if enclosure is flat.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>true</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="fullspace"><span class="type-signature"></span>fullspace<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    <p>Puts the app into fullspace mode.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>false</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="usePixelScale"><span class="type-signature"></span>usePixelScale<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    <p>Allows you to use A-Frame units as CSS pixels.
-This is the default behavior for three.js apps, but not for A-Frame apps.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>false</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="verticalAlign"><span class="type-signature"></span>verticalAlign<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    <p>Puts the origin at the <code>bottom</code>, <code>middle</code> (default), or <code>top</code> of the Altspace enclosure.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>"middle"</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
     
 
     
