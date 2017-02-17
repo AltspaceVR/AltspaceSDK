@@ -17,7 +17,7 @@
     "dev": "budo",
     "dist": "gulp dist",
     "build": "npm run compile && npm run doc",
-    "compile": "node scripts/bundle.js",
+    "compile": "gulp --gulpfile scripts/build.js altspace_js",
     "doc": "jsdoc -c .jsdoc.json && jsdoc -c .jsdoc-aframe.json"
   },
   "keywords": [
@@ -81,6 +81,7 @@
     "rollup-plugin-node-builtins": "^2.0.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
+    "rollup-stream": "^1.19.0",
     "run-sequence": "1.1.5",
     "vinyl-buffer": "1.0.0",
     "vinyl-source-stream": "1.1.0",
