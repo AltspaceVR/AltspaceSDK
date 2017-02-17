@@ -5,7 +5,7 @@
     "opts": {
         "recurse": true,
         "destination": "doc",
-        "readme": "README.md",
+        "readme": "README.template.md",
         "template": "./node_modules/minami"
     },
     "plugins": ["plugins/markdown"],

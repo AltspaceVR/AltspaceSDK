@@ -58,7 +58,8 @@ class NContainer extends NativeComponent
 		* Fired every time an object enters or leaves the bounds of the n-container
 		* @event container-count-changed
 		* @memberof module:altspace/components.n-container
-		* @param {Object} event - Contains details of the event. The current
+		* @param {Object} event - Contains details of the event. The new object count
+		* can be found at `event.detail.count`.
 		*/
 		el.addEventListener('container-count-changed', event => {
 

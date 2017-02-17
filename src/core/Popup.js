@@ -6,11 +6,13 @@
 */
 /**
 * Show the popup
+* @instance
 * @method show
 * @memberof module:altspace~Popup
 */
 /**
 * Hide the popup
+* @instance
 * @method hide
 * @memberof module:altspace~Popup
 */

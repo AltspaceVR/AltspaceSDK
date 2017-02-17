@@ -1,5 +1,23 @@
 /**
+* AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
+* In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
+* this SDK provides a set of components to add AltspaceVR compatibility and additional
+* functionality to the toolset. At a minimum, A-Frame apps will need the [altspace]{@link module:altspace/components.altspace}
+* component on the `<a-scene>` tag to function as an AltspaceVR app.
 * @module altspace/components
+* @example
+* <html>
+*   <head>
+*     <title>My A-Frame Scene</title>
+*     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v{{SDK_VERSION}}/dist/altspace.min.js"></script>
+*   </head>
+*   <body>
+*     <a-scene altspace>
+*       <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
+*     </a-scene>
+*   </body>
+* </html>
 */
 
 'use strict';

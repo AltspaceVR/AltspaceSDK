@@ -4,9 +4,7 @@ import Behavior from './Behavior';
 
 /**
 * The SteamVRTrackedObject behavior updates an objects position and rotation to
-* match the location of a SteamVR input device.
-*
-* A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
+* match the location of a SteamVR input device. A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
 * must be on the scene containing this object for it to function properly.
 *
 * @param {Object} [config]

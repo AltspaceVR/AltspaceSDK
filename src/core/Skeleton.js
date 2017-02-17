@@ -8,8 +8,9 @@
 */
 
 /**
-* A number from 0 to 3 indicating the confidence of the
-* tracking
+* A number from 0 to 3 indicating the confidence of the tracking.
+* Values can be either `0` (no confidence/tracking), `2` (low confidence
+* Leap Motion), or `3` (high confidence Leap Motion, or tracked controllers).
 * @instance
 * @member {Number} confidence
 * @memberof module:altspace~TrackingJoint

@@ -6,7 +6,7 @@
 */
 
 // make sure that the core uses the correct version of the SDK
-let version = '<SDK_VERSION>';
+let version = '{{SDK_VERSION}}';
 if (window.altspace && window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }

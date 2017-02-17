@@ -3,7 +3,7 @@
 */
 
 /**
-* The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
+* The AltspaceSDK includes a Behaviors shim that adds Behavior capabilities to
 * Three.js.
 * It adds methods to Three.js' Scene and Object3D classes which allow you to
 * add, remove, retrieve and use Behaviors.

@@ -121,7 +121,7 @@ class NText extends NativeComponent {
 
 /**
 * Make the object's +Z always face the viewer. Currently will only directly apply
-* to main mesh or native component on the attached entity, not any children or submeshes. @frame
+* to main mesh or native component on the attached entity, not any children or submeshes. @aframe
 * @alias n-billboard
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent

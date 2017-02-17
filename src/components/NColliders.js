@@ -52,6 +52,16 @@ class NCollider extends NativeComponent {
 }
 
 /**
+* Fired when an object enters a trigger volume, e.g. `isTrigger: true`
+* @event module:altspace/components.NCollider.triggerenter
+*/
+
+/**
+* Fired when an object leaves a trigger volume, e.g. `isTrigger: true`
+* @event module:altspace/components.NCollider.triggerexit
+*/
+
+/**
 * A sphere-shaped collider. @aframe
 * @alias n-sphere-collider
 * @memberof module:altspace/components
@@ -66,10 +76,10 @@ class NSphereCollider extends NCollider {
 			* The radius of the sphere collider in meters
 			* @instance
 			* @member {Number} radius
-			* @default 0.001
+			* @default 1
 			* @memberof module:altspace/components.n-sphere-collider
 			*/
-			radius: { default: '0.001', type: 'number' },
+			radius: { default: 1, type: 'number' },
 		};
 	}
 }
@@ -98,7 +108,7 @@ class NBoxCollider extends NCollider {
 
 /**
 * Create a capsule-shaped collider on this entity. Capsules
-* are a union of a cylinder and two spheres on top and bottom.
+* are a union of a cylinder and two spheres on top and bottom. @aframe
 * @alias n-capsule-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.NCollider
@@ -140,7 +150,7 @@ class NCapsuleCollider extends NCollider {
 
 /**
 * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
-* low-poly meshes.
+* low-poly meshes. @aframe
 * @example <a-box n-mesh-collider></a-box>
 * @alias n-mesh-collider
 * @memberof module:altspace/components
@@ -153,7 +163,7 @@ class NMeshCollider extends NCollider {
 			/**
 			* Whether the collider should be convex or concave. Set this to false if you have holes
 			* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
-			* expensive comparet to conves colliders.
+			* expensive compared to convex colliders.
 			* @instance
 			* @member {boolean} convex
 			* @default true

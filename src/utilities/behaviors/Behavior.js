@@ -4,12 +4,17 @@
 * Base class for all behaviors. Use this class as a pattern, but do not use
 * directly.
 * @memberof module:altspace/utilities/behaviors
-* @prop {string} type - The name of this class
 */
 class Behavior
 {
 	constructor(){}
 
+	/**
+	* The string name of this class. This is used for {@link THREE.Object3D#getBehaviorByType}.
+	* @instance
+	* @member {string} type
+	* @memberof module:altspace/utilities/behaviors.Behavior
+	*/
 	get type(){
 		if(!this._typeWarning){
 			console.warn('Behavior', this, 'does not expose type information!',

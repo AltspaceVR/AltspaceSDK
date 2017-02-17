@@ -20,7 +20,7 @@ function getController(hand, config) {
 
 /**
 * The SteamVRInput behavior manages SteamVR input devices. It should be added
-* to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
+* to the ThreeJS scene and is a requirement of [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}.
 *
 * @param {Object} [config]
 * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
@@ -35,7 +35,7 @@ function getController(hand, config) {
 * @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
 * @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
 */
-class SteamVRInputBehavior extends Behavior {
+class SteamVRInput extends Behavior {
 
 	get type(){ return 'SteamVRInput'; }
 
@@ -44,8 +44,8 @@ class SteamVRInputBehavior extends Behavior {
 	}
 
 	awake() {
-		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
-		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
+		this.leftControllerPromise = getController(SteamVRInput.LEFT_CONTROLLER, this.config);
+		this.rightControllerPromise = getController(SteamVRInput.RIGHT_CONTROLLER, this.config);
 		this.firstControllerPromise = Promise.race([
 			this.leftControllerPromise,
 			this.rightControllerPromise,
@@ -63,27 +63,29 @@ class SteamVRInputBehavior extends Behavior {
 			const blockedAxes = controller.axes.map(() => false);
 			const blockedButtons = controller.buttons.map(() => false);
 
-			blockedButtons[SteamVRInputBehavior.BUTTON_TRIGGER] = true;
-			blockedButtons[SteamVRInputBehavior.BUTTON_TOUCHPAD] = true;
+			blockedButtons[SteamVRInput.BUTTON_TRIGGER] = true;
+			blockedButtons[SteamVRInput.BUTTON_TOUCHPAD] = true;
 
 			controller.preventDefault(blockedAxes, blockedButtons);
 		});
 	}
 }
 
-SteamVRInputBehavior.BUTTON_TRIGGER = 0;
-SteamVRInputBehavior.BUTTON_GRIP = 1;
-SteamVRInputBehavior.BUTTON_TOUCHPAD = 2;
-SteamVRInputBehavior.BUTTON_DPAD_UP = 3;
-SteamVRInputBehavior.BUTTON_DPAD_RIGHT = 4;
-SteamVRInputBehavior.BUTTON_DPAD_DOWN = 5;
-SteamVRInputBehavior.BUTTON_DPAD_LEFT = 6;
+Object.assign(SteamVRInput, {
+	BUTTON_TRIGGER: 0,
+	BUTTON_GRIP: 1,
+	BUTTON_TOUCHPAD: 2,
+	BUTTON_DPAD_UP: 3,
+	BUTTON_DPAD_RIGHT: 4,
+	BUTTON_DPAD_DOWN: 5,
+	BUTTON_DPAD_LEFT: 6,
 
-SteamVRInputBehavior.AXIS_TOUCHPAD_X = 0;
-SteamVRInputBehavior.AXIS_TOUCHPAD_Y = 1;
+	AXIS_TOUCHPAD_X: 0,
+	AXIS_TOUCHPAD_Y: 1,
 
-SteamVRInputBehavior.FIRST_CONTROLLER = 'first';
-SteamVRInputBehavior.LEFT_CONTROLLER = 'left';
-SteamVRInputBehavior.RIGHT_CONTROLLER = 'right';
+	FIRST_CONTROLLER: 'first',
+	LEFT_CONTROLLER: 'left',
+	RIGHT_CONTROLLER: 'right'
+});
 
 export default SteamVRInputBehavior;

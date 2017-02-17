@@ -15,11 +15,12 @@ class AltspaceCursorCollider extends AFrameComponent
 	get schema(){
 		return {
 			/**
-			* The state of the cursor collider.
+			* The state of the cursor collider. If `true`, the object can be clicked,
+			* and things behind this object cannot be clicked.
 			* @instance
 			* @member {boolean} enabled
 			* @default true
-			* @memberof module:altspace/components/altspace-cursor-collider
+			* @memberof module:altspace/components.altspace-cursor-collider
 			*/
 			enabled: {type: 'boolean', default: 'true'}
 		};

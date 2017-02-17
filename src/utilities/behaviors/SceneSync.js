@@ -215,6 +215,7 @@ class SceneSync extends Behavior
 	/**
 	* True if this client is the master, false otherwise. Master is generally the client that
 	* has been in the room the longest.
+	* @instance
 	* @member {boolean} isMasterClient
 	* @memberof module:altspace/utilities/behaviors.SceneSync
 	*/

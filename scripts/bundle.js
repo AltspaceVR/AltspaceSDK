@@ -35,7 +35,7 @@ depsResolved.then(() =>
 		context: 'window',
 		external: ['firebase', 'urllib', 'please'],
 		plugins: [buble(), replace({
-			delimiters: ['<', '>'],
+			delimiters: ['{{', '}}'],
 			values: {
 				SDK_VERSION: version
 			}
@@ -84,7 +84,7 @@ depsResolved.then(() =>
 		context: 'window',
 		external: ['firebase', 'urllib', 'please'],
 		plugins: [buble(), replace({
-			delimiters: ['<', '>'],
+			delimiters: ['{{', '}}'],
 			values: {
 				SDK_VERSION: version
 			}
