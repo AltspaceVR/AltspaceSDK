@@ -76,8 +76,8 @@ AFRAME.registerComponent('sync-resource', {
 			var resourceRef = sync.dataRef.child('resource');
 			resourceRef.on('value', function (snapshot)
 			{
-				if (sync.isMine && !self.firstValue) return;
 				var val = snapshot.val();
+				if (!val || sync.isMine && !self.firstValue) return;
 
 				self.refLock = true;
 				self.el.setAttribute('sync-resource', 'res', val);
