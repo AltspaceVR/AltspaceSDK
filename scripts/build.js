@@ -16,6 +16,7 @@ const gulp = require('gulp'),
 	orderedMerge = require('ordered-merge-stream'),
 
 	libpath = require('path'),
+	del = require('del'),
 	version = require('../package.json').version;;
 
 function r(...args){
@@ -65,4 +66,21 @@ gulp.task('altspace_js', () =>
 	.pipe(concat('altspace.min.js'))
 	.pipe(gulp.dest(r('../dist')))
 	.pipe(print());
+});
+
+gulp.task('del-doc', function () {
+	return del('doc');
+});
+
+gulp.task('doc', () =>
+{
+	// generate js docs
+
+	// generate aframe docs
+
+	// compile readme template to doc/index.html
+
+	// do version replace on doc/**/*.html
+
+	// copy readme template to readme.md, do version replace
 });

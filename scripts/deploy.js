@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * Notes on gulp that were compiled during the development of this build script can be found here:
  * https://docs.google.com/document/d/1ikgmMnOGGbyTu9ggs7NSDByLrXCfX6Ll0F0JbT1CwZ0/edit?usp=sharing
@@ -45,118 +44,6 @@ var s3Path = '/libs/altspace.js';
 var targetRemote = 'origin';
 
 var version;
-
-var docfiles = [
-	'src/utilities/**/*.js',
-	'!src/utilities/**/*.es6.js',
-	'README.md'
-];
-
-gulp.task('transpile_es6', function () {
-	return gulp.src([
-		'./**/*.es6.js'
-	])
-		.pipe(babel({ optional: ['runtime'] }))
-		.pipe(rename(function (es6Path) {
-			es6Path.basename = es6Path.basename.replace('.es6', '');
-		}))
-		.pipe(gulp.dest('./'));
-});
-
-gulp.task('altspace_js', ['transpile_es6'], function () {
-	var cwd = './';
-	version = JSON.parse(fs.readFileSync(cwd + '/package.json')).version;
-	console.log('version', version);
-
-	browserify(
-		'./examples/living-room/living-room.js'
-	)
-		.bundle()
-		.pipe(vsource('living-room-main.js'))
-		.pipe(vbuffer())
-		.pipe(gulp.dest('./examples/living-room/'));
-
-	return orderedMerge([
-		browserify(
-			'./src/utilities/shims/OBJMTLLoader.js'
-		)
-			.bundle()
-			.pipe(vsource('OBJMTLLoader.js'))
-			.pipe(vbuffer()),
-		browserify(
-			'./src/utilities/behaviors/Object3DSync.js'
-		)
-			.bundle()
-			.pipe(vsource('Object3DSync.js'))
-			.pipe(vbuffer()),
-		gulp.src([
-			'./lib/Please.js', // TODO: Put these elsewhere because of window clobbering, esp url.js
-			'./lib/url.js',
-			'./lib/firebase.js',
-
-			'./src/shim-core.js',
-
-			'./src/utilities/sync.js',
-			'./src/utilities/codepen.js',
-			'./src/utilities/simulation.js',
-			'./src/utilities/multiloader.js',
-
-			'./src/utilities/shims/behaviors.js',
-			'./src/utilities/shims/cursor.js',
-			'./src/utilities/shims/bubbling.js',
-
-			'./src/utilities/behaviors/Bob.js',
-			'./src/utilities/behaviors/ButtonStateStyle.js',
-			'./src/utilities/behaviors/Drag.js',
-			'./src/utilities/behaviors/GamepadControls.js',
-			'./src/utilities/behaviors/HoverColor.js',
-			'./src/utilities/behaviors/HoverScale.js',
-			'./src/utilities/behaviors/JointCollisionEvents.js',
-			'./src/utilities/behaviors/SceneSync.js',
-			'./src/utilities/behaviors/Spin.js',
-			'./src/utilities/behaviors/TouchpadRotate.js'
-		], { cwd: cwd }),
-		browserify(
-			'./src/utilities/behaviors/Layout.js'
-		)
-			.bundle()
-			.pipe(vsource('Layout.js'))
-			.pipe(vbuffer()),
-		browserify(
-			'./src/utilities/behaviors/SteamVRInput.js'
-		)
-			.bundle()
-			.pipe(vsource('SteamVRInput.js'))
-			.pipe(vbuffer()),
-		browserify(
-			'./src/utilities/behaviors/SteamVRTrackedObject.js'
-		)
-			.bundle()
-			.pipe(vsource('SteamVRTrackedObject.js'))
-			.pipe(vbuffer()),
-		gulp.src(
-			'./src/version.js', { cwd: cwd })
-			.pipe(replace('VERSION', "'" + version + "'"))
-	])
-		.pipe(concat('altspace.js'))
-		.pipe(wrapUmd({
-			namespace: 'altspace',
-			deps: [
-				{ name: 'three', globalName: 'THREE', paramName: 'THREE' }
-			],
-			exports: 'altspace'
-		}))
-		.pipe(gulp.dest('./dist/', { cwd: cwd }))
-		.pipe(sourcemaps.init())
-		.pipe(concat('altspace.min.js'))
-		.pipe(uglify())
-		.on('error', function (e) {
-			console.log(e);
-		})
-		.pipe(sourcemaps.write('./maps'))
-		.pipe(gulp.dest('./dist/', { cwd: cwd }))
-		.pipe(print());
-});
 
 // ### Publish tasks ###
 
@@ -256,47 +143,6 @@ gulp.task('publish-aws', function () {
 		.pipe(awspublish.reporter());
 });
 
-// ### Main tasks ###
-
-gulp.task('default', function () {
-	return gulp.start('altspace_js');
-});
-
-gulp.task('del-doc', function () {
-	return del('doc');
-});
-
-gulp.task('doc', ['altspace_js', 'bump-readme'], function (done) {
-	var argv = yargs.option(
-		'clientjs',
-		{
-			describe: 'Path to the directory containing altspace-client.js',
-			demand: false
-		}
-	).argv;
-
-	if (!argv.clientjs) {
-		argv.clientjs = '../UnityClient/js/src';
-	}
-
-	docfiles.push(argv.clientjs + '/*.js');
-	docfiles.push(argv.clientjs + '/apis/*.js');
-	gulp.src(docfiles)
-		.pipe(jsdoc({
-			opts: {
-				destination: './doc',
-				template: './node_modules/minami'
-			},
-			plugins: ['plugins/markdown'],
-			templates: {
-				default: {
-					outputSourceFiles: false,
-					layoutFile: './node_modules/minami/tmpl/layout.tmpl'
-				}
-			}
-		}, done));
-});
-
 gulp.task('watch', ['altspace_js', 'doc'], function () {
 	gulp.watch('./version.json', ['altspace_js']);
 	gulp.watch('./examples/**/*.js', ['altspace_js']);
@@ -325,43 +171,4 @@ gulp.task('publish', function (done) {
 		'publish-aws',
 		done);
 
-/************** A-Frame gulp script (deprecated)
-var
-	fs = require('fs'),
-	gulp = require('gulp'),
-	del = require('del'),
-	merge = require('merge-stream'),
-	webpackStream = require('webpack-stream'),
-	replace = require('gulp-replace');
-
-function versionAndPack(filename, webpackPlugins) {
-	return gulp.src('./src/index.js')
-		.pipe(webpackStream({
-			output: {
-				filename: filename
-			},
-			plugins: webpackPlugins,
-			devtool: 'source-map'
-		}))
-		.pipe(replace('AFRAME_ALTSPACE_VERSION', version))
-		.pipe(gulp.dest('./dist/'));
-}
-
-gulp.task('clean:dist', function () {
-	return del(['./dist/*.js']);
-});
-gulp.task('dist', ['clean:dist'], function () {
-	version = JSON.parse(fs.readFileSync('./package.json')).version;
-	console.log('version', version);
-	return merge(
-		versionAndPack('aframe-altspace-component.js'),
-		versionAndPack(
-			'aframe-altspace-component.min.js',
-			[
-				new webpackStream.webpack.optimize.UglifyJsPlugin(),
-				new webpackStream.webpack.optimize.OccurrenceOrderPlugin()
-			]
-		)
-	);
-*/
 });
