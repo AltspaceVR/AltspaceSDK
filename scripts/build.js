@@ -3,7 +3,9 @@
 const gulp = require('gulp'),
 	jsdoc = require('gulp-jsdoc3'),
 	concat = require('gulp-concat'),
+	uglify = require('gulp-uglify'),
 	sourcemaps = require('gulp-sourcemaps'),
+	print = require('gulp-print'),
 
 	rollup = require('rollup-stream'),
 	buble = require('rollup-plugin-buble'),
@@ -22,11 +24,13 @@ function r(...args){
 
 gulp.task('altspace_js', () =>
 {
+	// pack the various es2015 modules into a transpiled iife
 	return orderedMerge([
 		rollup({
 			entry: r('../src/index.js'),
 			format: 'iife',
 			moduleName: 'altspace',
+			external: ['firebase', 'urllib', 'please', 'threejs'],
 			globals: {
 				firebase: 'Firebase',
 				urllib: 'Url',
@@ -38,18 +42,27 @@ gulp.task('altspace_js', () =>
 				values: {
 					SDK_VERSION: version
 				}
-			})],
-			sourceMap: true
+			})]
 		})
 			.pipe(source('altspace.js'))
 			.pipe(buffer()),
+
+		// tack our dependencies onto the end
 		gulp.src([
 			'firebase.min.js',
 			'Please.min.js',
 			'url.min.js'
 		].map(f => r('../lib', f)))
 	])
-	.pipe(sourcemaps.init({loadMaps: true})),
+
+	// output non-minified source
 	.pipe(concat('altspace.js'))
-	.pipe(gulp.dest(r('../dist')));
+	.pipe(gulp.dest(r('../dist')))
+	.pipe(print())
+
+	// generate minified file
+	.pipe(uglify())
+	.pipe(concat('altspace.min.js'))
+	.pipe(gulp.dest(r('../dist')))
+	.pipe(print());
 });
