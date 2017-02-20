@@ -3,45 +3,26 @@
  * https://docs.google.com/document/d/1ikgmMnOGGbyTu9ggs7NSDByLrXCfX6Ll0F0JbT1CwZ0/edit?usp=sharing
  **/
 
-var gulp = require('gulp'),
+const gulp = require('gulp'),
 
 	yargs = require('yargs'),
 	fs = require('fs'),
 	path = require('path'),
-
-	print = require('gulp-print'),
-	concat = require('gulp-concat'),
 	rename = require('gulp-rename'),
-	babel = require('gulp-babel'),
-
-	vsource = require('vinyl-source-stream'),
-	vbuffer = require('vinyl-buffer'),
-	browserify = require('browserify'),
-
-	uglify = require('gulp-uglify'),
-	merge = require('merge-stream'),
-	orderedMerge = require('ordered-merge-stream'),
-	replace = require('gulp-replace'),
-	wrapUmd = require('gulp-wrap-umd'),
-
-	jsdoc = require('gulp-jsdoc3'),
-	jshint = require('gulp-jshint'),
-	sourcemaps = require('gulp-sourcemaps'),
 
 	awspublish = require('gulp-awspublish'),
 	bump = require('gulp-bump'),
 	del = require('del'),
 	git = require('gulp-git'),
-	prompt = require('gulp-prompt'),
 	release = require('conventional-github-releaser'),
 	runsequence = require('run-sequence'),
 	shell = require('gulp-shell'),
-	aws = require('aws-sdk');
+	aws = require('aws-sdk'),
 
-var awsRegion = 'us-west-1';
-var awsAccessKey = 'AKIAJEGF6GH26BCU7VYA';
-var s3Path = '/libs/altspace.js';
-var targetRemote = 'origin';
+	awsRegion = 'us-west-1',
+	awsAccessKey = 'AKIAJEGF6GH26BCU7VYA',
+	s3Path = '/libs/altspace.js',
+	targetRemote = 'origin';
 
 var version;
 
@@ -85,16 +66,6 @@ gulp.task('bump', function () {
 	return gulp.src('package.json')
 		.pipe(bump({ type: argv.bump }))
 		.pipe(gulp.dest('.'));
-});
-gulp.task('bump-readme', function (done) {
-	version = JSON.parse(fs.readFileSync('./package.json')).version;
-	del('README.md').then(function () {
-		gulp.src('README.template.md')
-			.pipe(replace('VERSION', version))
-			.pipe(rename('README.md'))
-			.pipe(gulp.dest('.'))
-			.on('end', done);
-	});
 });
 gulp.task('add', function () {
 	return gulp.src('.').pipe(git.add());
@@ -156,7 +127,6 @@ gulp.task('publish', function (done) {
 	runsequence(
 		'publish-precheck',
 		'bump',
-		'bump-readme',
 		'altspace_js',
 		'del-doc',
 		'doc',
