@@ -2,7 +2,7 @@
 
 The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, and Samsung GearVR.
 
-**Latest Version: v2.0.0 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.0.0)**
+**Latest Version: v{{SDK_VERSION}} -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v{{SDK_VERSION}})**
 
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -32,7 +32,7 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 Include the latest version of the SDK in your app with:
 
-`<script src="https://sdk.altvr.com/libs/altspace.js/2.0.0/altspace.min.js"></script>`
+`<script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
