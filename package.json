@@ -12,13 +12,11 @@
   },
   "main": "dist/altspace.js",
   "scripts": {
-    "build-three": "gulp altspace_js",
-    "doc-three": "gulp doc",
     "dev": "budo",
     "dist": "gulp dist",
     "build": "npm run compile && npm run doc",
     "compile": "gulp --gulpfile scripts/build.js altspace_js",
-    "doc": "jsdoc -c .jsdoc.json && jsdoc -c .jsdoc-aframe.json"
+    "doc": "gulp --gulpfile scripts/build.js doc"
   },
   "keywords": [
     "aframe",
