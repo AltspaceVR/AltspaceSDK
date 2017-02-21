@@ -9,6 +9,7 @@ const gulp = require('gulp'),
 	g_replace = require('gulp-replace'),
 	rename = require('gulp-rename'),
 	markdown = require('gulp-markdown'),
+	prepend = require('gulp-insert').prepend,
 
 	rollup = require('rollup-stream'),
 	buble = require('rollup-plugin-buble'),
@@ -75,6 +76,9 @@ const build_configs = {
 	            layoutFile: r("../node_modules/minami/tmpl/layout.tmpl")
 	        }
 	    }
+	},
+	markdown: {
+		gfm: true
 	}
 };
 
@@ -126,7 +130,8 @@ gulp.task('doc', done =>
 		merge(
 			// compile readme template to doc/index.html
 			gulp.src('../README.template.md')
-				.pipe(markdown())
+				.pipe(markdown(build_configs.markdown))
+				.pipe(prepend('<link rel="stylesheet" href="js/styles/jsdoc-default.css"/>\n'))
 				.pipe(rename('index.html'))
 				.pipe(gulp.dest('../doc/'))
 
