@@ -19,3 +19,34 @@ Note that many of our APIs make use of Promises. Learn about how they work [here
 * [Examples list](/examples/) ([Source code](https://github.com/AltspaceVR/AltspaceSDK/tree/master/examples))
 * [Three.js documentation](https://threejs.org/docs)
 * [Report a bug](https://github.com/AltspaceVR/AltspaceSDK/issues)
+
+## Quick Start
+
+This is a fully functional example of what Three.js code looks like.
+[Live Demo](https://altspacevr.github.io/AltspaceSDK/examples/basic-cube.html)
+
+```html
+<!DOCTYPE html>
+<html lang=en>
+	<head>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+		<script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>
+	</head>
+	<body>
+		<script>
+        // wraps up the renderer, scene, and animation loop
+		var sim = new altspace.utilities.Simulation();
+
+        // create a green cube 200 pixels in size
+		var cube = new THREE.Mesh(
+            new THREE.BoxGeometry(200, 200, 200),
+            new THREE.MeshBasicMaterial({color: 0x00ff00})
+        );
+		sim.scene.add(cube);
+
+        // attach a spin behavior to make it rotate over time
+		cube.addBehavior( new altspace.utilities.behaviors.Spin() );
+		</script>
+	</body>
+</html>
+```

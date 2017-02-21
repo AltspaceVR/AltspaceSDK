@@ -1,7 +1,8 @@
 /**
 * Behaviors are designed to be plug-and-play reusable modules to add some type of
 * functionality to an object. See [Behavior]{@link module:altspace/utilities/behaviors.Behavior}
-* for a full description of a behavior's lifecycle.
+* for a full description of a behavior's lifecycle. You add behaviors to Object3Ds
+* with [addBehavior]{@link THREE.Object3D}.
 * @module altspace/utilities/behaviors
 */
 
