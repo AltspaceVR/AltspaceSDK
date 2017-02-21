@@ -6,9 +6,11 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 
 # AltspaceVR SDK
 
+## [A-Frame API](https://altspacevr.github.io/doc/aframe/) - [Three.js API](https://altspacevr.github.io/doc/js/)
+
 The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](https://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.
 
-[Three.js] is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. [A-Frame] is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
+Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
 
 **If you are brand new to web development** or 3D applications, we recommend you develop with A-Frame, as it's more user-friendly and has more utility built-in. Head over to our [A-Frame API Documentation] for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from [A-Frame].
 
@@ -43,12 +45,16 @@ If you use npm, you can install altspace.js with:
 ## SDK Feature Overview
 
 - **Holographic rendering** - Display your 3D models in true-to-life size, stand next to them, walk through them, etc.
-- **Cursor emulation** - Receive cursor events on your objects, e.g. `cursordown`, `cursormove`, etc.
+- **Cursor emulation\*** - Receive cursor events on your objects, e.g. `cursordown`, `cursormove`, etc.
 - **Synchronization** - Share app state across all clients, store high scores, etc.
-- **Environmental data** - Know the size and relative scale of your app's enclosure, or request access to the entire virtual space.
+- **Environmental data\*\*** - Know the size and relative scale of your app's enclosure, or request access to the entire virtual space.
 - **User data** - Know info about who is using your app, including a unique identifier, name, and moderator status. (This data is not stored automatically, but is available upon request.)
 - **Avatar tracking skeleton** - Know the position and orientation of your users' heads, hands, etc.
 - **Unity native resources (A-Frame only)** - Create proxy objects that let you manipulate native Unity assets, including pre-optimized models, particle effects, colliders, and more.
+
+\* For the purposes of cursor collision, meshes are approximated to be a 4/5 scale of their bounding box. If desired, default cursor collision can be disabled.
+
+\*\* Meshes outside the bounds of the enclosure will be culled unless you request full space access.
 
 ## AltspaceVR Debugger
 
