@@ -45,9 +45,9 @@ If you use npm, you can install altspace.js with:
 ## SDK Feature Overview
 
 - **Holographic rendering** - Display your 3D models in true-to-life size, stand next to them, walk through them, etc.
-- **Cursor emulation\*** - Receive cursor events on your objects, e.g. `cursordown`, `cursormove`, etc.
+- <strong>Cursor emulation*</strong> - Receive cursor events on your objects, e.g. `cursordown`, `cursormove`, etc.
 - **Synchronization** - Share app state across all clients, store high scores, etc.
-- **Environmental data\*\*** - Know the size and relative scale of your app's enclosure, or request access to the entire virtual space.
+- <strong>Environmental data**</strong> - Know the size and relative scale of your app's enclosure, or request access to the entire virtual space.
 - **User data** - Know info about who is using your app, including a unique identifier, name, and moderator status. (This data is not stored automatically, but is available upon request.)
 - **Avatar tracking skeleton** - Know the position and orientation of your users' heads, hands, etc.
 - **Unity native resources (A-Frame only)** - Create proxy objects that let you manipulate native Unity assets, including pre-optimized models, particle effects, colliders, and more.
