@@ -1,22 +1,22 @@
-# AltspaceVR SDK
-
-The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, and Samsung GearVR.
-
-**Latest Version: v{{SDK_VERSION}} -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v{{SDK_VERSION}})**
-
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
 
-[Three.js] is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. [A-Frame] is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
+# AltspaceVR SDK
+
+The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](https://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.
+
+[Three.js] is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. [A-Frame] is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
+
+**If you are brand new to web development** or 3D applications, we recommend you develop with A-Frame, as it's more user-friendly and has more utility built-in. Head over to our [A-Frame API Documentation] for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from [A-Frame].
+
+**If you know what you're doing**, you have your choice between A-Frame and Three.js. Three.js is lower-level than A-Frame, so it is more flexible, but at the cost of additional complexity. If you think this is for you, you should read our [Three.js API Documentation]. You'll also need the upstream [Three.js Reference].
 
 ## Resources
-
-- **[Getting Started] - If you're new to the SDK, start here!**
-- **[API Reference] - Reference for built-in API functions, utilities, and more**
 - **[Developer Portal] - Tutorials, projects, initiative program, and app submission**
+- **The AltspaceVR [SDK Wiki] - User-contributed tips and tricks**
 - **[Local Dev Setup] - Instructions for setting up a local dev environment**
 - **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
 - **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**
@@ -28,7 +28,9 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 
 Many APIs are present in the client without loading `altspace.js`, but please still include it, as this may change in the future.
 
-**The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.** This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js` we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
+The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js`, we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
+
+**Latest Version: v{{SDK_VERSION}} -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v{{SDK_VERSION}})**
 
 Include the latest version of the SDK in your app with:
 
@@ -38,78 +40,50 @@ If you use npm, you can install altspace.js with:
 
 `npm install altspace`
 
-## API Overview
+## SDK Feature Overview
 
-**See the [API Reference](http://altspacevr.github.io/AltspaceSDK/doc) for full details and a complete list of APIs and utilities.**
+- **Holographic rendering** - Display your 3D models in true-to-life size, stand next to them, walk through them, etc.
+- **Cursor emulation** - Receive cursor events on your objects, e.g. `cursordown`, `cursormove`, etc.
+- **Synchronization** - Share app state across all clients, store high scores, etc.
+- **Environmental data** - Know the size and relative scale of your app's enclosure, or request access to the entire virtual space.
+- **User data** - Know info about who is using your app, including a unique identifier, name, and moderator status. (This data is not stored automatically, but is available upon request.)
+- **Avatar tracking skeleton** - Know the position and orientation of your users' heads, hands, etc.
+- **Unity native resources (A-Frame only)** - Create proxy objects that let you manipulate native Unity assets, including pre-optimized models, particle effects, colliders, and more.
 
-> Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
+## AltspaceVR Debugger
 
-#### Holographic Rendering
-
-* `var renderer = altspace.getThreeJSRenderer();`
- returns a renderer that can be used to render three.js scenes as holographic objects
-
-  > Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)
-
-#### Cursor Events
-
-The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners.
-
->Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that significantly concave objects (buckets, etc) will block contained objects from being clicked on.
-
-* `mesh.addEventListener('cursorup' / 'cursordown', callback);`
- listen for cursor events on a specific mesh.
-
-  >These events will bubble up the three.js hierarchy. `stopPropagation` and `stopImmediatePropagation` are supported and work similarly to DOM events
-* `scene.addEventListner('cursormove', callback)`
- listen for cursor move events
-
-#### Enclosure Properties
-
-* `altspace.getEnclosure().then(callback)`
- returns a promise that will fulfill with a description of the enclosure, including its size and `pixelsPerMeter` which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.
-
-#### User Data
-
-* `altspace.getUser().then(callback)`
- returns a promise that will fulfill with information about the local user
-
-#### Tracking Skeleton
-
-* `altspace.getThreeJSTrackingSkeleton().then(callback)`
- returns a promise that will fulfill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. **Make sure to add the skeleton to your scene after receiving it**
-
-## Debugger
-
-The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
+The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.
 
 **[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.zip)**
 > Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.
 
-## Three.js Feature Support
-Altspace supports Three.js r73 to r74. r74 is recommended.
+## Graphics Feature Support
+
+AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame version 0.3.0 is currently the only version supported.
 
 **Currently supported:**
 * Object3D transformation and hierarchy
 * Most Geometries
 * MeshBasicMaterial
+* JPEG, PNG, [HTML5 Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage) textures
 * Face and vertex colors
 
 **Not currently supported:**
-* Three.js r75
 * Lighting, custom shaders, screen space effects.
 * Texture filter, format, anisotropy, flip, THREE.MirroredRepeatWrapping.
 * Using GIF images for textures
 * VideoTexture
 * Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
+* Other material types including LineBasicMateral, MeshFaceMaterial, MultiMaterial
 * Wireframes
-* Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial
 * Line Geometries
-* Quad faces
+* Quad/N-Gon faces
 * Dynamic meshes, skinned meshes
+* Interleaved BufferGeometry attributes
 * Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)
 
-**Habits of Successful AltspaceVR Web Apps:**
+## Habits of Successful AltspaceVR Web Apps
+
 * If you're loading a texture from a URL, make sure its dimensions are a power-of-two for improved performance.
 * Mind your texture sizes. Large textures can cause frame locking in the client.
 * If your app requires many different textures and geometries, add them to a scene incrementally.
@@ -129,39 +103,30 @@ Altspace's browser is based on Chromium version 40.
 
 **Currently supported:**
 * Libre audio and video codecs (ogg, webm)
+* ES2015 [Promises](https://developers.google.com/web/fundamentals/getting-started/primers/promises)
 
 **Not currently supported:**
 * Proprietary audio and video codecs (h.264, mp4, mp3)
 * WebRTC
-* ES6
+* WebVR
+* Most features of ES2015
+* The `<audio>` media tag
+* The `<a>` tag attribute `target`
+* The `<iframe>` tag
 
 [Three.js]: http://threejs.org/
+[Three.js Reference]: https://threejs.org/docs/
 [A-Frame]: https://aframe.io/docs/0.3.0/introduction/
 
-[Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
+[SDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
-[API Reference]: http://altspacevr.github.io/AltspaceSDK/doc/
+[A-Frame API Documentation]: https://altspacevr.github.io/doc/aframe/
+[Three.js API Documentation]: https://altspacevr.github.io/doc/js/
 [Local Dev Setup]: https://developer.altvr.com/local-dev/
 [App Guidelines]: https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f
 [Getting Started]: https://developer.altvr.com/get-started/
 [Slack]: https://altspacevrsdk.slack.com
-
-[Tutorial Series]: https://developer.altvr.com/get-started/
-
-[Flocking Birds]: http://threejs.org/examples/canvas_geometry_birds.html "Objects simulating the Boid flocking algorithm."
-[Voxel Painter]: http://threejs.org/examples/#webgl_interactive_voxelpainter "Interactively add objects to the world."
-[Draggable Cubes]: http://threejs.org/examples/#webgl_interactive_draggablecubes "Click-and-drag to move objects around."
-[Falling Cubes]: http://chandlerprall.github.io/Physijs/examples/collisions.html "Gravity/collision simulation using Physijs plugin."
-[OBJ/MTL Import]: http://threejs.org/examples/#webgl_loader_obj_mtl "Load objects from OBJ/MTL files from Blender."
-[Hemisphere Light]: http://threejs.org/examples/#webgl_lights_hemisphere "Flying bird, with a dynamic shadow and toggle-able lighting."
-[Material Reflection]: http://threejs.org/examples/#webgl_materials_cars_camaro "Car with a reflective material that can change color."
-[Point Cloud]: http://threejs.org/examples/#webgl_particles_dynamic "People made of particles that fall to the ground then reconstruct."
-[Three.js Scene]: http://threejs.org/examples/#webgl_loader_scene "Scene with eclectic objects exported from Three.js then imported back."
-[Ocean Shader]: http://threejs.org/examples/#webgl_shaders_ocean "Sphere submerging into an ocean rendered with a custom WebGL shader."
-
-[Live Coding Tutorial]: https://www.youtube.com/watch?v=R47GvXmvmec
-[AltspaceVR looking for SDK Collaborators]: https://www.youtube.com/watch?v=dk8i5or4PJI
 
 ---
 

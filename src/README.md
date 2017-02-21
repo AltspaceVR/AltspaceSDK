@@ -1,46 +1,8 @@
-# AltspaceVR SDK
-
-The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](http://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, and Samsung GearVR.
-
-**Latest Version: v{{SDK_VERSION}} -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v{{SDK_VERSION}})**
-
-<!--
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--->
-
-[Three.js] is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. [A-Frame] is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
-
-## Resources
-
-- **[Getting Started] - If you're new to the SDK, start here!**
-- **[API Reference] - Reference for built-in API functions, utilities, and more**
-- **[Developer Portal] - Tutorials, projects, initiative program, and app submission**
-- **[Local Dev Setup] - Instructions for setting up a local dev environment**
-- **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
-- **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**
+# Three.js API for AltspaceVR
 
 
-## altspace.js
-
-`altspace.js` should be included whenever you use the SDK. It contains core utilities and APIs, and is useful both inside and outside of the client.
-
-Many APIs are present in the client without loading `altspace.js`, but please still include it, as this may change in the future.
-
-**The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.** This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js` we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
-
-Include the latest version of the SDK in your app with:
-
-`<script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>`
-
-If you use npm, you can install altspace.js with:
-
-`npm install altspace`
 
 ## API Overview
-
-**See the [API Reference](http://altspacevr.github.io/AltspaceSDK/doc) for full details and a complete list of APIs and utilities.**
 
 > Note that many of our APIs make use of Promises. Learn about how they work over at [HTML5 Rocks](http://www.html5rocks.com/en/tutorials/es6/promises/)
 
@@ -78,62 +40,6 @@ The basic way to allow the user to interact with three.js objects in AltspaceVR 
 
 * `altspace.getThreeJSTrackingSkeleton().then(callback)`
  returns a promise that will fulfill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. **Make sure to add the skeleton to your scene after receiving it**
-
-## Debugger
-
-The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.
-
-**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.zip)**
-> Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.
-
-## Three.js Feature Support
-Altspace supports Three.js r73 to r74. r74 is recommended.
-
-**Currently supported:**
-* Object3D transformation and hierarchy
-* Most Geometries
-* MeshBasicMaterial
-* Face and vertex colors
-
-**Not currently supported:**
-* Three.js r75
-* Lighting, custom shaders, screen space effects.
-* Texture filter, format, anisotropy, flip, THREE.MirroredRepeatWrapping.
-* Using GIF images for textures
-* VideoTexture
-* Material blending, depthTest, depthWrite, alphaTest, clippingPlanes
-* Wireframes
-* Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial
-* Line Geometries
-* Quad faces
-* Dynamic meshes, skinned meshes
-* Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)
-
-**Habits of Successful AltspaceVR Web Apps:**
-* If you're loading a texture from a URL, make sure its dimensions are a power-of-two for improved performance.
-* Mind your texture sizes. Large textures can cause frame locking in the client.
-* If your app requires many different textures and geometries, add them to a scene incrementally.
-* Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.
-* Get user input via AltspaceVR cursor events or the tracking skeleton rather than from the keyboard.
-* Limit the number of objects per scene and polygons per object.
-* Bake ambient occlusion and other lighting into your models. All models currently render as unlit.
-* Avoid adding too many transparent objects to your scene. Transparency is GPU-intensive, especially on the Gear VR.
-
-**Known Issues:**
-* Object visibility does not propagate to child objects in the scene graph.
-  You can work around this by recursively setting the visibility on an object and its children.
-* Texture wrap mode is ignored on the `wrapT` property. The value of `wrapS` is used for both axes.
-
-## Browser Feature Support
-Altspace's browser is based on Chromium version 40.
-
-**Currently supported:**
-* Libre audio and video codecs (ogg, webm)
-
-**Not currently supported:**
-* Proprietary audio and video codecs (h.264, mp4, mp3)
-* WebRTC
-* ES6
 
 [Three.js]: http://threejs.org/
 [A-Frame]: https://aframe.io/docs/0.3.0/introduction/
