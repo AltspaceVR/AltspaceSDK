@@ -25,7 +25,7 @@ class HoverColor extends Behavior
 
 		// Default is to trigger color change on cursorenter/cursorleave events,
 		// also support triggering on cursordown/cursorup events.
-		if (config.event !== 'cursorenter' && config.event !== 'cursordown') {
+		if (this.config.event !== 'cursorenter' && this.config.event !== 'cursordown') {
 			throw Error('Expected config.event "cursorenter" or "cursordown"');
 		}
 
@@ -42,7 +42,7 @@ class HoverColor extends Behavior
 		this.cursordown = (event => {
 			this.cursordownObject = this.object3d;
 			if (this.config.event === 'cursordown' ){
-				this.setColor(cursordownObject);
+				this.setColor(this.cursordownObject);
 			}
 		}).bind(this);
 

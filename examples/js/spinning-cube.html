@@ -3,18 +3,18 @@
 <head>
 <meta charset=utf-8>
 <title>Spinning Cube</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 <script>
 
-var sim = altspace.utilities.Simulation();
+var sim = new altspace.utilities.Simulation();
 sim.camera.position.z = 5;
 var config = { authorId: 'AltspaceVR', appId: 'SpinningCube' };
 var sceneSync;
 altspace.utilities.sync.connect(config).then(function(connection) {
-	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+	sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {'Cube': createCube },
 		ready: ready
 	});
@@ -28,9 +28,9 @@ function createCube() {
 	var material = new THREE.MeshBasicMaterial({color:'#ffffff', map: texture});
 	var cube = new THREE.Mesh(geometry, material);
 	cube.addBehaviors(
-		altspace.utilities.behaviors.Object3DSync(),
-		altspace.utilities.behaviors.Spin({speed: 0.0005}),
-		ChangeColor()
+		new altspace.utilities.behaviors.Object3DSync(),
+		new altspace.utilities.behaviors.Spin({speed: 0.0005}),
+		new ChangeColor()
 	);
 
 	sim.scene.add(cube);
@@ -43,45 +43,41 @@ function ready(firstInstance) {
 	}
 }
 
+
 function ChangeColor() {//define a custom behavior
+	this.type = 'ChangeColor';
+	this.object3d = null;
+	this.lastColor = null;
+	this.colorRef = null;
+	this.collisionIntersect = null;
+	this.lastCollisionIntersect = null;
+}
 
-	var object3d;
-	var lastColor;
-	var colorRef;
+ChangeColor.prototype.awake = function(o) {
+	this.object3d = o;
+	var sync = this.object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
+	this.colorRef = sync.dataRef.child('color');
 
-	function awake(o) {
-		object3d = o;
-		var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
-		colorRef = sync.dataRef.child('color');
+	var self = this;
+	this.colorRef.on('value', function (snapshot) {
+		var value = snapshot.val();
+		if (!value) return; //we are first to create the cube, no color set yet
+		self.object3d.material.color = new THREE.Color(value);
+		self.object3d.material.needsUpdate = true;//currently required in Altspace
+	});
 
-		colorRef.on('value', function (snapshot) {
-			var value = snapshot.val();
-			if (!value) return; //we are first to create the cube, no color set yet
-			object3d.material.color = new THREE.Color(value);
-			object3d.material.needsUpdate = true;//currently required in Altspace
+	this.object3d.addEventListener('cursordown', function(e) {
+		self.colorRef.set( Math.floor(Math.random() * 0x1000000) );
+	});
+
+	if (altspace && altspace.inClient) {
+		altspace.getEnclosure().then(function(e) {
+			// scale cube so it's 1 meter in Altspace
+			self.object3d.scale.multiplyScalar(e.pixelsPerMeter);
 		});
-
-		object3d.addEventListener('cursordown', function() {
-			var color = Please.make_color()[0];//random color
-			colorRef.set(color);
-		});
-
-		if (altspace && altspace.inClient) {
-			altspace.getEnclosure().then(function(e) {
-				// scale cube so it's 1 meter in Altspace
-				object3d.scale.multiplyScalar(e.pixelsPerMeter);
-			});
-		}
-
 	}
 
-	function update(deltaTime) {
-		/* no updating needed, color changes in Firebase 'value' callback above */
-	}
-
-	return { awake: awake, update: update };
-
-};
+}
 
 </script>
 </body>

@@ -125,6 +125,7 @@ class JointCollisionEvents extends Behavior
 				if(joint && joint.confidence !== 0) {
 					let jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, this.jointCube);
 					let collision = objectBB.intersectsBox(jointBB);
+
 					if(collision) {
 						let intersectBB = objectBB.intersect(jointBB);
 						if(this.jointIntersectUnion) {
@@ -132,7 +133,6 @@ class JointCollisionEvents extends Behavior
 						} else {
 							this.jointIntersectUnion = intersectBB;
 						}
-
 						this.hasCollided = true;
 						this.collidedJoints.push(joint);
 					}
@@ -161,7 +161,7 @@ class JointCollisionEvents extends Behavior
 		// Dispatch collision event
 		if(this.hasCollided)
 		{
-			object3d.dispatchEvent(new CollsionEvent(
+			this.object3d.dispatchEvent(new CollisionEvent(
 				this.jointIntersectUnion,
 				this.collidedJoints,
 				this.object3d

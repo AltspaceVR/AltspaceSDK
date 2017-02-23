@@ -3,13 +3,13 @@
 <head>
 <meta charset=utf-8>
 <title>Joint Collision Push</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 <script>
 
-var sim = altspace.utilities.Simulation();
+var sim = new altspace.utilities.Simulation();
 var pushOffset = 2;
 var cubePos = 80;
 var button;
@@ -26,7 +26,7 @@ altspace.getEnclosure().then(function(e) {
 		appId: 'JointCollisionPush'
 	}).then(function(connection) {
 		// Retrieve SceneSync
-		sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+		sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 			instantiators: {'Cube': createCube }, // create cube
 			ready: ready // call ready
 		});
@@ -58,8 +58,8 @@ function createCube() {
 	material = new THREE.MeshBasicMaterial({color:'#00ccff'});
 	cube = new THREE.Mesh(geometry, material);
 	cube.addBehaviors(
-		altspace.utilities.behaviors.Object3DSync(),
-		altspace.utilities.behaviors.JointCollisionEvents({
+		new altspace.utilities.behaviors.Object3DSync(),
+		new altspace.utilities.behaviors.JointCollisionEvents({
 			joints: altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS.concat(
 				[ ['Head', 'Center', 0] ]
 			),
@@ -126,7 +126,7 @@ function UpdatePosition() {//define a custom behavior
 
 		// If pushing
 		if(collisionIntersect) {
-			var collisionCenter = collisionIntersect.center();
+			var collisionCenter = collisionIntersect.getCenter();
 
 			// Initial push is 0,0,0
 			var offset = new THREE.Vector3(0, 0, 0);

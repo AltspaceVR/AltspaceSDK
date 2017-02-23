@@ -55,7 +55,7 @@ class GamepadControls extends Behavior
 		this.object3d = o;
 		this.scene = s;
 		this.sync = this.object3d.getBehaviorByType('Object3DSync');
-		this.originalObj = object3d.clone();
+		this.originalObj = this.object3d.clone();
 		this.gamepad = this.getGamepad();
 		if (this.gamepad) {
 			console.log('Gamepad detected: ' + this.gamepad.id);
@@ -152,8 +152,8 @@ class GamepadControls extends Behavior
 				this.isAltModeL = !this.isAltModeL;//button released
 			this.prevAltButtonL = isAltButtonL;
 
-			let leftStickX = gamepad.axes[0];//left / right
-			let leftStickY = gamepad.axes[1];//up / down
+			let leftStickX = this.gamepad.axes[0];//left / right
+			let leftStickY = this.gamepad.axes[1];//up / down
 
 			let isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
 			if (isMove && !this.sync.isMine)
@@ -183,10 +183,10 @@ class GamepadControls extends Behavior
 			let isAltButtonR = this.gamepad.buttons[11].pressed;//right stick button
 			if (this.prevAltButtonR && !isAltButtonR)
 				this.isAltModeR = !this.isAltModeR;//button released
-			prevAltButtonR = isAltButtonR;
+			this.prevAltButtonR = isAltButtonR;
 
-			let rightStickX = gamepad.axes[2];//left / right
-			let rightStickY = gamepad.axes[3];//up / down
+			let rightStickX = this.gamepad.axes[2];//left / right
+			let rightStickY = this.gamepad.axes[3];//up / down
 
 			let isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
 			if (isRotate && !this.sync.isMine)

@@ -3,8 +3,8 @@
 <head>
 	<meta charset=utf-8>
 	<title>Adding Cubes</title>
-	<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-	<script src="../dist/altspace.min.js"></script>
+	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+	<script src="../../dist/altspace.js"></script>
 
 </head>
 <body>
@@ -12,7 +12,7 @@
         var utilities = altspace.utilities;
         var behaviors = altspace.utilities.behaviors;
 
-        var sim = utilities.Simulation();
+        var sim = new utilities.Simulation();
         var inCodePen = utilities.codePen.inCodePen;
 		var instanceRef;
 
@@ -29,7 +29,7 @@
 
 		    var myColor = Please.make_color()[0];
 
-		    var sceneSync = behaviors.SceneSync(instanceRef, {
+		    var sceneSync = new behaviors.SceneSync(instanceRef, {
 		        instantiators: {
 		            'Cube': createCube,
 		            'InstantiationSphere': createInstantiationSphere,
@@ -84,9 +84,9 @@
                   new THREE.MeshBasicMaterial({ color: '#EB5B40' })
                 );
 		        sphere.addBehaviors(
-                  behaviors.Bob({ shouldMove: true }),
-                  behaviors.ButtonStateStyle(),
-                  behaviors.Object3DSync({
+                  new behaviors.Bob({ shouldMove: true }),
+                  new behaviors.ButtonStateStyle(),
+                  new behaviors.Object3DSync({
                       position: true
                   })
                 );
@@ -118,13 +118,13 @@
                   new THREE.MeshBasicMaterial({ color: new THREE.Color(initData.color) })
                 );
 		        cube.addBehaviors(
-                  behaviors.Bob({ shouldMove: false }),
-                  behaviors.Spin({ speed: 0.002 }),
-                  behaviors.ButtonStateStyle(),
-                  behaviors.Object3DSync({
+                  new behaviors.Bob({ shouldMove: false }),
+                  new behaviors.Spin({ speed: 0.002 }),
+                  new behaviors.ButtonStateStyle(),
+                  new behaviors.Object3DSync({
                       position: true
                   }),
-                  behaviors.Drag({
+                  new behaviors.Drag({
                       x: { min: -BoardWidth / 2, max: BoardWidth / 2 },
                       z: { min: -BoardWidth / 2, max: BoardWidth / 2 }
                   })

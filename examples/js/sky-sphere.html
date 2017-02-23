@@ -3,17 +3,17 @@
 <head>
 <meta charset=utf-8>
 <title>Sky Sphere</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 <script>
 
-var sim = altspace.utilities.Simulation();
+var sim = new altspace.utilities.Simulation();
 var config = { authorId: 'AltspaceVR', appId: 'SkySphere' };
 var sceneSync;
 altspace.utilities.sync.connect(config).then(function(connection) {
-	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+	sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {
 			SkySphere: createSkySphere,
 			Cube: createCube
@@ -40,7 +40,7 @@ function createSkySphere() {
 		})
 	);
 	skySphere.name = 'skySphere';
-	var sync = altspace.utilities.behaviors.Object3DSync({scale: true, position: true});
+	var sync = new altspace.utilities.behaviors.Object3DSync({scale: true, position: true});
 	skySphere.addBehavior(sync);
 	skySphere.scale.x = -1;
 	altspace.getEnclosure().then(function (enclosure) {
@@ -67,7 +67,7 @@ function createCube() {
 			map: new THREE.TextureLoader().load('images/click-me.jpg')
 		})
 	);
-	cube.addBehavior(altspace.utilities.behaviors.Object3DSync());
+	cube.addBehavior(new altspace.utilities.behaviors.Object3DSync());
 	cube.scale.multiplyScalar(0.5);
 	cube.position.set(1, 1, -1.5);
 	altspace.getEnclosure().then(function (enclosure) {
@@ -94,4 +94,3 @@ function ready(firstInstance) {
 </script>
 </body>
 </html>
-

@@ -2,10 +2,10 @@
 <html lang='en'>
 <head>
 <title>Chess</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="../../dist/altspace.js"></script>
 
 </head>
 <body>
@@ -52,7 +52,7 @@ ChessApp = (function(){
 			instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
 		}).then(function(connection) {
 			if (!location.search) { return; }
-			sim = altspace.utilities.Simulation();
+			sim = new altspace.utilities.Simulation();
 			instanceRef = connection.instance;
 
 			if (altspace.inClient) {
@@ -121,7 +121,7 @@ ChessApp = (function(){
 		whitePieces = cloneModels(whitePieces, whiteTint);
 		blackPieces = cloneModels(blackPieces, blackTint);
 
-		sceneSync = altspace.utilities.behaviors.SceneSync(instanceRef, {
+		sceneSync = new altspace.utilities.behaviors.SceneSync(instanceRef, {
 			instantiators: {
 				'Piece': function(initData){
 					var i = initData.index;
@@ -129,12 +129,12 @@ ChessApp = (function(){
 					var object3d = array[i];
 					var limit = CONFIG.dragPlaneSize;
 					object3d.addBehaviors(
-						altspace.utilities.behaviors.Object3DSync({position: true}),
-						altspace.utilities.behaviors.Drag({
+						new altspace.utilities.behaviors.Object3DSync({position: true}),
+						new altspace.utilities.behaviors.Drag({
 							x: {min: -1 * limit, max: limit},
 							z: {min: -1 * limit, max: limit}
 						}),
-						altspace.utilities.behaviors.HoverColor({
+						new altspace.utilities.behaviors.HoverColor({
 							//event: 'cursordown',
 							scene: sim.scene,
 							color: new THREE.Color(0.8, 0.2, 0.2)

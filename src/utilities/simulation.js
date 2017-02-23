@@ -1,11 +1,6 @@
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
+'use strict';
 
 import * as CursorShim from './shims/cursor';
-
-/**
-* @module altspace/utilities
-*/
 
 /**
 * Simulation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
@@ -21,7 +16,7 @@ import * as CursorShim from './shims/cursor';
 */
 class Simulation
 {
-	constructor({auto = true})
+	constructor(config = {auto: true})
 	{
 		this._scene = null;
 		this._renderer = null;
@@ -49,7 +44,7 @@ class Simulation
 			this._setupWebGL();
 		}
 
-		if(auto && !usingAFrame)
+		if(config.auto && !usingAFrame)
 			this.loop();
 	}
 

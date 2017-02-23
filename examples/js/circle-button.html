@@ -3,8 +3,8 @@
 	<head>
 		<meta charset=utf-8>
 		<title>Circle Button Example</title>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
-		<script src="../dist/altspace.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
+		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
 		<script>
@@ -24,8 +24,8 @@
 		// Assign button effects
 		var circlebutton = new THREE.Group();
 		circlebutton.add(circle);
-		circlebutton.addBehavior(altspace.utilities.behaviors.HoverScale({ scale: 1.2, duration: 150 }));
-		circlebutton.addBehavior(altspace.utilities.behaviors.HoverColor({ event: 'cursordown', color: new THREE.Color('red') }));
+		circlebutton.addBehavior(new altspace.utilities.behaviors.HoverScale({ scale: 1.2, duration: 150 }));
+		circlebutton.addBehavior(new altspace.utilities.behaviors.HoverColor({ event: 'cursordown', color: new THREE.Color('red') }));
 
 		// Assign button event handlers
 		circlebutton.addEventListener('cursorenter', function(event) {

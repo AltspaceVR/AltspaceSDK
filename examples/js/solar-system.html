@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Solar System Example</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="../../dist/altspace.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <style>
@@ -82,7 +82,7 @@ SolarSystemApp = (function(){
 	var loadRequest;
 
 	function main() {
-	    sim = window.sim = altspace.utilities.Simulation();
+	    sim = window.sim = new altspace.utilities.Simulation();
 		sim.scene.add(solarSystem);
 		if (altspace.inClient) {
 			altspace.getEnclosure().then(function (enclosure) {
@@ -150,53 +150,47 @@ SolarSystemApp = (function(){
 
 			planets.push(obj);
 			solarSystem.add(obj);
-			obj.addBehaviors(OrbitBehavior());
+			obj.addBehaviors(new OrbitBehavior());
 		}
 	}
 
 	function OrbitBehavior(){
-
-		var obj;
-
-		function awake(o) {
-			obj = o;
-		}
-
-		function update(deltatime) {
-			if(compactMode){
-				if(obj === planetsByName[selectedPlanetName]) {
-				 	obj.visible = true;
-					obj.position.x = 0;
-					obj.position.y = 0;
-					obj.position.z = 0;
-					// We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
-					var scale = altspace.inClient ? 3.6 : 0.4 ;
-					obj.scale.x = scale;
-					obj.scale.y = scale;
-					obj.scale.z = scale;
-				} else {
-				 	obj.visible = false;
-					obj.scale.x = 0.00001;
-					obj.scale.y = 0.00001;
-					obj.scale.z = 0.00001;
-				}
-			} else {
-				obj.orbitalPosition += obj.orbitalVelocity;
-				var r = obj.solarDistance;
-				var x = r*Math.sin(obj.orbitalPosition);
-				var z = r*Math.cos(obj.orbitalPosition);
-				obj.position.x = x;
-				obj.position.z = z;
-			}
-			obj.rotation.y += 0.001;
-		}
-
-		return {
-			awake: awake,
-			update: update
-		};
-
+		this.obj = null;
 	}
+
+	OrbitBehavior.prototype.awake = function(o) {
+		this.obj = o;
+	}
+
+	OrbitBehavior.prototype.update = function(deltatime) {
+		if(compactMode){
+			if(this.obj === planetsByName[selectedPlanetName]) {
+			 	this.obj.visible = true;
+				this.obj.position.x = 0;
+				this.obj.position.y = 0;
+				this.obj.position.z = 0;
+				// We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
+				var scale = altspace.inClient ? 3.6 : 0.4 ;
+				this.obj.scale.x = scale;
+				this.obj.scale.y = scale;
+				this.obj.scale.z = scale;
+			} else {
+			 	this.obj.visible = false;
+				this.obj.scale.x = 0.00001;
+				this.obj.scale.y = 0.00001;
+				this.obj.scale.z = 0.00001;
+			}
+		} else {
+			this.obj.orbitalPosition += this.obj.orbitalVelocity;
+			var r = this.obj.solarDistance;
+			var x = r*Math.sin(this.obj.orbitalPosition);
+			var z = r*Math.cos(this.obj.orbitalPosition);
+			this.obj.position.x = x;
+			this.obj.position.z = z;
+		}
+		this.obj.rotation.y += 0.001;
+	}
+
 
 	window.addEventListener('resize', function(){
 		if(compactMode){

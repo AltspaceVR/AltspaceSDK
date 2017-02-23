@@ -4,17 +4,17 @@
 <head>
 <meta charset=utf-8>
 <title>Synced Dice</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
 <script src="https://cdn.rawgit.com/schteppe/cannon.js/v0.6.2/build/cannon.min.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 
 <body>
 <script>
-var sim = altspace.utilities.Simulation({auto: false});
+var sim = new altspace.utilities.Simulation({auto: false});
 sim.camera.position.z = 30;
 
 var physicsWorld = new CANNON.World();
@@ -46,7 +46,7 @@ Promise.all([
 
 	function createFloor() {
 		var bottom = -10;
-		var floor = new CANNON.Body({ 
+		var floor = new CANNON.Body({
 			mass: 0,
 			shape: new CANNON.Plane(),
 			position: new CANNON.Vec3(0, bottom, 0)

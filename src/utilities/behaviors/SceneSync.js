@@ -74,7 +74,7 @@ class SceneSync extends Behavior
 
 		// add our client ID to the list of connected clients,
 		// but have it be automatically removed by firebase if we disconnect for any reason
-		this.clientsRef.push(clientId).onDisconnect().remove();
+		this.clientsRef.push(this.clientId).onDisconnect().remove();
 
 		this.instanceRef.child('initialized').once('value', (snapshot => {
 			let shouldInitialize = !snapshot.val();
@@ -117,7 +117,7 @@ class SceneSync extends Behavior
 	{
 		let data = snapshot.val();
 		let key = snapshot.key();
-		let instantiator = this.instantiators[data.syncType];
+		let instantiator = this.config.instantiators[data.syncType];
 
 		if (!instantiator) {
 			console.warn('No instantiator found for syncType: ' + data.syncType);

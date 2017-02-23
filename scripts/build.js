@@ -32,7 +32,7 @@ const build_configs = {
 	rollup: {
 		entry: r('../src/index.js'),
 		format: 'iife',
-		moduleName: 'altspace',
+		context: 'window',
 		external: ['firebase', 'urllib', 'please', 'threejs'],
 		globals: {
 			firebase: 'Firebase',
@@ -86,16 +86,16 @@ gulp.task('altspace_js', () =>
 {
 	// pack the various es2015 modules into a transpiled iife
 	return orderedMerge([
-		rollup(build_configs.rollup)
-			.pipe(source('altspace.js'))
-			.pipe(buffer()),
-
 		// tack our dependencies onto the end
 		gulp.src([
 			'../lib/firebase.min.js',
 			'../lib/Please.min.js',
 			'../lib/url.min.js'
-		])
+		]),
+
+		rollup(build_configs.rollup)
+			.pipe(source('altspace.js'))
+			.pipe(buffer())
 	])
 
 	// output non-minified source

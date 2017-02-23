@@ -5,9 +5,11 @@
 * @module altspace
 */
 
-// make sure that the core uses the correct version of the SDK
+if(!window.altspace)
+	window.altspace = {components: {}, utilities: {}, inClient: false};
+
 let version = '{{SDK_VERSION}}';
-if (window.altspace && window.altspace.requestVersion) {
+if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
 
@@ -17,7 +19,8 @@ if(window.AFRAME && !window.THREE){
 }
 
 // include source packages
-import * as components from './components/index';
-import * as utilities from './utilities/index';
+import * as components_lib from './components/index';
+import * as utilities_lib from './utilities/index';
 
-export { components, utilities, version };
+Object.assign(window.altspace.components, components_lib);
+Object.assign(window.altspace.utilities, utilities_lib);

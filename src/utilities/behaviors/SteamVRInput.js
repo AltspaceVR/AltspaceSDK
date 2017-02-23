@@ -88,4 +88,4 @@ Object.assign(SteamVRInput, {
 	RIGHT_CONTROLLER: 'right'
 });
 
-export default SteamVRInputBehavior;
+export default SteamVRInput;

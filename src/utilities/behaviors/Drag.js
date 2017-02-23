@@ -147,7 +147,7 @@ class Drag extends Behavior
 		//Otherwise, object appears to 'jump' when selected, moving so its
 		//center is directly until the cursor. We allow drag on edge of object.
 		this.raycaster.set(event.ray.origin, event.ray.direction);
-		let hit = raycaster.intersectObject(object3d, true)[0];
+		let hit = this.raycaster.intersectObject(this.object3d, true)[0];
 		if (!hit)
 			return;
 
@@ -198,7 +198,7 @@ class Drag extends Behavior
 		});
 
 		//constrain target position
-		targetWorldPosition.clamp(min, max);
+		targetWorldPosition.clamp(this.min, this.max);
 
 		//move object
 		this.object3d.parent.updateMatrixWorld();

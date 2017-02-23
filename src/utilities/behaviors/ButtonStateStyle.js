@@ -37,7 +37,7 @@ class ButtonStateStyle extends Behavior
 	{
 		this.object3d = o;
 		this.scene = s;
-		this.originalColor = this.config.originalColor || object3d.material.color;
+		this.originalColor = this.config.originalColor || this.object3d.material.color;
 		this.object3d.addEventListener('cursorenter', this._cbs.cursorenter);
 		this.object3d.addEventListener('cursordown', this._cbs.cursordown);
 	}
@@ -69,7 +69,7 @@ class ButtonStateStyle extends Behavior
 	cursorEnter()
 	{
 		this.changeBrightness(this.config.overBrightness);
-		object3d.addEventListener('cursorleave', this._cbs.cursorleave);
+		this.object3d.addEventListener('cursorleave', this._cbs.cursorleave);
 	}
 
 	cursorUp(event)

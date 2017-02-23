@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Gamepad Cube</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 </body>
@@ -21,14 +21,14 @@ GamepadCube = (function(){
 
 	// Setup
 	function main() {
-		sim = altspace.utilities.Simulation();
+		sim = new altspace.utilities.Simulation();
 		loadCubeModel();//must load model before creating synced cube
 	}
 
 	function onModelReady() {
 		var config = { authorId: 'AltspaceVR', appId: 'GamepadCube' };
 		altspace.utilities.sync.connect(config).then(function(connection) {
-			sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+			sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 				instantiators: {'Cube': createCube },
 				ready: ready
 			});
@@ -51,8 +51,8 @@ GamepadCube = (function(){
 		cube = cubeModel.clone();
 		cube.scale.multiplyScalar(15);
 		cube.addBehaviors(
-			altspace.utilities.behaviors.Object3DSync({position: true, rotation: true, scale: true}),
-			altspace.utilities.behaviors.GamepadControls()
+			new altspace.utilities.behaviors.Object3DSync({position: true, rotation: true, scale: true}),
+			new altspace.utilities.behaviors.GamepadControls()
 		);
 		cube.name = 'cube';
 		cube.rotation.y += Math.PI / 8;
@@ -67,7 +67,7 @@ GamepadCube = (function(){
 		}
 	}
 
-	return { 
+	return {
 		main: main,
 		getCube: function(){ return cube; },
 	};

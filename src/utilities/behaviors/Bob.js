@@ -17,7 +17,7 @@ import Behavior from './Behavior';
 class Bob extends Behavior
 {
 	get type(){ return 'Bob'; }
-	
+
 	constructor(config)
 	{
 		this.config = Object.assign({x:3, y:5, shouldRotate:true, shouldMove:true}, config);
@@ -30,7 +30,7 @@ class Bob extends Behavior
 	awake(o)
 	{
 		this.object3d = o;
-		this.offsetPosition = object3D.position.clone();
+		this.offsetPosition = this.object3d.position.clone();
 	}
 
 	update(deltaTime)
@@ -48,7 +48,7 @@ class Bob extends Behavior
 		}
 
 		if (this.config.shouldRotate){
-			object3d.rotation.x = Math.sin(nowInt / 500) / 15;
+			this.object3d.rotation.x = Math.sin(nowInt / 500) / 15;
 		}
 	}
 }

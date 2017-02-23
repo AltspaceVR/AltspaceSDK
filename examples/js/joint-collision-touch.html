@@ -3,17 +3,17 @@
 <head>
 <meta charset=utf-8>
 <title>Joint Collision Touch</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 <script>
 
-var sim = altspace.utilities.Simulation();
+var sim = new altspace.utilities.Simulation();
 var config = { authorId: 'AltspaceVR', appId: 'JointCollisionTouch' };
 var sceneSync;
 altspace.utilities.sync.connect(config).then(function(connection) {
-	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+	sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {'Cube': createCube },
 		ready: ready
 	});
@@ -27,9 +27,9 @@ function createCube() {
 	var material = new THREE.MeshBasicMaterial({color:'#ff0000'});
 	var cube = new THREE.Mesh(geometry, material);
 	cube.addBehaviors(
-		altspace.utilities.behaviors.Object3DSync(),
-		altspace.utilities.behaviors.JointCollisionEvents({joints: [['Index', 'Right', 3]]}),
-		ChangeColor()
+		new altspace.utilities.behaviors.Object3DSync(),
+		new altspace.utilities.behaviors.JointCollisionEvents({joints: [['Index', 'Right', 3]]}),
+		new ChangeColor()
 	);
 
 	sim.scene.add(cube);
@@ -43,51 +43,49 @@ function ready(firstInstance) {
 }
 
 function ChangeColor() {//define a custom behavior
+	this.type = 'ChangeColor';
+	this.object3d = null;
+	this.lastColor = null;
+	this.colorRef = null;
+	this.collisionIntersect = null;
+	this.lastCollisionIntersect = null;
+}
 
-	var object3d;
-	var lastColor;
-	var colorRef;
-	var collisionIntersect;
-	var lastCollisionIntersect;
+ChangeColor.prototype.awake = function(o) {
+	this.object3d = o;
+	var sync = this.object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
+	this.colorRef = sync.dataRef.child('color');
 
-	function awake(o) {
-		object3d = o;
-		var sync = object3d.getBehaviorByType('Object3DSync');//TODO: better way of doing this
-		colorRef = sync.dataRef.child('color');
+	var self = this;
+	this.colorRef.on('value', function (snapshot) {
+		var value = snapshot.val();
+		if (!value) return; //we are first to create the cube, no color set yet
+		self.object3d.material.color = new THREE.Color(value);
+		self.object3d.material.needsUpdate = true;//currently required in Altspace
+	});
 
-		colorRef.on('value', function (snapshot) {
-			var value = snapshot.val();
-			if (!value) return; //we are first to create the cube, no color set yet
-			object3d.material.color = new THREE.Color(value);
-			object3d.material.needsUpdate = true;//currently required in Altspace
+	this.object3d.addEventListener('jointcollision', function(e) {
+		self.collisionIntersect = e.detail.intersect;
+	});
+
+	if (altspace && altspace.inClient) {
+		altspace.getEnclosure().then(function(e) {
+			// scale cube so it's 1 meter in Altspace
+			self.object3d.scale.multiplyScalar(e.pixelsPerMeter);
 		});
-
-		object3d.addEventListener('jointcollision', function(e) {
-			collisionIntersect = e.detail.intersect;
-		});
-
-		if (altspace && altspace.inClient) {
-			altspace.getEnclosure().then(function(e) {
-				// scale cube so it's 1 meter in Altspace
-				object3d.scale.multiplyScalar(e.pixelsPerMeter);
-			});
-		}
-
 	}
 
-	function update(deltaTime) {
-		if (collisionIntersect === lastCollisionIntersect) { return; }
-		if(collisionIntersect) {
-			colorRef.set(0x00ff00);
-		} else {
-			colorRef.set(0xff0000);
-		}
-		lastCollisionIntersect = collisionIntersect;
-		collisionIntersect = null;
+}
+
+ChangeColor.prototype.update = function(deltaTime) {
+	if (this.collisionIntersect === this.lastCollisionIntersect) { return; }
+	if(this.collisionIntersect) {
+		this.colorRef.set(0x00ff00);
+	} else {
+		this.colorRef.set(0xff0000);
 	}
-
-	return { awake: awake, update: update };
-
+	this.lastCollisionIntersect = this.collisionIntersect;
+	this.collisionIntersect = null;
 }
 
 </script>

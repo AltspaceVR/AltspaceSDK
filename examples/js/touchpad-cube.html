@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Touchpad Cube</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 </body>
@@ -24,7 +24,7 @@ TouchpadCube = (function () {
 
 	// Setup
 	function main() {
-	    sim = utilities.Simulation();
+	    sim = new utilities.Simulation();
 		loadCubeModel();//must load model before creating synced cube
 	}
 
@@ -35,7 +35,7 @@ TouchpadCube = (function () {
 	        authorId: inCodePen ? utilities.codePen.getAuthorId() : "AltspaceVR",
 	        instanceId: inCodePen ? utilities.codePen.getPenId() : null
 	    }).then(function (connection) {
-	        sceneSync = behaviors.SceneSync(connection.instance, {
+	        sceneSync = new behaviors.SceneSync(connection.instance, {
 	            instantiators: { 'Cube': createCube },
 	            ready: ready
 	        });
@@ -58,8 +58,8 @@ TouchpadCube = (function () {
 		cube = cubeModel.clone();
 		cube.scale.multiplyScalar(15);
 		cube.addBehaviors(
-			behaviors.Object3DSync({ position: true, rotation: true, scale: true }),
-			behaviors.TouchpadRotate()
+			new behaviors.Object3DSync({ position: true, rotation: true, scale: true }),
+			new behaviors.TouchpadRotate()
 		);
 		cube.name = 'cube';
 		cube.rotation.y += Math.PI / 8;
@@ -74,7 +74,7 @@ TouchpadCube = (function () {
 		}
 	}
 
-	return { 
+	return {
 		main: main,
 		getCube: function(){ return cube; },
 	};

@@ -3,13 +3,13 @@
 	<head>
 		<meta charset=utf-8>
 		<title>Drag Events</title>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="../dist/altspace.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
 		<script>
 
-			var sim = altspace.utilities.Simulation();
+			var sim = new altspace.utilities.Simulation();
 			var config = { authorId: 'AltspaceVR', appId: 'DragEvents' };
 			var sceneSync;
 			var enclosure;
@@ -20,7 +20,7 @@
 				//Connect to sync server
 				altspace.utilities.sync.connect(config).then(function(connection) {
 					//Retrieve SceneSync
-					sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+					sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 						instantiators: {'Cube': createCube },//Create the cube
 						ready: ready//Ready!
 					});
@@ -39,8 +39,8 @@
 				cube.position.y = (enclosure.innerHeight / 4) * -1;
 				//Add behaviors
 				cube.addBehaviors(
-					altspace.utilities.behaviors.Object3DSync({position: true}),
-					altspace.utilities.behaviors.Drag({
+					new altspace.utilities.behaviors.Object3DSync({position: true}),
+					new altspace.utilities.behaviors.Drag({
 						//Limit drag to within bounds of the enclosure
 						x: { min: (enclosure.innerWidth / 3) * -1, max: (enclosure.innerWidth / 3)},
 						z: { min: (enclosure.innerDepth / 3) * -1, max: (enclosure.innerDepth / 3)}

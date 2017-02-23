@@ -3,10 +3,10 @@
 <head>
 <meta charset=utf-8>
 <title>Hats Example</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-<script src="../dist/altspace.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="../../dist/altspace.js"></script>
 </head>
 <body>
 	<script>
@@ -42,7 +42,7 @@
 
 			function main() {
 
-				sim = altspace.utilities.Simulation();
+				sim = new altspace.utilities.Simulation();
 				var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
 				Promise.all(promises).then(function (array) {
 					skeleton = array[0];
@@ -103,7 +103,7 @@
 					appId: 'Hats',
 					authorId: 'AltspaceVR'
 				}).then(function (connection) {
-					sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+					sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 						instantiators: { 'Hat': createHat },
 						ready: onSyncReady
 					});
@@ -140,9 +140,9 @@
 					var offset = new THREE.Vector3();
 					offset.copy(config.models[obj.name].offset);
 					offset.multiplyScalar(scale);
-					obj.addBehavior(FollowBehavior({ offset: offset, joint: head }));
+					obj.addBehavior(new FollowBehavior({ offset: offset, joint: head }));
 				}
-				obj.addBehavior(altspace.utilities.behaviors.Object3DSync({
+				obj.addBehavior(new altspace.utilities.behaviors.Object3DSync({
 					position: true, rotation: true
 				}));
 				sim.scene.add(obj);
@@ -150,30 +150,26 @@
 			}
 
 			function FollowBehavior(config) {
+				this.offset = config.offset;
+				this.joint = config.joint;
 
-				var offset = config.offset;
-				var joint = config.joint;
+				this.object3d = null;
+				this.sync = null;
+			}
 
-				var object3d;
-				var sync;
+			FollowBehavior.prototype.awake = function(o) {
+				this.object3d = o;
+				this.sync = this.object3d.getBehaviorByType('Object3DSync');
+			}
 
-				function awake(o) {
-					object3d = o;
-					sync = object3d.getBehaviorByType('Object3DSync');
-				}
-
-				function update() {
-					//No need to take ownership of this hat, since we created it.
-					object3d.position.copy(joint.position);
-					object3d.rotation.copy(joint.rotation);
-					//Use offset to position hat on top of head.
-					object3d.translateX(offset.x);
-					object3d.translateY(offset.y);
-					object3d.translateZ(offset.z);
-				}
-
-				return { awake: awake, update: update };
-
+			FollowBehavior.prototype.update = function() {
+				//No need to take ownership of this hat, since we created it.
+				this.object3d.position.copy(this.joint.position);
+				this.object3d.rotation.copy(this.joint.rotation);
+				//Use offset to position hat on top of head.
+				this.object3d.translateX(this.offset.x);
+				this.object3d.translateY(this.offset.y);
+				this.object3d.translateZ(this.offset.z);
 			}
 
 			return { main: main };
