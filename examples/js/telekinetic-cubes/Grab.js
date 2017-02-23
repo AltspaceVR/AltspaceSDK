@@ -1,6 +1,6 @@
-window.telekenetic = window.telekenetic || {};
+window.telekinetic = window.telekinetic || {};
 
-telekenetic.Grab = function (config) {
+telekinetic.Grab = function (config) {
 	config = config || {};
 
 	var object3d;
@@ -32,16 +32,10 @@ telekenetic.Grab = function (config) {
 	}
 
 	function release() {
-		THREE.SceneUtils.detach(object3d, object3d.parent, scene);
+		if(object3d.parent)
+			THREE.SceneUtils.detach(object3d, object3d.parent, scene);
 		object3d.dispatchEvent({ type: 'released' });
 	}
 
-	function update(deltaTime) {
-		if (object3d.parent == centerEye && sync) sync.enqueueSend();
-	}
-
-	function start() {
-	}
-
-	return { awake: awake, start: start, update: update};
+	return { awake: awake };
 };

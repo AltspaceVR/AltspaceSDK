@@ -17,16 +17,24 @@ export default class BrushBehavior {
 	constructor({ hand }) {
 		this._hand = hand;
 		this._pixelsPerMeter = 0;
-		altspace.getEnclosure().then((enclosure) => {
+		altspace.getEnclosure().then(((enclosure) => {
 			this._pixelsPerMeter = enclosure.pixelsPerMeter;
 			const s = BRUSH_SIZE/10 * this._pixelsPerMeter;
-			this._object3d.scale.set(s, s, s);
-		});
+
+			if(this._object3d)
+				this._object3d.scale.setScalar(s);
+			else {
+				this._scaleFactor = s;
+			}
+		}).bind(this));
 	}
 
 	awake(object3d, scene) {
 		this._object3d = object3d;
 		this._scene = scene;
+
+		if(this._scaleFactor)
+			this._object3d.scale.setScalar(this._scaleFactor);
 
 		this._steamVRInput = this._scene.getBehaviorByType('SteamVRInput');
 		this._sceneSync = this._scene.getBehaviorByType('SceneSync');

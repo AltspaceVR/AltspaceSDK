@@ -1,4 +1,4 @@
-window.telekenetic = window.telekenetic || {};
+window.telekinetic = window.telekinetic || {};
 
 (function () {
 
@@ -14,7 +14,7 @@ window.telekenetic = window.telekenetic || {};
 		sphere.position.x = 100;
 
 		sphere.addEventListener('cursordown', function () {
-			var enclosure = telekenetic.enclosure;
+			var enclosure = telekinetic.enclosure;
 			//clicking on sphere creates block of random size nearby
 			function randInt(min, max) { return Math.random() * (max - min) + min; }
 			var initData = {
@@ -26,7 +26,7 @@ window.telekenetic = window.telekenetic || {};
 				z: randInt(-enclosure.innerDepth / 2, enclosure.innerDepth / 2),
 				color: myColor
 			};
-			telekenetic.sceneSync.instantiate('Cube', initData, true);
+			telekinetic.sceneSync.instantiate('Cube', initData, true);
 		});
 
 		return sphere;
@@ -38,8 +38,8 @@ window.telekenetic = window.telekenetic || {};
 		sphere.position.x = -100;
 
 		sphere.addEventListener('cursordown', function () {
-			var cubes = telekenetic.cubes;
-			if (cubes.length) telekenetic.sceneSync.destroy(cubes[cubes.length - 1]);
+			var cubes = telekinetic.cubes;
+			if (cubes.length) telekinetic.sceneSync.destroy(cubes[cubes.length - 1]);
 		});
 
 		return sphere;
@@ -52,17 +52,17 @@ window.telekenetic = window.telekenetic || {};
 			new THREE.MeshBasicMaterial({ color: '#EB5B40' })
 		);
 		sphere.addBehaviors(
-			Bob({ shouldMove: true }),
-			ButtonStateStyle(),
-			Object3DSync({
+			new Bob({ shouldMove: true }),
+			new ButtonStateStyle(),
+			new Object3DSync({
 				position: true
 			})
 		);
-		telekenetic.sim.scene.add(sphere);
+		telekinetic.sim.scene.add(sphere);
 		return sphere;
 	}
 
-	telekenetic.createInstantiationSphere = createInstantiationSphere;
-	telekenetic.createDestructionSphere = createDestructionSphere;
-	telekenetic.createSphere = createSphere;
+	telekinetic.createInstantiationSphere = createInstantiationSphere;
+	telekinetic.createDestructionSphere = createDestructionSphere;
+	telekinetic.createSphere = createSphere;
 })();

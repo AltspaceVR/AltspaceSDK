@@ -1,6 +1,6 @@
-window.telekenetic = window.telekenetic || {};
+window.telekinetic = window.telekinetic || {};
 
-telekenetic.PushPull = function (config) {
+telekinetic.PushPull = function (config) {
 	config = config || {};
 
 	var object3d;

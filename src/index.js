@@ -22,5 +22,5 @@ if(window.AFRAME && !window.THREE){
 import * as components_lib from './components/index';
 import * as utilities_lib from './utilities/index';
 
-Object.assign(window.altspace.components, components_lib);
-Object.assign(window.altspace.utilities, utilities_lib);
+Object.assign(window.altspace.components || {}, components_lib);
+Object.assign(window.altspace.utilities || {}, utilities_lib);

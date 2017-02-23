@@ -3,8 +3,8 @@
 <head>
 <meta charset=utf-8>
 <title>Popup Example</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-<script src="../../dist/altspace.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../../dist/altspace.js"></script>
 </head>
 
 <body>
@@ -13,12 +13,12 @@ if (!window.altspace || !window.altspace.inClient) {
   document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 }
 
-var sim = altspace.utilities.Simulation();
+var sim = new altspace.utilities.Simulation();
 var config = { authorId: 'AltspaceVR', appId: 'Popup' };
 var sceneSync, popup;
 
 altspace.utilities.sync.connect(config).then(function(connection) {
-	sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+	sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {
 			'cube': createCube,
 			'sphere': createSphere,
@@ -98,7 +98,7 @@ function createThing(geometry, options) {
 	var cube = new THREE.Mesh(geometry, material);
 	cube.position.copy(options.position);
 	cube.addBehaviors(
-		altspace.utilities.behaviors.Object3DSync(),
+		new altspace.utilities.behaviors.Object3DSync(),
 		ShowPopup()
 	);
 	if (options.user) {

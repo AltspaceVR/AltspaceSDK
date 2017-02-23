@@ -1,4 +1,6 @@
-let 
+import Map from 'es6-map';
+
+let
 	behaviors = altspace.utilities.behaviors,
 	simulation = new altspace.utilities.Simulation(),
 	scene = window.scene = simulation.scene,

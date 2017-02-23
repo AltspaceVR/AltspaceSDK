@@ -6,7 +6,7 @@ import BrushBehavior from './behaviors/brush.js';
 const SteamVRInputBehavior = altspace.utilities.behaviors.SteamVRInput;
 const SteamVRTrackedObjectBehavior = altspace.utilities.behaviors.SteamVRTrackedObject;
 
-const sim = altspace.utilities.Simulation();
+const sim = new altspace.utilities.Simulation();
 const config = { authorId: 'AltspaceVR', appId: 'SpinningCube' };
 
 function createAxis() {
@@ -56,7 +56,7 @@ function createBrush({ hand, enclosure }) {
 function createClone({ position, rotation, scale }) {
 	const group = createAxis();
 	group.addBehaviors(
-		altspace.utilities.behaviors.Object3DSync()
+		new altspace.utilities.behaviors.Object3DSync()
 	);
 	group.position.set(position.x, position.y, position.z);
 	group.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
@@ -76,7 +76,7 @@ function createFocusCube({innerWidth, innerDepth, innerHeight, pixelsPerMeter}) 
 }
 
 altspace.utilities.sync.connect(config).then((connection) => {
-	const sceneSync = altspace.utilities.behaviors.SceneSync(connection.instance, {
+	const sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
 		instantiators: {
 			clone: createClone,
 		},
