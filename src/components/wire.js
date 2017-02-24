@@ -4,7 +4,7 @@ import {AFrameComponent} from './AFrameComponent';
 
 /**
 * The wire component allows you to trigger an event on another entity when an event
-* occurs on an entity. @aframe
+* occurs on an entity. If no targets are selected, it will target itself. @aframe
 * @alias wire
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
@@ -80,10 +80,12 @@ class Wire extends AFrameComponent
 		};
 	}
 
+	constructor(){
+		this.multiple = true;
+	}
+
 	init()
 	{
-		this.multiple = true;
-
 		this.actOnTargets = (function()
 		{
 			function act(el) {

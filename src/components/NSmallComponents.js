@@ -127,7 +127,7 @@ class NText extends NativeComponent {
 * @extends module:altspace/components.NativeComponent
 */
 class NBillboard extends NativeComponent {
-	constructor(){ super('n-billboard'); }
+	constructor(){ super('n-billboard', false); }
 }
 
 export {NObject, NSpawner, NText, NBillboard};

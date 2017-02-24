@@ -43,7 +43,6 @@ class AltspaceCursorCollider extends AFrameComponent
 	{
 		let obj = this.el.object3D;
 		if(obj){
-			console.log('Setting collider flag to', state);
 			safeDeepSet(obj.userData, ['altspace','collider','enabled'], state);
 			obj.traverse(subobj => {
 				if( subobj instanceof THREE.Mesh ){

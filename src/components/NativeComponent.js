@@ -32,8 +32,8 @@ class PlaceholderMesh extends THREE.Mesh {
 */
 class NativeComponent extends AFrameComponent
 {
-	constructor(name){
-		this.name = name;
+	constructor(name, sendUpdates = true){
+		Object.assign(this, {name, sendUpdates});
 	}
 
 	init()
@@ -53,7 +53,8 @@ class NativeComponent extends AFrameComponent
 
 	update(){
 		let mesh = this.mesh || this.el.object3DMap.mesh;
-		altspace.updateNativeComponent(mesh, this.name, this.data);
+		if(this.sendUpdates)
+			altspace.updateNativeComponent(mesh, this.name, this.data);
 	}
 
 	remove(){

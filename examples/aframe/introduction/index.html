@@ -2,8 +2,7 @@
 <head>
 	<title>Introduction</title>
 	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-	<script src="../../dist/aframe-altspace-component.js"></script>
-	<script src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
+	<script src="../../../dist/altspace.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
 	<script src="gallery.js"></script>
@@ -109,7 +108,7 @@
 		}
 	});
 
-	</script>
+</script>
 </head>
 <body>
 <a-scene debug altspace="fullspace: true" sync-system='author: altspacevr; app: native-gallery'>
@@ -143,8 +142,8 @@
 
 	<a-entity id="path1" unfolding-path="length:20" position="0 0 -6"></a-entity>
 	<a-entity id="trigger1" position="0 0 -16" n-box-collider="isTrigger:true; type:environment; size: 8 4 27" n-container="capacity:1"
-		wire="targets:#path1; gained: container-full; gain: unfolded"
-		wire__0="targets:#path1; lost: container-full; lose: unfolded">
+		wire="target:#path1; gained: container-full; gain: unfolded"
+		wire__0="target:#path1; lost: container-full; lose: unfolded">
 	</a-entity>
 
 	<!-- <a-entity n-object="res:architecture/floor-4w-4l" position="-2 0 -6" rotation="90 180 0">
@@ -174,7 +173,7 @@
 				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity>
 				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
 			</a-entity>
-			<a-entity class="ring" position="0 4" rotation="0 -45 180">
+			<a-entity class="ring" position="0 4 0" rotation="0 -45 180">
 				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
 				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
 				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
@@ -190,14 +189,21 @@
 
 	<a-entity class="platform" position="0 0 -32">
 
-			<a-entity position='0 10 0'
-				n-text='text: FAQ; fontSize: 40' n-billboard></a-entity>
+		<a-entity position='0 10 0' n-text='text: FAQ; fontSize: 40' n-billboard></a-entity>
 
 		<a-entity position='6 1 0' rotation='0 90 0' scale="0.3 0.3 0.3">
+
 			<a-entity position='0 3 -0.6' rotation='0 180 0'
 				n-text='text: What is the Playground?; fontSize: 4'></a-entity>
 			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
-				n-text='text: The Playground is an activity where you can easily and quickly create, share, and play web-based VR content that makes use of the advanced features in AltspaceVR. The space consists of a space-wide browser, and all the content you experience in this activity is defined via the web. Our initial release of the Playground focuses on spawnable physics items and the creation of games, puzzles, and environments that play well with them.; fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+				n-text='text: The Playground is an activity where you can easily
+				and quickly create, share, and play web-based VR content that makes
+				use of the advanced features in AltspaceVR. The space consists of
+				a space-wide browser, and all the content you experience in this
+				activity is defined via the web. Our initial release of the Playground
+				focuses on spawnable physics items and the creation of games,
+				puzzles, and environments that play well with them.;
+				fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
 			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
 				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
 				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
