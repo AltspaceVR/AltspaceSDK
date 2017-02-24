@@ -1,5 +1,6 @@
 'use strict';
 
+import 'es6-string-polyfills';
 import NativeComponent from './NativeComponent';
 
 /**
@@ -144,6 +145,7 @@ class NSound extends NativeComponent
 				}
 				this.data.src = location.origin + currPath + src;
 			}
+
 		}
 		super.init();
 	}
@@ -154,6 +156,7 @@ class NSound extends NativeComponent
 		if (this.playHandler) {
 		  this.el.removeEventListener(oldData.on, this.playHandler);
 		}
+
 		if (this.data.on) {
 		  this.playHandler = this.playSound.bind(this);
 		  this.el.addEventListener(this.data.on, this.playHandler);

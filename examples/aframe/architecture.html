@@ -2,12 +2,11 @@
 <html>
 <head>
 	<title>Native Architecture</title>
-	<script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
-	<script src="../../dist/aframe-altspace-component.js"></script>
-	<script src="http://sdk.altvr.com/libs/altspace.js/0.19.0/altspace.min.js"></script>
-	</head>
+	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="../../../dist/altspace.js"></script>
+</head>
 <body>
-<a-scene altspace>
+<a-scene altspace='fullspace: true'>
 	<a-entity class="room" position="0 -0.01 0">
 		<a-entity class="floor-half">
 			<a-entity n-object="res:architecture/floor-4w-4l" position="-6, 0, 2"></a-entity>

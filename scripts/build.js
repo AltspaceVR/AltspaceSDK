@@ -14,6 +14,7 @@ const gulp = require('gulp'),
 	rollup = require('rollup-stream'),
 	buble = require('rollup-plugin-buble'),
 	r_replace = require('rollup-plugin-replace'),
+	node_resolve = require('rollup-plugin-node-resolve'),
 
 	source = require('vinyl-source-stream'),
 	buffer = require('vinyl-buffer'),
@@ -40,7 +41,7 @@ const build_configs = {
 			please: 'Please',
 			threejs: 'THREE'
 		},
-		plugins: [buble(), r_replace({
+		plugins: [buble(), node_resolve({jsnext: true, main: true}), r_replace({
 			delimiters: ['{{', '}}'],
 			values: {
 				SDK_VERSION: version

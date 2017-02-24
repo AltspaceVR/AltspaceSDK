@@ -80,11 +80,11 @@ class Wire extends AFrameComponent
 		};
 	}
 
-	constructor()
+	init()
 	{
 		this.multiple = true;
 
-		this.actOnTargets = function()
+		this.actOnTargets = (function()
 		{
 			function act(el) {
 				if (this.data.emit) {
@@ -103,14 +103,18 @@ class Wire extends AFrameComponent
 
 			if(this.data.target)
 				act.call(this, this.data.target);
-		}.bind(this);
 
-		this.actOnTargetsIfStateMatches = function (event) {
+			if( !this.data.targets && !this.data.target )
+				act.call(this, this.el);
+
+		}).bind(this);
+
+		this.actOnTargetsIfStateMatches = (function (event) {
 			let state = event.detail.state;
 			if (state === this.data.gained || state === this.data.lost) {
 				this.actOnTargets();
 			}
-		}.bind(this);
+		}).bind(this);
 	}
 
 	update(oldData)
