@@ -51,12 +51,12 @@ function flatten(obj)
 
 function registerComponentClass(name, cls)
 {
-	AFRAME.registerComponent(name, flatten(new cls(true)));
+	AFRAME.registerComponent(name, flatten(new cls()));
 }
 
 function registerSystemClass(name, cls)
 {
-	AFRAME.registerSystem(name, flatten(new cls(true)));
+	AFRAME.registerSystem(name, flatten(new cls()));
 }
 
 export { AFrameComponent, AFrameSystem, registerComponentClass, registerSystemClass, flatten };

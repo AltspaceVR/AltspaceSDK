@@ -173,7 +173,7 @@ class NMeshCollider extends NCollider {
 		};
 	}
 
-	constructor(mesh = null){
+	constructor(mesh = null, data){
 		super('n-mesh-collider');
 		this.mesh = mesh;
 		this.subcomponents = [];
@@ -187,11 +187,12 @@ class NMeshCollider extends NCollider {
 		else
 		{
 			this.subcomponents = [];
-			let mesh = this.el.object3DMap.mesh;
+			let mesh = this.el.object3D;
 			mesh.traverse((o => {
 				if(o instanceof THREE.Mesh){
 					let subcomp = new NMeshCollider(o);
 					this.subcomponents.push(subcomp);
+					subcomp.data = this.data;
 					subcomp.init();
 				}
 			}).bind(this));

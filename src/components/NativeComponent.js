@@ -53,8 +53,9 @@ class NativeComponent extends AFrameComponent
 
 	update(){
 		let mesh = this.mesh || this.el.object3DMap.mesh;
-		if(this.sendUpdates)
+		if(this.sendUpdates){
 			altspace.updateNativeComponent(mesh, this.name, this.data);
+		}
 	}
 
 	remove(){

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Mesh Collider Test</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../../dist/altspace.js"></script>
+	<script>
+		AFRAME.registerComponent('model-color', {
+			schema: {type: 'int', default: 0xffffff},
+			init: function(){
+				this.el.addEventListener('model-loaded', this.update.bind(this));
+			},
+			update: function(){
+				this.el.object3D.traverse((function(o){
+					if(o instanceof THREE.Mesh && o.material){
+						o.material.color.setHex(this.data);
+					}
+				}).bind(this));
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<a-scene altspace="fullspace: true">
+
+		<!--a-assets>
+			<a-asset-item id='test-obj' src='resources/test.obj'></a-asset-item>
+			<a-asset-item id='test-mtl' src='resources/test.mtl'></a-asset-item>
+			<a-asset-item id='test-dae' src='resources/test.dae'></a-asset-item>
+		</a-assets-->
+
+		<a-entity position="-3 1 0" n-spawner="res: interactables/basketball"></a-entity>
+
+		<a-sphere position="3 0 0" color='red' segments-width="8" segments-height="8"
+			n-mesh-collider="type: environment; convex: true;">
+		</a-sphere>
+
+		<a-sphere position="0 0 0" color='blue' segments-width="8" segments-height="8"
+			n-mesh-collider="type: environment; convex: false;">
+		</a-sphere>
+
+		<!-- yellow -->
+		<a-obj-model src="resources/test.obj" mtl="resources/test.mtl" position="0 0 4"
+			model-color='16776960' n-mesh-collider="type: environment; convex: false">
+		</a-obj-model>
+
+		<!-- magenta -->
+		<a-obj-model src="resources/test.obj" mtl="resources/test.mtl" position="0 0 8"
+			model-color='16711935' n-mesh-collider="type: environment; convex: true">
+		</a-obj-model>
+
+		<!-- cyan -->
+		<a-collada-model src="resources/test.dae" position="0 0 12"
+			model-color='65535' n-mesh-collider="type: environment; convex: false">
+		</a-collada-model>
+
+		<a-entity position="0 1 14" n-spawner="res: interactables/basketball"></a-entity>
+	</a-scene>
+</body>
+
+</html>

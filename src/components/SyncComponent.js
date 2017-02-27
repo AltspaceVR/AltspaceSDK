@@ -12,10 +12,8 @@ import {AFrameComponent} from './AFrameComponent';
 */
 class SyncComponent extends AFrameComponent
 {
-	constructor(isComponent = false)
+	constructor()
 	{
-		this._isComponent = isComponent;
-
 		this.scene = undefined;
 		this.syncSys = undefined;
 		this.ref = undefined;
