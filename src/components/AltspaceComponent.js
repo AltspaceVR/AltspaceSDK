@@ -5,7 +5,8 @@ import {AFrameComponent} from './AFrameComponent';
 /**
 * The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
 *
-* **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
+* **Note**: This component can have side-effects on some default components. To be
+* safe, this component should be specified last.
 *
 * @example
 * <head>
@@ -98,17 +99,19 @@ class AltspaceComponent extends AFrameComponent
 	initRenderer()
 	{
 		let scene = this.el.object3D;
+		let naturalScale = this.el.sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
 		altspace.getEnclosure().then((e =>
 		{
+
 			if(this.data.fullspace){
 				e.requestFullspace();
 				e.addEventListener('fullspacechange', () => {
-					scene.scale.setScalar(e.pixelsPerMeter);
+					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
 				});
 			}
 
 			if (!this.data.usePixelScale || this.data.fullspace){
-				scene.scale.setScalar(e.pixelsPerMeter);
+				scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
 			}
 
 			switch (this.data.verticalAlign) {

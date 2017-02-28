@@ -2,11 +2,10 @@
   <head>
     <title>A-Frame Altspace Component - Test Sync</title>
       <script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
-      <script src="../../dist/aframe-altspace-component.js"></script>
-      <script src="http://sdk.altvr.com/libs/altspace.js/0.19.2/altspace.min.js"></script>
+      <script src="../../../dist/altspace.js"></script>
   </head>
 <body>
-    <a-scene debug altspace sync-system="author: altspacevr; app: sync-test">
+    <a-scene debug sync-system="author: altspacevr; app: sync-test" altspace>
         <a-assets>
             <a-mixin id="coneGeo" geometry="primitive: cone; radius-top: 0; radius-bottom: 0.5" material="color: grey"></a-mixin>
             <a-mixin id="sphereGeo" geometry="primitive: sphere; radius: 0.5;" material="color: grey"></a-mixin>

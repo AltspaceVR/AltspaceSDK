@@ -33,6 +33,7 @@ class SyncColor extends AFrameComponent
 		let colorRef = this.sync.dataRef.child('material/color');
 		let refChangedLocked = false;
 		let firstValue = true;
+		let self = this;
 
 		this.el.addEventListener('componentchanged', event =>
 		{
@@ -40,14 +41,13 @@ class SyncColor extends AFrameComponent
 			let oldData = event.detail.oldData;
 			let newData = event.detail.newData;
 
-			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && sync.isMine)
+			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && self.sync.isMine)
 			{
 				//For some reason A-Frame has a misconfigured material reference if we do this too early
 				setTimeout(() => colorRef.set(newData.color), 0);
 			}
 		});
 
-		let self = this;
 		colorRef.on('value', snapshot => {
 			if(!self.sync.isMine || firstValue)
 			{
