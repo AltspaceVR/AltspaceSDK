@@ -3,9 +3,9 @@
 	<head>
 		<title>Behavior Tests</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
-		<script src="../../dist/altspace.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../../dist/altspace.js"></script>
 	</head>
 	<body>
 		<select id="behaviorSelector">
@@ -28,7 +28,7 @@
 
 			var boxSize = 1;
 
-			var boxTex = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg');
+			var boxTex = new THREE.TextureLoader().load('resources/UV_Grid_Sm.jpg');
 			var boxMesh = new THREE.Mesh(
 				new THREE.BoxGeometry(boxSize, boxSize, boxSize),
 				new THREE.MeshBasicMaterial({color: 'green', map: boxTex}));
@@ -39,7 +39,8 @@
 
 			var behaviorSelector = document.getElementById('behaviorSelector')
 
-			var behaviorConfigs = Array.from(behaviorSelector.options).reduce(function (configs, opt) {
+			var behaviorConfigs = Array.prototype.slice.call(behaviorSelector.options)
+			.reduce(function (configs, opt) {
 				if (opt.dataset.config) {
 					configs[opt.value] = JSON.parse(opt.dataset.config);
 				}
@@ -60,10 +61,9 @@
 				var behavior = altspace.utilities.behaviors[behaviorName];
 				var config = behaviorConfigs[behaviorName];
 				boxMesh.addBehavior(new behavior(config));
-				behaviorSelector.selectedIndex = Array.from(behaviorSelector.options).
+				behaviorSelector.selectedIndex = Array.prototype.slice.call(behaviorSelector.options).
 					map(function (opt) { return opt.value; }).indexOf(behaviorName);
 			}
 		</script>
 	</body>
 </html>
-

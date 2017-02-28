@@ -3,9 +3,9 @@
 	<head>
 		<title>Renderer Tests</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/libs/stats.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 		<style>body { font: bold 20pt sans-serif; background: white; margin-top: 40pt; }</style>
 	</head>
@@ -18,7 +18,7 @@
 			window.scene = scene = new THREE.Scene();
 
 			function makeTestPlane (wrapping, x) {
-				var texture = THREE.ImageUtils.loadTexture('../images/UV_Grid_Sm.jpg');
+				var texture = THREE.ImageUtils.loadTexture('resources/UV_Grid_Sm.jpg');
 				texture.wrapS = texture.wrapT = wrapping;
 				var textureMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 				var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), textureMat);
@@ -71,7 +71,7 @@
 					info.textContent = `${j.toFixed(2)}, ${k.toFixed(2)}`;
 				});
 
-				if (!window.altspace) { 
+				if (!window.altspace) {
 					controls.update();
 				}
 
