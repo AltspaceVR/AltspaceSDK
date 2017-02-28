@@ -32,6 +32,8 @@ import SyncSystem from './SyncSystem';
 import SyncTransform from './sync-transform';
 import SyncNSound from './sync-n-sound';
 import Wire from './wire';
+import OnePerUser from './one-per-user';
+import Instantiator from './instantiator';
 
 import {NObject, NSpawner, NText, NBillboard} from './NSmallComponents';
 import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
@@ -49,6 +51,8 @@ if (window.AFRAME)
 	registerComponentClass('sync', SyncComponent);
 	registerComponentClass('sync-n-sound', SyncNSound);
 	registerComponentClass('wire', Wire);
+	registerComponentClass('one-per-user', OnePerUser);
+	registerComponentClass('instantiator', Instantiator);
 	registerComponentClass('n-object', NObject);
 	registerComponentClass('n-spawner', NSpawner);
 	registerComponentClass('n-text', NText);
@@ -63,7 +67,7 @@ if (window.AFRAME)
 
 export {
 	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
-	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire,
+	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
 	NObject, NSpawner, NText, NBillboard, NContainer, NSound,
 	NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider
 };
