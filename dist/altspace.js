@@ -263,10 +263,10 @@ U.prototype.pe=function(a,b){x("Firebase.changeEmail",2,2,arguments.length);fg("
 U.prototype.We=function(a,b){x("Firebase.resetPassword",2,2,arguments.length);fg("Firebase.resetPassword",1,a,!1);gg("Firebase.resetPassword",a,"email");A("Firebase.resetPassword",2,b,!1);this.k.N.We(a,b)};U.prototype.resetPassword=U.prototype.We;})();
 
 
-var Url=function(){"use strict";var t={protocol:"protocol",host:"hostname",port:"port",path:"pathname",query:"search",hash:"hash"},r={ftp:21,gopher:70,http:80,https:443,ws:80,wss:443},o=function(o,e){var a=document,i=a.createElement("a"),e=e||a.location.href,n=e.match(/\/\/(.*?)(?::(.*?))?@/)||[];i.href=e;for(var h in t)o[h]=i[t[h]]||"";if(o.protocol=o.protocol.replace(/:$/,""),o.query=o.query.replace(/^\?/,""),o.hash=o.hash.replace(/^#/,""),o.user=n[1]||"",o.pass=n[2]||"",o.port=r[o.protocol]==o.port||0==o.port?"":o.port,o.protocol||/^([a-z]+:)?\/\//.test(e))o.path=o.path.replace(/^\/?/,"/");else{var p=new Url(a.location.href.match(/(.*\/)/)[0]),c=p.path.split("/"),f=o.path.split("/");c.pop();for(var h=0,u=["protocol","user","pass","host","port"],l=u.length;h<l;h++)o[u[h]]=p[u[h]];for(;".."==f[0];)c.pop(),f.shift();o.path=("/"!=e.substring(0,1)?c.join("/"):"")+"/"+f.join("/")}s(o)},e=function(t){return t=t.replace(/\+/g," "),t=t.replace(/%([ef][0-9a-f])%([89ab][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o,e){var s=parseInt(r,16)-224,a=parseInt(o,16)-128;if(0==s&&a<32)return t;var i=parseInt(e,16)-128,n=(s<<12)+(a<<6)+i;return n>65535?t:String.fromCharCode(n)}),t=t.replace(/%([cd][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o){var e=parseInt(r,16)-192;if(e<2)return t;var s=parseInt(o,16)-128;return String.fromCharCode((e<<6)+s)}),t=t.replace(/%([0-7][0-9a-f])/gi,function(t,r){return String.fromCharCode(parseInt(r,16))})},s=function(t){var r=t.query;t.query=new function(t){for(var r,o=/([^=&]+)(=([^&]*))?/g;r=o.exec(t);){var s=decodeURIComponent(r[1].replace(/\+/g," ")),a=r[3]?e(r[3]):"";null!=this[s]?(this[s]instanceof Array||(this[s]=[this[s]]),this[s].push(a)):this[s]=a}this.clear=function(){for(s in this)this[s]instanceof Function||delete this[s]},this.toString=function(){var t="",r=encodeURIComponent;for(var o in this)if(!(this[o]instanceof Function))if(this[o]instanceof Array){var e=this[o].length;if(e)for(var s=0;s<e;s++)t+=t?"&":"",t+=r(o)+"="+r(this[o][s]);else t+=(t?"&":"")+r(o)+"="}else t+=t?"&":"",t+=r(o)+"="+r(this[o]);return t}}(r)};return function(t){this.toString=function(){return(this.protocol&&this.protocol+"://")+(this.user&&this.user+(this.pass&&":"+this.pass)+"@")+(this.host&&this.host)+(this.port&&":"+this.port)+(this.path&&this.path)+(this.query.toString()&&"?"+this.query)+(this.hash&&"#"+this.hash)},o(this,t)}}();
 /*!Please JS v0.4.2, Jordan Checkman 2014, Checkman.io, MIT License, Have fun.*/
 !function(e,r,a){"function"==typeof define&&define.amd?define([],a):"object"==typeof exports?module.exports=a():r[e]=a()}("Please",this,function(){"use strict";function e(){function e(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),Math.floor(o()*(r-e+1))+e}function r(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),o()*(r-e)+e}function a(e,r,a){return Math.max(r,Math.min(e,a))}function o(e,r){var a;switch(e){case"hex":for(a=0;a<r.length;a++)r[a]=F.HSV_to_HEX(r[a]);break;case"rgb":for(a=0;a<r.length;a++)r[a]=F.HSV_to_RGB(r[a]);break;case"rgb-string":for(a=0;a<r.length;a++){var o=F.HSV_to_RGB(r[a]);r[a]="rgb("+o.r+","+o.g+","+o.b+")"}break;case"hsv":break;default:console.error("Format not recognized.")}return r}function n(e){var r=F.HSV_to_RGB(e),a=(299*r.r+587*r.g+114*r.b)/1e3;return a>=128?"dark":"light"}function t(e){var r={};for(var a in e)e.hasOwnProperty(a)&&(r[a]=e[a]);return r}function l(e){function r(){o=(o+1)%256,n=(n+a[o])%256;var e=a[o];return a[o]=a[n],a[n]=e,a[(a[o]+a[n])%256]}for(var a=[],o=0,n=0,t=0;256>t;t++)a[t]=t;for(var l=0,F=0;256>l;l++){F=(F+a[l]+e.charCodeAt(l%e.length))%256;var s=a[l];a[l]=a[F],a[F]=s}this.random=function(){for(var e=0,a=0,o=1;8>e;e++)a+=r()*o,o*=256;return a/0x10000000000000000}}var F={},s={aliceblue:"F0F8FF",antiquewhite:"FAEBD7",aqua:"00FFFF",aquamarine:"7FFFD4",azure:"F0FFFF",beige:"F5F5DC",bisque:"FFE4C4",black:"000000",blanchedalmond:"FFEBCD",blue:"0000FF",blueviolet:"8A2BE2",brown:"A52A2A",burlywood:"DEB887",cadetblue:"5F9EA0",chartreuse:"7FFF00",chocolate:"D2691E",coral:"FF7F50",cornflowerblue:"6495ED",cornsilk:"FFF8DC",crimson:"DC143C",cyan:"00FFFF",darkblue:"00008B",darkcyan:"008B8B",darkgoldenrod:"B8860B",darkgray:"A9A9A9",darkgrey:"A9A9A9",darkgreen:"006400",darkkhaki:"BDB76B",darkmagenta:"8B008B",darkolivegreen:"556B2F",darkorange:"FF8C00",darkorchid:"9932CC",darkred:"8B0000",darksalmon:"E9967A",darkseagreen:"8FBC8F",darkslateblue:"483D8B",darkslategray:"2F4F4F",darkslategrey:"2F4F4F",darkturquoise:"00CED1",darkviolet:"9400D3",deeppink:"FF1493",deepskyblue:"00BFFF",dimgray:"696969",dimgrey:"696969",dodgerblue:"1E90FF",firebrick:"B22222",floralwhite:"FFFAF0",forestgreen:"228B22",fuchsia:"FF00FF",gainsboro:"DCDCDC",ghostwhite:"F8F8FF",gold:"FFD700",goldenrod:"DAA520",gray:"808080",grey:"808080",green:"008000",greenyellow:"ADFF2F",honeydew:"F0FFF0",hotpink:"FF69B4",indianred:"CD5C5C",indigo:"4B0082",ivory:"FFFFF0",khaki:"F0E68C",lavender:"E6E6FA",lavenderblush:"FFF0F5",lawngreen:"7CFC00",lemonchiffon:"FFFACD",lightblue:"ADD8E6",lightcoral:"F08080",lightcyan:"E0FFFF",lightgoldenrodyellow:"FAFAD2",lightgray:"D3D3D3",lightgrey:"D3D3D3",lightgreen:"90EE90",lightpink:"FFB6C1",lightsalmon:"FFA07A",lightseagreen:"20B2AA",lightskyblue:"87CEFA",lightslategray:"778899",lightslategrey:"778899",lightsteelblue:"B0C4DE",lightyellow:"FFFFE0",lime:"00FF00",limegreen:"32CD32",linen:"FAF0E6",magenta:"FF00FF",maroon:"800000",mediumaquamarine:"66CDAA",mediumblue:"0000CD",mediumorchid:"BA55D3",mediumpurple:"9370D8",mediumseagreen:"3CB371",mediumslateblue:"7B68EE",mediumspringgreen:"00FA9A",mediumturquoise:"48D1CC",mediumvioletred:"C71585",midnightblue:"191970",mintcream:"F5FFFA",mistyrose:"FFE4E1",moccasin:"FFE4B5",navajowhite:"FFDEAD",navy:"000080",oldlace:"FDF5E6",olive:"808000",olivedrab:"6B8E23",orange:"FFA500",orangered:"FF4500",orchid:"DA70D6",palegoldenrod:"EEE8AA",palegreen:"98FB98",paleturquoise:"AFEEEE",palevioletred:"D87093",papayawhip:"FFEFD5",peachpuff:"FFDAB9",peru:"CD853F",pink:"FFC0CB",plum:"DDA0DD",powderblue:"B0E0E6",purple:"800080",rebeccapurple:"663399",red:"FF0000",rosybrown:"BC8F8F",royalblue:"4169E1",saddlebrown:"8B4513",salmon:"FA8072",sandybrown:"F4A460",seagreen:"2E8B57",seashell:"FFF5EE",sienna:"A0522D",silver:"C0C0C0",skyblue:"87CEEB",slateblue:"6A5ACD",slategray:"708090",slategrey:"708090",snow:"FFFAFA",springgreen:"00FF7F",steelblue:"4682B4",tan:"D2B48C",teal:"008080",thistle:"D8BFD8",tomato:"FF6347",turquoise:"40E0D0",violet:"EE82EE",wheat:"F5DEB3",white:"FFFFFF",whitesmoke:"F5F5F5",yellow:"FFFF00",yellowgreen:"9ACD32"},i=.618033988749895,u={hue:null,saturation:null,value:null,base_color:"",greyscale:!1,grayscale:!1,golden:!0,full_random:!1,colors_returned:1,format:"hex",seed:null},c={scheme_type:"analogous",format:"hex"},h={golden:!1,format:"hex"};return F.NAME_to_HEX=function(e){return e=e.toLowerCase(),e in s?s[e]:(console.error("Color name not recognized."),void 0)},F.NAME_to_RGB=function(e){return F.HEX_to_RGB(F.NAME_to_HEX(e))},F.NAME_to_HSV=function(e){return F.HEX_to_HSV(F.NAME_to_HEX(e))},F.HEX_to_RGB=function(e){var r=/^#?([a-f\d])([a-f\d])([a-f\d])$/i;e=e.replace(r,function(e,r,a,o){return r+r+a+a+o+o});var a=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);return a?{r:parseInt(a[1],16),g:parseInt(a[2],16),b:parseInt(a[3],16)}:null},F.RGB_to_HEX=function(e){return"#"+((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},F.HSV_to_RGB=function(e){var r,a,o,n,t,l,F,s,i=e.h,u=e.s,c=e.v;if(0===u)return{r:c,g:c,b:c};switch(i/=60,n=Math.floor(i),t=i-n,l=c*(1-u),F=c*(1-u*t),s=c*(1-u*(1-t)),n){case 0:r=c,a=s,o=l;break;case 1:r=F,a=c,o=l;break;case 2:r=l,a=c,o=s;break;case 3:r=l,a=F,o=c;break;case 4:r=s,a=l,o=c;break;case 5:r=c,a=l,o=F}return{r:Math.floor(255*r),g:Math.floor(255*a),b:Math.floor(255*o)}},F.RGB_to_HSV=function(e){var r=e.r/255,a=e.g/255,o=e.b/255,n=0,t=0,l=0,F=Math.min(r,Math.min(a,o)),s=Math.max(r,Math.max(a,o));if(F===s)return l=F,{h:0,s:0,v:l};var i=r===F?a-o:o===F?r-a:o-r,u=r===F?3:o===F?1:5;return n=60*(u-i/(s-F)),t=(s-F)/s,l=s,{h:n,s:t,v:l}},F.HSV_to_HEX=function(e){return F.RGB_to_HEX(F.HSV_to_RGB(e))},F.HEX_to_HSV=function(e){return F.RGB_to_HSV(F.HEX_to_RGB(e))},F.make_scheme=function(e,r){function n(e){return{h:e.h,s:e.s,v:e.v}}var l,F,s,i,u,h=t(c);if(null!==r)for(var d in r)r.hasOwnProperty(d)&&(h[d]=r[d]);var g=[e];switch(h.scheme_type.toLowerCase()){case"monochromatic":case"mono":for(u=1;2>=u;u++)l=n(e),s=l.s+.1*u,s=a(s,0,1),i=l.v+.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);for(u=1;2>=u;u++)l=n(e),s=l.s-.1*u,s=a(s,0,1),i=l.v-.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);break;case"complementary":case"complement":case"comp":l=n(e),l.h=(l.h+180)%360,g.push(l);break;case"split-complementary":case"split-complement":case"split":l=n(e),l.h=(l.h+165)%360,g.push(l),l=n(e),l.h=Math.abs((l.h-165)%360),g.push(l);break;case"double-complementary":case"double-complement":case"double":l=n(e),l.h=(l.h+180)%360,g.push(l),l.h=(l.h+30)%360,F=n(l),g.push(l),l.h=(l.h+180)%360,g.push(F);break;case"analogous":case"ana":for(u=1;5>=u;u++)l=n(e),l.h=(l.h+20*u)%360,g.push(l);break;case"triadic":case"triad":case"tri":for(u=1;3>u;u++)l=n(e),l.h=(l.h+120*u)%360,g.push(l);break;default:console.error("Color scheme not recognized.")}return o(h.format.toLowerCase(),g),g},F.make_color=function(n){var s=[],c=t(u),h=null;if(null!==n)for(var d in n)n.hasOwnProperty(d)&&(c[d]=n[d]);var g=null;"string"==typeof c.seed&&(g=new l(c.seed)),c.base_color.length>0&&(h=c.base_color.match(/^#?([0-9a-f]{3})([0-9a-f]{3})?$/i)?F.HEX_to_HSV(c.base_color):F.NAME_to_HSV(c.base_color));for(var m=0;m<c.colors_returned;m++){var f,E,b,p=e(0,360,g);null!==h?(f=a(e(h.h-5,h.h+5,g),0,360),E=0===h.s?0:r(.4,.85,g),b=r(.4,.85,g),s.push({h:f,s:E,v:b})):(f=c.greyscale===!0||c.grayscale===!0?0:c.golden===!0?(p+p/i)%360:null===c.hue||c.full_random===!0?p:a(c.hue,0,360),E=c.greyscale===!0||c.grayscale===!0?0:c.full_random===!0?r(0,1,g):null===c.saturation?.4:a(c.saturation,0,1),b=c.full_random===!0?r(0,1,g):c.greyscale===!0||c.grayscale===!0?r(.15,.75,g):null===c.value?.75:a(c.value,0,1),s.push({h:f,s:E,v:b}))}return o(c.format.toLowerCase(),s),s},F.make_contrast=function(e,r){var l=t(h);if(null!==r)for(var s in r)r.hasOwnProperty(s)&&(l[s]=r[s]);var u,c,d=n(e);if(l.golden===!0)c=e.h*(1+i)%360;else{var g=F.make_scheme(e,{scheme_type:"complementary",format:"hsv"})[1];c=a(g.h-30,0,360)}var m;return"dark"===d?m=a(e.v-.25,0,1):"light"===d&&(m=a(e.v+.25,0,1)),u=[{h:c,s:e.s,v:m}],o(l.format.toLowerCase(),u),u[0]},F}return e()});
-(function (exports,Firebase,Url,Please) {
+var Url=function(){"use strict";var t={protocol:"protocol",host:"hostname",port:"port",path:"pathname",query:"search",hash:"hash"},r={ftp:21,gopher:70,http:80,https:443,ws:80,wss:443},o=function(o,e){var a=document,i=a.createElement("a"),e=e||a.location.href,n=e.match(/\/\/(.*?)(?::(.*?))?@/)||[];i.href=e;for(var h in t)o[h]=i[t[h]]||"";if(o.protocol=o.protocol.replace(/:$/,""),o.query=o.query.replace(/^\?/,""),o.hash=o.hash.replace(/^#/,""),o.user=n[1]||"",o.pass=n[2]||"",o.port=r[o.protocol]==o.port||0==o.port?"":o.port,o.protocol||/^([a-z]+:)?\/\//.test(e))o.path=o.path.replace(/^\/?/,"/");else{var p=new Url(a.location.href.match(/(.*\/)/)[0]),c=p.path.split("/"),f=o.path.split("/");c.pop();for(var h=0,u=["protocol","user","pass","host","port"],l=u.length;h<l;h++)o[u[h]]=p[u[h]];for(;".."==f[0];)c.pop(),f.shift();o.path=("/"!=e.substring(0,1)?c.join("/"):"")+"/"+f.join("/")}s(o)},e=function(t){return t=t.replace(/\+/g," "),t=t.replace(/%([ef][0-9a-f])%([89ab][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o,e){var s=parseInt(r,16)-224,a=parseInt(o,16)-128;if(0==s&&a<32)return t;var i=parseInt(e,16)-128,n=(s<<12)+(a<<6)+i;return n>65535?t:String.fromCharCode(n)}),t=t.replace(/%([cd][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o){var e=parseInt(r,16)-192;if(e<2)return t;var s=parseInt(o,16)-128;return String.fromCharCode((e<<6)+s)}),t=t.replace(/%([0-7][0-9a-f])/gi,function(t,r){return String.fromCharCode(parseInt(r,16))})},s=function(t){var r=t.query;t.query=new function(t){for(var r,o=/([^=&]+)(=([^&]*))?/g;r=o.exec(t);){var s=decodeURIComponent(r[1].replace(/\+/g," ")),a=r[3]?e(r[3]):"";null!=this[s]?(this[s]instanceof Array||(this[s]=[this[s]]),this[s].push(a)):this[s]=a}this.clear=function(){for(s in this)this[s]instanceof Function||delete this[s]},this.toString=function(){var t="",r=encodeURIComponent;for(var o in this)if(!(this[o]instanceof Function))if(this[o]instanceof Array){var e=this[o].length;if(e)for(var s=0;s<e;s++)t+=t?"&":"",t+=r(o)+"="+r(this[o][s]);else t+=(t?"&":"")+r(o)+"="}else t+=t?"&":"",t+=r(o)+"="+r(this[o]);return t}}(r)};return function(t){this.toString=function(){return(this.protocol&&this.protocol+"://")+(this.user&&this.user+(this.pass&&":"+this.pass)+"@")+(this.host&&this.host)+(this.port&&":"+this.port)+(this.path&&this.path)+(this.query.toString()&&"?"+this.query)+(this.hash&&"#"+this.hash)},o(this,t)}}();
+(function (Firebase,Url,Please) {
 'use strict';
 
 Firebase = 'default' in Firebase ? Firebase['default'] : Firebase;
@@ -337,12 +337,12 @@ function flatten(obj)
 
 function registerComponentClass(name, cls)
 {
-	AFRAME.registerComponent(name, flatten(new cls(true)));
+	AFRAME.registerComponent(name, flatten(new cls()));
 }
 
 function registerSystemClass(name, cls)
 {
-	AFRAME.registerSystem(name, flatten(new cls(true)));
+	AFRAME.registerSystem(name, flatten(new cls()));
 }
 
 function safeDeepSet(obj, keys, value)
@@ -356,11 +356,11 @@ function safeDeepSet(obj, keys, value)
 }
 
 /**
-* Enable or disable cursor collision on the object.
+* Enable or disable cursor collision on the object. @aframe
+* @alias altspace-cursor-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
-
 var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 	function AltspaceCursorCollider () {
 		AFrameComponent$$1.apply(this, arguments);
@@ -373,7 +373,17 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 	var prototypeAccessors = { schema: {} };
 
 	prototypeAccessors.schema.get = function (){
-		return {enabled: {type: 'boolean', default: 'true'}};
+		return {
+			/**
+			* The state of the cursor collider. If `true`, the object can be clicked,
+			* and things behind this object cannot be clicked.
+			* @instance
+			* @member {boolean} enabled
+			* @default true
+			* @memberof module:altspace/components.altspace-cursor-collider
+			*/
+			enabled: {type: 'boolean', default: 'true'}
+		};
 	};
 
 	AltspaceCursorCollider.prototype.init = function init ()
@@ -395,7 +405,6 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 	{
 		var obj = this.el.object3D;
 		if(obj){
-			console.log('Setting collider flag to', state);
 			safeDeepSet(obj.userData, ['altspace','collider','enabled'], state);
 			obj.traverse(function (subobj) {
 				if( subobj instanceof THREE.Mesh ){
@@ -412,7 +421,8 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 
 /**
 * Enables tracked control support for A-Frame applications that use the built-in
-* `tracked-controls`, `vive-controls` or `hand-controls` components.
+* `tracked-controls`, `vive-controls` or `hand-controls` components. @aframe
+* @alias altspace-tracked-controls
 * @extends module:altspace/components.AFrameComponent
 * @memberof module:altspace/components
 */
@@ -467,15 +477,16 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
-* The altspace component makes A-Frame apps compatible with AltspaceVR.
+* The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
 *
-* **Note**: If you use the `embedded` A-Frame component on your scene, you must include it *before* the `altspace` component, or your app will silently fail.
+* **Note**: This component can have side-effects on some default components. To be
+* safe, this component should be specified last.
 *
 * @example
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/aframe-altspace-component/vAFRAME_ALTSPACE_VERSION/dist/aframe-altspace-component.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -483,6 +494,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 *   </a-scene>
 * </body>
 *
+* @alias altspace
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
@@ -499,10 +511,43 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 
 	prototypeAccessors.schema.get = function (){
 		return {
+
+			/**
+			* Allows you to use A-Frame units as CSS pixels.
+			* This is the default behavior for three.js apps, but not for A-Frame apps.
+			* @instance
+			* @member {boolean} usePixelScale
+			* @default false
+			* @memberof module:altspace/components.altspace
+			*/
 			usePixelScale: { type: 'boolean', default: 'false'},
+
+			/**
+			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
+			* @instance
+			* @member {string} verticalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.altspace
+			*/
 			verticalAlign: { type: 'string',  default: 'middle'},
-			enclosuresOnly:{ type: 'boolean', default: 'true'},
-			fullspace:     { type: 'boolean', default: 'false'}
+
+			/**
+			* Prevents the scene from being created if enclosure is flat.
+			* @instance
+			* @member {boolean} enclosuresOnly
+			* @default true
+			* @memberof module:altspace/components.altspace
+			*/
+			enclosuresOnly: { type: 'boolean', default: 'true'},
+
+			/**
+			* Puts the app into fullspace mode.
+			* @instance
+			* @member {boolean} fullspace
+			* @default false
+			* @memberof module:altspace/components.altspace
+			*/
+			fullspace: { type: 'boolean', default: 'false'}
 		}
 	};
 
@@ -539,16 +584,18 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		var this$1 = this;
 
 		var scene = this.el.object3D;
+		var naturalScale = this.el.sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
 		altspace.getEnclosure().then((function (e) {
+
 			if(this$1.data.fullspace){
 				e.requestFullspace();
 				e.addEventListener('fullspacechange', function () {
-					scene.scale.setScalar(e.pixelsPerMeter);
+					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
 				});
 			}
 
 			if (!this$1.data.usePixelScale || this$1.data.fullspace){
-				scene.scale.setScalar(e.pixelsPerMeter);
+				scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
 			}
 
 			switch (this$1.data.verticalAlign) {
@@ -699,7 +746,8 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 /**
 * Sync the color property of the object between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
-* [sync]{@link module:altspace/components.sync} component on the target entity.
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-color
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
@@ -735,20 +783,20 @@ var SyncColor = (function (AFrameComponent$$1) {
 		var colorRef = this.sync.dataRef.child('material/color');
 		var refChangedLocked = false;
 		var firstValue = true;
+		var self = this;
 
 		this.el.addEventListener('componentchanged', function (event) {
 			var name = event.detail.name;
 			var oldData = event.detail.oldData;
 			var newData = event.detail.newData;
 
-			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && sync.isMine)
+			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && self.sync.isMine)
 			{
 				//For some reason A-Frame has a misconfigured material reference if we do this too early
 				setTimeout(function () { return colorRef.set(newData.color); }, 0);
 			}
 		});
 
-		var self = this;
 		colorRef.on('value', function (snapshot) {
 			if(!self.sync.isMine || firstValue)
 			{
@@ -771,17 +819,14 @@ var SyncColor = (function (AFrameComponent$$1) {
 /**
 * Enables the synchronization of properties of the entity. Must be used in
 * conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
-* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}).
+* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
+* @alias sync
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
 var SyncComponent = (function (AFrameComponent$$1) {
-	function SyncComponent(isComponent)
+	function SyncComponent()
 	{
-		if ( isComponent === void 0 ) isComponent = false;
-
-		this._isComponent = isComponent;
-
 		this.scene = undefined;
 		this.syncSys = undefined;
 		this.ref = undefined;
@@ -794,7 +839,9 @@ var SyncComponent = (function (AFrameComponent$$1) {
 
 		/**
 		* Indicates whether the sync ownership is yours.
-		* @member sync.sync#isMine
+		* @instance
+		* @member {boolean} isMine
+		* @memberof module:altspace/components.sync
 		* @readonly
 		*/
 		this.isMine = false;
@@ -806,14 +853,18 @@ var SyncComponent = (function (AFrameComponent$$1) {
 
 	var prototypeAccessors = { schema: {} };
 
-	/**
-	* @prop {string} ownOn - The name of the event, or a list of events, that
-	* will cause the local client to take ownership of this object. This field
-	* cannot be updated after initialization.
-	*/
 	prototypeAccessors.schema.get = function (){
 		return {
 			mode: { default: 'link' },
+
+			/**
+			* The name of the event, or a list of events, that
+			* will cause the local client to take ownership of this object. This field
+			* cannot be updated after initialization.
+			* @instance
+			* @member {string} ownOn
+			* @memberof module:altspace/components.sync
+			*/
 			ownOn: { type: 'string' } //cannot be changed after creation
 		};
 	};
@@ -846,7 +897,9 @@ var SyncComponent = (function (AFrameComponent$$1) {
 	/**
 	* Tell sync to start pushing local property values instead of updating
 	* local from remote values.
-	* @method sync.sync#takeOwnership
+	* @instance
+	* @method takeOwnership
+	* @memberof module:altspace/components.sync
 	*/
 	SyncComponent.prototype.takeOwnership = function takeOwnership ()
 	{
@@ -940,7 +993,8 @@ var SyncComponent = (function (AFrameComponent$$1) {
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
 * [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
-* This component must be present on `a-scene` for any other sync components to work.
+* This component must be present on `a-scene` for any other sync components to work. @aframe
+* @alias sync-system
 * @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
@@ -957,9 +1011,36 @@ var SyncSystem = (function (AFrameSystem$$1) {
 
 	prototypeAccessors.schema.get = function (){
 		return {
+			/**
+			* A unique identifier for you or your organization.
+			* @instance
+			* @member {string} author
+			* @memberof module:altspace/components.sync-system
+			*/
 			author: { type: 'string', default: null },
+
+			/**
+			* The name of the app.
+			* @instance
+			* @member {string} app
+			* @memberof module:altspace/components.sync-system
+			*/
 			app: { type: 'string', default: null },
+
+			/**
+			* Override the instance ID. Can also be overridden with a URL parameter.
+			* @instance
+			* @member {string} instance
+			* @memberof module:altspace/components.sync-system
+			*/
 			instance: { type: 'string', default: null },
+
+			/**
+			* Override the base reference. Set this to use your own Firebase.
+			* @instance
+			* @member {string} refUrl
+			* @memberof module:altspace/components.sync-system
+			*/
 			refUrl: { type: 'string', default: null }
 		};
 	};
@@ -1034,6 +1115,10 @@ var SyncSystem = (function (AFrameSystem$$1) {
 
 	/**
 	* Returns true if the local client is the master client.
+	* @instance
+	* @method isMasterClient
+	* @memberof module:altspace/components.sync-system
+	* @returns {boolean}
 	*/
 	SyncSystem.prototype.isMasterClient = function isMasterClient ()
 	{
@@ -1045,157 +1130,162 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	return SyncSystem;
 }(AFrameSystem));
 
-//TODO: We need to figure out a way to recieve our first update without caring about ownership.
-// firstValue is probably not the right way to go, probably something about having sent yet. Need to change for both
+//from underscore.js
+function throttle(func, wait, options) {
+	var timeout, context, args, result;
+	var previous = 0;
+	if (!options) { options = {}; }
+
+	var later = function() {
+		previous = options.leading === false ? 0 : Date.now();
+		timeout = null;
+		result = func.apply(context, args);
+		if (!timeout) { context = args = null; }
+	};
+
+	var throttled = function() {
+		var now = Date.now();
+		if (!previous && options.leading === false) { previous = now; }
+		var remaining = wait - (now - previous);
+		context = this;
+		args = arguments;
+		if (remaining <= 0 || remaining > wait) {
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = null;
+			}
+			previous = now;
+			result = func.apply(context, args);
+			if (!timeout) { context = args = null; }
+		} else if (!timeout && options.trailing !== false) {
+			timeout = setTimeout(later, remaining);
+		}
+		return result;
+	};
+
+	throttled.cancel = function() {
+		clearTimeout(timeout);
+		previous = 0;
+		timeout = context = args = null;
+	};
+
+	return throttled;
+}
+
 
 /**
 * Synchronize the position, rotation, and scale of this object with all clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
-* @mixin sync-transform
-* @memberof sync
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-transform
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+* @example
+* <a-scene sync-system='app: myapp; author: name'>
+*     <a-box move-it-around sync sync-transform></a-box>
+* </a-scene>
 */
-AFRAME.registerComponent('sync-transform',
-{
-	dependencies: ['sync'],
-	schema: {
-	},
-	init: function () {
-		var component = this;
-		var sync = component.el.components.sync;
-		if(sync.isConnected) { start(); } else { component.el.addEventListener('connected', start); }
-
-		function start(){
-
-			var positionRef = sync.dataRef.child('position');
-			var rotationRef = sync.dataRef.child('rotation');
-			var scaleRef = sync.dataRef.child('scale');
-
-			component.updateRate = 100;
-
-			var stoppedAnimations = [];
-			//pause all animations on ownership loss
-			component.el.addEventListener('ownershiplost', function() {
-				var children = component.el.children;
-				for (var i = 0; i < children.length; i++) {
-					var tagName = children[i].tagName.toLowerCase();
-					if (tagName === "a-animation") {
-						stoppedAnimations.push(children[i]);
-						children[i].stop();
-					}
-				}
-			});
-			component.el.addEventListener('ownershipgained', function () {
-				for (var i = 0; i < stoppedAnimations.length; i++) {
-					var animation = stoppedAnimations[i];
-					animation.start();
-				}
-				stoppedAnimations = [];
-			});
-
-			function onTransform(snapshot, componentName) {
-				if (sync.isMine) { return; }
-
-				var value = snapshot.val();
-				if (!value) { return; }
-
-				component.el.setAttribute(componentName, value);
-			}
-
-			positionRef.on('value', function (snapshot) {
-				onTransform(snapshot, 'position');
-			});
-
-			rotationRef.on('value', function (snapshot) {
-				onTransform(snapshot, 'rotation');
-			});
-
-			scaleRef.on('value', function (snapshot) {
-				onTransform(snapshot, 'scale');
-			});
-
-			var sendPosition = throttle(function(value){
-				positionRef.set(value);
-			}, component.updateRate);
-
-			var sendRotation = throttle(function(value){
-				rotationRef.set(value);
-			}, component.updateRate);
-
-			var sendScale = throttle(function(value){
-				scaleRef.set(value);
-			}, component.updateRate);
-
-			function onComponentChanged(event){
-				if (!sync.isMine) { return; }
-
-				var name = event.detail.name;
-				var newData = event.detail.newData;
-
-				if (name === 'position') {
-					sendPosition(newData);
-				} else if (name === 'rotation') {
-					sendRotation(newData);
-				} else if (name === 'scale') {
-					sendScale(newData);
-				} else {
-					return;
-				}
-
-			}
-
-			//from underscore.js
-			function throttle(func, wait, options) {
-				var timeout, context, args, result;
-				var previous = 0;
-				if (!options) { options = {}; }
-
-				var later = function() {
-				  previous = options.leading === false ? 0 : Date.now();
-				  timeout = null;
-				  result = func.apply(context, args);
-				  if (!timeout) { context = args = null; }
-				};
-
-				var throttled = function() {
-				  var now = Date.now();
-				  if (!previous && options.leading === false) { previous = now; }
-				  var remaining = wait - (now - previous);
-				  context = this;
-				  args = arguments;
-				  if (remaining <= 0 || remaining > wait) {
-					if (timeout) {
-					  clearTimeout(timeout);
-					  timeout = null;
-					}
-					previous = now;
-					result = func.apply(context, args);
-					if (!timeout) { context = args = null; }
-				  } else if (!timeout && options.trailing !== false) {
-					timeout = setTimeout(later, remaining);
-				  }
-				  return result;
-				};
-
-				throttled.cancel = function() {
-				  clearTimeout(timeout);
-				  previous = 0;
-				  timeout = context = args = null;
-				};
-
-				return throttled;
-			  }
-
-
-			component.el.addEventListener('componentchanged', onComponentChanged);
-		}
+var SyncTransform = (function (AFrameComponent$$1) {
+	function SyncTransform () {
+		AFrameComponent$$1.apply(this, arguments);
 	}
-});
+
+	if ( AFrameComponent$$1 ) SyncTransform.__proto__ = AFrameComponent$$1;
+	SyncTransform.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncTransform.prototype.constructor = SyncTransform;
+
+	var prototypeAccessors = { dependencies: {} };
+
+	prototypeAccessors.dependencies.get = function (){ return ['sync']; };
+	SyncTransform.prototype.init = function init ()
+	{
+		this.sync = this.el.components.sync;
+		if(this.sync.isConnected)
+			{ start(); }
+		else
+			{ this.el.addEventListener('connected', this.start.bind(this)); }
+	};
+
+	SyncTransform.prototype.start = function start ()
+	{
+		var sync = this.sync, component = this;
+		var positionRef = sync.dataRef.child('position');
+		var rotationRef = sync.dataRef.child('rotation');
+		var scaleRef = sync.dataRef.child('scale');
+
+		component.updateRate = 100;
+		var stoppedAnimations = [];
+
+		//pause all animations on ownership loss
+		component.el.addEventListener('ownershiplost', function () {
+			component.el.children.forEach(function (child) {
+				var tagName = child.tagName.toLowerCase();
+				if (tagName === "a-animation") {
+					stoppedAnimations.push(child);
+					child.stop();
+				}
+			});
+		});
+
+		component.el.addEventListener('ownershipgained', function () {
+			stoppedAnimations.forEach(function (a) { return a.start(); });
+			stoppedAnimations = [];
+		});
+
+		function onTransform(snapshot, componentName) {
+			if (sync.isMine) { return; }
+
+			var value = snapshot.val();
+			if (!value) { return; }
+
+			component.el.setAttribute(componentName, value);
+		}
+
+		positionRef.on('value', function (snapshot) { return onTransform(snapshot, 'position'); });
+		rotationRef.on('value', function (snapshot) { return onTransform(snapshot, 'rotation'); });
+		scaleRef.on('value', function (snapshot) { return onTransform(snapshot, 'scale'); });
+
+		var sendPosition = throttle(function(value){
+			positionRef.set(value);
+		}, component.updateRate);
+
+		var sendRotation = throttle(function(value){
+			rotationRef.set(value);
+		}, component.updateRate);
+
+		var sendScale = throttle(function(value){
+			scaleRef.set(value);
+		}, component.updateRate);
+
+		function onComponentChanged(event)
+		{
+			if (!sync.isMine) { return; }
+
+			var name = event.detail.name;
+			var newData = event.detail.newData;
+
+			if (name === 'position') {
+				sendPosition(newData);
+			} else if (name === 'rotation') {
+				sendRotation(newData);
+			} else if (name === 'scale') {
+				sendScale(newData);
+			}
+		}
+
+		component.el.addEventListener('componentchanged', onComponentChanged);
+	};
+
+	Object.defineProperties( SyncTransform.prototype, prototypeAccessors );
+
+	return SyncTransform;
+}(AFrameComponent));
 
 /**
-* Synchronize the playback state of an {@link n.n-sound} component between clients.
-* Requires both a {@link sync.sync-system} component on the `a-scene`, and a
-* {@link sync.sync} component on the target entity.
+* Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-n-sound
 * @extends module:altspace/components.AFrameComponent
 * @memberof module:altspace/components
 */
@@ -1296,17 +1386,95 @@ var SyncNSound = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
- * The wire component allows you to trigger an event on another entity when an event occurs on an entity.
- * @memberof module:altspace/components
- * @extends module:altspace/components.AFrameComponent
- **/
+* The wire component allows you to trigger an event on another entity when an event
+* occurs on an entity. If no targets are selected, it will target itself. @aframe
+* @alias wire
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+**/
 
 var Wire = (function (AFrameComponent$$1) {
-	function Wire()
-	{
+	function Wire(){
 		this.multiple = true;
+	}
 
-		this.actOnTargets = function()
+	if ( AFrameComponent$$1 ) Wire.__proto__ = AFrameComponent$$1;
+	Wire.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Wire.prototype.constructor = Wire;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* Name of an event to listen for
+			* @instance
+			* @member {string} on
+			* @memberof module:altspace/components.wire
+			*/
+			on: {type: 'string'},
+
+			/**
+			* Name of an event to trigger on the targets
+			* @instance
+			* @member {string} emit
+			* @memberof module:altspace/components.wire
+			*/
+			emit: {type: 'string'},
+
+			/**
+			* Name of a state to watch for
+			* @instance
+			* @member {string} gained
+			* @memberof module:altspace/components.wire
+			*/
+			gained: {type: 'string'},
+
+			/**
+			* Name of a state to watch for
+			* @instance
+			* @member {string} lost
+			* @memberof module:altspace/components.wire
+			*/
+			lost: {type: 'string'},
+
+			/**
+			* Name of a state to add on the target
+			* @instance
+			* @member {string} gain
+			* @memberof module:altspace/components.wire
+			*/
+			gain: {type: 'string'},
+
+			/**
+			* Name of a state to remove on the target
+			* @instance
+			* @member {string} lose
+			* @memberof module:altspace/components.wire
+			*/
+			lose: {type: 'string'},
+
+			/**
+			* A selector to pick which objects to wire to
+			* @instance
+			* @member {selector} targets
+			* @memberof module:altspace/components.wire
+			*/
+			targets: {type: 'selectorAll'},
+
+			/**
+			* A selector to pick a single object to wire to
+			* @instance
+			* @member {selector} target
+			* @memberof module:altspace/components.wire
+			*/
+			target: {type: 'selector'}
+		};
+	};
+
+	Wire.prototype.init = function init ()
+	{
+		this.actOnTargets = (function()
 		{
 			function act(el) {
 				if (this.data.emit) {
@@ -1325,33 +1493,18 @@ var Wire = (function (AFrameComponent$$1) {
 
 			if(this.data.target)
 				{ act.call(this, this.data.target); }
-		}.bind(this);
 
-		this.actOnTargetsIfStateMatches = function (event) {
+			if( !this.data.targets && !this.data.target )
+				{ act.call(this, this.el); }
+
+		}).bind(this);
+
+		this.actOnTargetsIfStateMatches = (function (event) {
 			var state = event.detail.state;
 			if (state === this.data.gained || state === this.data.lost) {
 				this.actOnTargets();
 			}
-		}.bind(this);
-	}
-
-	if ( AFrameComponent$$1 ) Wire.__proto__ = AFrameComponent$$1;
-	Wire.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
-	Wire.prototype.constructor = Wire;
-
-	var prototypeAccessors = { schema: {} };
-
-	prototypeAccessors.schema.get = function (){
-		return {
-			on: {type: 'string'},
-			emit: {type: 'string'},
-			gained: {type: 'string'},
-			lost: {type: 'string'},
-			gain: {type: 'string'},
-			lose: {type: 'string'},
-			targets: {type: 'selectorAll'},
-			target: {type: 'selector'}
-		};
+		}).bind(this);
 	};
 
 	Wire.prototype.update = function update (oldData)
@@ -1422,8 +1575,10 @@ var PlaceholderMesh = (function (superclass) {
 * @extends module:altspace/components.AFrameComponent
 */
 var NativeComponent = (function (AFrameComponent$$1) {
-	function NativeComponent(name){
-		this.name = name;
+	function NativeComponent(name, sendUpdates){
+		if ( sendUpdates === void 0 ) sendUpdates = true;
+
+		Object.assign(this, {name: name, sendUpdates: sendUpdates});
 	}
 
 	if ( AFrameComponent$$1 ) NativeComponent.__proto__ = AFrameComponent$$1;
@@ -1447,7 +1602,9 @@ var NativeComponent = (function (AFrameComponent$$1) {
 
 	NativeComponent.prototype.update = function update (){
 		var mesh = this.mesh || this.el.object3DMap.mesh;
-		altspace.updateNativeComponent(mesh, this.name, this.data);
+		if(this.sendUpdates){
+			altspace.updateNativeComponent(mesh, this.name, this.data);
+		}
 	};
 
 	NativeComponent.prototype.remove = function remove (){
@@ -1467,7 +1624,8 @@ var NativeComponent = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
-* Attach a given native object to this entity.
+* Attach a given native object to this entity. @aframe
+* @alias n-object
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
@@ -1480,13 +1638,17 @@ var NObject = (function (NativeComponent$$1) {
 	NObject.prototype.constructor = NObject;
 
 	var prototypeAccessors = { schema: {} };
-
-	/**
-	* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
-	* can accept all resource types except for `interactables`.
-	*/
 	prototypeAccessors.schema.get = function (){
-		return {res: {type: 'string'}};
+		return {
+			/**
+			* The identifier for the [resource]{@link module:altspace/resources} you want. This component
+			* can accept all resource types except for `interactables`.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-object
+			*/
+			res: {type: 'string'}
+		};
 	};
 
 	Object.defineProperties( NObject.prototype, prototypeAccessors );
@@ -1497,7 +1659,8 @@ var NObject = (function (NativeComponent$$1) {
 /**
 * Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 * These copies will be physically interactive and automatically synchronized
-* between users.
+* between users. @aframe
+* @alias n-spawner
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
@@ -1510,13 +1673,17 @@ var NSpawner = (function (NativeComponent$$1) {
 	NSpawner.prototype.constructor = NSpawner;
 
 	var prototypeAccessors$1 = { schema: {} };
-
-	/**
-	* @prop {string} res - The identifier for the [resource]{@link module:altspace/resources} you want. This component
-	* can only accept resources of type `interactables`.
-	*/
 	prototypeAccessors$1.schema.get = function (){
-		return {res: {type: 'string'}};
+		return {
+			/**
+			* The identifier for the [resource]{@link module:altspace/resources} you want. This component
+			* can only accept resources of type `interactables`.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-spawner
+			*/
+			res: {type: 'string'}
+		};
 	};
 
 	Object.defineProperties( NSpawner.prototype, prototypeAccessors$1 );
@@ -1526,7 +1693,8 @@ var NSpawner = (function (NativeComponent$$1) {
 
 /**
 * Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
-* This text will be clearer than texture-based text and more performant than geometry-based test.
+* This text will be clearer than texture-based text and more performant than geometry-based test. @aframe
+* @alias n-text
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 */
@@ -1538,33 +1706,61 @@ var NText = (function (NativeComponent$$1) {
 	NText.prototype.constructor = NText;
 
 	var prototypeAccessors$2 = { schema: {} };
-
-	/**
-	* @prop {string} text - The text to be drawn.
-	* @prop {number} fontSize=10 - The height of the letters. 10pt ~= 1m
-	* @prop {number} width=10 - The width of the text area in meters. If the
-	* text is wider than this value, the overflow will be wrapped to the next line.
-	* @prop {number} height=1 - The height of the text area in meters. If the
-	* text is taller than this value, the overflow will be cut off.
-	* @prop {string} horizontalAlign=middle - The horizontal anchor point for
-	* the text. Can be `left`, `middle`, or `right`.
-	* @prop {string} verticalAlign=middle - The vertical anchor point for the
-	* text. Can be `top`, `middle`, or `bottom`.
-	*/
 	prototypeAccessors$2.schema.get = function (){
 		return {
+			/**
+			* The text to be drawn.
+			* @instance
+			* @member {string} text
+			* @memberof module:altspace/components.n-text
+			*/
 			text: { default: '', type: 'string' },
-			/*color: { default: 'white',
-				parse: function(value) {
-					return parseFloat(value, 10);
-				},
-				stringify: function(value) {
-					return value.toString();
-				}},*/
+
+			/**
+			* The height of the letters. 10pt ~= 1m
+			* @instance
+			* @member {int} fontSize
+			* @default 10
+			* @memberof module:altspace/components.n-text
+			*/
 			fontSize: { default: '10', type: 'int' },//roughly a meter tall
+
+			/**
+			* The width of the text area in meters. If the
+			* text is wider than this value, the overflow will be wrapped to the next line.
+			* @instance
+			* @member {number} width
+			* @default 10
+			* @memberof module:altspace/components.n-text
+			*/
 			width: { default: '10', type: 'number' },//in meters
+
+			/**
+			* The height of the text area in meters. If the
+			* text is taller than this value, the overflow will be cut off.
+			* @instance
+			* @member {number} height
+			* @default 1
+			* @memberof module:altspace/components.n-text
+			*/
 			height: { default: '1', type: 'number' },//in meters
+
+			/**
+			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.
+			* @instance
+			* @member {string} horizontalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.n-text
+			*/
 			horizontalAlign: { default: 'middle'},
+
+			/**
+			* The vertical anchor point for the text. Can be `top`, `middle`, or `bottom`.
+			* @instance
+			* @member {string} verticalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.n-text
+			*/
 			verticalAlign: { default: 'middle'}
 		};
 	};
@@ -1576,12 +1772,13 @@ var NText = (function (NativeComponent$$1) {
 
 /**
 * Make the object's +Z always face the viewer. Currently will only directly apply
-* to main mesh or native component on the attached entity, not any children or submeshes.
+* to main mesh or native component on the attached entity, not any children or submeshes. @aframe
+* @alias n-billboard
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 */
 var NBillboard = (function (NativeComponent$$1) {
-	function NBillboard(){ NativeComponent$$1.call(this, 'n-billboard'); }
+	function NBillboard(){ NativeComponent$$1.call(this, 'n-billboard', false); }
 
 	if ( NativeComponent$$1 ) NBillboard.__proto__ = NativeComponent$$1;
 	NBillboard.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
@@ -1591,21 +1788,12 @@ var NBillboard = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
-* Abstract base class for [NSphereCollider]{@link module:altspace/components.NSphereCollider},
-* [NBoxCollider]{@link module:altspace/components.NBoxCollider},
-* [NCapsuleCollider]{@link module:altspace/components.NCapsuleCollider},
-* and [NMeshCollider]{@link module:altspace/components.NMeshCollider}. You cannot use
+* Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
+* [n-box-collider]{@link module:altspace/components.n-box-collider},
+* [n-capsule-collider]{@link module:altspace/components.n-capsule-collider},
+* and [n-mesh-collider]{@link module:altspace/components.n-mesh-collider}. You cannot use
 * this class directly, but instead you should add one of those components
 * to your objects.
-* @prop {vec3} center=0,0,0 - The offset of the collider in local space.
-* @prop {string} type=hologram - The type of collider, one of: `object` | `environment` | `hologram`.
-* Object colliders collide with other objects, the environment, and the cursor.
-* Environment colliders collide with everything objects do, but you can also
-* teleport onto them. Hologram colliders only collide with other holograms and
-* the cursor.
-* @prop {boolean} isTrigger=false - If true, this collider will not block
-* other objects, but instead fire a `triggerenter` event when an object comes
-* into contact with it, and a `triggerexit` when it leaves contact.
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 */
@@ -1622,8 +1810,37 @@ var NCollider = (function (NativeComponent$$1) {
 
 	prototypeAccessors.schema.get = function (){
 		return {
+			/**
+			* The offset of the collider in local space.
+			* @instance
+			* @member {vec3} center
+			* @default [0, 0, 0]
+			* @memberof module:altspace/components.NCollider
+			*/
 			center: { type: 'vec3' },
+
+			/**
+			* The type of collider, one of: `object` | `environment` | `hologram`.
+			* Object colliders collide with other objects, the environment, and the cursor.
+			* Environment colliders collide with everything objects do, but you can also
+			* teleport onto them. Hologram colliders only collide with other holograms and
+			* the cursor.
+			* @instance
+			* @member {string} type
+			* @default "hologram"
+			* @memberof module:altspace/components.NCollider
+			*/
 			type: { type: 'string', default: 'object' },
+
+			/**
+			* If true, this collider will not block
+			* other objects, but instead fire a `triggerenter` event when an object comes
+			* into contact with it, and a `triggerexit` when it leaves contact.
+			* @instance
+			* @member {boolean} isTrigger
+			* @default false
+			* @memberof module:altspace/components.NCollider
+			*/
 			isTrigger: { default: false, type: 'boolean' }
 		};
 	};
@@ -1634,10 +1851,21 @@ var NCollider = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
-* A sphere-shaped collider.
-* @prop {Number} radius=0.001 - The radius of the sphere collider in meters
+* Fired when an object enters a trigger volume, e.g. `isTrigger: true`
+* @event module:altspace/components.NCollider.triggerenter
+*/
+
+/**
+* Fired when an object leaves a trigger volume, e.g. `isTrigger: true`
+* @event module:altspace/components.NCollider.triggerexit
+*/
+
+/**
+* A sphere-shaped collider. @aframe
+* @alias n-sphere-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.NCollider
+* @example <a-sphere radius=1 n-sphere-collider='radius: 1; type: object;'></a-sphere>
 */
 var NSphereCollider = (function (NCollider) {
 	function NSphereCollider(){ NCollider.call(this, 'n-sphere-collider'); }
@@ -1649,7 +1877,14 @@ var NSphereCollider = (function (NCollider) {
 	var prototypeAccessors$1 = { schema: {} };
 	prototypeAccessors$1.schema.get = function (){
 		return {
-			radius: { default: '0.001', type: 'number' },
+			/**
+			* The radius of the sphere collider in meters
+			* @instance
+			* @member {Number} radius
+			* @default 1
+			* @memberof module:altspace/components.n-sphere-collider
+			*/
+			radius: { default: 1, type: 'number' },
 		};
 	};
 
@@ -1659,8 +1894,8 @@ var NSphereCollider = (function (NCollider) {
 }(NCollider));
 
 /**
-* Create a box-shaped collider on this entity.
-* @prop {vec3} size=1,1,1 - The dimensions of the collider.
+* Create a box-shaped collider on this entity. @aframe
+* @alias n-box-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.NCollider
 */
@@ -1674,6 +1909,13 @@ var NBoxCollider = (function (NCollider) {
 	var prototypeAccessors$2 = { schema: {} };
 	prototypeAccessors$2.schema.get = function (){
 		return {
+			/**
+			* The dimensions of the collider.
+			* @instance
+			* @member {vec3} size
+			* @default [1, 1, 1]
+			* @memberof module:altspace/components.n-box-collider
+			*/
 			size: { type: 'vec3', default: '1 1 1' }
 		};
 	};
@@ -1685,10 +1927,8 @@ var NBoxCollider = (function (NCollider) {
 
 /**
 * Create a capsule-shaped collider on this entity. Capsules
-* are a union of a cylinder and two spheres on top and bottom.
-* @prop {number} radius=1 - The radius of the capsule in meters.
-* @prop {number} height=1 - The height of the shaft of the capsule in meters.
-* @prop {string} direction=y - The axis with which the capsule is aligned.
+* are a union of a cylinder and two spheres on top and bottom. @aframe
+* @alias n-capsule-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.NCollider
 */
@@ -1702,8 +1942,32 @@ var NCapsuleCollider = (function (NCollider) {
 	var prototypeAccessors$3 = { schema: {} };
 	prototypeAccessors$3.schema.get = function (){
 		return {
+
+			/**
+			* The radius of the capsule in meters.
+			* @instance
+			* @member {number} radius
+			* @default 1
+			* @memberof module:altspace/components.n-capsule-collider
+			*/
 			radius: { default: '0', type: 'number' },
+
+			/**
+			* The height of the shaft of the capsule in meters.
+			* @instance
+			* @member {number} height
+			* @default 0
+			* @memberof module:altspace/components.n-capsule-collider
+			*/
 			height: { default: '0', type: 'number' },
+
+			/**
+			* The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.
+			* @instance
+			* @member {string} direction
+			* @default 'y'
+			* @memberof module:altspace/components.n-capsule-collider
+			*/
 			direction: { default: 'y' }
 		};
 	};
@@ -1715,16 +1979,14 @@ var NCapsuleCollider = (function (NCollider) {
 
 /**
 * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
-* low-poly meshes.
+* low-poly meshes. @aframe
 * @example <a-box n-mesh-collider></a-box>
-* @prop {boolean} convex=true - Whether the collider should be convex or concave. Set this to false if you have holes
-* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
-* expensive comparet to conves colliders.
+* @alias n-mesh-collider
 * @memberof module:altspace/components
 * @extends module:altspace/components.NCollider
 */
 var NMeshCollider = (function (NCollider) {
-	function NMeshCollider(mesh){
+	function NMeshCollider(mesh, data){
 		if ( mesh === void 0 ) mesh = null;
 
 		NCollider.call(this, 'n-mesh-collider');
@@ -1740,6 +2002,16 @@ var NMeshCollider = (function (NCollider) {
 
 	prototypeAccessors$4.schema.get = function (){
 		return {
+
+			/**
+			* Whether the collider should be convex or concave. Set this to false if you have holes
+			* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
+			* expensive compared to convex colliders.
+			* @instance
+			* @member {boolean} convex
+			* @default true
+			* @memberof module:altspace/components.n-mesh-collider
+			*/
 			convex: { type: 'boolean', default: 'true' }
 		};
 	};
@@ -1754,11 +2026,12 @@ var NMeshCollider = (function (NCollider) {
 		else
 		{
 			this.subcomponents = [];
-			var mesh = this.el.object3DMap.mesh;
+			var mesh = this.el.object3D;
 			mesh.traverse((function (o) {
 				if(o instanceof THREE.Mesh){
 					var subcomp = new NMeshCollider(o);
 					this$1.subcomponents.push(subcomp);
+					subcomp.data = this$1.data;
 					subcomp.init();
 				}
 			}).bind(this));
@@ -1802,12 +2075,13 @@ var NMeshCollider = (function (NCollider) {
 /**
 * A container keeps a running tally of how many objects are within
 * its bounds, and adds and removes the states `container-full` and
-* `container-empty` based on the current count of objects. Can fire three
-* special events: `container-full`, `container-empty`, and `container-count-changed`.
-* @prop {number} capacity=4 - The value at which the container will fire the
-* `container-full` event.
+* `container-empty` based on the current count of objects. Requires a native
+* collider component set to trigger mode. @aframe
+* @alias n-container
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
+* @example
+* <a-box n-box-collider="isTrigger: true" n-container="capacity: 6"></a-box>
 */
 var NContainer = (function (NativeComponent$$1) {
 	function NContainer(){ NativeComponent$$1.call(this, 'n-container'); }
@@ -1817,7 +2091,18 @@ var NContainer = (function (NativeComponent$$1) {
 	NContainer.prototype.constructor = NContainer;
 
 	var prototypeAccessors = { schema: {} };
-	prototypeAccessors.schema.get = function (){ return {capacity: { default: 4, type: 'number' }}; };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The value at which the container will fire the `container-full` event.
+			* @instance
+			* @member {number} capacity
+			* @default 4
+			* @memberof module:altspace/components.n-container
+			*/
+			capacity: { default: 4, type: 'number' }
+		};
+	};
 	NContainer.prototype.init = function init ()
 	{
 		NativeComponent$$1.prototype.init.call(this);
@@ -1827,14 +2112,39 @@ var NContainer = (function (NativeComponent$$1) {
 
 		el.addEventListener('stateadded', function (event) {
 			if(event.detail.state === 'container-full'){
+				/**
+				* Fired when the n-container reaches its capacity
+				* @event container-full
+				* @memberof module:altspace/components.n-container
+				*/
 				el.emit('container-full');
 			}
 			if(event.detail.state === 'container-empty'){
+				/**
+				* Fired when the n-container reaches zero objects contained
+				* @event container-empty
+				* @memberof module:altspace/components.n-container
+				*/
 				el.emit('container-empty');
 			}
 		});
 
+		/**
+		* Fired every time an object enters or leaves the bounds of the n-container
+		* @event container-count-changed
+		* @memberof module:altspace/components.n-container
+		* @param {Object} event - Contains details of the event. The new object count
+		* can be found at `event.detail.count`.
+		*/
 		el.addEventListener('container-count-changed', function (event) {
+
+			/**
+			* The number of objects in this container.
+			* @instance
+			* @member {int} count
+			* @readonly
+			* @memberof module:altspace/components.n-container
+			*/
 			component.count = event.detail.count;
 		});
 	};
@@ -1844,32 +2154,14 @@ var NContainer = (function (NativeComponent$$1) {
 	return NContainer;
 }(NativeComponent));
 
+!function(){"use strict";function r(r){for(var t=[],e=0;e<r.length;e++){ t.push(r[e]); }return t}String.prototype.codePointAt||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=t.length,n=r?+r:0;if(n!=n&&(n=0),!(n<0||n>=e)){var o,i=t.charCodeAt(n);return i>=55296&&i<=56319&&e>n+1&&(o=t.charCodeAt(n+1),o>=56320&&o<=57343)?1024*(i-55296)+o-56320+65536:i}};r?r(String.prototype,"codePointAt",{value:t,configurable:!0,writable:!0}):String.prototype.codePointAt=t;}(),String.prototype.repeat||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=r?+r:0;if(e!=e&&(e=0),e<0||e==1/0){ throw RangeError(); }for(var n="";e;){ e%2==1&&(n+=t),e>1&&(t+=t),e>>=1; }return n};r?r(String.prototype,"repeat",{value:t,configurable:!0,writable:!0}):String.prototype.repeat=t;}(),String.prototype.includes||!function(){var r={}.toString,t=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),e="".indexOf,n=function(t){if(null==this){ throw TypeError(); }var n=this+"";if(t&&"[object RegExp]"==r.call(t)){ throw TypeError(); }var o=n.length,i=t+"",a=i.length,c=arguments.length>1?arguments[1]:void 0,u=c?+c:0;return u!=u&&(u=0),!(a+Math.min(Math.max(u,0),o)>o)&&e.call(n,i,u)!=-1};t?t(String.prototype,"includes",{value:n,configurable:!0,writable:!0}):String.prototype.includes=n;}(),String.prototype.startsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=arguments.length>1?arguments[1]:void 0,c=a?+a:0;c!=c&&(c=0);var u=Math.min(Math.max(c,0),n);if(i+u>n){ return!1; }for(var l=-1;++l<i;){ if(e.charCodeAt(u+l)!=o.charCodeAt(l)){ return!1; } }return!0};r?r(String.prototype,"startsWith",{value:e,configurable:!0,writable:!0}):String.prototype.startsWith=e;}(),String.prototype.endsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=n;if(arguments.length>1){var c=arguments[1];void 0!==c&&(a=c?+c:0,a!=a&&(a=0));}var u=Math.min(Math.max(a,0),n),l=u-i;if(l<0){ return!1; }for(var h=-1;++h<i;){ if(e.charCodeAt(l+h)!=o.charCodeAt(h)){ return!1; } }return!0};r?r(String.prototype,"endsWith",{value:e,configurable:!0,writable:!0}):String.prototype.endsWith=e;}(),String.fromCodePoint||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=String.fromCharCode,e=Math.floor,n=function(r){
+var arguments$1 = arguments;
+var n,o,i=16384,a=[],c=-1,u=arguments.length;if(!u){ return""; }for(var l="";++c<u;){var h=+arguments$1[c];if(!isFinite(h)||h<0||h>1114111||e(h)!=h){ throw RangeError("Invalid code point: "+h); }h<=65535?a.push(h):(h-=65536,n=(h>>10)+55296,o=h%1024+56320,a.push(n,o)),(c+1==u||a.length>i)&&(l+=t.apply(null,a),a.length=0);}return l};r?r(String,"fromCodePoint",{value:n,configurable:!0,writable:!0}):String.fromCodePoint=n;}(),Object.defineProperty(String,"raw",{configurable:!0,enumerable:!1,writable:!0,value:function(t,e){var n;t=null!=t?t:{},e=arguments.length>1?r(arguments).slice(1):[];try{n=r(t.raw);}catch(r){throw new TypeError("Cannot convert undefined or null to object")}return n.map(function(r,n){return t.raw.length<=n?r:null!=e[n-1]?e[n-1]+r:r}).join("")}});}();
+
 /**
-* Play the sound given by the `src` or `res` property from the location
-* of the entity.
-* @prop {string} res - The resource identifier for a built-in sound clip.
-* @prop {string} src - A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
-* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
-* @prop {string} on - The name of the event that will play this sound clip.
-* @prop {boolean} loop=false - Tells the clip to loop back to the beginning of the clip
-* once it's finished.
-* @prop {boolean} autoplay=false - Tells the clip to start automatically when
-* the scene loads, instead of waiting for `playSound()`.
-* @prop {boolean} oneshot=false - Tells the clip to clean itself up when it
-* finishes playing. Allows for overlapping instances of the sound.
-* @prop {number} volume=1 - The volume of the clip, from [0,1].
-* @prop {number} spatialBlend=1 - How spatialized a sound is, from [0,1].
-* A value of 1 will be fully localized, and the sound will pan left and
-* right as you turn your head. A value of 0 makes it non-spatialized, and
-* it will always be heard in both ears.
-* @prop {number} pitch=1 - The speed multiplier for the sound. 0.5 is one
-* octave down, and 2 is one octave up.
-* @prop {number} minDistance=1 - Inside this distance in meters,
-* the sound volume is at full volume.
-* @prop {number} maxDistance=12 - If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
-* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
-* @prop {string} rolloff='logarithmic' - Set this to 'linear' or 'cosine' if you want to cut sounds off at a
-* maxDistance.
+* Play a sound from a particular location. Limiting sound duration to 5 seconds
+* or less is recommended to prevent hitching when the sound loads. @aframe
+* @alias n-sound
 * @memberof module:altspace/components
 * @extends module:altspace/components.NativeComponent
 */
@@ -1883,17 +2175,118 @@ var NSound = (function (NativeComponent$$1) {
 	var prototypeAccessors = { schema: {} };
 	prototypeAccessors.schema.get = function (){
 		return {
-			on: { type: 'string' },
+
+			/**
+			* Play the sound given by the `src` or `res` property from the location
+			* of the entity. @aframe
+			* The resource identifier for a built-in sound clip.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-sound
+			*/
 			res: { type: 'string' },
+
+			/**
+			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+			* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
+			* @instance
+			* @member {string} src
+			* @memberof module:altspace/components.n-sound
+			*/
 			src: { type: 'string' },
+
+			/**
+			* The name of the event that will play this sound clip.
+			* @instance
+			* @member {string} on
+			* @memberof module:altspace/components.n-sound
+			*/
+			on: { type: 'string' },
+
+			/**
+			* Tells the clip to loop back to the beginning of the clip once it's finished.
+			* @instance
+			* @member {boolean} loop
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
 			loop: { type: 'boolean' },
+
+			/**
+			* The volume of the clip, from [0,1].
+			* @instance
+			* @member {number} volume
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			volume: { type: 'number', default: 1 },
+
+			/**
+			* Tells the clip to start automatically when the scene loads, instead of waiting for `playSound()`.
+			* @instance
+			* @member {boolean} autoplay
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
 			autoplay: { type: 'boolean' },
+
+			/**
+			* Tells the clip to clean itself up when it
+			* finishes playing. Allows for overlapping instances of the sound.
+			* @instance
+			* @member {boolean} oneshot
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
 			oneshot: { type: 'boolean' },
+
+			/**
+			* How spatialized a sound is, from [0,1].
+			* A value of 1 will be fully localized, and the sound will pan left and
+			* right as you turn your head. A value of 0 makes it non-spatialized, and
+			* it will always be heard in both ears.
+			* @instance
+			* @member {number} spatialBlend
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			spatialBlend: { type: 'float', default: 1 },
+
+			/**
+			* The speed multiplier for the sound. 0.5 is one octave down, and 2 is one octave up.
+			* @instance
+			* @member {number} pitch
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			pitch: { type: 'float', default: 1 },
+
+			/**
+			* Inside this distance in meters, the sound volume is at full volume.
+			* @instance
+			* @member {number} minDistance
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
 			minDistance: { type: 'float', default: 1 },
+
+			/**
+			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+			* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
+			* @instance
+			* @member {number} maxDistance
+			* @default 12
+			* @memberof module:altspace/components.n-sound
+			*/
 			maxDistance: { type: 'float', default: 12 },
+
+			/**
+			* Set this to 'linear' or 'cosine' if you want to cut sounds off at a maxDistance.
+			* @instance
+			* @member {string} rolloff
+			* @default "logarithmic"
+			* @memberof module:altspace/components.n-sound
+			*/
 			rolloff: { type: 'string', default: 'logarithmic' },
 		};
 	};
@@ -1912,6 +2305,7 @@ var NSound = (function (NativeComponent$$1) {
 				}
 				this.data.src = location.origin + currPath + src;
 			}
+
 		}
 		NativeComponent$$1.prototype.init.call(this);
 	};
@@ -1922,6 +2316,7 @@ var NSound = (function (NativeComponent$$1) {
 		if (this.playHandler) {
 		  this.el.removeEventListener(oldData.on, this.playHandler);
 		}
+
 		if (this.data.on) {
 		  this.playHandler = this.playSound.bind(this);
 		  this.el.addEventListener(this.data.on, this.playHandler);
@@ -1943,8 +2338,9 @@ var NSound = (function (NativeComponent$$1) {
 		this.callComponent('pause');
 
 		/**
+		* Emitted when the sound stops playing
 		* @event sound-paused
-		* @memberof module:altspace/components
+		* @memberof module:altspace/components.NSound
 		*/
 		this.el.emit('sound-paused');
 	};
@@ -1956,8 +2352,9 @@ var NSound = (function (NativeComponent$$1) {
 		this.callComponent('play');
 
 		/**
+		* Emitted when the sound starts playing
 		* @event sound-played
-		* @memberof module:altspace/components
+		* @memberof module:altspace/components.NSound
 		*/
 		this.el.emit('sound-played');
 	};
@@ -1976,148 +2373,61 @@ var NSound = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
+* AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
+* In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
+* this SDK provides a set of components to add AltspaceVR compatibility and additional
+* functionality to the toolset. At a minimum, A-Frame apps will need the [altspace]{@link module:altspace/components.altspace}
+* component on the `<a-scene>` tag to function as an AltspaceVR app.
 * @module altspace/components
+* @example
+* <html>
+*   <head>
+*     <title>My A-Frame Scene</title>
+*     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.0/dist/altspace.min.js"></script>
+*   </head>
+*   <body>
+*     <a-scene altspace>
+*       <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
+*     </a-scene>
+*   </body>
+* </html>
 */
 
 if (window.AFRAME)
 {
-	/**
-	* @mixin altspace-cursor-collider
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.AltspaceCursorCollider
-	*/
 	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
-
-	/**
-	* @mixin altspace-tracked-controls
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.AltspaceTrackedControls
-	*/
 	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
-
-	/**
-	* @mixin altspace
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.AltspaceComponent
-	*/
 	registerComponentClass('altspace', AltspaceComponent);
-
-	/**
-	* @mixin sync-system
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.SyncSystem
-	*/
 	registerSystemClass('sync-system', SyncSystem);
-
-	/**
-	* @mixin sync-color
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.SyncColor
-	*/
 	registerComponentClass('sync-color', SyncColor);
-
-	/**
-	* @mixin sync
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.SyncComponent
-	*/
+	registerComponentClass('sync-transform', SyncTransform);
 	registerComponentClass('sync', SyncComponent);
-
-	/**
-	* @mixin sync-n-sound
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.SyncNSound
-	*/
 	registerComponentClass('sync-n-sound', SyncNSound);
-
-	/**
-	* @mixin wire
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.Wire
-	*/
 	registerComponentClass('wire', Wire);
-
-	/**
-	* @mixin n-object
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NObject
-	*/
 	registerComponentClass('n-object', NObject);
-
-	/**
-	* @mixin n-spawner
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NSpawner
-	*/
 	registerComponentClass('n-spawner', NSpawner);
-
-	/**
-	* @mixin n-text
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NText
-	*/
 	registerComponentClass('n-text', NText);
-
-	/**
-	* @mixin n-billboard
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NBillboard
-	*/
 	registerComponentClass('n-billboard', NBillboard);
-
-	/**
-	* @mixin n-container
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NContainer
-	*/
 	registerComponentClass('n-container', NContainer);
-
-	/**
-	* @mixin n-sound
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NSound
-	*/
 	registerComponentClass('n-sound', NSound);
-
-	/**
-	* @mixin n-sphere-collider
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NSphereCollider
-	*/
 	registerComponentClass('n-sphere-collider', NSphereCollider);
-
-	/**
-	* @mixin n-box-collider
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NBoxCollider
-	*/
 	registerComponentClass('n-box-collider', NBoxCollider);
-
-	/**
-	* @mixin n-capsule-collider
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NCapsuleCollider
-	*/
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
-
-	/**
-	* @mixin n-mesh-collider
-	* @memberof module:altspace/components
-	* @extends module:altspace/components.NMeshCollider
-	*/
 	registerComponentClass('n-mesh-collider', NMeshCollider);
 }
 
 
 
 
-var index = Object.freeze({
+var components_lib = Object.freeze({
 	AltspaceComponent: AltspaceComponent,
 	AltspaceCursorCollider: AltspaceCursorCollider,
 	AltspaceTrackedControls: AltspaceTrackedControls,
 	SyncSystem: SyncSystem,
 	SyncComponent: SyncComponent,
 	SyncColor: SyncColor,
+	SyncTransform: SyncTransform,
 	SyncNSound: SyncNSound,
 	Wire: Wire,
 	NObject: NObject,
@@ -2289,7 +2599,7 @@ function connect(config)
 
 
 
-var sync$1 = Object.freeze({
+var sync = Object.freeze({
 	connect: connect
 });
 
@@ -2305,7 +2615,7 @@ var domElem;
 
 var overObject;
 
-var raycaster$1 = new THREE.Raycaster();
+var raycaster = new THREE.Raycaster();
 
 /**
  * Initializes the cursor module
@@ -2385,8 +2695,8 @@ function createCursorEvent(type, intersection) {
 		bubbles: true,
 		target: intersection ? intersection.object : null,
 		ray: {
-			origin: raycaster$1.ray.origin.clone(),
-			direction: raycaster$1.ray.direction.clone()
+			origin: raycaster.ray.origin.clone(),
+			direction: raycaster.ray.direction.clone()
 		},
 		point: intersection ? intersection.point.clone() : null
 	}
@@ -2397,9 +2707,9 @@ function findIntersection(mouseEvent) {
 	mouse.x = (mouseEvent.offsetX / (domElem.width || domElem.innerWidth)) * 2 - 1;
 	mouse.y = -(mouseEvent.offsetY / (domElem.height || domElem.innerHeight)) * 2 + 1;
 
-	raycaster$1.setFromCamera(mouse, camera);
+	raycaster.setFromCamera(mouse, camera);
 
-	var intersections = raycaster$1.intersectObjects(scene.children, true);
+	var intersections = raycaster.intersectObjects(scene.children, true);
 
 	// return the first object with an enabled collider
 	return intersections.find(function(e){
@@ -2417,13 +2727,6 @@ var cursor = Object.freeze({
 	init: init
 });
 
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-
-/**
-* @module altspace/utilities
-*/
-
 /**
 * Simulation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
 *
@@ -2436,9 +2739,9 @@ window.altspace.utilities = window.altspace.utilities || {};
 * @param {Boolean} [config.auto=true] Automatically start the render loop.
 * @memberof module:altspace/utilities
 */
-var Simulation = function Simulation(ref)
+var Simulation = function Simulation(config)
 {
-	var auto = ref.auto; if ( auto === void 0 ) auto = true;
+	if ( config === void 0 ) config = {auto: true};
 
 	this._scene = null;
 	this._renderer = null;
@@ -2466,7 +2769,7 @@ var Simulation = function Simulation(ref)
 		this._setupWebGL();
 	}
 
-	if(auto && !usingAFrame)
+	if(config.auto && !usingAFrame)
 		{ this.loop(); }
 };
 
@@ -2862,7 +3165,7 @@ function dispatchEvent( event ) {
 */
 
 /**
-* The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
+* The AltspaceSDK includes a Behaviors shim that adds Behavior capabilities to
 * Three.js.
 * It adds methods to Three.js' Scene and Object3D classes which allow you to
 * add, remove, retrieve and use Behaviors.
@@ -3132,7 +3435,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 
 
 
-var index$2 = Object.freeze({
+var index = Object.freeze({
 	OBJMTLLoader: OBJMTLLoader,
 	cursor: cursor
 });
@@ -3141,12 +3444,17 @@ var index$2 = Object.freeze({
 * Base class for all behaviors. Use this class as a pattern, but do not use
 * directly.
 * @memberof module:altspace/utilities/behaviors
-* @prop {string} type - The name of this class
 */
 var Behavior = function Behavior(){};
 
 var prototypeAccessors$2 = { type: {} };
 
+/**
+* The string name of this class. This is used for {@link THREE.Object3D#getBehaviorByType}.
+* @instance
+* @member {string} type
+* @memberof module:altspace/utilities/behaviors.Behavior
+*/
 prototypeAccessors$2.type.get = function (){
 	if(!this._typeWarning){
 		console.warn('Behavior', this, 'does not expose type information!',
@@ -3222,7 +3530,7 @@ var Bob = (function (Behavior$$1) {
 	Bob.prototype.awake = function awake (o)
 	{
 		this.object3d = o;
-		this.offsetPosition = object3D.position.clone();
+		this.offsetPosition = this.object3d.position.clone();
 	};
 
 	Bob.prototype.update = function update (deltaTime)
@@ -3240,7 +3548,7 @@ var Bob = (function (Behavior$$1) {
 		}
 
 		if (this.config.shouldRotate){
-			object3d.rotation.x = Math.sin(nowInt / 500) / 15;
+			this.object3d.rotation.x = Math.sin(nowInt / 500) / 15;
 		}
 	};
 
@@ -3289,7 +3597,7 @@ var ButtonStateStyle = (function (Behavior$$1) {
 	{
 		this.object3d = o;
 		this.scene = s;
-		this.originalColor = this.config.originalColor || object3d.material.color;
+		this.originalColor = this.config.originalColor || this.object3d.material.color;
 		this.object3d.addEventListener('cursorenter', this._cbs.cursorenter);
 		this.object3d.addEventListener('cursordown', this._cbs.cursordown);
 	};
@@ -3321,7 +3629,7 @@ var ButtonStateStyle = (function (Behavior$$1) {
 	ButtonStateStyle.prototype.cursorEnter = function cursorEnter ()
 	{
 		this.changeBrightness(this.config.overBrightness);
-		object3d.addEventListener('cursorleave', this._cbs.cursorleave);
+		this.object3d.addEventListener('cursorleave', this._cbs.cursorleave);
 	};
 
 	ButtonStateStyle.prototype.cursorUp = function cursorUp (event)
@@ -3491,7 +3799,7 @@ var Drag = (function (Behavior$$1) {
 		//Otherwise, object appears to 'jump' when selected, moving so its
 		//center is directly until the cursor. We allow drag on edge of object.
 		this.raycaster.set(event.ray.origin, event.ray.direction);
-		var hit = raycaster.intersectObject(object3d, true)[0];
+		var hit = this.raycaster.intersectObject(this.object3d, true)[0];
 		if (!hit)
 			{ return; }
 
@@ -3542,7 +3850,7 @@ var Drag = (function (Behavior$$1) {
 		});
 
 		//constrain target position
-		targetWorldPosition.clamp(min, max);
+		targetWorldPosition.clamp(this.min, this.max);
 
 		//move object
 		this.object3d.parent.updateMatrixWorld();
@@ -3653,7 +3961,7 @@ var GamepadControls = (function (Behavior$$1) {
 		this.object3d = o;
 		this.scene = s;
 		this.sync = this.object3d.getBehaviorByType('Object3DSync');
-		this.originalObj = object3d.clone();
+		this.originalObj = this.object3d.clone();
 		this.gamepad = this.getGamepad();
 		if (this.gamepad) {
 			console.log('Gamepad detected: ' + this.gamepad.id);
@@ -3752,8 +4060,8 @@ var GamepadControls = (function (Behavior$$1) {
 				{ this.isAltModeL = !this.isAltModeL; }//button released
 			this.prevAltButtonL = isAltButtonL;
 
-			var leftStickX = gamepad.axes[0];//left / right
-			var leftStickY = gamepad.axes[1];//up / down
+			var leftStickX = this.gamepad.axes[0];//left / right
+			var leftStickY = this.gamepad.axes[1];//up / down
 
 			var isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
 			if (isMove && !this.sync.isMine)
@@ -3783,10 +4091,10 @@ var GamepadControls = (function (Behavior$$1) {
 			var isAltButtonR = this.gamepad.buttons[11].pressed;//right stick button
 			if (this.prevAltButtonR && !isAltButtonR)
 				{ this.isAltModeR = !this.isAltModeR; }//button released
-			prevAltButtonR = isAltButtonR;
+			this.prevAltButtonR = isAltButtonR;
 
-			var rightStickX = gamepad.axes[2];//left / right
-			var rightStickY = gamepad.axes[3];//up / down
+			var rightStickX = this.gamepad.axes[2];//left / right
+			var rightStickY = this.gamepad.axes[3];//up / down
 
 			var isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
 			if (isRotate && !this.sync.isMine)
@@ -3855,7 +4163,7 @@ var HoverColor = (function (Behavior$$1) {
 
 		// Default is to trigger color change on cursorenter/cursorleave events,
 		// also support triggering on cursordown/cursorup events.
-		if (config.event !== 'cursorenter' && config.event !== 'cursordown') {
+		if (this.config.event !== 'cursorenter' && this.config.event !== 'cursordown') {
 			throw Error('Expected config.event "cursorenter" or "cursordown"');
 		}
 
@@ -3872,7 +4180,7 @@ var HoverColor = (function (Behavior$$1) {
 		this.cursordown = (function (event) {
 			this$1.cursordownObject = this$1.object3d;
 			if (this$1.config.event === 'cursordown' ){
-				this$1.setColor(cursordownObject);
+				this$1.setColor(this$1.cursordownObject);
 			}
 		}).bind(this);
 
@@ -4184,6 +4492,7 @@ var JointCollisionEvents = (function (Behavior$$1) {
 				if(joint && joint.confidence !== 0) {
 					var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, this$1.jointCube);
 					var collision = objectBB.intersectsBox(jointBB);
+
 					if(collision) {
 						var intersectBB = objectBB.intersect(jointBB);
 						if(this$1.jointIntersectUnion) {
@@ -4191,7 +4500,6 @@ var JointCollisionEvents = (function (Behavior$$1) {
 						} else {
 							this$1.jointIntersectUnion = intersectBB;
 						}
-
 						this$1.hasCollided = true;
 						this$1.collidedJoints.push(joint);
 					}
@@ -4220,7 +4528,7 @@ var JointCollisionEvents = (function (Behavior$$1) {
 		// Dispatch collision event
 		if(this.hasCollided)
 		{
-			object3d.dispatchEvent(new CollsionEvent(
+			this.object3d.dispatchEvent(new CollisionEvent(
 				this.jointIntersectUnion,
 				this.collidedJoints,
 				this.object3d
@@ -4295,6 +4603,31 @@ var LeaveEvent = (function (JointCollisionEvent) {
 }(JointCollisionEvent));
 
 /**
+* Fires a continuous event while any joints are colliding with the object.
+*
+* @event jointcollision
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with the object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+var CollisionEvent = (function (JointCollisionEvent) {
+	function CollisionEvent(){
+		var args = [], len = arguments.length;
+		while ( len-- ) args[ len ] = arguments[ len ];
+
+		JointCollisionEvent.apply(this, [ 'jointcollision' ].concat( args ));
+	}
+
+	if ( JointCollisionEvent ) CollisionEvent.__proto__ = JointCollisionEvent;
+	CollisionEvent.prototype = Object.create( JointCollisionEvent && JointCollisionEvent.prototype );
+	CollisionEvent.prototype.constructor = CollisionEvent;
+
+	return CollisionEvent;
+}(JointCollisionEvent));
+
+/**
 * An array of JointIds describing the tip of every finger on both hands.
 * @constant {Array.<JointId>} HAND_JOINTS
 * @memberof module:altspace/utilities/behaviors.JointCollisionEvents
@@ -4317,7 +4650,7 @@ JointCollisionEvents.HAND_JOINTS = [
 
 var containerMax = Symbol('containerMax');
 var containerMin = Symbol('containerMin');
-var object3D$1 = Symbol('object3D');
+var object3D = Symbol('object3D');
 var boundingBox = Symbol('boundingBox');
 var origMatrix = Symbol('origMatrix');
 var origMatrixAutoUpdate = Symbol('origMatrixAutoUpdate');
@@ -4420,13 +4753,13 @@ var Layout = (function (Behavior$$1) {
 			var offset = ref.offset;
 			var anchorOffset = this$1.getAnchorOffset(axis, this$1.my[axis]);
 			if (position === 'max') {
-				this$1[object3D$1].position[axis] = this$1[containerMax][axis] + offset + anchorOffset;
+				this$1[object3D].position[axis] = this$1[containerMax][axis] + offset + anchorOffset;
 			}
 			else if (position === 'min') {
-				this$1[object3D$1].position[axis] = this$1[containerMin][axis] + offset + anchorOffset;
+				this$1[object3D].position[axis] = this$1[containerMin][axis] + offset + anchorOffset;
 			}
 			else if (position === 'center') {
-				this$1[object3D$1].position[axis] = offset + anchorOffset;
+				this$1[object3D].position[axis] = offset + anchorOffset;
 			}
 			else {
 				throw new Error(
@@ -4446,13 +4779,13 @@ var Layout = (function (Behavior$$1) {
 	Layout.prototype.awake = function awake (_object3D) {
 		var this$1 = this;
 
-		this[object3D$1] = _object3D;
-		this[boundingBox] = new THREE.Box3().setFromObject(this[object3D$1]);
+		this[object3D] = _object3D;
+		this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
 
 		// TODO Listen for resize events on the enclosure
 		altspace.getEnclosure().then(function (_enclosure) {
 			this$1[enclosure] = _enclosure;
-			if (this$1[object3D$1].parent instanceof THREE.Scene) {
+			if (this$1[object3D].parent instanceof THREE.Scene) {
 				var
 					hw = this$1[enclosure].innerWidth / 2,
 					hh = this$1[enclosure].innerHeight / 2,
@@ -4462,11 +4795,11 @@ var Layout = (function (Behavior$$1) {
 				this$1.doLayout();
 			}
 			else {
-				var objWorldScale = this$1[object3D$1].getWorldScale();
+				var objWorldScale = this$1[object3D].getWorldScale();
 				this$1[boundingBox].min.divide(objWorldScale);
 				this$1[boundingBox].max.divide(objWorldScale);
 
-				this$1[parent] = this$1[object3D$1].parent;
+				this$1[parent] = this$1[object3D].parent;
 
 				this$1[origMatrix] = this$1[parent].matrix.clone();
 				this$1[origMatrixAutoUpdate] = this$1[parent].matrixAutoUpdate;
@@ -4481,9 +4814,9 @@ var Layout = (function (Behavior$$1) {
 					parentBoundingBox = origParentBoundingBoxes.get(this$1[parent].uuid);
 				}
 				else {
-					this$1[parent].remove(this$1[object3D$1]);
+					this$1[parent].remove(this$1[object3D]);
 					parentBoundingBox = new THREE.Box3().setFromObject(this$1[parent]);
-					this$1[parent].add(this$1[object3D$1]);
+					this$1[parent].add(this$1[object3D]);
 					origParentBoundingBoxes.set(this$1[parent].uuid, parentBoundingBox);
 				}
 
@@ -4783,7 +5116,7 @@ var SceneSync = (function (Behavior$$1) {
 
 		// add our client ID to the list of connected clients,
 		// but have it be automatically removed by firebase if we disconnect for any reason
-		this.clientsRef.push(clientId).onDisconnect().remove();
+		this.clientsRef.push(this.clientId).onDisconnect().remove();
 
 		this.instanceRef.child('initialized').once('value', (function (snapshot) {
 			var shouldInitialize = !snapshot.val();
@@ -4828,7 +5161,7 @@ var SceneSync = (function (Behavior$$1) {
 	{
 		var data = snapshot.val();
 		var key = snapshot.key();
-		var instantiator = this.instantiators[data.syncType];
+		var instantiator = this.config.instantiators[data.syncType];
 
 		if (!instantiator) {
 			console.warn('No instantiator found for syncType: ' + data.syncType);
@@ -4926,6 +5259,7 @@ var SceneSync = (function (Behavior$$1) {
 	/**
 	* True if this client is the master, false otherwise. Master is generally the client that
 	* has been in the room the longest.
+	* @instance
 	* @member {boolean} isMasterClient
 	* @memberof module:altspace/utilities/behaviors.SceneSync
 	*/
@@ -4994,7 +5328,7 @@ function getController(hand, config) {
 
 /**
 * The SteamVRInput behavior manages SteamVR input devices. It should be added
-* to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
+* to the ThreeJS scene and is a requirement of [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}.
 *
 * @param {Object} [config]
 * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
@@ -5009,24 +5343,24 @@ function getController(hand, config) {
 * @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
 * @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
 */
-var SteamVRInputBehavior = (function (Behavior$$1) {
-	function SteamVRInputBehavior(config) {
+var SteamVRInput = (function (Behavior$$1) {
+	function SteamVRInput(config) {
 		this.config = Object.assign({logging: false}, config);
 	}
 
-	if ( Behavior$$1 ) SteamVRInputBehavior.__proto__ = Behavior$$1;
-	SteamVRInputBehavior.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
-	SteamVRInputBehavior.prototype.constructor = SteamVRInputBehavior;
+	if ( Behavior$$1 ) SteamVRInput.__proto__ = Behavior$$1;
+	SteamVRInput.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SteamVRInput.prototype.constructor = SteamVRInput;
 
 	var prototypeAccessors = { type: {} };
 
 	prototypeAccessors.type.get = function (){ return 'SteamVRInput'; };
 
-	SteamVRInputBehavior.prototype.awake = function awake () {
+	SteamVRInput.prototype.awake = function awake () {
 		var this$1 = this;
 
-		this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
-		this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
+		this.leftControllerPromise = getController(SteamVRInput.LEFT_CONTROLLER, this.config);
+		this.rightControllerPromise = getController(SteamVRInput.RIGHT_CONTROLLER, this.config);
 		this.firstControllerPromise = Promise.race([
 			this.leftControllerPromise,
 			this.rightControllerPromise ]);
@@ -5043,38 +5377,38 @@ var SteamVRInputBehavior = (function (Behavior$$1) {
 			var blockedAxes = controller.axes.map(function () { return false; });
 			var blockedButtons = controller.buttons.map(function () { return false; });
 
-			blockedButtons[SteamVRInputBehavior.BUTTON_TRIGGER] = true;
-			blockedButtons[SteamVRInputBehavior.BUTTON_TOUCHPAD] = true;
+			blockedButtons[SteamVRInput.BUTTON_TRIGGER] = true;
+			blockedButtons[SteamVRInput.BUTTON_TOUCHPAD] = true;
 
 			controller.preventDefault(blockedAxes, blockedButtons);
 		});
 	};
 
-	Object.defineProperties( SteamVRInputBehavior.prototype, prototypeAccessors );
+	Object.defineProperties( SteamVRInput.prototype, prototypeAccessors );
 
-	return SteamVRInputBehavior;
+	return SteamVRInput;
 }(Behavior));
 
-SteamVRInputBehavior.BUTTON_TRIGGER = 0;
-SteamVRInputBehavior.BUTTON_GRIP = 1;
-SteamVRInputBehavior.BUTTON_TOUCHPAD = 2;
-SteamVRInputBehavior.BUTTON_DPAD_UP = 3;
-SteamVRInputBehavior.BUTTON_DPAD_RIGHT = 4;
-SteamVRInputBehavior.BUTTON_DPAD_DOWN = 5;
-SteamVRInputBehavior.BUTTON_DPAD_LEFT = 6;
+Object.assign(SteamVRInput, {
+	BUTTON_TRIGGER: 0,
+	BUTTON_GRIP: 1,
+	BUTTON_TOUCHPAD: 2,
+	BUTTON_DPAD_UP: 3,
+	BUTTON_DPAD_RIGHT: 4,
+	BUTTON_DPAD_DOWN: 5,
+	BUTTON_DPAD_LEFT: 6,
 
-SteamVRInputBehavior.AXIS_TOUCHPAD_X = 0;
-SteamVRInputBehavior.AXIS_TOUCHPAD_Y = 1;
+	AXIS_TOUCHPAD_X: 0,
+	AXIS_TOUCHPAD_Y: 1,
 
-SteamVRInputBehavior.FIRST_CONTROLLER = 'first';
-SteamVRInputBehavior.LEFT_CONTROLLER = 'left';
-SteamVRInputBehavior.RIGHT_CONTROLLER = 'right';
+	FIRST_CONTROLLER: 'first',
+	LEFT_CONTROLLER: 'left',
+	RIGHT_CONTROLLER: 'right'
+});
 
 /**
 * The SteamVRTrackedObject behavior updates an objects position and rotation to
-* match the location of a SteamVR input device.
-*
-* A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
+* match the location of a SteamVR input device. A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
 * must be on the scene containing this object for it to function properly.
 *
 * @param {Object} [config]
@@ -5203,14 +5537,15 @@ var TouchpadRotate = (function (Behavior$$1) {
 /**
 * Behaviors are designed to be plug-and-play reusable modules to add some type of
 * functionality to an object. See [Behavior]{@link module:altspace/utilities/behaviors.Behavior}
-* for a full description of a behavior's lifecycle.
+* for a full description of a behavior's lifecycle. You add behaviors to Object3Ds
+* with [addBehavior]{@link THREE.Object3D}.
 * @module altspace/utilities/behaviors
 */
 
 
 
 
-var index$3 = Object.freeze({
+var index$1 = Object.freeze({
 	Behavior: Behavior,
 	Bob: Bob,
 	ButtonStateStyle: ButtonStateStyle,
@@ -5223,20 +5558,20 @@ var index$3 = Object.freeze({
 	Object3DSync: Object3DSync,
 	SceneSync: SceneSync,
 	Spin: Spin,
-	SteamVRInput: SteamVRInputBehavior,
+	SteamVRInput: SteamVRInput,
 	SteamVRTrackedObject: SteamVRTrackedObject,
 	TouchpadRotate: TouchpadRotate
 });
 
 
 
-var index$1 = Object.freeze({
-	sync: sync$1,
+var utilities_lib = Object.freeze({
+	sync: sync,
 	Simulation: Simulation,
 	multiloader: multiloader,
 	codePen: codepen,
-	shims: index$2,
-	behaviors: index$3
+	shims: index,
+	behaviors: index$1
 });
 
 /**
@@ -5244,9 +5579,11 @@ var index$1 = Object.freeze({
 * @module altspace
 */
 
-// make sure that the core uses the correct version of the SDK
+if(!window.altspace)
+	{ window.altspace = {components: {}, utilities: {}, inClient: false}; }
+
 var version = '2.0.0';
-if (window.altspace && window.altspace.requestVersion) {
+if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
 
@@ -5256,9 +5593,7 @@ if(window.AFRAME && !window.THREE){
 }
 
 // include source packages
+Object.assign(window.altspace.components || {}, components_lib);
+Object.assign(window.altspace.utilities || {}, utilities_lib);
 
-exports.components = index;
-exports.utilities = index$1;
-exports.version = version;
-
-}((this.altspace = this.altspace || {}),Firebase,Url,Please));
+}(Firebase,Url,Please));
