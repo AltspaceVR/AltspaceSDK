@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>n-capsule-collider - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script>
+        function saveVerticalScrollPosition(evt){
+            window.localStorage.setItem('navscrollpos', evt.target.scrollTop);
+        }
+        function loadVerticalScrollPosition(){
+            var nav = document.querySelector('nav');
+            nav.scrollTop = window.localStorage.getItem('navscrollpos');
+        }
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav onscroll='saveVerticalScrollPosition(event)'>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a></li><li><a href="module-altspace_utilities_codePen.html">altspace/utilities/codePen</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_codePen.html#.ensureInVR">ensureInVR</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.getAuthorId">getAuthorId</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.getPenId">getPenId</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.setName">setName</a></li></ul></li><li><a href="module-altspace_utilities_shims.html">altspace/utilities/shims</a></li><li><a href="module-altspace_utilities_shims_bubbling.html">altspace/utilities/shims/bubbling</a></li><li><a href="module-altspace_utilities_shims_cursor.html">altspace/utilities/shims/cursor</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_shims_cursor.html#.init">init</a></li></ul></li><li><a href="module-altspace_utilities_sync.html">altspace/utilities/sync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_sync.html#.connect">connect</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="native.html">native</a></li><li><a href="sync.html">sync</a></li><li><a href="THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="module-altspace-AltRenderer.html">AltRenderer</a><ul class='methods'><li data-type='method'><a href="module-altspace-AltRenderer.html#render">render</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Behavior.html">Behavior</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#awake">awake</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#dispose">dispose</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#start">start</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#update">update</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Bob.html">Bob</a></li><li><a href="module-altspace_utilities_behaviors.ButtonStateStyle.html">ButtonStateStyle</a></li><li><a href="module-altspace_utilities_sync-Connection.html">Connection</a></li><li><a href="module-altspace-Document.html">Document</a><ul class='methods'><li data-type='method'><a href="module-altspace-Document.html#reset">reset</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Drag.html">Drag</a></li><li><a href="module-altspace-Enclosure.html">Enclosure</a><ul class='methods'><li data-type='method'><a href="module-altspace-Enclosure.html#exitFullspace">exitFullspace</a></li><li data-type='method'><a href="module-altspace-Enclosure.html#requestFullspace">requestFullspace</a></li></ul></li><li><a href="module-altspace-Gamepad.html">Gamepad</a><ul class='methods'><li data-type='method'><a href="module-altspace-Gamepad.html#preventDefault">preventDefault</a></li></ul></li><li><a href="module-altspace-GamepadButton.html">GamepadButton</a></li><li><a href="module-altspace_utilities_behaviors.GamepadControls.html">GamepadControls</a></li><li><a href="module-altspace_utilities_behaviors.HoverColor.html">HoverColor</a></li><li><a href="module-altspace_utilities_behaviors.HoverScale.html">HoverScale</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html">JointCollisionEvents</a></li><li><a href="module-altspace_utilities_behaviors.Layout.html">Layout</a></li><li><a href="THREE.Object3D.html">Object3D</a><ul class='methods'><li data-type='method'><a href="THREE.Object3D.html#addBehavior">addBehavior</a></li><li data-type='method'><a href="THREE.Object3D.html#addBehaviors">addBehaviors</a></li><li data-type='method'><a href="THREE.Object3D.html#getBehaviorByType">getBehaviorByType</a></li><li data-type='method'><a href="THREE.Object3D.html#removeAllBehaviors">removeAllBehaviors</a></li><li data-type='method'><a href="THREE.Object3D.html#removeBehavior">removeBehavior</a></li><li data-type='method'><a href="THREE.Object3D.html#updateBehaviors">updateBehaviors</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html">Object3DSync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.Object3DSync.html#takeOwnership">takeOwnership</a></li></ul></li><li><a href="module-altspace_utilities_shims.OBJMTLLoader.html">OBJMTLLoader</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_shims.OBJMTLLoader.html#.load">load</a></li></ul></li><li><a href="module-altspace-Popup.html">Popup</a><ul class='methods'><li data-type='method'><a href="module-altspace-Popup.html#hide">hide</a></li><li data-type='method'><a href="module-altspace-Popup.html#show">show</a></li></ul></li><li><a href="THREE.Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="THREE.Scene.html#updateAllBehaviors">updateAllBehaviors</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.SceneSync.html">SceneSync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.SceneSync.html#destroy">destroy</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.SceneSync.html#instantiate">instantiate</a></li></ul></li><li><a href="module-altspace_utilities.Simulation.html">Simulation</a></li><li><a href="module-altspace_utilities_behaviors.Spin.html">Spin</a></li><li><a href="module-altspace_utilities_behaviors.SteamVRInput.html">SteamVRInput</a></li><li><a href="module-altspace_utilities_behaviors.SteamVRTrackedObject.html">SteamVRTrackedObject</a></li><li><a href="module-altspace_utilities_behaviors.TouchpadRotate.html">TouchpadRotate</a></li><li><a href="module-altspace-TrackingJoint.html">TrackingJoint</a></li><li><a href="module-altspace-TrackingSkeleton.html">TrackingSkeleton</a><ul class='methods'><li data-type='method'><a href="module-altspace-TrackingSkeleton.html#getJoint">getJoint</a></li></ul></li><li><a href="Window.html">Window</a></li></ul><h3>Events</h3><ul><li><a href="Window.html#event:blur">blur</a></li><li><a href="sync.sync-system.html#event:clientjoined">clientjoined</a></li><li><a href="sync.sync-system.html#event:clientleft">clientleft</a></li><li><a href="sync.sync-system.html#event:connected">connected</a></li><li><a href="THREE.Object3D.html#.event:cursordown">cursordown</a></li><li><a href="THREE.Object3D.html#.event:cursorenter">cursorenter</a></li><li><a href="THREE.Object3D.html#.event:cursorleave">cursorleave</a></li><li><a href="THREE.Scene.html#event:cursormove">cursormove</a></li><li><a href="THREE.Object3D.html#.event:cursorup">cursorup</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html#.event:dragstart">dragstart</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html#.event:dragstop">dragstop</a></li><li><a href="Window.html#event:focus">focus</a></li><li><a href="module-altspace.Enclosure.html#event:fullspacechange">fullspacechange</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollision">jointcollision</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollisionenter">jointcollisionenter</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollisionleave">jointcollisionleave</a></li><li><a href="native.n-sound.html#event:n-sound-loaded">n-sound-loaded</a></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html#.event:ownershipgained">ownershipgained</a></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html#.event:ownershiplost">ownershiplost</a></li><li><a href="module-altspace.html#event:touchpaddown">touchpaddown</a></li><li><a href="module-altspace.html#event:touchpadgesture">touchpadgesture</a></li><li><a href="module-altspace.html#event:touchpadmove">touchpadmove</a></li><li><a href="module-altspace.html#event:touchpadup">touchpadup</a></li></ul><h3>Mixins</h3><ul><li><a href="sync.instantiator.html">instantiator</a></li><li><a href="native.n-billboard.html">n-billboard</a></li><li><a href="native.n-box-collider.html">n-box-collider</a></li><li><a href="native.n-capsule-collider.html">n-capsule-collider</a></li><li><a href="native.n-cockpit-parent.html">n-cockpit-parent</a></li><li><a href="native.n-collider.html">n-collider</a></li><li><a href="native.n-container.html">n-container</a></li><li><a href="native.n-mesh-collider.html">n-mesh-collider</a></li><li><a href="native.n-object.html">n-object</a></li><li><a href="native.n-skeleton-parent.html">n-skeleton-parent</a></li><li><a href="native.n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="native.n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="native.n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="native.n-sound.html#seek">seek</a></li></ul></li><li><a href="native.n-spawner.html">n-spawner</a></li><li><a href="native.n-sphere-collider.html">n-sphere-collider</a></li><li><a href="native.n-text.html">n-text</a></li><li><a href="sync.one-per-user.html">one-per-user</a></li><li><a href="sync.sync.html">sync</a><ul class='methods'><li data-type='method'><a href="sync.sync.html#takeOwnership">takeOwnership</a></li></ul></li><li><a href="sync.sync-n-skeleton-parent.html">sync-n-skeleton-parent</a></li><li><a href="sync.sync-system.html">sync-system</a><ul class='methods'><li data-type='method'><a href="sync.sync-system.html#instantiate">instantiate</a></li><li data-type='method'><a href="sync.sync-system.html#removeLast">removeLast</a></li></ul></li></ul>
+</nav>
+<script>loadVerticalScrollPosition()</script>
+
+<div id="main">
+    
+    <h1 class="page-title">n-capsule-collider</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="native.html">native</a>.</span>
+        
+        n-capsule-collider
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Create a capsule-shaped collider on this entity. Capsules
+are a union of a cylinder and two spheres on top and bottom.</p></div>
+        
+
+        
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>radius</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The radius of the capsule in meters.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The height of the shaft of the capsule in meters.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    y
+                
+                </td>
+            
+
+            <td class="description last"><p>The axis with which the capsule is aligned.
+One of <code>x</code>, <code>y</code>, or <code>z</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="native.n-collider.html">native.n-collider</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

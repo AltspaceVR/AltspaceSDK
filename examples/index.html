@@ -37,29 +37,24 @@
 	'js/steamvr/',
 	'js/popup/',
 	'tests',
-	'aframe/architecture/index.html',
-	'aframe/basic/index.html',
-	'aframe/custom-component/index.html',
-	'aframe/fireball/index.html',
-	'aframe/introduction/index.html',
-	'aframe/moon/index.html',
-	'aframe/native/index.html',
-	'aframe/native-sound/index.html',
-	'aframe/test-mesh-collider/index.html',
-	'aframe/test-cursor-events/index.html',
-	'aframe/test-fullspace/index.html',
-	'aframe/test-meter-scale/index.html',
-	'aframe/test-pixel-scale/index.html',
-	'aframe/test-sync/index.html',
-	'aframe/test-vertical-align/index.html',
-	'aframe/threejs/index.html',
-	'aframe/wire/index.html'
+	'aframe/architecture.html',
+	'aframe/armory.html',
+	'aframe/basic.html',
+	'aframe/custom-component.html',
+	'aframe/fireball/',
+	'aframe/introduction/',
+	'aframe/moon.html',
+	'aframe/native.html',
+	'aframe/native-sound.html',
+	'aframe/native-parents.html',
+	'aframe/threejs.html',
+	'aframe/wire.html'
 ].forEach(function (example) {
 	var li = document.createElement('li');
 	var a = document.createElement('a');
 	a.href = a.textContent = example;
 	li.appendChild(a);
-	list.appendChild(li);
+	document.getElementById('list').appendChild(li);
 });
 </script>
 </body>
