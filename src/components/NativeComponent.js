@@ -39,16 +39,20 @@ class NativeComponent extends AFrameComponent
 	init()
 	{
 		let mesh = this.mesh || this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+		this.currentMesh = mesh;
 
 		//If you attach native components to an entity, it will not use a default collider
-		mesh.userData.altspace = mesh.userData.altspace || {};
-		mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
-		mesh.userData.altspace.collider.enabled = false;
+		safeDeepSet(mesh.user, ['altspace', 'collider', 'enabled'], false);
 
 		altspace.addNativeComponent(mesh, this.name);
 
 		//to pass defaults
 		this.update(this.data);
+
+		this.el.addEventListener('object3dset', (event => {
+			if(event.detail.type === 'mesh')
+				altspace.removeNativeComponent(this.currentMesh, this.name);
+		}).bind(this));
 	}
 
 	update(){

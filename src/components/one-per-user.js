@@ -14,7 +14,7 @@ class OnePerUser extends AFrameComponent
 		return {
 			/**
 			* A comma-separated list of mixin ids that are used to instantiate the object.
-			* @member {array} mixin
+			* @member {string} mixin
 			* @instance
 			* @memberof module:altspace/components.one-per-user
 			*/

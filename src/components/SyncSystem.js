@@ -51,7 +51,7 @@ class SyncSystem extends AFrameSystem
 
 	/**
 	* True if the sync system is connected and ready for syncing.
-	* @member module:altspace/components.sync-system#isConnected
+	* @member {boolean} module:altspace/components.sync-system#isConnected
 	* @readonly
 	*/
 

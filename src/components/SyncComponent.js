@@ -12,28 +12,6 @@ import {AFrameComponent} from './AFrameComponent';
 */
 class SyncComponent extends AFrameComponent
 {
-	constructor()
-	{
-		this.scene = undefined;
-		this.syncSys = undefined;
-		this.ref = undefined;
-		this.key = undefined;
-		this.dataRef = undefined;
-		this.ownerRef = undefined;
-		this.ownerId = undefined;
-
-		this.isConnected = false;
-
-		/**
-		* Indicates whether the sync ownership is yours.
-		* @instance
-		* @member {boolean} isMine
-		* @memberof module:altspace/components.sync
-		* @readonly
-		*/
-		this.isMine = false;
-	}
-
 	get schema(){
 		return {
 			mode: { default: 'link' },
@@ -52,8 +30,18 @@ class SyncComponent extends AFrameComponent
 
 	init()
 	{
+		/**
+		* Indicates whether the sync ownership is yours.
+		* @instance
+		* @member {boolean} isMine
+		* @memberof module:altspace/components.sync
+		* @readonly
+		*/
+		this.isMine = false;
+
 		this.scene = this.el.sceneEl;
 		this.syncSys = this.scene.systems['sync-system'];
+		this.isConnected = false;
 
 		if(this.syncSys.isConnected)
 			start();
@@ -131,14 +119,7 @@ class SyncComponent extends AFrameComponent
 
 	setupReceive()
 	{
-		//if nobody has owned the object yet, we will.
-		this.ownerRef.transaction((owner => {
-			if (owner) return undefined;
-			this.ownerRef.onDisconnect().set(null);
-			return this.syncSys.clientId;
-		}).bind(this));
-
-		this.ownerRef.on('value', (snapshot =>
+		function onOwnerUpdate(snapshot)
 		{
 			let newOwnerId = snapshot.val();
 			let gained = newOwnerId === this.syncSys.clientId && !this.isMine;
@@ -157,7 +138,21 @@ class SyncComponent extends AFrameComponent
 			this.ownerId = newOwnerId;
 
 			this.isMine = newOwnerId === this.syncSys.clientId;
-		}).bind(this));
+		}
+
+		//if nobody has owned the object yet, we will.
+		this.ownerRef.transaction(
+			(owner => {
+				if (owner) return undefined;
+				this.ownerRef.onDisconnect().set(null);
+				return this.syncSys.clientId;
+			}).bind(this),
+
+			((error, committed) => {
+				if(!committed) return;
+				this.ownerRef.on('value', onOwnerUpdate.bind(this));
+			}).bind(this)
+		);
 	}
 }
 

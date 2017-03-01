@@ -31,11 +31,14 @@ import SyncComponent from './SyncComponent';
 import SyncSystem from './SyncSystem';
 import SyncTransform from './sync-transform';
 import SyncNSound from './sync-n-sound';
+import SyncNSkeletonParent from './sync-n-skeleton-parent';
 import Wire from './wire';
 import OnePerUser from './one-per-user';
 import Instantiator from './instantiator';
 
-import {NObject, NSpawner, NText, NBillboard} from './NSmallComponents';
+import {
+	NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent
+} from './NSmallComponents';
 import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
 import NContainer from './NContainer';
 import NSound from './NSound';
@@ -50,6 +53,7 @@ if (window.AFRAME)
 	registerComponentClass('sync-transform', SyncTransform);
 	registerComponentClass('sync', SyncComponent);
 	registerComponentClass('sync-n-sound', SyncNSound);
+	registerComponentClass('sync-n-skeleton-parent', SyncNSkeletonParent);
 	registerComponentClass('wire', Wire);
 	registerComponentClass('one-per-user', OnePerUser);
 	registerComponentClass('instantiator', Instantiator);
@@ -57,6 +61,8 @@ if (window.AFRAME)
 	registerComponentClass('n-spawner', NSpawner);
 	registerComponentClass('n-text', NText);
 	registerComponentClass('n-billboard', NBillboard);
+	registerComponentClass('n-skeleton-parent', NSkeletonParent);
+	registerComponentClass('n-cockpit-parent', NCockpitParent);
 	registerComponentClass('n-container', NContainer);
 	registerComponentClass('n-sound', NSound);
 	registerComponentClass('n-sphere-collider', NSphereCollider);
@@ -68,6 +74,7 @@ if (window.AFRAME)
 export {
 	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
 	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
-	NObject, NSpawner, NText, NBillboard, NContainer, NSound,
-	NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider
+	SyncNSkeletonParent, NObject, NSpawner, NText, NBillboard, NSkeletonParent,
+	NCockpitParent, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
+	NMeshCollider
 };

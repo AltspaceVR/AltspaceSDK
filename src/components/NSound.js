@@ -154,12 +154,12 @@ class NSound extends NativeComponent
 	{
 		super.update(oldData);
 		if (this.playHandler) {
-		  this.el.removeEventListener(oldData.on, this.playHandler);
+			this.el.removeEventListener(oldData.on, this.playHandler);
 		}
 
 		if (this.data.on) {
-		  this.playHandler = this.playSound.bind(this);
-		  this.el.addEventListener(this.data.on, this.playHandler);
+			this.playHandler = this.playSound.bind(this);
+			this.el.addEventListener(this.data.on, this.playHandler);
 		}
 	}
 
@@ -167,7 +167,7 @@ class NSound extends NativeComponent
 	{
 		super.remove();
 		if (this.playHandler) {
-		  this.el.removeEventListener(oldData.on, this.playHandler);
+			this.el.removeEventListener(this.data.on, this.playHandler);
 		}
 	}
 

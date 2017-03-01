@@ -130,4 +130,54 @@ class NBillboard extends NativeComponent {
 	constructor(){ super('n-billboard', false); }
 }
 
-export {NObject, NSpawner, NText, NBillboard};
+/**
+* Parents an entity to a joint on the avatar skeleton. @aframe
+* @alias n-skeleton-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+class NSkeletonParent extends NativeComponent {
+	constructor(){ super('n-skeleton-parent'); }
+	get schema(){ return {
+		/**
+		* One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg',
+		* 'foot', 'toes', 'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb',
+		* 'index', 'middle', 'ring' or 'pinky'.
+		* @member {string} module:altspace/components.n-skeleton-parent#part
+		*/
+		part: {type: 'string'},
+
+		/**
+		* Side of the body. Either 'left', 'center' or 'right'
+		* @member {string} module:altspace/components.n-skeleton-parent#side
+		* @default "center"
+		*/
+		side: {type: 'string', default: 'center'},
+
+		/**
+		* Bone index. e.g. Which knuckle joint to attach to.
+		* @member {int} module:altspace/components.n-skeleton-parent#index
+		* @default 0
+		*/
+		index: {type: 'int', default: 0},
+
+		/**
+		* Id of the user to which the entity should be attached. Defaults to the
+		* local user.
+		* @member {int} module:altspace/components.n-skeleton-parent#userId
+		*/
+		userId: {type: 'string'}
+	}; }
+}
+
+/**
+* Parents an entity to the cockpit. @aframe
+* @alias n-cockpit-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+class NCockpitParent extends NativeComponent {
+	constructor(){ super('n-cockpit-parent', false); }
+}
+
+export {NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent};

@@ -55,7 +55,7 @@ AFRAME.registerComponent('color-cycle', {
 
 ## Native Components
 
-In addition to the normal power of A-Frame that AltspaceVR developers are used to, we now support attaching native AltspaceVR assets to entities via special A-Frame components. So you can spawn physical objects that you can stand on, interactables that users can pick up and throw, and much more! See the [native component documentation](module-altspace_components.html) and the [native component FAQ](https://github.com/AltspaceVR/aframe-altspace-component/blob/master/native.md) for the details.
+In addition to the normal power of A-Frame that AltspaceVR developers are used to, we now support attaching native AltspaceVR assets to entities via special A-Frame components. So you can spawn physical objects that you can stand on, interactables that users can pick up and throw, and much more! The downside here is that this process is opaque to your code. For example, if you attach an object to a user via `n-skeleton-parent`, its true position in javascript is not updated, even though it moves around the scene. See the [native component documentation](module-altspace_components.html) and the [native component FAQ](https://github.com/AltspaceVR/aframe-altspace-component/blob/master/native.md) for the details.
 
 
 ## Native Resources

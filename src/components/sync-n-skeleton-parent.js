@@ -1,21 +1,37 @@
+'use strict';
+
+import {AFrameComponent} from './AFrameComponent';
+
 /**
- * Syncs the attributes of an n-skeleton-parent component across clients
- * @mixin sync-n-skeleton-parent
- * @memberof sync
- */
-AFRAME.registerComponent('sync-n-skeleton-parent', {
-	dependencies: ['sync'],
-	init: function () {
-		var scene = document.querySelector('a-scene');
+* Syncs the attributes of an n-skeleton-parent component across clients @aframe
+* @alias sync-n-skeleton-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+
+class SyncNSkeletonParent extends AFrameComponent
+{
+	get dependencies(){ return ['sync']; }
+
+	init()
+	{
+		let scene = this.el.sceneEl;
 		this.syncSys = scene.systems['sync-system'];
 		this.sync = this.el.components.sync;
-		if(this.syncSys.isConnected) { this._start(); }
-		else { scene.addEventListener('connected', this._start.bind(this)); }
-	},
-	getDataRef: function (propertyName) {
+		if(this.syncSys.isConnected){
+			this._start();
+		}
+		else {
+			scene.addEventListener('connected', this._start.bind(this));
+		}
+	}
+
+	getDataRef(propertyName) {
 		return this.sync.dataRef.child('n-skeleton-parent/' + propertyName);
-	},
-	_start: function () {
+	}
+
+	_start()
+	{
 		this.attributeRef = this.sync.dataRef.child('n-skeleton-parent');
 		this.attributeRef.on('value', function (snapshot) {
 			var val = snapshot.val();
@@ -37,5 +53,6 @@ AFRAME.registerComponent('sync-n-skeleton-parent', {
 			}
 		}.bind(this));
 	}
-});
+}
 
+export default SyncNSkeletonParent;
