@@ -14,33 +14,28 @@
 
 TouchpadCube = (function () {
 
-    var utilities = altspace.utilities;
-    var behaviors = altspace.utilities.behaviors;
+	var utilities = altspace.utilities;
+	var behaviors = altspace.utilities.behaviors;
 
 	var sim;
+	var connection;
 	var sceneSync;
 	var cube;
 	var cubeModel;
 
 	// Setup
-	function main() {
-	    sim = new utilities.Simulation();
+	function main(_connection) {
+		connection = _connection;
+		sim = new utilities.Simulation();
 		loadCubeModel();//must load model before creating synced cube
 	}
 
 	function onModelReady() {
-	    var inCodePen = utilities.codePen.inCodePen;
-	    utilities.sync.connect({
-            appId: "TouchpadCube",
-	        authorId: inCodePen ? utilities.codePen.getAuthorId() : "AltspaceVR",
-	        instanceId: inCodePen ? utilities.codePen.getPenId() : null
-	    }).then(function (connection) {
-	        sceneSync = new behaviors.SceneSync(connection.instance, {
-	            instantiators: { 'Cube': createCube },
-	            ready: ready
-	        });
-	        sim.scene.addBehavior(sceneSync);
-	    });
+		sceneSync = new behaviors.SceneSync(connection.instance, {
+			instantiators: { 'Cube': createCube },
+			ready: ready
+		});
+		sim.scene.addBehavior(sceneSync);
 	}
 
 	function loadCubeModel() {
@@ -82,7 +77,12 @@ TouchpadCube = (function () {
 }());
 
 
-TouchpadCube.main();
+altspace.utilities.sync.connect({
+	appId: "TouchpadCube",
+	authorId: "AltspaceVR"
+}).then(function (connection) {
+	TouchpadCube.main(connection);
+});
 
 </script>
 </html>

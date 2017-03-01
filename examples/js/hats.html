@@ -30,6 +30,7 @@
 			};
 
 			var sim;
+			var connection;
 			var sceneSync;
 			var objTemplateByName = {};
 			var modelNames = [];
@@ -40,8 +41,8 @@
 			var scale;
 			var enclosure;
 
-			function main() {
-
+			function main(_connection) {
+				connection = _connection;
 				sim = new altspace.utilities.Simulation();
 				var promises = [altspace.getThreeJSTrackingSkeleton(), altspace.getEnclosure()];
 				Promise.all(promises).then(function (array) {
@@ -98,17 +99,11 @@
 					initialHats.push(obj);
 				}
 
-				// Now that hat templates ready, init sync.
-				altspace.utilities.sync.connect({
-					appId: 'Hats',
-					authorId: 'AltspaceVR'
-				}).then(function (connection) {
-					sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
-						instantiators: { 'Hat': createHat },
-						ready: onSyncReady
-					});
-					sim.scene.addBehavior(sceneSync);
+				sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
+					instantiators: { 'Hat': createHat },
+					ready: onSyncReady
 				});
+				sim.scene.addBehavior(sceneSync);
 			}
 
 			function onSyncReady() {
@@ -176,9 +171,15 @@
 
 		}());
 
-		altspace.getEnclosure().then(function (enclosure) {
-			enclosure.requestFullspace().then(function () {
-				HatsApp.main();
+		// Now that hat templates ready, init sync.
+		altspace.utilities.sync.connect({
+			appId: 'Hats',
+			authorId: 'AltspaceVR'
+		}).then(function (connection) {
+			altspace.getEnclosure().then(function (enclosure) {
+				enclosure.requestFullspace().then(function () {
+					HatsApp.main(connection);
+				});
 			});
 		});
 	</script>
