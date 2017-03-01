@@ -26,10 +26,10 @@ var raycaster = new THREE.Raycaster();
  * @memberof module:altspace/utilities/shims/cursor
  */
 function init(_scene, _camera, _params) {
-	if (!_scene || !_scene instanceof THREE.Scene) {
+	if (!_scene || !(_scene instanceof THREE.Scene)) {
 		throw new TypeError('Requires THREE.Scene argument');
 	}
-	if (!_camera || !_camera instanceof THREE.Camera) {
+	if (!_camera || !(_camera instanceof THREE.Camera)) {
 		throw new TypeError('Requires THREE.Camera argument');
 	}
 	scene = _scene;

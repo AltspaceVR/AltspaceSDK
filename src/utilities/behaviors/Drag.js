@@ -35,6 +35,8 @@ class Drag extends Behavior
 
 	constructor(config)
 	{
+		super();
+
 		//space: view, local, world, sphere
 		//gridSnap, cursorSnap
 		//config: x: true, y: true, z: false, defaultDistance: 1000
@@ -167,7 +169,7 @@ class Drag extends Behavior
 		* @type module:altspace/utilities/behaviors.Drag~DragEvent
 		* @memberof module:altspace/utilities/behaviors.Drag
 		*/
-	 	let dragEvent = this.createDragEvent('dragstart');
+		let dragEvent = this.createDragEvent('dragstart');
 		this.object3d.dispatchEvent(dragEvent);
 	}
 

@@ -14,8 +14,9 @@ import Behavior from './Behavior';
 class Spin extends Behavior
 {
 	get type(){ return 'Spin'; }
-	
+
 	constructor(config) {
+		super();
 		this.config = Object.assign(
 			{speed: 1e-4, axis: new THREE.Vector3(0,1,0)},
 			config
@@ -31,6 +32,6 @@ class Spin extends Behavior
 	update(deltaTime) {
 		this.object3d.rotateOnAxis(this.config.axis, this.config.speed * deltaTime);
 	}
-};
+}
 
 export default Spin;

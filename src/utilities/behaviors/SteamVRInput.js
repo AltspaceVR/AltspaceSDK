@@ -40,6 +40,7 @@ class SteamVRInput extends Behavior {
 	get type(){ return 'SteamVRInput'; }
 
 	constructor(config) {
+		super();
 		this.config = Object.assign({logging: false}, config);
 	}
 

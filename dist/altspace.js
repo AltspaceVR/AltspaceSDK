@@ -554,7 +554,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 	AltspaceComponent.prototype.init = function init ()
 	{
 		this.version = 'AFRAME_ALTSPACE_VERSION';
-		if(!this.el.object3D instanceof THREE.Scene){
+		if(!(this.el.object3D instanceof THREE.Scene)){
 			console.warn('aframe-altspace-component can only be attached to a-scene');
 			return;
 		}
@@ -599,16 +599,16 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			}
 
 			switch (this$1.data.verticalAlign) {
-				case 'bottom':
-					scene.position.y -= e.innerHeight / 2;
-					break;
-				case 'top':
-					scene.position.y += e.innerHeight / 2;
-					break;
-				case 'middle':
-					break;
-				default:
-					console.warn('Unexpected value for verticalAlign: ', this$1.data.verticalAlign);
+			case 'bottom':
+				scene.position.y -= e.innerHeight / 2;
+				break;
+			case 'top':
+				scene.position.y += e.innerHeight / 2;
+				break;
+			case 'middle':
+				break;
+			default:
+				console.warn('Unexpected value for verticalAlign: ', this$1.data.verticalAlign);
 			}
 
 			if(this$1.data.enclosuresOnly && e.innerDepth === 1){
@@ -700,7 +700,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			}
 			emit('mouseleave', event);
 		});
-    };
+	};
 
 	AltspaceComponent.prototype.initCollisionEvents = function initCollisionEvents ()
 	{
@@ -736,7 +736,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			emit('triggerexit', event);
 		});
 
-    };
+	};
 
 	Object.defineProperties( AltspaceComponent.prototype, prototypeAccessors );
 
@@ -1595,6 +1595,7 @@ var SyncNSkeletonParent = (function (AFrameComponent$$1) {
 
 var Wire = (function (AFrameComponent$$1) {
 	function Wire(){
+		AFrameComponent$$1.call(this);
 		this.multiple = true;
 	}
 
@@ -1920,6 +1921,7 @@ var NativeComponent = (function (AFrameComponent$$1) {
 	function NativeComponent(name, sendUpdates){
 		if ( sendUpdates === void 0 ) sendUpdates = true;
 
+		AFrameComponent$$1.call(this);
 		Object.assign(this, {name: name, sendUpdates: sendUpdates});
 	}
 
@@ -3054,10 +3056,10 @@ var raycaster = new THREE.Raycaster();
  * @memberof module:altspace/utilities/shims/cursor
  */
 function init(_scene, _camera, _params) {
-	if (!_scene || !_scene instanceof THREE.Scene) {
+	if (!_scene || !(_scene instanceof THREE.Scene)) {
 		throw new TypeError('Requires THREE.Scene argument');
 	}
-	if (!_camera || !_camera instanceof THREE.Camera) {
+	if (!_camera || !(_camera instanceof THREE.Camera)) {
 		throw new TypeError('Requires THREE.Camera argument');
 	}
 	scene = _scene;
@@ -3315,7 +3317,7 @@ function init$1(params){
 function load(loadRequest, onComplete){
 	var req = loadRequest;
 	var start = Date.now();
-	if (!req || !req instanceof LoadRequest){
+	if (!req || !(req instanceof LoadRequest)){
 		throw new Error('MultiLoader.load expects first arg of type LoadRequest');
 	}
 	if (!onComplete || typeof(onComplete) !== 'function'){
@@ -3503,15 +3505,15 @@ var OBJMTLLoader = function OBJMTLLoader () {};
 
 OBJMTLLoader.prototype.load = function load (objFile, mtlFile, callback)
 {
-    var mtlLoader = new THREE.MTLLoader();
-    var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
-    mtlLoader.setBaseUrl(baseUrl + '/');
-    mtlLoader.setCrossOrigin(this.crossOrigin);
-    mtlLoader.load(mtlFile, function (materials) {
-        var objLoader = new THREE.OBJLoader();
-        objLoader.setMaterials(materials);
-        objLoader.load(objFile, callback);
-    });
+	var mtlLoader = new THREE.MTLLoader();
+	var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
+	mtlLoader.setBaseUrl(baseUrl + '/');
+	mtlLoader.setCrossOrigin(this.crossOrigin);
+	mtlLoader.load(mtlFile, function (materials) {
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.load(objFile, callback);
+	});
 };
 
 /**
@@ -3937,6 +3939,7 @@ Object.defineProperties( Behavior.prototype, prototypeAccessors$2 );
 var Bob = (function (Behavior$$1) {
 	function Bob(config)
 	{
+		Behavior$$1.call(this);
 		this.config = Object.assign({x:3, y:5, shouldRotate:true, shouldMove:true}, config);
 		this.object3d = null;
 		this.offsetPosition = null;
@@ -3996,6 +3999,7 @@ var Bob = (function (Behavior$$1) {
 var ButtonStateStyle = (function (Behavior$$1) {
 	function ButtonStateStyle(config)
 	{
+		Behavior$$1.call(this);
 		this.config = Object.assign({overBrightness: 1.5, downBrightness: 0.5}, config);
 		this.object3d = null;
 		this.scene = null;
@@ -4108,6 +4112,8 @@ function getWorldPosition(obj) {
 var Drag = (function (Behavior$$1) {
 	function Drag(config)
 	{
+		Behavior$$1.call(this);
+
 		//space: view, local, world, sphere
 		//gridSnap, cursorSnap
 		//config: x: true, y: true, z: false, defaultDistance: 1000
@@ -4244,7 +4250,7 @@ var Drag = (function (Behavior$$1) {
 		* @type module:altspace/utilities/behaviors.Drag~DragEvent
 		* @memberof module:altspace/utilities/behaviors.Drag
 		*/
-	 	var dragEvent = this.createDragEvent('dragstart');
+		var dragEvent = this.createDragEvent('dragstart');
 		this.object3d.dispatchEvent(dragEvent);
 	};
 
@@ -4352,6 +4358,7 @@ var tolerance = 0.2;
 var GamepadControls = (function (Behavior$$1) {
 	function GamepadControls(config)
 	{
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{position: true, rotation: true, scale: true},
 			config
@@ -4581,6 +4588,7 @@ var HoverColor = (function (Behavior$$1) {
 	{
 		var this$1 = this;
 
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{event: 'cursorenter', color: new THREE.Color('yellow')},
 			config
@@ -4709,6 +4717,7 @@ var HoverScale = (function (Behavior$$1) {
 	{
 		var this$1 = this;
 
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{scale: 1.15, duration: 75, revertOnDispose: true},
 			config
@@ -4836,6 +4845,7 @@ function initSkeleton(scene) {
 var JointCollisionEvents = (function (Behavior$$1) {
 	function JointCollisionEvents(config)
 	{
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{jointCubeSize: 15, joints: JointCollisionEvents.HAND_JOINTS},
 			config
@@ -5114,6 +5124,7 @@ var Layout = (function (Behavior$$1) {
 		var my = ref.my; if ( my === void 0 ) my = {};
 		var at = ref.at;
 
+		Behavior$$1.call(this);
 		this.my = my;
 		this.at = at;
 	}
@@ -5307,6 +5318,7 @@ function isEqual(a, b)
 var Object3DSync = (function (Behavior$$1) {
 	function Object3DSync(config)
 	{
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{position: false, rotation: false, scale: false, auto: false, world: false},
 			config
@@ -5498,6 +5510,7 @@ function autoSendAll() {
 var SceneSync = (function (Behavior$$1) {
 	function SceneSync(instanceRef, config)
 	{
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{instantiators: {}, destroyers: {}, ready: null, autoSendRateMS: 100},
 			config
@@ -5706,6 +5719,7 @@ var SceneSync = (function (Behavior$$1) {
 */
 var Spin = (function (Behavior$$1) {
 	function Spin(config) {
+		Behavior$$1.call(this);
 		this.config = Object.assign(
 			{speed: 1e-4, axis: new THREE.Vector3(0,1,0)},
 			config
@@ -5770,6 +5784,7 @@ function getController(hand, config) {
 */
 var SteamVRInput = (function (Behavior$$1) {
 	function SteamVRInput(config) {
+		Behavior$$1.call(this);
 		this.config = Object.assign({logging: false}, config);
 	}
 
@@ -5846,6 +5861,7 @@ var SteamVRTrackedObject = (function (Behavior$$1) {
 	function SteamVRTrackedObject(ref) {
 		var hand = ref.hand; if ( hand === void 0 ) hand = 'first';
 
+		Behavior$$1.call(this);
 		this._hand = hand;
 	}
 
@@ -5899,6 +5915,7 @@ var TouchpadRotate = (function (Behavior$$1) {
 	{
 		if ( config === void 0 ) config = {};
 
+		Behavior$$1.call(this);
 		this.object3d = null;
 		this.scene = null;
 		this.startingRotation = null;

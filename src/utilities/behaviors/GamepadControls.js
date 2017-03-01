@@ -31,6 +31,7 @@ class GamepadControls extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign(
 			{position: true, rotation: true, scale: true},
 			config

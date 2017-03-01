@@ -54,6 +54,7 @@ class JointCollisionEvents extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign(
 			{jointCubeSize: 15, joints: JointCollisionEvents.HAND_JOINTS},
 			config

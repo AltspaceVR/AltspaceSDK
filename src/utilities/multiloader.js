@@ -39,7 +39,7 @@ function init(params){
 function load(loadRequest, onComplete){
 	var req = loadRequest;
 	var start = Date.now();
-	if (!req || !req instanceof LoadRequest){
+	if (!req || !(req instanceof LoadRequest)){
 		throw new Error('MultiLoader.load expects first arg of type LoadRequest');
 	}
 	if (!onComplete || typeof(onComplete) !== 'function'){

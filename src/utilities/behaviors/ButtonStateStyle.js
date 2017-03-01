@@ -19,6 +19,7 @@ class ButtonStateStyle extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign({overBrightness: 1.5, downBrightness: 0.5}, config);
 		this.object3d = null;
 		this.scene = null;

@@ -13,6 +13,7 @@ class TouchpadRotate extends Behavior
 
 	constructor(config = {})
 	{
+		super();
 		this.object3d = null;
 		this.scene = null;
 		this.startingRotation = null;

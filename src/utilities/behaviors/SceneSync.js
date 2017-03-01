@@ -41,6 +41,7 @@ class SceneSync extends Behavior
 
 	constructor(instanceRef, config)
 	{
+		super();
 		this.config = Object.assign(
 			{instantiators: {}, destroyers: {}, ready: null, autoSendRateMS: 100},
 			config

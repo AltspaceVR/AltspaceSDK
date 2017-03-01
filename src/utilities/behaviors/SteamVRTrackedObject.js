@@ -18,6 +18,7 @@ class SteamVRTrackedObject extends Behavior {
 	get type(){ return 'SteamVRTrackedObject'; }
 
 	constructor({ hand = 'first' }) {
+		super();
 		this._hand = hand;
 	}
 

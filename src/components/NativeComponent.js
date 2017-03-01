@@ -33,6 +33,7 @@ class PlaceholderMesh extends THREE.Mesh {
 class NativeComponent extends AFrameComponent
 {
 	constructor(name, sendUpdates = true){
+		super();
 		Object.assign(this, {name, sendUpdates});
 	}
 

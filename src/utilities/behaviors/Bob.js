@@ -20,6 +20,7 @@ class Bob extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign({x:3, y:5, shouldRotate:true, shouldMove:true}, config);
 		this.object3d = null;
 		this.offsetPosition = null;

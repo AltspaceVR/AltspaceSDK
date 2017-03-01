@@ -43,6 +43,7 @@ class Layout extends Behavior {
 	get type(){ return 'Layout'; }
 
 	constructor ({ my = {}, at }) {
+		super();
 		this.my = my;
 		this.at = at;
 	}

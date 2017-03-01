@@ -71,7 +71,7 @@ class AltspaceComponent extends AFrameComponent
 	init()
 	{
 		this.version = 'AFRAME_ALTSPACE_VERSION';
-		if(!this.el.object3D instanceof THREE.Scene){
+		if(!(this.el.object3D instanceof THREE.Scene)){
 			console.warn('aframe-altspace-component can only be attached to a-scene');
 			return;
 		}
@@ -115,16 +115,16 @@ class AltspaceComponent extends AFrameComponent
 			}
 
 			switch (this.data.verticalAlign) {
-				case 'bottom':
-					scene.position.y -= e.innerHeight / 2;
-					break;
-				case 'top':
-					scene.position.y += e.innerHeight / 2;
-					break;
-				case 'middle':
-					break;
-				default:
-					console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+			case 'bottom':
+				scene.position.y -= e.innerHeight / 2;
+				break;
+			case 'top':
+				scene.position.y += e.innerHeight / 2;
+				break;
+			case 'middle':
+				break;
+			default:
+				console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
 			}
 
 			if(this.data.enclosuresOnly && e.innerDepth === 1){
@@ -216,7 +216,7 @@ class AltspaceComponent extends AFrameComponent
 			}
 			emit('mouseleave', event);
 		});
-    }
+	}
 
 	initCollisionEvents()
 	{
@@ -234,7 +234,7 @@ class AltspaceComponent extends AFrameComponent
 				event.other = event.other.el;
 			}
 			targetEl.emit(eventName, event);
-		};
+		}
 
 		scene.addEventListener('collisionenter', event => {
 			emit('collisionenter', event);
@@ -252,7 +252,7 @@ class AltspaceComponent extends AFrameComponent
 			emit('triggerexit', event);
 		});
 
-    }
+	}
 }
 
 export default AltspaceComponent;

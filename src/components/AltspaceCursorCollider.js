@@ -51,6 +51,6 @@ class AltspaceCursorCollider extends AFrameComponent
 			});
 		}
 	}
-};
+}
 
 export default AltspaceCursorCollider;

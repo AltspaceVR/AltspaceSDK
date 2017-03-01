@@ -55,6 +55,7 @@ class Object3DSync extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign(
 			{position: false, rotation: false, scale: false, auto: false, world: false},
 			config

@@ -81,6 +81,7 @@ class Wire extends AFrameComponent
 	}
 
 	constructor(){
+		super();
 		this.multiple = true;
 	}
 

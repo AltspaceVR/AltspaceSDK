@@ -26,4 +26,4 @@ import TouchpadRotate from './TouchpadRotate';
 
 export { Behavior, Bob, ButtonStateStyle, Drag, GamepadControls, HoverColor,
 	HoverScale, JointCollisionEvents, Layout, Object3DSync, SceneSync, Spin,
- 	SteamVRInput, SteamVRTrackedObject, TouchpadRotate };
+	SteamVRInput, SteamVRTrackedObject, TouchpadRotate };

@@ -18,6 +18,7 @@ class HoverScale extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign(
 			{scale: 1.15, duration: 75, revertOnDispose: true},
 			config

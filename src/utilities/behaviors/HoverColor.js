@@ -18,6 +18,7 @@ class HoverColor extends Behavior
 
 	constructor(config)
 	{
+		super();
 		this.config = Object.assign(
 			{event: 'cursorenter', color: new THREE.Color('yellow')},
 			config
