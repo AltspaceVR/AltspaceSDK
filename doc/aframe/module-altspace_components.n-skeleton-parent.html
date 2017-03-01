@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>n-billboard - Documentation</title>
+    <title>n-skeleton-parent - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -39,7 +39,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-billboard</h1>
+    <h1 class="page-title">n-skeleton-parent</h1>
     
 
     
@@ -54,11 +54,10 @@
         <h2>
             <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a>.</span>
         
-        n-billboard
+        n-skeleton-parent
         </h2>
         
-            <div class="class-description"><p>Make the object's +Z always face the viewer. Currently will only directly apply
-to main mesh or native component on the attached entity, not any children or submeshes.</p></div>
+            <div class="class-description"><p>Parents an entity to a joint on the avatar skeleton.</p></div>
         
     
 </header>
@@ -156,6 +155,251 @@ to main mesh or native component on the attached entity, not any children or sub
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="index"><span class="type-signature"></span>index<span class="type-signature"> :int</span></h4>
+
+
+
+
+<div class="description">
+    <p>Bone index. e.g. Which knuckle joint to attach to.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>0</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="part"><span class="type-signature"></span>part<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg',
+'foot', 'toes', 'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb',
+'index', 'middle', 'ring' or 'pinky'.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="side"><span class="type-signature"></span>side<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Side of the body. Either 'left', 'center' or 'right'</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"center"</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="userId"><span class="type-signature"></span>userId<span class="type-signature"> :int</span></h4>
+
+
+
+
+<div class="description">
+    <p>Id of the user to which the entity should be attached. Defaults to the
+local user.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     

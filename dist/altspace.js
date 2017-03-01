@@ -825,26 +825,8 @@ var SyncColor = (function (AFrameComponent$$1) {
 * @extends module:altspace/components.AFrameComponent
 */
 var SyncComponent = (function (AFrameComponent$$1) {
-	function SyncComponent()
-	{
-		this.scene = undefined;
-		this.syncSys = undefined;
-		this.ref = undefined;
-		this.key = undefined;
-		this.dataRef = undefined;
-		this.ownerRef = undefined;
-		this.ownerId = undefined;
-
-		this.isConnected = false;
-
-		/**
-		* Indicates whether the sync ownership is yours.
-		* @instance
-		* @member {boolean} isMine
-		* @memberof module:altspace/components.sync
-		* @readonly
-		*/
-		this.isMine = false;
+	function SyncComponent () {
+		AFrameComponent$$1.apply(this, arguments);
 	}
 
 	if ( AFrameComponent$$1 ) SyncComponent.__proto__ = AFrameComponent$$1;
@@ -873,11 +855,21 @@ var SyncComponent = (function (AFrameComponent$$1) {
 	{
 		var this$1 = this;
 
+		/**
+		* Indicates whether the sync ownership is yours.
+		* @instance
+		* @member {boolean} isMine
+		* @memberof module:altspace/components.sync
+		* @readonly
+		*/
+		this.isMine = false;
+
 		this.scene = this.el.sceneEl;
 		this.syncSys = this.scene.systems['sync-system'];
+		this.isConnected = false;
 
 		if(this.syncSys.isConnected)
-			{ start(); }
+			{ this.start(); }
 		else
 			{ this.scene.addEventListener('connected', this.start.bind(this)); }
 
@@ -929,9 +921,6 @@ var SyncComponent = (function (AFrameComponent$$1) {
 				return;
 			}
 
-			console.log('syncSys: ' + this.syncSys);
-			console.log('syncSys.sceneRef: ' + this.syncSys.sceneRef);
-
 			this.link(this.syncSys.sceneRef.child(id));
 			this.setupReceive();
 
@@ -956,32 +945,40 @@ var SyncComponent = (function (AFrameComponent$$1) {
 	{
 		var this$1 = this;
 
-		//if nobody has owned the object yet, we will.
-		this.ownerRef.transaction((function (owner) {
-			if (owner) { return undefined; }
-			this$1.ownerRef.onDisconnect().set(null);
-			return this$1.syncSys.clientId;
-		}).bind(this));
-
-		this.ownerRef.on('value', (function (snapshot) {
+		function onOwnerUpdate(snapshot)
+		{
 			var newOwnerId = snapshot.val();
-			var gained = newOwnerId === this$1.syncSys.clientId && !this$1.isMine;
+			var gained = newOwnerId === this.syncSys.clientId && !this.isMine;
 			if (gained)
-				{ this$1.el.emit('ownershipgained', null, false); }
+				{ this.el.emit('ownershipgained', null, false); }
 
 			//note this also fires when we start up without ownership
-			var lost = newOwnerId !== this$1.syncSys.clientId && this$1.isMine;
+			var lost = newOwnerId !== this.syncSys.clientId && this.isMine;
 			if (lost){
-				this$1.el.emit('ownershiplost', null, false);
+				this.el.emit('ownershiplost', null, false);
 
 				//we no longer have to clear our ownership when we disconnect
-				this$1.ownerRef.onDisconnect().cancel();
+				this.ownerRef.onDisconnect().cancel();
 			}
 
-			this$1.ownerId = newOwnerId;
+			this.ownerId = newOwnerId;
 
-			this$1.isMine = newOwnerId === this$1.syncSys.clientId;
-		}).bind(this));
+			this.isMine = newOwnerId === this.syncSys.clientId;
+		}
+
+		//if nobody has owned the object yet, we will.
+		this.ownerRef.transaction(
+			(function (owner) {
+				if (owner) { return undefined; }
+				this$1.ownerRef.onDisconnect().set(null);
+				return this$1.syncSys.clientId;
+			}).bind(this),
+
+			(function (error, committed) {
+				if(!committed) { return; }
+				this$1.ownerRef.on('value', onOwnerUpdate.bind(this$1));
+			}).bind(this)
+		);
 	};
 
 	Object.defineProperties( SyncComponent.prototype, prototypeAccessors );
@@ -1045,6 +1042,30 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		};
 	};
 
+	/**
+	* True if the sync system is connected and ready for syncing.
+	* @member {boolean} module:altspace/components.sync-system#isConnected
+	* @readonly
+	*/
+
+	/**
+	* Fired when a connection is established and the sync system is fully initialized.
+	* @event module:altspace/components.sync-system#connected
+	* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
+	*/
+
+	/**
+	* Fired when a client joins.
+	* @event module:altspace/components.sync-system#clientjoined
+	* @property {string} id - Guid identifying the client.
+	*/
+
+	/**
+	* Fired when a client leaves.
+	* @event module:altspace/components.sync-system#clientleft
+	* @property {string} id - Guid identifying the client.
+	*/
+
 	SyncSystem.prototype.init = function init ()
 	{
 		if(!this.data || !this.data.app){
@@ -1053,21 +1074,30 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		}
 		console.log(this.data);
 
+		this.queuedInstantiations = [];
 		this.isConnected = false;
-		altspace.utilities.sync.connect({
-			authorId: this.data.author,
-			appId: this.data.app,
-			instanceId: this.data.instance,
-			baseRefUrl: this.data.refUrl
-		}).then(this.connected.bind(this));
+		Promise.all([
+			altspace.utilities.sync.connect({
+				authorId: this.data.author,
+				appId: this.data.app,
+				instanceId: this.data.instance,
+				baseRefUrl: this.data.refUrl
+			}),
+			altspace.getUser()
+		]).then(this.connected.bind(this));
 	};
 
-	SyncSystem.prototype.connected = function connected (connection)
+	SyncSystem.prototype.connected = function connected (results)
 	{
-		this.connection = connection;
+		this.connection = results.shift();
+		this.userInfo = results.shift();
 
 		this.sceneRef = this.connection.instance.child('scene');
 		this.clientsRef = this.connection.instance.child('clients');
+		this.instantiatedElementsRef = this.connection.instance.child('instantiatedElements');
+
+		this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
+		this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
 
 		// temporary way of having unique identifiers for each client
 		this.clientId = this.sceneEl.object3D.uuid;
@@ -1108,6 +1138,8 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			var shouldInitialize = !snapshot.val();
 			snapshot.ref().set(true);
 
+			self.processQueuedInstantiations();
+
 			self.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
 			self.isConnected = true;
 		});
@@ -1123,6 +1155,108 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	SyncSystem.prototype.isMasterClient = function isMasterClient ()
 	{
 		return this.masterClientId === this.clientId;
+	};
+
+	SyncSystem.prototype.listenToInstantiationGroup = function listenToInstantiationGroup (snapshot) {
+		snapshot.ref().on('child_added', this.createElement.bind(this));
+		snapshot.ref().on('child_removed', this.removeElement.bind(this));
+	};
+
+	SyncSystem.prototype.stopListeningToInstantiationGroup = function stopListeningToInstantiationGroup (snapshot) {
+		snapshot.ref().off('child_added');
+		snapshot.ref().off('child_removed');
+	};
+
+	SyncSystem.prototype.processQueuedInstantiations = function processQueuedInstantiations () {
+		var this$1 = this;
+
+		this.queuedInstantiations.forEach((function (instantiationProps) {
+			instantiationProps.creatorUserId = this$1.userInfo.userId;
+			instantiationProps.clientId = this$1.clientId;
+			this$1.instantiatedElementsRef.child(instantiationProps.groupName).
+				push(instantiationProps).
+				onDisconnect().remove();
+		}).bind(this));
+		// Clear queue.
+		this.queuedInstantiations.length = 0;
+	};
+
+	/**
+	* Instantiate an entity with the given mixins.
+	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
+	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
+	* @param {Element} [el] - The element responsible for instantiating this entity.
+	* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with
+	*	[removeLast]{@link module:altspace/components.sync-system#removeLast}.
+	* @param {string} [instantiatorId] - Used by [removeLast]{@link module:altspace/components.sync-system#removeLast} to indicate who was
+	*	responsible for the removed entity.
+	*/
+	SyncSystem.prototype.instantiate = function instantiate (mixin, parent, el, groupName, instantiatorId) {
+		// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those
+		// correctly.
+		if (!mixin) {
+			console.error('AltspaceVR: Instantiation requires a mixin value.', el);
+			return;
+		}
+		var parentWithId = parent && parent.id;
+		var parentIsScene = parent.nodeName === 'A-SCENE';
+		if (!parentWithId && !parentIsScene) {
+			console.error('AltspaceVR: Instantiation requires a parent with an id.', el);
+			return;
+		}
+
+		var parentSelector = parentWithId ? '#' + parent.id : 'a-scene';
+		var instantiationProps = {
+			instantiatorId: instantiatorId || '',
+			groupName: groupName || 'main',
+			mixin: mixin,
+			parent: parentSelector
+		};
+		this.queuedInstantiations.push(instantiationProps);
+		if (this.isConnected) {
+			this.processQueuedInstantiations();
+		}
+	};
+
+	/**
+	* Remove the last entity instantiated in the given group.
+	* Returns a Promise which resolves with the instantiatorId associated with the removed entity.
+	* @param {string} groupName - Name of the group from which to remove the entity.
+	* @returns {Promise}
+	*/
+	SyncSystem.prototype.removeLast = function removeLast (groupName) {
+		var this$1 = this;
+
+		return new Promise((function (resolve) {
+			this$1.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
+				'value',
+				function (snapshot) {
+					if (!snapshot.hasChildren()) { resolve(); return; }
+					var val = snapshot.val();
+					var key = Object.keys(val)[0];
+					resolve(val[key].instantiatorId);
+					snapshot.ref().child(key).remove();
+				}
+			);
+		}).bind(this));
+	};
+
+	SyncSystem.prototype.createElement = function createElement (snapshot) {
+		var val = snapshot.val();
+		var key = snapshot.key();
+		var entityEl = document.createElement('a-entity');
+		entityEl.id = val.groupName + '-instance-' + key;
+		document.querySelector(val.parent).appendChild(entityEl);
+		entityEl.setAttribute('mixin', val.mixin);
+		entityEl.dataset.creatorUserId = val.creatorUserId;
+	};
+
+	SyncSystem.prototype.removeElement = function removeElement (snapshot) {
+		var val = snapshot.val();
+		var key = snapshot.key();
+		var id = val.groupName + '-instance-' + key;
+		var el = document.querySelector('#' + id);
+		el.parentNode.removeChild(el);
 	};
 
 	Object.defineProperties( SyncSystem.prototype, prototypeAccessors );
@@ -1386,6 +1520,72 @@ var SyncNSound = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
+* Syncs the attributes of an n-skeleton-parent component across clients @aframe
+* @alias sync-n-skeleton-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+
+var SyncNSkeletonParent = (function (AFrameComponent$$1) {
+	function SyncNSkeletonParent () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) SyncNSkeletonParent.__proto__ = AFrameComponent$$1;
+	SyncNSkeletonParent.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncNSkeletonParent.prototype.constructor = SyncNSkeletonParent;
+
+	var prototypeAccessors = { dependencies: {} };
+
+	prototypeAccessors.dependencies.get = function (){ return ['sync']; };
+
+	SyncNSkeletonParent.prototype.init = function init ()
+	{
+		var scene = this.el.sceneEl;
+		this.syncSys = scene.systems['sync-system'];
+		this.sync = this.el.components.sync;
+		if(this.syncSys.isConnected){
+			this._start();
+		}
+		else {
+			scene.addEventListener('connected', this._start.bind(this));
+		}
+	};
+
+	SyncNSkeletonParent.prototype.getDataRef = function getDataRef (propertyName) {
+		return this.sync.dataRef.child('n-skeleton-parent/' + propertyName);
+	};
+
+	SyncNSkeletonParent.prototype._start = function _start ()
+	{
+		this.attributeRef = this.sync.dataRef.child('n-skeleton-parent');
+		this.attributeRef.on('value', function (snapshot) {
+			var val = snapshot.val();
+			if (!val) { return; }
+			this.el.setAttribute('n-skeleton-parent', val);
+		}.bind(this));
+
+		// dataset.creatorUserId is defined when the entity is instantiated via the sync system.
+		if (this.el.dataset.creatorUserId) {
+			this.attributeRef.set(Object.assign(
+				{}, this.el.components['n-skeleton-parent'].data, {userId: this.el.dataset.creatorUserId}));
+		}
+
+		this.el.addEventListener('componentchanged', function (event) {
+			if (!this.sync.isMine) { return; }
+			var name = event.detail.name;
+			if (name === 'n-skeleton-parent') {
+				this.attributeRef.set(event.detail.newData);
+			}
+		}.bind(this));
+	};
+
+	Object.defineProperties( SyncNSkeletonParent.prototype, prototypeAccessors );
+
+	return SyncNSkeletonParent;
+}(AFrameComponent));
+
+/**
 * The wire component allows you to trigger an event on another entity when an event
 * occurs on an entity. If no targets are selected, it will target itself. @aframe
 * @alias wire
@@ -1541,6 +1741,148 @@ var Wire = (function (AFrameComponent$$1) {
 	return Wire;
 }(AFrameComponent));
 
+/**
+* Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
+* @alias one-per-user
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var OnePerUser = (function (AFrameComponent$$1) {
+	function OnePerUser () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) OnePerUser.__proto__ = AFrameComponent$$1;
+	OnePerUser.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	OnePerUser.prototype.constructor = OnePerUser;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* A comma-separated list of mixin ids that are used to instantiate the object.
+			* @member {string} mixin
+			* @instance
+			* @memberof module:altspace/components.one-per-user
+			*/
+			mixin: {type: 'string'},
+
+			/**
+			* A selector specifying which element should be the parent of the instantiated entity.
+			* Defaults to the parent node (i.e. new element becomes a sibling of this entity).
+			* @member {string} [parent]
+			* @instance
+			* @memberof module:altspace/components.one-per-user
+			*/
+			parent: {type: 'selector'}
+		};
+	};
+
+	OnePerUser.prototype.init = function init (){
+		var scene = this.el.sceneEl;
+		this.syncSys = scene.systems['sync-system'];
+		this.syncSys.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el);
+	};
+
+	Object.defineProperties( OnePerUser.prototype, prototypeAccessors );
+
+	return OnePerUser;
+}(AFrameComponent));
+
+/**
+* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
+* The instantiated objects are built using the specified mixins. @aframe
+* @alias instantiator
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var Instantiator = (function (AFrameComponent$$1) {
+	function Instantiator () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) Instantiator.__proto__ = AFrameComponent$$1;
+	Instantiator.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Instantiator.prototype.constructor = Instantiator;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){ return {
+		/**
+		* An event that triggers the instantiation
+		* @instance
+		* @member {string} on
+		* @memberof module:altspace/components.instantiator
+		*/
+		on: {type: 'string'},
+
+		/**
+		* A space-separated list of mixins that should be used to instantiate the object.
+		* @instance
+		* @member {string} mixin
+		* @memberof module:altspace/components.instantiator
+		*/
+		mixin: {type: 'string'},
+
+		/**
+		* A selector that determines which object the instantiated object will be added to.
+		* @instance
+		* @member {string} parent
+		* @default "a-scene"
+		* @memberof module:altspace/components.instantiator
+		*/
+		parent: {type: 'selector', default: 'a-scene'},
+
+		/**
+		* An identifier which can be used to group instantiated objects.
+		* @instance
+		* @member {string} group
+		* @default "main"
+		* @memberof module:altspace/components.instantiator
+		*/
+		group: {type: 'string', default: 'main'},
+
+		/**
+		* Whether the last object instantiated in a group should be removed before
+		* instantiating a new object.
+		* @instance
+		* @member {boolean} removeLast
+		* @default true
+		* @memberof module:altspace/components.instantiator
+		*/
+		removeLast: {type: 'boolean', default: 'true'},
+	}; };
+
+	Instantiator.prototype.init = function init () {
+		this.onHandler = this.instantiateOrToggle.bind(this);
+		this.el.addEventListener(this.data.on, this.onHandler);
+		this.syncSys = this.el.sceneEl.systems['sync-system'];
+	};
+
+	Instantiator.prototype.instantiateOrToggle = function instantiateOrToggle () {
+		var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
+		if (this.data.removeLast) {
+			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
+				if (lastInstantiatorId !== this.el.id) {
+					this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id);
+				}
+			}.bind(this));
+		}
+		else {
+			this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent);
+		}
+	};
+
+	Instantiator.prototype.remove = function remove () {
+		this.el.removeEventListener(this.data.on, this.onHandler);
+	};
+
+	Object.defineProperties( Instantiator.prototype, prototypeAccessors );
+
+	return Instantiator;
+}(AFrameComponent));
+
 // graceful fallback in web browsers
 if (!window.altspace || !altspace.inClient)
 {
@@ -1587,17 +1929,27 @@ var NativeComponent = (function (AFrameComponent$$1) {
 
 	NativeComponent.prototype.init = function init ()
 	{
+		var this$1 = this;
+
 		var mesh = this.mesh || this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+		this.currentMesh = mesh;
 
 		//If you attach native components to an entity, it will not use a default collider
-		mesh.userData.altspace = mesh.userData.altspace || {};
-		mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
-		mesh.userData.altspace.collider.enabled = false;
-
+		safeDeepSet(mesh.userData, ['altspace', 'collider', 'enabled'], false);
 		altspace.addNativeComponent(mesh, this.name);
 
 		//to pass defaults
 		this.update(this.data);
+
+		if(!this._dontRebind){
+			this.el.addEventListener('object3dset', (function (event) {
+				if(event.detail.type === 'mesh'){
+					altspace.removeNativeComponent(this$1.currentMesh, this$1.name);
+					this$1._dontRebind = true;
+					this$1.init();
+				}
+			}).bind(this));
+		}
 	};
 
 	NativeComponent.prototype.update = function update (){
@@ -1785,6 +2137,72 @@ var NBillboard = (function (NativeComponent$$1) {
 	NBillboard.prototype.constructor = NBillboard;
 
 	return NBillboard;
+}(NativeComponent));
+
+/**
+* Parents an entity to a joint on the avatar skeleton. @aframe
+* @alias n-skeleton-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NSkeletonParent = (function (NativeComponent$$1) {
+	function NSkeletonParent(){ NativeComponent$$1.call(this, 'n-skeleton-parent'); }
+
+	if ( NativeComponent$$1 ) NSkeletonParent.__proto__ = NativeComponent$$1;
+	NSkeletonParent.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NSkeletonParent.prototype.constructor = NSkeletonParent;
+
+	var prototypeAccessors$3 = { schema: {} };
+	prototypeAccessors$3.schema.get = function (){ return {
+		/**
+		* One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg',
+		* 'foot', 'toes', 'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb',
+		* 'index', 'middle', 'ring' or 'pinky'.
+		* @member {string} module:altspace/components.n-skeleton-parent#part
+		*/
+		part: {type: 'string'},
+
+		/**
+		* Side of the body. Either 'left', 'center' or 'right'
+		* @member {string} module:altspace/components.n-skeleton-parent#side
+		* @default "center"
+		*/
+		side: {type: 'string', default: 'center'},
+
+		/**
+		* Bone index. e.g. Which knuckle joint to attach to.
+		* @member {int} module:altspace/components.n-skeleton-parent#index
+		* @default 0
+		*/
+		index: {type: 'int', default: 0},
+
+		/**
+		* Id of the user to which the entity should be attached. Defaults to the
+		* local user.
+		* @member {int} module:altspace/components.n-skeleton-parent#userId
+		*/
+		userId: {type: 'string'}
+	}; };
+
+	Object.defineProperties( NSkeletonParent.prototype, prototypeAccessors$3 );
+
+	return NSkeletonParent;
+}(NativeComponent));
+
+/**
+* Parents an entity to the cockpit. @aframe
+* @alias n-cockpit-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NCockpitParent = (function (NativeComponent$$1) {
+	function NCockpitParent(){ NativeComponent$$1.call(this, 'n-cockpit-parent', false); }
+
+	if ( NativeComponent$$1 ) NCockpitParent.__proto__ = NativeComponent$$1;
+	NCockpitParent.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NCockpitParent.prototype.constructor = NCockpitParent;
+
+	return NCockpitParent;
 }(NativeComponent));
 
 /**
@@ -2314,12 +2732,12 @@ var NSound = (function (NativeComponent$$1) {
 	{
 		NativeComponent$$1.prototype.update.call(this, oldData);
 		if (this.playHandler) {
-		  this.el.removeEventListener(oldData.on, this.playHandler);
+			this.el.removeEventListener(oldData.on, this.playHandler);
 		}
 
 		if (this.data.on) {
-		  this.playHandler = this.playSound.bind(this);
-		  this.el.addEventListener(this.data.on, this.playHandler);
+			this.playHandler = this.playSound.bind(this);
+			this.el.addEventListener(this.data.on, this.playHandler);
 		}
 	};
 
@@ -2327,7 +2745,7 @@ var NSound = (function (NativeComponent$$1) {
 	{
 		NativeComponent$$1.prototype.remove.call(this);
 		if (this.playHandler) {
-		  this.el.removeEventListener(oldData.on, this.playHandler);
+			this.el.removeEventListener(this.data.on, this.playHandler);
 		}
 	};
 
@@ -2404,11 +2822,16 @@ if (window.AFRAME)
 	registerComponentClass('sync-transform', SyncTransform);
 	registerComponentClass('sync', SyncComponent);
 	registerComponentClass('sync-n-sound', SyncNSound);
+	registerComponentClass('sync-n-skeleton-parent', SyncNSkeletonParent);
 	registerComponentClass('wire', Wire);
+	registerComponentClass('one-per-user', OnePerUser);
+	registerComponentClass('instantiator', Instantiator);
 	registerComponentClass('n-object', NObject);
 	registerComponentClass('n-spawner', NSpawner);
 	registerComponentClass('n-text', NText);
 	registerComponentClass('n-billboard', NBillboard);
+	registerComponentClass('n-skeleton-parent', NSkeletonParent);
+	registerComponentClass('n-cockpit-parent', NCockpitParent);
 	registerComponentClass('n-container', NContainer);
 	registerComponentClass('n-sound', NSound);
 	registerComponentClass('n-sphere-collider', NSphereCollider);
@@ -2430,10 +2853,15 @@ var components_lib = Object.freeze({
 	SyncTransform: SyncTransform,
 	SyncNSound: SyncNSound,
 	Wire: Wire,
+	OnePerUser: OnePerUser,
+	Instantiator: Instantiator,
+	SyncNSkeletonParent: SyncNSkeletonParent,
 	NObject: NObject,
 	NSpawner: NSpawner,
 	NText: NText,
 	NBillboard: NBillboard,
+	NSkeletonParent: NSkeletonParent,
+	NCockpitParent: NCockpitParent,
 	NContainer: NContainer,
 	NSound: NSound,
 	NSphereCollider: NSphereCollider,

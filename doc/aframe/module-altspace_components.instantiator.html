@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>n-billboard - Documentation</title>
+    <title>instantiator - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -39,7 +39,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-billboard</h1>
+    <h1 class="page-title">instantiator</h1>
     
 
     
@@ -54,11 +54,11 @@
         <h2>
             <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a>.</span>
         
-        n-billboard
+        instantiator
         </h2>
         
-            <div class="class-description"><p>Make the object's +Z always face the viewer. Currently will only directly apply
-to main mesh or native component on the attached entity, not any children or submeshes.</p></div>
+            <div class="class-description"><p>Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
+The instantiated objects are built using the specified mixins.</p></div>
         
     
 </header>
@@ -142,7 +142,7 @@ to main mesh or native component on the attached entity, not any children or sub
 
 
     <ul>
-        <li><a href="module-altspace_components.NativeComponent.html">module:altspace/components.NativeComponent</a></li>
+        <li><a href="module-altspace_components.AFrameComponent.html">module:altspace/components.AFrameComponent</a></li>
     </ul>
 
 
@@ -156,6 +156,311 @@ to main mesh or native component on the attached entity, not any children or sub
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="group"><span class="type-signature"></span>group<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>An identifier which can be used to group instantiated objects.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"main"</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mixin"><span class="type-signature"></span>mixin<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>A space-separated list of mixins that should be used to instantiate the object.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="on"><span class="type-signature"></span>on<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>An event that triggers the instantiation</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="parent"><span class="type-signature"></span>parent<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>A selector that determines which object the instantiated object will be added to.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"a-scene"</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="removeLast"><span class="type-signature"></span>removeLast<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>Whether the last object instantiated in a group should be removed before
+instantiating a new object.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>true</li>
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
