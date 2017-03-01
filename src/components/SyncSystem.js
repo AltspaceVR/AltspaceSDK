@@ -81,6 +81,7 @@ class SyncSystem extends AFrameSystem
 		}
 		console.log(this.data);
 
+		this.queuedInstantiations = [];
 		this.isConnected = false;
 		Promise.all([
 			altspace.utilities.sync.connect({

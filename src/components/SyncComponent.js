@@ -44,7 +44,7 @@ class SyncComponent extends AFrameComponent
 		this.isConnected = false;
 
 		if(this.syncSys.isConnected)
-			start();
+			this.start();
 		else
 			this.scene.addEventListener('connected', this.start.bind(this));
 
@@ -93,9 +93,6 @@ class SyncComponent extends AFrameComponent
 				console.error('Entities cannot be synced using link mode without an id.');
 				return;
 			}
-
-			console.log('syncSys: ' + this.syncSys);
-			console.log('syncSys.sceneRef: ' + this.syncSys.sceneRef);
 
 			this.link(this.syncSys.sceneRef.child(id));
 			this.setupReceive();
