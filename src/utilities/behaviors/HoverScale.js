@@ -26,15 +26,15 @@ class HoverScale extends Behavior
 
 		this.object3d = null;
 		this.originalScale = null;
-		this.elapsedTime = null;
-		this.progress = null;
+		this.elapsedTime = this.config.duration;
+		this.progress = 1;
 		this.srcScale = null;
 		this.destScale = null;
 
 		this.onHoverStateChange = (() => {
 			[this.srcScale, this.destScale] = [this.destScale, this.srcScale];
 			this.progress = 1 - this.progress;
-			this.elapsedTime = this.duration - this.elapsedTime;
+			this.elapsedTime = this.config.duration - this.elapsedTime;
 		}).bind(this);
 	}
 
