@@ -4,11 +4,9 @@
  **/
 
 const gulp = require('gulp'),
-
 	awspublish = require('gulp-awspublish'),
 	release = require('conventional-github-releaser'),
 	runsequence = require('run-sequence'),
-
 
 	awsRegion = 'us-west-1',
 	awsAccessKey = 'AKIAJEGF6GH26BCU7VYA',

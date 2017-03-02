@@ -12,7 +12,6 @@
   },
   "main": "dist/altspace.js",
   "scripts": {
-    "dev": "budo",
     "build": "gulp --gulpfile scripts/build.js altspace_js doc",
     "doc": "gulp --gulpfile scripts/build.js doc",
     "version": "npm run build && git add .",
@@ -36,9 +35,6 @@
     "three": "~0.73.0"
   },
   "devDependencies": {
-    "aframe": "0.3.0",
-    "aws-sdk": "^2.2.38",
-    "budo": "9.2.0",
     "conventional-github-releaser": "0.5.1",
     "del": "^2.2.2",
     "es6-map": "^0.1.4",
@@ -46,28 +42,19 @@
     "eslint": "^3.6.1",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-html": "^1.5.3",
-    "ghpages": "0.0.3",
     "gulp": "^3.9.1",
     "gulp-awspublish": "3.0.1",
-    "gulp-babel": "5.2.1",
-    "gulp-bump": "1.0.0",
     "gulp-concat": "2.6.0",
-    "gulp-git": "1.6.1",
     "gulp-insert": "^0.5.0",
     "gulp-jsdoc3": "^0.3.0",
-    "gulp-jshint": "1.11.2",
     "gulp-markdown": "^1.2.0",
     "gulp-print": "2.0.1",
-    "gulp-prompt": "0.1.2",
     "gulp-rename": "1.2.2",
     "gulp-replace": "^0.5.4",
-    "gulp-shell": "0.5.1",
-    "gulp-sourcemaps": "1.6.0",
     "gulp-uglify": "1.4.1",
     "jsdoc": "^3.4.3",
     "merge-stream": "^1.0.1",
     "minami": "github:altspacevr/minami",
-    "orchestrator": "^0.3.8",
     "ordered-merge-stream": "0.0.0",
     "rollup": "^0.41.4",
     "rollup-plugin-buble": "^0.15.0",
@@ -77,8 +64,6 @@
     "rollup-stream": "^1.19.0",
     "run-sequence": "1.1.5",
     "vinyl-buffer": "1.0.0",
-    "vinyl-source-stream": "1.1.0",
-    "webpack-stream": "^3.2.0",
-    "yargs": "3.27.0"
+    "vinyl-source-stream": "1.1.0"
   }
 }
