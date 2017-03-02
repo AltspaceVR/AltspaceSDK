@@ -19,10 +19,15 @@ const gulp = require('gulp'),
 	shell = require('gulp-shell'),
 	aws = require('aws-sdk'),
 
+	Orchestrator = require('orchestrator'),
+
 	awsRegion = 'us-west-1',
 	awsAccessKey = 'AKIAJEGF6GH26BCU7VYA',
 	s3Path = '/libs/altspace.js',
 	targetRemote = 'origin';
+
+// require other file
+const build = require('./build');
 
 var version;
 
@@ -114,21 +119,17 @@ gulp.task('publish-aws', function () {
 		.pipe(awspublish.reporter());
 });
 
-gulp.task('watch', ['altspace_js', 'doc'], function () {
-	gulp.watch('./version.json', ['altspace_js']);
-	gulp.watch('./examples/**/*.js', ['altspace_js']);
-	gulp.watch('./src/**/*.js', ['altspace_js']);
-	gulp.watch('./lib/**/*.js', ['altspace_js']);
-	gulp.watch('./tests/**/*.js', ['altspace_js']);
-	gulp.watch(docfiles, { verbose: true }, ['doc']);
+gulp.task('compile', function(done){
+	let o = new Orchestrator();
+	o.add('altspace_js', build.altspace_js);
+	o.add('doc', build.doc);
+	o.start('altspace_js', 'doc', done);
 });
 
 gulp.task('publish', function (done) {
 	runsequence(
 		'publish-precheck',
 		'bump',
-		'altspace_js',
-		'del-doc',
 		'doc',
 		'add',
 		'commit',

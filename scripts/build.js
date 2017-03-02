@@ -83,6 +83,12 @@ const build_configs = {
 	}
 };
 
+gulp.task('watch', ['altspace_js', 'doc'], function () {
+	gulp.watch('./package.json', ['altspace_js']);
+	gulp.watch('./src/**/*.js', ['altspace_js']);
+	gulp.watch('./lib/**/*.js', ['altspace_js']);
+});
+
 gulp.task('altspace_js', () =>
 {
 	// pack the various es2015 modules into a transpiled iife
@@ -111,11 +117,7 @@ gulp.task('altspace_js', () =>
 	.pipe(print());
 });
 
-gulp.task('del-doc', function () {
-	return del(r('../doc'), {force: true});
-});
-
-gulp.task('doc', done =>
+gulp.task('doc', (done) =>
 {
 	function JSDocPromise(files, config){
 		return new Promise((resolve, reject) => {
@@ -124,10 +126,14 @@ gulp.task('doc', done =>
 	}
 
 	// jsdoc doesn't like not being last in line, promises are the workaround
-	Promise.all([
-		JSDocPromise(['../src/**/*.js', '!../src/components/*.js'], build_configs.jsdoc_js),
-		JSDocPromise(['../src/components/*.js'], build_configs.jsdoc_aframe)
-	]).then(() => {
+	del(r('../doc'), {force: true})
+	.then(() =>
+		Promise.all([
+			JSDocPromise(['../src/**/*.js', '!../src/components/*.js'], build_configs.jsdoc_js),
+			JSDocPromise(['../src/components/*.js'], build_configs.jsdoc_aframe)
+		])
+	)
+	.then(() => {
 		merge(
 			// compile readme template to doc/index.html
 			gulp.src('../README.template.md')

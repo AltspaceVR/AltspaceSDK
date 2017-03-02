@@ -12,11 +12,7 @@
   },
   "main": "dist/altspace.js",
   "scripts": {
-    "dev": "budo",
-    "dist": "gulp dist",
-    "build": "npm run compile && npm run doc",
-    "compile": "gulp --gulpfile scripts/build.js altspace_js",
-    "doc": "gulp --gulpfile scripts/build.js doc"
+    "version": "gulp --gulpfile scripts/build.js altspace_js doc"
   },
   "keywords": [
     "aframe",
@@ -30,9 +26,7 @@
     "altspacevr",
     "altspace"
   ],
-  "dependencies": {
-    "lodash.isequal": "4.1.3"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "three": "~0.73.0"
   },
@@ -68,6 +62,7 @@
     "jsdoc": "^3.4.3",
     "merge-stream": "^1.0.1",
     "minami": "github:altspacevr/minami",
+    "orchestrator": "^0.3.8",
     "ordered-merge-stream": "0.0.0",
     "rollup": "^0.41.4",
     "rollup-plugin-buble": "^0.15.0",
