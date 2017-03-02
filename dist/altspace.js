@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.0-0/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v1.0.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -2804,7 +2804,7 @@ var NSound = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.0-0/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v1.0.0/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -4714,8 +4714,8 @@ var HoverScale = (function (Behavior$$1) {
 
 		this.object3d = null;
 		this.originalScale = null;
-		this.elapsedTime = null;
-		this.progress = null;
+		this.elapsedTime = this.config.duration;
+		this.progress = 1;
 		this.srcScale = null;
 		this.destScale = null;
 
@@ -4723,7 +4723,7 @@ var HoverScale = (function (Behavior$$1) {
 			var assign;
 			(assign = [this$1.destScale, this$1.srcScale], this$1.srcScale = assign[0], this$1.destScale = assign[1]);
 			this$1.progress = 1 - this$1.progress;
-			this$1.elapsedTime = this$1.duration - this$1.elapsedTime;
+			this$1.elapsedTime = this$1.config.duration - this$1.elapsedTime;
 		}).bind(this);
 	}
 
@@ -6013,7 +6013,7 @@ var utilities_lib = Object.freeze({
 if(!window.altspace)
 	{ window.altspace = {components: {}, utilities: {}, inClient: false}; }
 
-var version = '2.0.0-0';
+var version = '1.0.0';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }

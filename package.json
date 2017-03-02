@@ -12,9 +12,12 @@
   },
   "main": "dist/altspace.js",
   "scripts": {
+    "dev": "budo",
     "build": "gulp --gulpfile scripts/build.js altspace_js doc",
-    "version": "gulp --gulpfile scripts/build.js altspace_js doc && git add .",
-    "postversion": "git push && git push --tags"
+    "doc": "gulp --gulpfile scripts/build.js doc",
+    "version": "npm run build && git add .",
+    "postversion": "git push && git push --tags",
+    "postpublish": "gulp --gulpfile scripts/deploy.js release publish-aws"
   },
   "keywords": [
     "aframe",

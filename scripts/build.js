@@ -117,41 +117,44 @@ gulp.task('altspace_js', () =>
 	.pipe(print());
 });
 
-gulp.task('doc', (done) =>
-{
-	function JSDocPromise(files, config){
-		return new Promise((resolve, reject) => {
-			gulp.src(files).pipe(jsdoc(config, resolve));
-		});
-	}
-
-	// jsdoc doesn't like not being last in line, promises are the workaround
-	del(r('../doc'), {force: true})
-	.then(() =>
-		Promise.all([
-			JSDocPromise(['../src/**/*.js', '!../src/components/*.js'], build_configs.jsdoc_js),
-			JSDocPromise(['../src/components/*.js'], build_configs.jsdoc_aframe)
-		])
-	)
-	.then(() => {
-		merge(
-			// compile readme template to doc/index.html
-			gulp.src('../README.template.md')
-				.pipe(markdown(build_configs.markdown))
-				.pipe(prepend('<link rel="stylesheet" href="js/styles/jsdoc-default.css"/>\n'))
-				.pipe(rename('index.html'))
-				.pipe(gulp.dest('../doc/'))
-
-				// do version replace on doc/**/*.html
-				.pipe(gulp.src('../doc/**/*.html'))
-				.pipe(g_replace('{{SDK_VERSION}}', version))
-				.pipe(gulp.dest('../doc/')),
-
-			// generate readme from template
-			gulp.src('../README.template.md')
-				.pipe(g_replace('{{SDK_VERSION}}', version))
-				.pipe(rename('README.md'))
-				.pipe(gulp.dest('../'))
-		).on('end', done);
-	});
+/*
+* The documentation tasks. Each step in the pipe uses a different concurrency
+* management paradigm, so they each have to go into their own subtask. Initial
+* attempts to put them in one were unsuccessful.
+*/
+gulp.task('del-doc', () => {
+	return del(r('../doc'), {force: true});
 });
+
+gulp.task('jsdoc-js', ['del-doc'], (done) => {
+	gulp.src(['../src/**/*.js', '!../src/components/*.js'])
+		.pipe(jsdoc(build_configs.jsdoc_js, done));
+});
+
+gulp.task('jsdoc-aframe', ['del-doc'], (done) => {
+	gulp.src(['../src/components/*.js'])
+		.pipe(jsdoc(build_configs.jsdoc_aframe, done));
+});
+
+gulp.task('compile-doc-index', ['del-doc'], () => {
+	return gulp.src('../README.template.md')
+		.pipe(markdown(build_configs.markdown))
+		.pipe(prepend('<link rel="stylesheet" href="js/styles/jsdoc-default.css"/>\n'))
+		.pipe(rename('index.html'))
+		.pipe(gulp.dest('../doc/'));
+});
+
+gulp.task('version-docs', ['jsdoc-js','jsdoc-aframe','compile-doc-index'], () => {
+	return gulp.src('../doc/**/*.html')
+		.pipe(g_replace('{{SDK_VERSION}}', version))
+		.pipe(gulp.dest('../doc/'))
+});
+
+gulp.task('version-readme', () => {
+	return gulp.src('../README.template.md')
+		.pipe(g_replace('{{SDK_VERSION}}', version))
+		.pipe(rename('README.md'))
+		.pipe(gulp.dest('../'))
+});
+
+gulp.task('doc', ['version-docs','version-readme']);
