@@ -26,7 +26,7 @@ class OBJMTLLoader
 	{
 		var mtlLoader = new THREE.MTLLoader()
 		var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
-		mtlLoader.setBaseUrl(baseUrl + '/');
+		mtlLoader.setTexturePath(baseUrl + '/');
 		mtlLoader.setCrossOrigin(this.crossOrigin);
 		mtlLoader.load(mtlFile, function (materials) {
 			var objLoader = new THREE.OBJLoader();

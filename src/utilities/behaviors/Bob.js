@@ -43,8 +43,8 @@ class Bob extends Behavior
 			if (!this.lastBobPosition.equals(this.object3d.position))
 				this.offsetPosition.copy(this.object3d.position);
 
-			this.object3d.position.y += Math.sin(nowInt / 800) * this.config.x;
-			this.object3d.position.x += Math.sin(nowInt / 500) * this.config.y;
+			this.object3d.position.y = this.offsetPosition.y + Math.sin(nowInt / 800) * this.config.x;
+			this.object3d.position.x = this.offsetPosition.x + Math.sin(nowInt / 500) * this.config.y;
 			this.lastBobPosition.copy(this.object3d.position);
 		}
 

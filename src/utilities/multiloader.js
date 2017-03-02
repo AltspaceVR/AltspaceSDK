@@ -5,23 +5,15 @@ var TRACE;
 var baseUrl = '';
 var crossOrigin = '';//assigned to THREE.MTLLoader.crossOrigin
 
-function LoadRequest(){
+class LoadRequest {
 	//To create loadRequst: new MultiLoader.LoadRequest()
-
-	var objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
-	var mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
-	var objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
-	var error;//String indicating loading error with at least one file.
-	var objectsLoaded = 0;//Used internally to determine when loading complete.
-
-	return {
-		objUrls: objUrls,
-		mtlUrls: mtlUrls,
-		objects: objects,
-		error: error,
-		objectsLoaded: objectsLoaded
-	};
-
+	constructor(){
+		this.objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
+		this.mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
+		this.objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
+		this.error = null;//String indicating loading error with at least one file.
+		this.objectsLoaded = 0;//Used internally to determine when loading complete.
+	}
 }//end of LoadRequest
 
 function init(params){

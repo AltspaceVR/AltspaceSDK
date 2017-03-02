@@ -3283,24 +3283,13 @@ var TRACE;
 var baseUrl = '';
 var crossOrigin = '';//assigned to THREE.MTLLoader.crossOrigin
 
-function LoadRequest(){
-	//To create loadRequst: new MultiLoader.LoadRequest()
-
-	var objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
-	var mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
-	var objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
-	var error;//String indicating loading error with at least one file.
-	var objectsLoaded = 0;//Used internally to determine when loading complete.
-
-	return {
-		objUrls: objUrls,
-		mtlUrls: mtlUrls,
-		objects: objects,
-		error: error,
-		objectsLoaded: objectsLoaded
-	};
-
-}//end of LoadRequest
+var LoadRequest = function LoadRequest(){
+	this.objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
+	this.mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
+	this.objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
+	this.error = null;//String indicating loading error with at least one file.
+	this.objectsLoaded = 0;//Used internally to determine when loading complete.
+};//end of LoadRequest
 
 function init$1(params){
 	var p = params || {};
@@ -3507,7 +3496,7 @@ OBJMTLLoader.prototype.load = function load (objFile, mtlFile, callback)
 {
 	var mtlLoader = new THREE.MTLLoader();
 	var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
-	mtlLoader.setBaseUrl(baseUrl + '/');
+	mtlLoader.setTexturePath(baseUrl + '/');
 	mtlLoader.setCrossOrigin(this.crossOrigin);
 	mtlLoader.load(mtlFile, function (materials) {
 		var objLoader = new THREE.OBJLoader();
@@ -3970,8 +3959,8 @@ var Bob = (function (Behavior$$1) {
 			if (!this.lastBobPosition.equals(this.object3d.position))
 				{ this.offsetPosition.copy(this.object3d.position); }
 
-			this.object3d.position.y += Math.sin(nowInt / 800) * this.config.x;
-			this.object3d.position.x += Math.sin(nowInt / 500) * this.config.y;
+			this.object3d.position.y = this.offsetPosition.y + Math.sin(nowInt / 800) * this.config.x;
+			this.object3d.position.x = this.offsetPosition.x + Math.sin(nowInt / 500) * this.config.y;
 			this.lastBobPosition.copy(this.object3d.position);
 		}
 
