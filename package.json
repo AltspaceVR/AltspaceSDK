@@ -1,7 +1,7 @@
 {
   "name": "AltspaceSDK",
   "author": "AltspaceVR",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AltspaceVR/AltspaceSDK.git"
@@ -12,7 +12,8 @@
   },
   "main": "dist/altspace.js",
   "scripts": {
-    "version": "gulp --gulpfile scripts/build.js altspace_js doc && git add dist doc"
+    "version": "gulp --gulpfile scripts/build.js altspace_js doc && git add .",
+    "postversion": "git push"
   },
   "keywords": [
     "aframe",
