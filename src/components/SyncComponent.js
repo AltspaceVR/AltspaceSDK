@@ -82,7 +82,7 @@ class SyncComponent extends AFrameComponent
 		//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
 		//This ensures, for example, that synced animations keep playing
 		this.scene.addEventListener('clientleft', (event => {
-			let shouldTakeOwnership = (!ownerId || ownerId === event.detail.id) && this.syncSys.isMasterClient;
+			let shouldTakeOwnership = (!this.ownerId || this.ownerId === event.detail.id) && this.syncSys.isMasterClient;
 			if(shouldTakeOwnership)
 				this.takeOwnership();
 		}).bind(this));
