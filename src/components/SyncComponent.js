@@ -120,12 +120,13 @@ class SyncComponent extends AFrameComponent
 		{
 			let newOwnerId = snapshot.val();
 			let gained = newOwnerId === this.syncSys.clientId && !this.isMine;
-			if (gained)
+			if (gained) {
 				this.el.emit('ownershipgained', null, false);
+			}
 
 			//note this also fires when we start up without ownership
-			let lost = newOwnerId !== this.syncSys.clientId && this.isMine;
-			if (lost){
+			let lost = newOwnerId !== this.syncSys.clientId;
+			if (lost) {
 				this.el.emit('ownershiplost', null, false);
 
 				//we no longer have to clear our ownership when we disconnect
@@ -137,16 +138,18 @@ class SyncComponent extends AFrameComponent
 			this.isMine = newOwnerId === this.syncSys.clientId;
 		}
 
-		//if nobody has owned the object yet, we will.
 		this.ownerRef.transaction(
 			(owner => {
 				if (owner) return undefined;
-				this.ownerRef.onDisconnect().set(null);
+				// try to take ownership
 				return this.syncSys.clientId;
 			}).bind(this),
 
 			((error, committed) => {
-				if(!committed) return;
+				if(committed) {
+					// Commit succeeded. We are the owner, so set to null if we disconnect.
+					this.ownerRef.onDisconnect().set(null);
+				}
 				this.ownerRef.on('value', onOwnerUpdate.bind(this));
 			}).bind(this)
 		);

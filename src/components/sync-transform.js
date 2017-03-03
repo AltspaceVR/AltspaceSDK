@@ -81,7 +81,7 @@ class SyncTransform extends AFrameComponent
 
 		//pause all animations on ownership loss
 		component.el.addEventListener('ownershiplost', () => {
-			component.el.children.forEach(child => {
+			Array.from(component.el.children).forEach(child => {
 				let tagName = child.tagName.toLowerCase();
 				if (tagName === "a-animation") {
 					stoppedAnimations.push(child);
@@ -97,7 +97,6 @@ class SyncTransform extends AFrameComponent
 
 		function onTransform(snapshot, componentName) {
 			if (sync.isMine) return;
-
 			let value = snapshot.val();
 			if (!value) return;
 
