@@ -949,12 +949,13 @@ var SyncComponent = (function (AFrameComponent$$1) {
 		{
 			var newOwnerId = snapshot.val();
 			var gained = newOwnerId === this.syncSys.clientId && !this.isMine;
-			if (gained)
-				{ this.el.emit('ownershipgained', null, false); }
+			if (gained) {
+				this.el.emit('ownershipgained', null, false);
+			}
 
 			//note this also fires when we start up without ownership
-			var lost = newOwnerId !== this.syncSys.clientId && this.isMine;
-			if (lost){
+			var lost = newOwnerId !== this.syncSys.clientId;
+			if (lost) {
 				this.el.emit('ownershiplost', null, false);
 
 				//we no longer have to clear our ownership when we disconnect
@@ -966,16 +967,18 @@ var SyncComponent = (function (AFrameComponent$$1) {
 			this.isMine = newOwnerId === this.syncSys.clientId;
 		}
 
-		//if nobody has owned the object yet, we will.
 		this.ownerRef.transaction(
 			(function (owner) {
 				if (owner) { return undefined; }
-				this$1.ownerRef.onDisconnect().set(null);
+				// try to take ownership
 				return this$1.syncSys.clientId;
 			}).bind(this),
 
 			(function (error, committed) {
-				if(!committed) { return; }
+				if(committed) {
+					// Commit succeeded. We are the owner, so set to null if we disconnect.
+					this$1.ownerRef.onDisconnect().set(null);
+				}
 				this$1.ownerRef.on('value', onOwnerUpdate.bind(this$1));
 			}).bind(this)
 		);
@@ -1352,7 +1355,7 @@ var SyncTransform = (function (AFrameComponent$$1) {
 
 		//pause all animations on ownership loss
 		component.el.addEventListener('ownershiplost', function () {
-			component.el.children.forEach(function (child) {
+			Array.from(component.el.children).forEach(function (child) {
 				var tagName = child.tagName.toLowerCase();
 				if (tagName === "a-animation") {
 					stoppedAnimations.push(child);
@@ -1368,7 +1371,6 @@ var SyncTransform = (function (AFrameComponent$$1) {
 
 		function onTransform(snapshot, componentName) {
 			if (sync.isMine) { return; }
-
 			var value = snapshot.val();
 			if (!value) { return; }
 
@@ -1943,7 +1945,7 @@ var NativeComponent = (function (AFrameComponent$$1) {
 		//to pass defaults
 		this.update(this.data);
 
-		if(!this._dontRebind){
+		if(!this.mesh && !this._dontRebind){
 			this.el.addEventListener('object3dset', (function (event) {
 				if(event.detail.type === 'mesh'){
 					altspace.removeNativeComponent(this$1.currentMesh, this$1.name);
