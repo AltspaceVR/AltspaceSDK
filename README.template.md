@@ -127,8 +127,8 @@ Altspace's browser is based on Chromium version 40.
 [SDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
 [Developer Portal]: http://developer.altvr.com
-[A-Frame API Documentation]: https://altspacevr.github.io/doc/aframe/
-[Three.js API Documentation]: https://altspacevr.github.io/doc/js/
+[A-Frame API Documentation]: https://altspacevr.github.io/AltspaceSDK/doc/aframe/
+[Three.js API Documentation]: https://altspacevr.github.io/AltspaceSDK/doc/js/
 [Local Dev Setup]: https://developer.altvr.com/local-dev/
 [App Guidelines]: https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f
 [Getting Started]: https://developer.altvr.com/get-started/

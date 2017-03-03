@@ -49,7 +49,7 @@ class NativeComponent extends AFrameComponent
 		//to pass defaults
 		this.update(this.data);
 
-		if(!this._dontRebind){
+		if(!this.mesh && !this._dontRebind){
 			this.el.addEventListener('object3dset', (event => {
 				if(event.detail.type === 'mesh'){
 					altspace.removeNativeComponent(this.currentMesh, this.name);

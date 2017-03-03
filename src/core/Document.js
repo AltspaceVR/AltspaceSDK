@@ -1,5 +1,5 @@
 /**
-* Get a three.js object that represents the visible 2D dom content of an enclosure.
+* Get a three.js object that represents the visible 2D DOM content of an enclosure.
 * Returns a promise that resolves with a [Document]{@link module:altspace~Document}
 * object.
 * @method getDocument

@@ -12,7 +12,7 @@ Note that many of our APIs make use of Promises. Learn about how they work [here
 * [object.addEventListener](https://threejs.org/docs/#Reference/Core/EventDispatcher) - Be notified when a user interacts with an object. Available events are `cursorup`, `cursordown`, `cursormove`, `cursorenter`, and `cursorleave`.
 * [altspace.utilities.sync.connect](module-altspace_utilities_sync.html) - Every user in a room is running their own copy of your app. Use this function to synchronize changes and events between users.
     * [SceneSync](module-altspace_utilities_behaviors.SceneSync.html) and [Object3DSync](module-altspace_utilities_behaviors.Object3DSync.html) are helper behaviors to make the sync process easier.
-* [altspace.getThreeJSTrackingSkeleton](module-altspace.html.#getThreeJSTrackingSkeleton) - Keep track of the user's head and hands.
+* [altspace.getThreeJSTrackingSkeleton](module-altspace.html#.getThreeJSTrackingSkeleton) - Keep track of the user's head and hands.
 
 * [Behaviors](module-altspace_utilities_behaviors.html) - Our system for modularizing code so it's reusable on different objects. Many behaviors are built-in.
 
@@ -31,7 +31,7 @@ This is a fully functional example of what Three.js code looks like.
 <!DOCTYPE html>
 <html lang=en>
 	<head>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
 		<script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>
 	</head>
 	<body>
