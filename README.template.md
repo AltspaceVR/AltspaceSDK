@@ -6,7 +6,7 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 
 # AltspaceVR SDK
 
-## [A-Frame API](https://altspacevr.github.io/doc/aframe/) - [Three.js API](https://altspacevr.github.io/doc/js/)
+## [A-Frame API](https://altspacevr.github.io/AltspaceSDK/doc/aframe/) - [Three.js API](https://altspacevr.github.io/AltspaceSDK/doc/js/)
 
 The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](https://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.
 
