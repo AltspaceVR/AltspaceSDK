@@ -12,7 +12,8 @@
   },
   "main": "dist/altspace.js",
   "scripts": {
-    "build": "gulp --gulpfile scripts/build.js altspace_js doc",
+    "lint": "eslint src examples scripts",
+    "build": "npm run lint && gulp --gulpfile scripts/build.js altspace_js doc",
     "doc": "gulp --gulpfile scripts/build.js doc",
     "version": "npm run build && git add .",
     "postversion": "git push && git push --tags",
