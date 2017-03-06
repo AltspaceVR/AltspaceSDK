@@ -5,7 +5,7 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
 <h1 id="altspacevr-sdk">AltspaceVR SDK</h1>
-<h2 id="-a-frame-api-https-altspacevr-github-io-doc-aframe-three-js-api-https-altspacevr-github-io-doc-js-"><a href="https://altspacevr.github.io/doc/aframe/">A-Frame API</a> - <a href="https://altspacevr.github.io/doc/js/">Three.js API</a></h2>
+<h2 id="-a-frame-api-https-altspacevr-github-io-altspacesdk-doc-aframe-three-js-api-https-altspacevr-github-io-altspacesdk-doc-js-"><a href="https://altspacevr.github.io/AltspaceSDK/doc/aframe/">A-Frame API</a> - <a href="https://altspacevr.github.io/AltspaceSDK/doc/js/">Three.js API</a></h2>
 <p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">Three.js</a> or <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="https://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.</p>
 <p>Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.</p>
 <p><strong>If you are brand new to web development</strong> or 3D applications, we recommend you develop with A-Frame, as it&#39;s more user-friendly and has more utility built-in. Head over to our <a href="https://altspacevr.github.io/AltspaceSDK/doc/aframe/">A-Frame API Documentation</a> for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a>.</p>
@@ -22,9 +22,9 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 <p><code>altspace.js</code> should be included whenever you use the SDK. It contains core utilities and APIs, and is useful both inside and outside of the client.</p>
 <p>Many APIs are present in the client without loading <code>altspace.js</code>, but please still include it, as this may change in the future.</p>
 <p>The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of <code>altspace.js</code>, we will try to return legacy behavior appropriate to your version of <code>altspace.js</code>. Versioning will follow <a href="http://semver.org/">SEMVER</a> as closely as possible. Details for each version can be found in the <a href="https://github.com/AltspaceVR/AltspaceSDK/releases">Release Notes</a>.</p>
-<p><strong>Latest Version: v2.0.1 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.0.1">See Changes</a></strong></p>
+<p><strong>Latest Version: v2.0.2 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.0.2">See Changes</a></strong></p>
 <p>Include the latest version of the SDK in your app with:</p>
-<p><code>&lt;script src=&quot;https://sdk.altvr.com/libs/altspace.js/2.0.1/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;https://sdk.altvr.com/libs/altspace.js/2.0.2/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>If you use npm, you can install altspace.js with:</p>
 <p><code>npm install altspace</code></p>
 <h2 id="sdk-feature-overview">SDK Feature Overview</h2>
