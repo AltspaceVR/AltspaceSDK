@@ -1,73 +1,73 @@
 <html>
   <head>
-    <title>A-Frame Altspace Component - Test Cursor Events</title>
-      <script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
-      <script src="../../../dist/altspace.js"></script>
-      <script>
+	<title>A-Frame Altspace Component - Test Cursor Events</title>
+	  <script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
+	  <script src="../../../dist/altspace.js"></script>
+	  <script>
 
-      </script>
+	  </script>
   </head>
   <body>
-    <a-scene altspace>
-      <a-assets>
-        <a-mixin id="coneGeo" geometry="primitive: cone; radius-top: 0; radius-bottom: 0.5" material="color: grey"></a-mixin>
-        <a-mixin id="sphereGeo" geometry="primitive: sphere; radius: 0.5;" material="color: grey"></a-mixin>
-        <a-mixin id="yoyoAni" attribute="position" direction="alternate"
-                 dur="3000" fill="forwards" repeat="indefinite"></a-mixin>
-      </a-assets>
+	<a-scene altspace>
+	  <a-assets>
+		<a-mixin id="coneGeo" geometry="primitive: cone; radius-top: 0; radius-bottom: 0.5" material="color: grey"></a-mixin>
+		<a-mixin id="sphereGeo" geometry="primitive: sphere; radius: 0.5;" material="color: grey"></a-mixin>
+		<a-mixin id="yoyoAni" attribute="position" direction="alternate"
+				 dur="3000" fill="forwards" repeat="indefinite"></a-mixin>
+	  </a-assets>
 
-      <a-entity position="0 1.8 2">
-        <a-camera look-controls>
-          <a-cursor position="0 0 -1.25"
-            geometry="primitive: ring; radiusOuter: 0.075;
-                      radiusInner: 0.05;"
-            material="color: cyan; shader: flat"
-            maxDistance="30" fuse="false"></a-cursor>
-        </a-camera>
-      </a-entity>
-      <a-entity id="cone1" mixin="coneGeo" position="-1 0 0">
-        <a-animation mixin="yoyoAni" to="-1 2 0"></a-animation>
-      </a-entity>
-      <a-entity id="sphere" mixin="sphereGeo" position="0 0 0">
-        <a-animation mixin="yoyoAni" to="0 2 0"></a-animation>
-      </a-entity>
-      <a-entity id="cone2" mixin="coneGeo" position="1 0 0" rotation="0 0 180">
-        <a-animation mixin="yoyoAni" to="1 2 0"></a-animation>
-      </a-entity>
-    </a-scene>
+	  <a-entity position="0 1.8 2">
+		<a-camera look-controls>
+		  <a-cursor position="0 0 -1.25"
+			geometry="primitive: ring; radiusOuter: 0.075;
+					  radiusInner: 0.05;"
+			material="color: cyan; shader: flat"
+			maxDistance="30" fuse="false"></a-cursor>
+		</a-camera>
+	  </a-entity>
+	  <a-entity id="cone1" mixin="coneGeo" position="-1 0 0">
+		<a-animation mixin="yoyoAni" to="-1 2 0"></a-animation>
+	  </a-entity>
+	  <a-entity id="sphere" mixin="sphereGeo" position="0 0 0">
+		<a-animation mixin="yoyoAni" to="0 2 0"></a-animation>
+	  </a-entity>
+	  <a-entity id="cone2" mixin="coneGeo" position="1 0 0" rotation="0 0 180">
+		<a-animation mixin="yoyoAni" to="1 2 0"></a-animation>
+	  </a-entity>
+	</a-scene>
   </body>
   <script>
 
-      var changeColorRandom = function(el) {
-          var rand = function() { return Math.floor(Math.random() * 255)};
-          el.setAttribute('material', 'color', 'rgb('+rand()+','+rand()+','+rand()+')');
-      }
+	var changeColorRandom = function(el) {
+		var rand = function() { return Math.floor(Math.random() * 255)};
+		el.setAttribute('material', 'color', 'rgb('+rand()+','+rand()+','+rand()+')');
+	}
 
-      // Cone 1: Testing mousedown, listening on the entity.
-      var cone1El = document.querySelector('#cone1');
-      cone1El.addEventListener('mousedown', function(event) {
-          changeColorRandom(event.target);
-      });
+	// Cone 1: Testing mousedown, listening on the entity.
+	var cone1El = document.querySelector('#cone1');
+	cone1El.addEventListener('mousedown', function(event) {
+		changeColorRandom(event.target);
+	});
 
-      // Cone 2: Testing click, listening on the cursor.
-      var cone2El = document.querySelector('#cone2');
-      var cursorEl = document.querySelector('a-cursor');
-      cursorEl.addEventListener('click', function(event) {
-          var el = event.detail.target;
-          if (el && el.object3D.uuid === cone2El.object3D.uuid) {
-              changeColorRandom(el);
-          }
-      });
+	// Cone 2: Testing click, listening on the cursor.
+	var cone2El = document.querySelector('#cone2');
+	var cursorEl = document.querySelector('a-cursor');
+	cursorEl.addEventListener('click', function(event) {
+		var el = event.detail.target;
+		if (el && el.object3D.uuid === cone2El.object3D.uuid) {
+			changeColorRandom(el);
+		}
+	});
 
-      // Sphere: Testing mousedown/mouseup events.
-      var sphereEl = document.querySelector('#sphere');
-      sphereEl.addEventListener('mouseenter', function(event) {
-          changeColorRandom(event.target);
-      });
-      sphereEl.addEventListener('mouseleave', function(event) {
-          changeColorRandom(event.target);
-          event.target.setAttribute('material', 'color', 'grey');
-      });
+	// Sphere: Testing mousedown/mouseup events.
+	var sphereEl = document.querySelector('#sphere');
+	sphereEl.addEventListener('mouseenter', function(event) {
+		changeColorRandom(event.target);
+	});
+	sphereEl.addEventListener('mouseleave', function(event) {
+		changeColorRandom(event.target);
+		event.target.setAttribute('material', 'color', 'grey');
+	});
 
   </script>
 </html>

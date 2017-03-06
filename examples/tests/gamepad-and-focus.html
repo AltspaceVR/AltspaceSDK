@@ -29,18 +29,20 @@
 			}
 			setInterval(() => {
 				watches.forEach((watch, i) =>{
-				if (!watchList.children[i]) {
-					var watchItem = document.createElement('li');
-					watchList.appendChild(watchItem);
-				}
-				try {
-					let val = watch();
-					if (!Array.isArray(val)) {
-						val = [val];
+					if (!watchList.children[i]) {
+						var watchItem = document.createElement('li');
+						watchList.appendChild(watchItem);
 					}
-					watchList.childNodes[i].textContent = val.join(' ').toString();
-				}
-				catch(e) {}
+					try {
+						let val = watch();
+						if (!Array.isArray(val)) {
+							val = [val];
+						}
+						watchList.childNodes[i].textContent = val.join(' ').toString();
+					}
+					catch(e) {
+						// be silent if a watch fails
+					}
 				})
 			}, 100)
 
@@ -77,7 +79,7 @@
 						var gamepadPos = altspace.getGamepads()[i].position;
 						return ['gamepad', i, 'position', gamepadPos.x, gamepadPos.y, gamepadPos.z]
 					});
-				}(i));
+				})(i);
 			}
 
 			var renderer = altspace.getThreeJSRenderer();

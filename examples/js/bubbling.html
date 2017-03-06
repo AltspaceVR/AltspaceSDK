@@ -52,43 +52,43 @@
 			var geometry, root;
 
 			function setTintColor (obj, tintColor) {
-			    obj.userData.tintColor = tintColor;
-			    for (var i = 0; i < obj.children.length; i++) {
-			        obj.children[i].userData.tintColor = tintColor;
-			    }
+				obj.userData.tintColor = tintColor;
+				for (var i = 0; i < obj.children.length; i++) {
+					obj.children[i].userData.tintColor = tintColor;
+				}
 			}
 
-            function addEventListeners(object3d) {
-                object3d.addEventListener('cursordown', function (event) {
-                	console.dir(event.currentTarget);
-                    var randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-                    setTintColor( event.currentTarget, randomColor);
-                    event.stopPropagation();//This should still allow the scale to happen, but only on the target
-                });
+			function addEventListeners(object3d) {
+				object3d.addEventListener('cursordown', function (event) {
+					console.dir(event.currentTarget);
+					var randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+					setTintColor( event.currentTarget, randomColor);
+					event.stopPropagation();//This should still allow the scale to happen, but only on the target
+				});
 
-                object3d.addEventListener('cursordown', function (event) {
-                    event.currentTarget.scale.x = 3;
-                    event.currentTarget.scale.y = 3;
-                    event.currentTarget.scale.z = 3;
-                });
+				object3d.addEventListener('cursordown', function (event) {
+					event.currentTarget.scale.x = 3;
+					event.currentTarget.scale.y = 3;
+					event.currentTarget.scale.z = 3;
+				});
 
-                object3d.addEventListener('cursorenter', function (event) {
-                    event.currentTarget.scale.x = 1.5;
-                    event.currentTarget.scale.y = 1.5;
-                    event.currentTarget.scale.z = 1.5;
-                    event.stopImmediatePropagation();//This means the target will not turn black
-                });
+				object3d.addEventListener('cursorenter', function (event) {
+					event.currentTarget.scale.x = 1.5;
+					event.currentTarget.scale.y = 1.5;
+					event.currentTarget.scale.z = 1.5;
+					event.stopImmediatePropagation();//This means the target will not turn black
+				});
 
-                object3d.addEventListener('cursorenter', function (event) {//This should never fire
-                    event.currentTarget.userData.tintColor = { r:0, g: 0, b: 0};
-                });
+				object3d.addEventListener('cursorenter', function (event) {//This should never fire
+					event.currentTarget.userData.tintColor = { r:0, g: 0, b: 0};
+				});
 
-                object3d.addEventListener('cursorleave', function (event) {
-                    event.currentTarget.scale.x = 1.0;
-                    event.currentTarget.scale.y = 1.0;
-                    event.currentTarget.scale.z = 1.0;
-                });
-            }
+				object3d.addEventListener('cursorleave', function (event) {
+					event.currentTarget.scale.x = 1.0;
+					event.currentTarget.scale.y = 1.0;
+					event.currentTarget.scale.z = 1.0;
+				});
+			}
 
 			var manager = new THREE.LoadingManager();
 			var loader = new altspace.utilities.shims.OBJMTLLoader( manager );
@@ -119,38 +119,38 @@
 					root.position.z = 100;
 					scene.add( root );
 
-				    var amount = 30, object, parent;
+					var amount = 30, object, parent;
 
 					for (var i = 0; i < 6; i++) {
 
-					    parent = root;
+						parent = root;
 
-					    for (var j = 0; j < amount; j++) {
+						for (var j = 0; j < amount; j++) {
 
-					        object = sun.clone();
+							object = sun.clone();
 
-					        if (i === 0)
-					            object.position.x = 10;
-                            if (i === 1)
-                                object.position.x = -10;
-                            if (i === 2)
-                                object.position.y = 10;
-                            if (i === 3)
-                                object.position.y = -10;
-                            if (i === 4)
-                                object.position.z = 10;
-                            if (i === 5)
-                                object.position.z = -10;
+							if (i === 0)
+								object.position.x = 10;
+							if (i === 1)
+								object.position.x = -10;
+							if (i === 2)
+								object.position.y = 10;
+							if (i === 3)
+								object.position.y = -10;
+							if (i === 4)
+								object.position.z = 10;
+							if (i === 5)
+								object.position.z = -10;
 
-					        addEventListeners(object);
+							addEventListeners(object);
 
-					        parent.add(object);
-					        parent = object;
+							parent.add(object);
+							parent = object;
 
-					    }
+						}
 					}
 
-				    renderer = altspace.getThreeJSRenderer();
+					renderer = altspace.getThreeJSRenderer();
 
 					animate();
 				} );

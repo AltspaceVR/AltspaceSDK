@@ -9,142 +9,142 @@
 </head>
 <body>
 	<script>
-        var utilities = altspace.utilities;
-        var behaviors = altspace.utilities.behaviors;
+		var utilities = altspace.utilities;
+		var behaviors = altspace.utilities.behaviors;
 
-        var sim = new utilities.Simulation();
-        var inCodePen = utilities.codePen.inCodePen;
+		var sim = new utilities.Simulation();
+		var inCodePen = utilities.codePen.inCodePen;
 		var instanceRef;
 
-        utilities.sync.connect({
-            appId: 'AddingCubes',
-            authorId: inCodePen ? utilities.codePen.getAuthorId() : 'AltspaceVR',
-            instanceId: inCodePen ? utilities.codePen.getPenId() : null
+		utilities.sync.connect({
+			appId: 'AddingCubes',
+			authorId: inCodePen ? utilities.codePen.getAuthorId() : 'AltspaceVR',
+			instanceId: inCodePen ? utilities.codePen.getPenId() : null
 		}).then(function(connection) {
-		    instanceRef = connection.instance;
+			instanceRef = connection.instance;
 
-		    var cubes = [];
-		    var BoardWidth = 300;
-		    var BoardDepth = 300;
+			var cubes = [];
+			var BoardWidth = 300;
+			var BoardDepth = 300;
 
-		    var myColor = Please.make_color()[0];
+			var myColor = Please.make_color()[0];
 
-		    var sceneSync = new behaviors.SceneSync(instanceRef, {
-		        instantiators: {
-		            'Cube': createCube,
-		            'InstantiationSphere': createInstantiationSphere,
-		            'DestructionSphere': createDestructionSphere
-		        },
-		        destroyers: {
-		            'Cube': destroyCube
-		        },
-		        ready: ready
-		    });
-		    sim.scene.addBehavior(sceneSync);
+			var sceneSync = new behaviors.SceneSync(instanceRef, {
+				instantiators: {
+					'Cube': createCube,
+					'InstantiationSphere': createInstantiationSphere,
+					'DestructionSphere': createDestructionSphere
+				},
+				destroyers: {
+					'Cube': destroyCube
+				},
+				ready: ready
+			});
+			sim.scene.addBehavior(sceneSync);
 
-		    function createInstantiationSphere(initData) {
-		        var sphere = createSphere(initData);
-		        sphere.material.color = new THREE.Color("#00EE00");
-		        sphere.position.x = 100;
+			function createInstantiationSphere(initData) {
+				var sphere = createSphere(initData);
+				sphere.material.color = new THREE.Color("#00EE00");
+				sphere.position.x = 100;
 
-		        sphere.addEventListener('cursordown', function () {
-		            //clicking on sphere creates block of random size nearby
-		            function randInt(min, max) { return Math.random() * (max - min) + min; }
-		            var initData = {
-		                width: randInt(20, 100),
-		                height: randInt(20, 100),
-		                depth: randInt(20, 100),
-		                x: randInt(-BoardWidth / 2, BoardWidth / 2),
-		                y: randInt(-BoardWidth / 2, BoardWidth / 2),
-		                z: randInt(-BoardWidth / 2, BoardWidth / 2),
-		                color: myColor
-		            };
-		            sceneSync.instantiate('Cube', initData, true);
-		        });
+				sphere.addEventListener('cursordown', function () {
+					//clicking on sphere creates block of random size nearby
+					function randInt(min, max) { return Math.random() * (max - min) + min; }
+					var initData = {
+						width: randInt(20, 100),
+						height: randInt(20, 100),
+						depth: randInt(20, 100),
+						x: randInt(-BoardWidth / 2, BoardWidth / 2),
+						y: randInt(-BoardWidth / 2, BoardWidth / 2),
+						z: randInt(-BoardWidth / 2, BoardWidth / 2),
+						color: myColor
+					};
+					sceneSync.instantiate('Cube', initData, true);
+				});
 
-		        return sphere;
-		    }
+				return sphere;
+			}
 
-		    function createDestructionSphere(initData) {
-		        var sphere = createSphere(initData);
-		        sphere.material.color = new THREE.Color("#EE0000");
-		        sphere.position.x = -100;
+			function createDestructionSphere(initData) {
+				var sphere = createSphere(initData);
+				sphere.material.color = new THREE.Color("#EE0000");
+				sphere.position.x = -100;
 
-		        sphere.addEventListener('cursordown', function () {
-		            if (cubes.length) sceneSync.destroy(cubes[cubes.length - 1]);
-		        });
+				sphere.addEventListener('cursordown', function () {
+					if (cubes.length) sceneSync.destroy(cubes[cubes.length - 1]);
+				});
 
-		        return sphere;
-		    }
+				return sphere;
+			}
 
-		    function createSphere(initData) {
-		        var radius = initData.radius;
-		        var sphere = new THREE.Mesh(
-                  new THREE.SphereGeometry(radius, 20, 20),
-                  new THREE.MeshBasicMaterial({ color: '#EB5B40' })
-                );
-		        sphere.addBehaviors(
-                  new behaviors.Bob({ shouldMove: true }),
-                  new behaviors.ButtonStateStyle(),
-                  new behaviors.Object3DSync({
-                      position: true
-                  })
-                );
-		        sim.scene.add(sphere);
-		        return sphere;
-		    }
+			function createSphere(initData) {
+				var radius = initData.radius;
+				var sphere = new THREE.Mesh(
+					new THREE.SphereGeometry(radius, 20, 20),
+					new THREE.MeshBasicMaterial({ color: '#EB5B40' })
+				);
+				sphere.addBehaviors(
+					new behaviors.Bob({ shouldMove: true }),
+					new behaviors.ButtonStateStyle(),
+					new behaviors.Object3DSync({
+						position: true
+					})
+				);
+				sim.scene.add(sphere);
+				return sphere;
+			}
 
-		    function destroyCube(cube) {
+			function destroyCube(cube) {
 
-		        var i = cubes.indexOf(cube);
-		        if (i !== -1) {
-		            cubes.splice(i, 1);
-		        }
+				var i = cubes.indexOf(cube);
+				if (i !== -1) {
+					cubes.splice(i, 1);
+				}
 
-		        // returning true invokes the default destructor (removes from scene and disposes references)
-		        return true;
-		    }
+				// returning true invokes the default destructor (removes from scene and disposes references)
+				return true;
+			}
 
-		    function createCube(initData) {
-		        var width = initData.width;
-		        var height = initData.height;
-		        var depth = initData.depth;
-		        var x = initData.x || 0;
-		        var y = initData.y || 0;
-		        var z = initData.z || 0;
+			function createCube(initData) {
+				var width = initData.width;
+				var height = initData.height;
+				var depth = initData.depth;
+				var x = initData.x || 0;
+				var y = initData.y || 0;
+				var z = initData.z || 0;
 
-		        var cube = new THREE.Mesh(
-                  new THREE.BoxGeometry(width, height, depth),
-                  new THREE.MeshBasicMaterial({ color: new THREE.Color(initData.color) })
-                );
-		        cube.addBehaviors(
-                  new behaviors.Bob({ shouldMove: false }),
-                  new behaviors.Spin({ speed: 0.002 }),
-                  new behaviors.ButtonStateStyle(),
-                  new behaviors.Object3DSync({
-                      position: true
-                  }),
-                  new behaviors.Drag({
-                      x: { min: -BoardWidth / 2, max: BoardWidth / 2 },
-                      z: { min: -BoardWidth / 2, max: BoardWidth / 2 }
-                  })
+				var cube = new THREE.Mesh(
+					new THREE.BoxGeometry(width, height, depth),
+					new THREE.MeshBasicMaterial({ color: new THREE.Color(initData.color) })
+				);
+				cube.addBehaviors(
+					new behaviors.Bob({ shouldMove: false }),
+					new behaviors.Spin({ speed: 0.002 }),
+					new behaviors.ButtonStateStyle(),
+					new behaviors.Object3DSync({
+						position: true
+					}),
+					new behaviors.Drag({
+						x: { min: -BoardWidth / 2, max: BoardWidth / 2 },
+						z: { min: -BoardWidth / 2, max: BoardWidth / 2 }
+					})
 
-                );
-		        cube.position.set(x, y, z);
-		        cube.position.y = -100;
-		        sim.scene.add(cube);
+				);
+				cube.position.set(x, y, z);
+				cube.position.y = -100;
+				sim.scene.add(cube);
 
-		        cubes.push(cube);
+				cubes.push(cube);
 
-		        return cube;
-		    }
+				return cube;
+			}
 
-		    function ready(firstInInstance) {
-		        if (firstInInstance) {
-		            sceneSync.instantiate('InstantiationSphere', { radius: 50 });
-		            sceneSync.instantiate('DestructionSphere', { radius: 50 });
-		        }
-		    }
+			function ready(firstInInstance) {
+				if (firstInInstance) {
+					sceneSync.instantiate('InstantiationSphere', { radius: 50 });
+					sceneSync.instantiate('DestructionSphere', { radius: 50 });
+				}
+			}
 		});
 
 	</script>
