@@ -22,7 +22,7 @@ const gulp = require('gulp'),
 
 	libpath = require('path'),
 	del = require('del'),
-	version = require('../package.json').version;;
+	version = require('../package.json').version;
 
 function r(...args){
 	return libpath.resolve(__dirname, ...args);
@@ -48,34 +48,34 @@ const build_configs = {
 		})]
 	},
 	jsdoc_js: {
-	    opts: {
-	        recurse: true,
-	        destination: r('../doc/js'),
-	        readme: r('../src/README.md'),
-	        template: r('../node_modules/minami')
-	    },
-	    plugins: ["plugins/markdown"],
-	    templates: {
-	        default: {
-	            outputSourceFiles: false,
-	            layoutFile: r('../node_modules/minami/tmpl/layout.tmpl')
-	        }
-	    }
+		opts: {
+			recurse: true,
+			destination: r('../doc/js'),
+			readme: r('../src/README.md'),
+			template: r('../node_modules/minami')
+		},
+		plugins: ["plugins/markdown"],
+		templates: {
+			default: {
+				outputSourceFiles: false,
+				layoutFile: r('../node_modules/minami/tmpl/layout.tmpl')
+			}
+		}
 	},
 	jsdoc_aframe: {
-	    opts: {
-	        recurse: true,
-	        destination: r("../doc/aframe"),
-	        readme: r("../src/components/README.md"),
-	        template: r("../node_modules/minami")
-	    },
-	    plugins: ["plugins/markdown"],
-	    templates: {
-	        default: {
-	            outputSourceFiles: false,
-	            layoutFile: r("../node_modules/minami/tmpl/layout.tmpl")
-	        }
-	    }
+		opts: {
+			recurse: true,
+			destination: r("../doc/aframe"),
+			readme: r("../src/components/README.md"),
+			template: r("../node_modules/minami")
+		},
+		plugins: ["plugins/markdown"],
+		templates: {
+			default: {
+				outputSourceFiles: false,
+				layoutFile: r("../node_modules/minami/tmpl/layout.tmpl")
+			}
+		}
 	},
 	markdown: {
 		gfm: true
