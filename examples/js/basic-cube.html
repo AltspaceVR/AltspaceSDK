@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang=en>
+	<head>
+		<meta charset=utf-8>
+		<title>My first Three.js app in Altspace</title>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+		if (!window.altspace || !window.altspace.inClient) {
+			document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+		}
+
+		var scene = new THREE.Scene();
+		var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+
+		var geometry = new THREE.BoxGeometry(200, 200, 200);
+		var material = new THREE.MeshBasicMaterial({
+			color: 0x00ff00
+		});
+		var cube = new THREE.Mesh(geometry, material);
+		scene.add(cube);
+
+		//Update & Rendering
+		function render() {
+			requestAnimationFrame(render);
+
+			cube.rotation.x += 0.01;
+			cube.rotation.y += 0.01;
+
+			renderer.render(scene);
+		}
+		render();
+		</script>
+	</body>
+</html>

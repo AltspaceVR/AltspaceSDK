@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+<meta charset=utf-8>
+<title>Synced Dice</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.rawgit.com/schteppe/cannon.js/v0.6.2/build/cannon.min.js"></script>
+<script src="../../dist/altspace.js"></script>
+</head>
+
+<body>
+<script>
+var sim = new altspace.utilities.Simulation({auto: false});
+sim.camera.position.z = 30;
+
+var physicsWorld = new CANNON.World();
+physicsWorld.gravity.set(0, -9.82 * 5, 0);
+
+var config = { authorId: 'AltspaceVR', appId: 'SyncedDice' };
+
+altspace.utilities.sync.connect(config).then(initApp);
+
+function initApp(connection) {
+	var modelPromise = new Promise(function (resolve, reject) {
+		var loader = new altspace.utilities.shims.OBJMTLLoader();
+		loader.load('models/dice/d6_high.obj', 'models/dice/d6_high.mtl', resolve);
+	});
+
+	Promise.all([
+		modelPromise,
+		altspace.inClient ? altspace.getEnclosure() : Promise.resolve()
+	]).then(function(resources) {
+		startApp(connection, resources);
+	});
+}
+
+function startApp(connection, resources) {
+	var dieModel = resources.shift();
+	dieModel.scale.multiplyScalar(0.2);
+	var enclosure = resources.shift();
+
+	var controls;
+	if (altspace.inClient) {
+		sim.scene.scale.multiplyScalar(enclosure.pixelsPerMeter/10);
+	}
+	else {
+		controls = new THREE.OrbitControls(sim.camera);
+	}
+
+	function createFloor() {
+		var bottom = -10;
+		var floor = new CANNON.Body({
+			mass: 0,
+			shape: new CANNON.Plane(),
+			position: new CANNON.Vec3(0, bottom, 0)
+		});
+		floor.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI/2);
+		physicsWorld.add(floor);
+	}
+
+	var dice = [];
+	function createDie() {
+		var mesh = dieModel.clone();
+		sim.scene.add(mesh);
+
+		var body = new CANNON.Body({
+			mass: 0,
+			shape: new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)) ,
+			position: new CANNON.Vec3(dice.length * 1.5, 0, 0)
+		});
+		physicsWorld.add(body);
+
+		dice.push({mesh: mesh, body: body});
+	}
+
+	function createRollButton() {
+		var diceState = connection.instance.child('diceState');
+		diceState.on('value', function (snap) {
+			var newDiceState = snap.val();
+			if (!newDiceState) { return; }
+			newDiceState.forEach(function (dieState, i) {
+				var dieBody = dice[i].body;
+				dieBody.position.set(i * 1.5, 0, 0);
+				dieBody.quaternion.set(0, 0, 0, 1);
+				dieBody.velocity.copy(dieState.velocity);
+				dieBody.angularVelocity.copy(dieState.angularVelocity);
+				dieBody.mass = 1;
+				dieBody.updateMassProperties();
+				dieBody.type = CANNON.Body.DYNAMIC;
+			});
+		});
+
+		function random(factor) {
+			return (Math.random() * 2 - 1) * factor;
+		}
+
+		function randomVector(downward, factor) {
+			return {
+				x: random(factor),
+				y: downward ? -Math.random() : random(factor),
+				z: random(factor)
+			}
+		}
+
+		var rollButton = new THREE.Mesh(
+			new THREE.BoxGeometry(1, 1, 1)
+		);
+		rollButton.position.y = 1.5;
+		rollButton.addEventListener('cursordown', function () {
+			var newDiceState = [];
+			dice.forEach(function () {
+				newDiceState.push({
+					velocity: randomVector(true, 4),
+					angularVelocity: randomVector(false, Math.PI * 6)
+				});
+			});
+			diceState.set(newDiceState);
+		});
+		sim.scene.add(rollButton);
+	}
+
+	var lastFrame = 0;
+	function loop(elapsed) {
+		var deltaTime = elapsed - lastFrame;
+		physicsWorld.step(1/30, deltaTime/1000, 20);
+		lastFrame = elapsed;
+
+		dice.forEach(function (die) {
+			die.mesh.position.copy(die.body.position);
+			die.mesh.quaternion.copy(die.body.quaternion);
+		});
+
+		if (controls) { controls.update(); }
+
+		sim.renderer.render(sim.scene, sim.camera);
+
+		requestAnimationFrame(loop);
+	}
+
+	createFloor();
+
+	createDie();
+	createDie();
+	createDie();
+
+	createRollButton();
+
+	loop(0);
+}
+</script>
+</body>
+</html>

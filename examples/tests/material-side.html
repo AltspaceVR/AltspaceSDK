@@ -3,15 +3,15 @@
 	<head>
 		<title>Material Side Tests</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
 		<script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 		<style>
 			body { margin: 0px; overflow: hidden; }
-			label { 
-				font: bold 40pt sans-serif; 
-				position: absolute; 
+			label {
+				font: bold 40pt sans-serif;
+				position: absolute;
 				color: white;
 				top: 300px;
 			}
@@ -30,7 +30,7 @@
 			}
 
 			function makeSphere (side, x, y, xs, ys, zs) {
-				var texture = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg');
+				var texture = new THREE.TextureLoader().load('resources/UV_Grid_Sm.jpg');
 				var material = new THREE.MeshBasicMaterial({color:'#ff00ff', map: texture, opacity: 0.5});
 				material.side = side;
 				var sphere = new THREE.Mesh(new THREE.SphereGeometry(), material);

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Hello Hands</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<script>
+if (!window.altspace || !window.altspace.inClient) {
+	document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+}
+
+var text = "HelloHands";//"AltspaceVR"
+
+//Setup
+var scene = new THREE.Scene();
+var renderer = altspace.getThreeJSRenderer();
+
+//Letters
+var letters = [];
+new THREE.FontLoader().load(
+	'https://cdn.rawgit.com/mrdoob/three.js/r74/examples/fonts/helvetiker_regular.typeface.js',
+	createLettersAndAttachToSkeleton
+);
+
+var skeleton;
+
+function waitForJoint(part, side) {
+	var promise = new Promise(function (resolve) {
+		var waitIntervalId = setInterval(function () {
+			if (skeleton.getJoint(part, side)) {
+				clearInterval(waitIntervalId);
+				resolve();
+			}
+		}, 10);
+	});
+	return promise;
+}
+
+function createLettersAndAttachToSkeleton (font) {
+	for(var i = 0, max = text.length; i < max; i++){
+		var geometry = new THREE.TextGeometry(text.charAt(i), {font: font});
+		var material = new THREE.MeshBasicMaterial({color:'green'});
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.scale.z = 0.3;
+		mesh.scale.multiplyScalar(0.3);
+		mesh.position.z = 30;
+		mesh.position.x = 8;
+		mesh.rotation.x = Math.PI / 2;
+		scene.add(mesh);
+		letters.push(mesh);
+	}
+
+	//Skeleton
+	altspace.getThreeJSTrackingSkeleton().then(function(_skeleton){
+		skeleton = _skeleton;
+		scene.add(skeleton);
+
+		waitForJoint('Index', 'Left').then(function () {
+			var i = 0;
+			skeleton.getJoint('Pinky',	'Left',	3).add(letters[i++]);
+			skeleton.getJoint('Ring',	'Left',	3).add(letters[i++]);
+			skeleton.getJoint('Middle', 'Left',	3).add(letters[i++]);
+			skeleton.getJoint('Index',	'Left',	3).add(letters[i++]);
+			skeleton.getJoint('Thumb',	'Left',	3).add(letters[i++]);
+		});
+		waitForJoint('Index', 'Right').then(function () {
+			var i = 5;
+			skeleton.getJoint('Thumb',	'Right',	3).add(letters[i++]);
+			skeleton.getJoint('Index',	'Right',	3).add(letters[i++]);
+			skeleton.getJoint('Middle', 'Right',	3).add(letters[i++]);
+			skeleton.getJoint('Ring',	'Right',	3).add(letters[i++]);
+			skeleton.getJoint('Pinky',	'Right',	3).add(letters[i++]);
+		});
+	}).otherwise(function () {
+		console.log(this, arguments);
+	});
+}
+
+function setLetterVisibility (side, offset) {
+	if (!letters.length) { return; }
+	var joint = skeleton && skeleton.getJoint('Index', side);
+	var handInView = joint && joint.confidence !== 0;
+	for (var i = offset; i < offset + 5; i++) {
+		letters[i].visible = handInView;
+	}
+}
+
+//Rendering
+function animate() {
+	requestAnimationFrame(animate);
+	setLetterVisibility('Left', 0);
+	setLetterVisibility('Right', 5);
+	renderer.render(scene);
+}
+animate();
+
+</script>
+</body>
+</html>

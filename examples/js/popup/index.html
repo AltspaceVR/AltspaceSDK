@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Popup Example</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../../dist/altspace.js"></script>
+</head>
+
+<body>
+<script>
+if (!window.altspace || !window.altspace.inClient) {
+	document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+}
+
+var sim = new altspace.utilities.Simulation();
+var config = { authorId: 'AltspaceVR', appId: 'Popup' };
+var sceneSync, popup;
+
+altspace.utilities.sync.connect(config).then(function(connection) {
+	sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
+		instantiators: {
+			'cube': createCube,
+			'sphere': createSphere,
+			'torus': createTorus
+		},
+		ready: ready
+	});
+	sim.scene.addBehavior(sceneSync);
+
+	// Open a popup with a form (popup.html) which allows you to add shapes to the scene.
+	var popupUrl = getFullUrl('popup.html' + location.search);
+	altspace.open(popupUrl, '_experience', {
+		icon: getFullUrl('favicon.png'),
+		hidden: true
+	}).then(function (_popup) {
+		// Save a reference to the popup so that we can open it when a user clicks
+		// on any shape via the ShowPopup behavior.
+		popup = _popup;
+	});
+
+	// This example uses Firebase to communicate between the popup and the main app.
+	// The form in the popup adds shapes to Firebase. When that happens, we instantiate the corresponding shape here.
+	connection.instance.child('things').on('child_added', function (snapshot) {
+		var thing = snapshot.val();
+		if (!thing) { return; }
+		sceneSync.instantiate(thing.shape, thing);
+	});
+});
+
+function ready(firstInstance) {
+	if (firstInstance) {
+		altspace.getEnclosure().then(function (enclosure) {
+			sceneSync.instantiate('cube', {
+				color: 'white',
+				position: {x: 0, y: -enclosure.innerHeight / 2, z: 0}
+			});
+		});
+	}
+}
+
+function ShowPopup() {
+	function awake(obj) {
+		obj.addEventListener('cursordown', function() {
+			popup.show();
+		});
+	}
+	return { awake: awake };
+}
+
+function getFullUrl(path) {
+	var currPath = location.pathname;
+	if (!currPath.endsWith('/')) {
+		currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+	}
+	return location.origin + currPath + path;
+}
+
+function getTextTexture(text) {
+	var canvas = document.createElement('canvas');
+	canvas.width = 128;
+	canvas.height = 64;
+	var ctx = canvas.getContext('2d');
+	ctx.fillStyle = 'white';
+	ctx.fillRect(0, 0, 128, 128);
+	ctx.fillStyle = 'black'
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.font = '16pt sans-serif';
+	ctx.fillText(text || '', 64, 32);
+	var texture = new THREE.Texture(canvas);
+	texture.needsUpdate = true;
+	return texture;
+}
+
+function createThing(geometry, options) {
+	var material = new THREE.MeshBasicMaterial({color: options.color});
+	var cube = new THREE.Mesh(geometry, material);
+	cube.position.copy(options.position);
+	cube.addBehaviors(
+		new altspace.utilities.behaviors.Object3DSync(),
+		ShowPopup()
+	);
+	if (options.user) {
+		var label = new THREE.Mesh(
+				new THREE.PlaneGeometry(100, 50),
+				new THREE.MeshBasicMaterial({
+					color: 'white',
+					map: getTextTexture(options.user), side: THREE.DoubleSide
+				})
+		);
+		label.position.y = 100;
+		cube.add(label);
+	}
+
+	sim.scene.add(cube);
+	return cube;
+}
+
+function createCube(options) {
+	return createThing(new THREE.BoxGeometry(100, 100, 100), options);
+}
+
+function createSphere(options) {
+	return createThing(new THREE.SphereGeometry(50, 8, 8), options);
+}
+
+function createTorus(options) {
+	return createThing(new THREE.TorusGeometry(50, 10, 4, 16), options);
+}
+</script>
+</body>
+</html>

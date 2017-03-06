@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Popup</title>
+
+<style>
+html, body { height: 90%; }
+body {
+	background: rgba(50, 50, 50, 0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+body, * {
+	font: 16pt sans-serif;
+
+}
+label { display: block; }
+label, button { margin: 0.5em; }
+div {
+	background: rgba(200, 200, 200, 0.8);
+	width: 10em;
+	height: 8em;
+	text-align: center;
+}
+</style>
+
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../../dist/altspace.min.js"></script>
+</head>
+<body>
+
+<div>
+<label>
+	Shape:
+	<select id="shape">
+		<option>cube</option>
+		<option>sphere</option>
+		<option>torus</option>
+	</select>
+</label>
+<label>
+	Color:
+	<select id="color">
+		<option>red</option>
+		<option>green</option>
+		<option>blue</option>
+	</select>
+</label>
+<button id="add">Add</button>
+</div>
+
+<script>
+var config = { authorId: 'AltspaceVR', appId: 'Popup' };
+var sceneSync;
+
+function getRandomVector(limit) {
+	return {
+		x: (Math.random() * 2 - 1) * limit,
+		y: (Math.random() * 2 - 1) * limit,
+		z: (Math.random() * 2 - 1) * limit
+	};
+}
+
+Promise.all([
+	altspace.utilities.sync.connect(config),
+	altspace.getUser()
+]).then(function(values) {
+	var connection = values.shift();
+	var user = values.shift();
+	add.addEventListener('click', function () {
+		// Add shapes to Firebase, the shapes are added to the scene by the main app page (index.html).
+		connection.instance.child('things').push({
+			shape: shape.value,
+			color: color.value,
+			user: user.displayName,
+			position: getRandomVector(256)
+		});
+	});
+});
+</script>
+</body>
+</html>

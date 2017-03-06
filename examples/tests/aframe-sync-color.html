@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../../dist/altspace.js"></script>
+	<title>test</title>
+	<script>
+
+		AFRAME.registerComponent('change-color', {
+			init: function () {
+				var self = this;
+				this.el.object3D.addEventListener('cursorup', function(){
+					var randomColor = Math.floor(Math.random() * 0x1000000);
+					randomColor = '#' + ('000000'+(randomColor).toString(16)).slice(-6);
+					self.el.components.sync.takeOwnership();
+					self.el.setAttribute('material', 'color', randomColor);
+				});
+			}
+		});
+
+	</script>
+
+</head>
+<body>
+
+<a-scene debug altspace sync-system='app: sync-test; author: AltspaceVR'>
+	<a-box id='box' depth="0.5" height="0.5" width="0.5" sync sync-color change-color></a-box>
+</a-scene>
+
+</body>
+</html>

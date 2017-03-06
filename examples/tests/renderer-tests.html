@@ -11,22 +11,22 @@
 		</style>
 	</head>
 	<body>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/MTLLoader.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/loaders/OBJLoader.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/libs/stats.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/libs/stats.min.js"></script>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js">
 		</script>
 		<script type="text/babel">
 
 			var scene, renderer, camera, controls, stats;
-			var 
+			var
 				colorTexCube,
-				animatedCube, colorCube, texturedCube, 
+				animatedCube, colorCube, texturedCube,
 				colorObj, visibilityCube, matVisibilityCube;
-			var 
+			var
 				GREEN = new THREE.Color(0, 1, 0), BLUE = new THREE.Color(0, 0, 1),
 				YELLOW = new THREE.Color(0, 1, 1), MAGENTA = new THREE.Color(1, 0, 1)
 			var textureMat;
@@ -58,7 +58,7 @@
 
 				if (!textureMat) {
 					var texture = THREE.ImageUtils.loadTexture(
-						'../images/UV_Grid_Sm.jpg' );
+						'resources/UV_Grid_Sm.jpg' );
 					textureMat = new THREE.MeshBasicMaterial( { map: texture } );
 				}
 
@@ -85,7 +85,7 @@
 				scene.add( cCube );
 				return cCube;
 			}
-			
+
 			function deepColor (obj, color) {
 				if (obj.material) {
 					obj.material.color = color;
@@ -94,7 +94,7 @@
 					deepColor(obj.children[i], color);
 				}
 			}
-			
+
 			var tests = [
 				{
 					name: 'colored, textured cube, performance',
@@ -187,7 +187,7 @@
 					init: function () {
 						matVisibilityCube = addTexturedCube();
 						matVisibilityCube.name = 'matVisibilityCube';
-						matVisibilityCube.material = 
+						matVisibilityCube.material =
 							matVisibilityCube.material.clone()
 						matVisibilityCube.name = 'matVisibilityCube';
 						matVisibilityCube.position.set(50, -50, 0);
@@ -202,7 +202,7 @@
 							}
 						);
 						matVisibilityCube.addEventListener(
-							'cursorup', 
+							'cursorup',
 							function () {
 								matVisInnerCube.material.color.setHex(0x00ff00);
 							}
@@ -221,11 +221,11 @@
 					enabled: true,
 					init: function () {
 						var mtlLoader = new THREE.MTLLoader()
-						mtlLoader.setBaseUrl('../models/test/');
-						mtlLoader.load('../models/test/test.mtl', function (materials) {
+						mtlLoader.setBaseUrl('../js/models/test/');
+						mtlLoader.load('../js/models/test/test.mtl', function (materials) {
 							var objLoader = new THREE.OBJLoader();
 							objLoader.setMaterials(materials);
-							objLoader.load('../models/test/test.obj', function (object) {
+							objLoader.load('../js/models/test/test.obj', function (object) {
 								// BOTTOM LEFT
 								colorObj = object;
 								colorObj.name = 'colorObj';
@@ -334,7 +334,7 @@
 					filter(test => test.update).
 					forEach(test => test.update(elapsed));
 
-				if (!window.altspace) { 
+				if (!window.altspace) {
 					controls.update();
 				}
 

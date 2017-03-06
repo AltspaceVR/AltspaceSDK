@@ -1,0 +1,64 @@
+<html>
+<head>
+	<title>Wire Component</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.js"></script>
+	<script src="../../../dist/altspace.js"></script>
+	<script>
+		AFRAME.registerComponent('flow-debugger', {
+			schema: {type: 'array'},
+			init: function(){
+				var self = this;
+				this.el.addEventListener('stateadded', function(evt){
+					console.log(self.el.id+': added '+evt.detail.state);
+				});
+				this.el.addEventListener('stateremoved', function(evt){
+					console.log(self.el.id+': removed '+evt.detail.state);
+				});
+
+				this.eventHandler = (function(evt){
+					console.log(this.el.id+': heard '+evt.type);
+				}).bind(this);
+			},
+			update: function(oldData){
+				var self = this;
+				if(oldData)
+					oldData.forEach(function(e){
+						self.el.removeEventListener(e, self.eventHandler);
+					});
+
+				this.data.forEach(function(e){
+					self.el.addEventListener(e, self.eventHandler);
+				});
+			}
+		});
+	</script>
+</head>
+<body>
+<a-scene debug altspace>
+	<a-entity id='trigger' flow-debugger='mousedown, mouseup, click'
+		geometry="primitive: box" material="color: green" position="0 1 2"
+		wire="on: click; emit: gogogo; targets: #notify, #pop"
+		wire__high="on: mouseup; gain: mouse-off; targets: #error"
+		wire__spin="gained: hovered; emit: spin; targets: #pop">
+		<a-entity n-text="fontSize: 2; text: trigger" position="0 1 0"></a-entity>
+	</a-entity>
+	<a-entity id="error" flow-debugger='gogogo'
+		geometry="primitive: box" material="color: blue" position="-2 1 0"
+		n-sound="res: ui/error; volume: 0.7; autoplay: true; oneshot: true;"
+		altspace-cursor-collider="enabled: true">
+		<a-animation begin="mouse-off" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
+	</a-entity>
+	<a-entity id="notify" flow-debugger='gogogo'
+		geometry="primitive: box" material="color: purple" position="2 1 0"
+		n-sound="res: ui/notify; on: gogogo"
+		altspace-cursor-collider="enabled: true">
+	</a-entity>
+	<a-entity id="pop" flow-debugger='gogogo, spin'
+		geometry="primitive: box" material="color: orange" position="-2 1 2">
+		<a-animation begin="gogogo" attribute="position" dur="2000" to="-2 2 2" direction="alternate"></a-animation>
+		<a-animation begin="spin" attribute="rotation" dur="2000" to="0 180 0" direction="alternate"></a-animation>
+	</a-entity>
+	<a-camera><a-cursor></a-cursor></a-camera>
+</a-scene>
+</body>
+</html>

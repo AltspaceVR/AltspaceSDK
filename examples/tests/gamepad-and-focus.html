@@ -3,9 +3,9 @@
 	<head>
 		<title>Gamepad and Focus Tests</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
-		<script src="../../dist/altspace.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../../dist/altspace.js"></script>
 		<style>
 			body { background: white; }
 			li { font: 20pt sans-serif; list-style-type: none }
@@ -16,12 +16,7 @@
 		<ol id="logList"></ol>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 		<script type="text/babel">
-			var sim = new altspace.utilities.Simulation({auto: false}), controls;
-
-			if (!altspace.inClient) {
-				controls = new THREE.OrbitControls(sim.camera);
-			}
-
+			
 			function log () {
 				var li = document.createElement('li');
 				li.textContent = Array.prototype.slice.apply(arguments).join(' ');
@@ -34,18 +29,20 @@
 			}
 			setInterval(() => {
 				watches.forEach((watch, i) =>{
-				if (!watchList.children[i]) {
-					var watchItem = document.createElement('li');
-					watchList.appendChild(watchItem);
-				}
-				try {
-					let val = watch();
-					if (!Array.isArray(val)) {
-						val = [val];
+					if (!watchList.children[i]) {
+						var watchItem = document.createElement('li');
+						watchList.appendChild(watchItem);
 					}
-					watchList.childNodes[i].textContent = val.join(' ').toString();
-				}
-				catch(e) {}
+					try {
+						let val = watch();
+						if (!Array.isArray(val)) {
+							val = [val];
+						}
+						watchList.childNodes[i].textContent = val.join(' ').toString();
+					}
+					catch(e) {
+						// be silent if a watch fails
+					}
 				})
 			}, 100)
 
@@ -82,7 +79,7 @@
 						var gamepadPos = altspace.getGamepads()[i].position;
 						return ['gamepad', i, 'position', gamepadPos.x, gamepadPos.y, gamepadPos.z]
 					});
-				}(i));
+				})(i);
 			}
 
 			var renderer = altspace.getThreeJSRenderer();

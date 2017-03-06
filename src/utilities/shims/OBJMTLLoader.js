@@ -1,40 +1,39 @@
 'use strict';
 
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
+/**
+* Load an OBJ file and its material definition in one pass.
+* @class OBJMTLLoader
+* @memberof module:altspace/utilities/shims
+*/
+class OBJMTLLoader
+{
+	/**
+	* A function that's passed the result of the OBJMTLLoader.
+	* @callback module:altspace/utilities/shims.OBJMTLLoader~LoaderCallback
+	* @param {Object3D} object - The loaded object
+	*/
 
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-if (!window.altspace) {
-    window.altspace = {};
+	/**
+	* Begin loading the definition files.
+	* @method load
+	* @memberof module:altspace/utilities/shims.OBJMTLLoader
+	* @static
+	* @param {string} objFile - The URL to the OBJ file
+	* @param {string} mtlFile - The URL to the MTL file
+	* @param {LoaderCallback} callback - The function called when loading is complete
+	*/
+	load (objFile, mtlFile, callback)
+	{
+		var mtlLoader = new THREE.MTLLoader()
+		var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
+		mtlLoader.setTexturePath(baseUrl + '/');
+		mtlLoader.setCrossOrigin(this.crossOrigin);
+		mtlLoader.load(mtlFile, function (materials) {
+			var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials(materials);
+			objLoader.load(objFile, callback);
+		});
+	}
 }
-if (!window.altspace.utilities) {
-    window.altspace.utilities = {};
-}
-if (!window.altspace.utilities.shims) {
-    window.altspace.utilities.shims = {};
-}
 
-var OBJMTLLoader = (function () {
-    function OBJMTLLoader() {
-        _classCallCheck(this, OBJMTLLoader);
-    }
-
-    _createClass(OBJMTLLoader, [{
-        key: 'load',
-        value: function load(objFile, mtlFile, callback) {
-            var mtlLoader = new THREE.MTLLoader();
-            var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
-            mtlLoader.setBaseUrl(baseUrl + '/');
-            mtlLoader.setCrossOrigin(this.crossOrigin);
-            mtlLoader.load(mtlFile, function (materials) {
-                var objLoader = new THREE.OBJLoader();
-                objLoader.setMaterials(materials);
-                objLoader.load(objFile, callback);
-            });
-        }
-    }]);
-
-    return OBJMTLLoader;
-})();
-
-window.altspace.utilities.shims.OBJMTLLoader = OBJMTLLoader;
+export default OBJMTLLoader;

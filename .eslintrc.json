@@ -3,6 +3,10 @@
 		"html"
 	],
 	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": 2015,
+		"sourceType": "module"
+	},
 	"env": {
 		"browser": true,
 		"es6": true,
@@ -17,7 +21,6 @@
 		"global-require": 0,
 		"one-var": 0,
 		"comma-dangle": 0,
-		// TODO: Re-enable these rules when existing lint is removed
 		"no-unused-vars": 0,
 		"no-undef": 0,
 		"no-redeclare": 0
@@ -27,4 +30,3 @@
 		"altspace": true
 	}
 }
-

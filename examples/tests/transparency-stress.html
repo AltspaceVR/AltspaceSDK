@@ -3,8 +3,8 @@
 	<head>
 		<title>Transparency Tests</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
 	</head>
 	<body>
@@ -19,7 +19,7 @@
 				var geometry = new THREE.BoxGeometry(s, s, s);
 
 				if (!textureMat) {
-					var texture = THREE.ImageUtils.loadTexture('../images/altspace-logo.png' );
+					var texture = THREE.ImageUtils.loadTexture('../js/images/altspace-logo.png' );
 					textureMat = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.8 });
 				}
 
@@ -61,7 +61,7 @@
 			}
 
 			function animate(elapsed) {
-				if (controls) { 
+				if (controls) {
 					controls.update();
 				}
 				requestAnimationFrame(animate);
@@ -71,5 +71,3 @@
 		</script>
 	</body>
 </html>
-
-
