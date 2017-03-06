@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v1.0.0/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -909,7 +909,7 @@ var SyncComponent = (function (AFrameComponent$$1) {
 		//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
 		//This ensures, for example, that synced animations keep playing
 		this.scene.addEventListener('clientleft', (function (event) {
-			var shouldTakeOwnership = (!ownerId || ownerId === event.detail.id) && this$1.syncSys.isMasterClient;
+			var shouldTakeOwnership = (!this$1.ownerId || this$1.ownerId === event.detail.id) && this$1.syncSys.isMasterClient;
 			if(shouldTakeOwnership)
 				{ this$1.takeOwnership(); }
 		}).bind(this));
@@ -2806,7 +2806,7 @@ var NSound = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v1.0.0/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.0/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6015,7 +6015,7 @@ var utilities_lib = Object.freeze({
 if(!window.altspace)
 	{ window.altspace = {components: {}, utilities: {}, inClient: false}; }
 
-var version = '1.0.0';
+var version = '2.0.0';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
