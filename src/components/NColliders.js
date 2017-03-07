@@ -150,7 +150,8 @@ class NCapsuleCollider extends NCollider {
 
 /**
 * Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
-* low-poly meshes. @aframe
+* low-poly meshes. If using this alongside the `geometry` component, make sure that
+* `geometry` comes before this component. @aframe
 * @example <a-box n-mesh-collider></a-box>
 * @alias n-mesh-collider
 * @memberof module:altspace/components
