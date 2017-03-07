@@ -15,12 +15,7 @@ const gulp = require('gulp'),
 	s3Path = '/libs/altspace.js',
 	targetRemote = 'origin';
 
-// require other file
-const build = require('./build');
-
-var version;
-
-// ### Publish tasks ###
+const version = require('../package.json').version;
 
 gulp.task('release', function (done) {
 	release({ type: 'oauth', token: process.env.githubtoken }, done);
@@ -33,7 +28,7 @@ gulp.task('publish-aws', function () {
 		secretAccessKey: process.env.awssecretkey,
 		params: { Bucket: 'sdk.altvr.com' }
 	});
-	return gulp.src('dist/**')
+	return gulp.src('../dist/**')
 		.pipe(rename(function (distPath) {
 			if (distPath.dirname === '.') { distPath.dirname = ''; }
 			distPath.dirname = s3Path + '/' + version + '/' + distPath.dirname;
