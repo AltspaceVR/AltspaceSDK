@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 
 * {
   box-sizing: border-box
@@ -320,6 +320,10 @@ h4.name {
   color: #4D4E53;
 }
 
+.prettyprint code:empty:before {
+  content: '';
+}
+
 .prettyprint > code {
   padding: 15px
 }
@@ -590,5 +594,16 @@ dl.param-type {
 
   footer {
     margin-left: 0;
+  }
+}
+
+@media only print {
+  nav {
+    display: none;
+  }
+
+  #main {
+    float: none;
+    width: 100%;
   }
 }
