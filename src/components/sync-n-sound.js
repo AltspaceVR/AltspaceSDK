@@ -48,7 +48,7 @@ class SyncNSound extends AFrameComponent
 				type: event.type,
 				sender: this.syncSys.clientId,
 				el: this.el.id,
-				time: Date.now()
+				time: Firebase.ServerValue.TIMESTAMP
 			};
 			this.soundEventRef.set(event);
 		}
@@ -56,38 +56,38 @@ class SyncNSound extends AFrameComponent
 		this.el.addEventListener('sound-played', sendEvent.bind(this));
 		this.el.addEventListener('sound-paused', sendEvent.bind(this));
 
-		this.soundEventRef.on('value', (snapshot => {
-			if (this.sync.isMine)
-				return;
+		// Retrieve the initial value once so we know to discard it.
+		this.soundEventRef.once('value', snapshot => {
+			let initialEvent = snapshot.val();
+			this.soundEventRef.on('value', snapshot => {
+				let event = snapshot.val();
+				if (!event || (initialEvent && event.time === initialEvent.time) || this.sync.isMine) { return; }
 
-			let event = snapshot.val();
-			if (!event)
-				return;
-
-			if (event.el === this.el.id) {
-				let sound = this.el.components['n-sound'];
-				if (event.type === 'sound-played') {
-					sound.playSound();
+				if (event.el === this.el.id) {
+					let sound = this.el.components['n-sound'];
+					if (event.type === 'sound-played') {
+						sound.playSound();
+					}
+					else {
+						sound.pauseSound();
+					}
 				}
-				else {
-					sound.pauseSound();
-				}
-			}
-		}).bind(this));
+			});
+		});
 
-		this.el.addEventListener('componentchanged', (event => {
+		this.el.addEventListener('componentchanged', event => {
 			if (!this.sync.isMine) return;
 			let name = event.detail.name;
 			if (name !== 'n-sound') return;
 			this.soundStateRef.set(event.detail.newData);
-		}).bind(this));
+		});
 
-		this.soundStateRef.on('value', (snapshot => {
+		this.soundStateRef.on('value', snapshot => {
 			if (this.sync.isMine) return;
 			let state = snapshot.val();
 			if (!state) return;
 			this.el.setAttribute('n-sound', state);
-		}).bind(this));
+		});
 	}
 }
 
