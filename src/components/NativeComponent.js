@@ -46,8 +46,10 @@ class NativeComponent extends AFrameComponent
 		safeDeepSet(mesh.userData, ['altspace', 'collider', 'enabled'], false);
 		altspace.addNativeComponent(mesh, this.name);
 
-		//to pass defaults
-		this.update(this.data);
+		if (this.sendUpdates) {
+			//to pass defaults
+			altspace.updateNativeComponent(mesh, this.name, this.data);
+		}
 
 		if(!this.mesh && !this._dontRebind){
 			this.el.addEventListener('object3dset', (event => {
