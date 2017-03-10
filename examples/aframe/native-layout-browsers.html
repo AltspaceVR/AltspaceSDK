@@ -1,11 +1,11 @@
 <html>
 	<head>
-		<title>A-Frame Altspace Component - Basic</title>
+		<title>A-Frame Altspace Component - Native Layout Browsers</title>
 		<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
 		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
-	<a-scene altspace sync-system="author: me; app: my-app">
+	<a-scene altspace >
 		<a-entity position="0 1 5" rotation="0 45 0" scale="2 2 2" n-layout-browser="url:http://xkcd.com"></a-entity>
 		<a-entity geometry="primitive: box" material="color: #C03546" position="0 1 -5" rotation="0 45 0" scale="2 2 2" n-layout-browser="url:http://altspacevr.github.io/AltspaceSDK/examples/js/chess.html; is3d:true"></a-entity>
 	</a-scene>
