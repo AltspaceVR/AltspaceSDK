@@ -107,6 +107,11 @@ class AltspaceComponent extends AFrameComponent
 				e.requestFullspace();
 				e.addEventListener('fullspacechange', () => {
 					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+
+					setTimeout(() => {
+						altspace.sceneInitialized();
+					}, 500);
+					//event
 				});
 			}
 
@@ -131,6 +136,12 @@ class AltspaceComponent extends AFrameComponent
 				this.el.renderer.render(new THREE.Scene());
 				this.el.renderer = this.el.effect = oldRenderer;
 
+			}
+
+			if (!this.data.fullspace) {
+				setTimeout(() => {
+					altspace.sceneInitialized();
+				}, 500);
 			}
 		}).bind(this));
 
