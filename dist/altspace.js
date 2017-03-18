@@ -631,6 +631,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		renderer.enableScissorTest = noop;
 		renderer.setScissor = noop;
 		renderer.setViewport = noop;
+		renderer.requestAnimationFrame = window.requestAnimationFrame; 
 		renderer.getPixelRatio = noop;
 		renderer.getMaxAnisotropy = noop;
 		renderer.setFaceCulling = noop;
