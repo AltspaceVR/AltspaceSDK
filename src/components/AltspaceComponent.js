@@ -1,6 +1,7 @@
 'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
+import {safeDeepSet} from './utilities';
 
 /**
 * The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
@@ -108,10 +109,7 @@ class AltspaceComponent extends AFrameComponent
 				e.addEventListener('fullspacechange', () => {
 					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
 
-					setTimeout(() => {
-						altspace.sceneInitialized();
-					}, 500);
-					//event
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 				});
 			}
 
@@ -139,9 +137,7 @@ class AltspaceComponent extends AFrameComponent
 			}
 
 			if (!this.data.fullspace) {
-				setTimeout(() => {
-					altspace.sceneInitialized();
-				}, 500);
+				safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 			}
 		}).bind(this));
 
