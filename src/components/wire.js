@@ -101,6 +101,8 @@ class Wire extends AFrameComponent
 				}
 			}
 
+			this.updateProperties(this.attrValue);
+
 			if(this.data.targets)
 				this.data.targets.forEach(act.bind(this));
 

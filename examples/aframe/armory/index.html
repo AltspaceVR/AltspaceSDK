@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Scene Sync Example</title>
 		<script src="//aframe.io/releases/0.3.0/aframe.js"></script>
+		<script src="https://unpkg.com/aframe-animation-component@^3.2.0/dist/aframe-animation-component.min.js"></script>
 		<script src="../../../dist/altspace.js"></script>
 		<script>
 			// n-skeleton-parent only works with root meshes at the moment. Since most model loaders use a root
@@ -50,6 +51,7 @@
 					scale="0.35 0.35 0.35"></a-mixin>
 				<a-mixin id="voxel-armor"
 					obj-model="obj: #voxel-armor-obj; mtl: #voxel-armor-mtl" collapse-model
+					animation="property: rotation; from: 0 0 0; to: 360 0 0; dir: reverse; startEvents: spin"></a-mixin>
 					scale="1 1 1"></a-mixin>
 				<a-mixin id="parent-to-chest"
 					position="0 0.35 0"
@@ -58,7 +60,8 @@
 
 				<a-mixin id="voxel-axe"
 					obj-model="obj: #voxel-axe-obj; mtl: #voxel-axe-mtl" collapse-model
-					scale="1 1 1"></a-mixin>
+					scale="1 1 1"
+					animation="property: rotation; from: 0 0 0; to: 360 0 0; dir: reverse; startEvents: spin"></a-mixin>
 				<a-mixin id="parent-to-left-hand"
 					position="0 0 0"
 					rotation="0 0 0"
@@ -108,6 +111,8 @@
 				instantiator="group: armor; on: click; mixin: metal-armor parent-to-chest"
 				position="2.3 2 0">
 			</a-entity>
+
+			<a-box wire="on: click; emit: spin; targets: [mixin*=voxel-axe].mine, [mixin*=voxel-armor].mine"></a-box>
 		</a-scene>
 	</body>
 </html>

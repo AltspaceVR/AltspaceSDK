@@ -252,6 +252,9 @@ class SyncSystem extends AFrameSystem
 		document.querySelector(val.parent).appendChild(entityEl);
 		entityEl.setAttribute('mixin', val.mixin);
 		entityEl.dataset.creatorUserId = val.creatorUserId;
+		if (this.userInfo.userId === val.creatorUserId) {
+			entityEl.classList.add('mine');
+		}
 	}
 
 	removeElement(snapshot) {
