@@ -1,0 +1,132 @@
+<html>
+<head>
+	<title>SVVR</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="../../../dist/altspace.js"></script>
+	<script>
+		AFRAME.registerComponent('circle-layout', {
+			schema: {
+				radius: {default: 1, min: 0}
+			},
+			init: function () {
+    			var children = this.el.getChildEntities();
+				for (var i = 0; i < children.length; i++) {
+					var childEl = children[i];
+					var radians = i * (2 * Math.PI) / children.length;
+					childEl.setAttribute('position', {
+						x: this.data.radius * Math.cos(radians),
+						y: 0,
+						z: this.data.radius * Math.sin(radians)
+					});
+				}
+			}
+		});
+	</script>
+</head>
+<body>
+<a-scene debug altspace="fullspace: true" sync-system='author: altspacevr; app: native-gallery'>
+
+    <a-mixin id='title' n-text='fontSize: 6; width: 6; verticalAlign: top;' position='0 3.1 0.1' rotation='0 0 0' ></a-mixin>
+    <a-mixin id='description' n-text='fontSize: 5; width: 5; height: 3; verticalAlign: top;' position='0 1.2 0.1' ></a-mixin>
+    <a-mixin id='picture' n-billboard scale="0.7 0.7 0.7"></a-mixin>
+
+    <a-entity rotation='0 -40 0' >
+		<a-entity position='0 1.7 0' scale="0.5 0.5 0.5">
+
+			<a-entity position='0 -2.5 0' circle-layout="radius: 6">
+				<a-image mixin="picture" src="images/1.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/2.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/3.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/4.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/5.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/7.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/8.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/9.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/10.png"  width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/11.png"  width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/1.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/2.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/3.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/4.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/5.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/7.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/8.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/9.png"   width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/10.png"  width='1.92' height='1.08' ></a-image>
+				<a-image mixin="picture" src="images/11.png"  width='1.92' height='1.08' ></a-image>
+			</a-entity>
+		
+			<a-entity id='welcome' position='0 3.6 -1' rotation='15 0 0' scale="0.37 0.37 0.37">
+
+				<a-entity id="mark">
+					<a-entity position='0 2.7 0.1' rotation='0 0 0'
+						n-object="res:ui/altspacevr-logo" scale="1.8 1.8 1.8">
+					</a-entity>
+
+					<a-entity position='0 1.3 0.1' rotation='0 0 0'
+						n-text='text: Web Apps;'></a-entity>
+				</a-entity>
+
+				<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position='0 2.3 -0.5' rotation='0 0 0' scale="0.3 0.3 0.3">
+				<a-entity mixin='description' n-text='text: Quickly create cross-platform, multiplayer VR apps and games that live anywhere on the web and can be used in AltspaceVR ; fontSize: 6; width: 11'></a-entity>
+				<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-8 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position='0.7 1 0' rotation='0 -20 0' scale="0.3 0.3 0.3">
+				<a-entity mixin='title' position='0 3.1 0.1' rotation='0 0 0' n-text='text: Open Web;'></a-entity>
+				<a-entity mixin='description' n-text='text: Host at any URL \nA-Frame + Chromium \nNo gatekeepers;'></a-entity>
+				<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position='-0.7 -0.2 0' rotation='0 20 0' scale="0.3 0.3 0.3">
+				<a-entity mixin='title' position='0 3.1 0.1' rotation='0 0 0' n-text='text: Automatic Audience;'></a-entity>
+				<a-entity mixin='description' n-text='text: In-VR community \nSocial foundation \nInternational reach;'></a-entity>
+				<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position='0.7 -1.4 0' rotation='0 -20 0' scale="0.3 0.3 0.3">
+				<a-entity mixin='title' position='0 3.1 0.1' rotation='0 0 0' n-text='text: Built for VR;'></a-entity>
+				<a-entity mixin='description' n-text='text: Broad device support \n Game engine APIs \nTooled for performance;'></a-entity>
+				<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position='-0.7 -2.6 0' rotation='0 20 0' scale="0.3 0.3 0.3">
+				<a-entity mixin='title' n-text='text: Funding Grants;'></a-entity>
+				<a-entity mixin='description' n-text='text:Awards of $1k-$10k\n Make your own idea \nKeep what you build; fontSize: 5; width: 6; height: 3; verticalAlign: top;'></a-entity>
+				<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position='12 10 -80' rotation="0 0 30" n-object='res:effects/fireworks'></a-entity>
+			<a-entity position='-12 10 -80' rotation="0 0 -30" n-object='res:effects/fireworks'></a-entity>
+
+		</a-entity>
+
+		<a-entity position='0.2 0.2 0.75' rotation="0 0 0" scale="0.3 0.3 0.3" n-object='res:objects/crowd'></a-entity>
+    </a-entity>
+
+</a-scene>
+</body>
+</html>
