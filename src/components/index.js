@@ -42,6 +42,7 @@ import {
 import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
 import NContainer from './NContainer';
 import NSound from './NSound';
+import NLayoutBrowser from './NLayoutBrowser';
 
 if (window.AFRAME)
 {
@@ -69,6 +70,7 @@ if (window.AFRAME)
 	registerComponentClass('n-box-collider', NBoxCollider);
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
+	registerComponentClass('n-layout-browser', NLayoutBrowser);
 }
 
 export {
@@ -76,5 +78,5 @@ export {
 	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
 	SyncNSkeletonParent, NObject, NSpawner, NText, NBillboard, NSkeletonParent,
 	NCockpitParent, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
-	NMeshCollider
+	NMeshCollider, NLayoutBrowser
 };
