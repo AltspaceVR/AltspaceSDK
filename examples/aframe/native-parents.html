@@ -25,7 +25,7 @@
 			sync sync-n-skeleton-parent>
 		</a-mixin>
 
-		<a-mixin id="hand-error"
+		<a-mixin id="hand-click"
 			n-sound="res: ui/click; volume: 0.05; loop: true; autoplay: true; maxDistance: 0.001; rolloff: cosine;"
 			n-skeleton-parent="part: hand; side: left; index: 0;"
 			sync sync-n-skeleton-parent>
@@ -64,7 +64,7 @@
 
 	<a-entity one-per-user="mixin: body-ball"></a-entity>
 
-	<a-entity one-per-user="mixin: hand-error"></a-entity>
+	<a-entity one-per-user="mixin: hand-click"></a-entity>
 
 	<a-entity
 		position="0 1 -1"
