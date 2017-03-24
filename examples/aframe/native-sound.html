@@ -15,7 +15,8 @@
 	</script>
 </head>
 <body>
-<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: sound-sync-test">
+<a-scene debug altspace="fullspace: true">
+	<altspace-sync author="altspacevr" app="sound-sync-test"></altspace-sync>
 	<a-entity id="loop"
 		geometry="primitive: box" material="color: green" position="-3 1 -2"
 		n-sound="res: ui/error; volume: 0.5; loop: true; on: click"

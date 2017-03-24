@@ -5,7 +5,8 @@
 	<script src="../../dist/altspace.js"></script>
 </head>
 <body>
-<a-scene debug altspace="fullspace: true" sync-system="author: altspacevr; app: native-parents">
+<a-scene debug altspace="fullspace: true">
+	<altspace-sync author="altspacevr" app="native-parents"></altspace-sync>
 	<a-assets>
 		<a-mixin id="left-box"
 			geometry="primitive: box"
@@ -24,9 +25,9 @@
 			sync sync-n-skeleton-parent>
 		</a-mixin>
 
-		<a-mixin id="spinal-tap"
-			n-sound="res: ui/error; volume: 0.5; loop: true; autoplay: true;"
-			n-skeleton-parent="part: spine;"
+		<a-mixin id="hand-error"
+			n-sound="res: ui/click; volume: 0.05; loop: true; autoplay: true; maxDistance: 0.001; rolloff: cosine;"
+			n-skeleton-parent="part: hand; side: left; index: 0;"
 			sync sync-n-skeleton-parent>
 		</a-mixin>
 
@@ -63,7 +64,7 @@
 
 	<a-entity one-per-user="mixin: body-ball"></a-entity>
 
-	<a-entity one-per-user="mixin: spinal-tap"></a-entity>
+	<a-entity one-per-user="mixin: hand-error"></a-entity>
 
 	<a-entity
 		position="0 1 -1"

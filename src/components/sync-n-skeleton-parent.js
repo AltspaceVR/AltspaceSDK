@@ -16,9 +16,9 @@ class SyncNSkeletonParent extends AFrameComponent
 	init()
 	{
 		let scene = this.el.sceneEl;
-		this.syncSys = scene.systems['sync-system'];
+		this.syncEl = document.querySelector('altspace-sync');
 		this.sync = this.el.components.sync;
-		if(this.syncSys.isConnected){
+		if(this.syncEl.connected){
 			this._start();
 		}
 		else {
@@ -39,7 +39,7 @@ class SyncNSkeletonParent extends AFrameComponent
 			this.el.setAttribute('n-skeleton-parent', val);
 		}.bind(this));
 
-		// dataset.creatorUserId is defined when the entity is instantiated via the sync system.
+		// dataset.creatorUserId is defined when the entity is instantiated via altspace-sync
 		if (this.el.dataset.creatorUserId) {
 			this.attributeRef.set(Object.assign(
 				{}, this.el.components['n-skeleton-parent'].data, {userId: this.el.dataset.creatorUserId}));

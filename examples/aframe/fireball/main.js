@@ -36,9 +36,9 @@
 		function initHighscore(){
 			var scene = document.querySelector('a-scene');
 			setTimeout(function(){
-				var syncSys = scene.systems['sync-system'];
-				runAfterConnected(syncSys, function(){
-					var highscoreRef = syncSys.connection.app.child('highscore');
+				var syncEl = document.querySelector('altspace-sync');
+				runAfterConnected(syncEl, function(){
+					var highscoreRef = syncEl.connection.app.child('highscore');
 					window.game.highscoreRef = highscoreRef;
 					refreshHighscoreboard();
 				});
@@ -123,11 +123,11 @@
 			});
 		}
 
-		function runAfterConnected(syncSys, callback){
-			if(syncSys.connection){
+		function runAfterConnected(syncEl, callback){
+			if(syncEl.connected){
 				callback();
 			} else {
-				syncSys.sceneEl.addEventListener('connected', function(){
+				syncEl.sceneEl.addEventListener('connected', function(){
 					callback();
 				});
 			}

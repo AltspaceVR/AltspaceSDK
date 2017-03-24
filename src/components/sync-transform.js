@@ -47,13 +47,14 @@ function throttle(func, wait, options) {
 
 /**
 * Synchronize the position, rotation, and scale of this object with all clients.
-* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* Requires both a [altspace-sync]{@link module:altspace/components.altspace-sync} element in the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
 * @alias sync-transform
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 * @example
-* <a-scene sync-system='app: myapp; author: name'>
+* <a-scene>
+*	  <altspace-sync app="myapp" author="name"></altspace-sync>
 *     <a-box move-it-around sync sync-transform></a-box>
 * </a-scene>
 */
@@ -63,7 +64,7 @@ class SyncTransform extends AFrameComponent
 	init()
 	{
 		this.sync = this.el.components.sync;
-		if(this.sync.isConnected)
+		if(this.sync.connected)
 			start();
 		else
 			this.el.addEventListener('connected', this.start.bind(this));
