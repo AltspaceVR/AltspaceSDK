@@ -3,7 +3,7 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
+* Instantiates an entity for each user using [altspace-sync]{@link components.altspace-sync}. @aframe
 * @alias one-per-user
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
@@ -33,8 +33,8 @@ class OnePerUser extends AFrameComponent
 
 	init(){
 		let scene = this.el.sceneEl;
-		this.syncSys = scene.systems['sync-system'];
-		this.syncSys.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el);
+		this.syncEl = document.querySelector('altspace-sync');
+		this.syncEl.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el);
 	}
 }
 

@@ -315,6 +315,12 @@ var AFrameComponent = (function (AFrameSystem) {
 	return AFrameComponent;
 }(AFrameSystem));
 
+var AFrameNode = function AFrameNode () {};
+
+AFrameNode.prototype.attachedCallback = function attachedCallback (){ };
+AFrameNode.prototype.attributeChangedCallback = function attributeChangedCallback (){ };
+AFrameNode.prototype.createdCallback = function createdCallback (){ };
+
 function flatten(obj)
 {
 	var ret = {};
@@ -335,14 +341,26 @@ function flatten(obj)
 	var ref;
 }
 
+function toDefinition(cls)
+{
+	var proto = cls.prototype;
+	var ret = {};
+	Object.keys(proto).forEach(function (key) {
+		ret[key] = { value: proto[key] };
+	});
+	return ret;
+}
+
 function registerComponentClass(name, cls)
 {
 	AFRAME.registerComponent(name, flatten(new cls()));
 }
 
-function registerSystemClass(name, cls)
+function registerElementClass(name, cls)
 {
-	AFRAME.registerSystem(name, flatten(new cls()));
+	AFRAME.registerElement(name, {prototype: 
+		Object.create(AFRAME.ANode.prototype, toDefinition(cls))
+	});
 }
 
 function safeDeepSet(obj, keys, value)
@@ -745,7 +763,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 
 /**
 * Sync the color property of the object between clients.
-* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* Requires both a [altspace-sync]{@link module:altspace/components.altspace-sync} element in the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
 * @alias sync-color
 * @memberof module:altspace/components
@@ -772,7 +790,7 @@ var SyncColor = (function (AFrameComponent$$1) {
 		this.sync = this.el.components.sync;
 
 		// wait for firebase connection to start sync routine
-		if(this.sync.isConnected)
+		if(this.sync.connected)
 			{ start(); }
 		else
 			{ this.el.addEventListener('connected', this.start.bind(this)); }
@@ -818,7 +836,7 @@ var SyncColor = (function (AFrameComponent$$1) {
 
 /**
 * Enables the synchronization of properties of the entity. Must be used in
-* conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
+* conjuction with the [altspace-sync]{@link module:altspace/components.altspace-sync} element and a component for a
 * specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
 * @alias sync
 * @memberof module:altspace/components
@@ -865,10 +883,10 @@ var SyncComponent = (function (AFrameComponent$$1) {
 		this.isMine = false;
 
 		this.scene = this.el.sceneEl;
-		this.syncSys = this.scene.systems['sync-system'];
-		this.isConnected = false;
+		this.syncEl = document.querySelector('altspace-sync');
+		this.connected = false;
 
-		if(this.syncSys.isConnected)
+		if(this.syncEl.connected)
 			{ this.start(); }
 		else
 			{ this.scene.addEventListener('connected', this.start.bind(this)); }
@@ -878,7 +896,7 @@ var SyncComponent = (function (AFrameComponent$$1) {
 			var ownershipEvents = this.data.ownOn.split(/[ ,]+/);
 			ownershipEvents.forEach((function (e) {
 				this$1.el.addEventListener(e, (function () {
-					if(this$1.isConnected){
+					if(this$1.connected){
 						this$1.takeOwnership();
 					}
 				}).bind(this$1));
@@ -895,7 +913,7 @@ var SyncComponent = (function (AFrameComponent$$1) {
 	*/
 	SyncComponent.prototype.takeOwnership = function takeOwnership ()
 	{
-		this.ownerRef.set(this.syncSys.clientId);
+		this.ownerRef.set(this.syncEl.clientId);
 
 		//clear our ownership if we disconnect
 		//this is needed if we are the last user in the room, but we expect people to join later
@@ -909,7 +927,7 @@ var SyncComponent = (function (AFrameComponent$$1) {
 		//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
 		//This ensures, for example, that synced animations keep playing
 		this.scene.addEventListener('clientleft', (function (event) {
-			var shouldTakeOwnership = (!this$1.ownerId || this$1.ownerId === event.detail.id) && this$1.syncSys.isMasterClient;
+			var shouldTakeOwnership = (!this$1.ownerId || this$1.ownerId === event.detail.id) && this$1.syncEl.isMasterClient;
 			if(shouldTakeOwnership)
 				{ this$1.takeOwnership(); }
 		}).bind(this));
@@ -921,7 +939,7 @@ var SyncComponent = (function (AFrameComponent$$1) {
 				return;
 			}
 
-			this.link(this.syncSys.sceneRef.child(id));
+			this.link(this.syncEl.sceneRef.child(id));
 			this.setupReceive();
 
 		} else {
@@ -929,7 +947,7 @@ var SyncComponent = (function (AFrameComponent$$1) {
 			return;
 		}
 
-		this.isConnected = true;
+		this.connected = true;
 		this.el.emit('connected', null, false);
 	};
 
@@ -948,13 +966,13 @@ var SyncComponent = (function (AFrameComponent$$1) {
 		function onOwnerUpdate(snapshot)
 		{
 			var newOwnerId = snapshot.val();
-			var gained = newOwnerId === this.syncSys.clientId && !this.isMine;
+			var gained = newOwnerId === this.syncEl.clientId && !this.isMine;
 			if (gained) {
 				this.el.emit('ownershipgained', null, false);
 			}
 
 			//note this also fires when we start up without ownership
-			var lost = newOwnerId !== this.syncSys.clientId;
+			var lost = newOwnerId !== this.syncEl.clientId;
 			if (lost) {
 				this.el.emit('ownershiplost', null, false);
 
@@ -964,14 +982,14 @@ var SyncComponent = (function (AFrameComponent$$1) {
 
 			this.ownerId = newOwnerId;
 
-			this.isMine = newOwnerId === this.syncSys.clientId;
+			this.isMine = newOwnerId === this.syncEl.clientId;
 		}
 
 		this.ownerRef.transaction(
 			(function (owner) {
 				if (owner) { return undefined; }
 				// try to take ownership
-				return this$1.syncSys.clientId;
+				return this$1.syncEl.clientId;
 			}).bind(this),
 
 			(function (error, committed) {
@@ -994,104 +1012,87 @@ var SyncComponent = (function (AFrameComponent$$1) {
 * options correspond exactly with the configuration options for
 * [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
 * This component must be present on `a-scene` for any other sync components to work. @aframe
-* @alias sync-system
+* @alias altspace-sync
 * @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
-var SyncSystem = (function (AFrameSystem$$1) {
-	function SyncSystem () {
-		AFrameSystem$$1.apply(this, arguments);
+var AltspaceSync = (function (AFrameNode$$1) {
+	function AltspaceSync () {
+		AFrameNode$$1.apply(this, arguments);
 	}
 
-	if ( AFrameSystem$$1 ) SyncSystem.__proto__ = AFrameSystem$$1;
-	SyncSystem.prototype = Object.create( AFrameSystem$$1 && AFrameSystem$$1.prototype );
-	SyncSystem.prototype.constructor = SyncSystem;
+	if ( AFrameNode$$1 ) AltspaceSync.__proto__ = AFrameNode$$1;
+	AltspaceSync.prototype = Object.create( AFrameNode$$1 && AFrameNode$$1.prototype );
+	AltspaceSync.prototype.constructor = AltspaceSync;
 
-	var prototypeAccessors = { schema: {} };
-
-	prototypeAccessors.schema.get = function (){
-		return {
-			/**
-			* A unique identifier for you or your organization.
-			* @instance
-			* @member {string} author
-			* @memberof module:altspace/components.sync-system
-			*/
-			author: { type: 'string', default: null },
-
-			/**
-			* The name of the app.
-			* @instance
-			* @member {string} app
-			* @memberof module:altspace/components.sync-system
-			*/
-			app: { type: 'string', default: null },
-
-			/**
-			* Override the instance ID. Can also be overridden with a URL parameter.
-			* @instance
-			* @member {string} instance
-			* @memberof module:altspace/components.sync-system
-			*/
-			instance: { type: 'string', default: null },
-
-			/**
-			* Override the base reference. Set this to use your own Firebase.
-			* @instance
-			* @member {string} refUrl
-			* @memberof module:altspace/components.sync-system
-			*/
-			refUrl: { type: 'string', default: null }
-		};
-	};
-
-	/**
-	* True if the sync system is connected and ready for syncing.
-	* @member {boolean} module:altspace/components.sync-system#isConnected
-	* @readonly
-	*/
-
-	/**
-	* Fired when a connection is established and the sync system is fully initialized.
-	* @event module:altspace/components.sync-system#connected
-	* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
-	*/
-
-	/**
-	* Fired when a client joins.
-	* @event module:altspace/components.sync-system#clientjoined
-	* @property {string} id - Guid identifying the client.
-	*/
-
-	/**
-	* Fired when a client leaves.
-	* @event module:altspace/components.sync-system#clientleft
-	* @property {string} id - Guid identifying the client.
-	*/
-
-	SyncSystem.prototype.init = function init ()
-	{
-		if(!this.data || !this.data.app){
-			console.warn('The sync-system must be present on the scene and configured with required data.');
+	AltspaceSync.prototype.createdCallback = function createdCallback (){
+		if (this.previousElementSibling) {
+			console.error('altspace-sync must be the first element under a-scene.');
 			return;
 		}
-		console.log(this.data);
+		if(!this.hasAttribute('app') || !this.hasAttribute('author')){
+			console.error('altspace-sync requires app and author attributes.');
+			return;
+		}
+		if (!/altspace-sync-instance/.test(location.search)) {
+			// The sync utility is going to reload the page anyway, so don't bother loading any assets
+			var noop = function () {};
+			AFRAME.utils.srcLoader.validateSrc = noop;
+			THREE.XHRLoader.prototype.load = noop;
+			THREE.Loader.Handlers.add(/jpe?g|png/i, {load: noop});
+		}
+
+		/**
+		* A unique identifier for you or your organization.
+		* @instance
+		* @member {string} author
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* The name of the app.
+		* @instance
+		* @member {string} app
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* Override the instance ID. Can also be overridden with a URL parameter.
+		* @instance
+		* @member {string} instance
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* Override the base reference. Set this to use your own Firebase.
+		* @instance
+		* @member {string} refUrl
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* True if sync is connected and ready for syncing.
+		* @member {boolean} module:altspace/components.altspace-sync#connected
+		* @readonly
+		*/
 
 		this.queuedInstantiations = [];
-		this.isConnected = false;
+		this.connected = false;
 		Promise.all([
 			altspace.utilities.sync.connect({
-				authorId: this.data.author,
-				appId: this.data.app,
-				instanceId: this.data.instance,
-				baseRefUrl: this.data.refUrl
+				authorId: this.getAttribute('author'),
+				appId: this.getAttribute('app'),
+				instanceId: this.getAttribute('instance'),
+				baseRefUrl: this.getAttribute('refUrl')
 			}),
 			altspace.getUser()
-		]).then(this.connected.bind(this));
+		]).then(this.setupRefs.bind(this));
 	};
 
-	SyncSystem.prototype.connected = function connected (results)
+	AltspaceSync.prototype.setupRefs = function setupRefs (results)
 	{
+		var this$1 = this;
+
 		this.connection = results.shift();
 		this.userInfo = results.shift();
 
@@ -1144,7 +1145,9 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			self.processQueuedInstantiations();
 
 			self.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
-			self.isConnected = true;
+			self.connected = true;
+			// Indicate that this a-node has finished loading.
+			this$1.load();
 		});
 	};
 
@@ -1152,25 +1155,25 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	* Returns true if the local client is the master client.
 	* @instance
 	* @method isMasterClient
-	* @memberof module:altspace/components.sync-system
+	* @memberof module:altspace/components.altspace-sync
 	* @returns {boolean}
 	*/
-	SyncSystem.prototype.isMasterClient = function isMasterClient ()
+	AltspaceSync.prototype.isMasterClient = function isMasterClient ()
 	{
 		return this.masterClientId === this.clientId;
 	};
 
-	SyncSystem.prototype.listenToInstantiationGroup = function listenToInstantiationGroup (snapshot) {
+	AltspaceSync.prototype.listenToInstantiationGroup = function listenToInstantiationGroup (snapshot) {
 		snapshot.ref().on('child_added', this.createElement.bind(this));
 		snapshot.ref().on('child_removed', this.removeElement.bind(this));
 	};
 
-	SyncSystem.prototype.stopListeningToInstantiationGroup = function stopListeningToInstantiationGroup (snapshot) {
+	AltspaceSync.prototype.stopListeningToInstantiationGroup = function stopListeningToInstantiationGroup (snapshot) {
 		snapshot.ref().off('child_added');
 		snapshot.ref().off('child_removed');
 	};
 
-	SyncSystem.prototype.processQueuedInstantiations = function processQueuedInstantiations () {
+	AltspaceSync.prototype.processQueuedInstantiations = function processQueuedInstantiations () {
 		var this$1 = this;
 
 		this.queuedInstantiations.forEach((function (instantiationProps) {
@@ -1190,11 +1193,11 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.
 	* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with
-	*	[removeLast]{@link module:altspace/components.sync-system#removeLast}.
-	* @param {string} [instantiatorId] - Used by [removeLast]{@link module:altspace/components.sync-system#removeLast} to indicate who was
+	*	[removeLast]{@link module:altspace/components.altspace-sync#removeLast}.
+	* @param {string} [instantiatorId] - Used by [removeLast]{@link module:altspace/components.altspace-sync#removeLast} to indicate who was
 	*	responsible for the removed entity.
 	*/
-	SyncSystem.prototype.instantiate = function instantiate (mixin, parent, el, groupName, instantiatorId) {
+	AltspaceSync.prototype.instantiate = function instantiate (mixin, parent, el, groupName, instantiatorId) {
 		// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those
 		// correctly.
 		if (!mixin) {
@@ -1216,7 +1219,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			parent: parentSelector
 		};
 		this.queuedInstantiations.push(instantiationProps);
-		if (this.isConnected) {
+		if (this.connected) {
 			this.processQueuedInstantiations();
 		}
 	};
@@ -1227,7 +1230,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	* @param {string} groupName - Name of the group from which to remove the entity.
 	* @returns {Promise}
 	*/
-	SyncSystem.prototype.removeLast = function removeLast (groupName) {
+	AltspaceSync.prototype.removeLast = function removeLast (groupName) {
 		var this$1 = this;
 
 		return new Promise((function (resolve) {
@@ -1244,7 +1247,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		}).bind(this));
 	};
 
-	SyncSystem.prototype.createElement = function createElement (snapshot) {
+	AltspaceSync.prototype.createElement = function createElement (snapshot) {
 		var val = snapshot.val();
 		var key = snapshot.key();
 		var entityEl = document.createElement('a-entity');
@@ -1254,7 +1257,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		entityEl.dataset.creatorUserId = val.creatorUserId;
 	};
 
-	SyncSystem.prototype.removeElement = function removeElement (snapshot) {
+	AltspaceSync.prototype.removeElement = function removeElement (snapshot) {
 		var val = snapshot.val();
 		var key = snapshot.key();
 		var id = val.groupName + '-instance-' + key;
@@ -1262,10 +1265,8 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		el.parentNode.removeChild(el);
 	};
 
-	Object.defineProperties( SyncSystem.prototype, prototypeAccessors );
-
-	return SyncSystem;
-}(AFrameSystem));
+	return AltspaceSync;
+}(AFrameNode));
 
 //from underscore.js
 function throttle(func, wait, options) {
@@ -1312,13 +1313,14 @@ function throttle(func, wait, options) {
 
 /**
 * Synchronize the position, rotation, and scale of this object with all clients.
-* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* Requires both a [altspace-sync]{@link module:altspace/components.altspace-sync} element in the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
 * @alias sync-transform
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 * @example
-* <a-scene sync-system='app: myapp; author: name'>
+* <a-scene>
+*	  <altspace-sync app="myapp" author="name"></altspace-sync>
 *     <a-box move-it-around sync sync-transform></a-box>
 * </a-scene>
 */
@@ -1337,7 +1339,7 @@ var SyncTransform = (function (AFrameComponent$$1) {
 	SyncTransform.prototype.init = function init ()
 	{
 		this.sync = this.el.components.sync;
-		if(this.sync.isConnected)
+		if(this.sync.connected)
 			{ start(); }
 		else
 			{ this.el.addEventListener('connected', this.start.bind(this)); }
@@ -1419,7 +1421,7 @@ var SyncTransform = (function (AFrameComponent$$1) {
 
 /**
 * Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
-* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* Requires both a [altspace-sync]{@link module:altspace/components.alspace-sync} element in the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
 * @alias sync-n-sound
 * @extends module:altspace/components.AFrameComponent
@@ -1444,12 +1446,12 @@ var SyncNSound = (function (AFrameComponent$$1) {
 	{
 		this.sync = this.el.components.sync;
 		this.scene = this.el.sceneEl;
-		this.syncSys = this.scene.systems['sync-system'];
+		this.syncEl = document.querySelector('altspace-sync');
 
 		this.soundStateRef = null;
 		this.soundEventRef = null;
 
-		if(this.sync.isConnected)
+		if(this.sync.connected)
 			{ this.start(); }
 		else
 			{ this.el.addEventListener('connected', this.start.bind(this)); }
@@ -1472,7 +1474,7 @@ var SyncNSound = (function (AFrameComponent$$1) {
 			if (!this.sync.isMine) { return; }
 			var event = {
 				type: event.type,
-				sender: this.syncSys.clientId,
+				sender: this.syncEl.clientId,
 				el: this.el.id,
 				time: Firebase.ServerValue.TIMESTAMP
 			};
@@ -1544,9 +1546,9 @@ var SyncNSkeletonParent = (function (AFrameComponent$$1) {
 	SyncNSkeletonParent.prototype.init = function init ()
 	{
 		var scene = this.el.sceneEl;
-		this.syncSys = scene.systems['sync-system'];
+		this.syncEl = document.querySelector('altspace-sync');
 		this.sync = this.el.components.sync;
-		if(this.syncSys.isConnected){
+		if(this.syncEl.connected){
 			this._start();
 		}
 		else {
@@ -1567,7 +1569,7 @@ var SyncNSkeletonParent = (function (AFrameComponent$$1) {
 			this.el.setAttribute('n-skeleton-parent', val);
 		}.bind(this));
 
-		// dataset.creatorUserId is defined when the entity is instantiated via the sync system.
+		// dataset.creatorUserId is defined when the entity is instantiated via altspace-sync
 		if (this.el.dataset.creatorUserId) {
 			this.attributeRef.set(Object.assign(
 				{}, this.el.components['n-skeleton-parent'].data, {userId: this.el.dataset.creatorUserId}));
@@ -1745,7 +1747,7 @@ var Wire = (function (AFrameComponent$$1) {
 }(AFrameComponent));
 
 /**
-* Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
+* Instantiates an entity for each user using [altspace-sync]{@link components.altspace-sync}. @aframe
 * @alias one-per-user
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
@@ -1784,8 +1786,8 @@ var OnePerUser = (function (AFrameComponent$$1) {
 
 	OnePerUser.prototype.init = function init (){
 		var scene = this.el.sceneEl;
-		this.syncSys = scene.systems['sync-system'];
-		this.syncSys.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el);
+		this.syncEl = document.querySelector('altspace-sync');
+		this.syncEl.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el);
 	};
 
 	Object.defineProperties( OnePerUser.prototype, prototypeAccessors );
@@ -1860,20 +1862,20 @@ var Instantiator = (function (AFrameComponent$$1) {
 	Instantiator.prototype.init = function init () {
 		this.onHandler = this.instantiateOrToggle.bind(this);
 		this.el.addEventListener(this.data.on, this.onHandler);
-		this.syncSys = this.el.sceneEl.systems['sync-system'];
+		this.syncEl = document.querySelector('altspace-sync');
 	};
 
 	Instantiator.prototype.instantiateOrToggle = function instantiateOrToggle () {
-		var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
+		var userGroup = this.data.group + '-' + this.syncEl.userInfo.userId;
 		if (this.data.removeLast) {
-			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
+			this.syncEl.removeLast(userGroup).then(function (lastInstantiatorId) {
 				if (lastInstantiatorId !== this.el.id) {
-					this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id);
+					this.syncEl.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id);
 				}
 			}.bind(this));
 		}
 		else {
-			this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent);
+			this.syncEl.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent);
 		}
 	};
 
@@ -2821,10 +2823,10 @@ var NSound = (function (NativeComponent$$1) {
 
 if (window.AFRAME)
 {
+	registerElementClass('altspace-sync', AltspaceSync);
 	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
 	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
 	registerComponentClass('altspace', AltspaceComponent);
-	registerSystemClass('sync-system', SyncSystem);
 	registerComponentClass('sync-color', SyncColor);
 	registerComponentClass('sync-transform', SyncTransform);
 	registerComponentClass('sync', SyncComponent);
@@ -2854,7 +2856,7 @@ var components_lib = Object.freeze({
 	AltspaceComponent: AltspaceComponent,
 	AltspaceCursorCollider: AltspaceCursorCollider,
 	AltspaceTrackedControls: AltspaceTrackedControls,
-	SyncSystem: SyncSystem,
+	AltspaceSync: AltspaceSync,
 	SyncComponent: SyncComponent,
 	SyncColor: SyncColor,
 	SyncTransform: SyncTransform,

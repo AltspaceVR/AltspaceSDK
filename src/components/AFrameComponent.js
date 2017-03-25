@@ -30,6 +30,13 @@ class AFrameComponent extends AFrameSystem
 	updateSchema(data){ }
 }
 
+class AFrameNode
+{
+	attachedCallback(){ }
+	attributeChangedCallback(){ }
+	createdCallback(){ }
+}
+
 function flatten(obj)
 {
 	let ret = {};
@@ -49,6 +56,16 @@ function flatten(obj)
 	return ret;
 }
 
+function toDefinition(cls)
+{
+	let proto = cls.prototype;
+	let ret = {};
+	Object.keys(proto).forEach(function (key) {
+		ret[key] = { value: proto[key] };
+	});
+	return ret;
+}
+
 function registerComponentClass(name, cls)
 {
 	AFRAME.registerComponent(name, flatten(new cls()));
@@ -59,4 +76,11 @@ function registerSystemClass(name, cls)
 	AFRAME.registerSystem(name, flatten(new cls()));
 }
 
-export { AFrameComponent, AFrameSystem, registerComponentClass, registerSystemClass, flatten };
+function registerElementClass(name, cls)
+{
+	AFRAME.registerElement(name, {prototype: 
+		Object.create(AFRAME.ANode.prototype, toDefinition(cls))
+	});
+}
+
+export { AFrameComponent, AFrameSystem, AFrameNode, registerComponentClass, registerSystemClass, registerElementClass, flatten };

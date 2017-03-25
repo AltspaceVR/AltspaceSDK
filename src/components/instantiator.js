@@ -60,20 +60,20 @@ class Instantiator extends AFrameComponent
 	init() {
 		this.onHandler = this.instantiateOrToggle.bind(this);
 		this.el.addEventListener(this.data.on, this.onHandler);
-		this.syncSys = this.el.sceneEl.systems['sync-system'];
+		this.syncEl = document.querySelector('altspace-sync');
 	}
 
 	instantiateOrToggle() {
-		let userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
+		let userGroup = this.data.group + '-' + this.syncEl.userInfo.userId;
 		if (this.data.removeLast) {
-			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
+			this.syncEl.removeLast(userGroup).then(function (lastInstantiatorId) {
 				if (lastInstantiatorId !== this.el.id) {
-					this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id)
+					this.syncEl.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id)
 				}
 			}.bind(this));
 		}
 		else {
-			this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
+			this.syncEl.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent)
 		}
 	}
 

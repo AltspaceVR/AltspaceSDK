@@ -4,7 +4,7 @@ import {AFrameComponent} from './AFrameComponent';
 
 /**
 * Enables the synchronization of properties of the entity. Must be used in
-* conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
+* conjuction with the [altspace-sync]{@link module:altspace/components.altspace-sync} element and a component for a
 * specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
 * @alias sync
 * @memberof module:altspace/components
@@ -40,10 +40,10 @@ class SyncComponent extends AFrameComponent
 		this.isMine = false;
 
 		this.scene = this.el.sceneEl;
-		this.syncSys = this.scene.systems['sync-system'];
-		this.isConnected = false;
+		this.syncEl = document.querySelector('altspace-sync');
+		this.connected = false;
 
-		if(this.syncSys.isConnected)
+		if(this.syncEl.connected)
 			this.start();
 		else
 			this.scene.addEventListener('connected', this.start.bind(this));
@@ -53,7 +53,7 @@ class SyncComponent extends AFrameComponent
 			let ownershipEvents = this.data.ownOn.split(/[ ,]+/);
 			ownershipEvents.forEach((e => {
 				this.el.addEventListener(e, (() => {
-					if(this.isConnected){
+					if(this.connected){
 						this.takeOwnership();
 					}
 				}).bind(this));
@@ -70,7 +70,7 @@ class SyncComponent extends AFrameComponent
 	*/
 	takeOwnership()
 	{
-		this.ownerRef.set(this.syncSys.clientId);
+		this.ownerRef.set(this.syncEl.clientId);
 
 		//clear our ownership if we disconnect
 		//this is needed if we are the last user in the room, but we expect people to join later
@@ -82,7 +82,7 @@ class SyncComponent extends AFrameComponent
 		//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
 		//This ensures, for example, that synced animations keep playing
 		this.scene.addEventListener('clientleft', (event => {
-			let shouldTakeOwnership = (!this.ownerId || this.ownerId === event.detail.id) && this.syncSys.isMasterClient;
+			let shouldTakeOwnership = (!this.ownerId || this.ownerId === event.detail.id) && this.syncEl.isMasterClient;
 			if(shouldTakeOwnership)
 				this.takeOwnership();
 		}).bind(this));
@@ -94,7 +94,7 @@ class SyncComponent extends AFrameComponent
 				return;
 			}
 
-			this.link(this.syncSys.sceneRef.child(id));
+			this.link(this.syncEl.sceneRef.child(id));
 			this.setupReceive();
 
 		} else {
@@ -102,7 +102,7 @@ class SyncComponent extends AFrameComponent
 			return;
 		}
 
-		this.isConnected = true;
+		this.connected = true;
 		this.el.emit('connected', null, false);
 	}
 
@@ -119,13 +119,13 @@ class SyncComponent extends AFrameComponent
 		function onOwnerUpdate(snapshot)
 		{
 			let newOwnerId = snapshot.val();
-			let gained = newOwnerId === this.syncSys.clientId && !this.isMine;
+			let gained = newOwnerId === this.syncEl.clientId && !this.isMine;
 			if (gained) {
 				this.el.emit('ownershipgained', null, false);
 			}
 
 			//note this also fires when we start up without ownership
-			let lost = newOwnerId !== this.syncSys.clientId;
+			let lost = newOwnerId !== this.syncEl.clientId;
 			if (lost) {
 				this.el.emit('ownershiplost', null, false);
 
@@ -135,14 +135,14 @@ class SyncComponent extends AFrameComponent
 
 			this.ownerId = newOwnerId;
 
-			this.isMine = newOwnerId === this.syncSys.clientId;
+			this.isMine = newOwnerId === this.syncEl.clientId;
 		}
 
 		this.ownerRef.transaction(
 			(owner => {
 				if (owner) return undefined;
 				// try to take ownership
-				return this.syncSys.clientId;
+				return this.syncEl.clientId;
 			}).bind(this),
 
 			((error, committed) => {

@@ -4,7 +4,7 @@ import {AFrameComponent} from './AFrameComponent';
 
 /**
 * Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
-* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* Requires both a [altspace-sync]{@link module:altspace/components.alspace-sync} element in the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
 * @alias sync-n-sound
 * @extends module:altspace/components.AFrameComponent
@@ -20,12 +20,12 @@ class SyncNSound extends AFrameComponent
 	{
 		this.sync = this.el.components.sync;
 		this.scene = this.el.sceneEl;
-		this.syncSys = this.scene.systems['sync-system'];
+		this.syncEl = document.querySelector('altspace-sync');
 
 		this.soundStateRef = null;
 		this.soundEventRef = null;
 
-		if(this.sync.isConnected)
+		if(this.sync.connected)
 			this.start();
 		else
 			this.el.addEventListener('connected', this.start.bind(this));
@@ -46,7 +46,7 @@ class SyncNSound extends AFrameComponent
 			if (!this.sync.isMine) return;
 			var event = {
 				type: event.type,
-				sender: this.syncSys.clientId,
+				sender: this.syncEl.clientId,
 				el: this.el.id,
 				time: Firebase.ServerValue.TIMESTAMP
 			};

@@ -4,7 +4,7 @@ import {AFrameComponent} from './AFrameComponent';
 
 /**
 * Sync the color property of the object between clients.
-* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* Requires both a [altspace-sync]{@link module:altspace/components.altspace-sync} element in the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
 * @alias sync-color
 * @memberof module:altspace/components
@@ -22,7 +22,7 @@ class SyncColor extends AFrameComponent
 		this.sync = this.el.components.sync;
 
 		// wait for firebase connection to start sync routine
-		if(this.sync.isConnected)
+		if(this.sync.connected)
 			start();
 		else
 			this.el.addEventListener('connected', this.start.bind(this));

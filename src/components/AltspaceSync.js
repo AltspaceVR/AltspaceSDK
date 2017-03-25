@@ -1,100 +1,100 @@
 'use strict';
 
-import {AFrameSystem} from './AFrameComponent';
+import {AFrameNode} from './AFrameComponent';
 
 /**
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
 * [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
 * This component must be present on `a-scene` for any other sync components to work. @aframe
-* @alias sync-system
+* @alias altspace-sync
 * @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
-class SyncSystem extends AFrameSystem
+class AltspaceSync extends AFrameNode
 {
-	get schema(){
-		return {
-			/**
-			* A unique identifier for you or your organization.
-			* @instance
-			* @member {string} author
-			* @memberof module:altspace/components.sync-system
-			*/
-			author: { type: 'string', default: null },
-
-			/**
-			* The name of the app.
-			* @instance
-			* @member {string} app
-			* @memberof module:altspace/components.sync-system
-			*/
-			app: { type: 'string', default: null },
-
-			/**
-			* Override the instance ID. Can also be overridden with a URL parameter.
-			* @instance
-			* @member {string} instance
-			* @memberof module:altspace/components.sync-system
-			*/
-			instance: { type: 'string', default: null },
-
-			/**
-			* Override the base reference. Set this to use your own Firebase.
-			* @instance
-			* @member {string} refUrl
-			* @memberof module:altspace/components.sync-system
-			*/
-			refUrl: { type: 'string', default: null }
-		};
-	}
-
 	/**
-	* True if the sync system is connected and ready for syncing.
-	* @member {boolean} module:altspace/components.sync-system#isConnected
-	* @readonly
-	*/
-
-	/**
-	* Fired when a connection is established and the sync system is fully initialized.
-	* @event module:altspace/components.sync-system#connected
+	* Fired when a connection is established and sync is fully initialized.
+	* @event module:altspace/components.altspace-sync#connected
 	* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
 	*/
 
 	/**
 	* Fired when a client joins.
-	* @event module:altspace/components.sync-system#clientjoined
+	* @event module:altspace/components.altspace-sync#clientjoined
 	* @property {string} id - Guid identifying the client.
 	*/
 
 	/**
 	* Fired when a client leaves.
-	* @event module:altspace/components.sync-system#clientleft
+	* @event module:altspace/components.altspace-sync#clientleft
 	* @property {string} id - Guid identifying the client.
 	*/
-
-	init()
-	{
-		if(!this.data || !this.data.app){
-			console.warn('The sync-system must be present on the scene and configured with required data.');
+	createdCallback(){
+		if (this.previousElementSibling) {
+			console.error('altspace-sync must be the first element under a-scene.');
 			return;
 		}
-		console.log(this.data);
+		if(!this.hasAttribute('app') || !this.hasAttribute('author')){
+			console.error('altspace-sync requires app and author attributes.');
+			return;
+		}
+		if (!/altspace-sync-instance/.test(location.search)) {
+			// The sync utility is going to reload the page anyway, so don't bother loading any assets
+			let noop = function () {};
+			AFRAME.utils.srcLoader.validateSrc = noop;
+			THREE.XHRLoader.prototype.load = noop;
+			THREE.Loader.Handlers.add(/jpe?g|png/i, {load: noop});
+		}
+
+		/**
+		* A unique identifier for you or your organization.
+		* @instance
+		* @member {string} author
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* The name of the app.
+		* @instance
+		* @member {string} app
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* Override the instance ID. Can also be overridden with a URL parameter.
+		* @instance
+		* @member {string} instance
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* Override the base reference. Set this to use your own Firebase.
+		* @instance
+		* @member {string} refUrl
+		* @memberof module:altspace/components.altspace-sync
+		*/
+
+		/**
+		* True if sync is connected and ready for syncing.
+		* @member {boolean} module:altspace/components.altspace-sync#connected
+		* @readonly
+		*/
 
 		this.queuedInstantiations = [];
-		this.isConnected = false;
+		this.connected = false;
 		Promise.all([
 			altspace.utilities.sync.connect({
-				authorId: this.data.author,
-				appId: this.data.app,
-				instanceId: this.data.instance,
-				baseRefUrl: this.data.refUrl
+				authorId: this.getAttribute('author'),
+				appId: this.getAttribute('app'),
+				instanceId: this.getAttribute('instance'),
+				baseRefUrl: this.getAttribute('refUrl')
 			}),
 			altspace.getUser()
-		]).then(this.connected.bind(this));
+		]).then(this.setupRefs.bind(this));
 	}
 
-	connected(results)
+	setupRefs(results)
 	{
 		this.connection = results.shift();
 		this.userInfo = results.shift();
@@ -148,7 +148,9 @@ class SyncSystem extends AFrameSystem
 			self.processQueuedInstantiations();
 
 			self.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
-			self.isConnected = true;
+			self.connected = true;
+			// Indicate that this a-node has finished loading.
+			this.load();
 		});
 	}
 
@@ -156,7 +158,7 @@ class SyncSystem extends AFrameSystem
 	* Returns true if the local client is the master client.
 	* @instance
 	* @method isMasterClient
-	* @memberof module:altspace/components.sync-system
+	* @memberof module:altspace/components.altspace-sync
 	* @returns {boolean}
 	*/
 	isMasterClient()
@@ -192,8 +194,8 @@ class SyncSystem extends AFrameSystem
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.
 	* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with
-	*	[removeLast]{@link module:altspace/components.sync-system#removeLast}.
-	* @param {string} [instantiatorId] - Used by [removeLast]{@link module:altspace/components.sync-system#removeLast} to indicate who was
+	*	[removeLast]{@link module:altspace/components.altspace-sync#removeLast}.
+	* @param {string} [instantiatorId] - Used by [removeLast]{@link module:altspace/components.altspace-sync#removeLast} to indicate who was
 	*	responsible for the removed entity.
 	*/
 	instantiate(mixin, parent, el, groupName, instantiatorId) {
@@ -218,7 +220,7 @@ class SyncSystem extends AFrameSystem
 			parent: parentSelector
 		};
 		this.queuedInstantiations.push(instantiationProps);
-		if (this.isConnected) {
+		if (this.connected) {
 			this.processQueuedInstantiations();
 		}
 	}
@@ -263,4 +265,4 @@ class SyncSystem extends AFrameSystem
 	}
 }
 
-export default SyncSystem;
+export default AltspaceSync;

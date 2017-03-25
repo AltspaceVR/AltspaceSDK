@@ -66,7 +66,7 @@ AFRAME.registerComponent('sync-resource', {
 		self.firstUpdate = true;
 		self.refLock = false;
 
-		if(sync.isConnected)
+		if(sync.connected)
 			start();
 		else
 			this.el.addEventListener('connected', start);

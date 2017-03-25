@@ -22,13 +22,13 @@
 
 'use strict';
 
-import {registerComponentClass, registerSystemClass} from './AFrameComponent';
+import {registerComponentClass, registerSystemClass, registerElementClass} from './AFrameComponent';
 import AltspaceCursorCollider from './AltspaceCursorCollider';
 import AltspaceTrackedControls from './AltspaceTrackedControls';
 import AltspaceComponent from './AltspaceComponent';
 import SyncColor from './SyncColor';
 import SyncComponent from './SyncComponent';
-import SyncSystem from './SyncSystem';
+import AltspaceSync from './AltspaceSync';
 import SyncTransform from './sync-transform';
 import SyncNSound from './sync-n-sound';
 import SyncNSkeletonParent from './sync-n-skeleton-parent';
@@ -45,10 +45,10 @@ import NSound from './NSound';
 
 if (window.AFRAME)
 {
+	registerElementClass('altspace-sync', AltspaceSync);
 	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
 	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
 	registerComponentClass('altspace', AltspaceComponent);
-	registerSystemClass('sync-system', SyncSystem);
 	registerComponentClass('sync-color', SyncColor);
 	registerComponentClass('sync-transform', SyncTransform);
 	registerComponentClass('sync', SyncComponent);
@@ -72,7 +72,7 @@ if (window.AFRAME)
 }
 
 export {
-	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
+	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, AltspaceSync,
 	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
 	SyncNSkeletonParent, NObject, NSpawner, NText, NBillboard, NSkeletonParent,
 	NCockpitParent, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
