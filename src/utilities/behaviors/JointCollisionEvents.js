@@ -153,8 +153,8 @@ class JointCollisionEvents extends Behavior
 		else if(hasPrevCollided && !this.hasCollided)
 		{
 			this.object3d.dispatchEvent(new LeaveEvent(
-				this.prevJointIntersectUnion || new THREE.Box3(),
-				this.prevCollidedJoints,
+				prevJointIntersectUnion || new THREE.Box3(),
+				prevCollidedJoints,
 				this.object3d
 			));
 		}
