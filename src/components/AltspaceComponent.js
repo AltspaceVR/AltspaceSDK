@@ -1,6 +1,7 @@
 'use strict';
 
 import {AFrameComponent} from './AFrameComponent';
+import {safeDeepSet} from './utilities';
 
 /**
 * The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
@@ -99,27 +100,33 @@ class AltspaceComponent extends AFrameComponent
 	initRenderer()
 	{
 		let scene = this.el.object3D;
-		let naturalScale = this.el.sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
-		altspace.getEnclosure().then((e =>
+		let sceneEl = this.el.sceneEl;
+		let naturalScale = sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
+		altspace.getEnclosure().then((enclosure =>
 		{
 
 			if(this.data.fullspace){
-				e.requestFullspace();
-				e.addEventListener('fullspacechange', () => {
-					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+				if (enclosure.fullspace) {
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
+				}
+				enclosure.requestFullspace();
+				enclosure.addEventListener('fullspacechange', () => {
+					scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
+					// Make sure we flag the scene as initialized if we weren't already in fullspace mode previously.
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 				});
 			}
 
 			if (!this.data.usePixelScale || this.data.fullspace){
-				scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+				scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
 			}
 
 			switch (this.data.verticalAlign) {
 			case 'bottom':
-				scene.position.y -= e.innerHeight / 2;
+				scene.position.y -= enclosure.innerHeight / 2;
 				break;
 			case 'top':
-				scene.position.y += e.innerHeight / 2;
+				scene.position.y += enclosure.innerHeight / 2;
 				break;
 			case 'middle':
 				break;
@@ -127,10 +134,13 @@ class AltspaceComponent extends AFrameComponent
 				console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
 			}
 
-			if(this.data.enclosuresOnly && e.innerDepth === 1){
+			if(this.data.enclosuresOnly && enclosure.innerDepth === 1){
 				this.el.renderer.render(new THREE.Scene());
 				this.el.renderer = this.el.effect = oldRenderer;
+			}
 
+			if (!this.data.fullspace) {
+				safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 			}
 		}).bind(this));
 
