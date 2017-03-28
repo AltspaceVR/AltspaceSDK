@@ -584,26 +584,32 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		var this$1 = this;
 
 		var scene = this.el.object3D;
-		var naturalScale = this.el.sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
-		altspace.getEnclosure().then((function (e) {
+		var sceneEl = this.el.sceneEl;
+		var naturalScale = sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
+		altspace.getEnclosure().then((function (enclosure) {
 
 			if(this$1.data.fullspace){
-				e.requestFullspace();
-				e.addEventListener('fullspacechange', function () {
-					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+				if (enclosure.fullspace) {
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
+				}
+				enclosure.requestFullspace();
+				enclosure.addEventListener('fullspacechange', function () {
+					scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
+					// Make sure we flag the scene as initialized if we weren't already in fullspace mode previously.
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 				});
 			}
 
 			if (!this$1.data.usePixelScale || this$1.data.fullspace){
-				scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+				scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
 			}
 
 			switch (this$1.data.verticalAlign) {
 			case 'bottom':
-				scene.position.y -= e.innerHeight / 2;
+				scene.position.y -= enclosure.innerHeight / 2;
 				break;
 			case 'top':
-				scene.position.y += e.innerHeight / 2;
+				scene.position.y += enclosure.innerHeight / 2;
 				break;
 			case 'middle':
 				break;
@@ -611,10 +617,13 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 				console.warn('Unexpected value for verticalAlign: ', this$1.data.verticalAlign);
 			}
 
-			if(this$1.data.enclosuresOnly && e.innerDepth === 1){
+			if(this$1.data.enclosuresOnly && enclosure.innerDepth === 1){
 				this$1.el.renderer.render(new THREE.Scene());
 				this$1.el.renderer = this$1.el.effect = oldRenderer;
+			}
 
+			if (!this$1.data.fullspace) {
+				safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 			}
 		}).bind(this));
 
@@ -2797,6 +2806,26 @@ var NSound = (function (NativeComponent$$1) {
 	return NSound;
 }(NativeComponent));
 
+var NLayoutBrowser = (function (NativeComponent$$1) {
+	function NLayoutBrowser(){ NativeComponent$$1.call(this, 'n-layout-browser'); }
+
+	if ( NativeComponent$$1 ) NLayoutBrowser.__proto__ = NativeComponent$$1;
+	NLayoutBrowser.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NLayoutBrowser.prototype.constructor = NLayoutBrowser;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			url: { default: 'about:blank'},
+			is3d: { default: false }
+		};
+	};
+
+	Object.defineProperties( NLayoutBrowser.prototype, prototypeAccessors );
+
+	return NLayoutBrowser;
+}(NativeComponent));
+
 /**
 * AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
 * In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
@@ -2845,6 +2874,7 @@ if (window.AFRAME)
 	registerComponentClass('n-box-collider', NBoxCollider);
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
+	registerComponentClass('n-layout-browser', NLayoutBrowser);
 }
 
 
@@ -2874,7 +2904,8 @@ var components_lib = Object.freeze({
 	NSphereCollider: NSphereCollider,
 	NBoxCollider: NBoxCollider,
 	NCapsuleCollider: NCapsuleCollider,
-	NMeshCollider: NMeshCollider
+	NMeshCollider: NMeshCollider,
+	NLayoutBrowser: NLayoutBrowser
 });
 
 /* global Url */
