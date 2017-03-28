@@ -2,6 +2,8 @@
 <head>
 	<title>SDK Poster</title>
 	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/2.3.0/nunjucks.min.js"></script>
+	<script src="https://cdn.rawgit.com/ngokevin/kframe/9a5876b2/components/template/dist/aframe-template-component.min.js"></script>
 	<script src="../../../dist/altspace.min.js"></script>
 	<script>
 		AFRAME.registerComponent('circle-layout', {
@@ -25,41 +27,64 @@
 </head>
 <body>
 <a-scene altspace="fullspace: true">
+	<a-assets>
+		<script id='array' type='text/x-nunjucks-template'>
+			{% for x in range(0, -width, -4) %}
+				{% for y in range(0, height, 4) %}
+					{% for z in range(0, depth, 4) %}
+						<a-entity position='{{x}} {{y}} {{z}}' n-object='res: {{model}}'></a-entity>
+					{% endfor %}
+				{% endfor %}
+			{% endfor %}
+		</script>
+	</a-assets>
 
-	<a-entity rotation='0 180 0' n-layout-browser='url: http://localhost:8001/examples/aframe/svvr/poster.html; is3d: true'></a-entity>
+	<a-entity position='0 0.25 -6'>
+		<a-entity position='0 3.6 0' rotation='0 180 0' scale='10 10 10'
+			n-layout-browser='url: http://localhost:8001/examples/aframe/svvr/poster.html; is3d: true'>
+		</a-entity>
 
-	<a-entity position='-4 0 -8' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='0 0 -8' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='4 0 -8' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='8 0 -8' n-object='res: architecture/floor-4w-4l'></a-entity>
+		<a-entity position='4 0 0' n-object='res: architecture/floor-slice-concave-4r'></a-entity>
+		<a-entity position='0 0 -4' rotation='0 90 0' n-object='res: architecture/floor-slice-concave-4r'></a-entity>
+		<a-entity position='-4 0 0' rotation='0 180 0' n-object='res: architecture/floor-slice-concave-4r'></a-entity>
+		<a-entity position='0 0 4' rotation='0 270 0' n-object='res: architecture/floor-slice-concave-4r'></a-entity>
+	</a-entity>
 
-	<a-entity position='-4 0 -4' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='0 0 -4' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='4 0 -4' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='8 0 -4' n-object='res: architecture/floor-4w-4l'></a-entity>
+	<!-- floor -->
+	<a-entity position='8 0 -6' template='src: #array; insert: beforeend'
+		data-model='architecture/floor-4w-4l' data-width=16 data-depth=24 data-height=1>
+	</a-entity>
 
-	<a-entity position='-4 0 0' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='0 0 0' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='4 0 0' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='8 0 0' n-object='res: architecture/floor-4w-4l'></a-entity>
+	<!-- railings -->
+	<a-entity position='8 0 -6' template='src: #array; insert: beforeend'
+		data-model='architecture/railing-4l' data-width=1 data-height=1 data-depth=24>
+	</a-entity>
+	<a-entity position='-8 0 18' rotation='0 180 0' template='src: #array; insert: beforeend'
+		data-model='architecture/railing-4l' data-width=1 data-height=1 data-depth=24>
+	</a-entity>
+	<a-entity position='8 0 18' rotation='0 270 0' template='src: #array; insert: beforeend'
+		data-model='architecture/railing-4l' data-width=1 data-height=1 data-depth=16>
+	</a-entity>
+	<a-entity position='-8 0 -6' rotation='0 90 0' n-object='res: architecture/railing-4l'>
+	</a-entity>
+	<a-entity position='0 0.25 -10' rotation='0 90 0' n-object='res: architecture/wall-base-curve-concave-4r'>
+	</a-entity>
+	<a-entity position='-4 0.25 -6' rotation='0 180 0' n-object='res: architecture/wall-base-curve-concave-4r'>
+	</a-entity>
+	<a-entity position='4 0 -6' rotation='0 90 0' n-object='res: architecture/railing-4l'>
+	</a-entity>
 
-	<a-entity position='-4 0 4' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='0 0 4' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='4 0 4' n-object='res: architecture/floor-4w-4l'></a-entity>
-	<a-entity position='8 0 4' n-object='res: architecture/floor-4w-4l'></a-entity>
-
-	<!-- teleporter labels -->
-	<a-entity position='-6 3 6' n-billboard n-text='text: The Grid; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-6 3 2' n-billboard n-text='text: Crystal Cave; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-6 3 -2' n-billboard n-text='text: Air Rush; font-size: 4; width: 4; height: 0.5'></a-entity>
-
-	<a-entity position='-6 3 -6' n-billboard n-text='text: Planetarium; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-2 3 -6' n-billboard n-text='text: Molecule Viewer; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='2 3 -6' n-billboard n-text='text: Space Bar; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='6 3 -6' n-billboard n-text='text: Piano; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<!-- teleporters -->
+	<a-entity position='-6 3 -2' n-billboard n-text='text: Crystal Cave; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='-6 3 2' n-billboard n-text='text: Air Rush; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='-6 3 6' n-billboard n-text='text: Planetarium; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='-6 3 10' n-billboard n-text='text: Molecule Viewer; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='-6 3 14' n-billboard n-text='text: Space Bar; font-size: 4; width: 4; height: 0.5'></a-entity>
 
 	<a-entity position='6 3 -2' n-billboard n-text='text: Dress Up; font-size: 4; width: 4; height: 0.5'></a-entity>
 	<a-entity position='6 3 2' n-billboard n-text='text: BeatLab; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='6 3 6' n-billboard n-text='text: The Grid; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='6 3 10' n-billboard n-text='text: Piano; font-size: 4; width: 4; height: 0.5'></a-entity>
 
 </a-scene>
 </body>
