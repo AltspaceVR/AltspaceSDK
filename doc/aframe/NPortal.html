@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>n-capsule-collider - Documentation</title>
+    <title>NPortal - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -39,7 +39,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-capsule-collider</h1>
+    <h1 class="page-title">NPortal</h1>
     
 
     
@@ -52,13 +52,8 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a>.</span>
-        
-        n-capsule-collider
+        NPortal
         </h2>
-        
-            <div class="class-description"><p>Create a capsule-shaped collider on this entity. Capsules
-are a union of a cylinder and two spheres on top and bottom.</p></div>
         
     
 </header>
@@ -67,6 +62,12 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
     <div class="container-overview">
     
         
+
+    
+
+    <h4 class="name" id="NPortal"><span class="type-signature"></span>new NPortal<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
 
 
 
@@ -136,17 +137,6 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="module-altspace_components.NCollider.html">module:altspace/components.NCollider</a></li>
-    </ul>
-
-
-    
 
     
 
@@ -156,403 +146,6 @@ are a union of a cylinder and two spheres on top and bottom.</p></div>
 
     
 
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="center"><span class="type-signature"></span>center<span class="type-signature"> :vec3</span></h4>
-
-
-
-
-<div class="description">
-    <p>The offset of the collider in local space.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="module-altspace_components.NCollider.html#center">module:altspace/components.NCollider#center</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>[0, 0, 0]</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="direction"><span class="type-signature"></span>direction<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    <p>The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>'y'</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"> :number</span></h4>
-
-
-
-
-<div class="description">
-    <p>The height of the shaft of the capsule in meters.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>0</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="isTrigger"><span class="type-signature"></span>isTrigger<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    <p>If true, this collider will not block
-other objects, but instead fire a <code>triggerenter</code> event when an object comes
-into contact with it, and a <code>triggerexit</code> when it leaves contact.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="module-altspace_components.NCollider.html#isTrigger">module:altspace/components.NCollider#isTrigger</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>false</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="radius"><span class="type-signature"></span>radius<span class="type-signature"> :number</span></h4>
-
-
-
-
-<div class="description">
-    <p>The radius of the capsule in meters.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>1</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    <p>The type of collider, one of: <code>object</code> | <code>environment</code> | <code>hologram</code>.
-Object colliders collide with other objects, the environment, and the cursor.
-Environment colliders collide with everything objects do, but you can also
-teleport onto them. Hologram colliders only collide with other holograms and
-the cursor.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="module-altspace_components.NCollider.html#type">module:altspace/components.NCollider#type</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>"hologram"</li>
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
     
 
     
