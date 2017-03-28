@@ -5,8 +5,8 @@
 	<script src="../../dist/altspace.js"></script>
 </head>
 <body>
-<a-scene altspace="fullspace: true">
-	<a-entity position="5 10 15">
+<a-scene altspace="fullspace: false">
+	<a-entity position="5 20 15" rotation="0 0 0">
 		<a-box id="destination" position="3 -5 0" rotation="0 45 0">
 			<a-box scale="0.1 0.1 0.1" position="1 0 0" color="red"></a-box>
 			<a-box scale="0.1 0.1 0.1" position="0 1 0" color="green"></a-box>
@@ -18,7 +18,8 @@
 		<a-box scale="0.1 0.1 0.1" position="0 1 0" color="green"></a-box>
 		<a-box scale="0.1 0.1 0.1" position="0 0 1" color="blue"></a-box>
 	</a-box>
-	<a-entity position="5 0 0" n-portal="targetEntity: #destination"></a-entity>
+	<a-entity id="foo" position="5 0 0" n-portal="targetEntity: #destination"></a-entity>
+	<a-entity id="bar" position="-5 0 0" n-portal="targetSpace: event-600107208956444944"></a-entity>
 </a-scene>
 </body>
 </html>
