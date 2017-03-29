@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.3/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.4/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -2814,7 +2814,7 @@ var NSound = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.3/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.4/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -4953,8 +4953,8 @@ var JointCollisionEvents = (function (Behavior$$1) {
 		else if(hasPrevCollided && !this.hasCollided)
 		{
 			this.object3d.dispatchEvent(new LeaveEvent(
-				this.prevJointIntersectUnion || new THREE.Box3(),
-				this.prevCollidedJoints,
+				prevJointIntersectUnion || new THREE.Box3(),
+				prevCollidedJoints,
 				this.object3d
 			));
 		}
@@ -6023,7 +6023,7 @@ var utilities_lib = Object.freeze({
 if(!window.altspace)
 	{ window.altspace = {components: {}, utilities: {}, inClient: false}; }
 
-var version = '2.0.3';
+var version = '2.0.4';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
