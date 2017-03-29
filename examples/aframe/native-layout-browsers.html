@@ -6,9 +6,10 @@
 	</head>
 	<body>
 	<a-scene altspace="fullspace: true">
-		<a-entity position="0 1 5" rotation="0 45 0" scale="2 2 2" n-layout-browser="url:http://xkcd.com"></a-entity>
-		<a-entity geometry="primitive: box" material="color: #C03546" position="0 1 -5" rotation="0 45 0" scale="2 1 2"
-			n-layout-browser="url:http://altspacevr.github.io/AltspaceSDK/examples/js/chess.html; is3d:true"></a-entity>
+		<a-entity position="0 1 5" rotation="0 45 0" scale="2 2 2" n-layout-browser="url: http://xkcd.com"></a-entity>
+		<a-entity position="0 1 -5" rotation="0 45 0" scale="2 2 2"
+			n-layout-browser="url:http://altspacevr.github.io/AltspaceSDK/examples/js/chess.html; isEnclosure:true">
+		</a-entity>
 	</a-scene>
 	</body>
 </html>
