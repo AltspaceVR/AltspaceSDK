@@ -37,8 +37,12 @@
 				{% endfor %}
 			{% endfor %}
 		</script>
+		<a-mixin id='teleporter-label' position='0 3 0'
+			n-billboard n-text='font-size: 4; width: 4; height: 0.5'>
+		</a-mixin>
 	</a-assets>
 
+	<!-- poster dais -->
 	<a-entity position='0 0.25 -6'>
 		<a-entity position='0 1.8 0' rotation='0 180 0' scale='5 5 5'
 			n-layout-browser='url: http://localhost:8001/examples/aframe/svvr/poster.html; is3d: true'>
@@ -75,16 +79,38 @@
 	</a-entity>
 
 	<!-- teleporters -->
-	<a-entity position='-6 3 -2' n-billboard n-text='text: Crystal Cave; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-6 3 2' n-billboard n-text='text: Air Rush; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-6 3 6' n-billboard n-text='text: Planetarium; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-6 3 10' n-billboard n-text='text: Molecule Viewer; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='-6 3 14' n-billboard n-text='text: Space Bar; font-size: 4; width: 4; height: 0.5'></a-entity>
-
-	<a-entity position='6 3 -2' n-billboard n-text='text: Dress Up; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='6 3 2' n-billboard n-text='text: BeatLab; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='6 3 6' n-billboard n-text='text: The Grid; font-size: 4; width: 4; height: 0.5'></a-entity>
-	<a-entity position='6 3 10' n-billboard n-text='text: Piano; font-size: 4; width: 4; height: 0.5'></a-entity>
+	<a-entity position='-7 0 -2' rotation='0 90 0'
+		n-portal='target-space: event-643621802479714914'>
+		<a-entity mixin='teleporter-label' n-text='text: Crystal Cave'></a-entity>
+	</a-entity>
+	<a-entity position='-7 0 2' rotation='0 90 0'
+		n-portal='target-space: the-grid-svvr-2017'>
+		<a-entity mixin='teleporter-label' n-text='text: Air Rush'></a-entity>
+	</a-entity>
+	<a-entity position='-7 0 6' rotation='0 90 0'
+		n-portal='target-space: event-643632276839596314'>
+		<a-entity mixin='teleporter-label' n-text='text: Planetarium'></a-entity>
+	</a-entity>
+	<a-entity position='-7 0 10' rotation='0 90 0'
+		n-portal='target-space: molecule-viewer-svvr-2017'>
+		<a-entity mixin='teleporter-label' n-text='text: Molecule Viewer'></a-entity>
+	</a-entity>
+	<a-entity position='7 0 -2' rotation='0 270 0'
+		n-portal='target-space: air-rush-svvr-2017'>
+		<a-entity mixin='teleporter-label' n-text='text: Space Bar'></a-entity>
+	</a-entity>
+	<a-entity position='7 0 2' rotation='0 270 0'
+		n-portal='target-space: space-bar-svvr-2017'>
+		<a-entity mixin='teleporter-label' n-text='text: Dress Up'></a-entity>
+	</a-entity>
+	<a-entity position='7 0 6' rotation='0 270 0'
+		n-portal='target-space: beatlab-svvr-2017'>
+		<a-entity mixin='teleporter-label' n-text='text: BeatLab'></a-entity>
+	</a-entity>
+	<a-entity position='7 0 10' rotation='0 270 0'
+		n-portal='target-space: piano-svvr-2017'>
+		<a-entity mixin='teleporter-label' n-text='text: Piano'></a-entity>
+	</a-entity>
 
 </a-scene>
 </body>
