@@ -1,7 +1,7 @@
 {
   "name": "altspace",
   "author": "AltspaceVR",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AltspaceVR/AltspaceSDK.git"
@@ -13,6 +13,7 @@
   "main": "dist/altspace.js",
   "scripts": {
     "lint": "eslint src/**/*.js examples/**/*.js examples/**/*.html scripts/**/*.js",
+    "buildjs": "npm run lint && gulp --gulpfile scripts/build.js altspace_js",
     "build": "npm run lint && gulp --gulpfile scripts/build.js altspace_js doc",
     "doc": "gulp --gulpfile scripts/build.js doc",
     "version": "npm run build && git add .",
