@@ -40,7 +40,7 @@
 				doc.rotateY(Math.PI / 4);
 				sim.scene.add(doc);
 
-				var button = meshHelpers.makeBox(1.5, boxSize * 1.5, -1.5, '../resources/click-me.jpg');
+				var button = meshHelpers.makeBox(1.5, boxSize * 1.5, -1.5, '../../resources/click-me.jpg');
 				button.userData.altspace.collider.enabled = true;
 				adjustToFullspace(enclosure, button, doc);
 				button.addEventListener('cursordown', function () {

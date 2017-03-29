@@ -51,7 +51,7 @@
 					scale="0.35 0.35 0.35"></a-mixin>
 				<a-mixin id="voxel-armor"
 					obj-model="obj: #voxel-armor-obj; mtl: #voxel-armor-mtl" collapse-model
-					animation="property: rotation; from: 0 0 0; to: 360 0 0; dir: reverse; startEvents: spin"></a-mixin>
+					animation="property: rotation; from: 0 0 0; to: 0 360 0; dir: reverse; startEvents: spin"></a-mixin>
 					scale="1 1 1"></a-mixin>
 				<a-mixin id="parent-to-chest"
 					position="0 0.35 0"
@@ -112,7 +112,9 @@
 				position="2.3 2 0">
 			</a-entity>
 
-			<a-box wire="on: click; emit: spin; targets: [mixin*=voxel-axe].mine, [mixin*=voxel-armor].mine"></a-box>
+			<a-box 
+				src="../../resources/click-me.jpg"
+				wire="on: click; emit: spin; targets: [mixin*=voxel-axe].mine, [mixin*=voxel-armor].mine"></a-box>
 		</a-scene>
 	</body>
 </html>
