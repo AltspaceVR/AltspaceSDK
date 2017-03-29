@@ -41,6 +41,7 @@ import {
 } from './NSmallComponents';
 import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
 import NContainer from './NContainer';
+import NPortal from './NPortal';
 import NSound from './NSound';
 import NLayoutBrowser from './NLayoutBrowser';
 
@@ -59,6 +60,7 @@ if (window.AFRAME)
 	registerComponentClass('one-per-user', OnePerUser);
 	registerComponentClass('instantiator', Instantiator);
 	registerComponentClass('n-object', NObject);
+	registerComponentClass('n-portal', NPortal);
 	registerComponentClass('n-spawner', NSpawner);
 	registerComponentClass('n-text', NText);
 	registerComponentClass('n-billboard', NBillboard);
@@ -76,7 +78,7 @@ if (window.AFRAME)
 export {
 	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
 	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
-	SyncNSkeletonParent, NObject, NSpawner, NText, NBillboard, NSkeletonParent,
+	SyncNSkeletonParent, NObject, NPortal, NSpawner, NText, NBillboard, NSkeletonParent,
 	NCockpitParent, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
 	NMeshCollider, NLayoutBrowser
 };
