@@ -63,7 +63,7 @@ class Wire extends AFrameComponent
 			lose: {type: 'string'},
 
 			/**
-			* A selector to pick which objects to wire to
+			* A selector to pick which objects to wire to. The selector is re-evaluated when the wire is triggered.
 			* @instance
 			* @member {selector} targets
 			* @memberof module:altspace/components.wire
@@ -71,7 +71,7 @@ class Wire extends AFrameComponent
 			targets: {type: 'selectorAll'},
 
 			/**
-			* A selector to pick a single object to wire to
+			* A selector to pick a single object to wire to. The selector is re-evaluated when the wire is triggered.
 			* @instance
 			* @member {selector} target
 			* @memberof module:altspace/components.wire

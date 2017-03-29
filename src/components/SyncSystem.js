@@ -187,7 +187,8 @@ class SyncSystem extends AFrameSystem
 	}
 
 	/**
-	* Instantiate an entity with the given mixins.
+	* Instantiate an entity with the given mixins. Instantiated entities that belong to the current user are given a
+	* "mine" class name, so that they can be selected against.
 	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.
