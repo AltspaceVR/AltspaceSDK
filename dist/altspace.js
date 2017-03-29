@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.3/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.1.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -1185,7 +1185,8 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	};
 
 	/**
-	* Instantiate an entity with the given mixins.
+	* Instantiate an entity with the given mixins. Instantiated entities that belong to the current user are given a
+	* "mine" class name, so that they can be selected against.
 	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.
@@ -1252,6 +1253,9 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		document.querySelector(val.parent).appendChild(entityEl);
 		entityEl.setAttribute('mixin', val.mixin);
 		entityEl.dataset.creatorUserId = val.creatorUserId;
+		if (this.userInfo.userId === val.creatorUserId) {
+			entityEl.classList.add('mine');
+		}
 	};
 
 	SyncSystem.prototype.removeElement = function removeElement (snapshot) {
@@ -1658,7 +1662,7 @@ var Wire = (function (AFrameComponent$$1) {
 			lose: {type: 'string'},
 
 			/**
-			* A selector to pick which objects to wire to
+			* A selector to pick which objects to wire to. The selector is re-evaluated when the wire is triggered.
 			* @instance
 			* @member {selector} targets
 			* @memberof module:altspace/components.wire
@@ -1666,7 +1670,7 @@ var Wire = (function (AFrameComponent$$1) {
 			targets: {type: 'selectorAll'},
 
 			/**
-			* A selector to pick a single object to wire to
+			* A selector to pick a single object to wire to. The selector is re-evaluated when the wire is triggered.
 			* @instance
 			* @member {selector} target
 			* @memberof module:altspace/components.wire
@@ -1690,6 +1694,8 @@ var Wire = (function (AFrameComponent$$1) {
 					el.removeState(this.data.lose);
 				}
 			}
+
+			this.updateProperties(this.attrValue);
 
 			if(this.data.targets)
 				{ this.data.targets.forEach(act.bind(this)); }
@@ -2809,7 +2815,7 @@ var NSound = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.3/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.1.0/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -4948,8 +4954,8 @@ var JointCollisionEvents = (function (Behavior$$1) {
 		else if(hasPrevCollided && !this.hasCollided)
 		{
 			this.object3d.dispatchEvent(new LeaveEvent(
-				this.prevJointIntersectUnion || new THREE.Box3(),
-				this.prevCollidedJoints,
+				prevJointIntersectUnion || new THREE.Box3(),
+				prevCollidedJoints,
 				this.object3d
 			));
 		}
@@ -6018,7 +6024,7 @@ var utilities_lib = Object.freeze({
 if(!window.altspace)
 	{ window.altspace = {components: {}, utilities: {}, inClient: false}; }
 
-var version = '2.0.3';
+var version = '2.1.0';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
