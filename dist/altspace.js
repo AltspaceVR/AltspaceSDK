@@ -1252,9 +1252,6 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		document.querySelector(val.parent).appendChild(entityEl);
 		entityEl.setAttribute('mixin', val.mixin);
 		entityEl.dataset.creatorUserId = val.creatorUserId;
-		if (this.userInfo.userId === val.creatorUserId) {
-			entityEl.classList.add('mine');
-		}
 	};
 
 	SyncSystem.prototype.removeElement = function removeElement (snapshot) {
@@ -1693,8 +1690,6 @@ var Wire = (function (AFrameComponent$$1) {
 					el.removeState(this.data.lose);
 				}
 			}
-
-			this.updateProperties(this.attrValue);
 
 			if(this.data.targets)
 				{ this.data.targets.forEach(act.bind(this)); }
