@@ -64,7 +64,7 @@ function createCube() {
 		new THREE.BoxGeometry(1, 1, 1),
 		new THREE.MeshBasicMaterial({
 			color:'#ffffff',
-			map: new THREE.TextureLoader().load('../tests/resources/click-me.jpg')
+			map: new THREE.TextureLoader().load('../resources/click-me.jpg')
 		})
 	);
 	cube.addBehavior(new altspace.utilities.behaviors.Object3DSync());
