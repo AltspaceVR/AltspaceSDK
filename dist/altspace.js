@@ -584,26 +584,32 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		var this$1 = this;
 
 		var scene = this.el.object3D;
-		var naturalScale = this.el.sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
-		altspace.getEnclosure().then((function (e) {
+		var sceneEl = this.el.sceneEl;
+		var naturalScale = sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
+		altspace.getEnclosure().then((function (enclosure) {
 
 			if(this$1.data.fullspace){
-				e.requestFullspace();
-				e.addEventListener('fullspacechange', function () {
-					scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+				if (enclosure.fullspace) {
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
+				}
+				enclosure.requestFullspace();
+				enclosure.addEventListener('fullspacechange', function () {
+					scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
+					// Make sure we flag the scene as initialized if we weren't already in fullspace mode previously.
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 				});
 			}
 
 			if (!this$1.data.usePixelScale || this$1.data.fullspace){
-				scene.scale.copy(naturalScale).multiplyScalar(e.pixelsPerMeter);
+				scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
 			}
 
 			switch (this$1.data.verticalAlign) {
 			case 'bottom':
-				scene.position.y -= e.innerHeight / 2;
+				scene.position.y -= enclosure.innerHeight / 2;
 				break;
 			case 'top':
-				scene.position.y += e.innerHeight / 2;
+				scene.position.y += enclosure.innerHeight / 2;
 				break;
 			case 'middle':
 				break;
@@ -611,10 +617,13 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 				console.warn('Unexpected value for verticalAlign: ', this$1.data.verticalAlign);
 			}
 
-			if(this$1.data.enclosuresOnly && e.innerDepth === 1){
+			if(this$1.data.enclosuresOnly && enclosure.innerDepth === 1){
 				this$1.el.renderer.render(new THREE.Scene());
 				this$1.el.renderer = this$1.el.effect = oldRenderer;
+			}
 
+			if (!this$1.data.fullspace) {
+				safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 			}
 		}).bind(this));
 
@@ -1948,10 +1957,7 @@ var NativeComponent = (function (AFrameComponent$$1) {
 		safeDeepSet(mesh.userData, ['altspace', 'collider', 'enabled'], false);
 		altspace.addNativeComponent(mesh, this.name);
 
-		if (this.sendUpdates) {
-			//to pass defaults
-			altspace.updateNativeComponent(mesh, this.name, this.data);
-		}
+		this.update();
 
 		if(!this.mesh && !this._dontRebind){
 			this.el.addEventListener('object3dset', (function (event) {
@@ -2585,6 +2591,67 @@ var NContainer = (function (NativeComponent$$1) {
 	return NContainer;
 }(NativeComponent));
 
+/**
+* Spawn a portal that allows you to travel to a different space or a different location in the current space.
+* @aframe
+* @alias n-portal
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NPortal = (function (NativeComponent$$1) {
+	function NPortal(){ NativeComponent$$1.call(this, 'n-portal'); }
+
+	if ( NativeComponent$$1 ) NPortal.__proto__ = NativeComponent$$1;
+	NPortal.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NPortal.prototype.constructor = NPortal;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The space id of the space that you want the portal to send users to.
+			* @instance
+			* @member {string} targetSpace
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetSpace: {type: 'string'},
+			/**
+			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
+			* and rotate the user in its direction.
+			* @instance
+			* @member {selector} targetEntity
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetEntity: {type: 'selector'}
+		};
+	};
+	NPortal.prototype.update = function update (){
+		var mesh = this.el.object3DMap.mesh;
+		var targetPosition, targetQuaternion;
+		if (this.data.targetEntity) {
+			// updateMatrixWorld doesn't traverse upwards to actually update an object's world matrix.
+			// Updating the entire scene's world matrcies is overkill, but there isn't a simple way to do the right 
+			// thing at the moment. See https://github.com/mrdoob/three.js/pull/9410
+			this.el.sceneEl.object3D.updateMatrixWorld(true);
+			targetPosition = this.data.targetEntity.object3D.getWorldPosition();
+			var quaternion = this.data.targetEntity.object3D.getWorldQuaternion();
+			targetQuaternion = {x: quaternion.x, y: quaternion.y, z: quaternion.z, w: quaternion.w};
+		}
+
+		var data = {
+			targetSpace: this.data.targetSpace,
+			targetPosition: targetPosition,
+			targetQuaternion: targetQuaternion
+		};
+
+		altspace.updateNativeComponent(mesh, this.name, data);
+	};
+
+	Object.defineProperties( NPortal.prototype, prototypeAccessors );
+
+	return NPortal;
+}(NativeComponent));
+
 !function(){"use strict";function r(r){for(var t=[],e=0;e<r.length;e++){ t.push(r[e]); }return t}String.prototype.codePointAt||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=t.length,n=r?+r:0;if(n!=n&&(n=0),!(n<0||n>=e)){var o,i=t.charCodeAt(n);return i>=55296&&i<=56319&&e>n+1&&(o=t.charCodeAt(n+1),o>=56320&&o<=57343)?1024*(i-55296)+o-56320+65536:i}};r?r(String.prototype,"codePointAt",{value:t,configurable:!0,writable:!0}):String.prototype.codePointAt=t;}(),String.prototype.repeat||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=r?+r:0;if(e!=e&&(e=0),e<0||e==1/0){ throw RangeError(); }for(var n="";e;){ e%2==1&&(n+=t),e>1&&(t+=t),e>>=1; }return n};r?r(String.prototype,"repeat",{value:t,configurable:!0,writable:!0}):String.prototype.repeat=t;}(),String.prototype.includes||!function(){var r={}.toString,t=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),e="".indexOf,n=function(t){if(null==this){ throw TypeError(); }var n=this+"";if(t&&"[object RegExp]"==r.call(t)){ throw TypeError(); }var o=n.length,i=t+"",a=i.length,c=arguments.length>1?arguments[1]:void 0,u=c?+c:0;return u!=u&&(u=0),!(a+Math.min(Math.max(u,0),o)>o)&&e.call(n,i,u)!=-1};t?t(String.prototype,"includes",{value:n,configurable:!0,writable:!0}):String.prototype.includes=n;}(),String.prototype.startsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=arguments.length>1?arguments[1]:void 0,c=a?+a:0;c!=c&&(c=0);var u=Math.min(Math.max(c,0),n);if(i+u>n){ return!1; }for(var l=-1;++l<i;){ if(e.charCodeAt(u+l)!=o.charCodeAt(l)){ return!1; } }return!0};r?r(String.prototype,"startsWith",{value:e,configurable:!0,writable:!0}):String.prototype.startsWith=e;}(),String.prototype.endsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=n;if(arguments.length>1){var c=arguments[1];void 0!==c&&(a=c?+c:0,a!=a&&(a=0));}var u=Math.min(Math.max(a,0),n),l=u-i;if(l<0){ return!1; }for(var h=-1;++h<i;){ if(e.charCodeAt(l+h)!=o.charCodeAt(h)){ return!1; } }return!0};r?r(String.prototype,"endsWith",{value:e,configurable:!0,writable:!0}):String.prototype.endsWith=e;}(),String.fromCodePoint||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=String.fromCharCode,e=Math.floor,n=function(r){
 var arguments$1 = arguments;
 var n,o,i=16384,a=[],c=-1,u=arguments.length;if(!u){ return""; }for(var l="";++c<u;){var h=+arguments$1[c];if(!isFinite(h)||h<0||h>1114111||e(h)!=h){ throw RangeError("Invalid code point: "+h); }h<=65535?a.push(h):(h-=65536,n=(h>>10)+55296,o=h%1024+56320,a.push(n,o)),(c+1==u||a.length>i)&&(l+=t.apply(null,a),a.length=0);}return l};r?r(String,"fromCodePoint",{value:n,configurable:!0,writable:!0}):String.fromCodePoint=n;}(),Object.defineProperty(String,"raw",{configurable:!0,enumerable:!1,writable:!0,value:function(t,e){var n;t=null!=t?t:{},e=arguments.length>1?r(arguments).slice(1):[];try{n=r(t.raw);}catch(r){throw new TypeError("Cannot convert undefined or null to object")}return n.map(function(r,n){return t.raw.length<=n?r:null!=e[n-1]?e[n-1]+r:r}).join("")}});}();
@@ -2804,6 +2871,47 @@ var NSound = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
+* Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
+* Layout browsers can only be used by apps that are set as the default app in a space.
+* @aframe
+* @alias n-layout-browser
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NLayoutBrowser = (function (NativeComponent$$1) {
+	function NLayoutBrowser(){ NativeComponent$$1.call(this, 'n-layout-browser'); }
+
+	if ( NativeComponent$$1 ) NLayoutBrowser.__proto__ = NativeComponent$$1;
+	NLayoutBrowser.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NLayoutBrowser.prototype.constructor = NLayoutBrowser;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* An absolute URL that you want to load in the browser.
+			* @instance
+			* @member {string} url
+			* @memberof module:altspace/components.n-layout-browser
+			*/
+			url: { default: 'about:blank'},
+			/**
+			* Whether the browser is a three-dimensional browser that can contain other apps.
+			* @instance
+			* @default false
+			* @member {bool} isEnclosure
+			* @memberof module:altspace/components.n-layout-browser
+			*/
+			isEnclosure: { default: false }
+		};
+	};
+
+	Object.defineProperties( NLayoutBrowser.prototype, prototypeAccessors );
+
+	return NLayoutBrowser;
+}(NativeComponent));
+
+/**
 * AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
 * In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
 * this SDK provides a set of components to add AltspaceVR compatibility and additional
@@ -2840,6 +2948,7 @@ if (window.AFRAME)
 	registerComponentClass('one-per-user', OnePerUser);
 	registerComponentClass('instantiator', Instantiator);
 	registerComponentClass('n-object', NObject);
+	registerComponentClass('n-portal', NPortal);
 	registerComponentClass('n-spawner', NSpawner);
 	registerComponentClass('n-text', NText);
 	registerComponentClass('n-billboard', NBillboard);
@@ -2851,6 +2960,7 @@ if (window.AFRAME)
 	registerComponentClass('n-box-collider', NBoxCollider);
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
+	registerComponentClass('n-layout-browser', NLayoutBrowser);
 }
 
 
@@ -2870,6 +2980,7 @@ var components_lib = Object.freeze({
 	Instantiator: Instantiator,
 	SyncNSkeletonParent: SyncNSkeletonParent,
 	NObject: NObject,
+	NPortal: NPortal,
 	NSpawner: NSpawner,
 	NText: NText,
 	NBillboard: NBillboard,
@@ -2880,7 +2991,8 @@ var components_lib = Object.freeze({
 	NSphereCollider: NSphereCollider,
 	NBoxCollider: NBoxCollider,
 	NCapsuleCollider: NCapsuleCollider,
-	NMeshCollider: NMeshCollider
+	NMeshCollider: NMeshCollider,
+	NLayoutBrowser: NLayoutBrowser
 });
 
 /* global Url */
