@@ -22,7 +22,8 @@ class NPortal extends NativeComponent {
 			targetSpace: {type: 'string'},
 			/**
 			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
-			* and rotate the user in its direction.
+			* and rotate the user in its direction. Note: The target position/rotation will not be updated if the
+			* targetEntity moves.
 			* @instance
 			* @member {selector} targetEntity
 			* @memberof module:altspace/components.n-portal
@@ -35,7 +36,7 @@ class NPortal extends NativeComponent {
 		let targetPosition, targetQuaternion;
 		if (this.data.targetEntity) {
 			// updateMatrixWorld doesn't traverse upwards to actually update an object's world matrix.
-			// Updating the entire scene's world matrcies is overkill, but there isn't a simple way to do the right 
+			// Updating the entire scene's world matrcies is overkill, but there isn't a simple way to do the right
 			// thing at the moment. See https://github.com/mrdoob/three.js/pull/9410
 			this.el.sceneEl.object3D.updateMatrixWorld(true);
 			targetPosition = this.data.targetEntity.object3D.getWorldPosition();
