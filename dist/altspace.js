@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.4/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.2.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -1194,7 +1194,8 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	};
 
 	/**
-	* Instantiate an entity with the given mixins.
+	* Instantiate an entity with the given mixins. Instantiated entities that belong to the current user are given a
+	* "mine" class name, so that they can be selected against.
 	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.
@@ -1261,6 +1262,9 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		document.querySelector(val.parent).appendChild(entityEl);
 		entityEl.setAttribute('mixin', val.mixin);
 		entityEl.dataset.creatorUserId = val.creatorUserId;
+		if (this.userInfo.userId === val.creatorUserId) {
+			entityEl.classList.add('mine');
+		}
 	};
 
 	SyncSystem.prototype.removeElement = function removeElement (snapshot) {
@@ -1667,7 +1671,7 @@ var Wire = (function (AFrameComponent$$1) {
 			lose: {type: 'string'},
 
 			/**
-			* A selector to pick which objects to wire to
+			* A selector to pick which objects to wire to. The selector is re-evaluated when the wire is triggered.
 			* @instance
 			* @member {selector} targets
 			* @memberof module:altspace/components.wire
@@ -1675,7 +1679,7 @@ var Wire = (function (AFrameComponent$$1) {
 			targets: {type: 'selectorAll'},
 
 			/**
-			* A selector to pick a single object to wire to
+			* A selector to pick a single object to wire to. The selector is re-evaluated when the wire is triggered.
 			* @instance
 			* @member {selector} target
 			* @memberof module:altspace/components.wire
@@ -1699,6 +1703,8 @@ var Wire = (function (AFrameComponent$$1) {
 					el.removeState(this.data.lose);
 				}
 			}
+
+			this.updateProperties(this.attrValue);
 
 			if(this.data.targets)
 				{ this.data.targets.forEach(act.bind(this)); }
@@ -2586,6 +2592,11 @@ var NContainer = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
+* Spawn a portal that allows you to travel to a different space or a different location in the current space.
+* @aframe
+* @alias n-portal
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
 */
 var NPortal = (function (NativeComponent$$1) {
 	function NPortal(){ NativeComponent$$1.call(this, 'n-portal'); }
@@ -2597,7 +2608,21 @@ var NPortal = (function (NativeComponent$$1) {
 	var prototypeAccessors = { schema: {} };
 	prototypeAccessors.schema.get = function (){
 		return {
+			/**
+			* The space id of the space that you want the portal to send users to.
+			* @instance
+			* @member {string} targetSpace
+			* @memberof module:altspace/components.n-portal
+			*/
 			targetSpace: {type: 'string'},
+			/**
+			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
+			* and rotate the user in its direction. Note: The target position/rotation will not be updated if the
+			* targetEntity moves.
+			* @instance
+			* @member {selector} targetEntity
+			* @memberof module:altspace/components.n-portal
+			*/
 			targetEntity: {type: 'selector'}
 		};
 	};
@@ -2605,9 +2630,9 @@ var NPortal = (function (NativeComponent$$1) {
 		var mesh = this.el.object3DMap.mesh;
 		var targetPosition, targetQuaternion;
 		if (this.data.targetEntity) {
-			// updateMatrixWorld doesn't traverse upwards to actually update the world matrix.
-			// Updating the entire scene's world matrcies is overkill, but there isn't a simple way to do the right thing
-			// at the moment. See https://github.com/mrdoob/three.js/pull/9410
+			// updateMatrixWorld doesn't traverse upwards to actually update an object's world matrix.
+			// Updating the entire scene's world matrcies is overkill, but there isn't a simple way to do the right
+			// thing at the moment. See https://github.com/mrdoob/three.js/pull/9410
 			this.el.sceneEl.object3D.updateMatrixWorld(true);
 			targetPosition = this.data.targetEntity.object3D.getWorldPosition();
 			var quaternion = this.data.targetEntity.object3D.getWorldQuaternion();
@@ -2846,6 +2871,14 @@ var NSound = (function (NativeComponent$$1) {
 	return NSound;
 }(NativeComponent));
 
+/**
+* Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
+* Layout browsers can only be used by apps that are set as the default app in a space.
+* @aframe
+* @alias n-layout-browser
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
 var NLayoutBrowser = (function (NativeComponent$$1) {
 	function NLayoutBrowser(){ NativeComponent$$1.call(this, 'n-layout-browser'); }
 
@@ -2856,8 +2889,21 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 	var prototypeAccessors = { schema: {} };
 	prototypeAccessors.schema.get = function (){
 		return {
+			/**
+			* An absolute URL that you want to load in the browser.
+			* @instance
+			* @member {string} url
+			* @memberof module:altspace/components.n-layout-browser
+			*/
 			url: { default: 'about:blank'},
-			is3d: { default: false }
+			/**
+			* Whether the browser is a three-dimensional browser that can contain other apps.
+			* @instance
+			* @default false
+			* @member {bool} isEnclosure
+			* @memberof module:altspace/components.n-layout-browser
+			*/
+			isEnclosure: { default: false }
 		};
 	};
 
@@ -2878,7 +2924,7 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.0.4/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.2.0/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6091,7 +6137,7 @@ var utilities_lib = Object.freeze({
 if(!window.altspace)
 	{ window.altspace = {components: {}, utilities: {}, inClient: false}; }
 
-var version = '2.0.4';
+var version = '2.2.0';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
