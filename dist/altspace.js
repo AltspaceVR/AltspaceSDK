@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.3.0/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -2224,36 +2224,6 @@ var NCockpitParent = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
- * Allows you to turn an object into a rigidbody. This is currently only useful for triggering events on colliders.
- * @aframe
-* @alias n-rigidbody
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
- */
-var NRigidbody = (function (NativeComponent$$1) {
-	function NRigidbody(){ NativeComponent$$1.call(this, 'n-rigidbody'); }
-
-	if ( NativeComponent$$1 ) NRigidbody.__proto__ = NativeComponent$$1;
-	NRigidbody.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
-	NRigidbody.prototype.constructor = NRigidbody;
-
-	var prototypeAccessors$4 = { schema: {} };
-	prototypeAccessors$4.schema.get = function (){ return {
-		/**
-		 * Setting this to true will cause this object to trigger events on trigger colliders.
-		* @member {boolean} module:altspace/components.n-rigidbody#isKinematic
-		*/
-		isKinematic: {type: 'boolean'},
-		positionConstraints: {default: [null, null, null], type: 'array'},
-		rotationConstraints: {default: [null, null, null], type: 'array'},
-	}; };
-
-	Object.defineProperties( NRigidbody.prototype, prototypeAccessors$4 );
-
-	return NRigidbody;
-}(NativeComponent));
-
-/**
 * Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
 * [n-box-collider]{@link module:altspace/components.n-box-collider},
 * [n-capsule-collider]{@link module:altspace/components.n-capsule-collider},
@@ -2954,7 +2924,7 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.3.0/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.0/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -2991,7 +2961,6 @@ if (window.AFRAME)
 	registerComponentClass('n-box-collider', NBoxCollider);
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
-	registerComponentClass('n-rigidbody', NRigidbody);
 	registerComponentClass('n-layout-browser', NLayoutBrowser);
 }
 
@@ -3018,7 +2987,6 @@ var components_lib = Object.freeze({
 	NBillboard: NBillboard,
 	NSkeletonParent: NSkeletonParent,
 	NCockpitParent: NCockpitParent,
-	NRigidbody: NRigidbody,
 	NContainer: NContainer,
 	NSound: NSound,
 	NSphereCollider: NSphereCollider,
@@ -6170,7 +6138,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.3.0';
+var version = '2.4.0';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
