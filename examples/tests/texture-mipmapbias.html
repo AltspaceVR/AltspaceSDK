@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Renderer Tests</title>
+		<meta charset="utf-8">
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
+		<script src="../../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+			var sim = new altspace.utilities.Simulation({auto: false}), controls;
+			sim.scene.scale.multiplyScalar(100);
+			
+			if(!altspace.inClient) { controls = new THREE.OrbitControls(sim.camera); }
+
+			function makeTestPlane (bias, x) {
+				var texture = THREE.ImageUtils.loadTexture('resources/UV_Grid_Sm.jpg');
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set(1, 100);
+				var textureMat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+				var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), textureMat);
+				mesh.scale.set(1, 100, 1);
+				mesh.position.set(0, -1, 0);
+				mesh.rotation.x = -Math.PI / 2;
+				sim.scene.add(mesh);
+			}
+			makeTestPlane(THREE.RepeatWrapping, 0);
+
+			function animate(elapsed) {
+				requestAnimationFrame(animate);
+				if (controls) { controls.update(); }
+				sim.renderer.render( sim.scene, sim.camera );
+			}
+			animate(0);
+		</script>
+	</body>
+</html>
+
