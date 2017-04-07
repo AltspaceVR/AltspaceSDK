@@ -180,4 +180,24 @@ class NCockpitParent extends NativeComponent {
 	constructor(){ super('n-cockpit-parent', false); }
 }
 
-export {NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent};
+/**
+ * Allows you to turn an object into a rigidbody. This is currently only useful for triggering events on colliders.
+ * @aframe
+* @alias n-rigidbody
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+ */
+class NRigidbody extends NativeComponent {
+	constructor(){ super('n-rigidbody'); }
+	get schema(){ return {
+		/**
+		 * Setting this to true will cause this object to trigger events on trigger colliders.
+		* @member {boolean} module:altspace/components.n-rigidbody#isKinematic
+		*/
+		isKinematic: {type: 'boolean'},
+		positionConstraints: {default: [null, null, null], type: 'array'},
+		rotationConstraints: {default: [null, null, null], type: 'array'},
+	}; }
+}
+
+export {NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent, NRigidbody};
