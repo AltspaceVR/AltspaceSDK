@@ -37,7 +37,7 @@ import OnePerUser from './one-per-user';
 import Instantiator from './instantiator';
 
 import {
-	NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent, NRigidbody
+	NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent
 } from './NSmallComponents';
 import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
 import NContainer from './NContainer';
@@ -72,7 +72,6 @@ if (window.AFRAME)
 	registerComponentClass('n-box-collider', NBoxCollider);
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
-	registerComponentClass('n-rigidbody', NRigidbody);
 	registerComponentClass('n-layout-browser', NLayoutBrowser);
 }
 
@@ -80,6 +79,6 @@ export {
 	AltspaceComponent, AltspaceCursorCollider, AltspaceTrackedControls, SyncSystem,
 	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
 	SyncNSkeletonParent, NObject, NPortal, NSpawner, NText, NBillboard, NSkeletonParent,
-	NCockpitParent, NRigidbody, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
+	NCockpitParent, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
 	NMeshCollider, NLayoutBrowser
 };
