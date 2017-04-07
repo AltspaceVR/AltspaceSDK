@@ -67,7 +67,21 @@
             });
         });
 
-        describe("the tracking skeleton", function () {
+        describe("the tracking skeleton api", function () {
+            it("should allow consecutive calls", function (done) {
+                let count = 0;
+                altspace.getThreeJSTrackingSkeleton().then(function (skel) {
+                    console.log('got tracking skeleton', count);
+                    if (++count === 2) { done(); }
+                });
+                altspace.getThreeJSTrackingSkeleton().then(function (skel) {
+                    console.log('got tracking skeleton', count);
+                    if (++count === 2) { done(); }
+                });
+            });
+        });
+
+        describe("the tracking skeleton itself", function () {
             var trackingSkeleton;
             before(function (done) {
                 altspace.getThreeJSTrackingSkeleton().then(function (skel) {
@@ -100,7 +114,7 @@
                 });
             });
 
-            it("should return the same skeleton for subsequent calls", function () {
+            it("should be the same instance subsequent calls", function () {
                 return expect(altspace.getThreeJSTrackingSkeleton()).to.eventually.equal(trackingSkeleton);
             });
         });
