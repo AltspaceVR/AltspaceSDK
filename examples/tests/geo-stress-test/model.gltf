@@ -1,29 +1,29 @@
 {
     "accessors": {
-        "Icosphere_buffer_accessor_0": {
-            "bufferView": "Icosphere_buffer_view_0",
+        "accessor_buffer_Sphere.002_0": {
+            "bufferView": "bufferView_buffer_Sphere.002_0",
             "byteOffset": 0,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 10338,
+            "count": 722,
             "max": [
-                0.25,
-                0.2499999850988388,
-                0.25
+                0.5000002980232239,
+                0.4999995827674866,
+                0.5
             ],
             "min": [
-                -0.2499999850988388,
-                -0.2499999850988388,
-                -0.25
+                -0.5000000596046448,
+                -0.500000536441803,
+                -0.5
             ],
             "type": "VEC3"
         },
-        "Icosphere_buffer_accessor_1": {
-            "bufferView": "Icosphere_buffer_view_0",
-            "byteOffset": 124056,
+        "accessor_buffer_Sphere.002_1": {
+            "bufferView": "bufferView_buffer_Sphere.002_0",
+            "byteOffset": 8664,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 10338,
+            "count": 722,
             "max": [
                 0.999969482421875,
                 1.0,
@@ -36,30 +36,128 @@
             ],
             "type": "VEC3"
         },
-        "Icosphere_buffer_accessor_2": {
-            "bufferView": "Icosphere_buffer_view_0",
-            "byteOffset": 248112,
+        "accessor_buffer_Sphere.002_2": {
+            "bufferView": "bufferView_buffer_Sphere.002_0",
+            "byteOffset": 17328,
             "byteStride": 8,
             "componentType": 5126,
-            "count": 10338,
+            "count": 722,
             "max": [
-                1.318070411682129,
-                0.9986811876296997
+                1.444444179534912,
+                1.0
             ],
             "min": [
-                0,
-                0
+                0.0,
+                0.0
             ],
             "type": "VEC2"
         },
-        "Icosphere_buffer_accessor_3": {
-            "bufferView": "Icosphere_buffer_view_1",
+        "accessor_buffer_Sphere.002_3": {
+            "bufferView": "bufferView_buffer_Sphere.002_0",
+            "byteOffset": 23104,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 722,
+            "max": [
+                1.444444179534912,
+                1.0
+            ],
+            "min": [
+                0.0,
+                0.0
+            ],
+            "type": "VEC2"
+        },
+        "accessor_buffer_Sphere.002_4": {
+            "bufferView": "bufferView_buffer_Sphere.002_1",
             "byteOffset": 0,
             "byteStride": 2,
             "componentType": 5123,
-            "count": 61440,
+            "count": 4104,
             "max": [
-                10337
+                721
+            ],
+            "min": [
+                0
+            ],
+            "type": "SCALAR"
+        },
+        "accessor_buffer_Sphere.003_0": {
+            "bufferView": "bufferView_buffer_Sphere.003_0",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 44700,
+            "max": [
+                0.49978187680244446,
+                0.49989035725593567,
+                0.5
+            ],
+            "min": [
+                -0.49978283047676086,
+                -0.4998927116394043,
+                -0.5
+            ],
+            "type": "VEC3"
+        },
+        "accessor_buffer_Sphere.003_1": {
+            "bufferView": "bufferView_buffer_Sphere.003_0",
+            "byteOffset": 536400,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 44700,
+            "max": [
+                0.9999999403953552,
+                0.9997824430465698,
+                0.9997820258140564
+            ],
+            "min": [
+                -1.0,
+                -0.9997806549072266,
+                -0.9997811913490295
+            ],
+            "type": "VEC3"
+        },
+        "accessor_buffer_Sphere.003_2": {
+            "bufferView": "bufferView_buffer_Sphere.003_0",
+            "byteOffset": 1072800,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 44700,
+            "max": [
+                1.4266633987426758,
+                1.0
+            ],
+            "min": [
+                0.0,
+                0.0
+            ],
+            "type": "VEC2"
+        },
+        "accessor_buffer_Sphere.003_3": {
+            "bufferView": "bufferView_buffer_Sphere.003_0",
+            "byteOffset": 1430400,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 44700,
+            "max": [
+                1.4266633987426758,
+                1.0
+            ],
+            "min": [
+                0.0,
+                0.0
+            ],
+            "type": "VEC2"
+        },
+        "accessor_buffer_Sphere.003_4": {
+            "bufferView": "bufferView_buffer_Sphere.003_1",
+            "byteOffset": 0,
+            "byteStride": 2,
+            "componentType": 5123,
+            "count": 66600,
+            "max": [
+                44699
             ],
             "min": [
                 0
@@ -75,38 +173,73 @@
         "version": "1.0"
     },
     "bufferViews": {
-        "Icosphere_buffer_view_0": {
-            "buffer": "Icosphere_buffer",
-            "byteLength": 330816,
+        "bufferView_buffer_Sphere.002_0": {
+            "buffer": "buffer_combined",
+            "byteLength": 28880,
+            "byteOffset": 1921200,
+            "target": 34962
+        },
+        "bufferView_buffer_Sphere.002_1": {
+            "buffer": "buffer_combined",
+            "byteLength": 8208,
+            "byteOffset": 1950080,
+            "target": 34963
+        },
+        "bufferView_buffer_Sphere.003_0": {
+            "buffer": "buffer_combined",
+            "byteLength": 1788000,
             "byteOffset": 0,
             "target": 34962
         },
-        "Icosphere_buffer_view_1": {
-            "buffer": "Icosphere_buffer",
-            "byteLength": 122880,
-            "byteOffset": 330816,
+        "bufferView_buffer_Sphere.003_1": {
+            "buffer": "buffer_combined",
+            "byteLength": 133200,
+            "byteOffset": 1788000,
             "target": 34963
         }
     },
     "buffers": {
-        "Icosphere_buffer": {
-            "byteLength": 453696,
+        "buffer_combined": {
+            "byteLength": 1958288,
             "type": "arraybuffer",
-            "uri": "Icosphere_buffer.bin"
+            "uri": "buffer_combined.bin"
         }
     },
+    "extensions": {
+        "KHR_materials_common": {
+            "lights": {}
+        }
+    },
+    "extensionsUsed": [
+        "KHR_materials_common"
+    ],
     "images": {
-        "sphere": {
-            "uri": "sphere.png"
+        "image_lightmap.001": {
+            "uri": "lightmap.jpg"
+        },
+        "image_world.jpg": {
+            "uri": "world.jpg"
         }
     },
     "materials": {
-        "Material.001": {
+        "material_Material.001": {
             "extensions": {
                 "KHR_materials_common": {
                     "technique": "CONSTANT",
                     "values": {
-                        "diffuse": [0.6, 0.6, 0.6, 1]
+                        "ambient": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "diffuse": "texture_Texture.001",
+                        "doubleSided": false,
+                        "emission": "texture_Texture.001",
+                        "shininess": 50,
+                        "specular": "texture_Texture.002",
+                        "transparency": 1.0,
+                        "transparent": false
                     }
                 }
             },
@@ -114,24 +247,41 @@
         }
     },
     "meshes": {
-        "Icosphere": {
-            "name": "Icosphere",
+        "mesh_Sphere.002": {
+            "name": "Sphere.002",
             "primitives": [
                 {
                     "attributes": {
-                        "NORMAL": "Icosphere_buffer_accessor_1",
-                        "POSITION": "Icosphere_buffer_accessor_0",
-                        "TEXCOORD_0": "Icosphere_buffer_accessor_2"
+                        "NORMAL": "accessor_buffer_Sphere.002_1",
+                        "POSITION": "accessor_buffer_Sphere.002_0",
+                        "TEXCOORD_0": "accessor_buffer_Sphere.002_2",
+                        "TEXCOORD_1": "accessor_buffer_Sphere.002_3"
                     },
-                    "indices": "Icosphere_buffer_accessor_3",
-                    "material": "Material.001",
+                    "indices": "accessor_buffer_Sphere.002_4",
+                    "material": "material_Material.001",
+                    "mode": 4
+                }
+            ]
+        },
+        "mesh_Sphere.003": {
+            "name": "Sphere.003",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_buffer_Sphere.003_1",
+                        "POSITION": "accessor_buffer_Sphere.003_0",
+                        "TEXCOORD_0": "accessor_buffer_Sphere.003_2",
+                        "TEXCOORD_1": "accessor_buffer_Sphere.003_3"
+                    },
+                    "indices": "accessor_buffer_Sphere.003_4",
+                    "material": "material_Material.001",
                     "mode": 4
                 }
             ]
         }
     },
     "nodes": {
-        "Icosphere": {
+        "node_highpoly": {
             "children": [],
             "matrix": [
                 1.0,
@@ -152,13 +302,39 @@
                 1.0
             ],
             "meshes": [
-                "Icosphere"
+                "mesh_Sphere.003"
             ],
-            "name": "Icosphere"
+            "name": "highpoly"
         },
-        "Scene_root": {
+        "node_lowpoly": {
+            "children": [],
+            "matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "meshes": [
+                "mesh_Sphere.002"
+            ],
+            "name": "lowpoly"
+        },
+        "node_scene_Scene_root": {
             "children": [
-                "Icosphere"
+                "node_highpoly",
+                "node_lowpoly"
             ],
             "matrix": [
                 1.0,
@@ -178,17 +354,17 @@
                 0.0,
                 1.0
             ],
-            "name": "Scene_root"
+            "name": "node_scene_Scene_root"
         }
     },
     "samplers": {
-        "default": {}
+        "sampler_default": {}
     },
-    "scene": "Scene",
+    "scene": "scene_Scene",
     "scenes": {
-        "Scene": {
+        "scene_Scene": {
             "extras": {
-                "active_camera": "",
+                "active_camera": null,
                 "background_color": [
                     0.05087608844041824,
                     0.05087608844041824,
@@ -198,16 +374,22 @@
             },
             "name": "Scene",
             "nodes": [
-                "Scene_root"
+                "node_scene_Scene_root"
             ]
         }
     },
     "textures": {
-        "Texture": {
-            "format": 35906,
-            "internalFormat": 35906,
-            "sampler": "default",
-            "source": "sphere"
+        "texture_Texture.001": {
+            "format": 6408,
+            "internalFormat": 6408,
+            "sampler": "sampler_default",
+            "source": "image_world.jpg"
+        },
+        "texture_Texture.002": {
+            "format": 6408,
+            "internalFormat": 6408,
+            "sampler": "sampler_default",
+            "source": "image_lightmap.001"
         }
     }
 }

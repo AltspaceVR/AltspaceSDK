@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Geometry Stress Test</title>
+	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
+	<script src="https://cdn.rawgit.com/mrdoob/stats.js/066cb4e8/build/stats.min.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="../../../dist/altspace.min.js"></script>
+	<script>
+
+		var stats = new Stats();
+		stats.showPanel(0);
+		//document.body.appendChild(stats.dom);
+
+		var scene = new THREE.Scene();
+		var renderer = altspace.getThreeJSRenderer();
+		var enc = null;
+		var box = new THREE.Mesh(new THREE.BoxBufferGeometry(0.05,0.05,0.05));
+		var ballMat = null;
+		var ballLow = null;
+		var ballHigh = null;
+
+		window.requestAnimationFrame(function animate(timestamp){
+			window.requestAnimationFrame(animate);
+
+			// animate texture
+			if(ballMat){
+				var offset = ballMat.lightMap.offset.x + 0.002;
+				ballMat.lightMap.offset.x = offset >= 1 ? offset - 1 : offset;
+			}
+
+			stats.begin();
+			renderer.render(scene);
+			stats.end();
+		});
+
+		altspace.getEnclosure().then(function(e){
+			scene.scale.setScalar(e.pixelsPerMeter);
+			enc = new THREE.Box3();
+			enc.setFromCenterAndSize(
+				new THREE.Vector3(),
+				new THREE.Vector3(e.innerWidth, e.innerHeight, e.innerDepth)
+					.divideScalar(e.pixelsPerMeter)
+			);
+			enc.max.y -= 1;
+		});
+
+		var loader = new THREE.GLTFLoader();
+		loader.setCrossOrigin('anonymous');
+		loader.load('model.gltf',
+			function(result){
+				ballLow = result.scene.getObjectByName('lowpoly').children[0];
+				ballHigh = result.scene.getObjectByName('highpoly').children[0];
+				ballLow.rotateX(-Math.PI/2);
+				ballHigh.rotateX(-Math.PI/2);
+				ballLow.scale.setScalar(0.2);
+				ballHigh.scale.setScalar(0.2);
+				ballLow.matrixAutoUpdate = true;
+				ballHigh.matrixAutoUpdate = true;
+
+				ballMat = ballLow.material;
+				ballMat.lightMap = ballMat.specularMap;
+				ballMat.specularMap = null;
+				ballMat.lightMap.wrapS = THREE.RepeatWrapping;
+			},
+			undefined,
+			function(err){
+				console.error(err);
+			}
+		);
+
+		function getRandomPointInBox(box){
+			var size = box.getSize();
+			return new THREE.Vector3(
+				Math.random() * size.x + box.min.x,
+				Math.random() * size.y + box.min.y,
+				Math.random() * size.z + box.min.z
+			);
+		}
+
+		var meshCount = 0;
+		var vertCount = 0;
+		var polyCount = 0;
+
+		function spawn(mesh)
+		{
+			if(!mesh || !enc) return;
+			var batchSize = 100;
+
+			for(var i=0; i<batchSize; i++)
+			{
+				var item = mesh.clone();
+				//item.material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
+				item.position.copy( getRandomPointInBox(enc) );
+				scene.add(item);
+			}
+
+			meshCount += batchSize;
+			vertCount += batchSize * mesh.geometry.attributes.position.count;
+			polyCount += batchSize * (mesh.geometry.index.count / 3);
+
+			document.getElementById('meshcount').innerHTML = meshCount.toLocaleString();
+			document.getElementById('vertcount').innerHTML = vertCount.toLocaleString();
+			document.getElementById('polycount').innerHTML = polyCount.toLocaleString();
+		}
+
+	</script>
+</head>
+<body>
+	<div style='background-color: white'>
+		<input type='button' id='ballHigh' value='High poly' onclick='spawn(ballHigh)'></input>
+		<input type='button' id='ballLow' value='Low poly' onclick='spawn(ballLow)'></input>
+		<input type='button' id='boxes' value='Lowest poly' onclick='spawn(box)'></input>
+		<span id='meshcount'>0</span> meshes,
+		<span id='vertcount'>0</span> verts,
+		<span id='polycount'>0</span> polys
+	</div>
+</body>
+</html>
