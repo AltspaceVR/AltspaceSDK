@@ -1,0 +1,2333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>altspace - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script>
+        function saveVerticalScrollPosition(evt){
+            window.localStorage.setItem('navscrollpos', evt.target.scrollTop);
+        }
+        function loadVerticalScrollPosition(){
+            var nav = document.querySelector('nav');
+            nav.scrollTop = window.localStorage.getItem('navscrollpos');
+        }
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav onscroll='saveVerticalScrollPosition(event)'>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-altspace.html">altspace</a><ul class='methods'><li data-type='method'><a href="module-altspace.html#.getDocument">getDocument</a></li><li data-type='method'><a href="module-altspace.html#.getEnclosure">getEnclosure</a></li><li data-type='method'><a href="module-altspace.html#.getGamepads">getGamepads</a></li><li data-type='method'><a href="module-altspace.html#.getSpace">getSpace</a></li><li data-type='method'><a href="module-altspace.html#.getThreeJSDebugInfo">getThreeJSDebugInfo</a></li><li data-type='method'><a href="module-altspace.html#.getThreeJSRenderer">getThreeJSRenderer</a></li><li data-type='method'><a href="module-altspace.html#.getThreeJSTrackingSkeleton">getThreeJSTrackingSkeleton</a></li><li data-type='method'><a href="module-altspace.html#.getUser">getUser</a></li><li data-type='method'><a href="module-altspace.html#.open">open</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a></li><li><a href="module-altspace_utilities_codePen.html">altspace/utilities/codePen</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_codePen.html#.ensureInVR">ensureInVR</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.getAuthorId">getAuthorId</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.getPenId">getPenId</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.setName">setName</a></li></ul></li><li><a href="module-altspace_utilities_shims.html">altspace/utilities/shims</a></li><li><a href="module-altspace_utilities_shims_bubbling.html">altspace/utilities/shims/bubbling</a></li><li><a href="module-altspace_utilities_shims_cursor.html">altspace/utilities/shims/cursor</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_shims_cursor.html#.init">init</a></li></ul></li><li><a href="module-altspace_utilities_sync.html">altspace/utilities/sync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_sync.html#.connect">connect</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="module-altspace-AltRenderer.html">AltRenderer</a><ul class='methods'><li data-type='method'><a href="module-altspace-AltRenderer.html#render">render</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Behavior.html">Behavior</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#awake">awake</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#dispose">dispose</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#start">start</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.Behavior.html#update">update</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Bob.html">Bob</a></li><li><a href="module-altspace_utilities_behaviors.ButtonStateStyle.html">ButtonStateStyle</a></li><li><a href="module-altspace_utilities_sync-Connection.html">Connection</a></li><li><a href="module-altspace-Document.html">Document</a><ul class='methods'><li data-type='method'><a href="module-altspace-Document.html#reset">reset</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Drag.html">Drag</a></li><li><a href="module-altspace-Enclosure.html">Enclosure</a><ul class='methods'><li data-type='method'><a href="module-altspace-Enclosure.html#exitFullspace">exitFullspace</a></li><li data-type='method'><a href="module-altspace-Enclosure.html#requestFullspace">requestFullspace</a></li></ul></li><li><a href="module-altspace-Gamepad.html">Gamepad</a><ul class='methods'><li data-type='method'><a href="module-altspace-Gamepad.html#preventDefault">preventDefault</a></li></ul></li><li><a href="module-altspace-GamepadButton.html">GamepadButton</a></li><li><a href="module-altspace_utilities_behaviors.GamepadControls.html">GamepadControls</a></li><li><a href="module-altspace_utilities_behaviors.HoverColor.html">HoverColor</a></li><li><a href="module-altspace_utilities_behaviors.HoverScale.html">HoverScale</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html">JointCollisionEvents</a></li><li><a href="module-altspace_utilities_behaviors.Layout.html">Layout</a></li><li><a href="THREE.Object3D.html">Object3D</a><ul class='methods'><li data-type='method'><a href="THREE.Object3D.html#addBehavior">addBehavior</a></li><li data-type='method'><a href="THREE.Object3D.html#addBehaviors">addBehaviors</a></li><li data-type='method'><a href="THREE.Object3D.html#getBehaviorByType">getBehaviorByType</a></li><li data-type='method'><a href="THREE.Object3D.html#removeAllBehaviors">removeAllBehaviors</a></li><li data-type='method'><a href="THREE.Object3D.html#removeBehavior">removeBehavior</a></li><li data-type='method'><a href="THREE.Object3D.html#updateBehaviors">updateBehaviors</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html">Object3DSync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.Object3DSync.html#takeOwnership">takeOwnership</a></li></ul></li><li><a href="module-altspace_utilities_shims.OBJMTLLoader.html">OBJMTLLoader</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_shims.OBJMTLLoader.html#.load">load</a></li></ul></li><li><a href="module-altspace-Popup.html">Popup</a><ul class='methods'><li data-type='method'><a href="module-altspace-Popup.html#hide">hide</a></li><li data-type='method'><a href="module-altspace-Popup.html#show">show</a></li></ul></li><li><a href="THREE.Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="THREE.Scene.html#updateAllBehaviors">updateAllBehaviors</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.SceneSync.html">SceneSync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.SceneSync.html#destroy">destroy</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.SceneSync.html#instantiate">instantiate</a></li></ul></li><li><a href="module-altspace_utilities.Simulation.html">Simulation</a></li><li><a href="module-altspace_utilities_behaviors.Spin.html">Spin</a></li><li><a href="module-altspace_utilities_behaviors.SteamVRInput.html">SteamVRInput</a></li><li><a href="module-altspace_utilities_behaviors.SteamVRTrackedObject.html">SteamVRTrackedObject</a></li><li><a href="module-altspace_utilities_behaviors.TouchpadRotate.html">TouchpadRotate</a></li><li><a href="module-altspace-TrackingJoint.html">TrackingJoint</a></li><li><a href="module-altspace-TrackingSkeleton.html">TrackingSkeleton</a><ul class='methods'><li data-type='method'><a href="module-altspace-TrackingSkeleton.html#getJoint">getJoint</a></li></ul></li><li><a href="Window.html">Window</a></li></ul><h3>Events</h3><ul><li><a href="Window.html#event:blur">blur</a></li><li><a href="THREE.Object3D.html#.event:cursordown">cursordown</a></li><li><a href="THREE.Object3D.html#.event:cursorenter">cursorenter</a></li><li><a href="THREE.Object3D.html#.event:cursorleave">cursorleave</a></li><li><a href="THREE.Scene.html#event:cursormove">cursormove</a></li><li><a href="THREE.Object3D.html#.event:cursorup">cursorup</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html#.event:dragstart">dragstart</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html#.event:dragstop">dragstop</a></li><li><a href="Window.html#event:focus">focus</a></li><li><a href="module-altspace.Enclosure.html#event:fullspacechange">fullspacechange</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollision">jointcollision</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollisionenter">jointcollisionenter</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollisionleave">jointcollisionleave</a></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html#.event:ownershipgained">ownershipgained</a></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html#.event:ownershiplost">ownershiplost</a></li><li><a href="module-altspace.html#event:touchpaddown">touchpaddown</a></li><li><a href="module-altspace.html#event:touchpadgesture">touchpadgesture</a></li><li><a href="module-altspace.html#event:touchpadmove">touchpadmove</a></li><li><a href="module-altspace.html#event:touchpadup">touchpadup</a></li></ul>
+</nav>
+<script>loadVerticalScrollPosition()</script>
+
+<div id="main">
+    
+    <h1 class="page-title">altspace</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>The main module for the AltspaceVR SDK.</p></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-altspace-AltRenderer.html">AltRenderer</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-Document.html">Document</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-Enclosure.html">Enclosure</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-Gamepad.html">Gamepad</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-GamepadButton.html">GamepadButton</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-Popup.html">Popup</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-TrackingJoint.html">TrackingJoint</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-altspace-TrackingSkeleton.html">TrackingSkeleton</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".inClient"><span class="type-signature">(static) </span>inClient<span class="type-signature"> :Boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>True if the app is running inside AltspaceVR.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getDocument"><span class="type-signature">(static) </span>getDocument<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get a three.js object that represents the visible 2D DOM content of an enclosure.
+Returns a promise that resolves with a <a href="module-altspace-Document.html">Document</a>
+object.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getEnclosure"><span class="type-signature">(static) </span>getEnclosure<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Gets the enclosure for the app. The resulting promise resolves to an
+<a href="module-altspace-Enclosure.html">Enclosure</a>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getGamepads"><span class="type-signature">(static) </span>getGamepads<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get a list of currently connected gamepads. Currently this requires polling this function until it returns
+a non-empty array. Connected gamepads are represented as
+<a href="module-altspace-Gamepad.html">Gamepad</a>
+objects. This should work with a range of gamepads, but has only been tested with an Xbox One and
+HTC Vive controllers on Windows.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getSpace"><span class="type-signature">(static) </span>getSpace<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Gets the space that the app is running in. The resulting promise resolves to a
+<a href="module-altspace.html#~Space">Space</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getThreeJSDebugInfo"><span class="type-signature">(static) </span>getThreeJSDebugInfo<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Retrieves debug information about 3D objects in an app.
+The resulting promise resolves to an array of
+<a href="module-altspace.html#~ThreeJSDebugInfo">ThreeJSDebugInfo</a> objects.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getThreeJSRenderer"><span class="type-signature">(static) </span>getThreeJSRenderer<span class="signature">()</span><span class="type-signature"> &rarr; {AltRenderer}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Gets the renderer instance for this app.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getThreeJSTrackingSkeleton"><span class="type-signature">(static) </span>getThreeJSTrackingSkeleton<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the tracking skeleton representing the body of the current
+user. The resulting promise resolves to a
+<a href="module-altspace-TrackingSkeleton.html">TrackingSkeleton</a>
+object.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getUser"><span class="type-signature">(static) </span>getUser<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Gets the current user. The resulting promise resolves to a
+<a href="module-altspace.html#~User">User</a> object.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".open"><span class="type-signature">(static) </span>open<span class="signature">(url, target<span class="signature-attributes">opt</span>, opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Open a URL in a user's private browser. The resulting promise resolves to a
+<a href="module-altspace-Popup.html">Popup</a> object.
+The target of the popup can either be '_blank' or '_experience'. The '_blank' target will open the URL
+in the user's &quot;Web&quot; panel. The '_experience' target allows you to augment the Altspace UI with a new
+button in the user's menu. When users click on the button, the popup will open in their private UI with
+the URL you provide. By default, the button will display the favicon associated with the URL.
+This gives you richer control of the user's experience when your app is loaded in a space.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The full URL that should be opened in the popup.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>target</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    '_blank'
+                
+                </td>
+            
+
+            <td class="description last"><p>Either '_experience' or '_blank'</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Options for the popup</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>icon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The full URL to an icon. The icon must be a square PNG or JPG.
+    If omitted, the favicon will be based on the popup URL's host.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hidden</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to hide the popup by default.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="~Space">Space</h4>
+
+
+
+
+<div class="description">
+    <p>Details of a space.</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Unique id for this space.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The space's display name.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>templateSid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Id for the template that the space is based on.
+    E.g. &quot;conference-room-base&quot;, &quot;game-room-base&quot;, etc.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="~ThreeJSDebugInfo">ThreeJSDebugInfo</h4>
+
+
+
+
+<div class="description">
+    <p>Debug information about an object in an app.</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Three.js UUID for this object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vertexCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Number of vertices in this object's
+    geometry.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isVisible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this object is visible in the scene</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isMaterialVisible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this object's material is
+    visible.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isCulled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this object has been culled due to it
+    moving out of the app enclosure bounds.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The object's position vector.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>quaternion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The object's orientation quarternion.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="~TouchpadEvent">TouchpadEvent</h4>
+
+
+
+
+<div class="description">
+    <p>The TouchpadEvent interface represents events that occur due to the user interacting with the Samsung
+GearVR Touchpad</p>
+<p>The best way to think about the units returned from the displacement properties is that they are the number
+of pixels that would be theoretically scrolled by swiping on the touchpad.
+Due to built-in acceleration, this can range from approximately 300 to 700 pixels for a full swipe of the
+touchpad.
+The coordinate system can also be thought of as the value you would add to the document position to scroll
+due to the swipe. (left is +x, up is +y)</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>displacementX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The horizontal distance that the user has dragged their finger since
+    pressing it on the touchpad. Sliding the finger left on the touchpad increases this value</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>displacementY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The vertical distance that the user has dragged their finger since
+    pressing it on the touchpad. Sliding the finger up on the touchpad increases this value</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="~User">User</h4>
+
+
+
+
+<div class="description">
+    <p>Details of a user.</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Unique id for this user.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>displayName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The user's chosen display name.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isModerator</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True if the user should be able to moderate apps</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="event:touchpaddown">touchpaddown</h4>
+
+    
+
+
+
+<div class="description">
+    <p>The touchpaddown event is fired from the <a href="module-altspace.html">altspace</a> object when the user presses their
+finger down on the touchpad.
+The displacement for this event will always be [0, 0]</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-altspace.html#~TouchpadEvent">module:altspace~TouchpadEvent</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="event:touchpadgesture">touchpadgesture</h4>
+
+    
+
+
+
+<div class="description">
+    <p>The touchpadgesture event is fired from the <a href="module-altspace.html">altspace</a> object when the user lifts their
+finger off the touchpad. If it is within a minimum radius, a tap is triggered. Otherwise the primary direction
+of movement is used to generate a directional gesture.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">TouchpadGesture</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>One of 'tap', 'up', 'down', 'left', 'right'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="event:touchpadmove">touchpadmove</h4>
+
+    
+
+
+
+<div class="description">
+    <p>The touchpadmove event is fired from the <a href="module-altspace.html">altspace</a> object while the user slides their
+finger across the trackpad.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-altspace.html#~TouchpadEvent">module:altspace~TouchpadEvent</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="event:touchpadup">touchpadup</h4>
+
+    
+
+
+
+<div class="description">
+    <p>The touchpadup event is fired from the <a href="module-altspace.html">altspace</a> object when the user lifts their
+finger up from the touchpad.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-altspace.html#~TouchpadEvent">module:altspace~TouchpadEvent</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

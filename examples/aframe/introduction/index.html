@@ -1,0 +1,303 @@
+<html>
+<head>
+	<title>Introduction</title>
+	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="../../../dist/altspace.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
+	<script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
+	<script src="gallery.js"></script>
+	<script>
+
+	AFRAME.registerComponent('unfolding-path', {
+		schema: {
+			length: {type: 'int'}
+		},
+		init: function(){
+			var component = this;
+
+			var duration = 500;
+			var gap = 0.1;
+			var tileWidth = 4;
+
+			//todo meet in middle
+			function unfold(){
+				var max = component.data.length / tileWidth;
+				var i;
+				var halfMax = Math.floor(max / 2);
+				var secondHalfMax = max - halfMax;
+
+				for(i = 0; i < halfMax; i++){
+					console.log(i);
+					var z = -i * tileWidth - (tileWidth * gap);
+
+					var section = document.createElement("a-entity");
+					component.el.appendChild(section);
+					section.setAttribute('rotation', '90 180 0');
+					section.setAttribute('position', '-2 -2 0');
+					section.setAttribute('scale', '1 1 ' + (1 - gap));
+					section.setAttribute('n-object', 'res', 'architecture/floor-4w-4l');
+
+					var animation = document.createElement("a-animation");
+					animation.setAttribute('attribute', 'rotation');
+					animation.setAttribute('dur', duration);
+					animation.setAttribute('to', '0 180 0');
+					animation.setAttribute('delay', duration * 0.8 * i);
+					animation.setAttribute('easing', 'ease');
+					section.appendChild(animation);
+
+					animation = document.createElement("a-animation");
+					animation.setAttribute('attribute', 'position');
+					animation.setAttribute('dur', duration);
+					animation.setAttribute('to', '-2 0 ' + z);
+					animation.setAttribute('delay', duration * 0.8 * i);
+					animation.setAttribute('easing', 'ease');
+					section.appendChild(animation);
+				}
+
+				for(var j = 0; j < secondHalfMax; j++){
+					console.log(j);
+					var z = -(secondHalfMax - j) * tileWidth - (halfMax * tileWidth);
+
+					var section = document.createElement("a-entity");
+					component.el.appendChild(section);
+					section.setAttribute('rotation', '90 0 0');
+					section.setAttribute('position', '2 -2 ' + max * -tileWidth);
+					section.setAttribute('scale', '1 1 ' + (1 - gap));
+					section.setAttribute('n-object', 'res', 'architecture/floor-4w-4l');
+
+					var animation = document.createElement("a-animation");
+					animation.setAttribute('attribute', 'rotation');
+					animation.setAttribute('dur', duration);
+					animation.setAttribute('to', '0 0 0');
+					animation.setAttribute('delay', duration * 0.8 * j);
+					animation.setAttribute('easing', 'ease');
+					section.appendChild(animation);
+
+					animation = document.createElement("a-animation");
+					animation.setAttribute('attribute', 'position');
+					animation.setAttribute('dur', duration);
+					animation.setAttribute('to', '2 0 ' + z);
+					animation.setAttribute('delay', duration * 0.8 * j);
+					animation.setAttribute('easing', 'ease');
+					section.appendChild(animation);
+				}
+			}
+
+
+			function fold(){
+				component.el.innerHTML = '';
+			}
+
+			component.onStateAdded = function(){
+				var state = event.detail.state;
+				if (state === "unfolded") {
+					unfold();
+				}
+			}
+
+			component.onStateRemoved = function(){
+				var state = event.detail.state;
+				if (state === "unfolded") {
+					fold();
+				}
+			}
+
+			this.el.addEventListener('stateadded', component.onStateAdded);
+			this.el.addEventListener('stateremoved', component.onStateRemoved);
+		}
+	});
+
+</script>
+</head>
+<body>
+<a-scene debug altspace="fullspace: true" sync-system='author: altspacevr; app: native-gallery'>
+
+	<!-- Playground Sign -->
+	<a-entity id='welcome' position='0 6 -7' rotation='-15 180 0' scale="1.5 1.5 1.5">
+
+		<a-entity id="mark">
+			<a-entity position='0 2.6 -0.6' rotation='0 180 0'
+				n-object="res:ui/altspacevr-logo" scale="2 2 2">
+			</a-entity>
+
+			<a-entity position='0 1.25 -0.6' rotation='0 180 0'
+				n-text='text: Playground;'></a-entity>
+
+			<a-entity position='-1.8 0.65 -0.6' rotation='0 180 0'
+				n-text='text: BETA; fontSize:4'></a-entity>
+		</a-entity>
+
+		<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+			<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+			<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+		</a-entity>
+
+		<a-entity position='12 -2 10' rotation="0 0 30" n-object='res:effects/fireworks'></a-entity>
+		<a-entity position='-12 -2 10' rotation="0 0 -30" n-object='res:effects/fireworks'></a-entity>
+	</a-entity>
+
+	<a-entity position='0 0.1 -3.5' rotation="270 0 0"
+		n-text='text: ^ Welcome ^; fontSize:9'></a-entity>
+
+	<a-entity id="path1" unfolding-path="length:20" position="0 0 -6"></a-entity>
+	<a-entity id="trigger1" position="0 0 -16" n-box-collider="isTrigger:true; type:environment; size: 8 4 27" n-container="capacity:1"
+		wire="target:#path1; gained: container-full; gain: unfolded"
+		wire__0="target:#path1; lost: container-full; lose: unfolded">
+	</a-entity>
+
+	<!-- <a-entity n-object="res:architecture/floor-4w-4l" position="-2 0 -6" rotation="90 180 0">
+		<a-animation attribute="rotation" dur="1000" to="0 180 0" easing="ease"></a-animation>
+	</a-entity>
+	<a-entity n-object="res:architecture/floor-4w-4l" position="-2 0 -10" rotation="90 180 0">
+		<a-animation attribute="rotation" dur="1000" to="0 180 0" easing="ease"></a-animation>
+	</a-entity> -->
+
+	<a-entity position='10 5 0' rotation="0 270 0"
+		n-text='text: Use the app selector to explore other playground apps; fontSize:6'></a-entity>
+
+	<a-entity class="platform" position="0 0 0">
+		<a-entity scale="1.5 1 1.5">
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="4 0 0"></a-entity>
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity>
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity>
+			<a-entity class="ring" rotation="0 45 0">
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity>
+
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="4 0 0" rotation="0 270 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 -4"></a-entity>
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
+			</a-entity>
+			<a-entity class="ring" position="0 4 0" rotation="0 -45 180">
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity>
+
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="4 0 0" rotation="0 270 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 -4"></a-entity>
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
+			</a-entity>
+		</a-entity>
+	</a-entity>
+
+	<a-entity class="platform" position="0 0 -32">
+
+		<a-entity position='0 10 0' n-text='text: FAQ; fontSize: 40' n-billboard></a-entity>
+
+		<a-entity position='6 1 0' rotation='0 90 0' scale="0.3 0.3 0.3">
+
+			<a-entity position='0 3 -0.6' rotation='0 180 0'
+				n-text='text: What is the Playground?; fontSize: 4'></a-entity>
+			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
+				n-text='text: The Playground is an activity where you can easily
+				and quickly create, share, and play web-based VR content that makes
+				use of the advanced features in AltspaceVR. The space consists of
+				a space-wide browser, and all the content you experience in this
+				activity is defined via the web. Our initial release of the Playground
+				focuses on spawnable physics items and the creation of games,
+				puzzles, and environments that play well with them.;
+				fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+			</a-entity>
+		</a-entity>
+
+		<a-entity position='5 1 3' rotation='0 60 0' scale="0.3 0.3 0.3">
+			<a-entity position='0 3 -0.6' rotation='0 180 0'
+				n-text='text: What are native components?; fontSize: 4'></a-entity>
+			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
+				n-text='text: Native components are A-Frame components that tap into the infrastructure of AltspaceVR to provide the web with capabilities that would traditionally only be feasible in native game engines. This includes features like physics, colliders, spatialized audio, and high-performance network synchronization that work across all desktop and mobile platforms supported by AltspaceVR.; fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+			</a-entity>
+		</a-entity>
+
+		<a-entity position='5 1 -3' rotation='0 120 0' scale="0.3 0.3 0.3">
+			<a-entity position='0 3 -0.6' rotation='0 180 0'
+				n-text='text: What are native resources?; fontSize: 4'></a-entity>
+			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
+				n-text='text: Often the most time-consuming part of building a VR application is gathering and optimizing the visual and auditory content you need. Native resources allow you to get started building VR web content immediately without becoming an expert in VR content creation. Our starter resources include fully realized objects like basketballs and soccer balls which bounce, sound, synchronize, and act like you would expect in real life, as well as a full interior set of walls, floors, windows, and ceilings. Native resources will automatically adapt to the performance requirements of various platforms.; fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+			</a-entity>
+		</a-entity>
+
+		<a-entity position='-6 1 0' rotation='0 -90 0' scale="0.3 0.3 0.3">
+			<a-entity position='0 3 -0.6' rotation='0 180 0'
+				n-text='text: What does being in Beta mean?; fontSize: 3'></a-entity>
+			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
+				n-text='text: The Playground makes use of many completely new concepts and features. We expect to iterate quickly, and that new needs and issues will be found as initial content is developed. We will not ensure backward compatibility during the beta. Right now, the Playground is accessible only to AltspaceVR developers. Becoming a developer is easy, feel free to contact us on the developer Slack to gain this flag on your account.; fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+			</a-entity>
+		</a-entity>
+
+		<a-entity position='-5 1 3' rotation='0 -60 0' scale="0.3 0.3 0.3">
+			<a-entity position='0 3 -0.6' rotation='0 180 0'
+				n-text='text: How do I create an app for the Playground?; fontSize: 3'></a-entity>
+			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
+				n-text='text: All Playground applications are created in A-Frame. Creating something with A-Frame is very similar to creating a website with HTML, and is one of the simplest ways to create a VR application.  Our introduction tutorials can be found on the developer portal. A-Frame applications can be hosted anywhere on the web. We recommend GitHub pages as a great place to start hosting your app.; fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+			</a-entity>
+		</a-entity>
+
+		<a-entity position='-5 1 -3' rotation='0 -120 0' scale="0.3 0.3 0.3">
+			<a-entity position='0 3 -0.6' rotation='0 180 0'
+				n-text='text: Can I use native components with three.js?; fontSize: 3'></a-entity>
+			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
+				n-text='text: Yes, by adding A-Frame to your three.js project, you can have A-Frame entities that use native components alongside your three.js application. This mostly involves just switching the scene your application uses to the one generated by A-Frame. Native components utilize the Entity-Component system provided by A-Frame, which is a vital abstraction that does not otherwise exist in three.js.; fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
+			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+			</a-entity>
+		</a-entity>
+
+		<a-entity scale="1.5 1 1.5">
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="4 0 0"></a-entity>
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity>
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity>
+			<a-entity class="ring" rotation="0 45 0">
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity> -->
+
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="4 0 0" rotation="0 270 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 -4"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
+			</a-entity>
+			<a-entity class="ring" position="0 4" rotation="0 -45 180">
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity> -->
+
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="4 0 0" rotation="0 270 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 -4"></a-entity>
+				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity> -->
+				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
+			</a-entity>
+		</a-entity>
+	</a-entity>
+
+	<a-entity position='6 0.25 -50' rotation='0 180 0' template='src: gallery.html'></a-entity>
+	<a-entity position='2 0 -46' n-object='res: architecture/floor-4w-4l'></a-entity>
+	<a-entity position='2 0 -42' n-object='res: architecture/floor-4w-4l'></a-entity>
+
+</a-scene>
+</body>
+</html>

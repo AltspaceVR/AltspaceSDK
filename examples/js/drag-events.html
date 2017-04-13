@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang=en>
+	<head>
+		<meta charset=utf-8>
+		<title>Drag Events</title>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+
+			var sim = new altspace.utilities.Simulation();
+			var config = { authorId: 'AltspaceVR', appId: 'DragEvents' };
+			var sceneSync;
+			var enclosure;
+
+			//Get the enclosure
+			altspace.getEnclosure().then(function(e) {
+				enclosure = e;
+				//Connect to sync server
+				altspace.utilities.sync.connect(config).then(function(connection) {
+					//Retrieve SceneSync
+					sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
+						instantiators: {'Cube': createCube },//Create the cube
+						ready: ready//Ready!
+					});
+					//Add SceneSync to the scene
+					sim.scene.addBehavior(sceneSync);
+				});
+			});
+
+			function createCube() {
+				//Create cube
+				var cubeSize = enclosure.innerWidth / 10;
+				var geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+				var material = new THREE.MeshBasicMaterial({color:'green'});
+				var cube = new THREE.Mesh(geometry, material);
+				//Bring the cube down closer to the user
+				cube.position.y = (enclosure.innerHeight / 4) * -1;
+				//Add behaviors
+				cube.addBehaviors(
+					new altspace.utilities.behaviors.Object3DSync({position: true}),
+					new altspace.utilities.behaviors.Drag({
+						//Limit drag to within bounds of the enclosure
+						x: { min: (enclosure.innerWidth / 3) * -1, max: (enclosure.innerWidth / 3)},
+						z: { min: (enclosure.innerDepth / 3) * -1, max: (enclosure.innerDepth / 3)}
+					})
+				);
+				//Add event listeners
+				addCubeListeners(cube);
+
+				sim.scene.add(cube);
+				return cube;
+			}
+
+			function addCubeListeners(cube){
+				//Add 'Drag Start' event listener
+				cube.addEventListener('dragstart', function (data) {
+					cube.material.color.setStyle('blue');
+				});
+				//Add 'Drag Stop' event listener
+				cube.addEventListener('dragstop', function (data) {
+					cube.material.color.setStyle('red');
+				});
+			}
+
+			function ready(firstInstance) {
+				if (firstInstance) {
+					sceneSync.instantiate('Cube');
+				}
+			}
+
+		</script>
+	</body>
+</html>

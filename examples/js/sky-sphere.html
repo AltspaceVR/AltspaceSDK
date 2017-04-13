@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Sky Sphere</title>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<script>
+
+var sim = new altspace.utilities.Simulation();
+var config = { authorId: 'AltspaceVR', appId: 'SkySphere' };
+var sceneSync;
+altspace.utilities.sync.connect(config).then(function(connection) {
+	sceneSync = new altspace.utilities.behaviors.SceneSync(connection.instance, {
+		instantiators: {
+			SkySphere: createSkySphere,
+			Cube: createCube
+		},
+		ready: ready
+	});
+	sim.scene.addBehavior(sceneSync);
+	altspace.getEnclosure().then(function (enclosure) {
+		function adjustToFullspace() {
+			var ppm = enclosure.pixelsPerMeter;
+			sim.scene.scale.set(ppm, ppm, ppm);
+		}
+		adjustToFullspace();
+		enclosure.addEventListener('fullspacechange', adjustToFullspace);
+	});
+});
+
+function createSkySphere() {
+	var skySphere = new THREE.Mesh(
+		new THREE.SphereGeometry(1, 16, 16),
+		new THREE.MeshBasicMaterial({
+			color:'#ffffff',
+			map: new THREE.TextureLoader().load('images/MarkJayBeeFractal-InternalActivity.jpg'),
+		})
+	);
+	skySphere.name = 'skySphere';
+	var sync = new altspace.utilities.behaviors.Object3DSync({scale: true, position: true});
+	skySphere.addBehavior(sync);
+	skySphere.scale.x = -1;
+	altspace.getEnclosure().then(function (enclosure) {
+		function adjustToFullspace() {
+			var ppm = enclosure.pixelsPerMeter;
+			sim.scene.scale.set(ppm, ppm, ppm);
+			sync.takeOwnership();
+			var scale = enclosure.fullspace ? 2000 : 1;
+			skySphere.scale.set(-scale, scale, scale);
+		}
+		adjustToFullspace();
+		enclosure.addEventListener('fullspacechange', adjustToFullspace);
+	});
+	sim.scene.add(skySphere);
+	return skySphere;
+}
+
+
+function createCube() {
+	var cube = new THREE.Mesh(
+		new THREE.BoxGeometry(1, 1, 1),
+		new THREE.MeshBasicMaterial({
+			color:'#ffffff',
+			map: new THREE.TextureLoader().load('../resources/click-me.jpg')
+		})
+	);
+	cube.addBehavior(new altspace.utilities.behaviors.Object3DSync());
+	cube.scale.multiplyScalar(0.5);
+	cube.position.set(1, 1, -1.5);
+	altspace.getEnclosure().then(function (enclosure) {
+		cube.addEventListener('cursordown', function () {
+			if (enclosure.fullspace) {
+				enclosure.exitFullspace();
+			}
+			else {
+				enclosure.requestFullspace();
+			}
+		});
+	});
+	sim.scene.add(cube);
+	return cube;
+}
+
+function ready(firstInstance) {
+	if (firstInstance) {
+		sceneSync.instantiate('SkySphere');
+		sceneSync.instantiate('Cube');
+	}
+}
+
+</script>
+</body>
+</html>

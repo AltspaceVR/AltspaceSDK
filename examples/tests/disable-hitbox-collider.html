@@ -3,8 +3,8 @@
 	<head>
 		<title>Disable Hitbox</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
 		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
@@ -16,7 +16,7 @@
 				controls = new THREE.OrbitControls(sim.camera);
 			}
 
-			var boxTex = new THREE.TextureLoader().load('../images/UV_Grid_Sm.jpg', init);
+			var boxTex = new THREE.TextureLoader().load('resources/UV_Grid_Sm.jpg', init);
 
 			function init () {
 				var boxSize = 80;
@@ -78,4 +78,3 @@
 		</script>
 	</body>
 </html>
-

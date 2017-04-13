@@ -1,2541 +1,3 @@
-
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(["three"], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('three'));
-  } else {
-    root.altspace = factory(root.THREE);
-  }
-}(this, function(THREE) {
-
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":4}],2:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-exports.__esModule = true;
-},{}],3:[function(require,module,exports){
-"use strict";
-
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
-
-exports["default"] = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-
-      _Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":1}],4:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function defineProperty(it, key, desc){
-  return $.setDesc(it, key, desc);
-};
-},{"../../modules/$":5}],5:[function(require,module,exports){
-var $Object = Object;
-module.exports = {
-  create:     $Object.create,
-  getProto:   $Object.getPrototypeOf,
-  isEnum:     {}.propertyIsEnumerable,
-  getDesc:    $Object.getOwnPropertyDescriptor,
-  setDesc:    $Object.defineProperty,
-  setDescs:   $Object.defineProperties,
-  getKeys:    $Object.keys,
-  getNames:   $Object.getOwnPropertyNames,
-  getSymbols: $Object.getOwnPropertySymbols,
-  each:       [].forEach
-};
-},{}],6:[function(require,module,exports){
-'use strict';
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-if (!window.altspace) {
-    window.altspace = {};
-}
-if (!window.altspace.utilities) {
-    window.altspace.utilities = {};
-}
-if (!window.altspace.utilities.shims) {
-    window.altspace.utilities.shims = {};
-}
-
-var OBJMTLLoader = (function () {
-    function OBJMTLLoader() {
-        _classCallCheck(this, OBJMTLLoader);
-    }
-
-    _createClass(OBJMTLLoader, [{
-        key: 'load',
-        value: function load(objFile, mtlFile, callback) {
-            var mtlLoader = new THREE.MTLLoader();
-            var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
-            mtlLoader.setBaseUrl(baseUrl + '/');
-            mtlLoader.setCrossOrigin(this.crossOrigin);
-            mtlLoader.load(mtlFile, function (materials) {
-                var objLoader = new THREE.OBJLoader();
-                objLoader.setMaterials(materials);
-                objLoader.load(objFile, callback);
-            });
-        }
-    }]);
-
-    return OBJMTLLoader;
-})();
-
-window.altspace.utilities.shims.OBJMTLLoader = OBJMTLLoader;
-},{"babel-runtime/helpers/class-call-check":2,"babel-runtime/helpers/create-class":3}]},{},[6]);
-
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (global){
-/**
- * lodash 3.0.1 (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright 2012-2016 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2016 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <https://lodash.com/license>
- */
-
-/** Used to determine if values are of the language type `Object`. */
-var objectTypes = {
-  'function': true,
-  'object': true
-};
-
-/** Detect free variable `exports`. */
-var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
-  ? exports
-  : undefined;
-
-/** Detect free variable `module`. */
-var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
-  ? module
-  : undefined;
-
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
-
-/** Detect free variable `self`. */
-var freeSelf = checkGlobal(objectTypes[typeof self] && self);
-
-/** Detect free variable `window`. */
-var freeWindow = checkGlobal(objectTypes[typeof window] && window);
-
-/** Detect `this` as the global object. */
-var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
-
-/**
- * Used as a reference to the global object.
- *
- * The `this` value is used if it's the global object to avoid Greasemonkey's
- * restricted `window` object, otherwise the `window` object is used.
- */
-var root = freeGlobal ||
-  ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
-    freeSelf || thisGlobal || Function('return this')();
-
-/**
- * Checks if `value` is a global object.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {null|Object} Returns `value` if it's a global object, else `null`.
- */
-function checkGlobal(value) {
-  return (value && value.Object === Object) ? value : null;
-}
-
-module.exports = root;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],2:[function(require,module,exports){
-(function (global){
-/**
- * lodash 4.1.3 (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright jQuery Foundation and other contributors <https://jquery.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/** Used as the size to enable large array optimizations. */
-var LARGE_ARRAY_SIZE = 200;
-
-/** Used to stand-in for `undefined` hash values. */
-var HASH_UNDEFINED = '__lodash_hash_undefined__';
-
-/** `Object#toString` result references. */
-var funcTag = '[object Function]',
-    genTag = '[object GeneratorFunction]';
-
-/**
- * Used to match `RegExp`
- * [syntax characters](http://ecma-international.org/ecma-262/6.0/#sec-patterns).
- */
-var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-
-/** Used to detect host constructors (Safari). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/** Used to determine if values are of the language type `Object`. */
-var objectTypes = {
-  'function': true,
-  'object': true
-};
-
-/** Detect free variable `exports`. */
-var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
-  ? exports
-  : undefined;
-
-/** Detect free variable `module`. */
-var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
-  ? module
-  : undefined;
-
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
-
-/** Detect free variable `self`. */
-var freeSelf = checkGlobal(objectTypes[typeof self] && self);
-
-/** Detect free variable `window`. */
-var freeWindow = checkGlobal(objectTypes[typeof window] && window);
-
-/** Detect `this` as the global object. */
-var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
-
-/**
- * Used as a reference to the global object.
- *
- * The `this` value is used if it's the global object to avoid Greasemonkey's
- * restricted `window` object, otherwise the `window` object is used.
- */
-var root = freeGlobal ||
-  ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
-    freeSelf || thisGlobal || Function('return this')();
-
-/**
- * Checks if `value` is a global object.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {null|Object} Returns `value` if it's a global object, else `null`.
- */
-function checkGlobal(value) {
-  return (value && value.Object === Object) ? value : null;
-}
-
-/**
- * Checks if `value` is a host object in IE < 9.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
- */
-function isHostObject(value) {
-  // Many host objects are `Object` objects that can coerce to strings
-  // despite having improperly defined `toString` methods.
-  var result = false;
-  if (value != null && typeof value.toString != 'function') {
-    try {
-      result = !!(value + '');
-    } catch (e) {}
-  }
-  return result;
-}
-
-/** Used for built-in method references. */
-var arrayProto = Array.prototype,
-    objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/** Used to detect if a method is native. */
-var reIsNative = RegExp('^' +
-  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-);
-
-/** Built-in value references. */
-var splice = arrayProto.splice;
-
-/* Built-in method references that are verified to be native. */
-var Map = getNative(root, 'Map'),
-    nativeCreate = getNative(Object, 'create');
-
-/**
- * Creates a hash object.
- *
- * @private
- * @constructor
- * @returns {Object} Returns the new hash object.
- */
-function Hash() {}
-
-/**
- * Removes `key` and its value from the hash.
- *
- * @private
- * @param {Object} hash The hash to modify.
- * @param {string} key The key of the value to remove.
- * @returns {boolean} Returns `true` if the entry was removed, else `false`.
- */
-function hashDelete(hash, key) {
-  return hashHas(hash, key) && delete hash[key];
-}
-
-/**
- * Gets the hash value for `key`.
- *
- * @private
- * @param {Object} hash The hash to query.
- * @param {string} key The key of the value to get.
- * @returns {*} Returns the entry value.
- */
-function hashGet(hash, key) {
-  if (nativeCreate) {
-    var result = hash[key];
-    return result === HASH_UNDEFINED ? undefined : result;
-  }
-  return hasOwnProperty.call(hash, key) ? hash[key] : undefined;
-}
-
-/**
- * Checks if a hash value for `key` exists.
- *
- * @private
- * @param {Object} hash The hash to query.
- * @param {string} key The key of the entry to check.
- * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
- */
-function hashHas(hash, key) {
-  return nativeCreate ? hash[key] !== undefined : hasOwnProperty.call(hash, key);
-}
-
-/**
- * Sets the hash `key` to `value`.
- *
- * @private
- * @param {Object} hash The hash to modify.
- * @param {string} key The key of the value to set.
- * @param {*} value The value to set.
- */
-function hashSet(hash, key, value) {
-  hash[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
-}
-
-// Avoid inheriting from `Object.prototype` when possible.
-Hash.prototype = nativeCreate ? nativeCreate(null) : objectProto;
-
-/**
- * Creates a map cache object to store key-value pairs.
- *
- * @private
- * @constructor
- * @param {Array} [values] The values to cache.
- */
-function MapCache(values) {
-  var index = -1,
-      length = values ? values.length : 0;
-
-  this.clear();
-  while (++index < length) {
-    var entry = values[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-
-/**
- * Removes all key-value entries from the map.
- *
- * @private
- * @name clear
- * @memberOf MapCache
- */
-function mapClear() {
-  this.__data__ = {
-    'hash': new Hash,
-    'map': Map ? new Map : [],
-    'string': new Hash
-  };
-}
-
-/**
- * Removes `key` and its value from the map.
- *
- * @private
- * @name delete
- * @memberOf MapCache
- * @param {string} key The key of the value to remove.
- * @returns {boolean} Returns `true` if the entry was removed, else `false`.
- */
-function mapDelete(key) {
-  var data = this.__data__;
-  if (isKeyable(key)) {
-    return hashDelete(typeof key == 'string' ? data.string : data.hash, key);
-  }
-  return Map ? data.map['delete'](key) : assocDelete(data.map, key);
-}
-
-/**
- * Gets the map value for `key`.
- *
- * @private
- * @name get
- * @memberOf MapCache
- * @param {string} key The key of the value to get.
- * @returns {*} Returns the entry value.
- */
-function mapGet(key) {
-  var data = this.__data__;
-  if (isKeyable(key)) {
-    return hashGet(typeof key == 'string' ? data.string : data.hash, key);
-  }
-  return Map ? data.map.get(key) : assocGet(data.map, key);
-}
-
-/**
- * Checks if a map value for `key` exists.
- *
- * @private
- * @name has
- * @memberOf MapCache
- * @param {string} key The key of the entry to check.
- * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
- */
-function mapHas(key) {
-  var data = this.__data__;
-  if (isKeyable(key)) {
-    return hashHas(typeof key == 'string' ? data.string : data.hash, key);
-  }
-  return Map ? data.map.has(key) : assocHas(data.map, key);
-}
-
-/**
- * Sets the map `key` to `value`.
- *
- * @private
- * @name set
- * @memberOf MapCache
- * @param {string} key The key of the value to set.
- * @param {*} value The value to set.
- * @returns {Object} Returns the map cache instance.
- */
-function mapSet(key, value) {
-  var data = this.__data__;
-  if (isKeyable(key)) {
-    hashSet(typeof key == 'string' ? data.string : data.hash, key, value);
-  } else if (Map) {
-    data.map.set(key, value);
-  } else {
-    assocSet(data.map, key, value);
-  }
-  return this;
-}
-
-// Add methods to `MapCache`.
-MapCache.prototype.clear = mapClear;
-MapCache.prototype['delete'] = mapDelete;
-MapCache.prototype.get = mapGet;
-MapCache.prototype.has = mapHas;
-MapCache.prototype.set = mapSet;
-
-/**
- * Creates a stack cache object to store key-value pairs.
- *
- * @private
- * @constructor
- * @param {Array} [values] The values to cache.
- */
-function Stack(values) {
-  var index = -1,
-      length = values ? values.length : 0;
-
-  this.clear();
-  while (++index < length) {
-    var entry = values[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-
-/**
- * Removes all key-value entries from the stack.
- *
- * @private
- * @name clear
- * @memberOf Stack
- */
-function stackClear() {
-  this.__data__ = { 'array': [], 'map': null };
-}
-
-/**
- * Removes `key` and its value from the stack.
- *
- * @private
- * @name delete
- * @memberOf Stack
- * @param {string} key The key of the value to remove.
- * @returns {boolean} Returns `true` if the entry was removed, else `false`.
- */
-function stackDelete(key) {
-  var data = this.__data__,
-      array = data.array;
-
-  return array ? assocDelete(array, key) : data.map['delete'](key);
-}
-
-/**
- * Gets the stack value for `key`.
- *
- * @private
- * @name get
- * @memberOf Stack
- * @param {string} key The key of the value to get.
- * @returns {*} Returns the entry value.
- */
-function stackGet(key) {
-  var data = this.__data__,
-      array = data.array;
-
-  return array ? assocGet(array, key) : data.map.get(key);
-}
-
-/**
- * Checks if a stack value for `key` exists.
- *
- * @private
- * @name has
- * @memberOf Stack
- * @param {string} key The key of the entry to check.
- * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
- */
-function stackHas(key) {
-  var data = this.__data__,
-      array = data.array;
-
-  return array ? assocHas(array, key) : data.map.has(key);
-}
-
-/**
- * Sets the stack `key` to `value`.
- *
- * @private
- * @name set
- * @memberOf Stack
- * @param {string} key The key of the value to set.
- * @param {*} value The value to set.
- * @returns {Object} Returns the stack cache instance.
- */
-function stackSet(key, value) {
-  var data = this.__data__,
-      array = data.array;
-
-  if (array) {
-    if (array.length < (LARGE_ARRAY_SIZE - 1)) {
-      assocSet(array, key, value);
-    } else {
-      data.array = null;
-      data.map = new MapCache(array);
-    }
-  }
-  var map = data.map;
-  if (map) {
-    map.set(key, value);
-  }
-  return this;
-}
-
-// Add methods to `Stack`.
-Stack.prototype.clear = stackClear;
-Stack.prototype['delete'] = stackDelete;
-Stack.prototype.get = stackGet;
-Stack.prototype.has = stackHas;
-Stack.prototype.set = stackSet;
-
-/**
- * Removes `key` and its value from the associative array.
- *
- * @private
- * @param {Array} array The array to modify.
- * @param {string} key The key of the value to remove.
- * @returns {boolean} Returns `true` if the entry was removed, else `false`.
- */
-function assocDelete(array, key) {
-  var index = assocIndexOf(array, key);
-  if (index < 0) {
-    return false;
-  }
-  var lastIndex = array.length - 1;
-  if (index == lastIndex) {
-    array.pop();
-  } else {
-    splice.call(array, index, 1);
-  }
-  return true;
-}
-
-/**
- * Gets the associative array value for `key`.
- *
- * @private
- * @param {Array} array The array to query.
- * @param {string} key The key of the value to get.
- * @returns {*} Returns the entry value.
- */
-function assocGet(array, key) {
-  var index = assocIndexOf(array, key);
-  return index < 0 ? undefined : array[index][1];
-}
-
-/**
- * Checks if an associative array value for `key` exists.
- *
- * @private
- * @param {Array} array The array to query.
- * @param {string} key The key of the entry to check.
- * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
- */
-function assocHas(array, key) {
-  return assocIndexOf(array, key) > -1;
-}
-
-/**
- * Gets the index at which the `key` is found in `array` of key-value pairs.
- *
- * @private
- * @param {Array} array The array to search.
- * @param {*} key The key to search for.
- * @returns {number} Returns the index of the matched value, else `-1`.
- */
-function assocIndexOf(array, key) {
-  var length = array.length;
-  while (length--) {
-    if (eq(array[length][0], key)) {
-      return length;
-    }
-  }
-  return -1;
-}
-
-/**
- * Sets the associative array `key` to `value`.
- *
- * @private
- * @param {Array} array The array to modify.
- * @param {string} key The key of the value to set.
- * @param {*} value The value to set.
- */
-function assocSet(array, key, value) {
-  var index = assocIndexOf(array, key);
-  if (index < 0) {
-    array.push([key, value]);
-  } else {
-    array[index][1] = value;
-  }
-}
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = object[key];
-  return isNative(value) ? value : undefined;
-}
-
-/**
- * Checks if `value` is suitable for use as unique object key.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
- */
-function isKeyable(value) {
-  var type = typeof value;
-  return type == 'number' || type == 'boolean' ||
-    (type == 'string' && value != '__proto__') || value == null;
-}
-
-/**
- * Converts `func` to its source code.
- *
- * @private
- * @param {Function} func The function to process.
- * @returns {string} Returns the source code.
- */
-function toSource(func) {
-  if (func != null) {
-    try {
-      return funcToString.call(func);
-    } catch (e) {}
-    try {
-      return (func + '');
-    } catch (e) {}
-  }
-  return '';
-}
-
-/**
- * Performs a
- * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
- * comparison between two values to determine if they are equivalent.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- * @example
- *
- * var object = { 'user': 'fred' };
- * var other = { 'user': 'fred' };
- *
- * _.eq(object, object);
- * // => true
- *
- * _.eq(object, other);
- * // => false
- *
- * _.eq('a', 'a');
- * // => true
- *
- * _.eq('a', Object('a'));
- * // => false
- *
- * _.eq(NaN, NaN);
- * // => true
- */
-function eq(value, other) {
-  return value === other || (value !== value && other !== other);
-}
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in Safari 8 which returns 'object' for typed array and weak map constructors,
-  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
-  var tag = isObject(value) ? objectToString.call(value) : '';
-  return tag == funcTag || tag == genTag;
-}
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-/**
- * Checks if `value` is a native function.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a native function,
- *  else `false`.
- * @example
- *
- * _.isNative(Array.prototype.push);
- * // => true
- *
- * _.isNative(_);
- * // => false
- */
-function isNative(value) {
-  if (!isObject(value)) {
-    return false;
-  }
-  var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
-  return pattern.test(toSource(value));
-}
-
-module.exports = Stack;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
-/**
- * lodash 4.1.3 (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright jQuery Foundation and other contributors <https://jquery.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-var Stack = require('lodash._stack'),
-    keys = require('lodash.keys'),
-    root = require('lodash._root');
-
-/** Used to compose bitmasks for comparison styles. */
-var UNORDERED_COMPARE_FLAG = 1,
-    PARTIAL_COMPARE_FLAG = 2;
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]',
-    arrayTag = '[object Array]',
-    boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    funcTag = '[object Function]',
-    genTag = '[object GeneratorFunction]',
-    mapTag = '[object Map]',
-    numberTag = '[object Number]',
-    objectTag = '[object Object]',
-    promiseTag = '[object Promise]',
-    regexpTag = '[object RegExp]',
-    setTag = '[object Set]',
-    stringTag = '[object String]',
-    symbolTag = '[object Symbol]',
-    weakMapTag = '[object WeakMap]';
-
-var arrayBufferTag = '[object ArrayBuffer]',
-    dataViewTag = '[object DataView]',
-    float32Tag = '[object Float32Array]',
-    float64Tag = '[object Float64Array]',
-    int8Tag = '[object Int8Array]',
-    int16Tag = '[object Int16Array]',
-    int32Tag = '[object Int32Array]',
-    uint8Tag = '[object Uint8Array]',
-    uint8ClampedTag = '[object Uint8ClampedArray]',
-    uint16Tag = '[object Uint16Array]',
-    uint32Tag = '[object Uint32Array]';
-
-/** Used to match `RegExp` [syntax characters](http://ecma-international.org/ecma-262/6.0/#sec-patterns). */
-var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-
-/** Used to detect host constructors (Safari). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/** Used to identify `toStringTag` values of typed arrays. */
-var typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
-typedArrayTags[errorTag] = typedArrayTags[funcTag] =
-typedArrayTags[mapTag] = typedArrayTags[numberTag] =
-typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
-typedArrayTags[setTag] = typedArrayTags[stringTag] =
-typedArrayTags[weakMapTag] = false;
-
-/**
- * A specialized version of `_.some` for arrays without support for iteratee
- * shorthands.
- *
- * @private
- * @param {Array} array The array to iterate over.
- * @param {Function} predicate The function invoked per iteration.
- * @returns {boolean} Returns `true` if any element passes the predicate check,
- *  else `false`.
- */
-function arraySome(array, predicate) {
-  var index = -1,
-      length = array.length;
-
-  while (++index < length) {
-    if (predicate(array[index], index, array)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Checks if `value` is a host object in IE < 9.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
- */
-function isHostObject(value) {
-  // Many host objects are `Object` objects that can coerce to strings
-  // despite having improperly defined `toString` methods.
-  var result = false;
-  if (value != null && typeof value.toString != 'function') {
-    try {
-      result = !!(value + '');
-    } catch (e) {}
-  }
-  return result;
-}
-
-/**
- * Converts `map` to an array.
- *
- * @private
- * @param {Object} map The map to convert.
- * @returns {Array} Returns the converted array.
- */
-function mapToArray(map) {
-  var index = -1,
-      result = Array(map.size);
-
-  map.forEach(function(value, key) {
-    result[++index] = [key, value];
-  });
-  return result;
-}
-
-/**
- * Converts `set` to an array.
- *
- * @private
- * @param {Object} set The set to convert.
- * @returns {Array} Returns the converted array.
- */
-function setToArray(set) {
-  var index = -1,
-      result = Array(set.size);
-
-  set.forEach(function(value) {
-    result[++index] = value;
-  });
-  return result;
-}
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/** Used to detect if a method is native. */
-var reIsNative = RegExp('^' +
-  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-);
-
-/** Built-in value references. */
-var Symbol = root.Symbol,
-    Uint8Array = root.Uint8Array;
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeGetPrototype = Object.getPrototypeOf;
-
-/* Built-in method references that are verified to be native. */
-var DataView = getNative(root, 'DataView'),
-    Map = getNative(root, 'Map'),
-    Promise = getNative(root, 'Promise'),
-    Set = getNative(root, 'Set'),
-    WeakMap = getNative(root, 'WeakMap');
-
-/** Used to detect maps, sets, and weakmaps. */
-var dataViewCtorString = DataView ? (DataView + '') : '',
-    mapCtorString = Map ? funcToString.call(Map) : '',
-    promiseCtorString = Promise ? funcToString.call(Promise) : '',
-    setCtorString = Set ? funcToString.call(Set) : '',
-    weakMapCtorString = WeakMap ? funcToString.call(WeakMap) : '';
-
-/** Used to convert symbols to primitives and strings. */
-var symbolProto = Symbol ? Symbol.prototype : undefined,
-    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
-
-/**
- * The base implementation of `_.has` without support for deep paths.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {Array|string} key The key to check.
- * @returns {boolean} Returns `true` if `key` exists, else `false`.
- */
-function baseHas(object, key) {
-  // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
-  // that are composed entirely of index properties, return `false` for
-  // `hasOwnProperty` checks of them.
-  return hasOwnProperty.call(object, key) ||
-    (typeof object == 'object' && key in object && getPrototype(object) === null);
-}
-
-/**
- * The base implementation of `_.isEqual` which supports partial comparisons
- * and tracks traversed objects.
- *
- * @private
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @param {Function} [customizer] The function to customize comparisons.
- * @param {boolean} [bitmask] The bitmask of comparison flags.
- *  The bitmask may be composed of the following flags:
- *     1 - Unordered comparison
- *     2 - Partial comparison
- * @param {Object} [stack] Tracks traversed `value` and `other` objects.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- */
-function baseIsEqual(value, other, customizer, bitmask, stack) {
-  if (value === other) {
-    return true;
-  }
-  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
-    return value !== value && other !== other;
-  }
-  return baseIsEqualDeep(value, other, baseIsEqual, customizer, bitmask, stack);
-}
-
-/**
- * A specialized version of `baseIsEqual` for arrays and objects which performs
- * deep comparisons and tracks traversed objects enabling objects with circular
- * references to be compared.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} [customizer] The function to customize comparisons.
- * @param {number} [bitmask] The bitmask of comparison flags. See `baseIsEqual`
- *  for more details.
- * @param {Object} [stack] Tracks traversed `object` and `other` objects.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function baseIsEqualDeep(object, other, equalFunc, customizer, bitmask, stack) {
-  var objIsArr = isArray(object),
-      othIsArr = isArray(other),
-      objTag = arrayTag,
-      othTag = arrayTag;
-
-  if (!objIsArr) {
-    objTag = getTag(object);
-    objTag = objTag == argsTag ? objectTag : objTag;
-  }
-  if (!othIsArr) {
-    othTag = getTag(other);
-    othTag = othTag == argsTag ? objectTag : othTag;
-  }
-  var objIsObj = objTag == objectTag && !isHostObject(object),
-      othIsObj = othTag == objectTag && !isHostObject(other),
-      isSameTag = objTag == othTag;
-
-  if (isSameTag && !objIsObj) {
-    stack || (stack = new Stack);
-    return (objIsArr || isTypedArray(object))
-      ? equalArrays(object, other, equalFunc, customizer, bitmask, stack)
-      : equalByTag(object, other, objTag, equalFunc, customizer, bitmask, stack);
-  }
-  if (!(bitmask & PARTIAL_COMPARE_FLAG)) {
-    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
-        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
-
-    if (objIsWrapped || othIsWrapped) {
-      var objUnwrapped = objIsWrapped ? object.value() : object,
-          othUnwrapped = othIsWrapped ? other.value() : other;
-
-      stack || (stack = new Stack);
-      return equalFunc(objUnwrapped, othUnwrapped, customizer, bitmask, stack);
-    }
-  }
-  if (!isSameTag) {
-    return false;
-  }
-  stack || (stack = new Stack);
-  return equalObjects(object, other, equalFunc, customizer, bitmask, stack);
-}
-
-/**
- * A specialized version of `baseIsEqualDeep` for arrays with support for
- * partial deep comparisons.
- *
- * @private
- * @param {Array} array The array to compare.
- * @param {Array} other The other array to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} customizer The function to customize comparisons.
- * @param {number} bitmask The bitmask of comparison flags. See `baseIsEqual`
- *  for more details.
- * @param {Object} stack Tracks traversed `array` and `other` objects.
- * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
- */
-function equalArrays(array, other, equalFunc, customizer, bitmask, stack) {
-  var index = -1,
-      isPartial = bitmask & PARTIAL_COMPARE_FLAG,
-      isUnordered = bitmask & UNORDERED_COMPARE_FLAG,
-      arrLength = array.length,
-      othLength = other.length;
-
-  if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
-    return false;
-  }
-  // Assume cyclic values are equal.
-  var stacked = stack.get(array);
-  if (stacked) {
-    return stacked == other;
-  }
-  var result = true;
-  stack.set(array, other);
-
-  // Ignore non-index properties.
-  while (++index < arrLength) {
-    var arrValue = array[index],
-        othValue = other[index];
-
-    if (customizer) {
-      var compared = isPartial
-        ? customizer(othValue, arrValue, index, other, array, stack)
-        : customizer(arrValue, othValue, index, array, other, stack);
-    }
-    if (compared !== undefined) {
-      if (compared) {
-        continue;
-      }
-      result = false;
-      break;
-    }
-    // Recursively compare arrays (susceptible to call stack limits).
-    if (isUnordered) {
-      if (!arraySome(other, function(othValue) {
-            return arrValue === othValue ||
-              equalFunc(arrValue, othValue, customizer, bitmask, stack);
-          })) {
-        result = false;
-        break;
-      }
-    } else if (!(
-          arrValue === othValue ||
-            equalFunc(arrValue, othValue, customizer, bitmask, stack)
-        )) {
-      result = false;
-      break;
-    }
-  }
-  stack['delete'](array);
-  return result;
-}
-
-/**
- * A specialized version of `baseIsEqualDeep` for comparing objects of
- * the same `toStringTag`.
- *
- * **Note:** This function only supports comparing values with tags of
- * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {string} tag The `toStringTag` of the objects to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} customizer The function to customize comparisons.
- * @param {number} bitmask The bitmask of comparison flags. See `baseIsEqual`
- *  for more details.
- * @param {Object} stack Tracks traversed `object` and `other` objects.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function equalByTag(object, other, tag, equalFunc, customizer, bitmask, stack) {
-  switch (tag) {
-    case dataViewTag:
-      if ((object.byteLength != other.byteLength) ||
-          (object.byteOffset != other.byteOffset)) {
-        return false;
-      }
-      object = object.buffer;
-      other = other.buffer;
-
-    case arrayBufferTag:
-      if ((object.byteLength != other.byteLength) ||
-          !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
-        return false;
-      }
-      return true;
-
-    case boolTag:
-    case dateTag:
-      // Coerce dates and booleans to numbers, dates to milliseconds and
-      // booleans to `1` or `0` treating invalid dates coerced to `NaN` as
-      // not equal.
-      return +object == +other;
-
-    case errorTag:
-      return object.name == other.name && object.message == other.message;
-
-    case numberTag:
-      // Treat `NaN` vs. `NaN` as equal.
-      return (object != +object) ? other != +other : object == +other;
-
-    case regexpTag:
-    case stringTag:
-      // Coerce regexes to strings and treat strings, primitives and objects,
-      // as equal. See https://es5.github.io/#x15.10.6.4 for more details.
-      return object == (other + '');
-
-    case mapTag:
-      var convert = mapToArray;
-
-    case setTag:
-      var isPartial = bitmask & PARTIAL_COMPARE_FLAG;
-      convert || (convert = setToArray);
-
-      if (object.size != other.size && !isPartial) {
-        return false;
-      }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(object);
-      if (stacked) {
-        return stacked == other;
-      }
-      bitmask |= UNORDERED_COMPARE_FLAG;
-      stack.set(object, other);
-
-      // Recursively compare objects (susceptible to call stack limits).
-      return equalArrays(convert(object), convert(other), equalFunc, customizer, bitmask, stack);
-
-    case symbolTag:
-      if (symbolValueOf) {
-        return symbolValueOf.call(object) == symbolValueOf.call(other);
-      }
-  }
-  return false;
-}
-
-/**
- * A specialized version of `baseIsEqualDeep` for objects with support for
- * partial deep comparisons.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} customizer The function to customize comparisons.
- * @param {number} bitmask The bitmask of comparison flags. See `baseIsEqual`
- *  for more details.
- * @param {Object} stack Tracks traversed `object` and `other` objects.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function equalObjects(object, other, equalFunc, customizer, bitmask, stack) {
-  var isPartial = bitmask & PARTIAL_COMPARE_FLAG,
-      objProps = keys(object),
-      objLength = objProps.length,
-      othProps = keys(other),
-      othLength = othProps.length;
-
-  if (objLength != othLength && !isPartial) {
-    return false;
-  }
-  var index = objLength;
-  while (index--) {
-    var key = objProps[index];
-    if (!(isPartial ? key in other : baseHas(other, key))) {
-      return false;
-    }
-  }
-  // Assume cyclic values are equal.
-  var stacked = stack.get(object);
-  if (stacked) {
-    return stacked == other;
-  }
-  var result = true;
-  stack.set(object, other);
-
-  var skipCtor = isPartial;
-  while (++index < objLength) {
-    key = objProps[index];
-    var objValue = object[key],
-        othValue = other[key];
-
-    if (customizer) {
-      var compared = isPartial
-        ? customizer(othValue, objValue, key, other, object, stack)
-        : customizer(objValue, othValue, key, object, other, stack);
-    }
-    // Recursively compare objects (susceptible to call stack limits).
-    if (!(compared === undefined
-          ? (objValue === othValue || equalFunc(objValue, othValue, customizer, bitmask, stack))
-          : compared
-        )) {
-      result = false;
-      break;
-    }
-    skipCtor || (skipCtor = key == 'constructor');
-  }
-  if (result && !skipCtor) {
-    var objCtor = object.constructor,
-        othCtor = other.constructor;
-
-    // Non `Object` object instances with different constructors are not equal.
-    if (objCtor != othCtor &&
-        ('constructor' in object && 'constructor' in other) &&
-        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
-          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
-      result = false;
-    }
-  }
-  stack['delete'](object);
-  return result;
-}
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = object[key];
-  return isNative(value) ? value : undefined;
-}
-
-/**
- * Gets the `[[Prototype]]` of `value`.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {null|Object} Returns the `[[Prototype]]`.
- */
-function getPrototype(value) {
-  return nativeGetPrototype(Object(value));
-}
-
-/**
- * Gets the `toStringTag` of `value`.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the `toStringTag`.
- */
-function getTag(value) {
-  return objectToString.call(value);
-}
-
-// Fallback for data views, maps, sets, and weak maps in IE 11,
-// for data views in Edge, and promises in Node.js.
-if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
-    (Map && getTag(new Map) != mapTag) ||
-    (Promise && getTag(Promise.resolve()) != promiseTag) ||
-    (Set && getTag(new Set) != setTag) ||
-    (WeakMap && getTag(new WeakMap) != weakMapTag)) {
-  getTag = function(value) {
-    var result = objectToString.call(value),
-        Ctor = result == objectTag ? value.constructor : null,
-        ctorString = typeof Ctor == 'function' ? funcToString.call(Ctor) : '';
-
-    if (ctorString) {
-      switch (ctorString) {
-        case dataViewCtorString: return dataViewTag;
-        case mapCtorString: return mapTag;
-        case promiseCtorString: return promiseTag;
-        case setCtorString: return setTag;
-        case weakMapCtorString: return weakMapTag;
-      }
-    }
-    return result;
-  };
-}
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @type {Function}
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-var isArray = Array.isArray;
-
-/**
- * Performs a deep comparison between two values to determine if they are
- * equivalent.
- *
- * **Note:** This method supports comparing arrays, array buffers, booleans,
- * date objects, error objects, maps, numbers, `Object` objects, regexes,
- * sets, strings, symbols, and typed arrays. `Object` objects are compared
- * by their own, not inherited, enumerable properties. Functions and DOM
- * nodes are **not** supported.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @returns {boolean} Returns `true` if the values are equivalent,
- *  else `false`.
- * @example
- *
- * var object = { 'user': 'fred' };
- * var other = { 'user': 'fred' };
- *
- * _.isEqual(object, other);
- * // => true
- *
- * object === other;
- * // => false
- */
-function isEqual(value, other) {
-  return baseIsEqual(value, other);
-}
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in Safari 8 which returns 'object' for typed array and weak map constructors,
-  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
-  var tag = isObject(value) ? objectToString.call(value) : '';
-  return tag == funcTag || tag == genTag;
-}
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This function is loosely based on
- * [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length,
- *  else `false`.
- * @example
- *
- * _.isLength(3);
- * // => true
- *
- * _.isLength(Number.MIN_VALUE);
- * // => false
- *
- * _.isLength(Infinity);
- * // => false
- *
- * _.isLength('3');
- * // => false
- */
-function isLength(value) {
-  return typeof value == 'number' &&
-    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-/**
- * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
- * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-/**
- * Checks if `value` is a native function.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a native function,
- *  else `false`.
- * @example
- *
- * _.isNative(Array.prototype.push);
- * // => true
- *
- * _.isNative(_);
- * // => false
- */
-function isNative(value) {
-  if (value == null) {
-    return false;
-  }
-  if (isFunction(value)) {
-    return reIsNative.test(funcToString.call(value));
-  }
-  return isObjectLike(value) &&
-    (isHostObject(value) ? reIsNative : reIsHostCtor).test(value);
-}
-
-/**
- * Checks if `value` is classified as a typed array.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isTypedArray(new Uint8Array);
- * // => true
- *
- * _.isTypedArray([]);
- * // => false
- */
-function isTypedArray(value) {
-  return isObjectLike(value) &&
-    isLength(value.length) && !!typedArrayTags[objectToString.call(value)];
-}
-
-module.exports = isEqual;
-
-},{"lodash._root":1,"lodash._stack":2,"lodash.keys":4}],4:[function(require,module,exports){
-/**
- * lodash (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright jQuery Foundation and other contributors <https://jquery.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]',
-    funcTag = '[object Function]',
-    genTag = '[object GeneratorFunction]',
-    stringTag = '[object String]';
-
-/** Used to detect unsigned integer values. */
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-
-/**
- * The base implementation of `_.times` without support for iteratee shorthands
- * or max array length checks.
- *
- * @private
- * @param {number} n The number of times to invoke `iteratee`.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array} Returns the array of results.
- */
-function baseTimes(n, iteratee) {
-  var index = -1,
-      result = Array(n);
-
-  while (++index < n) {
-    result[index] = iteratee(index);
-  }
-  return result;
-}
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/** Built-in value references. */
-var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeGetPrototype = Object.getPrototypeOf,
-    nativeKeys = Object.keys;
-
-/**
- * The base implementation of `_.has` without support for deep paths.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {Array|string} key The key to check.
- * @returns {boolean} Returns `true` if `key` exists, else `false`.
- */
-function baseHas(object, key) {
-  // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
-  // that are composed entirely of index properties, return `false` for
-  // `hasOwnProperty` checks of them.
-  return hasOwnProperty.call(object, key) ||
-    (typeof object == 'object' && key in object && getPrototype(object) === null);
-}
-
-/**
- * The base implementation of `_.keys` which doesn't skip the constructor
- * property of prototypes or treat sparse arrays as dense.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- */
-function baseKeys(object) {
-  return nativeKeys(Object(object));
-}
-
-/**
- * The base implementation of `_.property` without support for deep paths.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function baseProperty(key) {
-  return function(object) {
-    return object == null ? undefined : object[key];
-  };
-}
-
-/**
- * Gets the "length" property value of `object`.
- *
- * **Note:** This function is used to avoid a
- * [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792) that affects
- * Safari on at least iOS 8.1-8.3 ARM64.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {*} Returns the "length" value.
- */
-var getLength = baseProperty('length');
-
-/**
- * Gets the `[[Prototype]]` of `value`.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {null|Object} Returns the `[[Prototype]]`.
- */
-function getPrototype(value) {
-  return nativeGetPrototype(Object(value));
-}
-
-/**
- * Creates an array of index keys for `object` values of arrays,
- * `arguments` objects, and strings, otherwise `null` is returned.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array|null} Returns index keys, else `null`.
- */
-function indexKeys(object) {
-  var length = object ? object.length : undefined;
-  if (isLength(length) &&
-      (isArray(object) || isString(object) || isArguments(object))) {
-    return baseTimes(length, String);
-  }
-  return null;
-}
-
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-function isIndex(value, length) {
-  length = length == null ? MAX_SAFE_INTEGER : length;
-  return !!length &&
-    (typeof value == 'number' || reIsUint.test(value)) &&
-    (value > -1 && value % 1 == 0 && value < length);
-}
-
-/**
- * Checks if `value` is likely a prototype object.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
- */
-function isPrototype(value) {
-  var Ctor = value && value.constructor,
-      proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto;
-
-  return value === proto;
-}
-
-/**
- * Checks if `value` is likely an `arguments` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isArguments(function() { return arguments; }());
- * // => true
- *
- * _.isArguments([1, 2, 3]);
- * // => false
- */
-function isArguments(value) {
-  // Safari 8.1 incorrectly makes `arguments.callee` enumerable in strict mode.
-  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
-    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
-}
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @type {Function}
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-var isArray = Array.isArray;
-
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-function isArrayLike(value) {
-  return value != null && isLength(getLength(value)) && !isFunction(value);
-}
-
-/**
- * This method is like `_.isArrayLike` except that it also checks if `value`
- * is an object.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an array-like object,
- *  else `false`.
- * @example
- *
- * _.isArrayLikeObject([1, 2, 3]);
- * // => true
- *
- * _.isArrayLikeObject(document.body.children);
- * // => true
- *
- * _.isArrayLikeObject('abc');
- * // => false
- *
- * _.isArrayLikeObject(_.noop);
- * // => false
- */
-function isArrayLikeObject(value) {
-  return isObjectLike(value) && isArrayLike(value);
-}
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in Safari 8 which returns 'object' for typed array and weak map constructors,
-  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
-  var tag = isObject(value) ? objectToString.call(value) : '';
-  return tag == funcTag || tag == genTag;
-}
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This function is loosely based on
- * [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length,
- *  else `false`.
- * @example
- *
- * _.isLength(3);
- * // => true
- *
- * _.isLength(Number.MIN_VALUE);
- * // => false
- *
- * _.isLength(Infinity);
- * // => false
- *
- * _.isLength('3');
- * // => false
- */
-function isLength(value) {
-  return typeof value == 'number' &&
-    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-/**
- * Checks if `value` is classified as a `String` primitive or object.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isString('abc');
- * // => true
- *
- * _.isString(1);
- * // => false
- */
-function isString(value) {
-  return typeof value == 'string' ||
-    (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
-}
-
-/**
- * Creates an array of the own enumerable property names of `object`.
- *
- * **Note:** Non-object values are coerced to objects. See the
- * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
- * for more details.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Object
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- *   this.b = 2;
- * }
- *
- * Foo.prototype.c = 3;
- *
- * _.keys(new Foo);
- * // => ['a', 'b'] (iteration order is not guaranteed)
- *
- * _.keys('hi');
- * // => ['0', '1']
- */
-function keys(object) {
-  var isProto = isPrototype(object);
-  if (!(isProto || isArrayLike(object))) {
-    return baseKeys(object);
-  }
-  var indexes = indexKeys(object),
-      skipIndexes = !!indexes,
-      result = indexes || [],
-      length = result.length;
-
-  for (var key in object) {
-    if (baseHas(object, key) &&
-        !(skipIndexes && (key == 'length' || isIndex(key, length))) &&
-        !(isProto && key == 'constructor')) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-
-module.exports = keys;
-
-},{}],5:[function(require,module,exports){
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
-
-/**
- * The Object3DSync behavior syncs an object's transform and data.  
- * **Note:** Object3DSync must be used in conjunction with 
- * [SceneSync]{@link module:altspace/utilities/behaviors.SceneSync}
- *
- * @class Object3DSync
- * @param {Object} [config]
- * @param {Boolean} [config.position=false] Whether object's position should
- *  be synced
- * @param {Boolean} [config.rotation=false] Whether object's rotation should
- *  be synced
- * @param {Boolean} [config.scale=false] Whether object's scale should
- *  be synced
- * @param {Boolean} [config.auto=false] Whether the object should be synced 
- *  automatically. Not currently recommended.
- * @param {Boolean} [config.world=false] Whether world coordiantes should
- *  be sent when synchronizing position and rotation, instead of the
- *  transformation relative to the object's parent.  Use if synced object
- *  is a child (e.g. of the tracking skeleton) only in the sender scene.
- * @memberof module:altspace/utilities/behaviors
- **/
-window.altspace.utilities.behaviors.Object3DSync = function (config){
-	config = config || {};
-	/*if (config.position === undefined) config.position = true;
-	if (config.rotation === undefined) config.rotation = true;
-	if (config.scale === undefined) config.scale = true; */
-	var object3d;
-	var scene;
-	var ref;
-	var key;
-	var dataRef;
-	var ownerRef;
-	var transformRef;
-
-	var sceneSync;
-	var isMine = false;
-
-	var position = new THREE.Vector3();
-	var quaternion = new THREE.Quaternion(); 
-	var scale = new THREE.Vector3();
-	var isEqual = require('lodash.isequal');
-
-
-	function link(objectRef, sS) {
-		ref = objectRef;
-		key = ref.key();
-		transformRef = ref.child('batch');
-		dataRef = ref.child('data');
-		ownerRef = ref.child('owner');
-		sceneSync = sS;
-	}
-
-	//TODO: lerp
-	function setupReceive() {
-		transformRef.on('value', function (snapshot) {
-
-			if (isMine) return;
-
-			var value = snapshot.val();
-			if (!value) return;
-
-			if (config.position) {
-				object3d.position.set(value.position.x, value.position.y, value.position.z);
-			}
-			if (config.rotation) {
-				object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
-			}
-			if (config.scale) {
-				object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
-			}
-		});
-
-		ownerRef.on('value', function (snapshot) {
-			var newOwnerId = snapshot.val();
-
-			var gained = newOwnerId === sceneSync.clientId && !isMine;
-			if (gained) object3d.dispatchEvent({ type: 'ownershipgained' });
-
-			var lost = newOwnerId !== sceneSync.clientId && isMine;
-			if (lost) object3d.dispatchEvent({ type: 'ownershiplost' });
-			
-			isMine = newOwnerId === sceneSync.clientId;
-		});
-	}
-
-	function send() {
-		if (!isMine) return;
-
-		var transform = {};
-		if (config.world) {
-			object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
-			object3d.matrixWorld.decompose(position, quaternion, scale); 
-		} else {
-			position = object3d.position;
-			quaternion = object3d.quaternion;
-			scale = object3d.scale;
-		}
-		if (config.position) {
-			transform.position = {
-				x: position.x,
-				y: position.y,
-				z: position.z
-			};
-		}
-		if (config.rotation) {
-			transform.quaternion = {
-				x: quaternion.x,
-				y: quaternion.y,
-				z: quaternion.z,
-				w: quaternion.w
-			};
-		}
-		if (config.scale) {
-			transform.scale = {
-				x: scale.x,
-				y: scale.y,
-				z: scale.z
-			};
-		}
-		if (Object.keys(transform).length > 0) {
-			if (isEqual(transform, this.lastTransform)) { return; }
-			transformRef.set(transform);
-			this.lastTransform = transform;
-		}
-	}
-
-	function awake(o, s) {
-		object3d = o;
-		scene = s;
-
-		setupReceive();
-	}
-
-	function update(deltaTime) {
-		
-	}
-
-	/**
-	 * Take ownership of this object. The client that instantiates an object owns it,
-	 * afterwards changes in ownership must be managed by the app. Manual modifications
-	 * to the Firebase ref's will not obey ownership status.
-	 * @instance
-	 * @method takeOwnership
-	 * @memberof module:altspace/utilities/behaviors.Object3DSync
-	 */
-	function takeOwnership() {
-		ownerRef.set(sceneSync.clientId);
-	}
-
-	var exports = { awake: awake, update: update, type: 'Object3DSync', link: link, autoSend: send, takeOwnership: takeOwnership };
-
-	/**
-	 * Firebase reference for the 'data' child location, can be used to store data related to
-	 * this object.
-	 * @readonly
-	 * @instance
-	 * @member {Firebase} dataRef
-	 * @memberof module:altspace/utilities/behaviors.Object3DSync
-	 */
-	Object.defineProperty(exports, 'dataRef', {
-		get: function () {
-			return dataRef;
-		}
-	});
-
-	/**
-	 * True if this object is currently owned by this client, false otherwise.
-	 * @readonly
-	 * @instance
-	 * @member {boolean} isMine
-	 * @memberof module:altspace/utilities/behaviors.Object3DSync
-	 */
-	Object.defineProperty(exports, 'isMine', {
-		get: function () {
-			return isMine;
-		}
-	});
-
-	return exports;
-};
-
-//manual modifications to the ref's will not obey ownership status.
-
-},{"lodash.isequal":3}]},{},[5]);
-
-/*!Please JS v0.4.2, Jordan Checkman 2014, Checkman.io, MIT License, Have fun.*/
-!function(e,r,a){"function"==typeof define&&define.amd?define([],a):"object"==typeof exports?module.exports=a():r[e]=a()}("Please",this,function(){"use strict";function e(){function e(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),Math.floor(o()*(r-e+1))+e}function r(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),o()*(r-e)+e}function a(e,r,a){return Math.max(r,Math.min(e,a))}function o(e,r){var a;switch(e){case"hex":for(a=0;a<r.length;a++)r[a]=F.HSV_to_HEX(r[a]);break;case"rgb":for(a=0;a<r.length;a++)r[a]=F.HSV_to_RGB(r[a]);break;case"rgb-string":for(a=0;a<r.length;a++){var o=F.HSV_to_RGB(r[a]);r[a]="rgb("+o.r+","+o.g+","+o.b+")"}break;case"hsv":break;default:console.error("Format not recognized.")}return r}function n(e){var r=F.HSV_to_RGB(e),a=(299*r.r+587*r.g+114*r.b)/1e3;return a>=128?"dark":"light"}function t(e){var r={};for(var a in e)e.hasOwnProperty(a)&&(r[a]=e[a]);return r}function l(e){function r(){o=(o+1)%256,n=(n+a[o])%256;var e=a[o];return a[o]=a[n],a[n]=e,a[(a[o]+a[n])%256]}for(var a=[],o=0,n=0,t=0;256>t;t++)a[t]=t;for(var l=0,F=0;256>l;l++){F=(F+a[l]+e.charCodeAt(l%e.length))%256;var s=a[l];a[l]=a[F],a[F]=s}this.random=function(){for(var e=0,a=0,o=1;8>e;e++)a+=r()*o,o*=256;return a/0x10000000000000000}}var F={},s={aliceblue:"F0F8FF",antiquewhite:"FAEBD7",aqua:"00FFFF",aquamarine:"7FFFD4",azure:"F0FFFF",beige:"F5F5DC",bisque:"FFE4C4",black:"000000",blanchedalmond:"FFEBCD",blue:"0000FF",blueviolet:"8A2BE2",brown:"A52A2A",burlywood:"DEB887",cadetblue:"5F9EA0",chartreuse:"7FFF00",chocolate:"D2691E",coral:"FF7F50",cornflowerblue:"6495ED",cornsilk:"FFF8DC",crimson:"DC143C",cyan:"00FFFF",darkblue:"00008B",darkcyan:"008B8B",darkgoldenrod:"B8860B",darkgray:"A9A9A9",darkgrey:"A9A9A9",darkgreen:"006400",darkkhaki:"BDB76B",darkmagenta:"8B008B",darkolivegreen:"556B2F",darkorange:"FF8C00",darkorchid:"9932CC",darkred:"8B0000",darksalmon:"E9967A",darkseagreen:"8FBC8F",darkslateblue:"483D8B",darkslategray:"2F4F4F",darkslategrey:"2F4F4F",darkturquoise:"00CED1",darkviolet:"9400D3",deeppink:"FF1493",deepskyblue:"00BFFF",dimgray:"696969",dimgrey:"696969",dodgerblue:"1E90FF",firebrick:"B22222",floralwhite:"FFFAF0",forestgreen:"228B22",fuchsia:"FF00FF",gainsboro:"DCDCDC",ghostwhite:"F8F8FF",gold:"FFD700",goldenrod:"DAA520",gray:"808080",grey:"808080",green:"008000",greenyellow:"ADFF2F",honeydew:"F0FFF0",hotpink:"FF69B4",indianred:"CD5C5C",indigo:"4B0082",ivory:"FFFFF0",khaki:"F0E68C",lavender:"E6E6FA",lavenderblush:"FFF0F5",lawngreen:"7CFC00",lemonchiffon:"FFFACD",lightblue:"ADD8E6",lightcoral:"F08080",lightcyan:"E0FFFF",lightgoldenrodyellow:"FAFAD2",lightgray:"D3D3D3",lightgrey:"D3D3D3",lightgreen:"90EE90",lightpink:"FFB6C1",lightsalmon:"FFA07A",lightseagreen:"20B2AA",lightskyblue:"87CEFA",lightslategray:"778899",lightslategrey:"778899",lightsteelblue:"B0C4DE",lightyellow:"FFFFE0",lime:"00FF00",limegreen:"32CD32",linen:"FAF0E6",magenta:"FF00FF",maroon:"800000",mediumaquamarine:"66CDAA",mediumblue:"0000CD",mediumorchid:"BA55D3",mediumpurple:"9370D8",mediumseagreen:"3CB371",mediumslateblue:"7B68EE",mediumspringgreen:"00FA9A",mediumturquoise:"48D1CC",mediumvioletred:"C71585",midnightblue:"191970",mintcream:"F5FFFA",mistyrose:"FFE4E1",moccasin:"FFE4B5",navajowhite:"FFDEAD",navy:"000080",oldlace:"FDF5E6",olive:"808000",olivedrab:"6B8E23",orange:"FFA500",orangered:"FF4500",orchid:"DA70D6",palegoldenrod:"EEE8AA",palegreen:"98FB98",paleturquoise:"AFEEEE",palevioletred:"D87093",papayawhip:"FFEFD5",peachpuff:"FFDAB9",peru:"CD853F",pink:"FFC0CB",plum:"DDA0DD",powderblue:"B0E0E6",purple:"800080",rebeccapurple:"663399",red:"FF0000",rosybrown:"BC8F8F",royalblue:"4169E1",saddlebrown:"8B4513",salmon:"FA8072",sandybrown:"F4A460",seagreen:"2E8B57",seashell:"FFF5EE",sienna:"A0522D",silver:"C0C0C0",skyblue:"87CEEB",slateblue:"6A5ACD",slategray:"708090",slategrey:"708090",snow:"FFFAFA",springgreen:"00FF7F",steelblue:"4682B4",tan:"D2B48C",teal:"008080",thistle:"D8BFD8",tomato:"FF6347",turquoise:"40E0D0",violet:"EE82EE",wheat:"F5DEB3",white:"FFFFFF",whitesmoke:"F5F5F5",yellow:"FFFF00",yellowgreen:"9ACD32"},i=.618033988749895,u={hue:null,saturation:null,value:null,base_color:"",greyscale:!1,grayscale:!1,golden:!0,full_random:!1,colors_returned:1,format:"hex",seed:null},c={scheme_type:"analogous",format:"hex"},h={golden:!1,format:"hex"};return F.NAME_to_HEX=function(e){return e=e.toLowerCase(),e in s?s[e]:(console.error("Color name not recognized."),void 0)},F.NAME_to_RGB=function(e){return F.HEX_to_RGB(F.NAME_to_HEX(e))},F.NAME_to_HSV=function(e){return F.HEX_to_HSV(F.NAME_to_HEX(e))},F.HEX_to_RGB=function(e){var r=/^#?([a-f\d])([a-f\d])([a-f\d])$/i;e=e.replace(r,function(e,r,a,o){return r+r+a+a+o+o});var a=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);return a?{r:parseInt(a[1],16),g:parseInt(a[2],16),b:parseInt(a[3],16)}:null},F.RGB_to_HEX=function(e){return"#"+((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},F.HSV_to_RGB=function(e){var r,a,o,n,t,l,F,s,i=e.h,u=e.s,c=e.v;if(0===u)return{r:c,g:c,b:c};switch(i/=60,n=Math.floor(i),t=i-n,l=c*(1-u),F=c*(1-u*t),s=c*(1-u*(1-t)),n){case 0:r=c,a=s,o=l;break;case 1:r=F,a=c,o=l;break;case 2:r=l,a=c,o=s;break;case 3:r=l,a=F,o=c;break;case 4:r=s,a=l,o=c;break;case 5:r=c,a=l,o=F}return{r:Math.floor(255*r),g:Math.floor(255*a),b:Math.floor(255*o)}},F.RGB_to_HSV=function(e){var r=e.r/255,a=e.g/255,o=e.b/255,n=0,t=0,l=0,F=Math.min(r,Math.min(a,o)),s=Math.max(r,Math.max(a,o));if(F===s)return l=F,{h:0,s:0,v:l};var i=r===F?a-o:o===F?r-a:o-r,u=r===F?3:o===F?1:5;return n=60*(u-i/(s-F)),t=(s-F)/s,l=s,{h:n,s:t,v:l}},F.HSV_to_HEX=function(e){return F.RGB_to_HEX(F.HSV_to_RGB(e))},F.HEX_to_HSV=function(e){return F.RGB_to_HSV(F.HEX_to_RGB(e))},F.make_scheme=function(e,r){function n(e){return{h:e.h,s:e.s,v:e.v}}var l,F,s,i,u,h=t(c);if(null!==r)for(var d in r)r.hasOwnProperty(d)&&(h[d]=r[d]);var g=[e];switch(h.scheme_type.toLowerCase()){case"monochromatic":case"mono":for(u=1;2>=u;u++)l=n(e),s=l.s+.1*u,s=a(s,0,1),i=l.v+.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);for(u=1;2>=u;u++)l=n(e),s=l.s-.1*u,s=a(s,0,1),i=l.v-.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);break;case"complementary":case"complement":case"comp":l=n(e),l.h=(l.h+180)%360,g.push(l);break;case"split-complementary":case"split-complement":case"split":l=n(e),l.h=(l.h+165)%360,g.push(l),l=n(e),l.h=Math.abs((l.h-165)%360),g.push(l);break;case"double-complementary":case"double-complement":case"double":l=n(e),l.h=(l.h+180)%360,g.push(l),l.h=(l.h+30)%360,F=n(l),g.push(l),l.h=(l.h+180)%360,g.push(F);break;case"analogous":case"ana":for(u=1;5>=u;u++)l=n(e),l.h=(l.h+20*u)%360,g.push(l);break;case"triadic":case"triad":case"tri":for(u=1;3>u;u++)l=n(e),l.h=(l.h+120*u)%360,g.push(l);break;default:console.error("Color scheme not recognized.")}return o(h.format.toLowerCase(),g),g},F.make_color=function(n){var s=[],c=t(u),h=null;if(null!==n)for(var d in n)n.hasOwnProperty(d)&&(c[d]=n[d]);var g=null;"string"==typeof c.seed&&(g=new l(c.seed)),c.base_color.length>0&&(h=c.base_color.match(/^#?([0-9a-f]{3})([0-9a-f]{3})?$/i)?F.HEX_to_HSV(c.base_color):F.NAME_to_HSV(c.base_color));for(var m=0;m<c.colors_returned;m++){var f,E,b,p=e(0,360,g);null!==h?(f=a(e(h.h-5,h.h+5,g),0,360),E=0===h.s?0:r(.4,.85,g),b=r(.4,.85,g),s.push({h:f,s:E,v:b})):(f=c.greyscale===!0||c.grayscale===!0?0:c.golden===!0?(p+p/i)%360:null===c.hue||c.full_random===!0?p:a(c.hue,0,360),E=c.greyscale===!0||c.grayscale===!0?0:c.full_random===!0?r(0,1,g):null===c.saturation?.4:a(c.saturation,0,1),b=c.full_random===!0?r(0,1,g):c.greyscale===!0||c.grayscale===!0?r(.15,.75,g):null===c.value?.75:a(c.value,0,1),s.push({h:f,s:E,v:b}))}return o(c.format.toLowerCase(),s),s},F.make_contrast=function(e,r){var l=t(h);if(null!==r)for(var s in r)r.hasOwnProperty(s)&&(l[s]=r[s]);var u,c,d=n(e);if(l.golden===!0)c=e.h*(1+i)%360;else{var g=F.make_scheme(e,{scheme_type:"complementary",format:"hsv"})[1];c=a(g.h-30,0,360)}var m;return"dark"===d?m=a(e.v-.25,0,1):"light"===d&&(m=a(e.v+.25,0,1)),u=[{h:c,s:e.s,v:m}],o(l.format.toLowerCase(),u),u[0]},F}return e()});
-/*!
- * Lightweight URL manipulation with JavaScript
- * This library is independent of any other libraries and has pretty simple interface
- * and lightweight code-base.
- * Some ideas of query string parsing had been taken from Jan Wolter
- * @see http://unixpapa.com/js/querystring.html
- * 
- * @license MIT
- * @author Mykhailo Stadnyk <mikhus@gmail.com>
- */
-; var Url = (function() {
-	"use strict";
-
-	var
-		// mapping between what we want and <a> element properties
-		map = {
-			protocol : 'protocol',
-			host     : 'hostname',
-			port     : 'port',
-			path     : 'pathname',
-			query    : 'search',
-			hash     : 'hash'
-		},
-
-		/**
-		 * default ports as defined by http://url.spec.whatwg.org/#default-port
-		 * We need them to fix IE behavior, @see https://github.com/Mikhus/jsurl/issues/2
-		 */
-		defaultPorts = {
-			"ftp"    : 21,
-			"gopher" : 70,
-			"http"   : 80,
-			"https"  : 443,
-			"ws"     : 80,
-			"wss"    : 443
-		},
-
-		parse = function( self, url) {
-			var
-				d      = document,
-				link   = d.createElement( 'a'),
-				url    = url || d.location.href,
-				auth   = url.match( /\/\/(.*?)(?::(.*?))?@/) || []
-			;
-
-			link.href = url;
-
-			for (var i in map) {
-				self[i] = link[map[i]] || '';
-			}
-
-			// fix-up some parts
-			self.protocol = self.protocol.replace( /:$/, '');
-			self.query    = self.query.replace( /^\?/, '');
-			self.hash     = self.hash.replace( /^#/, '');
-			self.user     = auth[1] || '';
-			self.pass     = auth[2] || '';
-			self.port     = (defaultPorts[self.protocol] == self.port || self.port == 0) ? '' : self.port; // IE fix, Android browser fix
-
-			if (!self.protocol && !/^([a-z]+:)?\/\//.test( url)) { // is IE and path is relative
-				var
-					base     = new Url( d.location.href.match(/(.*\/)/)[0]),
-					basePath = base.path.split( '/'),
-					selfPath = self.path.split( '/')
-				;
-
-				basePath.pop();
-
-				for (var i = 0, props = ['protocol','user','pass','host','port'], s = props.length; i < s; i++) {
-					self[props[i]] = base[props[i]];
-				}
-
-				while (selfPath[0] == '..') { // skip all "../
-					basePath.pop();
-					selfPath.shift();
-				}
-
-				self.path = (url.substring(0, 1) != '/' ? basePath.join( '/') : '') + '/' + selfPath.join( '/');
-			}
-
-			else {
-				// fix absolute URL's path in IE
-				self.path = self.path.replace( /^\/?/, '/');
-			}
-
-			parseQs( self);
-		},
-		
-		decode = function(s) {
-			s = s.replace( /\+/g, ' ');
-
-			s = s.replace( /%([ef][0-9a-f])%([89ab][0-9a-f])%([89ab][0-9a-f])/gi,
-				function( code, hex1, hex2, hex3) {
-					var
-						n1 = parseInt( hex1, 16) - 0xE0,
-						n2 = parseInt( hex2, 16) - 0x80
-					;
-	
-					if (n1 == 0 && n2 < 32) {
-						return code;
-					}
-	
-					var
-						n3 = parseInt( hex3, 16) - 0x80,
-						n = (n1 << 12) + (n2 << 6) + n3
-					;
-	
-					if (n > 0xFFFF) {
-						return code;
-					}
-	
-					return String.fromCharCode( n);
-				}
-			);
-
-			s = s.replace( /%([cd][0-9a-f])%([89ab][0-9a-f])/gi,
-				function( code, hex1, hex2) {
-					var n1 = parseInt(hex1, 16) - 0xC0;
-	
-					if (n1 < 2) {
-						return code;
-					}
-	
-					var n2 = parseInt(hex2, 16) - 0x80;
-	
-					return String.fromCharCode( (n1 << 6) + n2);
-				}
-			);
-
-			s = s.replace( /%([0-7][0-9a-f])/gi,
-				function( code, hex) {
-					return String.fromCharCode( parseInt(hex, 16));
-				}
-			);
-
-			return s;
-		},
-
-		parseQs = function( self) {
-			var qs = self.query;
-
-			self.query = new (function( qs) {
-				var re = /([^=&]+)(=([^&]*))?/g, match;
-
-				while ((match = re.exec( qs))) {
-					var
-						key = decodeURIComponent(match[1].replace(/\+/g, ' ')),
-						value = match[3] ? decode(match[3]) : ''
-					;
-
-					if (this[key] != null) {
-						if (!(this[key] instanceof Array)) {
-							this[key] = [this[key]];
-						}
-
-						this[key].push( value);
-					}
-
-					else {
-						this[key] = value;
-					}
-				}
-
-				this.clear = function() {
-					for (key in this) {
-						if (!(this[key] instanceof Function)) {
-							delete this[key];
-						}
-					}
-				};
-
-				this.toString = function() {
-					var
-						s = '',
-						e = encodeURIComponent
-					;
-
-					for (var i in this) {
-						if (this[i] instanceof Function) {
-							continue;
-						}
-
-						if (this[i] instanceof Array) {
-							var len = this[i].length;
-
-							if (len) {
-								for (var ii = 0; ii < len; ii++) {
-									s += s ? '&' : '';
-									s += e( i) + '=' + e( this[i][ii]);
-								}
-							}
-
-							else { // parameter is an empty array, so treat as an empty argument
-								s += (s ? '&' : '') + e( i) + '=';
-							}
-						}
-
-						else {
-							s += s ? '&' : '';
-							s += e( i) + '=' + e( this[i]);
-						}
-					}
-
-					return s;
-				};
-			})( qs);
-		}
-	;
-
-	return function( url) {
-		this.toString = function() {
-			return (
-				(this.protocol && (this.protocol + '://')) +
-				(this.user && (this.user + (this.pass && (':' + this.pass)) + '@')) +
-				(this.host && this.host) +
-				(this.port && (':' + this.port)) +
-				(this.path && this.path) +
-				(this.query.toString() && ('?' + this.query)) +
-				(this.hash && ('#' + this.hash))
-			);
-		};
-
-		parse( this, url);
-	};
-}());
-
 /*! @license Firebase v2.2.9
     License: https://www.firebase.com/terms/terms-of-service.html */
 (function() {var g,aa=this;function n(a){return void 0!==a}function ba(){}function ca(a){a.vb=function(){return a.uf?a.uf:a.uf=new a}}
@@ -2801,23 +263,2740 @@ U.prototype.pe=function(a,b){x("Firebase.changeEmail",2,2,arguments.length);fg("
 U.prototype.We=function(a,b){x("Firebase.resetPassword",2,2,arguments.length);fg("Firebase.resetPassword",1,a,!1);gg("Firebase.resetPassword",a,"email");A("Firebase.resetPassword",2,b,!1);this.k.N.We(a,b)};U.prototype.resetPassword=U.prototype.We;})();
 
 
-(function () {
-	//Cant use || as assigning the same value to an unwritable property would throw an error
-	if (!window.altspace) {
-		window.altspace = {};
-		window.altspace.inClient = false;
-	}
-	if (!window.altspace.utilities) {
-		window.altspace.utilities = {};
+/*!Please JS v0.4.2, Jordan Checkman 2014, Checkman.io, MIT License, Have fun.*/
+!function(e,r,a){"function"==typeof define&&define.amd?define([],a):"object"==typeof exports?module.exports=a():r[e]=a()}("Please",this,function(){"use strict";function e(){function e(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),Math.floor(o()*(r-e+1))+e}function r(e,r,a){var o=Math.random;return a instanceof l&&(o=a.random),o()*(r-e)+e}function a(e,r,a){return Math.max(r,Math.min(e,a))}function o(e,r){var a;switch(e){case"hex":for(a=0;a<r.length;a++)r[a]=F.HSV_to_HEX(r[a]);break;case"rgb":for(a=0;a<r.length;a++)r[a]=F.HSV_to_RGB(r[a]);break;case"rgb-string":for(a=0;a<r.length;a++){var o=F.HSV_to_RGB(r[a]);r[a]="rgb("+o.r+","+o.g+","+o.b+")"}break;case"hsv":break;default:console.error("Format not recognized.")}return r}function n(e){var r=F.HSV_to_RGB(e),a=(299*r.r+587*r.g+114*r.b)/1e3;return a>=128?"dark":"light"}function t(e){var r={};for(var a in e)e.hasOwnProperty(a)&&(r[a]=e[a]);return r}function l(e){function r(){o=(o+1)%256,n=(n+a[o])%256;var e=a[o];return a[o]=a[n],a[n]=e,a[(a[o]+a[n])%256]}for(var a=[],o=0,n=0,t=0;256>t;t++)a[t]=t;for(var l=0,F=0;256>l;l++){F=(F+a[l]+e.charCodeAt(l%e.length))%256;var s=a[l];a[l]=a[F],a[F]=s}this.random=function(){for(var e=0,a=0,o=1;8>e;e++)a+=r()*o,o*=256;return a/0x10000000000000000}}var F={},s={aliceblue:"F0F8FF",antiquewhite:"FAEBD7",aqua:"00FFFF",aquamarine:"7FFFD4",azure:"F0FFFF",beige:"F5F5DC",bisque:"FFE4C4",black:"000000",blanchedalmond:"FFEBCD",blue:"0000FF",blueviolet:"8A2BE2",brown:"A52A2A",burlywood:"DEB887",cadetblue:"5F9EA0",chartreuse:"7FFF00",chocolate:"D2691E",coral:"FF7F50",cornflowerblue:"6495ED",cornsilk:"FFF8DC",crimson:"DC143C",cyan:"00FFFF",darkblue:"00008B",darkcyan:"008B8B",darkgoldenrod:"B8860B",darkgray:"A9A9A9",darkgrey:"A9A9A9",darkgreen:"006400",darkkhaki:"BDB76B",darkmagenta:"8B008B",darkolivegreen:"556B2F",darkorange:"FF8C00",darkorchid:"9932CC",darkred:"8B0000",darksalmon:"E9967A",darkseagreen:"8FBC8F",darkslateblue:"483D8B",darkslategray:"2F4F4F",darkslategrey:"2F4F4F",darkturquoise:"00CED1",darkviolet:"9400D3",deeppink:"FF1493",deepskyblue:"00BFFF",dimgray:"696969",dimgrey:"696969",dodgerblue:"1E90FF",firebrick:"B22222",floralwhite:"FFFAF0",forestgreen:"228B22",fuchsia:"FF00FF",gainsboro:"DCDCDC",ghostwhite:"F8F8FF",gold:"FFD700",goldenrod:"DAA520",gray:"808080",grey:"808080",green:"008000",greenyellow:"ADFF2F",honeydew:"F0FFF0",hotpink:"FF69B4",indianred:"CD5C5C",indigo:"4B0082",ivory:"FFFFF0",khaki:"F0E68C",lavender:"E6E6FA",lavenderblush:"FFF0F5",lawngreen:"7CFC00",lemonchiffon:"FFFACD",lightblue:"ADD8E6",lightcoral:"F08080",lightcyan:"E0FFFF",lightgoldenrodyellow:"FAFAD2",lightgray:"D3D3D3",lightgrey:"D3D3D3",lightgreen:"90EE90",lightpink:"FFB6C1",lightsalmon:"FFA07A",lightseagreen:"20B2AA",lightskyblue:"87CEFA",lightslategray:"778899",lightslategrey:"778899",lightsteelblue:"B0C4DE",lightyellow:"FFFFE0",lime:"00FF00",limegreen:"32CD32",linen:"FAF0E6",magenta:"FF00FF",maroon:"800000",mediumaquamarine:"66CDAA",mediumblue:"0000CD",mediumorchid:"BA55D3",mediumpurple:"9370D8",mediumseagreen:"3CB371",mediumslateblue:"7B68EE",mediumspringgreen:"00FA9A",mediumturquoise:"48D1CC",mediumvioletred:"C71585",midnightblue:"191970",mintcream:"F5FFFA",mistyrose:"FFE4E1",moccasin:"FFE4B5",navajowhite:"FFDEAD",navy:"000080",oldlace:"FDF5E6",olive:"808000",olivedrab:"6B8E23",orange:"FFA500",orangered:"FF4500",orchid:"DA70D6",palegoldenrod:"EEE8AA",palegreen:"98FB98",paleturquoise:"AFEEEE",palevioletred:"D87093",papayawhip:"FFEFD5",peachpuff:"FFDAB9",peru:"CD853F",pink:"FFC0CB",plum:"DDA0DD",powderblue:"B0E0E6",purple:"800080",rebeccapurple:"663399",red:"FF0000",rosybrown:"BC8F8F",royalblue:"4169E1",saddlebrown:"8B4513",salmon:"FA8072",sandybrown:"F4A460",seagreen:"2E8B57",seashell:"FFF5EE",sienna:"A0522D",silver:"C0C0C0",skyblue:"87CEEB",slateblue:"6A5ACD",slategray:"708090",slategrey:"708090",snow:"FFFAFA",springgreen:"00FF7F",steelblue:"4682B4",tan:"D2B48C",teal:"008080",thistle:"D8BFD8",tomato:"FF6347",turquoise:"40E0D0",violet:"EE82EE",wheat:"F5DEB3",white:"FFFFFF",whitesmoke:"F5F5F5",yellow:"FFFF00",yellowgreen:"9ACD32"},i=.618033988749895,u={hue:null,saturation:null,value:null,base_color:"",greyscale:!1,grayscale:!1,golden:!0,full_random:!1,colors_returned:1,format:"hex",seed:null},c={scheme_type:"analogous",format:"hex"},h={golden:!1,format:"hex"};return F.NAME_to_HEX=function(e){return e=e.toLowerCase(),e in s?s[e]:(console.error("Color name not recognized."),void 0)},F.NAME_to_RGB=function(e){return F.HEX_to_RGB(F.NAME_to_HEX(e))},F.NAME_to_HSV=function(e){return F.HEX_to_HSV(F.NAME_to_HEX(e))},F.HEX_to_RGB=function(e){var r=/^#?([a-f\d])([a-f\d])([a-f\d])$/i;e=e.replace(r,function(e,r,a,o){return r+r+a+a+o+o});var a=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);return a?{r:parseInt(a[1],16),g:parseInt(a[2],16),b:parseInt(a[3],16)}:null},F.RGB_to_HEX=function(e){return"#"+((1<<24)+(e.r<<16)+(e.g<<8)+e.b).toString(16).slice(1)},F.HSV_to_RGB=function(e){var r,a,o,n,t,l,F,s,i=e.h,u=e.s,c=e.v;if(0===u)return{r:c,g:c,b:c};switch(i/=60,n=Math.floor(i),t=i-n,l=c*(1-u),F=c*(1-u*t),s=c*(1-u*(1-t)),n){case 0:r=c,a=s,o=l;break;case 1:r=F,a=c,o=l;break;case 2:r=l,a=c,o=s;break;case 3:r=l,a=F,o=c;break;case 4:r=s,a=l,o=c;break;case 5:r=c,a=l,o=F}return{r:Math.floor(255*r),g:Math.floor(255*a),b:Math.floor(255*o)}},F.RGB_to_HSV=function(e){var r=e.r/255,a=e.g/255,o=e.b/255,n=0,t=0,l=0,F=Math.min(r,Math.min(a,o)),s=Math.max(r,Math.max(a,o));if(F===s)return l=F,{h:0,s:0,v:l};var i=r===F?a-o:o===F?r-a:o-r,u=r===F?3:o===F?1:5;return n=60*(u-i/(s-F)),t=(s-F)/s,l=s,{h:n,s:t,v:l}},F.HSV_to_HEX=function(e){return F.RGB_to_HEX(F.HSV_to_RGB(e))},F.HEX_to_HSV=function(e){return F.RGB_to_HSV(F.HEX_to_RGB(e))},F.make_scheme=function(e,r){function n(e){return{h:e.h,s:e.s,v:e.v}}var l,F,s,i,u,h=t(c);if(null!==r)for(var d in r)r.hasOwnProperty(d)&&(h[d]=r[d]);var g=[e];switch(h.scheme_type.toLowerCase()){case"monochromatic":case"mono":for(u=1;2>=u;u++)l=n(e),s=l.s+.1*u,s=a(s,0,1),i=l.v+.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);for(u=1;2>=u;u++)l=n(e),s=l.s-.1*u,s=a(s,0,1),i=l.v-.1*u,i=a(i,0,1),l.s=s,l.v=i,g.push(l);break;case"complementary":case"complement":case"comp":l=n(e),l.h=(l.h+180)%360,g.push(l);break;case"split-complementary":case"split-complement":case"split":l=n(e),l.h=(l.h+165)%360,g.push(l),l=n(e),l.h=Math.abs((l.h-165)%360),g.push(l);break;case"double-complementary":case"double-complement":case"double":l=n(e),l.h=(l.h+180)%360,g.push(l),l.h=(l.h+30)%360,F=n(l),g.push(l),l.h=(l.h+180)%360,g.push(F);break;case"analogous":case"ana":for(u=1;5>=u;u++)l=n(e),l.h=(l.h+20*u)%360,g.push(l);break;case"triadic":case"triad":case"tri":for(u=1;3>u;u++)l=n(e),l.h=(l.h+120*u)%360,g.push(l);break;default:console.error("Color scheme not recognized.")}return o(h.format.toLowerCase(),g),g},F.make_color=function(n){var s=[],c=t(u),h=null;if(null!==n)for(var d in n)n.hasOwnProperty(d)&&(c[d]=n[d]);var g=null;"string"==typeof c.seed&&(g=new l(c.seed)),c.base_color.length>0&&(h=c.base_color.match(/^#?([0-9a-f]{3})([0-9a-f]{3})?$/i)?F.HEX_to_HSV(c.base_color):F.NAME_to_HSV(c.base_color));for(var m=0;m<c.colors_returned;m++){var f,E,b,p=e(0,360,g);null!==h?(f=a(e(h.h-5,h.h+5,g),0,360),E=0===h.s?0:r(.4,.85,g),b=r(.4,.85,g),s.push({h:f,s:E,v:b})):(f=c.greyscale===!0||c.grayscale===!0?0:c.golden===!0?(p+p/i)%360:null===c.hue||c.full_random===!0?p:a(c.hue,0,360),E=c.greyscale===!0||c.grayscale===!0?0:c.full_random===!0?r(0,1,g):null===c.saturation?.4:a(c.saturation,0,1),b=c.full_random===!0?r(0,1,g):c.greyscale===!0||c.grayscale===!0?r(.15,.75,g):null===c.value?.75:a(c.value,0,1),s.push({h:f,s:E,v:b}))}return o(c.format.toLowerCase(),s),s},F.make_contrast=function(e,r){var l=t(h);if(null!==r)for(var s in r)r.hasOwnProperty(s)&&(l[s]=r[s]);var u,c,d=n(e);if(l.golden===!0)c=e.h*(1+i)%360;else{var g=F.make_scheme(e,{scheme_type:"complementary",format:"hsv"})[1];c=a(g.h-30,0,360)}var m;return"dark"===d?m=a(e.v-.25,0,1):"light"===d&&(m=a(e.v+.25,0,1)),u=[{h:c,s:e.s,v:m}],o(l.format.toLowerCase(),u),u[0]},F}return e()});
+var Url=function(){"use strict";var t={protocol:"protocol",host:"hostname",port:"port",path:"pathname",query:"search",hash:"hash"},r={ftp:21,gopher:70,http:80,https:443,ws:80,wss:443},o=function(o,e){var a=document,i=a.createElement("a"),e=e||a.location.href,n=e.match(/\/\/(.*?)(?::(.*?))?@/)||[];i.href=e;for(var h in t)o[h]=i[t[h]]||"";if(o.protocol=o.protocol.replace(/:$/,""),o.query=o.query.replace(/^\?/,""),o.hash=o.hash.replace(/^#/,""),o.user=n[1]||"",o.pass=n[2]||"",o.port=r[o.protocol]==o.port||0==o.port?"":o.port,o.protocol||/^([a-z]+:)?\/\//.test(e))o.path=o.path.replace(/^\/?/,"/");else{var p=new Url(a.location.href.match(/(.*\/)/)[0]),c=p.path.split("/"),f=o.path.split("/");c.pop();for(var h=0,u=["protocol","user","pass","host","port"],l=u.length;h<l;h++)o[u[h]]=p[u[h]];for(;".."==f[0];)c.pop(),f.shift();o.path=("/"!=e.substring(0,1)?c.join("/"):"")+"/"+f.join("/")}s(o)},e=function(t){return t=t.replace(/\+/g," "),t=t.replace(/%([ef][0-9a-f])%([89ab][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o,e){var s=parseInt(r,16)-224,a=parseInt(o,16)-128;if(0==s&&a<32)return t;var i=parseInt(e,16)-128,n=(s<<12)+(a<<6)+i;return n>65535?t:String.fromCharCode(n)}),t=t.replace(/%([cd][0-9a-f])%([89ab][0-9a-f])/gi,function(t,r,o){var e=parseInt(r,16)-192;if(e<2)return t;var s=parseInt(o,16)-128;return String.fromCharCode((e<<6)+s)}),t=t.replace(/%([0-7][0-9a-f])/gi,function(t,r){return String.fromCharCode(parseInt(r,16))})},s=function(t){var r=t.query;t.query=new function(t){for(var r,o=/([^=&]+)(=([^&]*))?/g;r=o.exec(t);){var s=decodeURIComponent(r[1].replace(/\+/g," ")),a=r[3]?e(r[3]):"";null!=this[s]?(this[s]instanceof Array||(this[s]=[this[s]]),this[s].push(a)):this[s]=a}this.clear=function(){for(s in this)this[s]instanceof Function||delete this[s]},this.toString=function(){var t="",r=encodeURIComponent;for(var o in this)if(!(this[o]instanceof Function))if(this[o]instanceof Array){var e=this[o].length;if(e)for(var s=0;s<e;s++)t+=t?"&":"",t+=r(o)+"="+r(this[o][s]);else t+=(t?"&":"")+r(o)+"="}else t+=t?"&":"",t+=r(o)+"="+r(this[o]);return t}}(r)};return function(t){this.toString=function(){return(this.protocol&&this.protocol+"://")+(this.user&&this.user+(this.pass&&":"+this.pass)+"@")+(this.host&&this.host)+(this.port&&":"+this.port)+(this.path&&this.path)+(this.query.toString()&&"?"+this.query)+(this.hash&&"#"+this.hash)},o(this,t)}}();
+(function (Firebase$1,Url,Please) {
+'use strict';
+
+Firebase$1 = 'default' in Firebase$1 ? Firebase$1['default'] : Firebase$1;
+Url = 'default' in Url ? Url['default'] : Url;
+Please = 'default' in Please ? Please['default'] : Please;
+
+/**
+* Stubs out the A-Frame "system" concept.
+* @see {@link https://aframe.io/docs/0.3.0/core/systems.html}
+* @memberof module:altspace/components
+*/
+var AFrameSystem = function AFrameSystem () {};
+
+var prototypeAccessors = { schema: {} };
+
+prototypeAccessors.schema.get = function (){
+	return null;
+};
+
+AFrameSystem.prototype.init = function init (){ };
+AFrameSystem.prototype.tick = function tick (time, timeDelta){ };
+AFrameSystem.prototype.pause = function pause (){ };
+AFrameSystem.prototype.play = function play (){ };
+
+Object.defineProperties( AFrameSystem.prototype, prototypeAccessors );
+
+/**
+* Stubs out the A-Frame "component" concept.
+* @see {@link https://aframe.io/docs/0.3.0/core/component.html}
+* @extends module:altspace/components.AFrameSystem
+* @memberof module:altspace/components
+*/
+var AFrameComponent = (function (AFrameSystem) {
+	function AFrameComponent () {
+		AFrameSystem.apply(this, arguments);
 	}
 
-	// THREE is exposed locally by the UMD wrapper, but altspace-client.js
-	// requires it to be global so export it here, once we
-	if (!window.THREE) {
-		window.THREE = THREE
-	}
-}());
+	if ( AFrameSystem ) AFrameComponent.__proto__ = AFrameSystem;
+	AFrameComponent.prototype = Object.create( AFrameSystem && AFrameSystem.prototype );
+	AFrameComponent.prototype.constructor = AFrameComponent;
 
+	AFrameComponent.prototype.update = function update (oldData){ };
+	AFrameComponent.prototype.remove = function remove (){ };
+	AFrameComponent.prototype.updateSchema = function updateSchema (data){ };
+
+	return AFrameComponent;
+}(AFrameSystem));
+
+function flatten(obj)
+{
+	var ret = {};
+	if(!obj.__proto__){
+		ret = Object.assign( {schema: {}, dependencies: []}, obj );
+	}
+	else {
+		ret = Object.assign( flatten(obj.__proto__), obj );
+	}
+
+	if(obj.schema)
+		{ Object.assign(ret.schema, obj.schema); }
+
+	if(obj.dependencies)
+		{ (ref = ret.dependencies).push.apply(ref, obj.dependencies); }
+
+	return ret;
+	var ref;
+}
+
+function registerComponentClass(name, cls)
+{
+	AFRAME.registerComponent(name, flatten(new cls()));
+}
+
+function registerSystemClass(name, cls)
+{
+	AFRAME.registerSystem(name, flatten(new cls()));
+}
+
+function safeDeepSet(obj, keys, value)
+{
+	if(keys.length === 0)
+		{ return value; }
+	else {
+		obj[keys[0]] = safeDeepSet(obj[keys[0]] || {}, keys.slice(1), value);
+		return obj;
+	}
+}
+
+/**
+* Enable or disable cursor collision on the object. @aframe
+* @alias altspace-cursor-collider
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var AltspaceCursorCollider = (function (AFrameComponent$$1) {
+	function AltspaceCursorCollider () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) AltspaceCursorCollider.__proto__ = AFrameComponent$$1;
+	AltspaceCursorCollider.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	AltspaceCursorCollider.prototype.constructor = AltspaceCursorCollider;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The state of the cursor collider. If `true`, the object can be clicked,
+			* and things behind this object cannot be clicked.
+			* @instance
+			* @member {boolean} enabled
+			* @default true
+			* @memberof module:altspace/components.altspace-cursor-collider
+			*/
+			enabled: {type: 'boolean', default: 'true'}
+		};
+	};
+
+	AltspaceCursorCollider.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		this.setColliderFlag(this.data.enabled);
+		this.el.addEventListener('model-loaded', (function () {
+			this$1.setColliderFlag(this$1.data.enabled);
+		}).bind(this));
+	};
+
+	AltspaceCursorCollider.prototype.update = function update ()
+	{
+		this.setColliderFlag(this.data.enabled);
+	};
+
+	AltspaceCursorCollider.prototype.setColliderFlag = function setColliderFlag (state)
+	{
+		var obj = this.el.object3D;
+		if(obj){
+			safeDeepSet(obj.userData, ['altspace','collider','enabled'], state);
+			obj.traverse(function (subobj) {
+				if( subobj instanceof THREE.Mesh ){
+					safeDeepSet(subobj.userData, ['altspace','collider','enabled'], state);
+				}
+			});
+		}
+	};
+
+	Object.defineProperties( AltspaceCursorCollider.prototype, prototypeAccessors );
+
+	return AltspaceCursorCollider;
+}(AFrameComponent));
+
+/**
+* Enables tracked control support for A-Frame applications that use the built-in
+* `tracked-controls`, `vive-controls` or `hand-controls` components. @aframe
+* @alias altspace-tracked-controls
+* @extends module:altspace/components.AFrameComponent
+* @memberof module:altspace/components
+*/
+var AltspaceTrackedControls = (function (AFrameComponent$$1) {
+	function AltspaceTrackedControls () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) AltspaceTrackedControls.__proto__ = AFrameComponent$$1;
+	AltspaceTrackedControls.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	AltspaceTrackedControls.prototype.constructor = AltspaceTrackedControls;
+
+	AltspaceTrackedControls.prototype.init = function init ()
+	{
+		this.gamepadIndex = null;
+		this.trackedControlsSystem = document.querySelector('a-scene').systems['tracked-controls'];
+		this.systemGamepads = 0;
+		altspace.getGamepads();
+	};
+
+	AltspaceTrackedControls.prototype.tick = function tick ()
+	{
+		if (
+			this.trackedControlsSystem &&
+			this.systemGamepads !== this.trackedControlsSystem.controllers.length &&
+			window.altspace && altspace.getGamepads && altspace.getGamepads().length
+		) {
+			var components = this.el.components;
+			if (components['paint-controls']) {
+				this.gamepadIndex = components['paint-controls'].data.hand === 'left' ? 2 : 1;
+			}
+
+			if (this.gamepadIndex === null && components['hand-controls']) {
+				this.gamepadIndex = components['hand-controls'].data === 'left' ? 2 : 1;
+			}
+
+			if (this.gamepadIndex === null && components['vive-controls']) {
+				this.gamepadIndex = components['vive-controls'].data.hand === 'left' ? 2 : 1;
+			}
+
+			if (this.gamepadIndex === null && components['tracked-controls']) {
+				this.gamepadIndex = components['tracked-controls'].data.controller;
+			}
+
+			this.el.setAttribute('tracked-controls', 'id', altspace.getGamepads()[this.gamepadIndex].id);
+			this.el.setAttribute('tracked-controls', 'controller', 0);
+			this.systemGamepads = this.trackedControlsSystem.controllers.length;
+		}
+	};
+
+	return AltspaceTrackedControls;
+}(AFrameComponent));
+
+/**
+* The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
+*
+* **Note**: This component can have side-effects on some default components. To be
+* safe, this component should be specified last.
+*
+* @example
+* <head>
+*   <title>My A-Frame Scene</title>
+*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.0/dist/altspace.min.js"></script>
+* </head>
+* <body>
+*   <a-scene altspace>
+*     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
+*   </a-scene>
+* </body>
+*
+* @alias altspace
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var AltspaceComponent = (function (AFrameComponent$$1) {
+	function AltspaceComponent () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) AltspaceComponent.__proto__ = AFrameComponent$$1;
+	AltspaceComponent.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	AltspaceComponent.prototype.constructor = AltspaceComponent;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+
+			/**
+			* Allows you to use A-Frame units as CSS pixels.
+			* This is the default behavior for three.js apps, but not for A-Frame apps.
+			* @instance
+			* @member {boolean} usePixelScale
+			* @default false
+			* @memberof module:altspace/components.altspace
+			*/
+			usePixelScale: { type: 'boolean', default: 'false'},
+
+			/**
+			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
+			* @instance
+			* @member {string} verticalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.altspace
+			*/
+			verticalAlign: { type: 'string',  default: 'middle'},
+
+			/**
+			* Prevents the scene from being created if enclosure is flat.
+			* @instance
+			* @member {boolean} enclosuresOnly
+			* @default true
+			* @memberof module:altspace/components.altspace
+			*/
+			enclosuresOnly: { type: 'boolean', default: 'true'},
+
+			/**
+			* Puts the app into fullspace mode.
+			* @instance
+			* @member {boolean} fullspace
+			* @default false
+			* @memberof module:altspace/components.altspace
+			*/
+			fullspace: { type: 'boolean', default: 'false'}
+		}
+	};
+
+	AltspaceComponent.prototype.init = function init ()
+	{
+		this.version = 'AFRAME_ALTSPACE_VERSION';
+		if(!(this.el.object3D instanceof THREE.Scene)){
+			console.warn('aframe-altspace-component can only be attached to a-scene');
+			return;
+		}
+
+		if (window.altspace && window.altspace.inClient) {
+			this.el.setAttribute('vr-mode-ui', {enabled: false});
+			this.initRenderer();
+			this.initCursorEvents();
+			this.initCollisionEvents();
+		}
+		else {
+			console.warn('aframe-altspace-component only works inside of AltspaceVR');
+		}
+	};
+
+	AltspaceComponent.prototype.tick = function tick (t, dt)
+	{
+		if(this.el.object3D.updateAllBehaviors)
+			{ this.el.object3D.updateAllBehaviors(); }
+	};
+
+	/*
+	* Swap in Altspace renderer when running in AltspaceVR.
+	*/
+	AltspaceComponent.prototype.initRenderer = function initRenderer ()
+	{
+		var this$1 = this;
+
+		var scene = this.el.object3D;
+		var sceneEl = this.el.sceneEl;
+		var naturalScale = sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
+		altspace.getEnclosure().then((function (enclosure) {
+
+			if(this$1.data.fullspace){
+				if (enclosure.fullspace) {
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
+				}
+				enclosure.requestFullspace();
+				enclosure.addEventListener('fullspacechange', function () {
+					scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
+					// Make sure we flag the scene as initialized if we weren't already in fullspace mode previously.
+					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
+				});
+			}
+
+			if (!this$1.data.usePixelScale || this$1.data.fullspace){
+				scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
+			}
+
+			switch (this$1.data.verticalAlign) {
+			case 'bottom':
+				scene.position.y -= enclosure.innerHeight / 2;
+				break;
+			case 'top':
+				scene.position.y += enclosure.innerHeight / 2;
+				break;
+			case 'middle':
+				break;
+			default:
+				console.warn('Unexpected value for verticalAlign: ', this$1.data.verticalAlign);
+			}
+
+			if(this$1.data.enclosuresOnly && enclosure.innerDepth === 1){
+				this$1.el.renderer.render(new THREE.Scene());
+				this$1.el.renderer = this$1.el.effect = oldRenderer;
+			}
+
+			if (!this$1.data.fullspace) {
+				safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
+			}
+		}).bind(this));
+
+		var oldRenderer = this.el.renderer;
+		var renderer = this.el.renderer = this.el.effect = altspace.getThreeJSRenderer({
+			aframeComponentVersion: this.version
+		});
+
+		var noop = function() {};
+		renderer.setSize = noop;
+		renderer.setPixelRatio = noop;
+		renderer.setClearColor = noop;
+		renderer.clear = noop;
+		renderer.enableScissorTest = noop;
+		renderer.setScissor = noop;
+		renderer.setViewport = noop;
+		renderer.getPixelRatio = noop;
+		renderer.getMaxAnisotropy = noop;
+		renderer.setFaceCulling = noop;
+		renderer.context = {canvas: {}};
+		renderer.shadowMap = {};
+	};
+
+	/*
+	* Emulate A-Frame cursor events when running in AltspaceVR.
+	*/
+	AltspaceComponent.prototype.initCursorEvents = function initCursorEvents ()
+	{
+
+		var scene = this.el.object3D;
+		var cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
+		if (cursorEl) {
+			// Hide A-Frame cursor mesh.
+			cursorEl.setAttribute('material', 'transparent', true);
+			cursorEl.setAttribute('material', 'opacity', 0.0);
+		}
+
+		function emit(eventName, event)
+		{
+			// Fire events on intersected object and A-Frame cursor.
+			var targetEl = event.target.el;
+			if (cursorEl){
+				cursorEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
+			}
+
+			if (targetEl){
+				targetEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
+			}
+		}
+
+		var cursordownObj = null;
+		scene.addEventListener('cursordown', function (event) {
+			cursordownObj = event.target;
+			emit('mousedown', event);
+		});
+
+		scene.addEventListener('cursorup', function (event) {
+			emit('mouseup', event);
+			if (event.target.uuid === cursordownObj.uuid) {
+				emit('click', event);
+			}
+			cursordownObj = null;
+		});
+
+		scene.addEventListener('cursorenter', function (event) {
+			if (!event.target.el){
+				return;
+			}
+			event.target.el.addState('hovered');
+			if (cursorEl){
+				cursorEl.addState('hovering');
+			}
+			emit('mouseenter', event);
+		});
+
+		scene.addEventListener('cursorleave', function (event) {
+			if (!event.target.el){
+				return;
+			}
+			event.target.el.removeState('hovered');
+			if (cursorEl){
+				cursorEl.removeState('hovering');
+			}
+			emit('mouseleave', event);
+		});
+	};
+
+	AltspaceComponent.prototype.initCollisionEvents = function initCollisionEvents ()
+	{
+		var scene = this.el.object3D;
+
+		function emit(eventName, event)
+		{
+			var targetEl = event.target.el;
+			if (!targetEl)
+				{ return; }
+
+			//remap target and other from object3Ds to aframe element
+			event.target = targetEl;
+			if (event.other && event.other.el) {
+				event.other = event.other.el;
+			}
+			targetEl.emit(eventName, event);
+		}
+
+		scene.addEventListener('collisionenter', function (event) {
+			emit('collisionenter', event);
+		});
+
+		scene.addEventListener('collisionexit', function (event) {
+			emit('collisionexit', event);
+		});
+
+		scene.addEventListener('triggerenter', function (event) {
+			emit('triggerenter', event);
+		});
+
+		scene.addEventListener('triggerexit', function (event) {
+			emit('triggerexit', event);
+		});
+
+	};
+
+	Object.defineProperties( AltspaceComponent.prototype, prototypeAccessors );
+
+	return AltspaceComponent;
+}(AFrameComponent));
+
+/**
+* Sync the color property of the object between clients.
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-color
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+
+var SyncColor = (function (AFrameComponent$$1) {
+	function SyncColor () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) SyncColor.__proto__ = AFrameComponent$$1;
+	SyncColor.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncColor.prototype.constructor = SyncColor;
+
+	var prototypeAccessors = { dependencies: {} };
+
+	prototypeAccessors.dependencies.get = function (){
+		return ['sync'];
+	};
+
+	SyncColor.prototype.init = function init ()
+	{
+		this.sync = this.el.components.sync;
+
+		// wait for firebase connection to start sync routine
+		if(this.sync.isConnected)
+			{ start(); }
+		else
+			{ this.el.addEventListener('connected', this.start.bind(this)); }
+	};
+
+	SyncColor.prototype.start = function start ()
+	{
+		var colorRef = this.sync.dataRef.child('material/color');
+		var refChangedLocked = false;
+		var firstValue = true;
+		var self = this;
+
+		this.el.addEventListener('componentchanged', function (event) {
+			var name = event.detail.name;
+			var oldData = event.detail.oldData;
+			var newData = event.detail.newData;
+
+			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && self.sync.isMine)
+			{
+				//For some reason A-Frame has a misconfigured material reference if we do this too early
+				setTimeout(function () { return colorRef.set(newData.color); }, 0);
+			}
+		});
+
+		colorRef.on('value', function (snapshot) {
+			if(!self.sync.isMine || firstValue)
+			{
+				var color = snapshot.val();
+
+				refChangedLocked = true;
+				self.el.setAttribute('material', 'color', color);
+				refChangedLocked = false;
+
+				firstValue = false;
+			}
+		});
+	};
+
+	Object.defineProperties( SyncColor.prototype, prototypeAccessors );
+
+	return SyncColor;
+}(AFrameComponent));
+
+/**
+* Enables the synchronization of properties of the entity. Must be used in
+* conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
+* specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
+* @alias sync
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var SyncComponent = (function (AFrameComponent$$1) {
+	function SyncComponent () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) SyncComponent.__proto__ = AFrameComponent$$1;
+	SyncComponent.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncComponent.prototype.constructor = SyncComponent;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			mode: { default: 'link' },
+
+			/**
+			* The name of the event, or a list of events, that
+			* will cause the local client to take ownership of this object. This field
+			* cannot be updated after initialization.
+			* @instance
+			* @member {string} ownOn
+			* @memberof module:altspace/components.sync
+			*/
+			ownOn: { type: 'string' } //cannot be changed after creation
+		};
+	};
+
+	SyncComponent.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		/**
+		* Indicates whether the sync ownership is yours.
+		* @instance
+		* @member {boolean} isMine
+		* @memberof module:altspace/components.sync
+		* @readonly
+		*/
+		this.isMine = false;
+
+		this.scene = this.el.sceneEl;
+		this.syncSys = this.scene.systems['sync-system'];
+		this.isConnected = false;
+
+		if(this.syncSys.isConnected)
+			{ this.start(); }
+		else
+			{ this.scene.addEventListener('connected', this.start.bind(this)); }
+
+		if(this.data.ownOn)
+		{
+			var ownershipEvents = this.data.ownOn.split(/[ ,]+/);
+			ownershipEvents.forEach((function (e) {
+				this$1.el.addEventListener(e, (function () {
+					if(this$1.isConnected){
+						this$1.takeOwnership();
+					}
+				}).bind(this$1));
+			}).bind(this));
+		}
+	};
+
+	/**
+	* Tell sync to start pushing local property values instead of updating
+	* local from remote values.
+	* @instance
+	* @method takeOwnership
+	* @memberof module:altspace/components.sync
+	*/
+	SyncComponent.prototype.takeOwnership = function takeOwnership ()
+	{
+		this.ownerRef.set(this.syncSys.clientId);
+
+		//clear our ownership if we disconnect
+		//this is needed if we are the last user in the room, but we expect people to join later
+		this.ownerRef.onDisconnect().set(null);
+	};
+
+	SyncComponent.prototype.start = function start ()
+	{
+		var this$1 = this;
+
+		//Make sure someone always owns an object. If the owner leaves and we are the master client, we will take it.
+		//This ensures, for example, that synced animations keep playing
+		this.scene.addEventListener('clientleft', (function (event) {
+			var shouldTakeOwnership = (!this$1.ownerId || this$1.ownerId === event.detail.id) && this$1.syncSys.isMasterClient;
+			if(shouldTakeOwnership)
+				{ this$1.takeOwnership(); }
+		}).bind(this));
+
+		if (this.data.mode === 'link') {
+			var id = this.el.id;
+			if (!id) {
+				console.error('Entities cannot be synced using link mode without an id.');
+				return;
+			}
+
+			this.link(this.syncSys.sceneRef.child(id));
+			this.setupReceive();
+
+		} else {
+			console.error('Unsupported sync mode: ' + this.data.mode);
+			return;
+		}
+
+		this.isConnected = true;
+		this.el.emit('connected', null, false);
+	};
+
+	SyncComponent.prototype.link = function link (entityRef)
+	{
+		this.ref = entityRef;
+		this.key = this.ref.key();
+		this.dataRef = this.ref.child('data');
+		this.ownerRef = this.ref.child('owner');
+	};
+
+	SyncComponent.prototype.setupReceive = function setupReceive ()
+	{
+		var this$1 = this;
+
+		function onOwnerUpdate(snapshot)
+		{
+			var newOwnerId = snapshot.val();
+			var gained = newOwnerId === this.syncSys.clientId && !this.isMine;
+			if (gained) {
+				this.el.emit('ownershipgained', null, false);
+			}
+
+			//note this also fires when we start up without ownership
+			var lost = newOwnerId !== this.syncSys.clientId;
+			if (lost) {
+				this.el.emit('ownershiplost', null, false);
+
+				//we no longer have to clear our ownership when we disconnect
+				this.ownerRef.onDisconnect().cancel();
+			}
+
+			this.ownerId = newOwnerId;
+
+			this.isMine = newOwnerId === this.syncSys.clientId;
+		}
+
+		this.ownerRef.transaction(
+			(function (owner) {
+				if (owner) { return undefined; }
+				// try to take ownership
+				return this$1.syncSys.clientId;
+			}).bind(this),
+
+			(function (error, committed) {
+				if(committed) {
+					// Commit succeeded. We are the owner, so set to null if we disconnect.
+					this$1.ownerRef.onDisconnect().set(null);
+				}
+				this$1.ownerRef.on('value', onOwnerUpdate.bind(this$1));
+			}).bind(this)
+		);
+	};
+
+	Object.defineProperties( SyncComponent.prototype, prototypeAccessors );
+
+	return SyncComponent;
+}(AFrameComponent));
+
+/**
+* Connect to a remote Firebase server, and facilitate synchronization. These
+* options correspond exactly with the configuration options for
+* [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
+* This component must be present on `a-scene` for any other sync components to work. @aframe
+* @alias sync-system
+* @extends module:altspace/components.AFrameSystem
+* @memberof module:altspace/components
+*/
+var SyncSystem = (function (AFrameSystem$$1) {
+	function SyncSystem () {
+		AFrameSystem$$1.apply(this, arguments);
+	}
+
+	if ( AFrameSystem$$1 ) SyncSystem.__proto__ = AFrameSystem$$1;
+	SyncSystem.prototype = Object.create( AFrameSystem$$1 && AFrameSystem$$1.prototype );
+	SyncSystem.prototype.constructor = SyncSystem;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* A unique identifier for you or your organization.
+			* @instance
+			* @member {string} author
+			* @memberof module:altspace/components.sync-system
+			*/
+			author: { type: 'string', default: null },
+
+			/**
+			* The name of the app.
+			* @instance
+			* @member {string} app
+			* @memberof module:altspace/components.sync-system
+			*/
+			app: { type: 'string', default: null },
+
+			/**
+			* Override the instance ID. Can also be overridden with a URL parameter.
+			* @instance
+			* @member {string} instance
+			* @memberof module:altspace/components.sync-system
+			*/
+			instance: { type: 'string', default: null },
+
+			/**
+			* Override the base reference. Set this to use your own Firebase.
+			* @instance
+			* @member {string} refUrl
+			* @memberof module:altspace/components.sync-system
+			*/
+			refUrl: { type: 'string', default: null }
+		};
+	};
+
+	/**
+	* True if the sync system is connected and ready for syncing.
+	* @member {boolean} module:altspace/components.sync-system#isConnected
+	* @readonly
+	*/
+
+	/**
+	* Fired when a connection is established and the sync system is fully initialized.
+	* @event module:altspace/components.sync-system#connected
+	* @property {boolean} shouldInitialize - True if this is the first client to establish a connection.
+	*/
+
+	/**
+	* Fired when a client joins.
+	* @event module:altspace/components.sync-system#clientjoined
+	* @property {string} id - Guid identifying the client.
+	*/
+
+	/**
+	* Fired when a client leaves.
+	* @event module:altspace/components.sync-system#clientleft
+	* @property {string} id - Guid identifying the client.
+	*/
+
+	SyncSystem.prototype.init = function init ()
+	{
+		if(!this.data || !this.data.app){
+			console.warn('The sync-system must be present on the scene and configured with required data.');
+			return;
+		}
+		console.log(this.data);
+
+		this.queuedInstantiations = [];
+		this.isConnected = false;
+		Promise.all([
+			altspace.utilities.sync.connect({
+				authorId: this.data.author,
+				appId: this.data.app,
+				instanceId: this.data.instance,
+				baseRefUrl: this.data.refUrl
+			}),
+			altspace.getUser()
+		]).then(this.connected.bind(this));
+	};
+
+	SyncSystem.prototype.connected = function connected (results)
+	{
+		this.connection = results.shift();
+		this.userInfo = results.shift();
+
+		this.sceneRef = this.connection.instance.child('scene');
+		this.clientsRef = this.connection.instance.child('clients');
+		this.instantiatedElementsRef = this.connection.instance.child('instantiatedElements');
+
+		this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
+		this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
+
+		// temporary way of having unique identifiers for each client
+		this.clientId = this.sceneEl.object3D.uuid;
+		this.masterClientId = null;
+
+		var self = this;
+
+		// local client connected
+		this.clientsRef.on("value", function (snapshot) {
+			var clientIds = snapshot.val();
+			var masterClientKey = Object.keys(clientIds)[0];
+			self.masterClientId = clientIds[masterClientKey];
+		});
+
+		// remote client connected
+		this.clientsRef.on('child_added', function (childSnapshot) {
+			var joinedClientId = childSnapshot.val();
+			//let the master client flag get set first
+			setTimeout(function () {
+				self.sceneEl.emit('clientjoined', {id: joinedClientId}, false);
+			}, 0);
+		});
+
+		// remote client disconnected
+		this.clientsRef.on('child_removed', function (childSnapshot) {
+			var leftClientId = childSnapshot.val();
+			//let the master client flag get set first
+			setTimeout(function () {
+				self.sceneEl.emit('clientleft', {id: leftClientId}, false);
+			}, 0);
+		});
+
+		// add our client ID to the list of connected clients,
+		// but have it be automatically removed by firebase if we disconnect for any reason
+		this.clientsRef.push(this.clientId).onDisconnect().remove();
+
+		this.connection.instance.child('initialized').once('value', function (snapshot) {
+			var shouldInitialize = !snapshot.val();
+			snapshot.ref().set(true);
+
+			self.processQueuedInstantiations();
+
+			self.sceneEl.emit('connected', { shouldInitialize: shouldInitialize }, false);
+			self.isConnected = true;
+		});
+	};
+
+	/**
+	* Returns true if the local client is the master client.
+	* @instance
+	* @method isMasterClient
+	* @memberof module:altspace/components.sync-system
+	* @returns {boolean}
+	*/
+	SyncSystem.prototype.isMasterClient = function isMasterClient ()
+	{
+		return this.masterClientId === this.clientId;
+	};
+
+	SyncSystem.prototype.listenToInstantiationGroup = function listenToInstantiationGroup (snapshot) {
+		snapshot.ref().on('child_added', this.createElement.bind(this));
+		snapshot.ref().on('child_removed', this.removeElement.bind(this));
+	};
+
+	SyncSystem.prototype.stopListeningToInstantiationGroup = function stopListeningToInstantiationGroup (snapshot) {
+		snapshot.ref().off('child_added');
+		snapshot.ref().off('child_removed');
+	};
+
+	SyncSystem.prototype.processQueuedInstantiations = function processQueuedInstantiations () {
+		var this$1 = this;
+
+		this.queuedInstantiations.forEach((function (instantiationProps) {
+			instantiationProps.creatorUserId = this$1.userInfo.userId;
+			instantiationProps.clientId = this$1.clientId;
+			this$1.instantiatedElementsRef.child(instantiationProps.groupName).
+				push(instantiationProps).
+				onDisconnect().remove();
+		}).bind(this));
+		// Clear queue.
+		this.queuedInstantiations.length = 0;
+	};
+
+	/**
+	* Instantiate an entity with the given mixins. Instantiated entities that belong to the current user are given a
+	* "mine" class name, so that they can be selected against.
+	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
+	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
+	* @param {Element} [el] - The element responsible for instantiating this entity.
+	* @param {string} [groupName] - A group that the entity should belong to. Used in conjunction with
+	*	[removeLast]{@link module:altspace/components.sync-system#removeLast}.
+	* @param {string} [instantiatorId] - Used by [removeLast]{@link module:altspace/components.sync-system#removeLast} to indicate who was
+	*	responsible for the removed entity.
+	*/
+	SyncSystem.prototype.instantiate = function instantiate (mixin, parent, el, groupName, instantiatorId) {
+		// TODO Validation should throw an error instead of a console.error, but A-Frame 0.3.0 doesn't propagate those
+		// correctly.
+		if (!mixin) {
+			console.error('AltspaceVR: Instantiation requires a mixin value.', el);
+			return;
+		}
+		var parentWithId = parent && parent.id;
+		var parentIsScene = parent.nodeName === 'A-SCENE';
+		if (!parentWithId && !parentIsScene) {
+			console.error('AltspaceVR: Instantiation requires a parent with an id.', el);
+			return;
+		}
+
+		var parentSelector = parentWithId ? '#' + parent.id : 'a-scene';
+		var instantiationProps = {
+			instantiatorId: instantiatorId || '',
+			groupName: groupName || 'main',
+			mixin: mixin,
+			parent: parentSelector
+		};
+		this.queuedInstantiations.push(instantiationProps);
+		if (this.isConnected) {
+			this.processQueuedInstantiations();
+		}
+	};
+
+	/**
+	* Remove the last entity instantiated in the given group.
+	* Returns a Promise which resolves with the instantiatorId associated with the removed entity.
+	* @param {string} groupName - Name of the group from which to remove the entity.
+	* @returns {Promise}
+	*/
+	SyncSystem.prototype.removeLast = function removeLast (groupName) {
+		var this$1 = this;
+
+		return new Promise((function (resolve) {
+			this$1.instantiatedElementsRef.child(groupName).orderByKey().limitToLast(1).once(
+				'value',
+				function (snapshot) {
+					if (!snapshot.hasChildren()) { resolve(); return; }
+					var val = snapshot.val();
+					var key = Object.keys(val)[0];
+					resolve(val[key].instantiatorId);
+					snapshot.ref().child(key).remove();
+				}
+			);
+		}).bind(this));
+	};
+
+	SyncSystem.prototype.createElement = function createElement (snapshot) {
+		var val = snapshot.val();
+		var key = snapshot.key();
+		var entityEl = document.createElement('a-entity');
+		entityEl.id = val.groupName + '-instance-' + key;
+		document.querySelector(val.parent).appendChild(entityEl);
+		entityEl.setAttribute('mixin', val.mixin);
+		entityEl.dataset.creatorUserId = val.creatorUserId;
+		if (this.userInfo.userId === val.creatorUserId) {
+			entityEl.classList.add('mine');
+		}
+	};
+
+	SyncSystem.prototype.removeElement = function removeElement (snapshot) {
+		var val = snapshot.val();
+		var key = snapshot.key();
+		var id = val.groupName + '-instance-' + key;
+		var el = document.querySelector('#' + id);
+		el.parentNode.removeChild(el);
+	};
+
+	Object.defineProperties( SyncSystem.prototype, prototypeAccessors );
+
+	return SyncSystem;
+}(AFrameSystem));
+
+//from underscore.js
+function throttle(func, wait, options) {
+	var timeout, context, args, result;
+	var previous = 0;
+	if (!options) { options = {}; }
+
+	var later = function() {
+		previous = options.leading === false ? 0 : Date.now();
+		timeout = null;
+		result = func.apply(context, args);
+		if (!timeout) { context = args = null; }
+	};
+
+	var throttled = function() {
+		var now = Date.now();
+		if (!previous && options.leading === false) { previous = now; }
+		var remaining = wait - (now - previous);
+		context = this;
+		args = arguments;
+		if (remaining <= 0 || remaining > wait) {
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = null;
+			}
+			previous = now;
+			result = func.apply(context, args);
+			if (!timeout) { context = args = null; }
+		} else if (!timeout && options.trailing !== false) {
+			timeout = setTimeout(later, remaining);
+		}
+		return result;
+	};
+
+	throttled.cancel = function() {
+		clearTimeout(timeout);
+		previous = 0;
+		timeout = context = args = null;
+	};
+
+	return throttled;
+}
+
+
+/**
+* Synchronize the position, rotation, and scale of this object with all clients.
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-transform
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+* @example
+* <a-scene sync-system='app: myapp; author: name'>
+*     <a-box move-it-around sync sync-transform></a-box>
+* </a-scene>
+*/
+var SyncTransform = (function (AFrameComponent$$1) {
+	function SyncTransform () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) SyncTransform.__proto__ = AFrameComponent$$1;
+	SyncTransform.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncTransform.prototype.constructor = SyncTransform;
+
+	var prototypeAccessors = { dependencies: {} };
+
+	prototypeAccessors.dependencies.get = function (){ return ['sync']; };
+	SyncTransform.prototype.init = function init ()
+	{
+		this.sync = this.el.components.sync;
+		if(this.sync.isConnected)
+			{ start(); }
+		else
+			{ this.el.addEventListener('connected', this.start.bind(this)); }
+	};
+
+	SyncTransform.prototype.start = function start ()
+	{
+		var sync = this.sync, component = this;
+		var positionRef = sync.dataRef.child('position');
+		var rotationRef = sync.dataRef.child('rotation');
+		var scaleRef = sync.dataRef.child('scale');
+
+		component.updateRate = 100;
+		var stoppedAnimations = [];
+
+		//pause all animations on ownership loss
+		component.el.addEventListener('ownershiplost', function () {
+			Array.from(component.el.children).forEach(function (child) {
+				var tagName = child.tagName.toLowerCase();
+				if (tagName === "a-animation") {
+					stoppedAnimations.push(child);
+					child.stop();
+				}
+			});
+		});
+
+		component.el.addEventListener('ownershipgained', function () {
+			stoppedAnimations.forEach(function (a) { return a.start(); });
+			stoppedAnimations = [];
+		});
+
+		function onTransform(snapshot, componentName) {
+			if (sync.isMine) { return; }
+			var value = snapshot.val();
+			if (!value) { return; }
+
+			component.el.setAttribute(componentName, value);
+		}
+
+		positionRef.on('value', function (snapshot) { return onTransform(snapshot, 'position'); });
+		rotationRef.on('value', function (snapshot) { return onTransform(snapshot, 'rotation'); });
+		scaleRef.on('value', function (snapshot) { return onTransform(snapshot, 'scale'); });
+
+		var sendPosition = throttle(function(value){
+			positionRef.set(value);
+		}, component.updateRate);
+
+		var sendRotation = throttle(function(value){
+			rotationRef.set(value);
+		}, component.updateRate);
+
+		var sendScale = throttle(function(value){
+			scaleRef.set(value);
+		}, component.updateRate);
+
+		function onComponentChanged(event)
+		{
+			if (!sync.isMine) { return; }
+
+			var name = event.detail.name;
+			var newData = event.detail.newData;
+
+			if (name === 'position') {
+				sendPosition(newData);
+			} else if (name === 'rotation') {
+				sendRotation(newData);
+			} else if (name === 'scale') {
+				sendScale(newData);
+			}
+		}
+
+		component.el.addEventListener('componentchanged', onComponentChanged);
+	};
+
+	Object.defineProperties( SyncTransform.prototype, prototypeAccessors );
+
+	return SyncTransform;
+}(AFrameComponent));
+
+/**
+* Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
+* Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
+* [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
+* @alias sync-n-sound
+* @extends module:altspace/components.AFrameComponent
+* @memberof module:altspace/components
+*/
+var SyncNSound = (function (AFrameComponent$$1) {
+	function SyncNSound () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) SyncNSound.__proto__ = AFrameComponent$$1;
+	SyncNSound.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncNSound.prototype.constructor = SyncNSound;
+
+	var prototypeAccessors = { dependencies: {} };
+
+	prototypeAccessors.dependencies.get = function (){
+		return ['sync'];
+	};
+
+	SyncNSound.prototype.init = function init ()
+	{
+		this.sync = this.el.components.sync;
+		this.scene = this.el.sceneEl;
+		this.syncSys = this.scene.systems['sync-system'];
+
+		this.soundStateRef = null;
+		this.soundEventRef = null;
+
+		if(this.sync.isConnected)
+			{ this.start(); }
+		else
+			{ this.el.addEventListener('connected', this.start.bind(this)); }
+	};
+
+	SyncNSound.prototype.remove = function remove ()
+	{
+		this.soundStateRef.off('value');
+		this.soundEventRef.off('value');
+	};
+
+	SyncNSound.prototype.start = function start ()
+	{
+		var this$1 = this;
+
+		this.soundStateRef = this.sync.dataRef.child('sound/state');
+		this.soundEventRef = this.sync.dataRef.child('sound/event');
+
+		function sendEvent(event) {
+			if (!this.sync.isMine) { return; }
+			var event = {
+				type: event.type,
+				sender: this.syncSys.clientId,
+				el: this.el.id,
+				time: Firebase.ServerValue.TIMESTAMP
+			};
+			this.soundEventRef.set(event);
+		}
+
+		this.el.addEventListener('sound-played', sendEvent.bind(this));
+		this.el.addEventListener('sound-paused', sendEvent.bind(this));
+
+		// Retrieve the initial value once so we know to discard it.
+		this.soundEventRef.once('value', function (snapshot) {
+			var initialEvent = snapshot.val();
+			this$1.soundEventRef.on('value', function (snapshot) {
+				var event = snapshot.val();
+				if (!event || (initialEvent && event.time === initialEvent.time) || this$1.sync.isMine) { return; }
+
+				if (event.el === this$1.el.id) {
+					var sound = this$1.el.components['n-sound'];
+					if (event.type === 'sound-played') {
+						sound.playSound();
+					}
+					else {
+						sound.pauseSound();
+					}
+				}
+			});
+		});
+
+		this.el.addEventListener('componentchanged', function (event) {
+			if (!this$1.sync.isMine) { return; }
+			var name = event.detail.name;
+			if (name !== 'n-sound') { return; }
+			this$1.soundStateRef.set(event.detail.newData);
+		});
+
+		this.soundStateRef.on('value', function (snapshot) {
+			if (this$1.sync.isMine) { return; }
+			var state = snapshot.val();
+			if (!state) { return; }
+			this$1.el.setAttribute('n-sound', state);
+		});
+	};
+
+	Object.defineProperties( SyncNSound.prototype, prototypeAccessors );
+
+	return SyncNSound;
+}(AFrameComponent));
+
+/**
+* Syncs the attributes of an n-skeleton-parent component across clients @aframe
+* @alias sync-n-skeleton-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+
+var SyncNSkeletonParent = (function (AFrameComponent$$1) {
+	function SyncNSkeletonParent () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) SyncNSkeletonParent.__proto__ = AFrameComponent$$1;
+	SyncNSkeletonParent.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	SyncNSkeletonParent.prototype.constructor = SyncNSkeletonParent;
+
+	var prototypeAccessors = { dependencies: {} };
+
+	prototypeAccessors.dependencies.get = function (){ return ['sync']; };
+
+	SyncNSkeletonParent.prototype.init = function init ()
+	{
+		var scene = this.el.sceneEl;
+		this.syncSys = scene.systems['sync-system'];
+		this.sync = this.el.components.sync;
+		if(this.syncSys.isConnected){
+			this._start();
+		}
+		else {
+			scene.addEventListener('connected', this._start.bind(this));
+		}
+	};
+
+	SyncNSkeletonParent.prototype.getDataRef = function getDataRef (propertyName) {
+		return this.sync.dataRef.child('n-skeleton-parent/' + propertyName);
+	};
+
+	SyncNSkeletonParent.prototype._start = function _start ()
+	{
+		this.attributeRef = this.sync.dataRef.child('n-skeleton-parent');
+		this.attributeRef.on('value', function (snapshot) {
+			var val = snapshot.val();
+			if (!val) { return; }
+			this.el.setAttribute('n-skeleton-parent', val);
+		}.bind(this));
+
+		// dataset.creatorUserId is defined when the entity is instantiated via the sync system.
+		if (this.el.dataset.creatorUserId) {
+			this.attributeRef.set(Object.assign(
+				{}, this.el.components['n-skeleton-parent'].data, {userId: this.el.dataset.creatorUserId}));
+		}
+
+		this.el.addEventListener('componentchanged', function (event) {
+			if (!this.sync.isMine) { return; }
+			var name = event.detail.name;
+			if (name === 'n-skeleton-parent') {
+				this.attributeRef.set(event.detail.newData);
+			}
+		}.bind(this));
+	};
+
+	Object.defineProperties( SyncNSkeletonParent.prototype, prototypeAccessors );
+
+	return SyncNSkeletonParent;
+}(AFrameComponent));
+
+/**
+* The wire component allows you to trigger an event on another entity when an event
+* occurs on an entity. If no targets are selected, it will target itself. @aframe
+* @alias wire
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+**/
+
+var Wire = (function (AFrameComponent$$1) {
+	function Wire(){
+		AFrameComponent$$1.call(this);
+		this.multiple = true;
+	}
+
+	if ( AFrameComponent$$1 ) Wire.__proto__ = AFrameComponent$$1;
+	Wire.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Wire.prototype.constructor = Wire;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* Name of an event to listen for
+			* @instance
+			* @member {string} on
+			* @memberof module:altspace/components.wire
+			*/
+			on: {type: 'string'},
+
+			/**
+			* Name of an event to trigger on the targets
+			* @instance
+			* @member {string} emit
+			* @memberof module:altspace/components.wire
+			*/
+			emit: {type: 'string'},
+
+			/**
+			* Name of a state to watch for
+			* @instance
+			* @member {string} gained
+			* @memberof module:altspace/components.wire
+			*/
+			gained: {type: 'string'},
+
+			/**
+			* Name of a state to watch for
+			* @instance
+			* @member {string} lost
+			* @memberof module:altspace/components.wire
+			*/
+			lost: {type: 'string'},
+
+			/**
+			* Name of a state to add on the target
+			* @instance
+			* @member {string} gain
+			* @memberof module:altspace/components.wire
+			*/
+			gain: {type: 'string'},
+
+			/**
+			* Name of a state to remove on the target
+			* @instance
+			* @member {string} lose
+			* @memberof module:altspace/components.wire
+			*/
+			lose: {type: 'string'},
+
+			/**
+			* A selector to pick which objects to wire to. The selector is re-evaluated when the wire is triggered.
+			* @instance
+			* @member {selector} targets
+			* @memberof module:altspace/components.wire
+			*/
+			targets: {type: 'selectorAll'},
+
+			/**
+			* A selector to pick a single object to wire to. The selector is re-evaluated when the wire is triggered.
+			* @instance
+			* @member {selector} target
+			* @memberof module:altspace/components.wire
+			*/
+			target: {type: 'selector'}
+		};
+	};
+
+	Wire.prototype.init = function init ()
+	{
+		this.actOnTargets = (function()
+		{
+			function act(el) {
+				if (this.data.emit) {
+					el.emit(this.data.emit);
+				}
+				if (this.data.gain) {
+					el.addState(this.data.gain);
+				}
+				if (this.data.lose) {
+					el.removeState(this.data.lose);
+				}
+			}
+
+			this.updateProperties(this.attrValue);
+
+			if(this.data.targets)
+				{ this.data.targets.forEach(act.bind(this)); }
+
+			if(this.data.target)
+				{ act.call(this, this.data.target); }
+
+			if( !this.data.targets && !this.data.target )
+				{ act.call(this, this.el); }
+
+		}).bind(this);
+
+		this.actOnTargetsIfStateMatches = (function (event) {
+			var state = event.detail.state;
+			if (state === this.data.gained || state === this.data.lost) {
+				this.actOnTargets();
+			}
+		}).bind(this);
+	};
+
+	Wire.prototype.update = function update (oldData)
+	{
+		if (oldData.on) {
+			this.el.removeEventListener(oldData.on, this.actOnTargets);
+		}
+		if (oldData.gained) {
+			this.el.removeEventListener('stateadded', this.actOnTargetsIfStateMatches);
+		}
+		if (oldData.lost) {
+			this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
+		}
+
+		if (this.data.on) {
+			this.el.addEventListener(this.data.on, this.actOnTargets);
+		}
+		if (this.data.gained) {
+			this.el.addEventListener('stateadded', this.actOnTargetsIfStateMatches);
+		}
+		if (this.data.lost) {
+			this.el.addEventListener('stateremoved', this.actOnTargetsIfStateMatches);
+		}
+	};
+
+	Wire.prototype.remove = function remove () {
+		this.el.removeEventListener(this.data.on, this.actOnTargets);
+		this.el.removeEventListener('stateadded', this.actOnTargetsIfStateMatches);
+		this.el.removeEventListener('stateremoved', this.actOnTargetsIfStateMatches);
+	};
+
+	Object.defineProperties( Wire.prototype, prototypeAccessors );
+
+	return Wire;
+}(AFrameComponent));
+
+/**
+* Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
+* @alias one-per-user
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var OnePerUser = (function (AFrameComponent$$1) {
+	function OnePerUser () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) OnePerUser.__proto__ = AFrameComponent$$1;
+	OnePerUser.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	OnePerUser.prototype.constructor = OnePerUser;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* A comma-separated list of mixin ids that are used to instantiate the object.
+			* @member {string} mixin
+			* @instance
+			* @memberof module:altspace/components.one-per-user
+			*/
+			mixin: {type: 'string'},
+
+			/**
+			* A selector specifying which element should be the parent of the instantiated entity.
+			* Defaults to the parent node (i.e. new element becomes a sibling of this entity).
+			* @member {string} [parent]
+			* @instance
+			* @memberof module:altspace/components.one-per-user
+			*/
+			parent: {type: 'selector'}
+		};
+	};
+
+	OnePerUser.prototype.init = function init (){
+		var scene = this.el.sceneEl;
+		this.syncSys = scene.systems['sync-system'];
+		this.syncSys.instantiate(this.data.mixin, this.data.parent || this.el.parentNode, this.el);
+	};
+
+	Object.defineProperties( OnePerUser.prototype, prototypeAccessors );
+
+	return OnePerUser;
+}(AFrameComponent));
+
+/**
+* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
+* The instantiated objects are built using the specified mixins. @aframe
+* @alias instantiator
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var Instantiator = (function (AFrameComponent$$1) {
+	function Instantiator () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) Instantiator.__proto__ = AFrameComponent$$1;
+	Instantiator.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Instantiator.prototype.constructor = Instantiator;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){ return {
+		/**
+		* An event that triggers the instantiation
+		* @instance
+		* @member {string} on
+		* @memberof module:altspace/components.instantiator
+		*/
+		on: {type: 'string'},
+
+		/**
+		* A space-separated list of mixins that should be used to instantiate the object.
+		* @instance
+		* @member {string} mixin
+		* @memberof module:altspace/components.instantiator
+		*/
+		mixin: {type: 'string'},
+
+		/**
+		* A selector that determines which object the instantiated object will be added to.
+		* @instance
+		* @member {string} parent
+		* @default "a-scene"
+		* @memberof module:altspace/components.instantiator
+		*/
+		parent: {type: 'selector', default: 'a-scene'},
+
+		/**
+		* An identifier which can be used to group instantiated objects.
+		* @instance
+		* @member {string} group
+		* @default "main"
+		* @memberof module:altspace/components.instantiator
+		*/
+		group: {type: 'string', default: 'main'},
+
+		/**
+		* Whether the last object instantiated in a group should be removed before
+		* instantiating a new object.
+		* @instance
+		* @member {boolean} removeLast
+		* @default true
+		* @memberof module:altspace/components.instantiator
+		*/
+		removeLast: {type: 'boolean', default: 'true'},
+	}; };
+
+	Instantiator.prototype.init = function init () {
+		this.onHandler = this.instantiateOrToggle.bind(this);
+		this.el.addEventListener(this.data.on, this.onHandler);
+		this.syncSys = this.el.sceneEl.systems['sync-system'];
+	};
+
+	Instantiator.prototype.instantiateOrToggle = function instantiateOrToggle () {
+		var userGroup = this.data.group + '-' + this.syncSys.userInfo.userId;
+		if (this.data.removeLast) {
+			this.syncSys.removeLast(userGroup).then(function (lastInstantiatorId) {
+				if (lastInstantiatorId !== this.el.id) {
+					this.syncSys.instantiate(this.data.mixin, this.data.parent, this.el, userGroup, this.el.id);
+				}
+			}.bind(this));
+		}
+		else {
+			this.syncSys.instantiate(this.el.id, userGroup, this.data.mixin, this.data.parent);
+		}
+	};
+
+	Instantiator.prototype.remove = function remove () {
+		this.el.removeEventListener(this.data.on, this.onHandler);
+	};
+
+	Object.defineProperties( Instantiator.prototype, prototypeAccessors );
+
+	return Instantiator;
+}(AFrameComponent));
+
+// graceful fallback in web browsers
+if (!window.altspace || !altspace.inClient)
+{
+	var noop = function () {};
+	safeDeepSet(window, ['altspace','addNativeComponent'], noop);
+	safeDeepSet(window, ['altspace','updateNativeComponent'], noop);
+	safeDeepSet(window, ['altspace','removeNativeComponent'], noop);
+}
+
+// create js-side dummy meshes so things are processed correctly
+var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
+var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+placeholderMaterial.visible = false;
+var PlaceholderMesh = (function (superclass) {
+	function PlaceholderMesh(){
+		superclass.call(this, placeholderGeometry, placeholderMaterial);
+	}
+
+	if ( superclass ) PlaceholderMesh.__proto__ = superclass;
+	PlaceholderMesh.prototype = Object.create( superclass && superclass.prototype );
+	PlaceholderMesh.prototype.constructor = PlaceholderMesh;
+
+	return PlaceholderMesh;
+}(THREE.Mesh));
+
+/**
+* Native components represent Unity-native game objects that offer extended functionality
+* only in AltspaceVR, with added caveats. This is the abstract base class for all
+* native components. Do not use this class directly.
+*
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var NativeComponent = (function (AFrameComponent$$1) {
+	function NativeComponent(name, sendUpdates){
+		if ( sendUpdates === void 0 ) sendUpdates = true;
+
+		AFrameComponent$$1.call(this);
+		Object.assign(this, {name: name, sendUpdates: sendUpdates});
+	}
+
+	if ( AFrameComponent$$1 ) NativeComponent.__proto__ = AFrameComponent$$1;
+	NativeComponent.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	NativeComponent.prototype.constructor = NativeComponent;
+
+	NativeComponent.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		var mesh = this.mesh || this.el.getOrCreateObject3D('mesh', PlaceholderMesh);
+		this.currentMesh = mesh;
+
+		//If you attach native components to an entity, it will not use a default collider
+		safeDeepSet(mesh.userData, ['altspace', 'collider', 'enabled'], false);
+		altspace.addNativeComponent(mesh, this.name);
+
+		this.update();
+
+		if(!this.mesh && !this._dontRebind){
+			this.el.addEventListener('object3dset', (function (event) {
+				if(event.detail.type === 'mesh'){
+					altspace.removeNativeComponent(this$1.currentMesh, this$1.name);
+					this$1._dontRebind = true;
+					this$1.init();
+				}
+			}).bind(this));
+		}
+	};
+
+	NativeComponent.prototype.update = function update (){
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		if(this.sendUpdates){
+			altspace.updateNativeComponent(mesh, this.name, this.data);
+		}
+	};
+
+	NativeComponent.prototype.remove = function remove (){
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.removeNativeComponent(mesh, this.name);
+	};
+
+	NativeComponent.prototype.callComponent = function callComponent (name){
+		var args = [], len = arguments.length - 1;
+		while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		altspace.callNativeComponent(mesh, this.name, name, args);
+	};
+
+	return NativeComponent;
+}(AFrameComponent));
+
+/**
+* Attach a given native object to this entity. @aframe
+* @alias n-object
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+* @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
+*/
+var NObject = (function (NativeComponent$$1) {
+	function NObject(){ NativeComponent$$1.call(this, 'n-object'); }
+
+	if ( NativeComponent$$1 ) NObject.__proto__ = NativeComponent$$1;
+	NObject.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NObject.prototype.constructor = NObject;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The identifier for the [resource]{@link module:altspace/resources} you want. This component
+			* can accept all resource types except for `interactables`.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-object
+			*/
+			res: {type: 'string'}
+		};
+	};
+
+	Object.defineProperties( NObject.prototype, prototypeAccessors );
+
+	return NObject;
+}(NativeComponent));
+
+/**
+* Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
+* These copies will be physically interactive and automatically synchronized
+* between users. @aframe
+* @alias n-spawner
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+* @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
+*/
+var NSpawner = (function (NativeComponent$$1) {
+	function NSpawner(){ NativeComponent$$1.call(this, 'n-spawner'); }
+
+	if ( NativeComponent$$1 ) NSpawner.__proto__ = NativeComponent$$1;
+	NSpawner.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NSpawner.prototype.constructor = NSpawner;
+
+	var prototypeAccessors$1 = { schema: {} };
+	prototypeAccessors$1.schema.get = function (){
+		return {
+			/**
+			* The identifier for the [resource]{@link module:altspace/resources} you want. This component
+			* can only accept resources of type `interactables`.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-spawner
+			*/
+			res: {type: 'string'}
+		};
+	};
+
+	Object.defineProperties( NSpawner.prototype, prototypeAccessors$1 );
+
+	return NSpawner;
+}(NativeComponent));
+
+/**
+* Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
+* This text will be clearer than texture-based text and more performant than geometry-based test. @aframe
+* @alias n-text
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NText = (function (NativeComponent$$1) {
+	function NText(){ NativeComponent$$1.call(this, 'n-text'); }
+
+	if ( NativeComponent$$1 ) NText.__proto__ = NativeComponent$$1;
+	NText.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NText.prototype.constructor = NText;
+
+	var prototypeAccessors$2 = { schema: {} };
+	prototypeAccessors$2.schema.get = function (){
+		return {
+			/**
+			* The text to be drawn.
+			* @instance
+			* @member {string} text
+			* @memberof module:altspace/components.n-text
+			*/
+			text: { default: '', type: 'string' },
+
+			/**
+			* The height of the letters. 10pt ~= 1m
+			* @instance
+			* @member {int} fontSize
+			* @default 10
+			* @memberof module:altspace/components.n-text
+			*/
+			fontSize: { default: '10', type: 'int' },//roughly a meter tall
+
+			/**
+			* The width of the text area in meters. If the
+			* text is wider than this value, the overflow will be wrapped to the next line.
+			* @instance
+			* @member {number} width
+			* @default 10
+			* @memberof module:altspace/components.n-text
+			*/
+			width: { default: '10', type: 'number' },//in meters
+
+			/**
+			* The height of the text area in meters. If the
+			* text is taller than this value, the overflow will be cut off.
+			* @instance
+			* @member {number} height
+			* @default 1
+			* @memberof module:altspace/components.n-text
+			*/
+			height: { default: '1', type: 'number' },//in meters
+
+			/**
+			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.
+			* @instance
+			* @member {string} horizontalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.n-text
+			*/
+			horizontalAlign: { default: 'middle'},
+
+			/**
+			* The vertical anchor point for the text. Can be `top`, `middle`, or `bottom`.
+			* @instance
+			* @member {string} verticalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.n-text
+			*/
+			verticalAlign: { default: 'middle'}
+		};
+	};
+
+	Object.defineProperties( NText.prototype, prototypeAccessors$2 );
+
+	return NText;
+}(NativeComponent));
+
+/**
+* Make the object's +Z always face the viewer. Currently will only directly apply
+* to main mesh or native component on the attached entity, not any children or submeshes. @aframe
+* @alias n-billboard
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NBillboard = (function (NativeComponent$$1) {
+	function NBillboard(){ NativeComponent$$1.call(this, 'n-billboard', false); }
+
+	if ( NativeComponent$$1 ) NBillboard.__proto__ = NativeComponent$$1;
+	NBillboard.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NBillboard.prototype.constructor = NBillboard;
+
+	return NBillboard;
+}(NativeComponent));
+
+/**
+* Parents an entity to a joint on the avatar skeleton. @aframe
+* @alias n-skeleton-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NSkeletonParent = (function (NativeComponent$$1) {
+	function NSkeletonParent(){ NativeComponent$$1.call(this, 'n-skeleton-parent'); }
+
+	if ( NativeComponent$$1 ) NSkeletonParent.__proto__ = NativeComponent$$1;
+	NSkeletonParent.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NSkeletonParent.prototype.constructor = NSkeletonParent;
+
+	var prototypeAccessors$3 = { schema: {} };
+	prototypeAccessors$3.schema.get = function (){ return {
+		/**
+		* One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg',
+		* 'foot', 'toes', 'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb',
+		* 'index', 'middle', 'ring' or 'pinky'.
+		* @member {string} module:altspace/components.n-skeleton-parent#part
+		*/
+		part: {type: 'string'},
+
+		/**
+		* Side of the body. Either 'left', 'center' or 'right'
+		* @member {string} module:altspace/components.n-skeleton-parent#side
+		* @default "center"
+		*/
+		side: {type: 'string', default: 'center'},
+
+		/**
+		* Bone index. e.g. Which knuckle joint to attach to.
+		* @member {int} module:altspace/components.n-skeleton-parent#index
+		* @default 0
+		*/
+		index: {type: 'int', default: 0},
+
+		/**
+		* Id of the user to which the entity should be attached. Defaults to the
+		* local user.
+		* @member {int} module:altspace/components.n-skeleton-parent#userId
+		*/
+		userId: {type: 'string'}
+	}; };
+
+	Object.defineProperties( NSkeletonParent.prototype, prototypeAccessors$3 );
+
+	return NSkeletonParent;
+}(NativeComponent));
+
+/**
+* Parents an entity to the cockpit. @aframe
+* @alias n-cockpit-parent
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NCockpitParent = (function (NativeComponent$$1) {
+	function NCockpitParent(){ NativeComponent$$1.call(this, 'n-cockpit-parent', false); }
+
+	if ( NativeComponent$$1 ) NCockpitParent.__proto__ = NativeComponent$$1;
+	NCockpitParent.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NCockpitParent.prototype.constructor = NCockpitParent;
+
+	return NCockpitParent;
+}(NativeComponent));
+
+/**
+* Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
+* [n-box-collider]{@link module:altspace/components.n-box-collider},
+* [n-capsule-collider]{@link module:altspace/components.n-capsule-collider},
+* and [n-mesh-collider]{@link module:altspace/components.n-mesh-collider}. You cannot use
+* this class directly, but instead you should add one of those components
+* to your objects.
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NCollider = (function (NativeComponent$$1) {
+	function NCollider () {
+		NativeComponent$$1.apply(this, arguments);
+	}
+
+	if ( NativeComponent$$1 ) NCollider.__proto__ = NativeComponent$$1;
+	NCollider.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NCollider.prototype.constructor = NCollider;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The offset of the collider in local space.
+			* @instance
+			* @member {vec3} center
+			* @default [0, 0, 0]
+			* @memberof module:altspace/components.NCollider
+			*/
+			center: { type: 'vec3' },
+
+			/**
+			* The type of collider, one of: `object` | `environment` | `hologram`.
+			* Object colliders collide with other objects, the environment, and the cursor.
+			* Environment colliders collide with everything objects do, but you can also
+			* teleport onto them. Hologram colliders only collide with other holograms and
+			* the cursor.
+			* @instance
+			* @member {string} type
+			* @default "hologram"
+			* @memberof module:altspace/components.NCollider
+			*/
+			type: { type: 'string', default: 'object' },
+
+			/**
+			* If true, this collider will not block
+			* other objects, but instead fire a `triggerenter` event when an object comes
+			* into contact with it, and a `triggerexit` when it leaves contact.
+			* @instance
+			* @member {boolean} isTrigger
+			* @default false
+			* @memberof module:altspace/components.NCollider
+			*/
+			isTrigger: { default: false, type: 'boolean' }
+		};
+	};
+
+	Object.defineProperties( NCollider.prototype, prototypeAccessors );
+
+	return NCollider;
+}(NativeComponent));
+
+/**
+* Fired when an object enters a trigger volume, e.g. `isTrigger: true`
+* @event module:altspace/components.NCollider.triggerenter
+*/
+
+/**
+* Fired when an object leaves a trigger volume, e.g. `isTrigger: true`
+* @event module:altspace/components.NCollider.triggerexit
+*/
+
+/**
+* A sphere-shaped collider. @aframe
+* @alias n-sphere-collider
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+* @example <a-sphere radius=1 n-sphere-collider='radius: 1; type: object;'></a-sphere>
+*/
+var NSphereCollider = (function (NCollider) {
+	function NSphereCollider(){ NCollider.call(this, 'n-sphere-collider'); }
+
+	if ( NCollider ) NSphereCollider.__proto__ = NCollider;
+	NSphereCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NSphereCollider.prototype.constructor = NSphereCollider;
+
+	var prototypeAccessors$1 = { schema: {} };
+	prototypeAccessors$1.schema.get = function (){
+		return {
+			/**
+			* The radius of the sphere collider in meters
+			* @instance
+			* @member {Number} radius
+			* @default 1
+			* @memberof module:altspace/components.n-sphere-collider
+			*/
+			radius: { default: 1, type: 'number' },
+		};
+	};
+
+	Object.defineProperties( NSphereCollider.prototype, prototypeAccessors$1 );
+
+	return NSphereCollider;
+}(NCollider));
+
+/**
+* Create a box-shaped collider on this entity. @aframe
+* @alias n-box-collider
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NBoxCollider = (function (NCollider) {
+	function NBoxCollider(){ NCollider.call(this, 'n-box-collider'); }
+
+	if ( NCollider ) NBoxCollider.__proto__ = NCollider;
+	NBoxCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NBoxCollider.prototype.constructor = NBoxCollider;
+
+	var prototypeAccessors$2 = { schema: {} };
+	prototypeAccessors$2.schema.get = function (){
+		return {
+			/**
+			* The dimensions of the collider.
+			* @instance
+			* @member {vec3} size
+			* @default [1, 1, 1]
+			* @memberof module:altspace/components.n-box-collider
+			*/
+			size: { type: 'vec3', default: '1 1 1' }
+		};
+	};
+
+	Object.defineProperties( NBoxCollider.prototype, prototypeAccessors$2 );
+
+	return NBoxCollider;
+}(NCollider));
+
+/**
+* Create a capsule-shaped collider on this entity. Capsules
+* are a union of a cylinder and two spheres on top and bottom. @aframe
+* @alias n-capsule-collider
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NCapsuleCollider = (function (NCollider) {
+	function NCapsuleCollider(){ NCollider.call(this, 'n-capsule-collider'); }
+
+	if ( NCollider ) NCapsuleCollider.__proto__ = NCollider;
+	NCapsuleCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NCapsuleCollider.prototype.constructor = NCapsuleCollider;
+
+	var prototypeAccessors$3 = { schema: {} };
+	prototypeAccessors$3.schema.get = function (){
+		return {
+
+			/**
+			* The radius of the capsule in meters.
+			* @instance
+			* @member {number} radius
+			* @default 1
+			* @memberof module:altspace/components.n-capsule-collider
+			*/
+			radius: { default: '0', type: 'number' },
+
+			/**
+			* The height of the shaft of the capsule in meters.
+			* @instance
+			* @member {number} height
+			* @default 0
+			* @memberof module:altspace/components.n-capsule-collider
+			*/
+			height: { default: '0', type: 'number' },
+
+			/**
+			* The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.
+			* @instance
+			* @member {string} direction
+			* @default 'y'
+			* @memberof module:altspace/components.n-capsule-collider
+			*/
+			direction: { default: 'y' }
+		};
+	};
+
+	Object.defineProperties( NCapsuleCollider.prototype, prototypeAccessors$3 );
+
+	return NCapsuleCollider;
+}(NCollider));
+
+/**
+* Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
+* low-poly meshes. If using this alongside the `geometry` component, make sure that
+* `geometry` comes before this component. @aframe
+* @example <a-box n-mesh-collider></a-box>
+* @alias n-mesh-collider
+* @memberof module:altspace/components
+* @extends module:altspace/components.NCollider
+*/
+var NMeshCollider = (function (NCollider) {
+	function NMeshCollider(mesh, data){
+		if ( mesh === void 0 ) mesh = null;
+
+		NCollider.call(this, 'n-mesh-collider');
+		this.mesh = mesh;
+		this.subcomponents = [];
+	}
+
+	if ( NCollider ) NMeshCollider.__proto__ = NCollider;
+	NMeshCollider.prototype = Object.create( NCollider && NCollider.prototype );
+	NMeshCollider.prototype.constructor = NMeshCollider;
+
+	var prototypeAccessors$4 = { schema: {} };
+
+	prototypeAccessors$4.schema.get = function (){
+		return {
+
+			/**
+			* Whether the collider should be convex or concave. Set this to false if you have holes
+			* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
+			* expensive compared to convex colliders.
+			* @instance
+			* @member {boolean} convex
+			* @default true
+			* @memberof module:altspace/components.n-mesh-collider
+			*/
+			convex: { type: 'boolean', default: 'true' }
+		};
+	};
+
+	NMeshCollider.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		if(this.mesh){
+			NCollider.prototype.init.call(this);
+		}
+		else
+		{
+			this.subcomponents = [];
+			var mesh = this.el.object3D;
+			mesh.traverse((function (o) {
+				if(o instanceof THREE.Mesh){
+					var subcomp = new NMeshCollider(o);
+					this$1.subcomponents.push(subcomp);
+					subcomp.data = this$1.data;
+					subcomp.init();
+				}
+			}).bind(this));
+
+			this.el.addEventListener('model-loaded', this.init.bind(this));
+		}
+	};
+
+	NMeshCollider.prototype.update = function update (oldData)
+	{
+		var this$1 = this;
+
+		if(this.mesh){
+			NCollider.prototype.update.call(this, oldData);
+		}
+		else {
+			this.subcomponents.forEach((function (sub) {
+				sub.data = this$1.data;
+				sub.update(oldData);
+			}).bind(this));
+		}
+	};
+
+	NMeshCollider.prototype.remove = function remove ()
+	{
+		if(this.mesh){
+			NCollider.prototype.remove.call(this);
+		}
+		else {
+			this.subcomponents.forEach((function (sub) {
+				sub.remove();
+			}).bind(this));
+		}
+	};
+
+	Object.defineProperties( NMeshCollider.prototype, prototypeAccessors$4 );
+
+	return NMeshCollider;
+}(NCollider));
+
+/**
+* A container keeps a running tally of how many objects are within
+* its bounds, and adds and removes the states `container-full` and
+* `container-empty` based on the current count of objects. Requires a native
+* collider component set to trigger mode. @aframe
+* @alias n-container
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+* @example
+* <a-box n-box-collider="isTrigger: true" n-container="capacity: 6"></a-box>
+*/
+var NContainer = (function (NativeComponent$$1) {
+	function NContainer(){ NativeComponent$$1.call(this, 'n-container'); }
+
+	if ( NativeComponent$$1 ) NContainer.__proto__ = NativeComponent$$1;
+	NContainer.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NContainer.prototype.constructor = NContainer;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The value at which the container will fire the `container-full` event.
+			* @instance
+			* @member {number} capacity
+			* @default 4
+			* @memberof module:altspace/components.n-container
+			*/
+			capacity: { default: 4, type: 'number' }
+		};
+	};
+	NContainer.prototype.init = function init ()
+	{
+		NativeComponent$$1.prototype.init.call(this);
+
+		var el = this.el;
+		var component = this;
+
+		el.addEventListener('stateadded', function (event) {
+			if(event.detail.state === 'container-full'){
+				/**
+				* Fired when the n-container reaches its capacity
+				* @event container-full
+				* @memberof module:altspace/components.n-container
+				*/
+				el.emit('container-full');
+			}
+			if(event.detail.state === 'container-empty'){
+				/**
+				* Fired when the n-container reaches zero objects contained
+				* @event container-empty
+				* @memberof module:altspace/components.n-container
+				*/
+				el.emit('container-empty');
+			}
+		});
+
+		/**
+		* Fired every time an object enters or leaves the bounds of the n-container
+		* @event container-count-changed
+		* @memberof module:altspace/components.n-container
+		* @param {Object} event - Contains details of the event. The new object count
+		* can be found at `event.detail.count`.
+		*/
+		el.addEventListener('container-count-changed', function (event) {
+
+			/**
+			* The number of objects in this container.
+			* @instance
+			* @member {int} count
+			* @readonly
+			* @memberof module:altspace/components.n-container
+			*/
+			component.count = event.detail.count;
+		});
+	};
+
+	Object.defineProperties( NContainer.prototype, prototypeAccessors );
+
+	return NContainer;
+}(NativeComponent));
+
+/**
+* Spawn a portal that allows you to travel to a different space or a different location in the current space.
+* @aframe
+* @alias n-portal
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NPortal = (function (NativeComponent$$1) {
+	function NPortal(){ NativeComponent$$1.call(this, 'n-portal'); }
+
+	if ( NativeComponent$$1 ) NPortal.__proto__ = NativeComponent$$1;
+	NPortal.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NPortal.prototype.constructor = NPortal;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The space id of the space that you want the portal to send users to.
+			* @instance
+			* @member {string} targetSpace
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetSpace: {type: 'string'},
+			/**
+			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
+			* and rotate the user in its direction. Note: The target position/rotation will not be updated if the
+			* targetEntity moves.
+			* @instance
+			* @member {selector} targetEntity
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetEntity: {type: 'selector'}
+		};
+	};
+	NPortal.prototype.update = function update (){
+		var mesh = this.el.object3DMap.mesh;
+		var targetPosition, targetQuaternion;
+		if (this.data.targetEntity) {
+			// updateMatrixWorld doesn't traverse upwards to actually update an object's world matrix.
+			// Updating the entire scene's world matrcies is overkill, but there isn't a simple way to do the right
+			// thing at the moment. See https://github.com/mrdoob/three.js/pull/9410
+			this.el.sceneEl.object3D.updateMatrixWorld(true);
+			targetPosition = this.data.targetEntity.object3D.getWorldPosition();
+			var quaternion = this.data.targetEntity.object3D.getWorldQuaternion();
+			targetQuaternion = {x: quaternion.x, y: quaternion.y, z: quaternion.z, w: quaternion.w};
+		}
+
+		var data = {
+			targetSpace: this.data.targetSpace,
+			targetPosition: targetPosition,
+			targetQuaternion: targetQuaternion
+		};
+
+		altspace.updateNativeComponent(mesh, this.name, data);
+	};
+
+	Object.defineProperties( NPortal.prototype, prototypeAccessors );
+
+	return NPortal;
+}(NativeComponent));
+
+!function(){"use strict";function r(r){for(var t=[],e=0;e<r.length;e++){ t.push(r[e]); }return t}String.prototype.codePointAt||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=t.length,n=r?+r:0;if(n!=n&&(n=0),!(n<0||n>=e)){var o,i=t.charCodeAt(n);return i>=55296&&i<=56319&&e>n+1&&(o=t.charCodeAt(n+1),o>=56320&&o<=57343)?1024*(i-55296)+o-56320+65536:i}};r?r(String.prototype,"codePointAt",{value:t,configurable:!0,writable:!0}):String.prototype.codePointAt=t;}(),String.prototype.repeat||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=r?+r:0;if(e!=e&&(e=0),e<0||e==1/0){ throw RangeError(); }for(var n="";e;){ e%2==1&&(n+=t),e>1&&(t+=t),e>>=1; }return n};r?r(String.prototype,"repeat",{value:t,configurable:!0,writable:!0}):String.prototype.repeat=t;}(),String.prototype.includes||!function(){var r={}.toString,t=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),e="".indexOf,n=function(t){if(null==this){ throw TypeError(); }var n=this+"";if(t&&"[object RegExp]"==r.call(t)){ throw TypeError(); }var o=n.length,i=t+"",a=i.length,c=arguments.length>1?arguments[1]:void 0,u=c?+c:0;return u!=u&&(u=0),!(a+Math.min(Math.max(u,0),o)>o)&&e.call(n,i,u)!=-1};t?t(String.prototype,"includes",{value:n,configurable:!0,writable:!0}):String.prototype.includes=n;}(),String.prototype.startsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=arguments.length>1?arguments[1]:void 0,c=a?+a:0;c!=c&&(c=0);var u=Math.min(Math.max(c,0),n);if(i+u>n){ return!1; }for(var l=-1;++l<i;){ if(e.charCodeAt(u+l)!=o.charCodeAt(l)){ return!1; } }return!0};r?r(String.prototype,"startsWith",{value:e,configurable:!0,writable:!0}):String.prototype.startsWith=e;}(),String.prototype.endsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=n;if(arguments.length>1){var c=arguments[1];void 0!==c&&(a=c?+c:0,a!=a&&(a=0));}var u=Math.min(Math.max(a,0),n),l=u-i;if(l<0){ return!1; }for(var h=-1;++h<i;){ if(e.charCodeAt(l+h)!=o.charCodeAt(h)){ return!1; } }return!0};r?r(String.prototype,"endsWith",{value:e,configurable:!0,writable:!0}):String.prototype.endsWith=e;}(),String.fromCodePoint||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=String.fromCharCode,e=Math.floor,n=function(r){
+var arguments$1 = arguments;
+var n,o,i=16384,a=[],c=-1,u=arguments.length;if(!u){ return""; }for(var l="";++c<u;){var h=+arguments$1[c];if(!isFinite(h)||h<0||h>1114111||e(h)!=h){ throw RangeError("Invalid code point: "+h); }h<=65535?a.push(h):(h-=65536,n=(h>>10)+55296,o=h%1024+56320,a.push(n,o)),(c+1==u||a.length>i)&&(l+=t.apply(null,a),a.length=0);}return l};r?r(String,"fromCodePoint",{value:n,configurable:!0,writable:!0}):String.fromCodePoint=n;}(),Object.defineProperty(String,"raw",{configurable:!0,enumerable:!1,writable:!0,value:function(t,e){var n;t=null!=t?t:{},e=arguments.length>1?r(arguments).slice(1):[];try{n=r(t.raw);}catch(r){throw new TypeError("Cannot convert undefined or null to object")}return n.map(function(r,n){return t.raw.length<=n?r:null!=e[n-1]?e[n-1]+r:r}).join("")}});}();
+
+/**
+* Play a sound from a particular location. Limiting sound duration to 5 seconds
+* or less is recommended to prevent hitching when the sound loads. @aframe
+* @alias n-sound
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NSound = (function (NativeComponent$$1) {
+	function NSound(){ NativeComponent$$1.call(this, 'n-sound'); }
+
+	if ( NativeComponent$$1 ) NSound.__proto__ = NativeComponent$$1;
+	NSound.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NSound.prototype.constructor = NSound;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+
+			/**
+			* Play the sound given by the `src` or `res` property from the location
+			* of the entity. @aframe
+			* The resource identifier for a built-in sound clip.
+			* @instance
+			* @member {string} res
+			* @memberof module:altspace/components.n-sound
+			*/
+			res: { type: 'string' },
+
+			/**
+			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+			* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
+			* @instance
+			* @member {string} src
+			* @memberof module:altspace/components.n-sound
+			*/
+			src: { type: 'string' },
+
+			/**
+			* The name of the event that will play this sound clip.
+			* @instance
+			* @member {string} on
+			* @memberof module:altspace/components.n-sound
+			*/
+			on: { type: 'string' },
+
+			/**
+			* Tells the clip to loop back to the beginning of the clip once it's finished.
+			* @instance
+			* @member {boolean} loop
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
+			loop: { type: 'boolean' },
+
+			/**
+			* The volume of the clip, from [0,1].
+			* @instance
+			* @member {number} volume
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
+			volume: { type: 'number', default: 1 },
+
+			/**
+			* Tells the clip to start automatically when the scene loads, instead of waiting for `playSound()`.
+			* @instance
+			* @member {boolean} autoplay
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
+			autoplay: { type: 'boolean' },
+
+			/**
+			* Tells the clip to clean itself up when it
+			* finishes playing. Allows for overlapping instances of the sound.
+			* @instance
+			* @member {boolean} oneshot
+			* @default false
+			* @memberof module:altspace/components.n-sound
+			*/
+			oneshot: { type: 'boolean' },
+
+			/**
+			* How spatialized a sound is, from [0,1].
+			* A value of 1 will be fully localized, and the sound will pan left and
+			* right as you turn your head. A value of 0 makes it non-spatialized, and
+			* it will always be heard in both ears.
+			* @instance
+			* @member {number} spatialBlend
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
+			spatialBlend: { type: 'float', default: 1 },
+
+			/**
+			* The speed multiplier for the sound. 0.5 is one octave down, and 2 is one octave up.
+			* @instance
+			* @member {number} pitch
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
+			pitch: { type: 'float', default: 1 },
+
+			/**
+			* Inside this distance in meters, the sound volume is at full volume.
+			* @instance
+			* @member {number} minDistance
+			* @default 1
+			* @memberof module:altspace/components.n-sound
+			*/
+			minDistance: { type: 'float', default: 1 },
+
+			/**
+			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+			* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
+			* @instance
+			* @member {number} maxDistance
+			* @default 12
+			* @memberof module:altspace/components.n-sound
+			*/
+			maxDistance: { type: 'float', default: 12 },
+
+			/**
+			* Set this to 'linear' or 'cosine' if you want to cut sounds off at a maxDistance.
+			* @instance
+			* @member {string} rolloff
+			* @default "logarithmic"
+			* @memberof module:altspace/components.n-sound
+			*/
+			rolloff: { type: 'string', default: 'logarithmic' },
+		};
+	};
+
+	NSound.prototype.init = function init ()
+	{
+		var src = this.data.src;
+		if (src && !src.startsWith('http')) {
+			if (src.startsWith('/')) {
+				this.data.src = location.origin + src;
+			}
+			else {
+				var currPath = location.pathname;
+				if (!currPath.endsWith('/')) {
+					currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+				}
+				this.data.src = location.origin + currPath + src;
+			}
+
+		}
+		NativeComponent$$1.prototype.init.call(this);
+	};
+
+	NSound.prototype.update = function update (oldData)
+	{
+		NativeComponent$$1.prototype.update.call(this, oldData);
+		if (this.playHandler) {
+			this.el.removeEventListener(oldData.on, this.playHandler);
+		}
+
+		if (this.data.on) {
+			this.playHandler = this.playSound.bind(this);
+			this.el.addEventListener(this.data.on, this.playHandler);
+		}
+	};
+
+	NSound.prototype.remove = function remove ()
+	{
+		NativeComponent$$1.prototype.remove.call(this);
+		if (this.playHandler) {
+			this.el.removeEventListener(this.data.on, this.playHandler);
+		}
+	};
+
+	/**
+	* Stop the playing sound, and preserve position in clip.
+	*/
+	NSound.prototype.pauseSound = function pauseSound () {
+		this.callComponent('pause');
+
+		/**
+		* Emitted when the sound stops playing
+		* @event sound-paused
+		* @memberof module:altspace/components.NSound
+		*/
+		this.el.emit('sound-paused');
+	};
+
+	/**
+	* Start the sound playing.
+	*/
+	NSound.prototype.playSound = function playSound () {
+		this.callComponent('play');
+
+		/**
+		* Emitted when the sound starts playing
+		* @event sound-played
+		* @memberof module:altspace/components.NSound
+		*/
+		this.el.emit('sound-played');
+	};
+
+	/**
+	* Jump to a position in the clip.
+	* @param {number} time - The time in milliseconds to jump to.
+	*/
+	NSound.prototype.seek = function seek (time) {
+		this.callComponent('seek', {time: time});
+	};
+
+	Object.defineProperties( NSound.prototype, prototypeAccessors );
+
+	return NSound;
+}(NativeComponent));
+
+/**
+* Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
+* Layout browsers can only be used by apps that are set as the default app in a space.
+* @aframe
+* @alias n-layout-browser
+* @memberof module:altspace/components
+* @extends module:altspace/components.NativeComponent
+*/
+var NLayoutBrowser = (function (NativeComponent$$1) {
+	function NLayoutBrowser(){ NativeComponent$$1.call(this, 'n-layout-browser'); }
+
+	if ( NativeComponent$$1 ) NLayoutBrowser.__proto__ = NativeComponent$$1;
+	NLayoutBrowser.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NLayoutBrowser.prototype.constructor = NLayoutBrowser;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* An absolute URL that you want to load in the browser.
+			* @instance
+			* @member {string} url
+			* @memberof module:altspace/components.n-layout-browser
+			*/
+			url: { default: 'about:blank'},
+			/**
+			* Whether the browser is a three-dimensional browser that can contain other apps.
+			* @instance
+			* @default false
+			* @member {bool} isEnclosure
+			* @memberof module:altspace/components.n-layout-browser
+			*/
+			isEnclosure: { default: false }
+		};
+	};
+
+	Object.defineProperties( NLayoutBrowser.prototype, prototypeAccessors );
+
+	return NLayoutBrowser;
+}(NativeComponent));
+
+/**
+* AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
+* In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
+* this SDK provides a set of components to add AltspaceVR compatibility and additional
+* functionality to the toolset. At a minimum, A-Frame apps will need the [altspace]{@link module:altspace/components.altspace}
+* component on the `<a-scene>` tag to function as an AltspaceVR app.
+* @module altspace/components
+* @example
+* <html>
+*   <head>
+*     <title>My A-Frame Scene</title>
+*     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.0/dist/altspace.min.js"></script>
+*   </head>
+*   <body>
+*     <a-scene altspace>
+*       <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
+*     </a-scene>
+*   </body>
+* </html>
+*/
+
+if (window.AFRAME)
+{
+	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
+	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
+	registerComponentClass('altspace', AltspaceComponent);
+	registerSystemClass('sync-system', SyncSystem);
+	registerComponentClass('sync-color', SyncColor);
+	registerComponentClass('sync-transform', SyncTransform);
+	registerComponentClass('sync', SyncComponent);
+	registerComponentClass('sync-n-sound', SyncNSound);
+	registerComponentClass('sync-n-skeleton-parent', SyncNSkeletonParent);
+	registerComponentClass('wire', Wire);
+	registerComponentClass('one-per-user', OnePerUser);
+	registerComponentClass('instantiator', Instantiator);
+	registerComponentClass('n-object', NObject);
+	registerComponentClass('n-portal', NPortal);
+	registerComponentClass('n-spawner', NSpawner);
+	registerComponentClass('n-text', NText);
+	registerComponentClass('n-billboard', NBillboard);
+	registerComponentClass('n-skeleton-parent', NSkeletonParent);
+	registerComponentClass('n-cockpit-parent', NCockpitParent);
+	registerComponentClass('n-container', NContainer);
+	registerComponentClass('n-sound', NSound);
+	registerComponentClass('n-sphere-collider', NSphereCollider);
+	registerComponentClass('n-box-collider', NBoxCollider);
+	registerComponentClass('n-capsule-collider', NCapsuleCollider);
+	registerComponentClass('n-mesh-collider', NMeshCollider);
+	registerComponentClass('n-layout-browser', NLayoutBrowser);
+}
+
+
+
+
+var components_lib = Object.freeze({
+	AltspaceComponent: AltspaceComponent,
+	AltspaceCursorCollider: AltspaceCursorCollider,
+	AltspaceTrackedControls: AltspaceTrackedControls,
+	SyncSystem: SyncSystem,
+	SyncComponent: SyncComponent,
+	SyncColor: SyncColor,
+	SyncTransform: SyncTransform,
+	SyncNSound: SyncNSound,
+	Wire: Wire,
+	OnePerUser: OnePerUser,
+	Instantiator: Instantiator,
+	SyncNSkeletonParent: SyncNSkeletonParent,
+	NObject: NObject,
+	NPortal: NPortal,
+	NSpawner: NSpawner,
+	NText: NText,
+	NBillboard: NBillboard,
+	NSkeletonParent: NSkeletonParent,
+	NCockpitParent: NCockpitParent,
+	NContainer: NContainer,
+	NSound: NSound,
+	NSphereCollider: NSphereCollider,
+	NBoxCollider: NBoxCollider,
+	NCapsuleCollider: NCapsuleCollider,
+	NMeshCollider: NMeshCollider,
+	NLayoutBrowser: NLayoutBrowser
+});
+
+/* global Url */
 /**
  * The Sync utility is currently based on Firebase. It provides a quick way
  * to synchronize apps between users (even when they are running outside of
@@ -2831,630 +3010,721 @@ U.prototype.We=function(a,b){x("Firebase.resetPassword",2,2,arguments.length);fg
  * when working with the sync instance.
  * @module altspace/utilities/sync
  */
-altspace.utilities.sync = (function () {
-	var Firebase = window.Firebase;
-	var inAltspace = altspace && altspace.inClient;
-	var canonicalUrl = getCanonicalUrl();
 
-	var instance;
+var inAltspace = altspace && altspace.inClient;
+var canonicalUrl = getCanonicalUrl();
 
-	function dashEscape(keyName) {
-		return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
+function dashEscape(keyName) {
+	return keyName ? encodeURIComponent(keyName).replace(/\./g, '%2E').replace(/%[A-Z0-9]{2}/g, '-') : null;
+}
+
+function getCanonicalUrl() {
+	var canonicalElement = document.querySelector('link[rel=canonical]');
+	return canonicalElement ? canonicalElement.href : window.location.href;
+}
+
+function getProjectId(appId, authorId, canonicalUrl) {
+	return dashEscape(authorId || canonicalUrl) + ':' + dashEscape(appId || '');
+}
+
+
+/**
+* Retreived
+* via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
+* @class module:altspace/utilities/sync~Connection
+* @memberof module:altspace/utilities/sync
+*/
+
+/**
+* (In-client only) A Firebase reference for the current user (on a per app basis). This can be used for things like a persistent inventory or personal highscores.
+* @instance
+* @member {Firebase} user
+* @memberof module:altspace/utilities/sync~Connection
+*/
+
+/**
+* A Firebase reference to the current instance of the app.
+* This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons.
+* This can be used as an input to SceneSync
+* @instance
+* @member {Firebase} instance
+* @memberof module:altspace/utilities/sync~Connection
+*/
+
+/**
+* (In-client only) A Firebase reference for the current space. Especially useful if multiple apps / instances need to communicate inside the space.
+* @instance
+* @member {Firebase} space
+* @memberof module:altspace/utilities/sync~Connection
+*/
+
+/**
+* A Firebase reference for the app.
+* This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.
+* @instance
+* @member {Firebase} app
+* @memberof module:altspace/utilities/sync~Connection
+*/
+
+
+/**
+* Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
+* Returns a promise that will fulfill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
+*
+* Note: Calling this method will cause a reload of the app, since it adds an 'altspace-sync-instance' query
+* parameter to the app's url. Best practice is to establish a sync connection first, before you load any resources
+* or render anything in your app. The promise returned by this method will be rejected the first time it is called,
+* while the app reloads with the new sync instance id.
+*
+* @method connect
+* @param {Object} config
+* @param {String} config.authorId A unique identifier for yourself or your organization
+* @param {String} config.appId The name of your app
+* @param {String} [config.baseRefUrl] Override the base reference. Set this to use your own Firebase.
+* @param {String} [config.instanceId] Override the instanceId. Can also be overriden using a query parameter.
+* @param {String} [config.spaceId] Override the spaceId. Can also be overriden using a query parameter.
+* @param {String} [config.userId] Override the userId. Can also be overriden using a query parameter.
+* @return {Promise}
+* @memberof module:altspace/utilities/sync
+**/
+//todo clients
+function connect(config)
+{
+	config = config || {};
+
+	var url = new Url();
+
+	// Our ref used for example apps. Data may be cleared periodically.
+	var baseRefUrl = config.baseRefUrl || 'https://altspace-apps.firebaseio.com/apps/examples/';
+	var baseRef = new Firebase$1(baseRefUrl);
+
+	// Gather query paramaters (some may only be used as testing overrides)
+	var instanceId = config.instanceId || url.query['altspace-sync-instance'];
+	var spaceId = config.spaceId || url.query['altspace-sync-space'];
+	var userId = config.userId || url.query['altspace-sync-user'];
+
+	if (!config.appId || !config.authorId) {
+		throw new Error('Both the appId and authorId must be provided to connect.');
 	}
 
-	function getCanonicalUrl() {
-		var canonicalElement = document.querySelector('link[rel=canonical]');
-		return canonicalElement ? canonicalElement.href : window.location.href;
+	var tasks = [];
+	if (inAltspace) {
+		if (!spaceId) { tasks.unshift(altspace.getSpace()); }
+		if (!userId) { tasks.unshift(altspace.getUser()); }
 	}
 
-	function getInstance(params) {
-		console.warn('altspace.utilities.sync.getInstance has been deprecated, please use connect instead.');
-		return getInstanceRef(params);
+	var refs = {};
+	var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
+	refs.app = baseRef.child(projectId).child('app');
+	var instancesRef = refs.app.child('instances');
+	if(instanceId) {
+		refs.instance = instancesRef.child(instanceId);
+	}
+	else {
+		refs.instance = instancesRef.push();
+		instanceId = refs.instance.key();
+		url.query['altspace-sync-instance'] = instanceId;
+		window.location.href = url.toString();
+		// bail early and allow the page to reload
+		return Promise.reject(new Error('Sync instance id not found. Reloading app with new sync id.'));
 	}
 
-	function getInstanceRef(params) {
-		var canonicalUrl = getCanonicalUrl();
-		var url = new Url();
-
-		params = params || {};
-
-		var instanceId = params.instanceId || url.query['altspace-sync-instance'];
-		var projectId = getProjectId(params.appId, params.authorId, canonicalUrl);
-
-		var firebaseApp = new Firebase('https://altspace-apps.firebaseio.com/apps/examples/').child(projectId); //An example firebase to be used for testing. Data will be cleared periodically.
-		firebaseApp.child('lastUrl').set(canonicalUrl);
-
-		var firebaseInstance;
-
-		if (instanceId) {
-			firebaseInstance = firebaseApp.child('instances').child(instanceId);
-		} else {
-			firebaseInstance = firebaseApp.child('instances').push();
-			instanceId = firebaseInstance.key();
-			url.query['altspace-sync-instance'] = instanceId;
-			window.location.href = url.toString();
-		}
-		instance = firebaseInstance;
-		return firebaseInstance;
-	}
-
-	function getProjectId(appId, authorId, canonicalUrl) {
-		return dashEscape(authorId || canonicalUrl) + ':' + dashEscape(appId || '');
-	}
-
-	function deprecatedAuthenticate(callback) {
-		console.warn('altspace.utilities.sync.authenticate has been depreciated, please use connect instead.');
-		var ref = instance || getInstance(params);
-		ref.authAnonymously(function(error, authData) {
-			if (error) {
-				console.error('Authetication Failed!', error);
-			} else {
-				callback(authData);
-			}
-		}, {remember: 'sessionOnly'});
-	}
-
-	// TODO Removed authentication step for now, until we upgrade to the new Firebase auth.
-	function authenticate(ref) {
-		return new Promise(function(resolve, reject) {
-			ref.authAnonymously(function(error, authData) {
-				if (error) {
-					console.error('Authetication Failed!', error);
-					reject(error);
-				} else {
-					resolve(authData);
-				}
-			}, { remember: 'sessionOnly' });
-		});
-	}
-
-	/**
-	 * Retreived
-	 * via [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync#connect}.
-	 * @class module:altspace/utilities/sync~Connection
-	 * @memberof module:altspace/utilities/sync
-	 */
-
-	/**
-		* (In-client only) A Firebase reference for the current user (on a per app basis). This can be used for things like a persistent inventory or personal highscores.
-		* @instance
-		* @member {Firebase} user
-		* @memberof module:altspace/utilities/sync~Connection
-		*/
-
-	/**
-		* A Firebase reference to the current instance of the app.
-		* This will change if the query paramater is removed through navigation, rebeaming, the space timing out, or other reasons.
-		* This can be used as an input to SceneSync
-		* @instance
-		* @member {Firebase} instance
-		* @memberof module:altspace/utilities/sync~Connection
-		*/
-
-	/**
-		* (In-client only) A Firebase reference for the current space. Especially useful if multiple apps / instances need to communicate inside the space.
-		* @instance
-		* @member {Firebase} space
-		* @memberof module:altspace/utilities/sync~Connection
-		*/
-
-	/**
-		* A Firebase reference for the app.
-		* This can be used for things like persistent high-scores, dynamic configuration, or inter-instance communication.
-		* @instance
-		* @member {Firebase} app
-		* @memberof module:altspace/utilities/sync~Connection
-		*/
-
-
-	/**
-	 * Connect to a sync session to obtain Firebase references that can be used for syncronization of real-time and persistent state.
-	 * Returns a promise that will fulfill with a [Connection]{@link module:altspace/utilities/sync~Connection}.
-	 *
-	 * @method connect
-	 * @param {Object} config
-	 * @param {String} config.authorId A unique identifier for yourself or your organization
-	 * @param {String} config.appId The name of your app
-	 * @param {String} [config.baseRefUrl] Override the base reference. Set this to use your own Firebase.
-	 * @param {String} [config.instanceId] Override the instanceId. Can also be overriden using a query parameter.
-	 * @param {String} [config.spaceId] Override the spaceId. Can also be overriden using a query parameter.
-	 * @param {String} [config.userId] Override the userId. Can also be overriden using a query parameter.
-	 * @return {Promise}
-	 * @memberof module:altspace/utilities/sync
-	 **/
-	//todo clients
-	function connect(config) {
-		config = config || {};
-
-		var url = new Url();
-
-		// Our ref used for example apps. Data may be cleared periodically.
-		var baseRefUrl = config.baseRefUrl || 'https://altspace-apps.firebaseio.com/apps/examples/';
-		var baseRef = new Firebase(baseRefUrl);
-
-		// Gather query paramaters (some may only be used as testing overrides)
-		var instanceId = config.instanceId || url.query['altspace-sync-instance'];
-		var spaceId = config.spaceId || url.query['altspace-sync-space'];
-		var userId = config.userId || url.query['altspace-sync-user'];
-
-		if (!config.appId || !config.authorId) {
-			throw new Error('Both the appId and authorId must be provided to connect.');
-		}
-
-		var tasks = [];
+	return Promise.all(tasks).then(function (results) {
 		if (inAltspace) {
-			if (!spaceId) tasks.unshift(altspace.getSpace());
-			if (!userId) tasks.unshift(altspace.getUser());
+			if (!spaceId) { spaceId = results.pop().sid; }
+			if (!userId) { userId = results.pop().userId; }
 		}
 
-		function getRefs() {
-			var refs = {};
+		spaceId = dashEscape(spaceId);
+		userId = dashEscape(userId);
+		instanceId = dashEscape(instanceId);
 
-			var projectId = getProjectId(config.appId, config.authorId, canonicalUrl);
-			refs.app = baseRef.child(projectId).child('app');
-			refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
-			refs.user = userId ? refs.app.child('users').child(userId) : null;
+		refs.space = spaceId ? refs.app.child('spaces').child(spaceId) : null;
+		refs.user = userId ? refs.app.child('users').child(userId) : null;
 
-			var instancesRef = refs.app.child('instances');
-			if (instanceId) {
-				refs.instance = instancesRef.child(instanceId);
-			} else {
-				refs.instance = instancesRef.push();
-				instanceId = refs.instance.key();
-			}
-			return refs;
+		var connection = refs;
+		return connection;
+	});
+}
+
+
+
+
+var sync = Object.freeze({
+	connect: connect
+});
+
+/**
+* Detects mouse move/up/down events, raycasts to find intersected objects,
+* then dispatches cursor move/up/down/enter/leave events that mimics
+* Altspace events.
+* @module altspace/utilities/shims/cursor
+*/
+var scene;
+var camera;
+var domElem;
+
+var overObject;
+
+var raycaster = new THREE.Raycaster();
+
+/**
+ * Initializes the cursor module
+ * @static
+ * @method init
+ * @param {THREE.Scene} scene
+ * @param {THREE.Camera} camera - Camera used for raycasting.
+ * @param {Object} [options] - An options object
+ * @param {THREE.WebGLRenderer} [options.renderer] - If supplied, applies cursor movement to render target
+ *	instead of entire client
+ * @memberof module:altspace/utilities/shims/cursor
+ */
+function init(_scene, _camera, _params) {
+	if (!_scene || !(_scene instanceof THREE.Scene)) {
+		throw new TypeError('Requires THREE.Scene argument');
+	}
+	if (!_camera || !(_camera instanceof THREE.Camera)) {
+		throw new TypeError('Requires THREE.Camera argument');
+	}
+	scene = _scene;
+	camera = _camera;
+
+	var p = _params || {};
+	domElem = p.renderer && p.renderer.domElement || window;
+
+	domElem.addEventListener('mousedown', mouseDown, false);
+	domElem.addEventListener('mouseup', mouseUp, false);
+	domElem.addEventListener('mousemove', mouseMove, false);
+}
+
+function mouseDown(event) {
+
+	var intersection = findIntersection(event);
+	if (!intersection || !intersection.point) { return; }
+
+	var cursorEvent = createCursorEvent('cursordown', intersection);
+	intersection.object.dispatchEvent(cursorEvent);
+}
+
+function mouseUp(event) {
+	var intersection = findIntersection(event);
+
+	var cursorEvent = createCursorEvent('cursorup', intersection);
+
+	if (intersection) {
+		intersection.object.dispatchEvent(cursorEvent);
+	} else {
+		scene.dispatchEvent(cursorEvent);
+	}
+}
+
+function mouseMove(event) {
+	var intersection = findIntersection(event);
+
+	var cursorEvent = createCursorEvent('cursormove', intersection);//TODO improve and don't fire only on scene
+	scene.dispatchEvent(cursorEvent);
+
+	var object = intersection ? intersection.object : null;
+	if (overObject != object) {
+		if (overObject) {
+			cursorEvent = createCursorEvent('cursorleave', intersection);
+			overObject.dispatchEvent(cursorEvent);
 		}
 
-		function updateUrl() {
-			if (!url.query['altspace-sync-instance']) {
-				url.query['altspace-sync-instance'] = instanceId;
-				window.location.href = url.toString();
-			}
+		if (object) {
+			cursorEvent = createCursorEvent('cursorenter', intersection);
+			object.dispatchEvent(cursorEvent);
 		}
 
-		return Promise.all(tasks).then(function (results) {
-			if (inAltspace) {
-				if (!spaceId) spaceId = results.pop().sid;
-				if (!userId) userId = results.pop().userId;
-			}
+		overObject = object;
+	}
+}
 
-			spaceId = dashEscape(spaceId);
-			userId = dashEscape(userId);
-			instanceId = dashEscape(instanceId);
+function createCursorEvent(type, intersection) {
+	return {
+		type: type,
+		bubbles: true,
+		target: intersection ? intersection.object : null,
+		ray: {
+			origin: raycaster.ray.origin.clone(),
+			direction: raycaster.ray.direction.clone()
+		},
+		point: intersection ? intersection.point.clone() : null
+	}
+}
 
-			var connection = getRefs();
+function findIntersection(mouseEvent) {
+	var mouse = new THREE.Vector2();
+	mouse.x = (mouseEvent.offsetX / (domElem.width || domElem.innerWidth)) * 2 - 1;
+	mouse.y = -(mouseEvent.offsetY / (domElem.height || domElem.innerHeight)) * 2 + 1;
 
-			updateUrl();
+	raycaster.setFromCamera(mouse, camera);
 
-			return connection;
-		});
+	var intersections = raycaster.intersectObjects(scene.children, true);
+
+	// return the first object with an enabled collider
+	return intersections.find(function(e){
+		return !e.object.userData
+			|| !e.object.userData.altspace
+			|| !e.object.userData.altspace.collider
+			|| e.object.userData.altspace.collider.enabled !== false;
+	}) || null;
+}
+
+
+
+
+var cursor = Object.freeze({
+	init: init
+});
+
+/**
+* Simulation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
+*
+* If all of your application logic is in behaviors, you do not need to create any additional requestAnimationFrame loops.
+*
+* It also automatically uses the WebGL renderer when running in a
+* desktop browser and emulates cursor events with mouse clicks.
+* @class Simulation
+* @param {Object} [config] Optional parameters.
+* @param {Boolean} [config.auto=true] Automatically start the render loop.
+* @memberof module:altspace/utilities
+*/
+var Simulation = function Simulation(config)
+{
+	if ( config === void 0 ) config = {auto: true};
+
+	this._scene = null;
+	this._renderer = null;
+	this._camera = null;
+
+	var usingAFrame = window.AFRAME && document.querySelector('a-scene');
+
+	if(usingAFrame)
+	{
+		var ascene = document.querySelector('a-scene');
+		this._scene = ascene.object3D;
+		this._renderer = ascene.renderer;
+
+		var acamera = document.querySelector('a-camera');
+		if(acamera)
+			{ this._camera = acamera.object3D; }
+	}
+	else if (window.altspace && altspace.inClient)
+	{
+		this._scene = new THREE.Scene();
+		this._renderer = altspace.getThreeJSRenderer();
+		this._camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
+	}
+	else {
+		this._setupWebGL();
 	}
 
+	if(config.auto && !usingAFrame)
+		{ this.loop(); }
+};
 
-	/**
-	 * Returns a firebase instance, just as if you had called new Firebase()
-	 *
-	 * By using syncInstance.parent() you can store cross-instance data like high scores. Likewise you can store persistent user data at syncInstance.parent().child([userId).
-	 * @deprecated The connect function can do this and more! Please switch to using it instead. This function will be removed in the next major version
-	 * @method getInstance
-	 * @param {Object} params
-	 * @param {String} params.appId An identifier for your app.
-	 * @param {String} [params.instanceId] An id for a particular instance of
-	 *  your app. Leave this blank if you would like to have one automatically generated and appended as a query string.
-	 * @param {String} [params.authorId] An identifier for the author of the
-	 *  app.
-	 * @return {Firebase}
-	 * @memberof module:altspace/utilities/sync
-	 * @example
-	 *  var syncInstance = altspace.utilities.sync.getInstance({
-	 *      // All sync instances with the same instance id will share
-	 *      // properties.
-	 *      instanceId: yourInstanceId,
-	 *      // This helps to prevent collisions.
-	 *      authorId: yourAuthorId
-	 *  });
-	 */
-	return {
-		connect: connect,
-		getInstance: getInstance,
-		authenticate: deprecatedAuthenticate
-	};
+var prototypeAccessors$1 = { scene: {},renderer: {},camera: {} };
 
-}());
+Simulation.prototype._setupWebGL = function _setupWebGL ()
+{
+	var scene = this._scene = new THREE.Scene();
+	var renderer = this._renderer = new THREE.WebGLRenderer({antialias: true});
+	var camera = this._camera = new THREE.PerspectiveCamera();
+
+	document.addEventListener("DOMContentLoaded", function (event) {
+		document.body.style.margin = '0px';
+		document.body.style.overflow = 'hidden';
+		renderer.setClearColor('#035F72');
+		var container = document.createElement('div');
+		document.body.appendChild(container);
+		container.appendChild(renderer.domElement);
+	});
+
+	function resizeRender(){
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	}
+	window.addEventListener('resize', resizeRender);
+	resizeRender();
+
+	camera.position.z = 500;
+	camera.fov = 45;
+	camera.near = 1;
+	camera.far = 2000;
+	scene.add(camera);
+	scene.add(new THREE.AmbientLight('white'));
+
+	// shim cursor
+	this.cursor = init(scene, camera);
+};
+
+/**
+* Begin the simulation. This loop is begun automatically by default.
+*/
+Simulation.prototype.loop = function loop ()
+{
+	window.requestAnimationFrame(this.loop.bind(this));
+
+	if(this.scene.updateAllBehaviors)
+		{ this.scene.updateAllBehaviors(); }
+
+	this.renderer.render(this.scene, this.camera);
+};
+
+/**
+* The simulation scene.
+* @readonly
+* @instance
+* @member {THREE.Scene} scene
+* @memberof module:altspace/utilities.Simulation
+*/
+prototypeAccessors$1.scene.get = function (){ return this._scene; };
+
+/**
+* The renderer being used.
+* @readonly
+* @instance
+* @member {(THREE.WebGLRenderer|AltRenderer)} renderer
+* @memberof module:altspace/utilities.Simulation
+*/
+prototypeAccessors$1.renderer.get = function (){ return this._renderer; };
+
+/**
+* The camera being used by the WebGL renderer.
+* @readonly
+* @instance
+* @member {Three.Camera} camera
+* @memberof module:altspace/utilities.Simulation
+*/
+prototypeAccessors$1.camera.get = function (){ return this._camera; };
+
+Object.defineProperties( Simulation.prototype, prototypeAccessors$1 );
+
+var loader;
+var TRACE;
+var baseUrl = '';
+var crossOrigin = '';//assigned to THREE.MTLLoader.crossOrigin
+
+var LoadRequest = function LoadRequest(){
+	this.objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
+	this.mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
+	this.objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
+	this.error = null;//String indicating loading error with at least one file.
+	this.objectsLoaded = 0;//Used internally to determine when loading complete.
+};//end of LoadRequest
+
+function init$1(params){
+	var p = params || {};
+	TRACE = p.TRACE || false;
+	if (p.crossOrigin) { crossOrigin = p.crossOrigin; }
+	if (p.baseUrl) { baseUrl = p.baseUrl; }
+	if (baseUrl.slice(-1) !== '/') { baseUrl += '/'; }
+
+	loader = new altspace.utilities.shims.OBJMTLLoader();
+	loader.crossOrigin = crossOrigin;
+	if (TRACE) { console.log('MultiLoader initialized with params', params); }
+}
+
+function load(loadRequest, onComplete){
+	var req = loadRequest;
+	var start = Date.now();
+	if (!req || !(req instanceof LoadRequest)){
+		throw new Error('MultiLoader.load expects first arg of type LoadRequest');
+	}
+	if (!onComplete || typeof(onComplete) !== 'function'){
+		throw new Error('MultiLoader.load expects second arg of type function');
+	}
+	if (!req.objUrls || !req.mtlUrls || req.objUrls.length !== req.mtlUrls.length){
+		throw new Error('MultiLoader.load called with bad LoadRequest');
+	}
+	var reqCount = req.objUrls.length;
+	if (TRACE) { console.log('Loading models...'); }
+	for (var i=0; i < reqCount; i++){
+		var loadModel = function(req, i){//We need i in the closure to store result.
+			var objUrl = baseUrl + req.objUrls[i];
+			var mtlUrl = baseUrl + req.mtlUrls[i];
+			if (TRACE) { console.log('Loading obj:'+objUrl+', mtl:'+mtlUrl); }
+			loader.load(objUrl, mtlUrl, function(object3d){//onLoaded
+				req.objects[i] = object3d;
+				req.objectsLoaded++;
+				if(req.objectsLoaded === reqCount){
+					var elapsed = ((Date.now()-start)/1000.0).toFixed(2);
+					if (TRACE) { console.log('Loaded '+reqCount+' models in '+elapsed+' seconds'); }
+					onComplete();
+				}
+			}, onProgress, function(){//onError
+				var url = xhr.target.responseURL || '';
+				req.error = 'Error loading file '+url;
+			});
+		};
+		loadModel(req, i);
+	}
+}
+
+function onProgress(xhr){
+	if (xhr.lengthComputable && xhr.target.responseURL) {
+		//Skip progress log if no xhr url, meaning it's a local file.
+		var percentComplete = xhr.loaded / xhr.total * 100;
+		var filename = xhr.target.responseURL.split('/').pop();
+		if (TRACE) { console.log('...'+filename+' '+Math.round(percentComplete,2)+'% downloaded'); }
+	}
+}
+
+
+
+
+var multiloader = Object.freeze({
+	init: init$1,
+	load: load,
+	LoadRequest: LoadRequest
+});
 
 /**
  * Utilities to help build AltspaceVR apps on CodePen.io.
  * @module altspace/utilities/codePen
  */
-altspace.utilities.codePen = (function () {
-	var exports = {};
 
-	var Please = window.Please;
-	var Url = window.Url;
+var name = 'VR CodePen';
+var inTile = window.name && window.name.slice(0, 4) === 'pen-';
+var inVR = !!window.altspace.inClient;
+var inCodePen = !!location.href.match('codepen.io/');
 
-	var name = 'VR CodePen';
-	var inTile = window.name && window.name.slice(0, 4) === 'pen-';
-	var inVR = !!window.altspace.inClient;
-	var inCodePen = !!location.href.match('codepen.io/');
-
-	function printDebugInfo() {
-		console.log("In a tile: " + inTile);
-		console.log("In VR: " + inVR);
-	}
-
-	/**
-	 * Will stop code exection and post a message informing the user to 
-	 * open the example in VR  
-	 * @method ensureInVR
-	 * @memberof module:altspace/utilities/codePen
-	 */
-	function ensureInVR() {
-		if (inTile || !inVR) //inTile && inAltspace
-		{
-			var css = document.createElement("style");
-			css.type = "text/css";
-			css.innerHTML = "@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);.altspace-info{text-align:center;font-family:'Open Sans',sans-serif;line-height:.5}.altspace-vr-notice{color:rgba(0,0,0,.7);font-size:5vw}.altspace-pen-name{font-size:7vw}";
-			document.head.appendChild(css);
-
-			document.body.style.background = Please.make_color({ seed: getPenId() });
-
-			var info = document.createElement("div");
-			info.className = "altspace-info";
-			document.body.appendChild(info);
-
-			var nameEl = document.createElement("span");
-			nameEl.className = "altspace-pen-name";
-			nameEl.innerHTML = '<p>' + name.toUpperCase() + '</p>';
-			info.appendChild(nameEl);
-
-			if (inTile) {
-				var errorMsg = 'VR mode does not support preview tiles. Stopping code execution.';
-				console.log('ERROR: ' + errorMsg);
-				throw new Error(errorMsg);
-			}
-
-			if (!inVR) {
-
-				var launchEl = document.createElement("span");
-				launchEl.className = "altspace-vr-notice";
-				launchEl.innerHTML = '<p>View</p>';
-				info.insertBefore(launchEl, nameEl);
-
-				var notice = document.createElement("span");
-				notice.className = "altspace-vr-notice";
-				notice.innerHTML = '<p>in <a href="http://altvr.com"> AltspaceVR </a></p>';
-				info.appendChild(notice);
-
-
-				var errorMsg = 'Not in VR mode. Stopping code execution.';
-				if (inTile) {
-					console.log('ERROR: ' + errorMsg);//thrown error message not displayed in console when inTile, log it
-				}
-				throw new Error(errorMsg);
-			}
-			return;
-
-		}
-	}
-
-	/**
-	 * Sets the name to be used by ensureInVR()  
-	 * @method setName
-	 * @param {String} name
-	 * @memberof module:altspace/utilities/codePen
-	 */
-	function setName(n) {//TODO: A better method for this would be awesome
-		name = n;
-	}
-
-	function getParsedUrl() {
-		var canonicalElement = document.querySelector('link[rel=canonical]');
-		var fullUrl = canonicalElement ? canonicalElement.href : window.location.href;
-		return new Url(fullUrl);
-	}
-
-
-	/**
-	 * Returns the pen ID, useful for setting the sync instanceId.
-	 * @method getPenId
-	 * @return {String}
-	 * @memberof module:altspace/utilities/codePen
-	 */
-	function getPenId() {
-		var url = getParsedUrl();
-		var splitPath = url.path.split('/');
-		var id = splitPath[splitPath.length - 1];
-		return id;
-	}
-
-	/**
-	 * Returns the pen author ID, useful for setting the sync authorId.
-	 * @method getAuthorId
-	 * @return {String}
-	 * @memberof module:altspace/utilities/codePen
-	 */
-	function getAuthorId() {
-		var url = getParsedUrl();
-		var splitPath = url.path.split('/');
-		var isTeam = splitPath[1] == 'team';
-		var id = isTeam ? 'team-' + splitPath[2] : splitPath[1];
-		return id;
-	}
-
-	return {
-		inTile: inTile,
-		inVR: inVR,
-		inCodePen: inCodePen,
-		ensureInVR: ensureInVR,
-		setName: setName,
-		getPenId: getPenId,
-		getAuthorId: getAuthorId,
-		printDebugInfo: printDebugInfo
-	};
-}());
-
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-
-/**
- * @module altspace/utilities
- */
-
-/**
- * Simluation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
- *
- * If all of your application logic is in behaviors, you do not need to create any additional requestAnimationFrame loops.
- *
- * It also automatically uses the WebGL renderer when running in a
- * desktop browser and emulates cursor events with mouse clicks.
- * @class Simulation
- * @param {Object} [config] Optional parameters.
- * @param {Boolean} [config.auto=true] Automatically start the render loop.
- * @memberof module:altspace/utilities
- */
-altspace.utilities.Simulation = function (config) {
-	config = config || {};
-	if (config.auto === undefined) config.auto = true;
-
-	var exports = {};
-	var scene;
-	var renderer;
-	var camera;
-	var usingAFrame = window.AFRAME && document.querySelector('a-scene');
-
-	setup();
-
-	function loop() {
-		window.requestAnimationFrame(loop);
-
-		if (scene.updateAllBehaviors)
-			scene.updateAllBehaviors();
-
-		renderer.render(scene, camera);
-	}
-
-	function setup() {
-		function setupAframe(){
-			var ascene = document.querySelector('a-scene');
-			scene = ascene.object3D;
-			renderer = ascene.renderer;
-
-			var acamera = document.querySelector('a-camera');
-			if(acamera)
-				camera = acamera.object3D;
-		}
-		function setupAltspace() {
-			scene = new THREE.Scene();
-			renderer = altspace.getThreeJSRenderer();
-			camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
-		}
-
-		function setupWebGL() {
-			scene = new THREE.Scene();
-			renderer = new THREE.WebGLRenderer({antialias: true});
-			camera = new THREE.PerspectiveCamera();
-			camera.position.z = 500;
-
-			var resizeRender = function () {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize(window.innerWidth, window.innerHeight);
-			};
-			document.addEventListener("DOMContentLoaded", function (event) {
-				document.body.style.margin = '0px';
-				document.body.style.overflow = 'hidden';
-				renderer.setClearColor('#035F72');
-				var container = document.createElement('div');
-				document.body.appendChild(container);
-				container.appendChild(renderer.domElement);
-			});
-			window.addEventListener('resize', resizeRender);
-			resizeRender();
-			camera.fov = 45;
-			camera.near = 1;
-			camera.far = 2000;
-			scene.add(camera);
-			scene.add(new THREE.AmbientLight('white'));
-
-			var shouldShimCursor = altspace && altspace.utilities && altspace.utilities.shims && altspace.utilities.shims.cursor;
-			if (shouldShimCursor) altspace.utilities.shims.cursor.init(scene, camera);
-		}
-
-		if(usingAFrame){
-			setupAframe();
-		} else if (window.altspace && altspace.inClient) {
-			setupAltspace();
-		} else {
-			setupWebGL();
-		}
-	}
-
-	if (config.auto && !usingAFrame) window.requestAnimationFrame(loop);
-
-
-	/**
-	 * The simulation scene.
-	 * @readonly
-	 * @instance
-	 * @member {THREE.Scene} scene
-	 * @memberof module:altspace/utilities.Simulation
-	 */
-	Object.defineProperty(exports, 'scene', {
-		get: function () {
-			return scene;
-		}
-	})
-
-	/**
-	 * The renderer being used.
-	 * @readonly
-	 * @instance
-	 * @member {(THREE.WebGLRenderer|AltRenderer)} renderer
-	 * @memberof module:altspace/utilities.Simulation
-	 */
-	Object.defineProperty(exports, 'renderer', {
-		get: function () {
-			return renderer;
-		}
-	})
-
-	/**
-	 * The camera being used by the WebGL renderer.
-	 * @readonly
-	 * @instance
-	 * @member {Three.Camera} camera
-	 * @memberof module:altspace/utilities.Simulation
-	 */
-	Object.defineProperty(exports, 'camera', {
-		get: function () {
-			return camera;
-		},
-		set: function (value) {
-			camera = value;
-		}
-	})
-	return exports;
+function printDebugInfo() {
+	console.log("In a tile: " + inTile);
+	console.log("In VR: " + inVR);
 }
 
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
+/**
+ * Will stop code exection and post a message informing the user to
+ * open the example in VR
+ * @method ensureInVR
+ * @memberof module:altspace/utilities/codePen
+ */
+function ensureInVR() {
+	if (inTile || !inVR) //inTile && inAltspace
+	{
+		var css = document.createElement("style");
+		css.type = "text/css";
+		css.innerHTML = "@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);.altspace-info{text-align:center;font-family:'Open Sans',sans-serif;line-height:.5}.altspace-vr-notice{color:rgba(0,0,0,.7);font-size:5vw}.altspace-pen-name{font-size:7vw}";
+		document.head.appendChild(css);
+
+		document.body.style.background = Please.make_color({ seed: getPenId() });
+
+		var info = document.createElement("div");
+		info.className = "altspace-info";
+		document.body.appendChild(info);
+
+		var nameEl = document.createElement("span");
+		nameEl.className = "altspace-pen-name";
+		nameEl.innerHTML = '<p>' + name.toUpperCase() + '</p>';
+		info.appendChild(nameEl);
+
+		if (inTile) {
+			var errorMsg = 'VR mode does not support preview tiles. Stopping code execution.';
+			console.log('ERROR: ' + errorMsg);
+			throw new Error(errorMsg);
+		}
+
+		if (!inVR) {
+
+			var launchEl = document.createElement("span");
+			launchEl.className = "altspace-vr-notice";
+			launchEl.innerHTML = '<p>View</p>';
+			info.insertBefore(launchEl, nameEl);
+
+			var notice = document.createElement("span");
+			notice.className = "altspace-vr-notice";
+			notice.innerHTML = '<p>in <a href="http://altvr.com"> AltspaceVR </a></p>';
+			info.appendChild(notice);
 
 
-altspace.utilities.multiloader = (function(){
-	var loader;
-	var TRACE;
-	var baseUrl = '';
-	var crossOrigin = '';//assigned to THREE.MTLLoader.crossOrigin
+			var errorMsg = 'Not in VR mode. Stopping code execution.';
+			if (inTile) {
+				console.log('ERROR: ' + errorMsg);//thrown error message not displayed in console when inTile, log it
+			}
+			throw new Error(errorMsg);
+		}
+		return;
 
-	function LoadRequest(){
-		//To create loadRequst: new MultiLoader.LoadRequest()
+	}
+}
 
-		var objUrls = [];//Paths to model geometry file, in Wavefront OBJ format.
-		var mtlUrls = [];//Paths to model materials file, in Wavefront MTL format.
-		var objects = [];//objects[i] is result of loader.load(objUrl[i], mtlUrl[i])
-		var error;//String indicating loading error with at least one file.
-		var objectsLoaded = 0;//Used internally to determine when loading complete.
+/**
+ * Sets the name to be used by ensureInVR()
+ * @method setName
+ * @param {String} name
+ * @memberof module:altspace/utilities/codePen
+ */
+function setName(n) {//TODO: A better method for this would be awesome
+	name = n;
+}
 
-		return {
-			objUrls: objUrls,
-			mtlUrls: mtlUrls,
-			objects: objects,
-			error: error,
-			objectsLoaded: objectsLoaded
+function getParsedUrl() {
+	var canonicalElement = document.querySelector('link[rel=canonical]');
+	var fullUrl = canonicalElement ? canonicalElement.href : window.location.href;
+	return new Url(fullUrl);
+}
+
+
+/**
+ * Returns the pen ID, useful for setting the sync instanceId.
+ * @method getPenId
+ * @return {String}
+ * @memberof module:altspace/utilities/codePen
+ */
+function getPenId() {
+	var url = getParsedUrl();
+	var splitPath = url.path.split('/');
+	var id = splitPath[splitPath.length - 1];
+	return id;
+}
+
+/**
+ * Returns the pen author ID, useful for setting the sync authorId.
+ * @method getAuthorId
+ * @return {String}
+ * @memberof module:altspace/utilities/codePen
+ */
+function getAuthorId() {
+	var url = getParsedUrl();
+	var splitPath = url.path.split('/');
+	var isTeam = splitPath[1] == 'team';
+	var id = isTeam ? 'team-' + splitPath[2] : splitPath[1];
+	return id;
+}
+
+
+
+
+var codepen = Object.freeze({
+	inTile: inTile,
+	inVR: inVR,
+	inCodePen: inCodePen,
+	ensureInVR: ensureInVR,
+	setName: setName,
+	getPenId: getPenId,
+	getAuthorId: getAuthorId,
+	printDebugInfo: printDebugInfo
+});
+
+/**
+* Load an OBJ file and its material definition in one pass.
+* @class OBJMTLLoader
+* @memberof module:altspace/utilities/shims
+*/
+var OBJMTLLoader = function OBJMTLLoader () {};
+
+OBJMTLLoader.prototype.load = function load (objFile, mtlFile, callback)
+{
+	var mtlLoader = new THREE.MTLLoader();
+	var baseUrl = mtlFile.split('/').slice(0, -1).join('/');
+	mtlLoader.setTexturePath(baseUrl + '/');
+	mtlLoader.setCrossOrigin(this.crossOrigin);
+	mtlLoader.load(mtlFile, function (materials) {
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.load(objFile, callback);
+	});
+};
+
+/**
+* The Altspace SDK adds event bubbling to Three.js' events system.
+* Simply include the SDK in your app and add a bubbling property to your event to take advantage of this feature.
+*
+* AltspaceVR cursor events always make use of this bubbling shim.
+*
+* @example
+* var parent = new THREE.Object3D();
+* parent.addEventListener('custom', function () {
+*     console.log('received custom event');
+* });
+* var child = new THREE.Object3D();
+* parent.add(child);
+* child.dispatchEvent({type: 'custom', bubbles: true});
+* // Console log shows 'received custom event'
+*
+* @module altspace/utilities/shims/bubbling
+*/
+
+if(THREE && !altspace.inClient)
+{
+	THREE.EventDispatcher.prototype.dispatchEvent = dispatchEvent;
+	THREE.Object3D.prototype.dispatchEvent = dispatchEvent;
+}
+
+function dispatchEvent( event ) {
+	var this$1 = this;
+
+
+	var shouldStopPropagation;
+	var shouldStopPropagationImmediately;
+
+	if ( event.bubbles ) {
+		event.currentTarget = this;
+		event.stopPropagation = function () {
+			shouldStopPropagation = true;
 		};
 
-	}//end of LoadRequest
+		event.stopImmediatePropagation = function () {
+			shouldStopPropagationImmediately = true;
+		};
 
-	function init(params){
-		var p = params || {};
-		TRACE = p.TRACE || false;
-		if (p.crossOrigin) crossOrigin = p.crossOrigin;
-		if (p.baseUrl) baseUrl = p.baseUrl;
-		if (baseUrl.slice(-1) !== '/') baseUrl += '/';
-
-		loader = new altspace.utilities.shims.OBJMTLLoader();
-		loader.crossOrigin = crossOrigin;
-		if (TRACE) console.log('MultiLoader initialized with params', params);
 	}
 
-	function load(loadRequest, onComplete){
-		var req = loadRequest;
-		var start = Date.now();
-		if (!req || !req instanceof LoadRequest){
-			throw new Error('MultiLoader.load expects first arg of type LoadRequest');
-		}
-		if (!onComplete || typeof(onComplete) !== 'function'){
-			throw new Error('MultiLoader.load expects second arg of type function');
-		}
-		if (!req.objUrls || !req.mtlUrls || req.objUrls.length !== req.mtlUrls.length){
-			throw new Error('MultiLoader.load called with bad LoadRequest');
-		}
-		var reqCount = req.objUrls.length;
-		if (TRACE) console.log('Loading models...')
-		for (var i=0; i < reqCount; i++){
-			var loadModel = function(req, i){//We need i in the closure to store result.
-				var objUrl = baseUrl + req.objUrls[i];
-				var mtlUrl = baseUrl + req.mtlUrls[i];
-				if (TRACE) console.log('Loading obj:'+objUrl+', mtl:'+mtlUrl);
-				loader.load(objUrl, mtlUrl, function(object3d){//onLoaded
-					req.objects[i] = object3d;
-					req.objectsLoaded++;
-					if(req.objectsLoaded === reqCount){
-						var elapsed = ((Date.now()-start)/1000.0).toFixed(2);
-						if (TRACE) console.log('Loaded '+reqCount+' models in '+elapsed+' seconds');
-						onComplete();
-					}
-				}, onProgress, function(){//onError 
-					var url = xhr.target.responseURL || '';
-					req.error = 'Error loading file '+url;
-				});
-			};
-			loadModel(req, i);
+	if ( this._listeners ) {
+
+		var listeners = this._listeners;
+		var listenerArray = listeners[ event.type ];
+
+		if ( listenerArray ) {
+			event.target = event.target || this;
+
+			var array = [];
+			var length = listenerArray.length;
+
+			for ( var i = 0; i < length; i ++ ) {
+				array[ i ] = listenerArray[ i ];
+			}
+
+			for ( var i = 0; i < length; i ++ ) {
+				array[ i ].call( this$1, event );
+				if ( shouldStopPropagationImmediately ) { return; }
+			}
 		}
 	}
 
-	function onProgress(xhr){
-		if (xhr.lengthComputable && xhr.target.responseURL) {
-			//Skip progress log if no xhr url, meaning it's a local file.
-			var percentComplete = xhr.loaded / xhr.total * 100;
-			var filename = xhr.target.responseURL.split('/').pop();
-			if (TRACE) console.log('...'+filename+' '+Math.round(percentComplete,2)+'% downloaded');
-		}
+	if ( event.bubbles && this.parent && this.parent.dispatchEvent && ! shouldStopPropagation ) {
+		dispatchEvent.call( this.parent, event );
 	}
-
-	return {
-		init: init,
-		load: load,
-		LoadRequest: LoadRequest,
-	};
-
-}());
+}
 
 /**
- * @author gavanwilhite / http://gavanwilhite.com
- */
+* @author gavanwilhite / http://gavanwilhite.com
+*/
 
 /**
- * The AltspaceDK includes a Behaviors shim that adds Behavior capabilities to
- * Three.js.
- * It adds methods to Three.js' Scene and Object3D classes which allow you to
- * add, remove, retrieve and use Behaviors.
- *
- * @namespace THREE
- */
+* The AltspaceSDK includes a Behaviors shim that adds Behavior capabilities to
+* Three.js.
+* It adds methods to Three.js' Scene and Object3D classes which allow you to
+* add, remove, retrieve and use Behaviors.
+*
+* @namespace THREE
+*/
 
 /**
- * The AltspaceSDK adds Behavior capabilites to Three.js' Scene class.
- * @class Scene
- * @memberof THREE
- */
+* The AltspaceSDK adds Behavior capabilites to Three.js' Scene class.
+* @class Scene
+* @memberof THREE
+*/
 
 /**
- * Update the behaviors of all the objects in this Scene.
- * @instance
- * @method updateAllBehaviors
- * @memberof THREE.Scene
- */
+* Update the behaviors of all the objects in this Scene.
+* @instance
+* @method updateAllBehaviors
+* @memberof THREE.Scene
+*/
 THREE.Scene.prototype.updateAllBehaviors = function () {
 
 	var now = performance.now();
@@ -3482,58 +3752,61 @@ THREE.Scene.prototype.updateAllBehaviors = function () {
 
 	this.__lastNow = now;
 
-}
+};
 
 /**
- * The AltspaceSDK adds Behavior capabilites to Three.js' Object3D class.
- * @class Object3D
- * @memberof THREE
- */
+* The AltspaceSDK adds Behavior capabilites to Three.js' Object3D class.
+* @class Object3D
+* @memberof THREE
+*/
 
 /**
- * Adds the given behavior to this object.
- * @instance
- * @method addBehavior
- * @param {Behavior} behavior Behavior to add.
- * @memberof THREE.Object3D
- */
-THREE.Object3D.prototype.addBehavior = function()
+* Adds the given behavior to this object.
+* @instance
+* @method addBehavior
+* @param {Behavior} behavior Behavior to add.
+* @memberof THREE.Object3D
+*/
+THREE.Object3D.prototype.addBehavior = function(behavior)
 {
-	this.__behaviorList = this.__behaviorList || [];
-	Array.prototype.push.apply(this.__behaviorList, arguments);
-}
+	this.addBehaviors(behavior);
+};
 
 /**
- * Adds the given behaviors to this object.
- * @instance
- * @method addBehaviors
- * @param {...Behavior} behavior Behavior to add.
- * @memberof THREE.Object3D
- */
+* Adds the given behaviors to this object.
+* @instance
+* @method addBehaviors
+* @param {...Behavior} behavior Behavior to add.
+* @memberof THREE.Object3D
+*/
 THREE.Object3D.prototype.addBehaviors = function()
 {
+	var behaviors = [], len = arguments.length;
+	while ( len-- ) behaviors[ len ] = arguments[ len ];
+
 	this.__behaviorList = this.__behaviorList || [];
-	Array.prototype.push.apply(this.__behaviorList, arguments);
-}
+	(ref = this.__behaviorList).push.apply(ref, behaviors);
+	var ref;
+};
 
 /**
- * Removes the given behavior from this object. The behavior is disposed if
- * possible.
- * @instance
- * @method removeBehavior
- * @param {...Behavior} behavior Behavior to remove.
- * @memberof THREE.Object3D
- */
+* Removes the given behavior from this object. The behavior is disposed if
+* possible.
+* @instance
+* @method removeBehavior
+* @param {...Behavior} behavior Behavior to remove.
+* @memberof THREE.Object3D
+*/
 THREE.Object3D.prototype.removeBehavior = function(behavior)
 {
-	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return null; }
 
 	var i = this.__behaviorList.indexOf(behavior);
 	if (i !== -1) {
 		this.__behaviorList.splice(i, 1);
 		try {
 
-			if (behavior.dispose) behavior.dispose.call(behavior, this);
+			if (behavior.dispose) { behavior.dispose.call(behavior, this); }
 
 		} catch (error) {
 
@@ -3547,25 +3820,27 @@ THREE.Object3D.prototype.removeBehavior = function(behavior)
 
 		}
 	}
-}
+};
 
 /**
- * Removes all behaviors from this object. The behaviors are disposed if
- * possible.
- * @instance
- * @method removeAllBehaviors
- * @memberof THREE.Object3D
- */
+* Removes all behaviors from this object. The behaviors are disposed if
+* possible.
+* @instance
+* @method removeAllBehaviors
+* @memberof THREE.Object3D
+*/
 THREE.Object3D.prototype.removeAllBehaviors = function ()
 {
-	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+	var this$1 = this;
+
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return null; }
 
 	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
-		var behavior = this.__behaviorList[i];
+		var behavior = this$1.__behaviorList[i];
 
 		try {
 
-			if (behavior.dispose) behavior.dispose.call(behavior, this);
+			if (behavior.dispose) { behavior.dispose.call(behavior, this$1); }
 
 		} catch (error) {
 
@@ -3574,50 +3849,54 @@ THREE.Object3D.prototype.removeAllBehaviors = function ()
 			console.log('[Behavior]');
 			console.log(behavior);
 			console.log('[Object3D]');
-			console.log(this);
+			console.log(this$1);
 			console.groupEnd();
 
 		}
 	}
 
 	this.__behaviorList.length = 0;
-}
+};
 
 /**
- * Retrieve a behavior by type.
- * @instance
- * @method getBehaviorByType
- * @param {String} type
- * @returns {Behavior}
- * @memberof THREE.Object3D
- */
+* Retrieve a behavior by type.
+* @instance
+* @method getBehaviorByType
+* @param {String} type
+* @returns {Behavior}
+* @memberof THREE.Object3D
+*/
 THREE.Object3D.prototype.getBehaviorByType = function(type) {
-	if (!this.__behaviorList || this.__behaviorList.length === 0) return null;
+	var this$1 = this;
+
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return null; }
 
 	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
-		if (this.__behaviorList[i].type === type)
-			return this.__behaviorList[i];
+		if (this$1.__behaviorList[i].type === type)
+			{ return this$1.__behaviorList[i]; }
 	}
-}
+};
 
 /**
- * Update behaviors on this object.
- * @instance
- * @method updateBehaviors
- * @param {Number} deltaTime Elapsed time in milliseconds
- * @memberof THREE.Object3D
- */
+* Update behaviors on this object.
+* @instance
+* @method updateBehaviors
+* @param {Number} deltaTime Elapsed time in milliseconds
+* @memberof THREE.Object3D
+*/
 THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
+	var this$1 = this;
 
-	if (!this.__behaviorList || this.__behaviorList.length === 0) return;
+
+	if (!this.__behaviorList || this.__behaviorList.length === 0) { return; }
 
 	var toInit = [];
 	var toUpdate = this.__behaviorList.slice(); // prevent mutation of the behavior list during this loop
 
 	for (var i = 0, max = this.__behaviorList.length; i < max; i++) {
 
-		var behavior = this.__behaviorList[i];
-		if (!behavior.__isInitialized) toInit.push(behavior);
+		var behavior = this$1.__behaviorList[i];
+		if (!behavior.__isInitialized) { toInit.push(behavior); }
 
 	}
 
@@ -3627,7 +3906,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 		var behavior = toInit[i];
 		try {
 
-			if (behavior.awake) behavior.awake.call(behavior, this, scene);
+			if (behavior.awake) { behavior.awake.call(behavior, this$1, scene); }
 
 		} catch (error) {
 
@@ -3636,7 +3915,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 			console.log('[Behavior]');
 			console.log(behavior);
 			console.log('[Object3D]');
-			console.log(this);
+			console.log(this$1);
 			console.groupEnd();
 
 		}
@@ -3649,7 +3928,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 		var behavior = toInit[i];
 		try {
 
-			if (behavior.start) behavior.start.call(behavior);
+			if (behavior.start) { behavior.start.call(behavior); }
 
 		} catch (error) {
 
@@ -3658,7 +3937,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 			console.log('[Behavior]');
 			console.log(behavior);
 			console.log('[Object3D]');
-			console.log(this);
+			console.log(this$1);
 			console.groupEnd();
 
 		}
@@ -3672,7 +3951,7 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 		var behavior = toUpdate[i];
 		try {
 
-			if (behavior.update) behavior.update.call(behavior, deltaTime);
+			if (behavior.update) { behavior.update.call(behavior, deltaTime); }
 
 		} catch (error) {
 
@@ -3681,441 +3960,338 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 			console.log('[Behavior]');
 			console.log(behavior);
 			console.log('[Object3D]');
-			console.log(this);
+			console.log(this$1);
 			console.groupEnd();
 
 		}
 
 	}
 
-}
+};
 
-
-
-altspace = window.altspace || {};
-altspace.utilities = altspace.utilities || {};
-altspace.utilities.shims = altspace.utilities.shims || {};
 /**
- * Detects mouse move/up/down events, raycasts to find intersected objects,
- * then dispatches cursor move/up/down/enter/leave events that mimics
- * Altspace events.
- * @module altspace/utilities/shims/cursor
- */
-altspace.utilities.shims.cursor = (function () {
-	//TODO: Support non-full window apps
+* @module altspace/utilities/shims
+*/
 
-	var scene;
-	var camera;
-	var domElem;
 
-	var overObject;
 
-	var raycaster = new THREE.Raycaster();
+var index = Object.freeze({
+	OBJMTLLoader: OBJMTLLoader,
+	cursor: cursor
+});
 
-	/**
-	 * Initializes the cursor module
-	 * @static
-	 * @method init
-	 * @param {THREE.Scene} scene
-	 * @param {THREE.Camera} camera - Camera used for raycasting.
-	 * @param {Object} [options] - An options object
-	 * @param {THREE.WebGLRenderer} [options.renderer] - If supplied, applies cursor movement to render target
-	 *	instead of entire client
-	 * @memberof module:altspace/utilities/shims/cursor
-	 */
-	function init(_scene, _camera, _params) {
-		if (!_scene || !_scene instanceof THREE.Scene) {
-			throw new TypeError('Requires THREE.Scene argument');
-		}
-		if (!_camera || !_camera instanceof THREE.Camera) {
-			throw new TypeError('Requires THREE.Camera argument');
-		}
-		scene = _scene;
-		camera = _camera;
+/**
+* Base class for all behaviors. Use this class as a pattern, but do not use
+* directly.
+* @memberof module:altspace/utilities/behaviors
+*/
+var Behavior = function Behavior(){};
 
-		p = _params || {};
-		domElem = p.renderer && p.renderer.domElement || window;
+var prototypeAccessors$2 = { type: {} };
 
-		domElem.addEventListener('mousedown', mouseDown, false)
-		domElem.addEventListener('mouseup', mouseUp, false)
-		domElem.addEventListener('mousemove', mouseMove, false)
+/**
+* The string name of this class. This is used for {@link THREE.Object3D#getBehaviorByType}.
+* @instance
+* @member {string} type
+* @memberof module:altspace/utilities/behaviors.Behavior
+*/
+prototypeAccessors$2.type.get = function (){
+	if(!this._typeWarning){
+		console.warn('Behavior', this, 'does not expose type information!',
+			'It will not be queryable by getBehaviorByType, which will break',
+			'some built-in behaviors.');
+		this._typeWarning = true;
+	}
+	return null; // is normally the name of the type, i.e. "Behavior"
+};
+
+/**
+* Called when the behavior is attached to an object. Any setup that requires
+* the object should be done here, e.g. adding event listeners.
+* @param {Object3D} obj - The new parent object
+* @param {Scene} scene - The scene the object is a member of
+*/
+Behavior.prototype.awake = function awake (obj, scene){};
+
+/**
+* Called when the behavior is ready to start. This is guaranteed to run after
+* all behaviors are awake. Any setup that requires interdependence on other
+* behaviors or objects should be done here.
+*/
+Behavior.prototype.start = function start (){};
+
+/**
+* Called every frame after awake/start. Run anything that needs to happen over
+* time here, e.g. animations.
+* @param {integer} deltaTime - The number of milliseconds elapsed since the
+* last update
+*/
+Behavior.prototype.update = function update (deltaTime){};
+
+/**
+* Called when the behavior is removed from its object. Clean up your event
+* handlers, etc. here.
+* @param {Object3D} obj - The object this behavior was once attached to
+*/
+Behavior.prototype.dispose = function dispose (obj){};
+
+Object.defineProperties( Behavior.prototype, prototypeAccessors$2 );
+
+/**
+* The Bob behavior adds a bobbing animation to an object
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+* @param {Object} [config]
+* @param {Boolean} [config.shouldRotate=true] Whether the animation should include
+*  rotation.
+* @param {Boolean} [config.shouldMove=true] Whether the animation should
+*  include movement.
+* @param {Number} [config.x=3] Amount of bob on the x axis.
+* @param {Number} [config.y=5] Amount of bob on the y axis.
+**/
+var Bob = (function (Behavior$$1) {
+	function Bob(config)
+	{
+		Behavior$$1.call(this);
+		this.config = Object.assign({x:3, y:5, shouldRotate:true, shouldMove:true}, config);
+		this.object3d = null;
+		this.offsetPosition = null;
+		this.lastBobPosition = new THREE.Vector3();
+		this.nowOffset = Math.random() * 10000;
 	}
 
-	function mouseDown(event) {
+	if ( Behavior$$1 ) Bob.__proto__ = Behavior$$1;
+	Bob.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Bob.prototype.constructor = Bob;
 
-		var intersection = findIntersection(event);
-		if (!intersection || !intersection.point) return;
+	var prototypeAccessors = { type: {} };
 
-		var cursorEvent = createCursorEvent('cursordown', intersection);
-		intersection.object.dispatchEvent(cursorEvent);
-	}
+	prototypeAccessors.type.get = function (){ return 'Bob'; };
 
-	function mouseUp(event) {
-		var intersection = findIntersection(event);
-
-		var cursorEvent = createCursorEvent('cursorup', intersection);
-
-		if (intersection) {
-			intersection.object.dispatchEvent(cursorEvent);
-		} else {
-			scene.dispatchEvent(cursorEvent);
-		}
-	}
-
-	function mouseMove(event) {
-		var intersection = findIntersection(event);
-
-		var cursorEvent = createCursorEvent('cursormove', intersection);//TODO improve and don't fire only on scene
-		scene.dispatchEvent(cursorEvent);
-
-		var object = intersection ? intersection.object : null;
-		if (overObject != object) {
-			if (overObject) {
-				cursorEvent = createCursorEvent('cursorleave', intersection);
-				overObject.dispatchEvent(cursorEvent);
-			}
-
-			if (object) {
-				cursorEvent = createCursorEvent('cursorenter', intersection);
-				object.dispatchEvent(cursorEvent);
-			}
-
-			overObject = object;
-		}
-	}
-
-	function createCursorEvent(type, intersection) {
-		return {
-			type: type,
-			bubbles: true,
-			target: intersection ? intersection.object : null,
-			ray: {
-				origin: raycaster.ray.origin.clone(),
-				direction: raycaster.ray.direction.clone()
-			},
-			point: intersection ? intersection.point.clone() : null
-		}
-	}
-
-	function findIntersection(mouseEvent) {
-		var mouse = new THREE.Vector2();
-		mouse.x = (mouseEvent.offsetX / (domElem.width || domElem.innerWidth)) * 2 - 1;
-		mouse.y = -(mouseEvent.offsetY / (domElem.height || domElem.innerHeight)) * 2 + 1;
-
-		raycaster.setFromCamera(mouse, camera);
-
-		var intersections = raycaster.intersectObjects(scene.children, true);
-
-		// return the first object with an enabled collider
-		return intersections.find(function(e){
-			return !e.object.userData
-				|| !e.object.userData.altspace
-				|| !e.object.userData.altspace.collider
-				|| e.object.userData.altspace.collider.enabled !== false;
-		}) || null;
-	}
-
-	return {
-		init: init,
+	Bob.prototype.awake = function awake (o)
+	{
+		this.object3d = o;
+		this.offsetPosition = this.object3d.position.clone();
 	};
 
-}());
+	Bob.prototype.update = function update (deltaTime)
+	{
+		var nowInt = Math.floor(performance.now()) + this.nowOffset;
+
+		if (this.config.shouldMove)
+		{
+			if (!this.lastBobPosition.equals(this.object3d.position))
+				{ this.offsetPosition.copy(this.object3d.position); }
+
+			this.object3d.position.y = this.offsetPosition.y + Math.sin(nowInt / 800) * this.config.x;
+			this.object3d.position.x = this.offsetPosition.x + Math.sin(nowInt / 500) * this.config.y;
+			this.lastBobPosition.copy(this.object3d.position);
+		}
+
+		if (this.config.shouldRotate){
+			this.object3d.rotation.x = Math.sin(nowInt / 500) / 15;
+		}
+	};
+
+	Object.defineProperties( Bob.prototype, prototypeAccessors );
+
+	return Bob;
+}(Behavior));
 
 /**
- * The Altspace SDK adds event bubbling to Three.js' events system.
- * Simply include the SDK in your app and add a bubbling property to your event to take advantage of this feature.
- * 
- * AltspaceVR cursor events always make use of this bubbling shim.
- *
- * @example
- * var parent = new THREE.Object3D();
- * parent.addEventListener('custom', function () {
- *     console.log('received custom event');
- * });
- * var child = new THREE.Object3D();
- * parent.add(child);
- * child.dispatchEvent({type: 'custom', bubbles: true});
- * // Console log shows 'received custom event'
- *
- * @module altspace/utilities/shims/bubbling
- */
-( function() {
+* A behavior that changes the color of an object when the cursor interacts with it.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+* @param {Object} [config] Optional parameters.
+* @param {THREE.Color} [config.originalColor] Base material color.
+* @param {Number} [config.overBrightness=1.5] Material brightness when cursor
+*	is over button.
+* @param {Number} [config.downBrightness=0.5] Material brightness when cursor
+*	is clicked.
+*/
+var ButtonStateStyle = (function (Behavior$$1) {
+	function ButtonStateStyle(config)
+	{
+		Behavior$$1.call(this);
+		this.config = Object.assign({overBrightness: 1.5, downBrightness: 0.5}, config);
+		this.object3d = null;
+		this.scene = null;
+		this.originalColor = null;
+		this.modifiedColor = new THREE.Color();
 
-	if (!THREE) return;
-
-	if (window.altspace && window.altspace.inAltspace) return;
-
-	THREE.EventDispatcher.prototype.dispatchEvent = dispatchEvent;
-	THREE.Object3D.prototype.dispatchEvent = dispatchEvent;
-
-	function dispatchEvent( event ) {
-
-		var shouldStopPropagation;
-		var shouldStopPropagationImmediately;
-
-		if ( event.bubbles ) {
-
-			event.currentTarget = this;
-
-			event.stopPropagation = function () {
-
-				shouldStopPropagation = true;
-
-			}
-
-			event.stopImmediatePropagation = function () {
-
-				shouldStopPropagationImmediately = true;
-
-			}
-
-		}
-
-		if ( this._listeners ) {
-
-			var listeners = this._listeners;
-			var listenerArray = listeners[ event.type ];
-
-			if ( listenerArray ) {
-
-				event.target = event.target || this;
-
-				var array = [];
-				var length = listenerArray.length;
-
-				for ( var i = 0; i < length; i ++ ) {
-
-					array[ i ] = listenerArray[ i ];
-
-				}
-
-				for ( var i = 0; i < length; i ++ ) {
-
-					array[ i ].call( this, event );
-
-					if ( shouldStopPropagationImmediately ) return;
-
-				}
-
-			}
-
-		}
-
-
-		if ( event.bubbles && this.parent && this.parent.dispatchEvent && ! shouldStopPropagation ) {
-
-			dispatchEvent.call( this.parent, event );
-
-		}
-
+		this._cbs = {
+			cursorenter: this.cursorEnter.bind(this),
+			cursordown: this.cursorDown.bind(this),
+			cursorup: this.cursorUp.bind(this),
+			cursorleave: this.cursorLeave.bind(this)
+		};
 	}
 
-}() );
+	if ( Behavior$$1 ) ButtonStateStyle.__proto__ = Behavior$$1;
+	ButtonStateStyle.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	ButtonStateStyle.prototype.constructor = ButtonStateStyle;
 
-/**
- * @module altspace/utilities/behaviors
- */
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+	var prototypeAccessors = { type: {} };
 
-/**
- * The Bob behavior adds a bobbing animation to an object
- *
- * @class Bob
- * @param {Object} [config]
- * @param {Boolean} [config.shouldRotate=true] Whether the animation should include
- *  rotation.
- * @param {Boolean} [config.shouldMove=true] Whether the animation should
- *  include movement.
- * @param {Number} [config.x=3] Amount of bob on the x axis.
- * @param {Number} [config.y=5] Amount of bob on the y axis.
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.Bob = function (config) {
-	var object3d;
+	prototypeAccessors.type.get = function (){ return 'ButtonStateStyle'; };
 
-	config = config || {};
-	config.x = config.x || 3;
-	config.y = config.y || 5;
+	ButtonStateStyle.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.originalColor = this.config.originalColor || this.object3d.material.color;
+		this.object3d.addEventListener('cursorenter', this._cbs.cursorenter);
+		this.object3d.addEventListener('cursordown', this._cbs.cursordown);
+	};
 
-	if (config.shouldRotate === undefined) config.shouldRotate = true;
-	if (config.shouldMove === undefined) config.shouldMove = true;
+	ButtonStateStyle.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursorenter', this._cbs.cursorenter);
+		this.object3d.removeEventListener('cursorleave', this._cbs.cursorleave);
+		this.object3d.removeEventListener('cursorup', this._cbs.cursorup);
+		this.object3d.removeEventListener('cursordown', this._cbs.cursordown);
+	};
 
-	var offsetPosition;
-	var lastBobPosition = new THREE.Vector3();
-	//TODO: Rotation
+	ButtonStateStyle.prototype.changeBrightness = function changeBrightness (brightness)
+	{
+		this.modifiedColor.set(this.originalColor);
+		this.modifiedColor.multiplyScalar(brightness);
+		this.modifiedColor.r = THREE.Math.clamp(this.modifiedColor.r, 0, 1);
+		this.modifiedColor.g = THREE.Math.clamp(this.modifiedColor.g, 0, 1);
+		this.modifiedColor.b = THREE.Math.clamp(this.modifiedColor.b, 0, 1);
+		this.object3d.material.color = this.modifiedColor;
+	};
 
-	var nowOffset = Math.random() * 10000;
+	ButtonStateStyle.prototype.cursorLeave = function cursorLeave ()
+	{
+		this.object3d.removeEventListener('cursorleave', this._cbs.cursorleave);
+		this.changeBrightness(1.0);
+	};
 
-	function awake(o) {
-		object3d = o;
-		offsetPosition = object3d.position.clone();
-	}
+	ButtonStateStyle.prototype.cursorEnter = function cursorEnter ()
+	{
+		this.changeBrightness(this.config.overBrightness);
+		this.object3d.addEventListener('cursorleave', this._cbs.cursorleave);
+	};
 
-	function update(deltaTime) {
-		var nowInt = Math.floor(performance.now()) + nowOffset;
-
-		if (config.shouldMove) {
-			if (!lastBobPosition.equals(object3d.position)) offsetPosition.copy(object3d.position);
-
-			object3d.position.y = offsetPosition.y + Math.sin(nowInt / 800) * config.x;
-			object3d.position.x = offsetPosition.x + Math.sin(nowInt / 500) * config.y;
-			lastBobPosition.copy(object3d.position);
-		}
-
-		if (config.shouldRotate) {
-			object3d.rotation.x = Math.sin(nowInt / 500) / 15;
-		}
-	}
-
-	return { awake: awake, update: update, type: 'Bob' };
-};
-
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
-
-/**
- * A behavior that changes the color of an object when the cursor interacts with it.
- * @class ButtonStateStyle
- * @param {Object} [config] Optional parameters.
- * @param {THREE.Color} [config.originalColor] Base material color.
- * @param {Number} [config.overBrightness=1.5] Material brightness when cursor
- *	is over button.
- * @param {Number} [config.downBrightness=0.5] Material brightness when cursor
- *	is clicked.
- * @memberof module:altspace/utilities/behaviors
- */
-altspace.utilities.behaviors.ButtonStateStyle = function (config) {
-	var object3d;
-	var scene;
-	var originalColor;
-	var modifiedColor = new THREE.Color();
-
-	config = config || {};
-	var overBrightness = config.overBrightness || 1.5;
-	var downBrightness = config.downBrightness || 0.5;
-
-	function changeBrightness(brightness) {
-		modifiedColor.set(originalColor);
-		modifiedColor.multiplyScalar(brightness);
-		modifiedColor.r = THREE.Math.clamp(modifiedColor.r, 0, 1);
-		modifiedColor.g = THREE.Math.clamp(modifiedColor.g, 0, 1);
-		modifiedColor.b = THREE.Math.clamp(modifiedColor.b, 0, 1);
-		object3d.material.color = modifiedColor;
-	}
-
-	function cursorLeave() {
-		object3d.removeEventListener('cursorleave', cursorLeave);
-		changeBrightness(1.0);
-	}
-
-	function cursorEnter() {
-		changeBrightness(overBrightness);
-		object3d.addEventListener('cursorleave', cursorLeave);
-	}
-
-	function cursorUp(event) {
-		scene.removeEventListener('cursorup', cursorUp);
-		object3d.addEventListener('cursorenter', cursorEnter);
-		if (event.target === object3d) {
-			changeBrightness(overBrightness);
-			object3d.addEventListener('cursorleave', cursorLeave);
+	ButtonStateStyle.prototype.cursorUp = function cursorUp (event)
+	{
+		this.scene.removeEventListener('cursorup', this._cbs.cursorup);
+		this.object3d.addEventListener('cursorenter', this._cbs.cursorenter);
+		if (event.target === this.object3d) {
+			this.changeBrightness(this.config.overBrightness);
+			this.object3d.addEventListener('cursorleave', this._cbs.cursorleave);
 		} else {
-			changeBrightness(1.0);
+			this.changeBrightness(1.0);
 		}
-	}
-	function cursorDown() {
-		scene.addEventListener('cursorup', cursorUp);
-		object3d.removeEventListener('cursorleave', cursorLeave);
-		object3d.removeEventListener('cursorenter', cursorEnter);
-		changeBrightness(downBrightness);
-	}
+	};
 
-	function awake(o, s) {
-		object3d = o;
-		scene = s;
-		originalColor = config.originalColor || object3d.material.color;
-		object3d.addEventListener('cursorenter', cursorEnter);
-		object3d.addEventListener('cursordown', cursorDown);
-	}
+	ButtonStateStyle.prototype.cursorDown = function cursorDown ()
+	{
+		this.scene.addEventListener('cursorup', this._cbs.cursorup);
+		this.object3d.removeEventListener('cursorleave', this._cbs.cursorleave);
+		this.object3d.removeEventListener('cursorenter', this._cbs.cursorenter);
+		this.changeBrightness(this.config.downBrightness);
+	};
 
-	function dispose() {
-		object3d.removeEventListener('cursorenter', cursorEnter);
-		object3d.removeEventListener('cursorleave', cursorLeave);
-		object3d.removeEventListener('cursorup', cursorUp);
-		object3d.removeEventListener('cursordown', cursorDown);
-	}
+	Object.defineProperties( ButtonStateStyle.prototype, prototypeAccessors );
 
-	return { awake: awake, dispose: dispose, type: 'ButtonStateStyle' };
-};
-
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+	return ButtonStateStyle;
+}(Behavior));
 
 //idea: API for symbolic camera from altspace? altspace.getThreeJSCenterCamera();
 //idea: offset (drag from bottom of piece). Workaround if you reparent
 
 //TODO: GSAP Draggable
+
+function getWorldPosition(obj) {
+	obj.updateMatrixWorld();
+	var vec = new THREE.Vector3();
+	vec.setFromMatrixPosition(obj.matrixWorld);
+	return vec;
+}
+
 /**
- * A behavior that makes an object draggable along a plane.
- * @class Drag
- * @param {Object} [config] Specify the axes along which the object can be
- *  dragged.
- *  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
- *  Each axis can also be an object specifying the minimum and maximum limits
- *  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
- *  **Note:** Currently you must specify exactly two axes.
- * @memberof module:altspace/utilities/behaviors
- */
-altspace.utilities.behaviors.Drag = function (config) {
-	//space: view, local, world, sphere
-	//gridSnap, cursorSnap
-	//config: x: true, y: true, z: false, defaultDistance: 1000
+* A behavior that makes an object draggable along a plane.
+* @param {Object} [config] Specify the axes along which the object can be
+*  dragged.
+*  E.g. To constrain the object to an XY plane: `{x: true, y: true}`
+*  Each axis can also be an object specifying the minimum and maximum limits
+*  of the constraint. E.g. `{x: {min: -10, max: 20}, y: true}`
+*  **Note:** Currently you must specify exactly two axes.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+var Drag = (function (Behavior$$1) {
+	function Drag(config)
+	{
+		Behavior$$1.call(this);
 
-	config = config || {};
+		//space: view, local, world, sphere
+		//gridSnap, cursorSnap
+		//config: x: true, y: true, z: false, defaultDistance: 1000
+		this.config = config = Object.assign(
+			{space: 'world', x: false, y: false, z: false, cursorSnap: true},
+			config
+		);
 
-	if (config.space === undefined) config.space = 'world';//TODO others
-	if (config.x === undefined) config.x = false;
-	if (config.y === undefined) config.y = false;
-	if (config.z === undefined) config.z = false;
-	if (config.cursorSnap === undefined) config.cursorSnap = true;//TODO false
+		this.min = new THREE.Vector3(
+			config.x.min !== undefined ? config.x.min : Number.NEGATIVE_INFINITY,
+			config.y.min !== undefined ? config.y.min : Number.NEGATIVE_INFINITY,
+			config.z.min !== undefined ? config.z.min : Number.NEGATIVE_INFINITY
+		);
+		this.max = new THREE.Vector3(
+			config.x.max !== undefined ? config.x.max : Number.POSITIVE_INFINITY,
+			config.y.max !== undefined ? config.y.max : Number.POSITIVE_INFINITY,
+			config.z.max !== undefined ? config.z.max : Number.POSITIVE_INFINITY
+		);
 
-	var inX = !!config.x;
-	var inY = !!config.y;
-	var inZ = !!config.z;
-	var min = new THREE.Vector3(
-		config.x.min !== undefined ? config.x.min : Number.NEGATIVE_INFINITY,
-		config.y.min !== undefined ? config.y.min : Number.NEGATIVE_INFINITY,
-		config.z.min !== undefined ? config.z.min : Number.NEGATIVE_INFINITY
-	);
-	var max = new THREE.Vector3(
-		config.x.max !== undefined ? config.x.max : Number.POSITIVE_INFINITY,
-		config.y.max !== undefined ? config.y.max : Number.POSITIVE_INFINITY,
-		config.z.max !== undefined ? config.z.max : Number.POSITIVE_INFINITY
-	);
+		//if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72'); //TODO: Do we need a revision check?
 
-	var object3d;
-	var scene;
-	var sync;
-	var intersector;
-	var dragOffset = new THREE.Vector3();
-	var raycaster = new THREE.Raycaster();
-	raycaster.linePrecision = 3;
+		this.object3d = null;
+		this.scene = null;
+		this.sync = null;
+		this.intersector = null;
+		this.dragOffset = new THREE.Vector3();
+		this.raycaster = new THREE.Raycaster();
+		this.raycaster.linePrecision = 3;
 
-	//if (THREE.REVISION !== '72') throw new Error('Drag requires three.js revision 72'); //TODO: Do we need a revision check?
-
-	function awake(o, s) {
-		object3d = o;
-		scene = s;
-		sync = object3d.getBehaviorByType('Object3DSync');
-		makeIntersector();
-		scene.add(intersector);//TODO: see if I can remove it from the scene. Might not req 72.
+		this._cbs = {
+			startDrag: this.startDrag.bind(this),
+			moveDrag: this.moveDrag.bind(this),
+			stopDrag: this.stopDrag.bind(this)
+		};
 	}
 
-	function makeIntersector() {
+	if ( Behavior$$1 ) Drag.__proto__ = Behavior$$1;
+	Drag.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Drag.prototype.constructor = Drag;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'Drag'; };
+
+	Drag.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.sync = o.getBehaviorByType('Object3DSync');
+		this.makeIntersector();
+		this.scene.add(this.intersector);//TODO: see if I can remove it from the scene. Might not req 72.
+	};
+
+	Drag.prototype.start = function start ()
+	{
+		this.object3d.addEventListener('cursordown', this._cbs.startDrag);
+	};
+
+	Drag.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursordown', this._cbs.startDrag);
+	};
+
+	Drag.prototype.makeIntersector = function makeIntersector ()
+	{
 		var extent = 10000;
 		var plane = new THREE.PlaneGeometry(extent, extent);
 
@@ -4128,18 +4304,13 @@ altspace.utilities.behaviors.Drag = function (config) {
 		function makeYZ() {
 			plane.rotateY(Math.PI / 2);
 		}
-		function makeViewAligned() {
-			throw new Error('Not implemented');
-		}
-
+		var inX = !!this.config.x, inY = !!this.config.y, inZ = !!this.config.z;
 		var axisCount = inX + inY + inZ; // implicit cast to integers
 
 		if (axisCount === 3) {
-
 			throw new Error('Arbitrary dragging currently unsupported. Please lock at least one axis.');
-
-		} else if (axisCount === 2) {
-
+		}
+		else if (axisCount === 2) {
 			if (inX && inY) {
 				makeXY();
 			} else if (inX && inZ) {
@@ -4147,54 +4318,43 @@ altspace.utilities.behaviors.Drag = function (config) {
 			} else if (inY && inZ) {
 				makeYZ();
 			}
-
-		} else if (axisCount === 1) {
-
+		}
+		else if (axisCount === 1) {
 			throw new Error('Single axis dragging currently unsupported.');
 			//TODO: make possible, possibly via view-aligned plane
-
-		} else {
+		}
+		else {
 			throw new Error('Invalid axis configuration');
 		}
+
 		var material = new THREE.MeshBasicMaterial({ color: 'purple' });
 		material.side = THREE.DoubleSide;
-		intersector = new THREE.Mesh(plane, material);
-		intersector.visible = false;// ensures other raycasters don't hit our intersector
-		intersector.material.visible = false;// ensures we never see flicker during temp visibility
-	}
+		this.intersector = new THREE.Mesh(plane, material);
+		this.intersector.visible = false;// ensures other raycasters don't hit our intersector
+		this.intersector.material.visible = false;// ensures we never see flicker during temp visibility
+	};
 
-	function getWorldPosition(obj) {
-		obj.updateMatrixWorld();
-		var vec = new THREE.Vector3();
-		vec.setFromMatrixPosition(obj.matrixWorld);
-		return vec;
-	}
-
-	function vec2str(vec) {
-		function shortNum(num) {
-			return Math.floor(num * 100) / 100;
-		}
-		return 'x: ' + shortNum(vec.x) + ', y: ' + shortNum(vec.y) + ', z: ' + shortNum(vec.z);
-	}
-
-	function startDrag(event) {
-		scene.addEventListener('cursorup', stopDrag);
-		scene.addEventListener('cursormove', moveDrag);
+	Drag.prototype.startDrag = function startDrag (event)
+	{
+		this.scene.addEventListener('cursorup', this._cbs.stopDrag);
+		this.scene.addEventListener('cursormove', this._cbs.moveDrag);
 
 		//Remember difference between center of object and drag point.
 		//Otherwise, object appears to 'jump' when selected, moving so its
 		//center is directly until the cursor. We allow drag on edge of object.
-		raycaster.set(event.ray.origin, event.ray.direction);
-		var hit = raycaster.intersectObject(object3d, true)[0];
-		if (!hit) return;
+		this.raycaster.set(event.ray.origin, event.ray.direction);
+		var hit = this.raycaster.intersectObject(this.object3d, true)[0];
+		if (!hit)
+			{ return; }
+
 		var dragPoint = hit.point.clone();
-		var objectCenterPoint = getWorldPosition(object3d).clone();
-		dragOffset.copy(dragPoint).sub(objectCenterPoint);
+		var objectCenterPoint = getWorldPosition(this.object3d).clone();
+		this.dragOffset.copy(dragPoint).sub(objectCenterPoint);
 
 		//Move to drag point (not object center), where raycast hits the object.
-		intersector.position.copy(intersector.parent.worldToLocal(dragPoint));
-		intersector.quaternion.copy(object3d.parent.quaternion);
-		intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
+		this.intersector.position.copy(this.intersector.parent.worldToLocal(dragPoint));
+		this.intersector.quaternion.copy(this.object3d.parent.quaternion);
+		this.intersector.updateMatrixWorld();// necessary for raycast, TODO: Make GH issue
 
 		/**
 		* Fired on an object when a drag interaction begins.
@@ -4203,46 +4363,54 @@ altspace.utilities.behaviors.Drag = function (config) {
 		* @type module:altspace/utilities/behaviors.Drag~DragEvent
 		* @memberof module:altspace/utilities/behaviors.Drag
 		*/
-		var dragEvent = createDragEvent('dragstart');
-		object3d.dispatchEvent(dragEvent);
-	}
+		var dragEvent = this.createDragEvent('dragstart');
+		this.object3d.dispatchEvent(dragEvent);
+	};
 
-	function moveDrag(event) {
-
-		if (sync && !sync.isMine) sync.takeOwnership();
+	Drag.prototype.moveDrag = function moveDrag (event)
+	{
+		if (this.sync && !this.sync.isMine)
+			{ this.sync.takeOwnership(); }
 
 		//find intersection
-		intersector.visible = true;// allow our intersector to be intersected
-		raycaster.set(event.ray.origin, event.ray.direction);
-		var intersection = raycaster.intersectObject(intersector, true)[0];
-		intersector.visible = false;// disallow our intersector to be intersected
+		this.intersector.visible = true;// allow our intersector to be intersected
+		this.raycaster.set(event.ray.origin, event.ray.direction);
+		var intersection = this.raycaster.intersectObject(this.intersector, true)[0];
+		this.intersector.visible = false;// disallow our intersector to be intersected
 
-		if (!intersection) return;
+		if (!intersection)
+			{ return; }
 
 		//New position is intersection point minus offset. Need offset since
 		//user probably won't click on exact center of object to drag it.
 		var targetWorldPosition = new THREE.Vector3();
-		targetWorldPosition.copy(intersection.point).sub(dragOffset);
-		//But maintain the original y position of the object.
-		targetWorldPosition.y = getWorldPosition(object3d).y;
+		targetWorldPosition.copy(intersection.point).sub(this.dragOffset);
+
+		//But maintain the original locked positions of the object.
+		var self = this;
+		var objWorldPos = getWorldPosition(this.object3d);
+		['x','y','z'].filter(function (i) { return !self.config[i]; }).forEach(function (i) {
+			targetWorldPosition[i] = objWorldPos[i];
+		});
 
 		//constrain target position
-		targetWorldPosition.clamp(min, max);
+		targetWorldPosition.clamp(this.min, this.max);
 
 		//move object
-		object3d.parent.updateMatrixWorld();
-		var targetLocalPosition = object3d.parent.worldToLocal(targetWorldPosition);//TODO: Test with nested objects
-		object3d.position.set(
-			config.x ? targetLocalPosition.x : object3d.position.x,
-			config.y ? targetLocalPosition.y : object3d.position.y,
-			config.z ? targetLocalPosition.z : object3d.position.z
+		this.object3d.parent.updateMatrixWorld();
+		var targetLocalPosition = this.object3d.parent.worldToLocal(targetWorldPosition);//TODO: Test with nested objects
+		this.object3d.position.set(
+			this.config.x ? targetLocalPosition.x : this.object3d.position.x,
+			this.config.y ? targetLocalPosition.y : this.object3d.position.y,
+			this.config.z ? targetLocalPosition.z : this.object3d.position.z
 		);
 
-	}
+	};
 
-	function stopDrag() {
-		scene.removeEventListener('cursorup', stopDrag);
-		scene.removeEventListener('cursormove', moveDrag);
+	Drag.prototype.stopDrag = function stopDrag ()
+	{
+		this.scene.removeEventListener('cursorup', this._cbs.stopDrag);
+		this.scene.removeEventListener('cursormove', this._cbs.moveDrag);
 
 		/**
 		* Fired on an object when a drag interaction ends
@@ -4251,17 +4419,9 @@ altspace.utilities.behaviors.Drag = function (config) {
 		* @type module:altspace/utilities/behaviors.Drag~DragEvent
 		* @memberof module:altspace/utilities/behaviors.Drag
 		*/
-		var dragEvent = createDragEvent('dragstop');
-		object3d.dispatchEvent(dragEvent);
-	}
-
-	function start() {
-		object3d.addEventListener('cursordown', startDrag);
-	}
-
-	function dispose() {
-		object3d.removeEventListener('cursordown', startDrag);
-	}
+		var dragEvent = this.createDragEvent('dragstop');
+		this.object3d.dispatchEvent(dragEvent);
+	};
 
 	/**
 	* Represents events emitted during drag interactions
@@ -4270,94 +4430,112 @@ altspace.utilities.behaviors.Drag = function (config) {
 	* @property {THREE.Ray} ray - The raycaster ray at the time of the event.
 	* @property {THREE.Object3D} target - The object which was dragged.
 	*/
-	function createDragEvent(type) {
+	Drag.prototype.createDragEvent = function createDragEvent (type)
+	{
 		return {
 			type: type,
 			bubbles: true,
-			target: object3d,
-			ray: raycaster.ray.clone()
+			target: this.object3d,
+			ray: this.raycaster.ray.clone()
 		}
+	};
+
+	Object.defineProperties( Drag.prototype, prototypeAccessors );
+
+	return Drag;
+}(Behavior));
+
+// ignore stick dead zone
+var tolerance = 0.2;
+
+/**
+* Allows an object to be moved, rotated, and scaled using a gamepad controller.
+* Left stick left / right and up / down moves object in the X-Y plane.
+* Clicking left stick enters left alt mode, where movement is in X-Z plane.
+* Clicking left stick again exits left alt mode.
+* Right stick left / right rotates object clockwise / counterclockwise (y axis).
+* Right stick up / down rotates object away forwards / backwards (x axis).
+* Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
+* Clicking right stick again exits right alt mode.
+* D-pad up / down scales object.
+* Back / reset button resets object to its original position and rotation.
+*
+* @param {Boolean} [config.position=true] Whether object's position can be changed.
+* @param {Boolean} [config.rotation=true] Whether object's rotation can be changed.
+* @param {Boolean} [config.scale=true] Whether object's scale can be changed.
+*
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+**/
+
+var GamepadControls = (function (Behavior$$1) {
+	function GamepadControls(config)
+	{
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{position: true, rotation: true, scale: true},
+			config
+		);
+
+		this.object3d = null;
+		this.gamepad = null;
+		this.scene = null;
+		this.sync = null;
+
+		this.isAltModeR = false;
+		this.isAltModeL = false;
+		this.prevAltButtonR = false;
+		this.prevAltButtonL = false;
+		this.isInitialized = false;
+
+		this.originalObj = null;//used to reset
 	}
 
-	return { awake: awake, start: start, dispose: dispose, type: 'Drag' };
-};
+	if ( Behavior$$1 ) GamepadControls.__proto__ = Behavior$$1;
+	GamepadControls.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	GamepadControls.prototype.constructor = GamepadControls;
 
-/**
- * @module altspace/utilities/behaviors
- */
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+	var prototypeAccessors = { type: {} };
 
-/**
- * Allows an object to be moved, rotated, and scaled using a gamepad controller.
- * Left stick left / right and up / down moves object in the X-Y plane.
- * Clicking left stick enters left alt mode, where movement is in X-Z plane.
- * Clicking left stick again exits left alt mode.
- * Right stick left / right rotates object clockwise / counterclockwise (y axis).
- * Right stick up / down rotates object away forwards / backwards (x axis).
- * Clicking right stick enters right alt mode, where left / right tumbles object (z axis).
- * Clicking right stick again exits right alt mode.
- * D-pad up / down scales object.
- * Back / reset button resets object to its original position and rotation.
- *
- * @param {Boolean} [config.position=true] Whether object's position can be changed.
- * @param {Boolean} [config.rotation=true] Whether object's rotation can be changed.
- * @param {Boolean} [config.scale=true] Whether object's scale can be changed.
- *
- * @class GamepadControls
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.GamepadControls = function (config) {
-	var object3d;
-	var gamepad;
-	var scene;
-	var sync;
+	prototypeAccessors.type.get = function (){ return 'GamepadControls'; };
 
-	var isAltModeR= false;
-	var isAltModeL= false;
-	var prevAltButtonR = false;
-	var prevAltButtonL = false;
-	var isInitialized = false;
+	GamepadControls.prototype.awake = function awake (o, s)
+	{
+		var this$1 = this;
 
-	var originalObj;//used to reset
-	var tolerance = 0.2;//ignore stick dead zone
-
-	config = config || {};
-	if (config.position === undefined) config.position = true;
-	if (config.rotation === undefined) config.rotation = true;
-	if (config.scale === undefined) config.scale = true;
-
-	function awake(o, s) {
-
-		object3d = o;
-		scene = s;
-		sync = object3d.getBehaviorByType('Object3DSync');
-		originalObj = object3d.clone();
-		gamepad = getGamepad();
-		if (gamepad) {
-			console.log('Gamepad detected: ' + gamepad.id);
+		this.object3d = o;
+		this.scene = s;
+		this.sync = this.object3d.getBehaviorByType('Object3DSync');
+		this.originalObj = this.object3d.clone();
+		this.gamepad = this.getGamepad();
+		if (this.gamepad) {
+			console.log('Gamepad detected: ' + this.gamepad.id);
 		} else {
-			var intervalID = setInterval(function() {
-				gamepad = getGamepad();
-				if (gamepad) {
-					console.log('Gamepad connected: ' + gamepad.id);
+			var intervalID = setInterval((function () {
+				this$1.gamepad = this$1.getGamepad();
+				if (this$1.gamepad) {
+					console.log('Gamepad connected: ' + this$1.gamepad.id);
 					clearInterval(intervalID);
 				}
-			}, 500);
+			}).bind(this), 500);
 		}
 
-		scene.addEventListener('cursordown', function(e) {
+		this.scene.addEventListener('cursordown', (function (e) {
 			//preventDefault only works when app has focus, so call after initial click
-			if (gamepad && !isInitialized) {
-				preventDefault(gamepad);
-				isInitialized = true;
+			if (this$1.gamepad && !this$1.isInitialized) {
+				this$1.preventDefault(this$1.gamepad);
+				this$1.isInitialized = true;
 			}
-		});
+		}).bind(this));
 
-	}
+	};
 
-	function getGamepad() {
+	// utility function to fetch correct type of gamepad
+	GamepadControls.prototype.getGamepad = function getGamepad ()
+	{
+		var this$1 = this;
+
+		var gamepads = [];
 		if (altspace && altspace.inClient) {
 			gamepads = altspace.getGamepads();
 		} else {
@@ -4365,552 +4543,644 @@ altspace.utilities.behaviors.GamepadControls = function (config) {
 			//https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
 			gamepads = navigator.getGamepads();
 		}
+
 		if (gamepads.length > 0) {
 			for (var i=0; i < gamepads.length; i++) {
 				var g = gamepads[i];
 				if (g && g.axes  && g.axes.length === 4 && g.buttons && g.buttons.length === 16) {
-					if (altspace && altspace.inClient) preventDefault(g);
+					if (altspace && altspace.inClient) { this$1.preventDefault(g); }
 					return g;//return first valid gamepad
 				}
 			}
 		}
 		return undefined;
-	}
+	};
 
-	function preventDefault(g) {
-		var axes = [];
-		var buttons = [];
-		for (var i=0; i > g.buttons; i++) buttons[i] = false;
-		for (var i=0; i > g.axes; i++) axes[i] = false;
-		if (config.position) {
+	GamepadControls.prototype.preventDefault = function preventDefault (g)
+	{
+		var axes = (new Array(4)).fill(false);
+		var buttons = (new Array(16)).fill(false);
+		if (this.config.position) {
 			axes[0] = true;
 			axes[1] = true;
 			buttons[10] = true;
 		}
-		if (config.rotation) {
+		if (this.config.rotation) {
 			axes[2] = true;
 			axes[3] = true;
 			buttons[11] = true;
 		}
-		if (config.scale) {
+		if (this.config.scale) {
 			buttons[12] = true;
 			buttons[13] = true;
 		}
 		buttons[8] = true;
 		g.preventDefault(axes, buttons);
-	}
+	};
 
-	function update(deltaTime) {
-		if ((!altspace || !altspace.inClient) && window.chrome && gamepad) {
-			gamepad = getGamepad();//On Chrome, need to poll for updates.
+	GamepadControls.prototype.update = function update (deltaTime)
+	{
+		if ((!altspace || !altspace.inClient) && window.chrome && this.gamepad) {
+			this.gamepad = this.getGamepad();//On Chrome, need to poll for updates.
 		}
-		if (!gamepad) return;
+		if (!this.gamepad)
+			{ return; }
 
 		//For axis and button numbers see: https://w3c.github.io/gamepad/
-		var isResetButton = gamepad.buttons[8].pressed;//reset / back button
-		if (isResetButton) {
-			if (!sync.isMine) sync.takeOwnership();
-			object3d.position.copy(originalObj.position);
-			object3d.rotation.copy(originalObj.rotation);
-			object3d.scale.copy(originalObj.scale);
+		var isResetButton = this.gamepad.buttons[8].pressed;//reset / back button
+		if (isResetButton)
+		{
+			if (!this.sync.isMine)
+				{ this.sync.takeOwnership(); }
+			this.object3d.position.copy(this.originalObj.position);
+			this.object3d.rotation.copy(this.originalObj.rotation);
+			this.object3d.scale.copy(this.originalObj.scale);
 			return;
 		}
 
-		if (config.position) {
-			var isAltButtonL = gamepad.buttons[10].pressed;//left stick button
-			if (prevAltButtonL && !isAltButtonL) isAltModeL = !isAltModeL;//button released
-			prevAltButtonL = isAltButtonL;
+		if (this.config.position)
+		{
+			var isAltButtonL = this.gamepad.buttons[10].pressed;//left stick button
+			if (this.prevAltButtonL && !isAltButtonL)
+				{ this.isAltModeL = !this.isAltModeL; }//button released
+			this.prevAltButtonL = isAltButtonL;
 
-			var leftStickX = gamepad.axes[0];//left / right
-			var leftStickY = gamepad.axes[1];//up / down
+			var leftStickX = this.gamepad.axes[0];//left / right
+			var leftStickY = this.gamepad.axes[1];//up / down
 
 			var isMove = Math.abs(leftStickX) > tolerance || Math.abs(leftStickY) > tolerance;
-			if (isMove && !sync.isMine) sync.takeOwnership();
+			if (isMove && !this.sync.isMine)
+				{ this.sync.takeOwnership(); }
 
 			var moveDistance = 200 * (deltaTime/1000);// 200 units per second
-			if (!isAltModeL && Math.abs(leftStickX) > tolerance) {
-				object3d.position.x += moveDistance * leftStickX;
-			}
-			if (!isAltModeL && Math.abs(leftStickY) > tolerance) {
-				object3d.position.z += moveDistance * leftStickY;
-			}
-			if (isAltModeL && Math.abs(leftStickX) > tolerance) {
-				object3d.position.x += moveDistance * leftStickX;
-			}
-			if (isAltModeL && Math.abs(leftStickY) > tolerance) {
-				object3d.position.y += moveDistance * -leftStickY;
-			}
-		}
 
-		if (config.rotation) {
-			var isAltButtonR = gamepad.buttons[11].pressed;//right stick button
-			if (prevAltButtonR && !isAltButtonR) isAltModeR = !isAltModeR;//button released
-			prevAltButtonR = isAltButtonR;
-
-			var rightStickX = gamepad.axes[2];//left / right
-			var rightStickY = gamepad.axes[3];//up / down
-
-			var isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
-			if (isRotate && !sync.isMine) sync.takeOwnership();
-
-			var rotateAngle = Math.PI * (deltaTime/1000);// 180 degrees per second
-			if (!isAltModeR && Math.abs(rightStickX) > tolerance) {
-				object3d.rotation.y += rotateAngle * rightStickX;
+			// left stick X always controls X movement
+			if (Math.abs(leftStickX) > tolerance){
+				this.object3d.position.x += moveDistance * leftStickX;
 			}
-			if (!isAltModeR && Math.abs(rightStickY) > tolerance) {
-				object3d.rotation.x += rotateAngle * rightStickY;
-			}
-			if (isAltModeR && Math.abs(rightStickX) > tolerance) {
-				object3d.rotation.z += rotateAngle * -rightStickX;
-			}
-		}
 
-		if (config.scale) {
-			var scaleChange = 10 * (deltaTime/1000);// 10 units per second
-			var dpadUp = gamepad.buttons[12].pressed;//d-pad up
-			var dpadDown = gamepad.buttons[13].pressed;//d-pad down
-
-			var isScale = gamepad.buttons[12].pressed || gamepad.buttons[13].pressed;
-			if (isScale && !sync.isMine) sync.takeOwnership();
-
-			var prev = object3d.scale;
-			var v3 = new THREE.Vector3(1, 1, 1);
-			v3.multiplyScalar(scaleChange);
-			if (dpadUp) object3d.scale.add(v3);
-			if (dpadDown) {
-				if (prev.x > v3.x && prev.y > v3.y && prev.z > v3.z) {//Don't go negative.
-					object3d.scale.sub(v3);
+			// left stick Y controls Z movement in normal mode, Y movement in alt mode
+			if(Math.abs(leftStickY) > tolerance)
+			{
+				if (this.isAltModeL){
+					this.object3d.position.y += moveDistance * -leftStickY;
+				}
+				else {
+					this.object3d.position.z += moveDistance * leftStickY;
 				}
 			}
 		}
 
-	}
+		if (this.config.rotation)
+		{
+			var isAltButtonR = this.gamepad.buttons[11].pressed;//right stick button
+			if (this.prevAltButtonR && !isAltButtonR)
+				{ this.isAltModeR = !this.isAltModeR; }//button released
+			this.prevAltButtonR = isAltButtonR;
 
-	return { awake: awake, update: update, type: 'GamepadControls' };
-};
+			var rightStickX = this.gamepad.axes[2];//left / right
+			var rightStickY = this.gamepad.axes[3];//up / down
 
+			var isRotate = Math.abs(rightStickX) > tolerance || Math.abs(rightStickY) > tolerance;
+			if (isRotate && !this.sync.isMine)
+				{ this.sync.takeOwnership(); }
 
-//Change color of an object when cursor hovers over it.
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+			var rotateAngle = Math.PI * (deltaTime/1000);// 180 degrees per second
+
+			if (!this.isAltModeR && Math.abs(rightStickY) > tolerance) {
+				this.object3d.rotation.x += rotateAngle * rightStickY;
+			}
+
+			if (Math.abs(rightStickX) > tolerance) {
+				if(this.isAltModeR)
+					{ this.object3d.rotation.z += rotateAngle * -rightStickX; }
+				else
+					{ this.object3d.rotation.y += rotateAngle * rightStickX; }
+			}
+		}
+
+		if (this.config.scale)
+		{
+			var scaleChange = 10 * (deltaTime/1000);// 10 units per second
+			var dpadUp = this.gamepad.buttons[12].pressed;//d-pad up
+			var dpadDown = this.gamepad.buttons[13].pressed;//d-pad down
+
+			var isScale = this.gamepad.buttons[12].pressed || this.gamepad.buttons[13].pressed;
+			if (isScale && !this.sync.isMine)
+				{ this.sync.takeOwnership(); }
+
+			var prev = this.object3d.scale;
+			var v3 = new THREE.Vector3(1, 1, 1);
+			v3.multiplyScalar(scaleChange);
+			if (dpadUp) { this.object3d.scale.add(v3); }
+			if (dpadDown) {
+				if (prev.x > v3.x && prev.y > v3.y && prev.z > v3.z) {//Don't go negative.
+					this.object3d.scale.sub(v3);
+				}
+			}
+		}
+	};
+
+	Object.defineProperties( GamepadControls.prototype, prototypeAccessors );
+
+	return GamepadControls;
+}(Behavior));
 
 /**
- * Changes the color of an object when cursor hovers over it.
- * @class HoverColor
- * @param {Object} [config] Optional parameters.
- * @param {String} [config.event='cursorenter'] Specify the name of event which
- *  triggers the color change.  Default is 'cursorenter' for a hover effect.
- * @param {THREE.Color} [config.color=THREE.Color('yellow')] A THREE.Color value that will be applied to the object's
- *  material.
- * @memberof module:altspace/utilities/behaviors
- */
-altspace.utilities.behaviors.HoverColor = function(config){
+* Changes the color of an object when cursor hovers over it.
+* @param {Object} [config] Optional parameters.
+* @param {String} [config.event='cursorenter'] Specify the name of event which
+*  triggers the color change.  Default is 'cursorenter' for a hover effect.
+* @param {THREE.Color} [config.color=THREE.Color('yellow')] A THREE.Color value that will be applied to the object's
+*  material.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+var HoverColor = (function (Behavior$$1) {
+	function HoverColor(config)
+	{
+		var this$1 = this;
 
-	config = config || {};
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{event: 'cursorenter', color: new THREE.Color('yellow')},
+			config
+		);
 
-	//Default is to trigger color change on cursorenter/cursorleave events,
-	//also support triggering on cursordown/cursorup events.
-	if (config.event === undefined) config.event = 'cursorenter';
-	if (config.event !== 'cursorenter' && config.event !== 'cursordown') {
-		throw Error('Expected config.event "cursorenter" or "cursordown"');
-	}
-	if (config.color === undefined) config.color = new THREE.Color('yellow');
-
-	var object3d;
-	var cursordownObject;
-	var cursorenterObject;
-	var scene;
-
-
-	function awake(o, s) {
-		object3d = o;
-		scene = s;
-		object3d.addEventListener('cursordown', cursordown);
-		scene.addEventListener('cursorup', cursorupScene);
-		if (config.event === 'cursorenter') {
-			object3d.addEventListener('cursorenter', cursorenter);
-			object3d.addEventListener('cursorleave', cursorleave);
+		// Default is to trigger color change on cursorenter/cursorleave events,
+		// also support triggering on cursordown/cursorup events.
+		if (this.config.event !== 'cursorenter' && this.config.event !== 'cursordown') {
+			throw Error('Expected config.event "cursorenter" or "cursordown"');
 		}
+
+		this.object3d = null;
+		this.cursordownObject = null;
+		this.cursorenterObject = null;
+		this.scene = null;
+
+		/*
+		* These are here and not in the prototype because we need references
+		* to the bound versions of these functions for "dispose".
+		*/
+
+		this.cursordown = (function (event) {
+			this$1.cursordownObject = this$1.object3d;
+			if (this$1.config.event === 'cursordown' ){
+				this$1.setColor(this$1.cursordownObject);
+			}
+		}).bind(this);
+
+		this.cursorenter = (function (event) {
+			//ignore hover events if a different object is selected,
+			//for example during a drag we don't want to change highlight
+			if (this$1.cursordownObject && this$1.cursordownObject !== this$1.object3d){
+				return;
+			}
+			if (this$1.cursorenterObject){
+				this$1.unsetColor(this$1.cursorenterObject);
+			}
+			this$1.cursorenterObject = this$1.object3d;
+			this$1.setColor(this$1.object3d);
+		}).bind(this);
+
+		this.cursorleave = (function (event) {
+			if (this$1.cursorenterObject === this$1.object3d){
+				this$1.cursorenterObject = null;
+				this$1.unsetColor(this$1.object3d);
+			}
+		}).bind(this);
+
+		this.cursorupScene = (function (event) {
+			if (this$1.config.event === 'cursordown' && this$1.cursordownObject ){
+				this$1.unsetColor(this$1.cursordownObject);
+			}
+			this$1.cursordownObject = null;
+		}).bind(this);
 	}
 
-	function cursordown(event){
-		cursordownObject = object3d;
-		if (config.event === 'cursordown' ){
-			setColor(cursordownObject);
-		}
-	}
+	if ( Behavior$$1 ) HoverColor.__proto__ = Behavior$$1;
+	HoverColor.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	HoverColor.prototype.constructor = HoverColor;
 
-	function cursorenter(event){
-		//ignore hover events if a different object is selected,
-		//for example during a drag we don't want to change highlight
-		if (cursordownObject && cursordownObject !== object3d){
-			return;
-		}
-		if (cursorenterObject){
-			unsetcolor(cursorenterObject);
-		}
-		cursorenterObject = object3d;
-		setColor(object3d);
-	}
+	var prototypeAccessors = { type: {} };
 
-	function cursorleave(event){
-		if (cursorenterObject === object3d){
-			cursorenterObject = null;
-			unsetColor(object3d);
-		}
-	}
+	prototypeAccessors.type.get = function (){ return 'HoverColor'; };
 
-	function cursorupScene(event){
-		if (config.event === 'cursordown' && cursordownObject ){
-			unsetColor(cursordownObject);
+	HoverColor.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+		this.object3d.addEventListener('cursordown', this.cursordown);
+		this.scene.addEventListener('cursorup', this.cursorupScene);
+		if (this.config.event === 'cursorenter') {
+			this.object3d.addEventListener('cursorenter', this.cursorenter);
+			this.object3d.addEventListener('cursorleave', this.cursorleave);
 		}
-		cursordownObject = null;
-	}
+	};
 
-	function setColor(o){
+	HoverColor.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursordown', this.cursordown);
+		this.scene.removeEventListener('cursorup', this.cursorupScene);
+		this.object3d.removeEventListener('cursorenter', this.cursorenter);
+		this.object3d.removeEventListener('cursorleave', this.cursorleave);
+	};
+
+	HoverColor.prototype.setColor = function setColor (o)
+	{
 		if (o.material && o.material.color){
 			o.userData.origColor = o.material.color;
-			o.material.color = config.color;
+			o.material.color = this.config.color;
 			//Not strictly needed but seems to make updating faster in Altspace.
-			if (o.material) o.material.needsUpdate = true;
+			if (o.material) { o.material.needsUpdate = true; }
 		}
-		for (var i = 0; i < o.children.length; i++){
-			setColor(o.children[i], config.color);//recursively apply to children
-		}
-	}
+		o.children.forEach(this.setColor.bind(this));
+	};
 
-	function unsetColor(o){
+	HoverColor.prototype.unsetColor = function unsetColor (o)
+	{
 		if (o.material && o.material.color){
 			if (!o.userData.origColor){
 				console.error('Cannot unsetColor, no userData.origColor for object', o);
 				return;
 			}
 			o.material.color = o.userData.origColor;
-			if (o.material) o.material.needsUpdate = true;
+			if (o.material) { o.material.needsUpdate = true; }
 		}
-		for (var i = 0; i < o.children.length; i++){
-			unsetColor(o.children[i]);
-		}
-	}
-
-	function dispose() {
-		object3d.removeEventListener('cursordown', cursordown);
-		scene.removeEventListener('cursorup', cursorupScene);
-		object3d.removeEventListener('cursorenter', cursorenter);
-		object3d.removeEventListener('cursorleave', cursorleave);
-	}
-
-	return {
-		//no update method, event-driven
-		awake: awake,
-		dispose: dispose,
-		type: 'HoverColor'
+		o.children.forEach(this.unsetColor.bind(this));
 	};
 
-};
+	Object.defineProperties( HoverColor.prototype, prototypeAccessors );
 
-//Change scale of an object when cursor hovers over it.
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+	return HoverColor;
+}(Behavior));
 
 /**
- * Changes the scale of an object when the cursor hovers over it, and restores the original scale when the cursor is no longer hovering over the object.
- * @class HoverScale
- * @param {Object} [config] Optional parameters.
- * @param {Number} [config.scale=1.15] A scaling factor that will be applied to the object's initial scale when the cursor hovers over it.
- * @param {Number} [config.duration=75] Duration the scaling effect is intended to take to complete, in milliseconds.
- * @param {Boolean} [config.revertOnDispose=true] Specifies whether the object's original scale should be restored when the behavior has been destroyed.
- * @memberof module:altspace/utilities/behaviors
- */
-altspace.utilities.behaviors.HoverScale = function(config) {
-	config = config || {};
-	var scale = config.scale || 1.15;
-	var duration = config.duration || 75; // Milliseconds
-	var revertOnDispose = ((config.revertOnDispose !== undefined) ? config.revertOnDispose : true);
+* Changes the scale of an object when the cursor hovers over it, and restores the original scale when the cursor is no longer hovering over the object.
+* @class HoverScale
+* @param {Object} [config] Optional parameters.
+* @param {Number} [config.scale=1.15] A scaling factor that will be applied to the object's initial scale when the cursor hovers over it.
+* @param {Number} [config.duration=75] Duration the scaling effect is intended to take to complete, in milliseconds.
+* @param {Boolean} [config.revertOnDispose=true] Specifies whether the object's original scale should be restored when the behavior has been destroyed.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+var HoverScale = (function (Behavior$$1) {
+	function HoverScale(config)
+	{
+		var this$1 = this;
 
-	var object3d;
-	var originalScale;
-	var elapsedTime;
-	var progress;
-	var srcScale;
-	var destScale;
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{scale: 1.15, duration: 75, revertOnDispose: true},
+			config
+		);
 
-	function awake(o, s) {
-		object3d = o;
-		originalScale = object3d.scale.clone();
+		this.object3d = null;
+		this.originalScale = null;
+		this.elapsedTime = this.config.duration;
+		this.progress = 1;
+		this.srcScale = null;
+		this.destScale = null;
 
-		srcScale = object3d.scale.clone();
-		srcScale.multiplyScalar(scale);
-
-		destScale = new THREE.Vector3();
-		destScale.copy(originalScale);
-
-		progress = 1;
-		elapsedTime = duration;
-
-		object3d.addEventListener('cursorenter', onHoverStateChange);
-		object3d.addEventListener('cursorleave', onHoverStateChange);
+		this.onHoverStateChange = (function () {
+			var assign;
+			(assign = [this$1.destScale, this$1.srcScale], this$1.srcScale = assign[0], this$1.destScale = assign[1]);
+			this$1.progress = 1 - this$1.progress;
+			this$1.elapsedTime = this$1.config.duration - this$1.elapsedTime;
+		}).bind(this);
 	}
 
-	function update(deltaTime) {
-		if(progress < 1) {
-			elapsedTime += deltaTime;
-			elapsedTime = THREE.Math.clamp(elapsedTime, 0, duration);
+	if ( Behavior$$1 ) HoverScale.__proto__ = Behavior$$1;
+	HoverScale.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	HoverScale.prototype.constructor = HoverScale;
 
-			progress = THREE.Math.clamp(elapsedTime / duration, 0, 1);
-			object3d.scale.lerpVectors(srcScale, destScale, progress);
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'HoverScale'; };
+
+	HoverScale.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.originalScale = this.object3d.scale.clone();
+
+		this.srcScale = this.object3d.scale.clone();
+		this.srcScale.multiplyScalar(this.config.scale);
+
+		this.destScale = new THREE.Vector3();
+		this.destScale.copy(this.originalScale);
+
+		this.progress = 1;
+		this.elapsedTime = this.config.duration;
+
+		this.object3d.addEventListener('cursorenter', this.onHoverStateChange);
+		this.object3d.addEventListener('cursorleave', this.onHoverStateChange);
+	};
+
+	HoverScale.prototype.update = function update (deltaTime)
+	{
+		if(this.progress < 1) {
+			this.elapsedTime = THREE.Math.clamp(
+				this.elapsedTime + deltaTime, 0, this.config.duration
+			);
+
+			this.progress = THREE.Math.clamp(this.elapsedTime / this.config.duration, 0, 1);
+			this.object3d.scale.lerpVectors(this.srcScale, this.destScale, this.progress);
 		}
-	}
+	};
 
-	function dispose() {
-		object3d.removeEventListener('cursorenter', onHoverStateChange);
-		object3d.removeEventListener('cursorleave', onHoverStateChange);
+	HoverScale.prototype.dispose = function dispose ()
+	{
+		this.object3d.removeEventListener('cursorenter', this.onHoverStateChange);
+		this.object3d.removeEventListener('cursorleave', this.onHoverStateChange);
 
 		// Restore Original Object Scale Before Behavior Was Applied
-		if(revertOnDispose) object3d.scale.copy(originalScale);
+		if(this.config.revertOnDispose)
+			{ this.object3d.scale.copy(this.originalScale); }
 
-		originalScale = null;
-		srcScale = null;
-		destScale = null;
-		object3d = null;
-	}
+		this.originalScale = null;
+		this.srcScale = null;
+		this.destScale = null;
+		this.object3d = null;
+	};
 
-	function onHoverStateChange() {
-		var temp = srcScale;
-		srcScale = destScale;
-		destScale = temp;
+	Object.defineProperties( HoverScale.prototype, prototypeAccessors );
 
-		progress = 1 - progress;
-		elapsedTime = duration - elapsedTime;
-	}
-
-	return { awake: awake, update: update, dispose: dispose, type: 'HoverScale' };
-};
+	return HoverScale;
+}(Behavior));
 
 /**
- * @module altspace/utilities/behaviors
- */
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+* An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
+* E.g. `['Index', 'Left', 0]` identifies the first joint on the index finger of the left hand.
+* See [TrackingSkeleton#getJoint]{@link module:altspace~TrackingSkeleton#getJoint} for available
+* joint names.
+* @typedef {Array.<String, String, Number>} module:altspace/utilities/behaviors.JointCollisionEvents~JointId
+**/
 
-/**
- * An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
- * E.g. `['Index', 'Left', 0]` identifies the first joint on the index finger of the left hand.
- * See [TrackingSkeleton#getJoint]{@link module:altspace~TrackingSkeleton#getJoint} for available
- * joint names.
- * @typedef {Array.<String, String, Number>} module:altspace/utilities/behaviors.JointCollisionEvents~JointId
- **/
+// helper function to guarantee skeleton presence, and fetch if available
+function initSkeleton(scene) {
+	return new Promise(function (resolve, reject) {
+		var skel = null;
 
-/**
- * The JointCollisionEvents behavior dispatches collision events which have been triggered by
- * [TrackingJoints]{@link module:altspace~TrackingJoint} intersecting with the object that has this behavior.
- *
- * @class JointCollisionEvents
- * @param {Object} [config] Optional parameters.
- * @param {Array.<JointId>} [config.joints] Array of
- * [JointIds]{@link module:altspace/utilities/behaviors.JointCollisionEvents~JointId} to track.<br>
- * Defaults to:
- *
- *     [
- *         ['Hand', 'Left', 0],
- *         ['Thumb', 'Left', 3],
- *         ['Index', 'Left', 3],
- *         ['Middle', 'Left', 3],
- *         ['Ring', 'Left', 3],
- *         ['Pinky', 'Left', 3],
- *
- *         ['Hand', 'Right', 0],
- *         ['Thumb', 'Right', 3],
- *         ['Index', 'Right', 3],
- *         ['Middle', 'Right', 3],
- *         ['Ring', 'Right', 3],
- *         ['Pinky', 'Right', 3],
- *     ]
- * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.
- * For optimal results, it is recommended that the value
- * provided is scaled according to your enclosure scaling factor.
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
-	var object3d;
-	var config = _config || {};
-
-	config.jointCubeSize = config.jointCubeSize || 15;
-	config.joints = config.joints || altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS;
-
-	var skeleton;
-	var jointCube;
-	var hasCollided = false;
-	var collidedJoints = [];
-	var jointIntersectUnion = null;
-
-	function initSkeleton(scene) {
-		return new Promise(function(resolve, reject) {
-			var skel = null;
-
-			// Attempt to use existing skeleton when available
-			scene.traverse(function(child) {
-				if(child.type === 'TrackingSkeleton') {
-					skel = child;
-					return;
-				}
-			});
-
-			if(skel) return resolve(skel);
-
-			// Skeleton has not been assigned to scene yet
-			altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
-				skel = trackingSkeleton;
-				scene.add(skel);
-				return resolve(skel);
-			});
+		// Attempt to use existing skeleton when available
+		scene.traverse(function (child) {
+			if(child.type === 'TrackingSkeleton') {
+				skel = child;
+				return;
+			}
 		});
+
+		if(skel)
+			{ return resolve(skel); }
+
+		// Skeleton has not been assigned to scene yet
+		altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
+			skel = trackingSkeleton;
+			scene.add(skel);
+			return resolve(skel);
+		});
+	});
+}
+
+/**
+* The JointCollisionEvents behavior dispatches collision events which have been triggered by
+* [TrackingJoints]{@link module:altspace~TrackingJoint} intersecting with the object that has this behavior.
+*
+* @param {Object} [config] Optional parameters.
+* @param {Array.<JointId>} [config.joints=HAND_JOINTS] Array of
+* [JointIds]{@link module:altspace/utilities/behaviors.JointCollisionEvents~JointId} to track.
+* @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.
+* For optimal results, it is recommended that the value
+* provided is scaled according to your enclosure scaling factor.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+var JointCollisionEvents = (function (Behavior$$1) {
+	function JointCollisionEvents(config)
+	{
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{jointCubeSize: 15, joints: JointCollisionEvents.HAND_JOINTS},
+			config
+		);
+
+		this.object3d = null;
+		this.skeleton = null;
+		this.jointCube = null;
+		this.hasCollided = false;
+		this.collidedJoints = [];
+		this.jointIntersectUnion = null;
 	}
 
-	function awake(o, s) {
-		object3d = o;
+	if ( Behavior$$1 ) JointCollisionEvents.__proto__ = Behavior$$1;
+	JointCollisionEvents.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	JointCollisionEvents.prototype.constructor = JointCollisionEvents;
 
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'JointCollisionEvents'; };
+
+	JointCollisionEvents.prototype.awake = function awake (o, s) {
+		this.object3d = o;
+		var self = this;
 		// Get the tracking skeleton
-		initSkeleton(s).then(function(_skeleton) {
+		initSkeleton(s).then(function (_skeleton) {
 			// Attach skeleton
-			skeleton = _skeleton;
+			self.skeleton = _skeleton;
 
-			jointCube = new THREE.Vector3(
-				config.jointCubeSize,
-				config.jointCubeSize,
-				config.jointCubeSize
+			self.jointCube = new THREE.Vector3(
+				self.config.jointCubeSize,
+				self.config.jointCubeSize,
+				self.config.jointCubeSize
 			);
 		}).catch(function (err) {
 			console.log('Failed to get tracking skeleton', err);
 		});
-	}
+	};
 
-	function update(deltaTime) {
-		if(!skeleton) return;
+	JointCollisionEvents.prototype.update = function update (deltaTime)
+	{
+		var this$1 = this;
+
+		if(!this.skeleton)
+			{ return; }
 
 		// Collect joints based on joints config option
 		var joints = [];
-		for(var i = 0; i < config.joints.length; i++) {
-			joints[i] = skeleton.getJoint(
-				config.joints[i][0],
-				config.joints[i][1],
-				config.joints[i][2] ? config.joints[i][2] : 0
+		for(var i = 0; i < this.config.joints.length; i++) {
+			joints[i] = this$1.skeleton.getJoint(
+				this$1.config.joints[i][0],
+				this$1.config.joints[i][1],
+				this$1.config.joints[i][2] || 0
 			);
 		}
 
 		// Get bounding box of owner object
-		var objectBB = new THREE.Box3().setFromObject(object3d);
+		var objectBB = new THREE.Box3().setFromObject(this.object3d);
 
 		// Add up all colliding joint intersects
-		var prevJointIntersectUnion = jointIntersectUnion;
-		jointIntersectUnion = null;
+		var prevJointIntersectUnion = this.jointIntersectUnion;
+		this.jointIntersectUnion = null;
 
-		var prevCollidedJoints = collidedJoints;
-		collidedJoints = [];
+		var prevCollidedJoints = this.collidedJoints;
+		this.collidedJoints = [];
 
-		var hasPrevCollided = hasCollided;
-		hasCollided = false;
+		var hasPrevCollided = this.hasCollided;
+		this.hasCollided = false;
 
 		if(
-			object3d.visible &&
-			object3d.scale.x > Number.EPSILON &&
-			object3d.scale.y > Number.EPSILON &&
-			object3d.scale.z > Number.EPSILON
+			this.object3d.visible &&
+			this.object3d.scale.x > Number.EPSILON &&
+			this.object3d.scale.y > Number.EPSILON &&
+			this.object3d.scale.z > Number.EPSILON
 		) {
-			for(var i = 0; i < config.joints.length; i++) {
-				var joint = joints[i];
+			for(var i$1 = 0; i$1 < this.config.joints.length; i$1++)
+			{
+				var joint = joints[i$1];
 				if(joint && joint.confidence !== 0) {
-					var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, jointCube);
+					var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, this$1.jointCube);
 					var collision = objectBB.intersectsBox(jointBB);
+
 					if(collision) {
 						var intersectBB = objectBB.intersect(jointBB);
-						if(jointIntersectUnion) {
-							jointIntersectUnion.union(intersectBB);
+						if(this$1.jointIntersectUnion) {
+							this$1.jointIntersectUnion.union(intersectBB);
 						} else {
-							jointIntersectUnion = intersectBB;
+							this$1.jointIntersectUnion = intersectBB;
 						}
-
-						hasCollided = true;
-						collidedJoints.push(joint);
+						this$1.hasCollided = true;
+						this$1.collidedJoints.push(joint);
 					}
 				}
 			}
 		}
 
 		// Dispatch collision event
-		if(!hasPrevCollided && hasCollided) {
-			/**
-			* Fires a single event when any specified joints initially collide with the object.
-			*
-			* @event jointcollisionenter
-			* @property {Object} detail Event details
-			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with object.
-			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} target - The object which was intersected.
-			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-			*/
-			object3d.dispatchEvent({
-				type: 'jointcollisionenter',
-				detail: {
-					intersect: jointIntersectUnion,
-					joints: collidedJoints
-				},
-				bubbles: true,
-				target: object3d
-			});
+		if(!hasPrevCollided && this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new EnterEvent(
+				this.jointIntersectUnion,
+				this.collidedJoints,
+				this.object3d
+			));
 		}
-		else if(hasPrevCollided && !hasCollided) {
-			/**
-			* Fires a single event when all joints are no longer colliding with the object.
-			*
-			* @event jointcollisionleave
-			* @property {Object} detail Event details
-			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which last intersected with the object.
-			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} target - The object which was intersected.
-			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-			*/
-			object3d.dispatchEvent({
-				type: 'jointcollisionleave',
-				detail: {
-					intersect: prevJointIntersectUnion || new THREE.Box3(),
-					joints: prevCollidedJoints
-				},
-				bubbles: true,
-				target: object3d
-			});
+		else if(hasPrevCollided && !this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new LeaveEvent(
+				prevJointIntersectUnion || new THREE.Box3(),
+				prevCollidedJoints,
+				this.object3d
+			));
 		}
 
 		// Dispatch collision event
-		if(hasCollided) {
-			/**
-			* Fires a continuous event while any joints are colliding with the object.
-			*
-			* @event jointcollision
-			* @property {Object} detail Event details
-			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with the object.
-			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} target - The object which was intersected.
-			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-			*/
-			object3d.dispatchEvent({
-				type: 'jointcollision',
-				detail: {
-					intersect: jointIntersectUnion,
-					joints: collidedJoints
-				},
-				bubbles: true,
-				target: object3d
-			});
+		if(this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new CollisionEvent(
+				this.jointIntersectUnion,
+				this.collidedJoints,
+				this.object3d
+			));
 		}
+	};
+
+	Object.defineProperties( JointCollisionEvents.prototype, prototypeAccessors );
+
+	return JointCollisionEvents;
+}(Behavior));
+
+var JointCollisionEvent = function JointCollisionEvent(type, union, joints, target)
+{
+	this.type = type;
+	this.detail = {
+		intersect: union,
+		joints: joints
+	};
+	this.bubbles = true;
+	this.target = target;
+};
+
+/**
+* Fires a single event when any specified joints initially collide with the object.
+*
+* @event jointcollisionenter
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+var EnterEvent = (function (JointCollisionEvent) {
+	function EnterEvent(){
+		var args = [], len = arguments.length;
+		while ( len-- ) args[ len ] = arguments[ len ];
+
+		JointCollisionEvent.apply(this, [ 'jointcollisionenter' ].concat( args ));
 	}
 
-	return { awake: awake, update: update, type: 'JointCollisionEvents' };
-};
-altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS = [
+	if ( JointCollisionEvent ) EnterEvent.__proto__ = JointCollisionEvent;
+	EnterEvent.prototype = Object.create( JointCollisionEvent && JointCollisionEvent.prototype );
+	EnterEvent.prototype.constructor = EnterEvent;
+
+	return EnterEvent;
+}(JointCollisionEvent));
+
+/**
+* Fires a single event when all joints are no longer colliding with the object.
+*
+* @event jointcollisionleave
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which last intersected with the object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+var LeaveEvent = (function (JointCollisionEvent) {
+	function LeaveEvent(){
+		var args = [], len = arguments.length;
+		while ( len-- ) args[ len ] = arguments[ len ];
+
+		JointCollisionEvent.apply(this, [ 'jointcollisionleave' ].concat( args ));
+	}
+
+	if ( JointCollisionEvent ) LeaveEvent.__proto__ = JointCollisionEvent;
+	LeaveEvent.prototype = Object.create( JointCollisionEvent && JointCollisionEvent.prototype );
+	LeaveEvent.prototype.constructor = LeaveEvent;
+
+	return LeaveEvent;
+}(JointCollisionEvent));
+
+/**
+* Fires a continuous event while any joints are colliding with the object.
+*
+* @event jointcollision
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with the object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+var CollisionEvent = (function (JointCollisionEvent) {
+	function CollisionEvent(){
+		var args = [], len = arguments.length;
+		while ( len-- ) args[ len ] = arguments[ len ];
+
+		JointCollisionEvent.apply(this, [ 'jointcollision' ].concat( args ));
+	}
+
+	if ( JointCollisionEvent ) CollisionEvent.__proto__ = JointCollisionEvent;
+	CollisionEvent.prototype = Object.create( JointCollisionEvent && JointCollisionEvent.prototype );
+	CollisionEvent.prototype.constructor = CollisionEvent;
+
+	return CollisionEvent;
+}(JointCollisionEvent));
+
+/**
+* An array of JointIds describing the tip of every finger on both hands.
+* @constant {Array.<JointId>} HAND_JOINTS
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+JointCollisionEvents.HAND_JOINTS = [
 	['Hand', 'Left', 0],
 	['Thumb', 'Left', 3],
 	['Index', 'Left', 3],
@@ -4923,120 +5193,526 @@ altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS = [
 	['Index', 'Right', 3],
 	['Middle', 'Right', 3],
 	['Ring', 'Right', 3],
-	['Pinky', 'Right', 3],
+	['Pinky', 'Right', 3]
 ];
 
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+var containerMax = Symbol('containerMax');
+var containerMin = Symbol('containerMin');
+var object3D = Symbol('object3D');
+var boundingBox = Symbol('boundingBox');
+var origMatrix = Symbol('origMatrix');
+var origMatrixAutoUpdate = Symbol('origMatrixAutoUpdate');
+var parent = Symbol('parent');
+var enclosure = Symbol('enclosure');
+var origParentBoundingBoxes = new Map();
 
 /**
- * The SceneSync behavior manages the synchronization of an entire scene.
- *
- * @class SceneSync
- * @param {Firebase} syncInstance
- * @param {Object} [config]
- * @param {Object} [config.instantiators] A dictionary of instantiation 
- *  callbacks by syncType. Instantiators are called on every client whenever an instantiation call is made. Instantiators are passed an initialization
- *  data object and the syncType. They should return an Object3D with an 
- *  Object3DSync behavior.
- * @param {Object} [config.destroyers] (Optional) A dictionary of destroy 
- *  callbacks by syncType. Destroyers are called on every client whenever an destroy call is made. If no destroyer is provided, a default one will be use
- *  which will remove the object from its parent and dispose its geometry, material, and texture. 
- *  If you return true from a custom destroyer, the default destroyer will also be called.
- * @param {Function} [config.ready] A callback that is called after 
- *  checking to see if the instance has already been initialized. The callback is passed a boolean that 
- *  is true if this is the first callback that has been called for this sync instance.
- *  This is primarily useful for setting up any objects that should only be created once for an instance, and is not necessary otherwise.
- * @memberof module:altspace/utilities/behaviors
- **/
-window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
-	var sceneRef = instanceRef.child('scene');
-	var clientsRef = instanceRef.child('clients');
+* The Layout behavior allows you to position objects easily. You can
+* position an object relative to its parent (either the Scene or a
+* another object) by using a position specifier for each of the axes.
+* The position specifier can be one of 'min', 'center' or 'max'. The default
+* specifier is 'center'. You can also add a modifier to the position in pixels
+* ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can
+* choose the location of the anchor on the object you are trying to position
+* by using the 'my' parameter.
+* You must specify at least one axis on the 'at' parameter.
+*
+* @example
+* // Position the top of the cube at 1.5 meters above the bottom of its parent.
+* cube.addBehavior(new altpsace.utilities.behaviors.Layout({
+*	   my: {y: 'max'},
+*	   at: {y: 'min+1.5m'}
+* });
+*
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+* @param {Object} config
+* @param {Object} config.at An object containing the axes and position
+*  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
+* @param {Object} [config.my] An object containing the axes and position
+*  specifiers for the layout anchor.
+**/
+var Layout = (function (Behavior$$1) {
+	function Layout (ref) {
+		var my = ref.my; if ( my === void 0 ) my = {};
+		var at = ref.at;
 
-	config = config || {};
-	var instantiators = config.instantiators || {};
-	var destroyers = config.destroyers || {};
-
-	var autoSendRateMS = 100;
-
-	var syncBehaviors = [];
-	var objectForKey = {};
-	var keyForUuid = {};
-
-	var clientId;
-	// there should always be one master client in the room. For now it will be the longest person online.
-	var masterClientId;
-
-	function autoSendAll() {
-		for (var i = 0, max = syncBehaviors.length; i < max; i++) {
-			syncBehaviors[i].autoSend();
-		}
+		Behavior$$1.call(this);
+		this.my = my;
+		this.at = at;
 	}
 
-	function awake(o, s) {
-		setInterval(autoSendAll, autoSendRateMS);
+	if ( Behavior$$1 ) Layout.__proto__ = Behavior$$1;
+	Layout.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Layout.prototype.constructor = Layout;
+
+	var prototypeAccessors = { type: {} };
+
+	// TODO-BP Ideally these would be private methods.
+	prototypeAccessors.type.get = function (){ return 'Layout'; };
+
+	Layout.prototype.getAxisSettings = function getAxisSettings (axis, axisValue, min, max) {
+		axisValue = axisValue || 'center';
+		axisValue = /(\w+)([-+].+)?/.exec(axisValue);
+		var position = axisValue[1];
+		var offsetSetting = axisValue[2];
+		var offset = parseFloat(offsetSetting) || 0;
+		if (offsetSetting && offsetSetting.endsWith('%')) {
+			offset = offset / 100 * (max[axis] - min[axis]);
+		}
+		else if (offsetSetting && offsetSetting.endsWith('m')) {
+			offset = offset * this[enclosure].pixelsPerMeter;
+		}
+		return {
+			position: position,
+			offset: offset
+		}
+	};
+
+	Layout.prototype.getAnchorOffset = function getAnchorOffset (axis, axisValue) {
+		var max = this[boundingBox].max;
+		var min = this[boundingBox].min;
+		var ref = this.getAxisSettings(
+			axis, axisValue, min, max);
+		var position = ref.position;
+		var offset = ref.offset;
+		if (position === 'max') {
+			return -max[axis] + offset
+		}
+		else if (position === 'min') {
+			return -min[axis] + offset
+		}
+		else if (position === 'center') {
+			return offset;
+		}
+		else {
+			throw new Error(
+				(axisValue + " is an invalid layout position for " + axis)
+			);
+		}
+	};
+
+	Layout.prototype.doLayout = function doLayout () {
+		var this$1 = this;
+
+		Array.from('xyz').forEach(function (axis) {
+			var ref = this$1.getAxisSettings(
+				axis, this$1.at[axis], this$1[containerMin], this$1[containerMax]);
+			var position = ref.position;
+			var offset = ref.offset;
+			var anchorOffset = this$1.getAnchorOffset(axis, this$1.my[axis]);
+			if (position === 'max') {
+				this$1[object3D].position[axis] = this$1[containerMax][axis] + offset + anchorOffset;
+			}
+			else if (position === 'min') {
+				this$1[object3D].position[axis] = this$1[containerMin][axis] + offset + anchorOffset;
+			}
+			else if (position === 'center') {
+				this$1[object3D].position[axis] = offset + anchorOffset;
+			}
+			else {
+				throw new Error(
+					((this$1.at[axis]) + " is an invalid layout position for " + axis)
+				);
+			}
+		});
+
+		if (this[parent]) {
+			// Restore the original parent transform
+			this[parent].matrix = this[origMatrix];
+			this[parent].updateMatrixWorld(true);
+			this[parent].matrixAutoUpdate = this[origMatrixAutoUpdate];
+		}
+	};
+
+	Layout.prototype.awake = function awake (_object3D) {
+		var this$1 = this;
+
+		this[object3D] = _object3D;
+		this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
+
+		// TODO Listen for resize events on the enclosure
+		altspace.getEnclosure().then(function (_enclosure) {
+			this$1[enclosure] = _enclosure;
+			if (this$1[object3D].parent instanceof THREE.Scene) {
+				var
+					hw = this$1[enclosure].innerWidth / 2,
+					hh = this$1[enclosure].innerHeight / 2,
+					hd = this$1[enclosure].innerDepth / 2;
+				this$1[containerMax] = new THREE.Vector3(hw, hh, hd);
+				this$1[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
+				this$1.doLayout();
+			}
+			else {
+				var objWorldScale = this$1[object3D].getWorldScale();
+				this$1[boundingBox].min.divide(objWorldScale);
+				this$1[boundingBox].max.divide(objWorldScale);
+
+				this$1[parent] = this$1[object3D].parent;
+
+				this$1[origMatrix] = this$1[parent].matrix.clone();
+				this$1[origMatrixAutoUpdate] = this$1[parent].matrixAutoUpdate;
+
+				// We want to use the un-transormed anchor of the parent.
+				// Reset the parent matrix so that we can get the original bounding box.
+				this$1[parent].matrixAutoUpdate = false;
+				this$1[parent].matrix.identity();
+
+				var parentBoundingBox;
+				if (origParentBoundingBoxes.has(this$1[parent].uuid)) {
+					parentBoundingBox = origParentBoundingBoxes.get(this$1[parent].uuid);
+				}
+				else {
+					this$1[parent].remove(this$1[object3D]);
+					parentBoundingBox = new THREE.Box3().setFromObject(this$1[parent]);
+					this$1[parent].add(this$1[object3D]);
+					origParentBoundingBoxes.set(this$1[parent].uuid, parentBoundingBox);
+				}
+
+				this$1[containerMax] = parentBoundingBox.max;
+				this$1[containerMin] = parentBoundingBox.min;
+				this$1.doLayout();
+			}
+		});
+	};
+
+	Object.defineProperties( Layout.prototype, prototypeAccessors );
+
+	return Layout;
+}(Behavior));
+
+// deep object comparison
+function isEqual(a, b)
+{
+	// objects are directly equal
+	if(a === b){
+		return true;
+	}
+	// recurse for each pair of array items
+	else if( Array.isArray(a) && Array.isArray(b) && a.length === b.length ){
+		return a.every( function (v,i) { return isEqual(a[i], b[i]); } );
+	}
+	// recurse for every key/val pair in objects
+	else if( a instanceof Object && b instanceof Object
+		&& isEqual(Object.keys(a).sort(), Object.keys(b).sort()) )
+	{
+		for(var k in a){
+			if( !isEqual(a[k], b[k]) )
+				{ return false; }
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+/**
+* The Object3DSync behavior syncs an object's transform and data.
+* **Note:** Object3DSync must be used in conjunction with
+* [SceneSync]{@link module:altspace/utilities/behaviors.SceneSync}
+*
+* @param {Object} [config]
+* @param {Boolean} [config.position=false] Whether object's position should
+*  be synced
+* @param {Boolean} [config.rotation=false] Whether object's rotation should
+*  be synced
+* @param {Boolean} [config.scale=false] Whether object's scale should
+*  be synced
+* @param {Boolean} [config.auto=false] Whether the object should be synced
+*  automatically. Not currently recommended.
+* @param {Boolean} [config.world=false] Whether world coordiantes should
+*  be sent when synchronizing position and rotation, instead of the
+*  transformation relative to the object's parent.  Use if synced object
+*  is a child (e.g. of the tracking skeleton) only in the sender scene.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+**/
+var Object3DSync = (function (Behavior$$1) {
+	function Object3DSync(config)
+	{
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{position: false, rotation: false, scale: false, auto: false, world: false},
+			config
+		);
+
+		this.object3d = null;
+		this.scene = null;
+		this.ref = null;
+		this.key = null;
+		this.dataRef = null;
+		this.ownerRef = null;
+		this.transformRef = null;
+
+		this.sceneSync = null;
+		this.isMine = false;
+
+		this.position = new THREE.Vector3();
+		this.quaternion = new THREE.Quaternion();
+		this.scale = new THREE.Vector3();
+	}
+
+	if ( Behavior$$1 ) Object3DSync.__proto__ = Behavior$$1;
+	Object3DSync.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Object3DSync.prototype.constructor = Object3DSync;
+
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'Object3DSync'; };
+
+	Object3DSync.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+
+		this.setupReceive();
+	};
+
+	//TODO: lerp
+	Object3DSync.prototype.setupReceive = function setupReceive ()
+	{
+		var this$1 = this;
+
+		this.transformRef.on('value', (function (snapshot) {
+			var value = snapshot.val();
+
+			if( !this$1.isMine && value )
+			{
+				if (this$1.config.position) {
+					this$1.object3d.position.set(value.position.x, value.position.y, value.position.z);
+				}
+				if (this$1.config.rotation) {
+					this$1.object3d.quaternion.set(value.quaternion.x, value.quaternion.y, value.quaternion.z, value.quaternion.w);
+				}
+				if (this$1.config.scale) {
+					this$1.object3d.scale.set(value.scale.x, value.scale.y, value.scale.z);
+				}
+			}
+		}).bind(this));
+
+		this.ownerRef.on('value', (function (snapshot) {
+			var newOwnerId = snapshot.val();
+			if (newOwnerId === this$1.sceneSync.clientId && !this$1.isMine)
+			{
+				/**
+				* Fired when a synced object's ownership is transferred to the local client.
+				* @event ownershipgained
+				* @memberof module:altspace/utilities/behaviors.Object3DSync
+				*/
+				this$1.object3d.dispatchEvent({ type: 'ownershipgained' });
+			}
+
+			if (newOwnerId !== this$1.sceneSync.clientId && this$1.isMine)
+			{
+				/**
+				* Fired when a synced object's ownership is transferred to someone else.
+				* @event ownershiplost
+				* @memberof module:altspace/utilities/behaviors.Object3DSync
+				*/
+				this$1.object3d.dispatchEvent({ type: 'ownershiplost' });
+			}
+
+			this$1.isMine = newOwnerId === this$1.sceneSync.clientId;
+		}).bind(this));
+	};
+
+	Object3DSync.prototype.link = function link (objectRef, sS)
+	{
+		this.ref = objectRef;
+		this.key = this.ref.key();
+		this.transformRef = this.ref.child('batch');
+		this.dataRef = this.ref.child('data');
+		this.ownerRef = this.ref.child('owner');
+		this.sceneSync = sS;
+	};
+
+	Object3DSync.prototype.autoSend = function autoSend ()
+	{
+		if (!this.isMine)
+			{ return; }
+
+		var transform = {};
+		if (this.config.world) {
+			this.object3d.updateMatrixWorld();//call before sending to avoid being a frame behind
+			this.object3d.matrixWorld.decompose(this.position, this.quaternion, this.scale);
+		} else {
+			this.position = this.object3d.position;
+			this.quaternion = this.object3d.quaternion;
+			this.scale = this.object3d.scale;
+		}
+		if (this.config.position) {
+			transform.position = {
+				x: this.position.x,
+				y: this.position.y,
+				z: this.position.z
+			};
+		}
+		if (this.config.rotation) {
+			transform.quaternion = {
+				x: this.quaternion.x,
+				y: this.quaternion.y,
+				z: this.quaternion.z,
+				w: this.quaternion.w
+			};
+		}
+		if (this.config.scale) {
+			transform.scale = {
+				x: this.scale.x,
+				y: this.scale.y,
+				z: this.scale.z
+			};
+		}
+		if (Object.keys(transform).length > 0) {
+			if (isEqual(transform, this.lastTransform)) { return; }
+			this.transformRef.set(transform);
+			this.lastTransform = transform;
+		}
+	};
+
+	/**
+	* Take ownership of this object. The client that instantiates an object owns it,
+	* afterwards changes in ownership must be managed by the app. Manual modifications
+	* to the Firebase ref's will not obey ownership status.
+	* @instance
+	* @method takeOwnership
+	* @memberof module:altspace/utilities/behaviors.Object3DSync
+	*/
+	Object3DSync.prototype.takeOwnership = function takeOwnership () {
+		this.ownerRef.set(this.sceneSync.clientId);
+	};
+
+	Object.defineProperties( Object3DSync.prototype, prototypeAccessors );
+
+	return Object3DSync;
+}(Behavior));
+
+// common maps between identifiers and objects
+var syncBehaviors = [];
+var objectForKey = {};
+var keyForUuid = {};
+
+function autoSendAll() {
+	syncBehaviors.forEach(function (s) { return s.autoSend(); });
+}
+
+/**
+* The SceneSync behavior manages the synchronization of an entire scene.
+* @param {Firebase} syncInstance - Obtain this by calling [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}
+* @param {Object} [config]
+* @param {Object} [config.instantiators] A dictionary of instantiation
+* callbacks by syncType. Instantiators are called on every client whenever an
+* instantiation call is made. Instantiators are passed an initialization
+* data object and the syncType. They should return an Object3D with an
+* Object3DSync behavior.
+* @param {Object} [config.destroyers] (Optional) A dictionary of destroy
+* callbacks by syncType. Destroyers are called on every client whenever a
+* destroy call is made. If no destroyer is provided, a default one will be use
+* which will remove the object from its parent and dispose its geometry, material, and texture.
+* If you return true from a custom destroyer, the default destroyer will also be called.
+* @param {Function} [config.ready] A callback that is called after
+* checking to see if the instance has already been initialized. The callback is passed a boolean that
+* is true if this is the first callback that has been called for this sync instance.
+* This is primarily useful for setting up any objects that should only be created
+* once for an instance, and is not necessary otherwise.
+* @param {integer} [config.autoSendRateMS=100] - The rate updates are published
+* to other clients, in milliseconds. This can usually be left default.
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+**/
+var SceneSync = (function (Behavior$$1) {
+	function SceneSync(instanceRef, config)
+	{
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{instantiators: {}, destroyers: {}, ready: null, autoSendRateMS: 100},
+			config
+		);
+
+		this.instanceRef = instanceRef;
+		this.sceneRef = instanceRef.child('scene');
+		this.clientsRef = instanceRef.child('clients');
+
+		this.clientId = null;
+		// there should always be one master client in the room. For now it will be the longest person online.
+		this.masterClientId = null;
+
+	}
+
+	if ( Behavior$$1 ) SceneSync.__proto__ = Behavior$$1;
+	SceneSync.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SceneSync.prototype.constructor = SceneSync;
+
+	var prototypeAccessors = { type: {},isMasterClient: {} };
+
+	prototypeAccessors.type.get = function (){ return 'SceneSync'; };
+
+	SceneSync.prototype.awake = function awake (o, s)
+	{
+		var this$1 = this;
+
+		setInterval(autoSendAll, this.config.autoSendRateMS);
 
 		var scene = s;
 
 		// temporary way of having unique identifiers for each client
-		clientId = scene.uuid;
-		clientsRef.on("value", function (snapshot) {
+		this.clientId = scene.uuid;
+		this.clientsRef.on("value", (function (snapshot) {
 			var clientIds = snapshot.val();
+			if (!clientIds) { return; }
 
-			if (!clientIds) return;
+			var masterClientKey = Object.keys(clientIds)[0];
+			this$1.masterClientId = clientIds[masterClientKey];
+		}).bind(this));
 
-			masterClientKey = Object.keys(clientIds)[0];
-			masterClientId = clientIds[masterClientKey];
-		});
-		// add our client ID to the list of connected clients, 
+		// add our client ID to the list of connected clients,
 		// but have it be automatically removed by firebase if we disconnect for any reason
-		clientsRef.push(clientId).onDisconnect().remove();
+		this.clientsRef.push(this.clientId).onDisconnect().remove();
 
-		instanceRef.child('initialized').once('value', function (snapshot) {
+		this.instanceRef.child('initialized').once('value', (function (snapshot) {
 			var shouldInitialize = !snapshot.val();
 			snapshot.ref().set(true);
-			if (config.ready) {
-				config.ready(shouldInitialize);
+			if (this$1.config.ready) {
+				this$1.config.ready(shouldInitialize);
 			}
-		});
-		
+		}).bind(this));
 
-		sceneRef.on('child_added', onInstantiate.bind(this));
-		sceneRef.on('child_removed', onDestroy.bind(this));
-	}
+		this.sceneRef.on('child_added', this.onInstantiate.bind(this));
+		this.sceneRef.on('child_removed', this.onDestroy.bind(this));
+	};
 
 	/**
-	 * Instantiate an object by syncType.
-	 * @instance
-	 * @method instantiate
-	 * @param {String} syncType Type of object to instantiate.
-	 * @param {Object} initData An object containing initialization data, passed
-	 *  to the instantiator.
-	 * @param {Boolean} destroyOnDisconnect If the object should be destroyed
-	 *  across all synced instance when the instantiating instance disconnects.
-	 * @memberof module:altspace/utilities/behaviors.SceneSync
-	 */
-	function instantiate(syncType, initData, destroyOnDisconnect) {
-		initData = initData || {};
-		var objectRef = sceneRef.push({ syncType: syncType, initData: initData },
-			function (error) { if (error) throw Error('Failed to save to Firebase', error) }
+	* Instantiate an object by syncType.
+	* @param {String} syncType Type of object to instantiate.
+	* @param {Object} initData An object containing initialization data, passed
+	* to the instantiator.
+	* @param {Boolean} destroyOnDisconnect If the object should be destroyed
+	* across all synced instance when the instantiating instance disconnects.
+	* @returns {Object3DSync}
+	*/
+	SceneSync.prototype.instantiate = function instantiate (syncType, initData, destroyOnDisconnect)
+	{
+		if ( initData === void 0 ) initData = {};
+
+		var objectRef = this.sceneRef.push({ syncType: syncType, initData: initData },
+			function (error) { if (error) { throw Error('Failed to save to Firebase', error); } }
 		);
-		if (destroyOnDisconnect) {
+
+		if(destroyOnDisconnect){
 			objectRef.onDisconnect().remove();//send remvoe_child to remote clients
 		}
+
 		//instantiation done, local child_added callback happens syncronously with push
 		var object = objectForKey[objectRef.key()];
 		object.getBehaviorByType('Object3DSync').takeOwnership();
 		return object;
-	}
+	};
 
-	function onInstantiate(snapshot) {
-
+	SceneSync.prototype.onInstantiate = function onInstantiate (snapshot)
+	{
 		var data = snapshot.val();
 		var key = snapshot.key();
-
-		var instantiator = instantiators[data.syncType];
+		var instantiator = this.config.instantiators[data.syncType];
 
 		if (!instantiator) {
 			console.warn('No instantiator found for syncType: ' + data.syncType);
@@ -5059,28 +5735,27 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
 
 		syncBehaviors.push(syncBehavior);
 		syncBehavior.link(snapshot.ref(), this);
-	}
+	};
 
 	/**
-	 * Destroy a synced object across instances.
-	 * @instance
-	 * @method destroy
-	 * @param {Object} object3d The object to destroy.
-	 * @memberof module:altspace/utilities/behaviors.SceneSync
-	 */
-	function destroy(object3d) {
+	* Destroy a synced object across instances.
+	* @param {Object} object3d The object to destroy.
+	*/
+	SceneSync.prototype.destroy = function destroy (object3d)
+	{
 		var key = keyForUuid[object3d.uuid];
 		if (!key) {
 			console.warn('Failed to find key for object3d to be destroyed', object3d);
 			return;
 		}
-		sceneRef.child(key).remove(function (error) {
-			if (error) console.warn('Failed to remove from Firebase', error);
+		this.sceneRef.child(key).remove( function (error) {
+			if (error) { console.warn('Failed to remove from Firebase', error); }
 		});
-		sceneRef.child(key).off();//detach all callbacks
-	}
+		this.sceneRef.child(key).off();//detach all callbacks
+	};
 
-	function onDestroy(snapshot) {
+	SceneSync.prototype.onDestroy = function onDestroy (snapshot)
+	{
 		var data = snapshot.val();
 		var key = snapshot.key();
 		var object3d = objectForKey[key];
@@ -5094,8 +5769,8 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
 			return;
 		}
 
-		function defaultDestroyer(object3d) {
-
+		function defaultDestroyer(object3d)
+		{
 			// remove all behaviors including this one
 			object3d.removeAllBehaviors();
 
@@ -5116,6485 +5791,364 @@ window.altspace.utilities.behaviors.SceneSync = function (instanceRef, config) {
 			}
 		}
 
-		var customDestroyer = destroyers[syncType]
+		var customDestroyer = this.config.destroyers[syncType];
 		var shouldDefaultDestroy = !customDestroyer;
 
-		if (customDestroyer) {
-
+		if (customDestroyer){
 			// returning true from a destroyer will additionally invoke the default destroyer
 			shouldDefaultDestroy = customDestroyer(object3d);
 		}
 
-		if (shouldDefaultDestroy) defaultDestroyer(object3d);
+		if (shouldDefaultDestroy)
+			{ defaultDestroyer(object3d); }
 
 		//remove from our local bookkeeping
 		delete objectForKey[key];
 		delete keyForUuid[object3d.uuid];
-	}
-
-	var exports = {
-		awake: awake,
-		instantiate: instantiate,
-		destroy: destroy,
-		type: 'SceneSync'
 	};
 
 	/**
-	 * Interval at which an object's position/rotation/scale data is sent to Firebase,
-	 * in milliseconds.
-	 * @readonly
-	 * @instance
-	 * @member {number} autoSendRateMS
-	 * @memberof module:altspace/utilities/behaviors.SceneSync
-	 */
-	Object.defineProperty(exports, 'autoSendRateMS', {
-		get: function () { return autoSendRateMS; }
-	});
+	* True if this client is the master, false otherwise. Master is generally the client that
+	* has been in the room the longest.
+	* @instance
+	* @member {boolean} isMasterClient
+	* @memberof module:altspace/utilities/behaviors.SceneSync
+	*/
+	prototypeAccessors.isMasterClient.get = function (){ return this.masterClientId === this.clientId; };
 
-	/**
-	 * True if this client is the master, false otherwise. Master is generally the client that 
-	 * has been in the room the longest.
-	 * @readonly
-	 * @instance
-	 * @member {boolean} isMasterClient
-	 * @memberof module:altspace/utilities/behaviors.SceneSync
-	 */
-	Object.defineProperty(exports, 'isMasterClient', {
-		get: function () { return masterClientId === clientId; }
-	});
+	Object.defineProperties( SceneSync.prototype, prototypeAccessors );
 
-	/**
-	 * UUID of the current client. 
-	 * @readonly
-	 * @instance
-	 * @member {string} clientId
-	 * @memberof module:altspace/utilities/behaviors.SceneSync
-	 */
-	Object.defineProperty(exports, 'clientId', {
-		get: function () { return clientId; }
-	});
-
-	/**
-	 * Firebase reference for the 'clients' child location. Can be used by app to listen
-	 * to clients entering and leaving the room (but generally should not be modified by apps).
-	 * @readonly
-	 * @instance
-	 * @member {Firebase} clientsRef
-	 * @memberof module:altspace/utilities/behaviors.SceneSync
-	 */
-	Object.defineProperty(exports, 'clientsRef', {
-		get: function () { return clientsRef; }
-	});
-	return exports;
-};
-
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+	return SceneSync;
+}(Behavior));
 
 /**
- * The Spin behavior adds a spinning animation to an object.
- *
- * @class Spin
- * @param {Object} [config]
- * @param {Number} [config.speed=0.0001] Rotation speed in radians per
- *  millisecond
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.Spin = function (config) {
-
-	config = config || {};
-
-	if (config.speed === undefined) config.speed = 0.0001;
-
-	var object3d;
-
-	function awake(o) {
-		object3d = o;
+* The Spin behavior adds a spinning animation to an object.
+* @param {Object} [config]
+* @param {Number} [config.speed=0.0001] Rotation speed in radians per
+*  millisecond
+* @param {Vector3} [config.axis={0,1,0}] - The axis of rotation
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+var Spin = (function (Behavior$$1) {
+	function Spin(config) {
+		Behavior$$1.call(this);
+		this.config = Object.assign(
+			{speed: 1e-4, axis: new THREE.Vector3(0,1,0)},
+			config
+		);
+		this.config.axis.normalize();
+		this.object3d = null;
 	}
 
-	function update(deltaTime) {
-		object3d.rotation.y += config.speed * deltaTime;
-	}
+	if ( Behavior$$1 ) Spin.__proto__ = Behavior$$1;
+	Spin.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	Spin.prototype.constructor = Spin;
 
-	return { awake: awake, update: update, type: 'Spin' };
-};
+	var prototypeAccessors = { type: {} };
 
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+	prototypeAccessors.type.get = function (){ return 'Spin'; };
 
-altspace.utilities.behaviors.TouchpadRotate = function (config) {
-	config = config || {};
+	Spin.prototype.awake = function awake (o) {
+		this.object3d = o;
+	};
 
-	var object3d;
-	var scene;
+	Spin.prototype.update = function update (deltaTime) {
+		this.object3d.rotateOnAxis(this.config.axis, this.config.speed * deltaTime);
+	};
 
-	var startingRotation;
+	Object.defineProperties( Spin.prototype, prototypeAccessors );
 
-	var activelyRotating = false;
-
-	function awake(o, s) {
-		object3d = o;
-		scene = s;
-
-		altspace.addEventListener('touchpadup', onTouchpadUp);
-		altspace.addEventListener('touchpaddown', onTouchpadDown);
-		altspace.addEventListener('touchpadmove', onTouchpadMove);
-	}
-
-	function onTouchpadUp(event) {
-		activelyRotating = false;
-	}
-
-	function onTouchpadDown(event) {
-		activelyRotating = true;
-		startingRotation = object3d.rotation.clone();
-	}
-
-	var lastDisplacementX = 0;
-
-	var runningCount = 5;
-	var runningAverageVelocityX = 0;
-
-	function onTouchpadMove(event) {
-		var deltaX = event.displacementX - lastDisplacementX;
-		object3d.rotation.set(startingRotation.x, startingRotation.y + event.displacementX / 300, startingRotation.z);
-
-		runningAverageVelocityX = ((runningAverageVelocityX * runningCount) + deltaX / 300) / (runningCount + 1);
-		lastDisplacementX = event.displacementX;
-	}
-
-	function update(deltaTime) {
-		if (!activelyRotating && Math.abs(runningAverageVelocityX) > 0.01) {
-			object3d.rotation.y += runningAverageVelocityX;
-			runningAverageVelocityX *= 0.97;
-		}
-	}
-
-	function start() {
-	}
-
-	return { awake: awake, start: start, update: update, type: 'TouchpadRotate' };
-};
-
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (global){
-"use strict";
-
-require("core-js/shim");
-
-require("regenerator/runtime");
-
-if (global._babelPolyfill) {
-  throw new Error("only one instance of babel/polyfill is allowed");
-}
-global._babelPolyfill = true;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":256,"regenerator/runtime":258}],2:[function(require,module,exports){
-module.exports = require("./lib/polyfill");
-
-},{"./lib/polyfill":1}],3:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
-},{"core-js/library/fn/array/from":10}],4:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/map"), __esModule: true };
-},{"core-js/library/fn/map":11}],5:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":12}],6:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/symbol"), __esModule: true };
-},{"core-js/library/fn/symbol":13}],7:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-exports.__esModule = true;
-},{}],8:[function(require,module,exports){
-"use strict";
-
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
-
-exports["default"] = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-
-      _Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":5}],9:[function(require,module,exports){
-module.exports = require("babel-core/polyfill");
-
-},{"babel-core/polyfill":2}],10:[function(require,module,exports){
-require('../../modules/es6.string.iterator');
-require('../../modules/es6.array.from');
-module.exports = require('../../modules/$.core').Array.from;
-},{"../../modules/$.core":22,"../../modules/es6.array.from":62,"../../modules/es6.string.iterator":66}],11:[function(require,module,exports){
-require('../modules/es6.object.to-string');
-require('../modules/es6.string.iterator');
-require('../modules/web.dom.iterable');
-require('../modules/es6.map');
-require('../modules/es7.map.to-json');
-module.exports = require('../modules/$.core').Map;
-},{"../modules/$.core":22,"../modules/es6.map":64,"../modules/es6.object.to-string":65,"../modules/es6.string.iterator":66,"../modules/es7.map.to-json":68,"../modules/web.dom.iterable":69}],12:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function defineProperty(it, key, desc){
-  return $.setDesc(it, key, desc);
-};
-},{"../../modules/$":44}],13:[function(require,module,exports){
-require('../../modules/es6.symbol');
-require('../../modules/es6.object.to-string');
-module.exports = require('../../modules/$.core').Symbol;
-},{"../../modules/$.core":22,"../../modules/es6.object.to-string":65,"../../modules/es6.symbol":67}],14:[function(require,module,exports){
-module.exports = function(it){
-  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
-  return it;
-};
-},{}],15:[function(require,module,exports){
-module.exports = function(){ /* empty */ };
-},{}],16:[function(require,module,exports){
-var isObject = require('./$.is-object');
-module.exports = function(it){
-  if(!isObject(it))throw TypeError(it + ' is not an object!');
-  return it;
-};
-},{"./$.is-object":37}],17:[function(require,module,exports){
-// getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = require('./$.cof')
-  , TAG = require('./$.wks')('toStringTag')
-  // ES3 wrong here
-  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
-
-module.exports = function(it){
-  var O, T, B;
-  return it === undefined ? 'Undefined' : it === null ? 'Null'
-    // @@toStringTag case
-    : typeof (T = (O = Object(it))[TAG]) == 'string' ? T
-    // builtinTag case
-    : ARG ? cof(O)
-    // ES3 arguments fallback
-    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
-};
-},{"./$.cof":18,"./$.wks":60}],18:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = function(it){
-  return toString.call(it).slice(8, -1);
-};
-},{}],19:[function(require,module,exports){
-'use strict';
-var $            = require('./$')
-  , hide         = require('./$.hide')
-  , redefineAll  = require('./$.redefine-all')
-  , ctx          = require('./$.ctx')
-  , strictNew    = require('./$.strict-new')
-  , defined      = require('./$.defined')
-  , forOf        = require('./$.for-of')
-  , $iterDefine  = require('./$.iter-define')
-  , step         = require('./$.iter-step')
-  , ID           = require('./$.uid')('id')
-  , $has         = require('./$.has')
-  , isObject     = require('./$.is-object')
-  , setSpecies   = require('./$.set-species')
-  , DESCRIPTORS  = require('./$.descriptors')
-  , isExtensible = Object.isExtensible || isObject
-  , SIZE         = DESCRIPTORS ? '_s' : 'size'
-  , id           = 0;
-
-var fastKey = function(it, create){
-  // return primitive with prefix
-  if(!isObject(it))return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
-  if(!$has(it, ID)){
-    // can't set id to frozen object
-    if(!isExtensible(it))return 'F';
-    // not necessary to add id
-    if(!create)return 'E';
-    // add missing object id
-    hide(it, ID, ++id);
-  // return object id with prefix
-  } return 'O' + it[ID];
-};
-
-var getEntry = function(that, key){
-  // fast case
-  var index = fastKey(key), entry;
-  if(index !== 'F')return that._i[index];
-  // frozen object case
-  for(entry = that._f; entry; entry = entry.n){
-    if(entry.k == key)return entry;
-  }
-};
-
-module.exports = {
-  getConstructor: function(wrapper, NAME, IS_MAP, ADDER){
-    var C = wrapper(function(that, iterable){
-      strictNew(that, C, NAME);
-      that._i = $.create(null); // index
-      that._f = undefined;      // first entry
-      that._l = undefined;      // last entry
-      that[SIZE] = 0;           // size
-      if(iterable != undefined)forOf(iterable, IS_MAP, that[ADDER], that);
-    });
-    redefineAll(C.prototype, {
-      // 23.1.3.1 Map.prototype.clear()
-      // 23.2.3.2 Set.prototype.clear()
-      clear: function clear(){
-        for(var that = this, data = that._i, entry = that._f; entry; entry = entry.n){
-          entry.r = true;
-          if(entry.p)entry.p = entry.p.n = undefined;
-          delete data[entry.i];
-        }
-        that._f = that._l = undefined;
-        that[SIZE] = 0;
-      },
-      // 23.1.3.3 Map.prototype.delete(key)
-      // 23.2.3.4 Set.prototype.delete(value)
-      'delete': function(key){
-        var that  = this
-          , entry = getEntry(that, key);
-        if(entry){
-          var next = entry.n
-            , prev = entry.p;
-          delete that._i[entry.i];
-          entry.r = true;
-          if(prev)prev.n = next;
-          if(next)next.p = prev;
-          if(that._f == entry)that._f = next;
-          if(that._l == entry)that._l = prev;
-          that[SIZE]--;
-        } return !!entry;
-      },
-      // 23.2.3.6 Set.prototype.forEach(callbackfn, thisArg = undefined)
-      // 23.1.3.5 Map.prototype.forEach(callbackfn, thisArg = undefined)
-      forEach: function forEach(callbackfn /*, that = undefined */){
-        var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3)
-          , entry;
-        while(entry = entry ? entry.n : this._f){
-          f(entry.v, entry.k, this);
-          // revert to the last existing entry
-          while(entry && entry.r)entry = entry.p;
-        }
-      },
-      // 23.1.3.7 Map.prototype.has(key)
-      // 23.2.3.7 Set.prototype.has(value)
-      has: function has(key){
-        return !!getEntry(this, key);
-      }
-    });
-    if(DESCRIPTORS)$.setDesc(C.prototype, 'size', {
-      get: function(){
-        return defined(this[SIZE]);
-      }
-    });
-    return C;
-  },
-  def: function(that, key, value){
-    var entry = getEntry(that, key)
-      , prev, index;
-    // change existing entry
-    if(entry){
-      entry.v = value;
-    // create new entry
-    } else {
-      that._l = entry = {
-        i: index = fastKey(key, true), // <- index
-        k: key,                        // <- key
-        v: value,                      // <- value
-        p: prev = that._l,             // <- previous entry
-        n: undefined,                  // <- next entry
-        r: false                       // <- removed
-      };
-      if(!that._f)that._f = entry;
-      if(prev)prev.n = entry;
-      that[SIZE]++;
-      // add to index
-      if(index !== 'F')that._i[index] = entry;
-    } return that;
-  },
-  getEntry: getEntry,
-  setStrong: function(C, NAME, IS_MAP){
-    // add .keys, .values, .entries, [@@iterator]
-    // 23.1.3.4, 23.1.3.8, 23.1.3.11, 23.1.3.12, 23.2.3.5, 23.2.3.8, 23.2.3.10, 23.2.3.11
-    $iterDefine(C, NAME, function(iterated, kind){
-      this._t = iterated;  // target
-      this._k = kind;      // kind
-      this._l = undefined; // previous
-    }, function(){
-      var that  = this
-        , kind  = that._k
-        , entry = that._l;
-      // revert to the last existing entry
-      while(entry && entry.r)entry = entry.p;
-      // get next entry
-      if(!that._t || !(that._l = entry = entry ? entry.n : that._t._f)){
-        // or finish the iteration
-        that._t = undefined;
-        return step(1);
-      }
-      // return step by kind
-      if(kind == 'keys'  )return step(0, entry.k);
-      if(kind == 'values')return step(0, entry.v);
-      return step(0, [entry.k, entry.v]);
-    }, IS_MAP ? 'entries' : 'values' , !IS_MAP, true);
-
-    // add [@@species], 23.1.2.2, 23.2.2.2
-    setSpecies(NAME);
-  }
-};
-},{"./$":44,"./$.ctx":23,"./$.defined":24,"./$.descriptors":25,"./$.for-of":29,"./$.has":32,"./$.hide":33,"./$.is-object":37,"./$.iter-define":40,"./$.iter-step":42,"./$.redefine-all":48,"./$.set-species":50,"./$.strict-new":53,"./$.uid":59}],20:[function(require,module,exports){
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var forOf   = require('./$.for-of')
-  , classof = require('./$.classof');
-module.exports = function(NAME){
-  return function toJSON(){
-    if(classof(this) != NAME)throw TypeError(NAME + "#toJSON isn't generic");
-    var arr = [];
-    forOf(this, false, arr.push, arr);
-    return arr;
-  };
-};
-},{"./$.classof":17,"./$.for-of":29}],21:[function(require,module,exports){
-'use strict';
-var $              = require('./$')
-  , global         = require('./$.global')
-  , $export        = require('./$.export')
-  , fails          = require('./$.fails')
-  , hide           = require('./$.hide')
-  , redefineAll    = require('./$.redefine-all')
-  , forOf          = require('./$.for-of')
-  , strictNew      = require('./$.strict-new')
-  , isObject       = require('./$.is-object')
-  , setToStringTag = require('./$.set-to-string-tag')
-  , DESCRIPTORS    = require('./$.descriptors');
-
-module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
-  var Base  = global[NAME]
-    , C     = Base
-    , ADDER = IS_MAP ? 'set' : 'add'
-    , proto = C && C.prototype
-    , O     = {};
-  if(!DESCRIPTORS || typeof C != 'function' || !(IS_WEAK || proto.forEach && !fails(function(){
-    new C().entries().next();
-  }))){
-    // create collection constructor
-    C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
-    redefineAll(C.prototype, methods);
-  } else {
-    C = wrapper(function(target, iterable){
-      strictNew(target, C, NAME);
-      target._c = new Base;
-      if(iterable != undefined)forOf(iterable, IS_MAP, target[ADDER], target);
-    });
-    $.each.call('add,clear,delete,forEach,get,has,set,keys,values,entries'.split(','),function(KEY){
-      var IS_ADDER = KEY == 'add' || KEY == 'set';
-      if(KEY in proto && !(IS_WEAK && KEY == 'clear'))hide(C.prototype, KEY, function(a, b){
-        if(!IS_ADDER && IS_WEAK && !isObject(a))return KEY == 'get' ? undefined : false;
-        var result = this._c[KEY](a === 0 ? 0 : a, b);
-        return IS_ADDER ? this : result;
-      });
-    });
-    if('size' in proto)$.setDesc(C.prototype, 'size', {
-      get: function(){
-        return this._c.size;
-      }
-    });
-  }
-
-  setToStringTag(C, NAME);
-
-  O[NAME] = C;
-  $export($export.G + $export.W + $export.F, O);
-
-  if(!IS_WEAK)common.setStrong(C, NAME, IS_MAP);
-
-  return C;
-};
-},{"./$":44,"./$.descriptors":25,"./$.export":27,"./$.fails":28,"./$.for-of":29,"./$.global":31,"./$.hide":33,"./$.is-object":37,"./$.redefine-all":48,"./$.set-to-string-tag":51,"./$.strict-new":53}],22:[function(require,module,exports){
-var core = module.exports = {version: '1.2.6'};
-if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],23:[function(require,module,exports){
-// optional / simple context binding
-var aFunction = require('./$.a-function');
-module.exports = function(fn, that, length){
-  aFunction(fn);
-  if(that === undefined)return fn;
-  switch(length){
-    case 1: return function(a){
-      return fn.call(that, a);
-    };
-    case 2: return function(a, b){
-      return fn.call(that, a, b);
-    };
-    case 3: return function(a, b, c){
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function(/* ...args */){
-    return fn.apply(that, arguments);
-  };
-};
-},{"./$.a-function":14}],24:[function(require,module,exports){
-// 7.2.1 RequireObjectCoercible(argument)
-module.exports = function(it){
-  if(it == undefined)throw TypeError("Can't call method on  " + it);
-  return it;
-};
-},{}],25:[function(require,module,exports){
-// Thank's IE8 for his funny defineProperty
-module.exports = !require('./$.fails')(function(){
-  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
-});
-},{"./$.fails":28}],26:[function(require,module,exports){
-// all enumerable object keys, includes symbols
-var $ = require('./$');
-module.exports = function(it){
-  var keys       = $.getKeys(it)
-    , getSymbols = $.getSymbols;
-  if(getSymbols){
-    var symbols = getSymbols(it)
-      , isEnum  = $.isEnum
-      , i       = 0
-      , key;
-    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))keys.push(key);
-  }
-  return keys;
-};
-},{"./$":44}],27:[function(require,module,exports){
-var global    = require('./$.global')
-  , core      = require('./$.core')
-  , ctx       = require('./$.ctx')
-  , PROTOTYPE = 'prototype';
-
-var $export = function(type, name, source){
-  var IS_FORCED = type & $export.F
-    , IS_GLOBAL = type & $export.G
-    , IS_STATIC = type & $export.S
-    , IS_PROTO  = type & $export.P
-    , IS_BIND   = type & $export.B
-    , IS_WRAP   = type & $export.W
-    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
-    , key, own, out;
-  if(IS_GLOBAL)source = name;
-  for(key in source){
-    // contains in native
-    own = !IS_FORCED && target && key in target;
-    if(own && key in exports)continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
-    // bind timers to global for call from export context
-    : IS_BIND && own ? ctx(out, global)
-    // wrap global constructors for prevent change them in library
-    : IS_WRAP && target[key] == out ? (function(C){
-      var F = function(param){
-        return this instanceof C ? new C(param) : C(param);
-      };
-      F[PROTOTYPE] = C[PROTOTYPE];
-      return F;
-    // make static versions for prototype methods
-    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
-  }
-};
-// type bitmap
-$export.F = 1;  // forced
-$export.G = 2;  // global
-$export.S = 4;  // static
-$export.P = 8;  // proto
-$export.B = 16; // bind
-$export.W = 32; // wrap
-module.exports = $export;
-},{"./$.core":22,"./$.ctx":23,"./$.global":31}],28:[function(require,module,exports){
-module.exports = function(exec){
-  try {
-    return !!exec();
-  } catch(e){
-    return true;
-  }
-};
-},{}],29:[function(require,module,exports){
-var ctx         = require('./$.ctx')
-  , call        = require('./$.iter-call')
-  , isArrayIter = require('./$.is-array-iter')
-  , anObject    = require('./$.an-object')
-  , toLength    = require('./$.to-length')
-  , getIterFn   = require('./core.get-iterator-method');
-module.exports = function(iterable, entries, fn, that){
-  var iterFn = getIterFn(iterable)
-    , f      = ctx(fn, that, entries ? 2 : 1)
-    , index  = 0
-    , length, step, iterator;
-  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
-  // fast case for arrays with default iterator
-  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
-    entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
-  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
-    call(iterator, f, step.value, entries);
-  }
-};
-},{"./$.an-object":16,"./$.ctx":23,"./$.is-array-iter":35,"./$.iter-call":38,"./$.to-length":57,"./core.get-iterator-method":61}],30:[function(require,module,exports){
-// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
-var toIObject = require('./$.to-iobject')
-  , getNames  = require('./$').getNames
-  , toString  = {}.toString;
-
-var windowNames = typeof window == 'object' && Object.getOwnPropertyNames
-  ? Object.getOwnPropertyNames(window) : [];
-
-var getWindowNames = function(it){
-  try {
-    return getNames(it);
-  } catch(e){
-    return windowNames.slice();
-  }
-};
-
-module.exports.get = function getOwnPropertyNames(it){
-  if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
-  return getNames(toIObject(it));
-};
-},{"./$":44,"./$.to-iobject":56}],31:[function(require,module,exports){
-// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var global = module.exports = typeof window != 'undefined' && window.Math == Math
-  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],32:[function(require,module,exports){
-var hasOwnProperty = {}.hasOwnProperty;
-module.exports = function(it, key){
-  return hasOwnProperty.call(it, key);
-};
-},{}],33:[function(require,module,exports){
-var $          = require('./$')
-  , createDesc = require('./$.property-desc');
-module.exports = require('./$.descriptors') ? function(object, key, value){
-  return $.setDesc(object, key, createDesc(1, value));
-} : function(object, key, value){
-  object[key] = value;
-  return object;
-};
-},{"./$":44,"./$.descriptors":25,"./$.property-desc":47}],34:[function(require,module,exports){
-// fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = require('./$.cof');
-module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
-  return cof(it) == 'String' ? it.split('') : Object(it);
-};
-},{"./$.cof":18}],35:[function(require,module,exports){
-// check on default Array iterator
-var Iterators  = require('./$.iterators')
-  , ITERATOR   = require('./$.wks')('iterator')
-  , ArrayProto = Array.prototype;
-
-module.exports = function(it){
-  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
-};
-},{"./$.iterators":43,"./$.wks":60}],36:[function(require,module,exports){
-// 7.2.2 IsArray(argument)
-var cof = require('./$.cof');
-module.exports = Array.isArray || function(arg){
-  return cof(arg) == 'Array';
-};
-},{"./$.cof":18}],37:[function(require,module,exports){
-module.exports = function(it){
-  return typeof it === 'object' ? it !== null : typeof it === 'function';
-};
-},{}],38:[function(require,module,exports){
-// call something on iterator step with safe closing on error
-var anObject = require('./$.an-object');
-module.exports = function(iterator, fn, value, entries){
-  try {
-    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
-  // 7.4.6 IteratorClose(iterator, completion)
-  } catch(e){
-    var ret = iterator['return'];
-    if(ret !== undefined)anObject(ret.call(iterator));
-    throw e;
-  }
-};
-},{"./$.an-object":16}],39:[function(require,module,exports){
-'use strict';
-var $              = require('./$')
-  , descriptor     = require('./$.property-desc')
-  , setToStringTag = require('./$.set-to-string-tag')
-  , IteratorPrototype = {};
-
-// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-require('./$.hide')(IteratorPrototype, require('./$.wks')('iterator'), function(){ return this; });
-
-module.exports = function(Constructor, NAME, next){
-  Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
-  setToStringTag(Constructor, NAME + ' Iterator');
-};
-},{"./$":44,"./$.hide":33,"./$.property-desc":47,"./$.set-to-string-tag":51,"./$.wks":60}],40:[function(require,module,exports){
-'use strict';
-var LIBRARY        = require('./$.library')
-  , $export        = require('./$.export')
-  , redefine       = require('./$.redefine')
-  , hide           = require('./$.hide')
-  , has            = require('./$.has')
-  , Iterators      = require('./$.iterators')
-  , $iterCreate    = require('./$.iter-create')
-  , setToStringTag = require('./$.set-to-string-tag')
-  , getProto       = require('./$').getProto
-  , ITERATOR       = require('./$.wks')('iterator')
-  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
-  , FF_ITERATOR    = '@@iterator'
-  , KEYS           = 'keys'
-  , VALUES         = 'values';
-
-var returnThis = function(){ return this; };
-
-module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
-  $iterCreate(Constructor, NAME, next);
-  var getMethod = function(kind){
-    if(!BUGGY && kind in proto)return proto[kind];
-    switch(kind){
-      case KEYS: return function keys(){ return new Constructor(this, kind); };
-      case VALUES: return function values(){ return new Constructor(this, kind); };
-    } return function entries(){ return new Constructor(this, kind); };
-  };
-  var TAG        = NAME + ' Iterator'
-    , DEF_VALUES = DEFAULT == VALUES
-    , VALUES_BUG = false
-    , proto      = Base.prototype
-    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
-    , $default   = $native || getMethod(DEFAULT)
-    , methods, key;
-  // Fix native
-  if($native){
-    var IteratorPrototype = getProto($default.call(new Base));
-    // Set @@toStringTag to native iterators
-    setToStringTag(IteratorPrototype, TAG, true);
-    // FF fix
-    if(!LIBRARY && has(proto, FF_ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
-    // fix Array#{values, @@iterator}.name in V8 / FF
-    if(DEF_VALUES && $native.name !== VALUES){
-      VALUES_BUG = true;
-      $default = function values(){ return $native.call(this); };
-    }
-  }
-  // Define iterator
-  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
-    hide(proto, ITERATOR, $default);
-  }
-  // Plug for library
-  Iterators[NAME] = $default;
-  Iterators[TAG]  = returnThis;
-  if(DEFAULT){
-    methods = {
-      values:  DEF_VALUES  ? $default : getMethod(VALUES),
-      keys:    IS_SET      ? $default : getMethod(KEYS),
-      entries: !DEF_VALUES ? $default : getMethod('entries')
-    };
-    if(FORCED)for(key in methods){
-      if(!(key in proto))redefine(proto, key, methods[key]);
-    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
-  }
-  return methods;
-};
-},{"./$":44,"./$.export":27,"./$.has":32,"./$.hide":33,"./$.iter-create":39,"./$.iterators":43,"./$.library":46,"./$.redefine":49,"./$.set-to-string-tag":51,"./$.wks":60}],41:[function(require,module,exports){
-var ITERATOR     = require('./$.wks')('iterator')
-  , SAFE_CLOSING = false;
-
-try {
-  var riter = [7][ITERATOR]();
-  riter['return'] = function(){ SAFE_CLOSING = true; };
-  Array.from(riter, function(){ throw 2; });
-} catch(e){ /* empty */ }
-
-module.exports = function(exec, skipClosing){
-  if(!skipClosing && !SAFE_CLOSING)return false;
-  var safe = false;
-  try {
-    var arr  = [7]
-      , iter = arr[ITERATOR]();
-    iter.next = function(){ safe = true; };
-    arr[ITERATOR] = function(){ return iter; };
-    exec(arr);
-  } catch(e){ /* empty */ }
-  return safe;
-};
-},{"./$.wks":60}],42:[function(require,module,exports){
-module.exports = function(done, value){
-  return {value: value, done: !!done};
-};
-},{}],43:[function(require,module,exports){
-module.exports = {};
-},{}],44:[function(require,module,exports){
-var $Object = Object;
-module.exports = {
-  create:     $Object.create,
-  getProto:   $Object.getPrototypeOf,
-  isEnum:     {}.propertyIsEnumerable,
-  getDesc:    $Object.getOwnPropertyDescriptor,
-  setDesc:    $Object.defineProperty,
-  setDescs:   $Object.defineProperties,
-  getKeys:    $Object.keys,
-  getNames:   $Object.getOwnPropertyNames,
-  getSymbols: $Object.getOwnPropertySymbols,
-  each:       [].forEach
-};
-},{}],45:[function(require,module,exports){
-var $         = require('./$')
-  , toIObject = require('./$.to-iobject');
-module.exports = function(object, el){
-  var O      = toIObject(object)
-    , keys   = $.getKeys(O)
-    , length = keys.length
-    , index  = 0
-    , key;
-  while(length > index)if(O[key = keys[index++]] === el)return key;
-};
-},{"./$":44,"./$.to-iobject":56}],46:[function(require,module,exports){
-module.exports = true;
-},{}],47:[function(require,module,exports){
-module.exports = function(bitmap, value){
-  return {
-    enumerable  : !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable    : !(bitmap & 4),
-    value       : value
-  };
-};
-},{}],48:[function(require,module,exports){
-var redefine = require('./$.redefine');
-module.exports = function(target, src){
-  for(var key in src)redefine(target, key, src[key]);
-  return target;
-};
-},{"./$.redefine":49}],49:[function(require,module,exports){
-module.exports = require('./$.hide');
-},{"./$.hide":33}],50:[function(require,module,exports){
-'use strict';
-var core        = require('./$.core')
-  , $           = require('./$')
-  , DESCRIPTORS = require('./$.descriptors')
-  , SPECIES     = require('./$.wks')('species');
-
-module.exports = function(KEY){
-  var C = core[KEY];
-  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
-    configurable: true,
-    get: function(){ return this; }
-  });
-};
-},{"./$":44,"./$.core":22,"./$.descriptors":25,"./$.wks":60}],51:[function(require,module,exports){
-var def = require('./$').setDesc
-  , has = require('./$.has')
-  , TAG = require('./$.wks')('toStringTag');
-
-module.exports = function(it, tag, stat){
-  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
-};
-},{"./$":44,"./$.has":32,"./$.wks":60}],52:[function(require,module,exports){
-var global = require('./$.global')
-  , SHARED = '__core-js_shared__'
-  , store  = global[SHARED] || (global[SHARED] = {});
-module.exports = function(key){
-  return store[key] || (store[key] = {});
-};
-},{"./$.global":31}],53:[function(require,module,exports){
-module.exports = function(it, Constructor, name){
-  if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
-  return it;
-};
-},{}],54:[function(require,module,exports){
-var toInteger = require('./$.to-integer')
-  , defined   = require('./$.defined');
-// true  -> String#at
-// false -> String#codePointAt
-module.exports = function(TO_STRING){
-  return function(that, pos){
-    var s = String(defined(that))
-      , i = toInteger(pos)
-      , l = s.length
-      , a, b;
-    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
-    a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-      ? TO_STRING ? s.charAt(i) : a
-      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-  };
-};
-},{"./$.defined":24,"./$.to-integer":55}],55:[function(require,module,exports){
-// 7.1.4 ToInteger
-var ceil  = Math.ceil
-  , floor = Math.floor;
-module.exports = function(it){
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-};
-},{}],56:[function(require,module,exports){
-// to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = require('./$.iobject')
-  , defined = require('./$.defined');
-module.exports = function(it){
-  return IObject(defined(it));
-};
-},{"./$.defined":24,"./$.iobject":34}],57:[function(require,module,exports){
-// 7.1.15 ToLength
-var toInteger = require('./$.to-integer')
-  , min       = Math.min;
-module.exports = function(it){
-  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-};
-},{"./$.to-integer":55}],58:[function(require,module,exports){
-// 7.1.13 ToObject(argument)
-var defined = require('./$.defined');
-module.exports = function(it){
-  return Object(defined(it));
-};
-},{"./$.defined":24}],59:[function(require,module,exports){
-var id = 0
-  , px = Math.random();
-module.exports = function(key){
-  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-};
-},{}],60:[function(require,module,exports){
-var store  = require('./$.shared')('wks')
-  , uid    = require('./$.uid')
-  , Symbol = require('./$.global').Symbol;
-module.exports = function(name){
-  return store[name] || (store[name] =
-    Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
-};
-},{"./$.global":31,"./$.shared":52,"./$.uid":59}],61:[function(require,module,exports){
-var classof   = require('./$.classof')
-  , ITERATOR  = require('./$.wks')('iterator')
-  , Iterators = require('./$.iterators');
-module.exports = require('./$.core').getIteratorMethod = function(it){
-  if(it != undefined)return it[ITERATOR]
-    || it['@@iterator']
-    || Iterators[classof(it)];
-};
-},{"./$.classof":17,"./$.core":22,"./$.iterators":43,"./$.wks":60}],62:[function(require,module,exports){
-'use strict';
-var ctx         = require('./$.ctx')
-  , $export     = require('./$.export')
-  , toObject    = require('./$.to-object')
-  , call        = require('./$.iter-call')
-  , isArrayIter = require('./$.is-array-iter')
-  , toLength    = require('./$.to-length')
-  , getIterFn   = require('./core.get-iterator-method');
-$export($export.S + $export.F * !require('./$.iter-detect')(function(iter){ Array.from(iter); }), 'Array', {
-  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
-  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
-    var O       = toObject(arrayLike)
-      , C       = typeof this == 'function' ? this : Array
-      , $$      = arguments
-      , $$len   = $$.length
-      , mapfn   = $$len > 1 ? $$[1] : undefined
-      , mapping = mapfn !== undefined
-      , index   = 0
-      , iterFn  = getIterFn(O)
-      , length, result, step, iterator;
-    if(mapping)mapfn = ctx(mapfn, $$len > 2 ? $$[2] : undefined, 2);
-    // if object isn't iterable or it's array with default iterator - use simple case
-    if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
-      for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
-        result[index] = mapping ? call(iterator, mapfn, [step.value, index], true) : step.value;
-      }
-    } else {
-      length = toLength(O.length);
-      for(result = new C(length); length > index; index++){
-        result[index] = mapping ? mapfn(O[index], index) : O[index];
-      }
-    }
-    result.length = index;
-    return result;
-  }
-});
-
-},{"./$.ctx":23,"./$.export":27,"./$.is-array-iter":35,"./$.iter-call":38,"./$.iter-detect":41,"./$.to-length":57,"./$.to-object":58,"./core.get-iterator-method":61}],63:[function(require,module,exports){
-'use strict';
-var addToUnscopables = require('./$.add-to-unscopables')
-  , step             = require('./$.iter-step')
-  , Iterators        = require('./$.iterators')
-  , toIObject        = require('./$.to-iobject');
-
-// 22.1.3.4 Array.prototype.entries()
-// 22.1.3.13 Array.prototype.keys()
-// 22.1.3.29 Array.prototype.values()
-// 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = require('./$.iter-define')(Array, 'Array', function(iterated, kind){
-  this._t = toIObject(iterated); // target
-  this._i = 0;                   // next index
-  this._k = kind;                // kind
-// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , kind  = this._k
-    , index = this._i++;
-  if(!O || index >= O.length){
-    this._t = undefined;
-    return step(1);
-  }
-  if(kind == 'keys'  )return step(0, index);
-  if(kind == 'values')return step(0, O[index]);
-  return step(0, [index, O[index]]);
-}, 'values');
-
-// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
-Iterators.Arguments = Iterators.Array;
-
-addToUnscopables('keys');
-addToUnscopables('values');
-addToUnscopables('entries');
-},{"./$.add-to-unscopables":15,"./$.iter-define":40,"./$.iter-step":42,"./$.iterators":43,"./$.to-iobject":56}],64:[function(require,module,exports){
-'use strict';
-var strong = require('./$.collection-strong');
-
-// 23.1 Map Objects
-require('./$.collection')('Map', function(get){
-  return function Map(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
-}, {
-  // 23.1.3.6 Map.prototype.get(key)
-  get: function get(key){
-    var entry = strong.getEntry(this, key);
-    return entry && entry.v;
-  },
-  // 23.1.3.9 Map.prototype.set(key, value)
-  set: function set(key, value){
-    return strong.def(this, key === 0 ? 0 : key, value);
-  }
-}, strong, true);
-},{"./$.collection":21,"./$.collection-strong":19}],65:[function(require,module,exports){
-
-},{}],66:[function(require,module,exports){
-'use strict';
-var $at  = require('./$.string-at')(true);
-
-// 21.1.3.27 String.prototype[@@iterator]()
-require('./$.iter-define')(String, 'String', function(iterated){
-  this._t = String(iterated); // target
-  this._i = 0;                // next index
-// 21.1.5.2.1 %StringIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , index = this._i
-    , point;
-  if(index >= O.length)return {value: undefined, done: true};
-  point = $at(O, index);
-  this._i += point.length;
-  return {value: point, done: false};
-});
-},{"./$.iter-define":40,"./$.string-at":54}],67:[function(require,module,exports){
-'use strict';
-// ECMAScript 6 symbols shim
-var $              = require('./$')
-  , global         = require('./$.global')
-  , has            = require('./$.has')
-  , DESCRIPTORS    = require('./$.descriptors')
-  , $export        = require('./$.export')
-  , redefine       = require('./$.redefine')
-  , $fails         = require('./$.fails')
-  , shared         = require('./$.shared')
-  , setToStringTag = require('./$.set-to-string-tag')
-  , uid            = require('./$.uid')
-  , wks            = require('./$.wks')
-  , keyOf          = require('./$.keyof')
-  , $names         = require('./$.get-names')
-  , enumKeys       = require('./$.enum-keys')
-  , isArray        = require('./$.is-array')
-  , anObject       = require('./$.an-object')
-  , toIObject      = require('./$.to-iobject')
-  , createDesc     = require('./$.property-desc')
-  , getDesc        = $.getDesc
-  , setDesc        = $.setDesc
-  , _create        = $.create
-  , getNames       = $names.get
-  , $Symbol        = global.Symbol
-  , $JSON          = global.JSON
-  , _stringify     = $JSON && $JSON.stringify
-  , setter         = false
-  , HIDDEN         = wks('_hidden')
-  , isEnum         = $.isEnum
-  , SymbolRegistry = shared('symbol-registry')
-  , AllSymbols     = shared('symbols')
-  , useNative      = typeof $Symbol == 'function'
-  , ObjectProto    = Object.prototype;
-
-// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
-var setSymbolDesc = DESCRIPTORS && $fails(function(){
-  return _create(setDesc({}, 'a', {
-    get: function(){ return setDesc(this, 'a', {value: 7}).a; }
-  })).a != 7;
-}) ? function(it, key, D){
-  var protoDesc = getDesc(ObjectProto, key);
-  if(protoDesc)delete ObjectProto[key];
-  setDesc(it, key, D);
-  if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
-} : setDesc;
-
-var wrap = function(tag){
-  var sym = AllSymbols[tag] = _create($Symbol.prototype);
-  sym._k = tag;
-  DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
-    configurable: true,
-    set: function(value){
-      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
-      setSymbolDesc(this, tag, createDesc(1, value));
-    }
-  });
-  return sym;
-};
-
-var isSymbol = function(it){
-  return typeof it == 'symbol';
-};
-
-var $defineProperty = function defineProperty(it, key, D){
-  if(D && has(AllSymbols, key)){
-    if(!D.enumerable){
-      if(!has(it, HIDDEN))setDesc(it, HIDDEN, createDesc(1, {}));
-      it[HIDDEN][key] = true;
-    } else {
-      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
-      D = _create(D, {enumerable: createDesc(0, false)});
-    } return setSymbolDesc(it, key, D);
-  } return setDesc(it, key, D);
-};
-var $defineProperties = function defineProperties(it, P){
-  anObject(it);
-  var keys = enumKeys(P = toIObject(P))
-    , i    = 0
-    , l = keys.length
-    , key;
-  while(l > i)$defineProperty(it, key = keys[i++], P[key]);
-  return it;
-};
-var $create = function create(it, P){
-  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
-};
-var $propertyIsEnumerable = function propertyIsEnumerable(key){
-  var E = isEnum.call(this, key);
-  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key]
-    ? E : true;
-};
-var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
-  var D = getDesc(it = toIObject(it), key);
-  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
-  return D;
-};
-var $getOwnPropertyNames = function getOwnPropertyNames(it){
-  var names  = getNames(toIObject(it))
-    , result = []
-    , i      = 0
-    , key;
-  while(names.length > i)if(!has(AllSymbols, key = names[i++]) && key != HIDDEN)result.push(key);
-  return result;
-};
-var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
-  var names  = getNames(toIObject(it))
-    , result = []
-    , i      = 0
-    , key;
-  while(names.length > i)if(has(AllSymbols, key = names[i++]))result.push(AllSymbols[key]);
-  return result;
-};
-var $stringify = function stringify(it){
-  if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
-  var args = [it]
-    , i    = 1
-    , $$   = arguments
-    , replacer, $replacer;
-  while($$.length > i)args.push($$[i++]);
-  replacer = args[1];
-  if(typeof replacer == 'function')$replacer = replacer;
-  if($replacer || !isArray(replacer))replacer = function(key, value){
-    if($replacer)value = $replacer.call(this, key, value);
-    if(!isSymbol(value))return value;
-  };
-  args[1] = replacer;
-  return _stringify.apply($JSON, args);
-};
-var buggyJSON = $fails(function(){
-  var S = $Symbol();
-  // MS Edge converts symbol values to JSON as {}
-  // WebKit converts symbol values to JSON as null
-  // V8 throws on boxed symbols
-  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
-});
-
-// 19.4.1.1 Symbol([description])
-if(!useNative){
-  $Symbol = function Symbol(){
-    if(isSymbol(this))throw TypeError('Symbol is not a constructor');
-    return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
-  };
-  redefine($Symbol.prototype, 'toString', function toString(){
-    return this._k;
-  });
-
-  isSymbol = function(it){
-    return it instanceof $Symbol;
-  };
-
-  $.create     = $create;
-  $.isEnum     = $propertyIsEnumerable;
-  $.getDesc    = $getOwnPropertyDescriptor;
-  $.setDesc    = $defineProperty;
-  $.setDescs   = $defineProperties;
-  $.getNames   = $names.get = $getOwnPropertyNames;
-  $.getSymbols = $getOwnPropertySymbols;
-
-  if(DESCRIPTORS && !require('./$.library')){
-    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
-  }
-}
-
-var symbolStatics = {
-  // 19.4.2.1 Symbol.for(key)
-  'for': function(key){
-    return has(SymbolRegistry, key += '')
-      ? SymbolRegistry[key]
-      : SymbolRegistry[key] = $Symbol(key);
-  },
-  // 19.4.2.5 Symbol.keyFor(sym)
-  keyFor: function keyFor(key){
-    return keyOf(SymbolRegistry, key);
-  },
-  useSetter: function(){ setter = true; },
-  useSimple: function(){ setter = false; }
-};
-// 19.4.2.2 Symbol.hasInstance
-// 19.4.2.3 Symbol.isConcatSpreadable
-// 19.4.2.4 Symbol.iterator
-// 19.4.2.6 Symbol.match
-// 19.4.2.8 Symbol.replace
-// 19.4.2.9 Symbol.search
-// 19.4.2.10 Symbol.species
-// 19.4.2.11 Symbol.split
-// 19.4.2.12 Symbol.toPrimitive
-// 19.4.2.13 Symbol.toStringTag
-// 19.4.2.14 Symbol.unscopables
-$.each.call((
-  'hasInstance,isConcatSpreadable,iterator,match,replace,search,' +
-  'species,split,toPrimitive,toStringTag,unscopables'
-).split(','), function(it){
-  var sym = wks(it);
-  symbolStatics[it] = useNative ? sym : wrap(sym);
-});
-
-setter = true;
-
-$export($export.G + $export.W, {Symbol: $Symbol});
-
-$export($export.S, 'Symbol', symbolStatics);
-
-$export($export.S + $export.F * !useNative, 'Object', {
-  // 19.1.2.2 Object.create(O [, Properties])
-  create: $create,
-  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
-  defineProperty: $defineProperty,
-  // 19.1.2.3 Object.defineProperties(O, Properties)
-  defineProperties: $defineProperties,
-  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
-  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
-  // 19.1.2.7 Object.getOwnPropertyNames(O)
-  getOwnPropertyNames: $getOwnPropertyNames,
-  // 19.1.2.8 Object.getOwnPropertySymbols(O)
-  getOwnPropertySymbols: $getOwnPropertySymbols
-});
-
-// 24.3.2 JSON.stringify(value [, replacer [, space]])
-$JSON && $export($export.S + $export.F * (!useNative || buggyJSON), 'JSON', {stringify: $stringify});
-
-// 19.4.3.5 Symbol.prototype[@@toStringTag]
-setToStringTag($Symbol, 'Symbol');
-// 20.2.1.9 Math[@@toStringTag]
-setToStringTag(Math, 'Math', true);
-// 24.3.3 JSON[@@toStringTag]
-setToStringTag(global.JSON, 'JSON', true);
-},{"./$":44,"./$.an-object":16,"./$.descriptors":25,"./$.enum-keys":26,"./$.export":27,"./$.fails":28,"./$.get-names":30,"./$.global":31,"./$.has":32,"./$.is-array":36,"./$.keyof":45,"./$.library":46,"./$.property-desc":47,"./$.redefine":49,"./$.set-to-string-tag":51,"./$.shared":52,"./$.to-iobject":56,"./$.uid":59,"./$.wks":60}],68:[function(require,module,exports){
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export  = require('./$.export');
-
-$export($export.P, 'Map', {toJSON: require('./$.collection-to-json')('Map')});
-},{"./$.collection-to-json":20,"./$.export":27}],69:[function(require,module,exports){
-require('./es6.array.iterator');
-var Iterators = require('./$.iterators');
-Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-},{"./$.iterators":43,"./es6.array.iterator":63}],70:[function(require,module,exports){
-arguments[4][14][0].apply(exports,arguments)
-},{"dup":14}],71:[function(require,module,exports){
-// 22.1.3.31 Array.prototype[@@unscopables]
-var UNSCOPABLES = require('./$.wks')('unscopables')
-  , ArrayProto  = Array.prototype;
-if(ArrayProto[UNSCOPABLES] == undefined)require('./$.hide')(ArrayProto, UNSCOPABLES, {});
-module.exports = function(key){
-  ArrayProto[UNSCOPABLES][key] = true;
-};
-},{"./$.hide":99,"./$.wks":151}],72:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"./$.is-object":106,"dup":16}],73:[function(require,module,exports){
-// 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
-'use strict';
-var toObject = require('./$.to-object')
-  , toIndex  = require('./$.to-index')
-  , toLength = require('./$.to-length');
-
-module.exports = [].copyWithin || function copyWithin(target/*= 0*/, start/*= 0, end = @length*/){
-  var O     = toObject(this)
-    , len   = toLength(O.length)
-    , to    = toIndex(target, len)
-    , from  = toIndex(start, len)
-    , $$    = arguments
-    , end   = $$.length > 2 ? $$[2] : undefined
-    , count = Math.min((end === undefined ? len : toIndex(end, len)) - from, len - to)
-    , inc   = 1;
-  if(from < to && to < from + count){
-    inc  = -1;
-    from += count - 1;
-    to   += count - 1;
-  }
-  while(count-- > 0){
-    if(from in O)O[to] = O[from];
-    else delete O[to];
-    to   += inc;
-    from += inc;
-  } return O;
-};
-},{"./$.to-index":144,"./$.to-length":147,"./$.to-object":148}],74:[function(require,module,exports){
-// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
-'use strict';
-var toObject = require('./$.to-object')
-  , toIndex  = require('./$.to-index')
-  , toLength = require('./$.to-length');
-module.exports = [].fill || function fill(value /*, start = 0, end = @length */){
-  var O      = toObject(this)
-    , length = toLength(O.length)
-    , $$     = arguments
-    , $$len  = $$.length
-    , index  = toIndex($$len > 1 ? $$[1] : undefined, length)
-    , end    = $$len > 2 ? $$[2] : undefined
-    , endPos = end === undefined ? length : toIndex(end, length);
-  while(endPos > index)O[index++] = value;
-  return O;
-};
-},{"./$.to-index":144,"./$.to-length":147,"./$.to-object":148}],75:[function(require,module,exports){
-// false -> Array#indexOf
-// true  -> Array#includes
-var toIObject = require('./$.to-iobject')
-  , toLength  = require('./$.to-length')
-  , toIndex   = require('./$.to-index');
-module.exports = function(IS_INCLUDES){
-  return function($this, el, fromIndex){
-    var O      = toIObject($this)
-      , length = toLength(O.length)
-      , index  = toIndex(fromIndex, length)
-      , value;
-    // Array#includes uses SameValueZero equality algorithm
-    if(IS_INCLUDES && el != el)while(length > index){
-      value = O[index++];
-      if(value != value)return true;
-    // Array#toIndex ignores holes, Array#includes - not
-    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
-      if(O[index] === el)return IS_INCLUDES || index;
-    } return !IS_INCLUDES && -1;
-  };
-};
-},{"./$.to-index":144,"./$.to-iobject":146,"./$.to-length":147}],76:[function(require,module,exports){
-// 0 -> Array#forEach
-// 1 -> Array#map
-// 2 -> Array#filter
-// 3 -> Array#some
-// 4 -> Array#every
-// 5 -> Array#find
-// 6 -> Array#findIndex
-var ctx      = require('./$.ctx')
-  , IObject  = require('./$.iobject')
-  , toObject = require('./$.to-object')
-  , toLength = require('./$.to-length')
-  , asc      = require('./$.array-species-create');
-module.exports = function(TYPE){
-  var IS_MAP        = TYPE == 1
-    , IS_FILTER     = TYPE == 2
-    , IS_SOME       = TYPE == 3
-    , IS_EVERY      = TYPE == 4
-    , IS_FIND_INDEX = TYPE == 6
-    , NO_HOLES      = TYPE == 5 || IS_FIND_INDEX;
-  return function($this, callbackfn, that){
-    var O      = toObject($this)
-      , self   = IObject(O)
-      , f      = ctx(callbackfn, that, 3)
-      , length = toLength(self.length)
-      , index  = 0
-      , result = IS_MAP ? asc($this, length) : IS_FILTER ? asc($this, 0) : undefined
-      , val, res;
-    for(;length > index; index++)if(NO_HOLES || index in self){
-      val = self[index];
-      res = f(val, index, O);
-      if(TYPE){
-        if(IS_MAP)result[index] = res;            // map
-        else if(res)switch(TYPE){
-          case 3: return true;                    // some
-          case 5: return val;                     // find
-          case 6: return index;                   // findIndex
-          case 2: result.push(val);               // filter
-        } else if(IS_EVERY)return false;          // every
-      }
-    }
-    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
-  };
-};
-},{"./$.array-species-create":77,"./$.ctx":85,"./$.iobject":102,"./$.to-length":147,"./$.to-object":148}],77:[function(require,module,exports){
-// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
-var isObject = require('./$.is-object')
-  , isArray  = require('./$.is-array')
-  , SPECIES  = require('./$.wks')('species');
-module.exports = function(original, length){
-  var C;
-  if(isArray(original)){
-    C = original.constructor;
-    // cross-realm fallback
-    if(typeof C == 'function' && (C === Array || isArray(C.prototype)))C = undefined;
-    if(isObject(C)){
-      C = C[SPECIES];
-      if(C === null)C = undefined;
-    }
-  } return new (C === undefined ? Array : C)(length);
-};
-},{"./$.is-array":104,"./$.is-object":106,"./$.wks":151}],78:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"./$.cof":79,"./$.wks":151,"dup":17}],79:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],80:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./$":114,"./$.ctx":85,"./$.defined":86,"./$.descriptors":87,"./$.for-of":95,"./$.has":98,"./$.hide":99,"./$.is-object":106,"./$.iter-define":110,"./$.iter-step":112,"./$.redefine-all":128,"./$.set-species":133,"./$.strict-new":137,"./$.uid":150,"dup":19}],81:[function(require,module,exports){
-arguments[4][20][0].apply(exports,arguments)
-},{"./$.classof":78,"./$.for-of":95,"dup":20}],82:[function(require,module,exports){
-'use strict';
-var hide              = require('./$.hide')
-  , redefineAll       = require('./$.redefine-all')
-  , anObject          = require('./$.an-object')
-  , isObject          = require('./$.is-object')
-  , strictNew         = require('./$.strict-new')
-  , forOf             = require('./$.for-of')
-  , createArrayMethod = require('./$.array-methods')
-  , $has              = require('./$.has')
-  , WEAK              = require('./$.uid')('weak')
-  , isExtensible      = Object.isExtensible || isObject
-  , arrayFind         = createArrayMethod(5)
-  , arrayFindIndex    = createArrayMethod(6)
-  , id                = 0;
-
-// fallback for frozen keys
-var frozenStore = function(that){
-  return that._l || (that._l = new FrozenStore);
-};
-var FrozenStore = function(){
-  this.a = [];
-};
-var findFrozen = function(store, key){
-  return arrayFind(store.a, function(it){
-    return it[0] === key;
-  });
-};
-FrozenStore.prototype = {
-  get: function(key){
-    var entry = findFrozen(this, key);
-    if(entry)return entry[1];
-  },
-  has: function(key){
-    return !!findFrozen(this, key);
-  },
-  set: function(key, value){
-    var entry = findFrozen(this, key);
-    if(entry)entry[1] = value;
-    else this.a.push([key, value]);
-  },
-  'delete': function(key){
-    var index = arrayFindIndex(this.a, function(it){
-      return it[0] === key;
-    });
-    if(~index)this.a.splice(index, 1);
-    return !!~index;
-  }
-};
-
-module.exports = {
-  getConstructor: function(wrapper, NAME, IS_MAP, ADDER){
-    var C = wrapper(function(that, iterable){
-      strictNew(that, C, NAME);
-      that._i = id++;      // collection id
-      that._l = undefined; // leak store for frozen objects
-      if(iterable != undefined)forOf(iterable, IS_MAP, that[ADDER], that);
-    });
-    redefineAll(C.prototype, {
-      // 23.3.3.2 WeakMap.prototype.delete(key)
-      // 23.4.3.3 WeakSet.prototype.delete(value)
-      'delete': function(key){
-        if(!isObject(key))return false;
-        if(!isExtensible(key))return frozenStore(this)['delete'](key);
-        return $has(key, WEAK) && $has(key[WEAK], this._i) && delete key[WEAK][this._i];
-      },
-      // 23.3.3.4 WeakMap.prototype.has(key)
-      // 23.4.3.4 WeakSet.prototype.has(value)
-      has: function has(key){
-        if(!isObject(key))return false;
-        if(!isExtensible(key))return frozenStore(this).has(key);
-        return $has(key, WEAK) && $has(key[WEAK], this._i);
-      }
-    });
-    return C;
-  },
-  def: function(that, key, value){
-    if(!isExtensible(anObject(key))){
-      frozenStore(that).set(key, value);
-    } else {
-      $has(key, WEAK) || hide(key, WEAK, {});
-      key[WEAK][that._i] = value;
-    } return that;
-  },
-  frozenStore: frozenStore,
-  WEAK: WEAK
-};
-},{"./$.an-object":72,"./$.array-methods":76,"./$.for-of":95,"./$.has":98,"./$.hide":99,"./$.is-object":106,"./$.redefine-all":128,"./$.strict-new":137,"./$.uid":150}],83:[function(require,module,exports){
-'use strict';
-var global         = require('./$.global')
-  , $export        = require('./$.export')
-  , redefine       = require('./$.redefine')
-  , redefineAll    = require('./$.redefine-all')
-  , forOf          = require('./$.for-of')
-  , strictNew      = require('./$.strict-new')
-  , isObject       = require('./$.is-object')
-  , fails          = require('./$.fails')
-  , $iterDetect    = require('./$.iter-detect')
-  , setToStringTag = require('./$.set-to-string-tag');
-
-module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
-  var Base  = global[NAME]
-    , C     = Base
-    , ADDER = IS_MAP ? 'set' : 'add'
-    , proto = C && C.prototype
-    , O     = {};
-  var fixMethod = function(KEY){
-    var fn = proto[KEY];
-    redefine(proto, KEY,
-      KEY == 'delete' ? function(a){
-        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
-      } : KEY == 'has' ? function has(a){
-        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
-      } : KEY == 'get' ? function get(a){
-        return IS_WEAK && !isObject(a) ? undefined : fn.call(this, a === 0 ? 0 : a);
-      } : KEY == 'add' ? function add(a){ fn.call(this, a === 0 ? 0 : a); return this; }
-        : function set(a, b){ fn.call(this, a === 0 ? 0 : a, b); return this; }
-    );
-  };
-  if(typeof C != 'function' || !(IS_WEAK || proto.forEach && !fails(function(){
-    new C().entries().next();
-  }))){
-    // create collection constructor
-    C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
-    redefineAll(C.prototype, methods);
-  } else {
-    var instance             = new C
-      // early implementations not supports chaining
-      , HASNT_CHAINING       = instance[ADDER](IS_WEAK ? {} : -0, 1) != instance
-      // V8 ~  Chromium 40- weak-collections throws on primitives, but should return false
-      , THROWS_ON_PRIMITIVES = fails(function(){ instance.has(1); })
-      // most early implementations doesn't supports iterables, most modern - not close it correctly
-      , ACCEPT_ITERABLES     = $iterDetect(function(iter){ new C(iter); }) // eslint-disable-line no-new
-      // for early implementations -0 and +0 not the same
-      , BUGGY_ZERO;
-    if(!ACCEPT_ITERABLES){ 
-      C = wrapper(function(target, iterable){
-        strictNew(target, C, NAME);
-        var that = new Base;
-        if(iterable != undefined)forOf(iterable, IS_MAP, that[ADDER], that);
-        return that;
-      });
-      C.prototype = proto;
-      proto.constructor = C;
-    }
-    IS_WEAK || instance.forEach(function(val, key){
-      BUGGY_ZERO = 1 / key === -Infinity;
-    });
-    if(THROWS_ON_PRIMITIVES || BUGGY_ZERO){
-      fixMethod('delete');
-      fixMethod('has');
-      IS_MAP && fixMethod('get');
-    }
-    if(BUGGY_ZERO || HASNT_CHAINING)fixMethod(ADDER);
-    // weak collections should not contains .clear method
-    if(IS_WEAK && proto.clear)delete proto.clear;
-  }
-
-  setToStringTag(C, NAME);
-
-  O[NAME] = C;
-  $export($export.G + $export.W + $export.F * (C != Base), O);
-
-  if(!IS_WEAK)common.setStrong(C, NAME, IS_MAP);
-
-  return C;
-};
-},{"./$.export":90,"./$.fails":92,"./$.for-of":95,"./$.global":97,"./$.is-object":106,"./$.iter-detect":111,"./$.redefine":129,"./$.redefine-all":128,"./$.set-to-string-tag":134,"./$.strict-new":137}],84:[function(require,module,exports){
-arguments[4][22][0].apply(exports,arguments)
-},{"dup":22}],85:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"./$.a-function":70,"dup":23}],86:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}],87:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"./$.fails":92,"dup":25}],88:[function(require,module,exports){
-var isObject = require('./$.is-object')
-  , document = require('./$.global').document
-  // in old IE typeof document.createElement is 'object'
-  , is = isObject(document) && isObject(document.createElement);
-module.exports = function(it){
-  return is ? document.createElement(it) : {};
-};
-},{"./$.global":97,"./$.is-object":106}],89:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"./$":114,"dup":26}],90:[function(require,module,exports){
-var global    = require('./$.global')
-  , core      = require('./$.core')
-  , hide      = require('./$.hide')
-  , redefine  = require('./$.redefine')
-  , ctx       = require('./$.ctx')
-  , PROTOTYPE = 'prototype';
-
-var $export = function(type, name, source){
-  var IS_FORCED = type & $export.F
-    , IS_GLOBAL = type & $export.G
-    , IS_STATIC = type & $export.S
-    , IS_PROTO  = type & $export.P
-    , IS_BIND   = type & $export.B
-    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] || (global[name] = {}) : (global[name] || {})[PROTOTYPE]
-    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-    , expProto  = exports[PROTOTYPE] || (exports[PROTOTYPE] = {})
-    , key, own, out, exp;
-  if(IS_GLOBAL)source = name;
-  for(key in source){
-    // contains in native
-    own = !IS_FORCED && target && key in target;
-    // export native or passed
-    out = (own ? target : source)[key];
-    // bind timers to global for call from export context
-    exp = IS_BIND && own ? ctx(out, global) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    // extend global
-    if(target && !own)redefine(target, key, out);
-    // export
-    if(exports[key] != out)hide(exports, key, exp);
-    if(IS_PROTO && expProto[key] != out)expProto[key] = out;
-  }
-};
-global.core = core;
-// type bitmap
-$export.F = 1;  // forced
-$export.G = 2;  // global
-$export.S = 4;  // static
-$export.P = 8;  // proto
-$export.B = 16; // bind
-$export.W = 32; // wrap
-module.exports = $export;
-},{"./$.core":84,"./$.ctx":85,"./$.global":97,"./$.hide":99,"./$.redefine":129}],91:[function(require,module,exports){
-var MATCH = require('./$.wks')('match');
-module.exports = function(KEY){
-  var re = /./;
-  try {
-    '/./'[KEY](re);
-  } catch(e){
-    try {
-      re[MATCH] = false;
-      return !'/./'[KEY](re);
-    } catch(f){ /* empty */ }
-  } return true;
-};
-},{"./$.wks":151}],92:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"dup":28}],93:[function(require,module,exports){
-'use strict';
-var hide     = require('./$.hide')
-  , redefine = require('./$.redefine')
-  , fails    = require('./$.fails')
-  , defined  = require('./$.defined')
-  , wks      = require('./$.wks');
-
-module.exports = function(KEY, length, exec){
-  var SYMBOL   = wks(KEY)
-    , original = ''[KEY];
-  if(fails(function(){
-    var O = {};
-    O[SYMBOL] = function(){ return 7; };
-    return ''[KEY](O) != 7;
-  })){
-    redefine(String.prototype, KEY, exec(defined, SYMBOL, original));
-    hide(RegExp.prototype, SYMBOL, length == 2
-      // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
-      // 21.2.5.11 RegExp.prototype[@@split](string, limit)
-      ? function(string, arg){ return original.call(string, this, arg); }
-      // 21.2.5.6 RegExp.prototype[@@match](string)
-      // 21.2.5.9 RegExp.prototype[@@search](string)
-      : function(string){ return original.call(string, this); }
-    );
-  }
-};
-},{"./$.defined":86,"./$.fails":92,"./$.hide":99,"./$.redefine":129,"./$.wks":151}],94:[function(require,module,exports){
-'use strict';
-// 21.2.5.3 get RegExp.prototype.flags
-var anObject = require('./$.an-object');
-module.exports = function(){
-  var that   = anObject(this)
-    , result = '';
-  if(that.global)     result += 'g';
-  if(that.ignoreCase) result += 'i';
-  if(that.multiline)  result += 'm';
-  if(that.unicode)    result += 'u';
-  if(that.sticky)     result += 'y';
-  return result;
-};
-},{"./$.an-object":72}],95:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"./$.an-object":72,"./$.ctx":85,"./$.is-array-iter":103,"./$.iter-call":108,"./$.to-length":147,"./core.get-iterator-method":152,"dup":29}],96:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./$":114,"./$.to-iobject":146,"dup":30}],97:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],98:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],99:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"./$":114,"./$.descriptors":87,"./$.property-desc":127,"dup":33}],100:[function(require,module,exports){
-module.exports = require('./$.global').document && document.documentElement;
-},{"./$.global":97}],101:[function(require,module,exports){
-// fast apply, http://jsperf.lnkit.com/fast-apply/5
-module.exports = function(fn, args, that){
-  var un = that === undefined;
-  switch(args.length){
-    case 0: return un ? fn()
-                      : fn.call(that);
-    case 1: return un ? fn(args[0])
-                      : fn.call(that, args[0]);
-    case 2: return un ? fn(args[0], args[1])
-                      : fn.call(that, args[0], args[1]);
-    case 3: return un ? fn(args[0], args[1], args[2])
-                      : fn.call(that, args[0], args[1], args[2]);
-    case 4: return un ? fn(args[0], args[1], args[2], args[3])
-                      : fn.call(that, args[0], args[1], args[2], args[3]);
-  } return              fn.apply(that, args);
-};
-},{}],102:[function(require,module,exports){
-arguments[4][34][0].apply(exports,arguments)
-},{"./$.cof":79,"dup":34}],103:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"./$.iterators":113,"./$.wks":151,"dup":35}],104:[function(require,module,exports){
-arguments[4][36][0].apply(exports,arguments)
-},{"./$.cof":79,"dup":36}],105:[function(require,module,exports){
-// 20.1.2.3 Number.isInteger(number)
-var isObject = require('./$.is-object')
-  , floor    = Math.floor;
-module.exports = function isInteger(it){
-  return !isObject(it) && isFinite(it) && floor(it) === it;
-};
-},{"./$.is-object":106}],106:[function(require,module,exports){
-arguments[4][37][0].apply(exports,arguments)
-},{"dup":37}],107:[function(require,module,exports){
-// 7.2.8 IsRegExp(argument)
-var isObject = require('./$.is-object')
-  , cof      = require('./$.cof')
-  , MATCH    = require('./$.wks')('match');
-module.exports = function(it){
-  var isRegExp;
-  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
-};
-},{"./$.cof":79,"./$.is-object":106,"./$.wks":151}],108:[function(require,module,exports){
-arguments[4][38][0].apply(exports,arguments)
-},{"./$.an-object":72,"dup":38}],109:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"./$":114,"./$.hide":99,"./$.property-desc":127,"./$.set-to-string-tag":134,"./$.wks":151,"dup":39}],110:[function(require,module,exports){
-arguments[4][40][0].apply(exports,arguments)
-},{"./$":114,"./$.export":90,"./$.has":98,"./$.hide":99,"./$.iter-create":109,"./$.iterators":113,"./$.library":116,"./$.redefine":129,"./$.set-to-string-tag":134,"./$.wks":151,"dup":40}],111:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"./$.wks":151,"dup":41}],112:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"dup":42}],113:[function(require,module,exports){
-arguments[4][43][0].apply(exports,arguments)
-},{"dup":43}],114:[function(require,module,exports){
-arguments[4][44][0].apply(exports,arguments)
-},{"dup":44}],115:[function(require,module,exports){
-arguments[4][45][0].apply(exports,arguments)
-},{"./$":114,"./$.to-iobject":146,"dup":45}],116:[function(require,module,exports){
-module.exports = false;
-},{}],117:[function(require,module,exports){
-// 20.2.2.14 Math.expm1(x)
-module.exports = Math.expm1 || function expm1(x){
-  return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
-};
-},{}],118:[function(require,module,exports){
-// 20.2.2.20 Math.log1p(x)
-module.exports = Math.log1p || function log1p(x){
-  return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
-};
-},{}],119:[function(require,module,exports){
-// 20.2.2.28 Math.sign(x)
-module.exports = Math.sign || function sign(x){
-  return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
-};
-},{}],120:[function(require,module,exports){
-var global    = require('./$.global')
-  , macrotask = require('./$.task').set
-  , Observer  = global.MutationObserver || global.WebKitMutationObserver
-  , process   = global.process
-  , Promise   = global.Promise
-  , isNode    = require('./$.cof')(process) == 'process'
-  , head, last, notify;
-
-var flush = function(){
-  var parent, domain, fn;
-  if(isNode && (parent = process.domain)){
-    process.domain = null;
-    parent.exit();
-  }
-  while(head){
-    domain = head.domain;
-    fn     = head.fn;
-    if(domain)domain.enter();
-    fn(); // <- currently we use it only for Promise - try / catch not required
-    if(domain)domain.exit();
-    head = head.next;
-  } last = undefined;
-  if(parent)parent.enter();
-};
-
-// Node.js
-if(isNode){
-  notify = function(){
-    process.nextTick(flush);
-  };
-// browsers with MutationObserver
-} else if(Observer){
-  var toggle = 1
-    , node   = document.createTextNode('');
-  new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
-  notify = function(){
-    node.data = toggle = -toggle;
-  };
-// environments with maybe non-completely correct, but existent Promise
-} else if(Promise && Promise.resolve){
-  notify = function(){
-    Promise.resolve().then(flush);
-  };
-// for other environments - macrotask based on:
-// - setImmediate
-// - MessageChannel
-// - window.postMessag
-// - onreadystatechange
-// - setTimeout
-} else {
-  notify = function(){
-    // strange IE + webpack dev server bug - use .call(global)
-    macrotask.call(global, flush);
-  };
-}
-
-module.exports = function asap(fn){
-  var task = {fn: fn, next: undefined, domain: isNode && process.domain};
-  if(last)last.next = task;
-  if(!head){
-    head = task;
-    notify();
-  } last = task;
-};
-},{"./$.cof":79,"./$.global":97,"./$.task":143}],121:[function(require,module,exports){
-// 19.1.2.1 Object.assign(target, source, ...)
-var $        = require('./$')
-  , toObject = require('./$.to-object')
-  , IObject  = require('./$.iobject');
-
-// should work with symbols and should have deterministic property order (V8 bug)
-module.exports = require('./$.fails')(function(){
-  var a = Object.assign
-    , A = {}
-    , B = {}
-    , S = Symbol()
-    , K = 'abcdefghijklmnopqrst';
-  A[S] = 7;
-  K.split('').forEach(function(k){ B[k] = k; });
-  return a({}, A)[S] != 7 || Object.keys(a({}, B)).join('') != K;
-}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
-  var T     = toObject(target)
-    , $$    = arguments
-    , $$len = $$.length
-    , index = 1
-    , getKeys    = $.getKeys
-    , getSymbols = $.getSymbols
-    , isEnum     = $.isEnum;
-  while($$len > index){
-    var S      = IObject($$[index++])
-      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
-      , length = keys.length
-      , j      = 0
-      , key;
-    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
-  }
-  return T;
-} : Object.assign;
-},{"./$":114,"./$.fails":92,"./$.iobject":102,"./$.to-object":148}],122:[function(require,module,exports){
-// most Object methods by ES6 should accept primitives
-var $export = require('./$.export')
-  , core    = require('./$.core')
-  , fails   = require('./$.fails');
-module.exports = function(KEY, exec){
-  var fn  = (core.Object || {})[KEY] || Object[KEY]
-    , exp = {};
-  exp[KEY] = exec(fn);
-  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
-};
-},{"./$.core":84,"./$.export":90,"./$.fails":92}],123:[function(require,module,exports){
-var $         = require('./$')
-  , toIObject = require('./$.to-iobject')
-  , isEnum    = $.isEnum;
-module.exports = function(isEntries){
-  return function(it){
-    var O      = toIObject(it)
-      , keys   = $.getKeys(O)
-      , length = keys.length
-      , i      = 0
-      , result = []
-      , key;
-    while(length > i)if(isEnum.call(O, key = keys[i++])){
-      result.push(isEntries ? [key, O[key]] : O[key]);
-    } return result;
-  };
-};
-},{"./$":114,"./$.to-iobject":146}],124:[function(require,module,exports){
-// all object keys, includes non-enumerable and symbols
-var $        = require('./$')
-  , anObject = require('./$.an-object')
-  , Reflect  = require('./$.global').Reflect;
-module.exports = Reflect && Reflect.ownKeys || function ownKeys(it){
-  var keys       = $.getNames(anObject(it))
-    , getSymbols = $.getSymbols;
-  return getSymbols ? keys.concat(getSymbols(it)) : keys;
-};
-},{"./$":114,"./$.an-object":72,"./$.global":97}],125:[function(require,module,exports){
-'use strict';
-var path      = require('./$.path')
-  , invoke    = require('./$.invoke')
-  , aFunction = require('./$.a-function');
-module.exports = function(/* ...pargs */){
-  var fn     = aFunction(this)
-    , length = arguments.length
-    , pargs  = Array(length)
-    , i      = 0
-    , _      = path._
-    , holder = false;
-  while(length > i)if((pargs[i] = arguments[i++]) === _)holder = true;
-  return function(/* ...args */){
-    var that  = this
-      , $$    = arguments
-      , $$len = $$.length
-      , j = 0, k = 0, args;
-    if(!holder && !$$len)return invoke(fn, pargs, that);
-    args = pargs.slice();
-    if(holder)for(;length > j; j++)if(args[j] === _)args[j] = $$[k++];
-    while($$len > k)args.push($$[k++]);
-    return invoke(fn, args, that);
-  };
-};
-},{"./$.a-function":70,"./$.invoke":101,"./$.path":126}],126:[function(require,module,exports){
-module.exports = require('./$.global');
-},{"./$.global":97}],127:[function(require,module,exports){
-arguments[4][47][0].apply(exports,arguments)
-},{"dup":47}],128:[function(require,module,exports){
-arguments[4][48][0].apply(exports,arguments)
-},{"./$.redefine":129,"dup":48}],129:[function(require,module,exports){
-// add fake Function#toString
-// for correct work wrapped methods / constructors with methods like LoDash isNative
-var global    = require('./$.global')
-  , hide      = require('./$.hide')
-  , SRC       = require('./$.uid')('src')
-  , TO_STRING = 'toString'
-  , $toString = Function[TO_STRING]
-  , TPL       = ('' + $toString).split(TO_STRING);
-
-require('./$.core').inspectSource = function(it){
-  return $toString.call(it);
-};
-
-(module.exports = function(O, key, val, safe){
-  if(typeof val == 'function'){
-    val.hasOwnProperty(SRC) || hide(val, SRC, O[key] ? '' + O[key] : TPL.join(String(key)));
-    val.hasOwnProperty('name') || hide(val, 'name', key);
-  }
-  if(O === global){
-    O[key] = val;
-  } else {
-    if(!safe)delete O[key];
-    hide(O, key, val);
-  }
-})(Function.prototype, TO_STRING, function toString(){
-  return typeof this == 'function' && this[SRC] || $toString.call(this);
-});
-},{"./$.core":84,"./$.global":97,"./$.hide":99,"./$.uid":150}],130:[function(require,module,exports){
-module.exports = function(regExp, replace){
-  var replacer = replace === Object(replace) ? function(part){
-    return replace[part];
-  } : replace;
-  return function(it){
-    return String(it).replace(regExp, replacer);
-  };
-};
-},{}],131:[function(require,module,exports){
-// 7.2.9 SameValue(x, y)
-module.exports = Object.is || function is(x, y){
-  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-};
-},{}],132:[function(require,module,exports){
-// Works with __proto__ only. Old v8 can't work with null proto objects.
-/* eslint-disable no-proto */
-var getDesc  = require('./$').getDesc
-  , isObject = require('./$.is-object')
-  , anObject = require('./$.an-object');
-var check = function(O, proto){
-  anObject(O);
-  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
-};
-module.exports = {
-  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
-    function(test, buggy, set){
-      try {
-        set = require('./$.ctx')(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
-        set(test, []);
-        buggy = !(test instanceof Array);
-      } catch(e){ buggy = true; }
-      return function setPrototypeOf(O, proto){
-        check(O, proto);
-        if(buggy)O.__proto__ = proto;
-        else set(O, proto);
-        return O;
-      };
-    }({}, false) : undefined),
-  check: check
-};
-},{"./$":114,"./$.an-object":72,"./$.ctx":85,"./$.is-object":106}],133:[function(require,module,exports){
-'use strict';
-var global      = require('./$.global')
-  , $           = require('./$')
-  , DESCRIPTORS = require('./$.descriptors')
-  , SPECIES     = require('./$.wks')('species');
-
-module.exports = function(KEY){
-  var C = global[KEY];
-  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
-    configurable: true,
-    get: function(){ return this; }
-  });
-};
-},{"./$":114,"./$.descriptors":87,"./$.global":97,"./$.wks":151}],134:[function(require,module,exports){
-arguments[4][51][0].apply(exports,arguments)
-},{"./$":114,"./$.has":98,"./$.wks":151,"dup":51}],135:[function(require,module,exports){
-arguments[4][52][0].apply(exports,arguments)
-},{"./$.global":97,"dup":52}],136:[function(require,module,exports){
-// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject  = require('./$.an-object')
-  , aFunction = require('./$.a-function')
-  , SPECIES   = require('./$.wks')('species');
-module.exports = function(O, D){
-  var C = anObject(O).constructor, S;
-  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-};
-},{"./$.a-function":70,"./$.an-object":72,"./$.wks":151}],137:[function(require,module,exports){
-arguments[4][53][0].apply(exports,arguments)
-},{"dup":53}],138:[function(require,module,exports){
-arguments[4][54][0].apply(exports,arguments)
-},{"./$.defined":86,"./$.to-integer":145,"dup":54}],139:[function(require,module,exports){
-// helper for String#{startsWith, endsWith, includes}
-var isRegExp = require('./$.is-regexp')
-  , defined  = require('./$.defined');
-
-module.exports = function(that, searchString, NAME){
-  if(isRegExp(searchString))throw TypeError('String#' + NAME + " doesn't accept regex!");
-  return String(defined(that));
-};
-},{"./$.defined":86,"./$.is-regexp":107}],140:[function(require,module,exports){
-// https://github.com/ljharb/proposal-string-pad-left-right
-var toLength = require('./$.to-length')
-  , repeat   = require('./$.string-repeat')
-  , defined  = require('./$.defined');
-
-module.exports = function(that, maxLength, fillString, left){
-  var S            = String(defined(that))
-    , stringLength = S.length
-    , fillStr      = fillString === undefined ? ' ' : String(fillString)
-    , intMaxLength = toLength(maxLength);
-  if(intMaxLength <= stringLength)return S;
-  if(fillStr == '')fillStr = ' ';
-  var fillLen = intMaxLength - stringLength
-    , stringFiller = repeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
-  if(stringFiller.length > fillLen)stringFiller = stringFiller.slice(0, fillLen);
-  return left ? stringFiller + S : S + stringFiller;
-};
-},{"./$.defined":86,"./$.string-repeat":141,"./$.to-length":147}],141:[function(require,module,exports){
-'use strict';
-var toInteger = require('./$.to-integer')
-  , defined   = require('./$.defined');
-
-module.exports = function repeat(count){
-  var str = String(defined(this))
-    , res = ''
-    , n   = toInteger(count);
-  if(n < 0 || n == Infinity)throw RangeError("Count can't be negative");
-  for(;n > 0; (n >>>= 1) && (str += str))if(n & 1)res += str;
-  return res;
-};
-},{"./$.defined":86,"./$.to-integer":145}],142:[function(require,module,exports){
-var $export = require('./$.export')
-  , defined = require('./$.defined')
-  , fails   = require('./$.fails')
-  , spaces  = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
-      '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF'
-  , space   = '[' + spaces + ']'
-  , non     = '\u200b\u0085'
-  , ltrim   = RegExp('^' + space + space + '*')
-  , rtrim   = RegExp(space + space + '*$');
-
-var exporter = function(KEY, exec){
-  var exp  = {};
-  exp[KEY] = exec(trim);
-  $export($export.P + $export.F * fails(function(){
-    return !!spaces[KEY]() || non[KEY]() != non;
-  }), 'String', exp);
-};
-
-// 1 -> String#trimLeft
-// 2 -> String#trimRight
-// 3 -> String#trim
-var trim = exporter.trim = function(string, TYPE){
-  string = String(defined(string));
-  if(TYPE & 1)string = string.replace(ltrim, '');
-  if(TYPE & 2)string = string.replace(rtrim, '');
-  return string;
-};
-
-module.exports = exporter;
-},{"./$.defined":86,"./$.export":90,"./$.fails":92}],143:[function(require,module,exports){
-var ctx                = require('./$.ctx')
-  , invoke             = require('./$.invoke')
-  , html               = require('./$.html')
-  , cel                = require('./$.dom-create')
-  , global             = require('./$.global')
-  , process            = global.process
-  , setTask            = global.setImmediate
-  , clearTask          = global.clearImmediate
-  , MessageChannel     = global.MessageChannel
-  , counter            = 0
-  , queue              = {}
-  , ONREADYSTATECHANGE = 'onreadystatechange'
-  , defer, channel, port;
-var run = function(){
-  var id = +this;
-  if(queue.hasOwnProperty(id)){
-    var fn = queue[id];
-    delete queue[id];
-    fn();
-  }
-};
-var listner = function(event){
-  run.call(event.data);
-};
-// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-if(!setTask || !clearTask){
-  setTask = function setImmediate(fn){
-    var args = [], i = 1;
-    while(arguments.length > i)args.push(arguments[i++]);
-    queue[++counter] = function(){
-      invoke(typeof fn == 'function' ? fn : Function(fn), args);
-    };
-    defer(counter);
-    return counter;
-  };
-  clearTask = function clearImmediate(id){
-    delete queue[id];
-  };
-  // Node.js 0.8-
-  if(require('./$.cof')(process) == 'process'){
-    defer = function(id){
-      process.nextTick(ctx(run, id, 1));
-    };
-  // Browsers with MessageChannel, includes WebWorkers
-  } else if(MessageChannel){
-    channel = new MessageChannel;
-    port    = channel.port2;
-    channel.port1.onmessage = listner;
-    defer = ctx(port.postMessage, port, 1);
-  // Browsers with postMessage, skip WebWorkers
-  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
-    defer = function(id){
-      global.postMessage(id + '', '*');
-    };
-    global.addEventListener('message', listner, false);
-  // IE8-
-  } else if(ONREADYSTATECHANGE in cel('script')){
-    defer = function(id){
-      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
-        html.removeChild(this);
-        run.call(id);
-      };
-    };
-  // Rest old browsers
-  } else {
-    defer = function(id){
-      setTimeout(ctx(run, id, 1), 0);
-    };
-  }
-}
-module.exports = {
-  set:   setTask,
-  clear: clearTask
-};
-},{"./$.cof":79,"./$.ctx":85,"./$.dom-create":88,"./$.global":97,"./$.html":100,"./$.invoke":101}],144:[function(require,module,exports){
-var toInteger = require('./$.to-integer')
-  , max       = Math.max
-  , min       = Math.min;
-module.exports = function(index, length){
-  index = toInteger(index);
-  return index < 0 ? max(index + length, 0) : min(index, length);
-};
-},{"./$.to-integer":145}],145:[function(require,module,exports){
-arguments[4][55][0].apply(exports,arguments)
-},{"dup":55}],146:[function(require,module,exports){
-arguments[4][56][0].apply(exports,arguments)
-},{"./$.defined":86,"./$.iobject":102,"dup":56}],147:[function(require,module,exports){
-arguments[4][57][0].apply(exports,arguments)
-},{"./$.to-integer":145,"dup":57}],148:[function(require,module,exports){
-arguments[4][58][0].apply(exports,arguments)
-},{"./$.defined":86,"dup":58}],149:[function(require,module,exports){
-// 7.1.1 ToPrimitive(input [, PreferredType])
-var isObject = require('./$.is-object');
-// instead of the ES6 spec version, we didn't implement @@toPrimitive case
-// and the second argument - flag - preferred type is a string
-module.exports = function(it, S){
-  if(!isObject(it))return it;
-  var fn, val;
-  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
-  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
-  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
-  throw TypeError("Can't convert object to primitive value");
-};
-},{"./$.is-object":106}],150:[function(require,module,exports){
-arguments[4][59][0].apply(exports,arguments)
-},{"dup":59}],151:[function(require,module,exports){
-arguments[4][60][0].apply(exports,arguments)
-},{"./$.global":97,"./$.shared":135,"./$.uid":150,"dup":60}],152:[function(require,module,exports){
-arguments[4][61][0].apply(exports,arguments)
-},{"./$.classof":78,"./$.core":84,"./$.iterators":113,"./$.wks":151,"dup":61}],153:[function(require,module,exports){
-'use strict';
-var $                 = require('./$')
-  , $export           = require('./$.export')
-  , DESCRIPTORS       = require('./$.descriptors')
-  , createDesc        = require('./$.property-desc')
-  , html              = require('./$.html')
-  , cel               = require('./$.dom-create')
-  , has               = require('./$.has')
-  , cof               = require('./$.cof')
-  , invoke            = require('./$.invoke')
-  , fails             = require('./$.fails')
-  , anObject          = require('./$.an-object')
-  , aFunction         = require('./$.a-function')
-  , isObject          = require('./$.is-object')
-  , toObject          = require('./$.to-object')
-  , toIObject         = require('./$.to-iobject')
-  , toInteger         = require('./$.to-integer')
-  , toIndex           = require('./$.to-index')
-  , toLength          = require('./$.to-length')
-  , IObject           = require('./$.iobject')
-  , IE_PROTO          = require('./$.uid')('__proto__')
-  , createArrayMethod = require('./$.array-methods')
-  , arrayIndexOf      = require('./$.array-includes')(false)
-  , ObjectProto       = Object.prototype
-  , ArrayProto        = Array.prototype
-  , arraySlice        = ArrayProto.slice
-  , arrayJoin         = ArrayProto.join
-  , defineProperty    = $.setDesc
-  , getOwnDescriptor  = $.getDesc
-  , defineProperties  = $.setDescs
-  , factories         = {}
-  , IE8_DOM_DEFINE;
-
-if(!DESCRIPTORS){
-  IE8_DOM_DEFINE = !fails(function(){
-    return defineProperty(cel('div'), 'a', {get: function(){ return 7; }}).a != 7;
-  });
-  $.setDesc = function(O, P, Attributes){
-    if(IE8_DOM_DEFINE)try {
-      return defineProperty(O, P, Attributes);
-    } catch(e){ /* empty */ }
-    if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
-    if('value' in Attributes)anObject(O)[P] = Attributes.value;
-    return O;
-  };
-  $.getDesc = function(O, P){
-    if(IE8_DOM_DEFINE)try {
-      return getOwnDescriptor(O, P);
-    } catch(e){ /* empty */ }
-    if(has(O, P))return createDesc(!ObjectProto.propertyIsEnumerable.call(O, P), O[P]);
-  };
-  $.setDescs = defineProperties = function(O, Properties){
-    anObject(O);
-    var keys   = $.getKeys(Properties)
-      , length = keys.length
-      , i = 0
-      , P;
-    while(length > i)$.setDesc(O, P = keys[i++], Properties[P]);
-    return O;
-  };
-}
-$export($export.S + $export.F * !DESCRIPTORS, 'Object', {
-  // 19.1.2.6 / 15.2.3.3 Object.getOwnPropertyDescriptor(O, P)
-  getOwnPropertyDescriptor: $.getDesc,
-  // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-  defineProperty: $.setDesc,
-  // 19.1.2.3 / 15.2.3.7 Object.defineProperties(O, Properties)
-  defineProperties: defineProperties
-});
-
-  // IE 8- don't enum bug keys
-var keys1 = ('constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,' +
-            'toLocaleString,toString,valueOf').split(',')
-  // Additional keys for getOwnPropertyNames
-  , keys2 = keys1.concat('length', 'prototype')
-  , keysLen1 = keys1.length;
-
-// Create object with `null` prototype: use iframe Object with cleared prototype
-var createDict = function(){
-  // Thrash, waste and sodomy: IE GC bug
-  var iframe = cel('iframe')
-    , i      = keysLen1
-    , gt     = '>'
-    , iframeDocument;
-  iframe.style.display = 'none';
-  html.appendChild(iframe);
-  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
-  // createDict = iframe.contentWindow.Object;
-  // html.removeChild(iframe);
-  iframeDocument = iframe.contentWindow.document;
-  iframeDocument.open();
-  iframeDocument.write('<script>document.F=Object</script' + gt);
-  iframeDocument.close();
-  createDict = iframeDocument.F;
-  while(i--)delete createDict.prototype[keys1[i]];
-  return createDict();
-};
-var createGetKeys = function(names, length){
-  return function(object){
-    var O      = toIObject(object)
-      , i      = 0
-      , result = []
-      , key;
-    for(key in O)if(key != IE_PROTO)has(O, key) && result.push(key);
-    // Don't enum bug & hidden keys
-    while(length > i)if(has(O, key = names[i++])){
-      ~arrayIndexOf(result, key) || result.push(key);
-    }
-    return result;
-  };
-};
-var Empty = function(){};
-$export($export.S, 'Object', {
-  // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-  getPrototypeOf: $.getProto = $.getProto || function(O){
-    O = toObject(O);
-    if(has(O, IE_PROTO))return O[IE_PROTO];
-    if(typeof O.constructor == 'function' && O instanceof O.constructor){
-      return O.constructor.prototype;
-    } return O instanceof Object ? ObjectProto : null;
-  },
-  // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
-  getOwnPropertyNames: $.getNames = $.getNames || createGetKeys(keys2, keys2.length, true),
-  // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-  create: $.create = $.create || function(O, /*?*/Properties){
-    var result;
-    if(O !== null){
-      Empty.prototype = anObject(O);
-      result = new Empty();
-      Empty.prototype = null;
-      // add "__proto__" for Object.getPrototypeOf shim
-      result[IE_PROTO] = O;
-    } else result = createDict();
-    return Properties === undefined ? result : defineProperties(result, Properties);
-  },
-  // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-  keys: $.getKeys = $.getKeys || createGetKeys(keys1, keysLen1, false)
-});
-
-var construct = function(F, len, args){
-  if(!(len in factories)){
-    for(var n = [], i = 0; i < len; i++)n[i] = 'a[' + i + ']';
-    factories[len] = Function('F,a', 'return new F(' + n.join(',') + ')');
-  }
-  return factories[len](F, args);
-};
-
-// 19.2.3.2 / 15.3.4.5 Function.prototype.bind(thisArg, args...)
-$export($export.P, 'Function', {
-  bind: function bind(that /*, args... */){
-    var fn       = aFunction(this)
-      , partArgs = arraySlice.call(arguments, 1);
-    var bound = function(/* args... */){
-      var args = partArgs.concat(arraySlice.call(arguments));
-      return this instanceof bound ? construct(fn, args.length, args) : invoke(fn, args, that);
-    };
-    if(isObject(fn.prototype))bound.prototype = fn.prototype;
-    return bound;
-  }
-});
-
-// fallback for not array-like ES3 strings and DOM objects
-$export($export.P + $export.F * fails(function(){
-  if(html)arraySlice.call(html);
-}), 'Array', {
-  slice: function(begin, end){
-    var len   = toLength(this.length)
-      , klass = cof(this);
-    end = end === undefined ? len : end;
-    if(klass == 'Array')return arraySlice.call(this, begin, end);
-    var start  = toIndex(begin, len)
-      , upTo   = toIndex(end, len)
-      , size   = toLength(upTo - start)
-      , cloned = Array(size)
-      , i      = 0;
-    for(; i < size; i++)cloned[i] = klass == 'String'
-      ? this.charAt(start + i)
-      : this[start + i];
-    return cloned;
-  }
-});
-$export($export.P + $export.F * (IObject != Object), 'Array', {
-  join: function join(separator){
-    return arrayJoin.call(IObject(this), separator === undefined ? ',' : separator);
-  }
-});
-
-// 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
-$export($export.S, 'Array', {isArray: require('./$.is-array')});
-
-var createArrayReduce = function(isRight){
-  return function(callbackfn, memo){
-    aFunction(callbackfn);
-    var O      = IObject(this)
-      , length = toLength(O.length)
-      , index  = isRight ? length - 1 : 0
-      , i      = isRight ? -1 : 1;
-    if(arguments.length < 2)for(;;){
-      if(index in O){
-        memo = O[index];
-        index += i;
-        break;
-      }
-      index += i;
-      if(isRight ? index < 0 : length <= index){
-        throw TypeError('Reduce of empty array with no initial value');
-      }
-    }
-    for(;isRight ? index >= 0 : length > index; index += i)if(index in O){
-      memo = callbackfn(memo, O[index], index, this);
-    }
-    return memo;
-  };
-};
-
-var methodize = function($fn){
-  return function(arg1/*, arg2 = undefined */){
-    return $fn(this, arg1, arguments[1]);
-  };
-};
-
-$export($export.P, 'Array', {
-  // 22.1.3.10 / 15.4.4.18 Array.prototype.forEach(callbackfn [, thisArg])
-  forEach: $.each = $.each || methodize(createArrayMethod(0)),
-  // 22.1.3.15 / 15.4.4.19 Array.prototype.map(callbackfn [, thisArg])
-  map: methodize(createArrayMethod(1)),
-  // 22.1.3.7 / 15.4.4.20 Array.prototype.filter(callbackfn [, thisArg])
-  filter: methodize(createArrayMethod(2)),
-  // 22.1.3.23 / 15.4.4.17 Array.prototype.some(callbackfn [, thisArg])
-  some: methodize(createArrayMethod(3)),
-  // 22.1.3.5 / 15.4.4.16 Array.prototype.every(callbackfn [, thisArg])
-  every: methodize(createArrayMethod(4)),
-  // 22.1.3.18 / 15.4.4.21 Array.prototype.reduce(callbackfn [, initialValue])
-  reduce: createArrayReduce(false),
-  // 22.1.3.19 / 15.4.4.22 Array.prototype.reduceRight(callbackfn [, initialValue])
-  reduceRight: createArrayReduce(true),
-  // 22.1.3.11 / 15.4.4.14 Array.prototype.indexOf(searchElement [, fromIndex])
-  indexOf: methodize(arrayIndexOf),
-  // 22.1.3.14 / 15.4.4.15 Array.prototype.lastIndexOf(searchElement [, fromIndex])
-  lastIndexOf: function(el, fromIndex /* = @[*-1] */){
-    var O      = toIObject(this)
-      , length = toLength(O.length)
-      , index  = length - 1;
-    if(arguments.length > 1)index = Math.min(index, toInteger(fromIndex));
-    if(index < 0)index = toLength(length + index);
-    for(;index >= 0; index--)if(index in O)if(O[index] === el)return index;
-    return -1;
-  }
-});
-
-// 20.3.3.1 / 15.9.4.4 Date.now()
-$export($export.S, 'Date', {now: function(){ return +new Date; }});
-
-var lz = function(num){
-  return num > 9 ? num : '0' + num;
-};
-
-// 20.3.4.36 / 15.9.5.43 Date.prototype.toISOString()
-// PhantomJS / old WebKit has a broken implementations
-$export($export.P + $export.F * (fails(function(){
-  return new Date(-5e13 - 1).toISOString() != '0385-07-25T07:06:39.999Z';
-}) || !fails(function(){
-  new Date(NaN).toISOString();
-})), 'Date', {
-  toISOString: function toISOString(){
-    if(!isFinite(this))throw RangeError('Invalid time value');
-    var d = this
-      , y = d.getUTCFullYear()
-      , m = d.getUTCMilliseconds()
-      , s = y < 0 ? '-' : y > 9999 ? '+' : '';
-    return s + ('00000' + Math.abs(y)).slice(s ? -6 : -4) +
-      '-' + lz(d.getUTCMonth() + 1) + '-' + lz(d.getUTCDate()) +
-      'T' + lz(d.getUTCHours()) + ':' + lz(d.getUTCMinutes()) +
-      ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
-  }
-});
-},{"./$":114,"./$.a-function":70,"./$.an-object":72,"./$.array-includes":75,"./$.array-methods":76,"./$.cof":79,"./$.descriptors":87,"./$.dom-create":88,"./$.export":90,"./$.fails":92,"./$.has":98,"./$.html":100,"./$.invoke":101,"./$.iobject":102,"./$.is-array":104,"./$.is-object":106,"./$.property-desc":127,"./$.to-index":144,"./$.to-integer":145,"./$.to-iobject":146,"./$.to-length":147,"./$.to-object":148,"./$.uid":150}],154:[function(require,module,exports){
-// 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
-var $export = require('./$.export');
-
-$export($export.P, 'Array', {copyWithin: require('./$.array-copy-within')});
-
-require('./$.add-to-unscopables')('copyWithin');
-},{"./$.add-to-unscopables":71,"./$.array-copy-within":73,"./$.export":90}],155:[function(require,module,exports){
-// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
-var $export = require('./$.export');
-
-$export($export.P, 'Array', {fill: require('./$.array-fill')});
-
-require('./$.add-to-unscopables')('fill');
-},{"./$.add-to-unscopables":71,"./$.array-fill":74,"./$.export":90}],156:[function(require,module,exports){
-'use strict';
-// 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
-var $export = require('./$.export')
-  , $find   = require('./$.array-methods')(6)
-  , KEY     = 'findIndex'
-  , forced  = true;
-// Shouldn't skip holes
-if(KEY in [])Array(1)[KEY](function(){ forced = false; });
-$export($export.P + $export.F * forced, 'Array', {
-  findIndex: function findIndex(callbackfn/*, that = undefined */){
-    return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-require('./$.add-to-unscopables')(KEY);
-},{"./$.add-to-unscopables":71,"./$.array-methods":76,"./$.export":90}],157:[function(require,module,exports){
-'use strict';
-// 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
-var $export = require('./$.export')
-  , $find   = require('./$.array-methods')(5)
-  , KEY     = 'find'
-  , forced  = true;
-// Shouldn't skip holes
-if(KEY in [])Array(1)[KEY](function(){ forced = false; });
-$export($export.P + $export.F * forced, 'Array', {
-  find: function find(callbackfn/*, that = undefined */){
-    return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-require('./$.add-to-unscopables')(KEY);
-},{"./$.add-to-unscopables":71,"./$.array-methods":76,"./$.export":90}],158:[function(require,module,exports){
-arguments[4][62][0].apply(exports,arguments)
-},{"./$.ctx":85,"./$.export":90,"./$.is-array-iter":103,"./$.iter-call":108,"./$.iter-detect":111,"./$.to-length":147,"./$.to-object":148,"./core.get-iterator-method":152,"dup":62}],159:[function(require,module,exports){
-arguments[4][63][0].apply(exports,arguments)
-},{"./$.add-to-unscopables":71,"./$.iter-define":110,"./$.iter-step":112,"./$.iterators":113,"./$.to-iobject":146,"dup":63}],160:[function(require,module,exports){
-'use strict';
-var $export = require('./$.export');
-
-// WebKit Array.of isn't generic
-$export($export.S + $export.F * require('./$.fails')(function(){
-  function F(){}
-  return !(Array.of.call(F) instanceof F);
-}), 'Array', {
-  // 22.1.2.3 Array.of( ...items)
-  of: function of(/* ...args */){
-    var index  = 0
-      , $$     = arguments
-      , $$len  = $$.length
-      , result = new (typeof this == 'function' ? this : Array)($$len);
-    while($$len > index)result[index] = $$[index++];
-    result.length = $$len;
-    return result;
-  }
-});
-},{"./$.export":90,"./$.fails":92}],161:[function(require,module,exports){
-require('./$.set-species')('Array');
-},{"./$.set-species":133}],162:[function(require,module,exports){
-'use strict';
-var $             = require('./$')
-  , isObject      = require('./$.is-object')
-  , HAS_INSTANCE  = require('./$.wks')('hasInstance')
-  , FunctionProto = Function.prototype;
-// 19.2.3.6 Function.prototype[@@hasInstance](V)
-if(!(HAS_INSTANCE in FunctionProto))$.setDesc(FunctionProto, HAS_INSTANCE, {value: function(O){
-  if(typeof this != 'function' || !isObject(O))return false;
-  if(!isObject(this.prototype))return O instanceof this;
-  // for environment w/o native `@@hasInstance` logic enough `instanceof`, but add this:
-  while(O = $.getProto(O))if(this.prototype === O)return true;
-  return false;
-}});
-},{"./$":114,"./$.is-object":106,"./$.wks":151}],163:[function(require,module,exports){
-var setDesc    = require('./$').setDesc
-  , createDesc = require('./$.property-desc')
-  , has        = require('./$.has')
-  , FProto     = Function.prototype
-  , nameRE     = /^\s*function ([^ (]*)/
-  , NAME       = 'name';
-// 19.2.4.2 name
-NAME in FProto || require('./$.descriptors') && setDesc(FProto, NAME, {
-  configurable: true,
-  get: function(){
-    var match = ('' + this).match(nameRE)
-      , name  = match ? match[1] : '';
-    has(this, NAME) || setDesc(this, NAME, createDesc(5, name));
-    return name;
-  }
-});
-},{"./$":114,"./$.descriptors":87,"./$.has":98,"./$.property-desc":127}],164:[function(require,module,exports){
-arguments[4][64][0].apply(exports,arguments)
-},{"./$.collection":83,"./$.collection-strong":80,"dup":64}],165:[function(require,module,exports){
-// 20.2.2.3 Math.acosh(x)
-var $export = require('./$.export')
-  , log1p   = require('./$.math-log1p')
-  , sqrt    = Math.sqrt
-  , $acosh  = Math.acosh;
-
-// V8 bug https://code.google.com/p/v8/issues/detail?id=3509
-$export($export.S + $export.F * !($acosh && Math.floor($acosh(Number.MAX_VALUE)) == 710), 'Math', {
-  acosh: function acosh(x){
-    return (x = +x) < 1 ? NaN : x > 94906265.62425156
-      ? Math.log(x) + Math.LN2
-      : log1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
-  }
-});
-},{"./$.export":90,"./$.math-log1p":118}],166:[function(require,module,exports){
-// 20.2.2.5 Math.asinh(x)
-var $export = require('./$.export');
-
-function asinh(x){
-  return !isFinite(x = +x) || x == 0 ? x : x < 0 ? -asinh(-x) : Math.log(x + Math.sqrt(x * x + 1));
-}
-
-$export($export.S, 'Math', {asinh: asinh});
-},{"./$.export":90}],167:[function(require,module,exports){
-// 20.2.2.7 Math.atanh(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {
-  atanh: function atanh(x){
-    return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
-  }
-});
-},{"./$.export":90}],168:[function(require,module,exports){
-// 20.2.2.9 Math.cbrt(x)
-var $export = require('./$.export')
-  , sign    = require('./$.math-sign');
-
-$export($export.S, 'Math', {
-  cbrt: function cbrt(x){
-    return sign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
-  }
-});
-},{"./$.export":90,"./$.math-sign":119}],169:[function(require,module,exports){
-// 20.2.2.11 Math.clz32(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {
-  clz32: function clz32(x){
-    return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
-  }
-});
-},{"./$.export":90}],170:[function(require,module,exports){
-// 20.2.2.12 Math.cosh(x)
-var $export = require('./$.export')
-  , exp     = Math.exp;
-
-$export($export.S, 'Math', {
-  cosh: function cosh(x){
-    return (exp(x = +x) + exp(-x)) / 2;
-  }
-});
-},{"./$.export":90}],171:[function(require,module,exports){
-// 20.2.2.14 Math.expm1(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {expm1: require('./$.math-expm1')});
-},{"./$.export":90,"./$.math-expm1":117}],172:[function(require,module,exports){
-// 20.2.2.16 Math.fround(x)
-var $export   = require('./$.export')
-  , sign      = require('./$.math-sign')
-  , pow       = Math.pow
-  , EPSILON   = pow(2, -52)
-  , EPSILON32 = pow(2, -23)
-  , MAX32     = pow(2, 127) * (2 - EPSILON32)
-  , MIN32     = pow(2, -126);
-
-var roundTiesToEven = function(n){
-  return n + 1 / EPSILON - 1 / EPSILON;
-};
-
-
-$export($export.S, 'Math', {
-  fround: function fround(x){
-    var $abs  = Math.abs(x)
-      , $sign = sign(x)
-      , a, result;
-    if($abs < MIN32)return $sign * roundTiesToEven($abs / MIN32 / EPSILON32) * MIN32 * EPSILON32;
-    a = (1 + EPSILON32 / EPSILON) * $abs;
-    result = a - (a - $abs);
-    if(result > MAX32 || result != result)return $sign * Infinity;
-    return $sign * result;
-  }
-});
-},{"./$.export":90,"./$.math-sign":119}],173:[function(require,module,exports){
-// 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
-var $export = require('./$.export')
-  , abs     = Math.abs;
-
-$export($export.S, 'Math', {
-  hypot: function hypot(value1, value2){ // eslint-disable-line no-unused-vars
-    var sum   = 0
-      , i     = 0
-      , $$    = arguments
-      , $$len = $$.length
-      , larg  = 0
-      , arg, div;
-    while(i < $$len){
-      arg = abs($$[i++]);
-      if(larg < arg){
-        div  = larg / arg;
-        sum  = sum * div * div + 1;
-        larg = arg;
-      } else if(arg > 0){
-        div  = arg / larg;
-        sum += div * div;
-      } else sum += arg;
-    }
-    return larg === Infinity ? Infinity : larg * Math.sqrt(sum);
-  }
-});
-},{"./$.export":90}],174:[function(require,module,exports){
-// 20.2.2.18 Math.imul(x, y)
-var $export = require('./$.export')
-  , $imul   = Math.imul;
-
-// some WebKit versions fails with big numbers, some has wrong arity
-$export($export.S + $export.F * require('./$.fails')(function(){
-  return $imul(0xffffffff, 5) != -5 || $imul.length != 2;
-}), 'Math', {
-  imul: function imul(x, y){
-    var UINT16 = 0xffff
-      , xn = +x
-      , yn = +y
-      , xl = UINT16 & xn
-      , yl = UINT16 & yn;
-    return 0 | xl * yl + ((UINT16 & xn >>> 16) * yl + xl * (UINT16 & yn >>> 16) << 16 >>> 0);
-  }
-});
-},{"./$.export":90,"./$.fails":92}],175:[function(require,module,exports){
-// 20.2.2.21 Math.log10(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {
-  log10: function log10(x){
-    return Math.log(x) / Math.LN10;
-  }
-});
-},{"./$.export":90}],176:[function(require,module,exports){
-// 20.2.2.20 Math.log1p(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {log1p: require('./$.math-log1p')});
-},{"./$.export":90,"./$.math-log1p":118}],177:[function(require,module,exports){
-// 20.2.2.22 Math.log2(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {
-  log2: function log2(x){
-    return Math.log(x) / Math.LN2;
-  }
-});
-},{"./$.export":90}],178:[function(require,module,exports){
-// 20.2.2.28 Math.sign(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {sign: require('./$.math-sign')});
-},{"./$.export":90,"./$.math-sign":119}],179:[function(require,module,exports){
-// 20.2.2.30 Math.sinh(x)
-var $export = require('./$.export')
-  , expm1   = require('./$.math-expm1')
-  , exp     = Math.exp;
-
-// V8 near Chromium 38 has a problem with very small numbers
-$export($export.S + $export.F * require('./$.fails')(function(){
-  return !Math.sinh(-2e-17) != -2e-17;
-}), 'Math', {
-  sinh: function sinh(x){
-    return Math.abs(x = +x) < 1
-      ? (expm1(x) - expm1(-x)) / 2
-      : (exp(x - 1) - exp(-x - 1)) * (Math.E / 2);
-  }
-});
-},{"./$.export":90,"./$.fails":92,"./$.math-expm1":117}],180:[function(require,module,exports){
-// 20.2.2.33 Math.tanh(x)
-var $export = require('./$.export')
-  , expm1   = require('./$.math-expm1')
-  , exp     = Math.exp;
-
-$export($export.S, 'Math', {
-  tanh: function tanh(x){
-    var a = expm1(x = +x)
-      , b = expm1(-x);
-    return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
-  }
-});
-},{"./$.export":90,"./$.math-expm1":117}],181:[function(require,module,exports){
-// 20.2.2.34 Math.trunc(x)
-var $export = require('./$.export');
-
-$export($export.S, 'Math', {
-  trunc: function trunc(it){
-    return (it > 0 ? Math.floor : Math.ceil)(it);
-  }
-});
-},{"./$.export":90}],182:[function(require,module,exports){
-'use strict';
-var $           = require('./$')
-  , global      = require('./$.global')
-  , has         = require('./$.has')
-  , cof         = require('./$.cof')
-  , toPrimitive = require('./$.to-primitive')
-  , fails       = require('./$.fails')
-  , $trim       = require('./$.string-trim').trim
-  , NUMBER      = 'Number'
-  , $Number     = global[NUMBER]
-  , Base        = $Number
-  , proto       = $Number.prototype
-  // Opera ~12 has broken Object#toString
-  , BROKEN_COF  = cof($.create(proto)) == NUMBER
-  , TRIM        = 'trim' in String.prototype;
-
-// 7.1.3 ToNumber(argument)
-var toNumber = function(argument){
-  var it = toPrimitive(argument, false);
-  if(typeof it == 'string' && it.length > 2){
-    it = TRIM ? it.trim() : $trim(it, 3);
-    var first = it.charCodeAt(0)
-      , third, radix, maxCode;
-    if(first === 43 || first === 45){
-      third = it.charCodeAt(2);
-      if(third === 88 || third === 120)return NaN; // Number('+0x1') should be NaN, old V8 fix
-    } else if(first === 48){
-      switch(it.charCodeAt(1)){
-        case 66 : case 98  : radix = 2; maxCode = 49; break; // fast equal /^0b[01]+$/i
-        case 79 : case 111 : radix = 8; maxCode = 55; break; // fast equal /^0o[0-7]+$/i
-        default : return +it;
-      }
-      for(var digits = it.slice(2), i = 0, l = digits.length, code; i < l; i++){
-        code = digits.charCodeAt(i);
-        // parseInt parses a string to a first unavailable symbol
-        // but ToNumber should return NaN if a string contains unavailable symbols
-        if(code < 48 || code > maxCode)return NaN;
-      } return parseInt(digits, radix);
-    }
-  } return +it;
-};
-
-if(!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')){
-  $Number = function Number(value){
-    var it = arguments.length < 1 ? 0 : value
-      , that = this;
-    return that instanceof $Number
-      // check on 1..constructor(foo) case
-      && (BROKEN_COF ? fails(function(){ proto.valueOf.call(that); }) : cof(that) != NUMBER)
-        ? new Base(toNumber(it)) : toNumber(it);
-  };
-  $.each.call(require('./$.descriptors') ? $.getNames(Base) : (
-    // ES3:
-    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
-    // ES6 (in case, if modules with ES6 Number statics required before):
-    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
-    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
-  ).split(','), function(key){
-    if(has(Base, key) && !has($Number, key)){
-      $.setDesc($Number, key, $.getDesc(Base, key));
-    }
-  });
-  $Number.prototype = proto;
-  proto.constructor = $Number;
-  require('./$.redefine')(global, NUMBER, $Number);
-}
-},{"./$":114,"./$.cof":79,"./$.descriptors":87,"./$.fails":92,"./$.global":97,"./$.has":98,"./$.redefine":129,"./$.string-trim":142,"./$.to-primitive":149}],183:[function(require,module,exports){
-// 20.1.2.1 Number.EPSILON
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
-},{"./$.export":90}],184:[function(require,module,exports){
-// 20.1.2.2 Number.isFinite(number)
-var $export   = require('./$.export')
-  , _isFinite = require('./$.global').isFinite;
-
-$export($export.S, 'Number', {
-  isFinite: function isFinite(it){
-    return typeof it == 'number' && _isFinite(it);
-  }
-});
-},{"./$.export":90,"./$.global":97}],185:[function(require,module,exports){
-// 20.1.2.3 Number.isInteger(number)
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {isInteger: require('./$.is-integer')});
-},{"./$.export":90,"./$.is-integer":105}],186:[function(require,module,exports){
-// 20.1.2.4 Number.isNaN(number)
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {
-  isNaN: function isNaN(number){
-    return number != number;
-  }
-});
-},{"./$.export":90}],187:[function(require,module,exports){
-// 20.1.2.5 Number.isSafeInteger(number)
-var $export   = require('./$.export')
-  , isInteger = require('./$.is-integer')
-  , abs       = Math.abs;
-
-$export($export.S, 'Number', {
-  isSafeInteger: function isSafeInteger(number){
-    return isInteger(number) && abs(number) <= 0x1fffffffffffff;
-  }
-});
-},{"./$.export":90,"./$.is-integer":105}],188:[function(require,module,exports){
-// 20.1.2.6 Number.MAX_SAFE_INTEGER
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-},{"./$.export":90}],189:[function(require,module,exports){
-// 20.1.2.10 Number.MIN_SAFE_INTEGER
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-},{"./$.export":90}],190:[function(require,module,exports){
-// 20.1.2.12 Number.parseFloat(string)
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {parseFloat: parseFloat});
-},{"./$.export":90}],191:[function(require,module,exports){
-// 20.1.2.13 Number.parseInt(string, radix)
-var $export = require('./$.export');
-
-$export($export.S, 'Number', {parseInt: parseInt});
-},{"./$.export":90}],192:[function(require,module,exports){
-// 19.1.3.1 Object.assign(target, source)
-var $export = require('./$.export');
-
-$export($export.S + $export.F, 'Object', {assign: require('./$.object-assign')});
-},{"./$.export":90,"./$.object-assign":121}],193:[function(require,module,exports){
-// 19.1.2.5 Object.freeze(O)
-var isObject = require('./$.is-object');
-
-require('./$.object-sap')('freeze', function($freeze){
-  return function freeze(it){
-    return $freeze && isObject(it) ? $freeze(it) : it;
-  };
-});
-},{"./$.is-object":106,"./$.object-sap":122}],194:[function(require,module,exports){
-// 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
-var toIObject = require('./$.to-iobject');
-
-require('./$.object-sap')('getOwnPropertyDescriptor', function($getOwnPropertyDescriptor){
-  return function getOwnPropertyDescriptor(it, key){
-    return $getOwnPropertyDescriptor(toIObject(it), key);
-  };
-});
-},{"./$.object-sap":122,"./$.to-iobject":146}],195:[function(require,module,exports){
-// 19.1.2.7 Object.getOwnPropertyNames(O)
-require('./$.object-sap')('getOwnPropertyNames', function(){
-  return require('./$.get-names').get;
-});
-},{"./$.get-names":96,"./$.object-sap":122}],196:[function(require,module,exports){
-// 19.1.2.9 Object.getPrototypeOf(O)
-var toObject = require('./$.to-object');
-
-require('./$.object-sap')('getPrototypeOf', function($getPrototypeOf){
-  return function getPrototypeOf(it){
-    return $getPrototypeOf(toObject(it));
-  };
-});
-},{"./$.object-sap":122,"./$.to-object":148}],197:[function(require,module,exports){
-// 19.1.2.11 Object.isExtensible(O)
-var isObject = require('./$.is-object');
-
-require('./$.object-sap')('isExtensible', function($isExtensible){
-  return function isExtensible(it){
-    return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
-  };
-});
-},{"./$.is-object":106,"./$.object-sap":122}],198:[function(require,module,exports){
-// 19.1.2.12 Object.isFrozen(O)
-var isObject = require('./$.is-object');
-
-require('./$.object-sap')('isFrozen', function($isFrozen){
-  return function isFrozen(it){
-    return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
-  };
-});
-},{"./$.is-object":106,"./$.object-sap":122}],199:[function(require,module,exports){
-// 19.1.2.13 Object.isSealed(O)
-var isObject = require('./$.is-object');
-
-require('./$.object-sap')('isSealed', function($isSealed){
-  return function isSealed(it){
-    return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
-  };
-});
-},{"./$.is-object":106,"./$.object-sap":122}],200:[function(require,module,exports){
-// 19.1.3.10 Object.is(value1, value2)
-var $export = require('./$.export');
-$export($export.S, 'Object', {is: require('./$.same-value')});
-},{"./$.export":90,"./$.same-value":131}],201:[function(require,module,exports){
-// 19.1.2.14 Object.keys(O)
-var toObject = require('./$.to-object');
-
-require('./$.object-sap')('keys', function($keys){
-  return function keys(it){
-    return $keys(toObject(it));
-  };
-});
-},{"./$.object-sap":122,"./$.to-object":148}],202:[function(require,module,exports){
-// 19.1.2.15 Object.preventExtensions(O)
-var isObject = require('./$.is-object');
-
-require('./$.object-sap')('preventExtensions', function($preventExtensions){
-  return function preventExtensions(it){
-    return $preventExtensions && isObject(it) ? $preventExtensions(it) : it;
-  };
-});
-},{"./$.is-object":106,"./$.object-sap":122}],203:[function(require,module,exports){
-// 19.1.2.17 Object.seal(O)
-var isObject = require('./$.is-object');
-
-require('./$.object-sap')('seal', function($seal){
-  return function seal(it){
-    return $seal && isObject(it) ? $seal(it) : it;
-  };
-});
-},{"./$.is-object":106,"./$.object-sap":122}],204:[function(require,module,exports){
-// 19.1.3.19 Object.setPrototypeOf(O, proto)
-var $export = require('./$.export');
-$export($export.S, 'Object', {setPrototypeOf: require('./$.set-proto').set});
-},{"./$.export":90,"./$.set-proto":132}],205:[function(require,module,exports){
-'use strict';
-// 19.1.3.6 Object.prototype.toString()
-var classof = require('./$.classof')
-  , test    = {};
-test[require('./$.wks')('toStringTag')] = 'z';
-if(test + '' != '[object z]'){
-  require('./$.redefine')(Object.prototype, 'toString', function toString(){
-    return '[object ' + classof(this) + ']';
-  }, true);
-}
-},{"./$.classof":78,"./$.redefine":129,"./$.wks":151}],206:[function(require,module,exports){
-'use strict';
-var $          = require('./$')
-  , LIBRARY    = require('./$.library')
-  , global     = require('./$.global')
-  , ctx        = require('./$.ctx')
-  , classof    = require('./$.classof')
-  , $export    = require('./$.export')
-  , isObject   = require('./$.is-object')
-  , anObject   = require('./$.an-object')
-  , aFunction  = require('./$.a-function')
-  , strictNew  = require('./$.strict-new')
-  , forOf      = require('./$.for-of')
-  , setProto   = require('./$.set-proto').set
-  , same       = require('./$.same-value')
-  , SPECIES    = require('./$.wks')('species')
-  , speciesConstructor = require('./$.species-constructor')
-  , asap       = require('./$.microtask')
-  , PROMISE    = 'Promise'
-  , process    = global.process
-  , isNode     = classof(process) == 'process'
-  , P          = global[PROMISE]
-  , Wrapper;
-
-var testResolve = function(sub){
-  var test = new P(function(){});
-  if(sub)test.constructor = Object;
-  return P.resolve(test) === test;
-};
-
-var USE_NATIVE = function(){
-  var works = false;
-  function P2(x){
-    var self = new P(x);
-    setProto(self, P2.prototype);
-    return self;
-  }
-  try {
-    works = P && P.resolve && testResolve();
-    setProto(P2, P);
-    P2.prototype = $.create(P.prototype, {constructor: {value: P2}});
-    // actual Firefox has broken subclass support, test that
-    if(!(P2.resolve(5).then(function(){}) instanceof P2)){
-      works = false;
-    }
-    // actual V8 bug, https://code.google.com/p/v8/issues/detail?id=4162
-    if(works && require('./$.descriptors')){
-      var thenableThenGotten = false;
-      P.resolve($.setDesc({}, 'then', {
-        get: function(){ thenableThenGotten = true; }
-      }));
-      works = thenableThenGotten;
-    }
-  } catch(e){ works = false; }
-  return works;
-}();
-
-// helpers
-var sameConstructor = function(a, b){
-  // library wrapper special case
-  if(LIBRARY && a === P && b === Wrapper)return true;
-  return same(a, b);
-};
-var getConstructor = function(C){
-  var S = anObject(C)[SPECIES];
-  return S != undefined ? S : C;
-};
-var isThenable = function(it){
-  var then;
-  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-};
-var PromiseCapability = function(C){
-  var resolve, reject;
-  this.promise = new C(function($$resolve, $$reject){
-    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
-    resolve = $$resolve;
-    reject  = $$reject;
-  });
-  this.resolve = aFunction(resolve),
-  this.reject  = aFunction(reject)
-};
-var perform = function(exec){
-  try {
-    exec();
-  } catch(e){
-    return {error: e};
-  }
-};
-var notify = function(record, isReject){
-  if(record.n)return;
-  record.n = true;
-  var chain = record.c;
-  asap(function(){
-    var value = record.v
-      , ok    = record.s == 1
-      , i     = 0;
-    var run = function(reaction){
-      var handler = ok ? reaction.ok : reaction.fail
-        , resolve = reaction.resolve
-        , reject  = reaction.reject
-        , result, then;
-      try {
-        if(handler){
-          if(!ok)record.h = true;
-          result = handler === true ? value : handler(value);
-          if(result === reaction.promise){
-            reject(TypeError('Promise-chain cycle'));
-          } else if(then = isThenable(result)){
-            then.call(result, resolve, reject);
-          } else resolve(result);
-        } else reject(value);
-      } catch(e){
-        reject(e);
-      }
-    };
-    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
-    chain.length = 0;
-    record.n = false;
-    if(isReject)setTimeout(function(){
-      var promise = record.p
-        , handler, console;
-      if(isUnhandled(promise)){
-        if(isNode){
-          process.emit('unhandledRejection', value, promise);
-        } else if(handler = global.onunhandledrejection){
-          handler({promise: promise, reason: value});
-        } else if((console = global.console) && console.error){
-          console.error('Unhandled promise rejection', value);
-        }
-      } record.a = undefined;
-    }, 1);
-  });
-};
-var isUnhandled = function(promise){
-  var record = promise._d
-    , chain  = record.a || record.c
-    , i      = 0
-    , reaction;
-  if(record.h)return false;
-  while(chain.length > i){
-    reaction = chain[i++];
-    if(reaction.fail || !isUnhandled(reaction.promise))return false;
-  } return true;
-};
-var $reject = function(value){
-  var record = this;
-  if(record.d)return;
-  record.d = true;
-  record = record.r || record; // unwrap
-  record.v = value;
-  record.s = 2;
-  record.a = record.c.slice();
-  notify(record, true);
-};
-var $resolve = function(value){
-  var record = this
-    , then;
-  if(record.d)return;
-  record.d = true;
-  record = record.r || record; // unwrap
-  try {
-    if(record.p === value)throw TypeError("Promise can't be resolved itself");
-    if(then = isThenable(value)){
-      asap(function(){
-        var wrapper = {r: record, d: false}; // wrap
-        try {
-          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
-        } catch(e){
-          $reject.call(wrapper, e);
-        }
-      });
-    } else {
-      record.v = value;
-      record.s = 1;
-      notify(record, false);
-    }
-  } catch(e){
-    $reject.call({r: record, d: false}, e); // wrap
-  }
-};
-
-// constructor polyfill
-if(!USE_NATIVE){
-  // 25.4.3.1 Promise(executor)
-  P = function Promise(executor){
-    aFunction(executor);
-    var record = this._d = {
-      p: strictNew(this, P, PROMISE),         // <- promise
-      c: [],                                  // <- awaiting reactions
-      a: undefined,                           // <- checked in isUnhandled reactions
-      s: 0,                                   // <- state
-      d: false,                               // <- done
-      v: undefined,                           // <- value
-      h: false,                               // <- handled rejection
-      n: false                                // <- notify
-    };
-    try {
-      executor(ctx($resolve, record, 1), ctx($reject, record, 1));
-    } catch(err){
-      $reject.call(record, err);
-    }
-  };
-  require('./$.redefine-all')(P.prototype, {
-    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
-    then: function then(onFulfilled, onRejected){
-      var reaction = new PromiseCapability(speciesConstructor(this, P))
-        , promise  = reaction.promise
-        , record   = this._d;
-      reaction.ok   = typeof onFulfilled == 'function' ? onFulfilled : true;
-      reaction.fail = typeof onRejected == 'function' && onRejected;
-      record.c.push(reaction);
-      if(record.a)record.a.push(reaction);
-      if(record.s)notify(record, false);
-      return promise;
-    },
-    // 25.4.5.1 Promise.prototype.catch(onRejected)
-    'catch': function(onRejected){
-      return this.then(undefined, onRejected);
-    }
-  });
-}
-
-$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: P});
-require('./$.set-to-string-tag')(P, PROMISE);
-require('./$.set-species')(PROMISE);
-Wrapper = require('./$.core')[PROMISE];
-
-// statics
-$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
-  // 25.4.4.5 Promise.reject(r)
-  reject: function reject(r){
-    var capability = new PromiseCapability(this)
-      , $$reject   = capability.reject;
-    $$reject(r);
-    return capability.promise;
-  }
-});
-$export($export.S + $export.F * (!USE_NATIVE || testResolve(true)), PROMISE, {
-  // 25.4.4.6 Promise.resolve(x)
-  resolve: function resolve(x){
-    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
-    if(x instanceof P && sameConstructor(x.constructor, this))return x;
-    var capability = new PromiseCapability(this)
-      , $$resolve  = capability.resolve;
-    $$resolve(x);
-    return capability.promise;
-  }
-});
-$export($export.S + $export.F * !(USE_NATIVE && require('./$.iter-detect')(function(iter){
-  P.all(iter)['catch'](function(){});
-})), PROMISE, {
-  // 25.4.4.1 Promise.all(iterable)
-  all: function all(iterable){
-    var C          = getConstructor(this)
-      , capability = new PromiseCapability(C)
-      , resolve    = capability.resolve
-      , reject     = capability.reject
-      , values     = [];
-    var abrupt = perform(function(){
-      forOf(iterable, false, values.push, values);
-      var remaining = values.length
-        , results   = Array(remaining);
-      if(remaining)$.each.call(values, function(promise, index){
-        var alreadyCalled = false;
-        C.resolve(promise).then(function(value){
-          if(alreadyCalled)return;
-          alreadyCalled = true;
-          results[index] = value;
-          --remaining || resolve(results);
-        }, reject);
-      });
-      else resolve(results);
-    });
-    if(abrupt)reject(abrupt.error);
-    return capability.promise;
-  },
-  // 25.4.4.4 Promise.race(iterable)
-  race: function race(iterable){
-    var C          = getConstructor(this)
-      , capability = new PromiseCapability(C)
-      , reject     = capability.reject;
-    var abrupt = perform(function(){
-      forOf(iterable, false, function(promise){
-        C.resolve(promise).then(capability.resolve, reject);
-      });
-    });
-    if(abrupt)reject(abrupt.error);
-    return capability.promise;
-  }
-});
-},{"./$":114,"./$.a-function":70,"./$.an-object":72,"./$.classof":78,"./$.core":84,"./$.ctx":85,"./$.descriptors":87,"./$.export":90,"./$.for-of":95,"./$.global":97,"./$.is-object":106,"./$.iter-detect":111,"./$.library":116,"./$.microtask":120,"./$.redefine-all":128,"./$.same-value":131,"./$.set-proto":132,"./$.set-species":133,"./$.set-to-string-tag":134,"./$.species-constructor":136,"./$.strict-new":137,"./$.wks":151}],207:[function(require,module,exports){
-// 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
-var $export = require('./$.export')
-  , _apply  = Function.apply;
-
-$export($export.S, 'Reflect', {
-  apply: function apply(target, thisArgument, argumentsList){
-    return _apply.call(target, thisArgument, argumentsList);
-  }
-});
-},{"./$.export":90}],208:[function(require,module,exports){
-// 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
-var $         = require('./$')
-  , $export   = require('./$.export')
-  , aFunction = require('./$.a-function')
-  , anObject  = require('./$.an-object')
-  , isObject  = require('./$.is-object')
-  , bind      = Function.bind || require('./$.core').Function.prototype.bind;
-
-// MS Edge supports only 2 arguments
-// FF Nightly sets third argument as `new.target`, but does not create `this` from it
-$export($export.S + $export.F * require('./$.fails')(function(){
-  function F(){}
-  return !(Reflect.construct(function(){}, [], F) instanceof F);
-}), 'Reflect', {
-  construct: function construct(Target, args /*, newTarget*/){
-    aFunction(Target);
-    var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
-    if(Target == newTarget){
-      // w/o altered newTarget, optimization for 0-4 arguments
-      if(args != undefined)switch(anObject(args).length){
-        case 0: return new Target;
-        case 1: return new Target(args[0]);
-        case 2: return new Target(args[0], args[1]);
-        case 3: return new Target(args[0], args[1], args[2]);
-        case 4: return new Target(args[0], args[1], args[2], args[3]);
-      }
-      // w/o altered newTarget, lot of arguments case
-      var $args = [null];
-      $args.push.apply($args, args);
-      return new (bind.apply(Target, $args));
-    }
-    // with altered newTarget, not support built-in constructors
-    var proto    = newTarget.prototype
-      , instance = $.create(isObject(proto) ? proto : Object.prototype)
-      , result   = Function.apply.call(Target, instance, args);
-    return isObject(result) ? result : instance;
-  }
-});
-},{"./$":114,"./$.a-function":70,"./$.an-object":72,"./$.core":84,"./$.export":90,"./$.fails":92,"./$.is-object":106}],209:[function(require,module,exports){
-// 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
-var $        = require('./$')
-  , $export  = require('./$.export')
-  , anObject = require('./$.an-object');
-
-// MS Edge has broken Reflect.defineProperty - throwing instead of returning false
-$export($export.S + $export.F * require('./$.fails')(function(){
-  Reflect.defineProperty($.setDesc({}, 1, {value: 1}), 1, {value: 2});
-}), 'Reflect', {
-  defineProperty: function defineProperty(target, propertyKey, attributes){
-    anObject(target);
-    try {
-      $.setDesc(target, propertyKey, attributes);
-      return true;
-    } catch(e){
-      return false;
-    }
-  }
-});
-},{"./$":114,"./$.an-object":72,"./$.export":90,"./$.fails":92}],210:[function(require,module,exports){
-// 26.1.4 Reflect.deleteProperty(target, propertyKey)
-var $export  = require('./$.export')
-  , getDesc  = require('./$').getDesc
-  , anObject = require('./$.an-object');
-
-$export($export.S, 'Reflect', {
-  deleteProperty: function deleteProperty(target, propertyKey){
-    var desc = getDesc(anObject(target), propertyKey);
-    return desc && !desc.configurable ? false : delete target[propertyKey];
-  }
-});
-},{"./$":114,"./$.an-object":72,"./$.export":90}],211:[function(require,module,exports){
-'use strict';
-// 26.1.5 Reflect.enumerate(target)
-var $export  = require('./$.export')
-  , anObject = require('./$.an-object');
-var Enumerate = function(iterated){
-  this._t = anObject(iterated); // target
-  this._i = 0;                  // next index
-  var keys = this._k = []       // keys
-    , key;
-  for(key in iterated)keys.push(key);
-};
-require('./$.iter-create')(Enumerate, 'Object', function(){
-  var that = this
-    , keys = that._k
-    , key;
-  do {
-    if(that._i >= keys.length)return {value: undefined, done: true};
-  } while(!((key = keys[that._i++]) in that._t));
-  return {value: key, done: false};
-});
-
-$export($export.S, 'Reflect', {
-  enumerate: function enumerate(target){
-    return new Enumerate(target);
-  }
-});
-},{"./$.an-object":72,"./$.export":90,"./$.iter-create":109}],212:[function(require,module,exports){
-// 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
-var $        = require('./$')
-  , $export  = require('./$.export')
-  , anObject = require('./$.an-object');
-
-$export($export.S, 'Reflect', {
-  getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, propertyKey){
-    return $.getDesc(anObject(target), propertyKey);
-  }
-});
-},{"./$":114,"./$.an-object":72,"./$.export":90}],213:[function(require,module,exports){
-// 26.1.8 Reflect.getPrototypeOf(target)
-var $export  = require('./$.export')
-  , getProto = require('./$').getProto
-  , anObject = require('./$.an-object');
-
-$export($export.S, 'Reflect', {
-  getPrototypeOf: function getPrototypeOf(target){
-    return getProto(anObject(target));
-  }
-});
-},{"./$":114,"./$.an-object":72,"./$.export":90}],214:[function(require,module,exports){
-// 26.1.6 Reflect.get(target, propertyKey [, receiver])
-var $        = require('./$')
-  , has      = require('./$.has')
-  , $export  = require('./$.export')
-  , isObject = require('./$.is-object')
-  , anObject = require('./$.an-object');
-
-function get(target, propertyKey/*, receiver*/){
-  var receiver = arguments.length < 3 ? target : arguments[2]
-    , desc, proto;
-  if(anObject(target) === receiver)return target[propertyKey];
-  if(desc = $.getDesc(target, propertyKey))return has(desc, 'value')
-    ? desc.value
-    : desc.get !== undefined
-      ? desc.get.call(receiver)
-      : undefined;
-  if(isObject(proto = $.getProto(target)))return get(proto, propertyKey, receiver);
-}
-
-$export($export.S, 'Reflect', {get: get});
-},{"./$":114,"./$.an-object":72,"./$.export":90,"./$.has":98,"./$.is-object":106}],215:[function(require,module,exports){
-// 26.1.9 Reflect.has(target, propertyKey)
-var $export = require('./$.export');
-
-$export($export.S, 'Reflect', {
-  has: function has(target, propertyKey){
-    return propertyKey in target;
-  }
-});
-},{"./$.export":90}],216:[function(require,module,exports){
-// 26.1.10 Reflect.isExtensible(target)
-var $export       = require('./$.export')
-  , anObject      = require('./$.an-object')
-  , $isExtensible = Object.isExtensible;
-
-$export($export.S, 'Reflect', {
-  isExtensible: function isExtensible(target){
-    anObject(target);
-    return $isExtensible ? $isExtensible(target) : true;
-  }
-});
-},{"./$.an-object":72,"./$.export":90}],217:[function(require,module,exports){
-// 26.1.11 Reflect.ownKeys(target)
-var $export = require('./$.export');
-
-$export($export.S, 'Reflect', {ownKeys: require('./$.own-keys')});
-},{"./$.export":90,"./$.own-keys":124}],218:[function(require,module,exports){
-// 26.1.12 Reflect.preventExtensions(target)
-var $export            = require('./$.export')
-  , anObject           = require('./$.an-object')
-  , $preventExtensions = Object.preventExtensions;
-
-$export($export.S, 'Reflect', {
-  preventExtensions: function preventExtensions(target){
-    anObject(target);
-    try {
-      if($preventExtensions)$preventExtensions(target);
-      return true;
-    } catch(e){
-      return false;
-    }
-  }
-});
-},{"./$.an-object":72,"./$.export":90}],219:[function(require,module,exports){
-// 26.1.14 Reflect.setPrototypeOf(target, proto)
-var $export  = require('./$.export')
-  , setProto = require('./$.set-proto');
-
-if(setProto)$export($export.S, 'Reflect', {
-  setPrototypeOf: function setPrototypeOf(target, proto){
-    setProto.check(target, proto);
-    try {
-      setProto.set(target, proto);
-      return true;
-    } catch(e){
-      return false;
-    }
-  }
-});
-},{"./$.export":90,"./$.set-proto":132}],220:[function(require,module,exports){
-// 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
-var $          = require('./$')
-  , has        = require('./$.has')
-  , $export    = require('./$.export')
-  , createDesc = require('./$.property-desc')
-  , anObject   = require('./$.an-object')
-  , isObject   = require('./$.is-object');
-
-function set(target, propertyKey, V/*, receiver*/){
-  var receiver = arguments.length < 4 ? target : arguments[3]
-    , ownDesc  = $.getDesc(anObject(target), propertyKey)
-    , existingDescriptor, proto;
-  if(!ownDesc){
-    if(isObject(proto = $.getProto(target))){
-      return set(proto, propertyKey, V, receiver);
-    }
-    ownDesc = createDesc(0);
-  }
-  if(has(ownDesc, 'value')){
-    if(ownDesc.writable === false || !isObject(receiver))return false;
-    existingDescriptor = $.getDesc(receiver, propertyKey) || createDesc(0);
-    existingDescriptor.value = V;
-    $.setDesc(receiver, propertyKey, existingDescriptor);
-    return true;
-  }
-  return ownDesc.set === undefined ? false : (ownDesc.set.call(receiver, V), true);
-}
-
-$export($export.S, 'Reflect', {set: set});
-},{"./$":114,"./$.an-object":72,"./$.export":90,"./$.has":98,"./$.is-object":106,"./$.property-desc":127}],221:[function(require,module,exports){
-var $        = require('./$')
-  , global   = require('./$.global')
-  , isRegExp = require('./$.is-regexp')
-  , $flags   = require('./$.flags')
-  , $RegExp  = global.RegExp
-  , Base     = $RegExp
-  , proto    = $RegExp.prototype
-  , re1      = /a/g
-  , re2      = /a/g
-  // "new" creates a new object, old webkit buggy here
-  , CORRECT_NEW = new $RegExp(re1) !== re1;
-
-if(require('./$.descriptors') && (!CORRECT_NEW || require('./$.fails')(function(){
-  re2[require('./$.wks')('match')] = false;
-  // RegExp constructor can alter flags and IsRegExp works correct with @@match
-  return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
-}))){
-  $RegExp = function RegExp(p, f){
-    var piRE = isRegExp(p)
-      , fiU  = f === undefined;
-    return !(this instanceof $RegExp) && piRE && p.constructor === $RegExp && fiU ? p
-      : CORRECT_NEW
-        ? new Base(piRE && !fiU ? p.source : p, f)
-        : Base((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? $flags.call(p) : f);
-  };
-  $.each.call($.getNames(Base), function(key){
-    key in $RegExp || $.setDesc($RegExp, key, {
-      configurable: true,
-      get: function(){ return Base[key]; },
-      set: function(it){ Base[key] = it; }
-    });
-  });
-  proto.constructor = $RegExp;
-  $RegExp.prototype = proto;
-  require('./$.redefine')(global, 'RegExp', $RegExp);
-}
-
-require('./$.set-species')('RegExp');
-},{"./$":114,"./$.descriptors":87,"./$.fails":92,"./$.flags":94,"./$.global":97,"./$.is-regexp":107,"./$.redefine":129,"./$.set-species":133,"./$.wks":151}],222:[function(require,module,exports){
-// 21.2.5.3 get RegExp.prototype.flags()
-var $ = require('./$');
-if(require('./$.descriptors') && /./g.flags != 'g')$.setDesc(RegExp.prototype, 'flags', {
-  configurable: true,
-  get: require('./$.flags')
-});
-},{"./$":114,"./$.descriptors":87,"./$.flags":94}],223:[function(require,module,exports){
-// @@match logic
-require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
-  // 21.1.3.11 String.prototype.match(regexp)
-  return function match(regexp){
-    'use strict';
-    var O  = defined(this)
-      , fn = regexp == undefined ? undefined : regexp[MATCH];
-    return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
-  };
-});
-},{"./$.fix-re-wks":93}],224:[function(require,module,exports){
-// @@replace logic
-require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
-  // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
-  return function replace(searchValue, replaceValue){
-    'use strict';
-    var O  = defined(this)
-      , fn = searchValue == undefined ? undefined : searchValue[REPLACE];
-    return fn !== undefined
-      ? fn.call(searchValue, O, replaceValue)
-      : $replace.call(String(O), searchValue, replaceValue);
-  };
-});
-},{"./$.fix-re-wks":93}],225:[function(require,module,exports){
-// @@search logic
-require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
-  // 21.1.3.15 String.prototype.search(regexp)
-  return function search(regexp){
-    'use strict';
-    var O  = defined(this)
-      , fn = regexp == undefined ? undefined : regexp[SEARCH];
-    return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
-  };
-});
-},{"./$.fix-re-wks":93}],226:[function(require,module,exports){
-// @@split logic
-require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
-  // 21.1.3.17 String.prototype.split(separator, limit)
-  return function split(separator, limit){
-    'use strict';
-    var O  = defined(this)
-      , fn = separator == undefined ? undefined : separator[SPLIT];
-    return fn !== undefined
-      ? fn.call(separator, O, limit)
-      : $split.call(String(O), separator, limit);
-  };
-});
-},{"./$.fix-re-wks":93}],227:[function(require,module,exports){
-'use strict';
-var strong = require('./$.collection-strong');
-
-// 23.2 Set Objects
-require('./$.collection')('Set', function(get){
-  return function Set(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
-}, {
-  // 23.2.3.1 Set.prototype.add(value)
-  add: function add(value){
-    return strong.def(this, value = value === 0 ? 0 : value, value);
-  }
-}, strong);
-},{"./$.collection":83,"./$.collection-strong":80}],228:[function(require,module,exports){
-'use strict';
-var $export = require('./$.export')
-  , $at     = require('./$.string-at')(false);
-$export($export.P, 'String', {
-  // 21.1.3.3 String.prototype.codePointAt(pos)
-  codePointAt: function codePointAt(pos){
-    return $at(this, pos);
-  }
-});
-},{"./$.export":90,"./$.string-at":138}],229:[function(require,module,exports){
-// 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
-'use strict';
-var $export   = require('./$.export')
-  , toLength  = require('./$.to-length')
-  , context   = require('./$.string-context')
-  , ENDS_WITH = 'endsWith'
-  , $endsWith = ''[ENDS_WITH];
-
-$export($export.P + $export.F * require('./$.fails-is-regexp')(ENDS_WITH), 'String', {
-  endsWith: function endsWith(searchString /*, endPosition = @length */){
-    var that = context(this, searchString, ENDS_WITH)
-      , $$   = arguments
-      , endPosition = $$.length > 1 ? $$[1] : undefined
-      , len    = toLength(that.length)
-      , end    = endPosition === undefined ? len : Math.min(toLength(endPosition), len)
-      , search = String(searchString);
-    return $endsWith
-      ? $endsWith.call(that, search, end)
-      : that.slice(end - search.length, end) === search;
-  }
-});
-},{"./$.export":90,"./$.fails-is-regexp":91,"./$.string-context":139,"./$.to-length":147}],230:[function(require,module,exports){
-var $export        = require('./$.export')
-  , toIndex        = require('./$.to-index')
-  , fromCharCode   = String.fromCharCode
-  , $fromCodePoint = String.fromCodePoint;
-
-// length should be 1, old FF problem
-$export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String', {
-  // 21.1.2.2 String.fromCodePoint(...codePoints)
-  fromCodePoint: function fromCodePoint(x){ // eslint-disable-line no-unused-vars
-    var res   = []
-      , $$    = arguments
-      , $$len = $$.length
-      , i     = 0
-      , code;
-    while($$len > i){
-      code = +$$[i++];
-      if(toIndex(code, 0x10ffff) !== code)throw RangeError(code + ' is not a valid code point');
-      res.push(code < 0x10000
-        ? fromCharCode(code)
-        : fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00)
-      );
-    } return res.join('');
-  }
-});
-},{"./$.export":90,"./$.to-index":144}],231:[function(require,module,exports){
-// 21.1.3.7 String.prototype.includes(searchString, position = 0)
-'use strict';
-var $export  = require('./$.export')
-  , context  = require('./$.string-context')
-  , INCLUDES = 'includes';
-
-$export($export.P + $export.F * require('./$.fails-is-regexp')(INCLUDES), 'String', {
-  includes: function includes(searchString /*, position = 0 */){
-    return !!~context(this, searchString, INCLUDES)
-      .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-},{"./$.export":90,"./$.fails-is-regexp":91,"./$.string-context":139}],232:[function(require,module,exports){
-arguments[4][66][0].apply(exports,arguments)
-},{"./$.iter-define":110,"./$.string-at":138,"dup":66}],233:[function(require,module,exports){
-var $export   = require('./$.export')
-  , toIObject = require('./$.to-iobject')
-  , toLength  = require('./$.to-length');
-
-$export($export.S, 'String', {
-  // 21.1.2.4 String.raw(callSite, ...substitutions)
-  raw: function raw(callSite){
-    var tpl   = toIObject(callSite.raw)
-      , len   = toLength(tpl.length)
-      , $$    = arguments
-      , $$len = $$.length
-      , res   = []
-      , i     = 0;
-    while(len > i){
-      res.push(String(tpl[i++]));
-      if(i < $$len)res.push(String($$[i]));
-    } return res.join('');
-  }
-});
-},{"./$.export":90,"./$.to-iobject":146,"./$.to-length":147}],234:[function(require,module,exports){
-var $export = require('./$.export');
-
-$export($export.P, 'String', {
-  // 21.1.3.13 String.prototype.repeat(count)
-  repeat: require('./$.string-repeat')
-});
-},{"./$.export":90,"./$.string-repeat":141}],235:[function(require,module,exports){
-// 21.1.3.18 String.prototype.startsWith(searchString [, position ])
-'use strict';
-var $export     = require('./$.export')
-  , toLength    = require('./$.to-length')
-  , context     = require('./$.string-context')
-  , STARTS_WITH = 'startsWith'
-  , $startsWith = ''[STARTS_WITH];
-
-$export($export.P + $export.F * require('./$.fails-is-regexp')(STARTS_WITH), 'String', {
-  startsWith: function startsWith(searchString /*, position = 0 */){
-    var that   = context(this, searchString, STARTS_WITH)
-      , $$     = arguments
-      , index  = toLength(Math.min($$.length > 1 ? $$[1] : undefined, that.length))
-      , search = String(searchString);
-    return $startsWith
-      ? $startsWith.call(that, search, index)
-      : that.slice(index, index + search.length) === search;
-  }
-});
-},{"./$.export":90,"./$.fails-is-regexp":91,"./$.string-context":139,"./$.to-length":147}],236:[function(require,module,exports){
-'use strict';
-// 21.1.3.25 String.prototype.trim()
-require('./$.string-trim')('trim', function($trim){
-  return function trim(){
-    return $trim(this, 3);
-  };
-});
-},{"./$.string-trim":142}],237:[function(require,module,exports){
-arguments[4][67][0].apply(exports,arguments)
-},{"./$":114,"./$.an-object":72,"./$.descriptors":87,"./$.enum-keys":89,"./$.export":90,"./$.fails":92,"./$.get-names":96,"./$.global":97,"./$.has":98,"./$.is-array":104,"./$.keyof":115,"./$.library":116,"./$.property-desc":127,"./$.redefine":129,"./$.set-to-string-tag":134,"./$.shared":135,"./$.to-iobject":146,"./$.uid":150,"./$.wks":151,"dup":67}],238:[function(require,module,exports){
-'use strict';
-var $            = require('./$')
-  , redefine     = require('./$.redefine')
-  , weak         = require('./$.collection-weak')
-  , isObject     = require('./$.is-object')
-  , has          = require('./$.has')
-  , frozenStore  = weak.frozenStore
-  , WEAK         = weak.WEAK
-  , isExtensible = Object.isExtensible || isObject
-  , tmp          = {};
-
-// 23.3 WeakMap Objects
-var $WeakMap = require('./$.collection')('WeakMap', function(get){
-  return function WeakMap(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
-}, {
-  // 23.3.3.3 WeakMap.prototype.get(key)
-  get: function get(key){
-    if(isObject(key)){
-      if(!isExtensible(key))return frozenStore(this).get(key);
-      if(has(key, WEAK))return key[WEAK][this._i];
-    }
-  },
-  // 23.3.3.5 WeakMap.prototype.set(key, value)
-  set: function set(key, value){
-    return weak.def(this, key, value);
-  }
-}, weak, true, true);
-
-// IE11 WeakMap frozen keys fix
-if(new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7){
-  $.each.call(['delete', 'has', 'get', 'set'], function(key){
-    var proto  = $WeakMap.prototype
-      , method = proto[key];
-    redefine(proto, key, function(a, b){
-      // store frozen objects on leaky map
-      if(isObject(a) && !isExtensible(a)){
-        var result = frozenStore(this)[key](a, b);
-        return key == 'set' ? this : result;
-      // store all the rest on native weakmap
-      } return method.call(this, a, b);
-    });
-  });
-}
-},{"./$":114,"./$.collection":83,"./$.collection-weak":82,"./$.has":98,"./$.is-object":106,"./$.redefine":129}],239:[function(require,module,exports){
-'use strict';
-var weak = require('./$.collection-weak');
-
-// 23.4 WeakSet Objects
-require('./$.collection')('WeakSet', function(get){
-  return function WeakSet(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
-}, {
-  // 23.4.3.1 WeakSet.prototype.add(value)
-  add: function add(value){
-    return weak.def(this, value, true);
-  }
-}, weak, false, true);
-},{"./$.collection":83,"./$.collection-weak":82}],240:[function(require,module,exports){
-'use strict';
-var $export   = require('./$.export')
-  , $includes = require('./$.array-includes')(true);
-
-$export($export.P, 'Array', {
-  // https://github.com/domenic/Array.prototype.includes
-  includes: function includes(el /*, fromIndex = 0 */){
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-require('./$.add-to-unscopables')('includes');
-},{"./$.add-to-unscopables":71,"./$.array-includes":75,"./$.export":90}],241:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"./$.collection-to-json":81,"./$.export":90,"dup":68}],242:[function(require,module,exports){
-// http://goo.gl/XkBrjD
-var $export  = require('./$.export')
-  , $entries = require('./$.object-to-array')(true);
-
-$export($export.S, 'Object', {
-  entries: function entries(it){
-    return $entries(it);
-  }
-});
-},{"./$.export":90,"./$.object-to-array":123}],243:[function(require,module,exports){
-// https://gist.github.com/WebReflection/9353781
-var $          = require('./$')
-  , $export    = require('./$.export')
-  , ownKeys    = require('./$.own-keys')
-  , toIObject  = require('./$.to-iobject')
-  , createDesc = require('./$.property-desc');
-
-$export($export.S, 'Object', {
-  getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object){
-    var O       = toIObject(object)
-      , setDesc = $.setDesc
-      , getDesc = $.getDesc
-      , keys    = ownKeys(O)
-      , result  = {}
-      , i       = 0
-      , key, D;
-    while(keys.length > i){
-      D = getDesc(O, key = keys[i++]);
-      if(key in result)setDesc(result, key, createDesc(0, D));
-      else result[key] = D;
-    } return result;
-  }
-});
-},{"./$":114,"./$.export":90,"./$.own-keys":124,"./$.property-desc":127,"./$.to-iobject":146}],244:[function(require,module,exports){
-// http://goo.gl/XkBrjD
-var $export = require('./$.export')
-  , $values = require('./$.object-to-array')(false);
-
-$export($export.S, 'Object', {
-  values: function values(it){
-    return $values(it);
-  }
-});
-},{"./$.export":90,"./$.object-to-array":123}],245:[function(require,module,exports){
-// https://github.com/benjamingr/RexExp.escape
-var $export = require('./$.export')
-  , $re     = require('./$.replacer')(/[\\^$*+?.()|[\]{}]/g, '\\$&');
-
-$export($export.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
-
-},{"./$.export":90,"./$.replacer":130}],246:[function(require,module,exports){
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export  = require('./$.export');
-
-$export($export.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":81,"./$.export":90}],247:[function(require,module,exports){
-'use strict';
-// https://github.com/mathiasbynens/String.prototype.at
-var $export = require('./$.export')
-  , $at     = require('./$.string-at')(true);
-
-$export($export.P, 'String', {
-  at: function at(pos){
-    return $at(this, pos);
-  }
-});
-},{"./$.export":90,"./$.string-at":138}],248:[function(require,module,exports){
-'use strict';
-var $export = require('./$.export')
-  , $pad    = require('./$.string-pad');
-
-$export($export.P, 'String', {
-  padLeft: function padLeft(maxLength /*, fillString = ' ' */){
-    return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
-  }
-});
-},{"./$.export":90,"./$.string-pad":140}],249:[function(require,module,exports){
-'use strict';
-var $export = require('./$.export')
-  , $pad    = require('./$.string-pad');
-
-$export($export.P, 'String', {
-  padRight: function padRight(maxLength /*, fillString = ' ' */){
-    return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
-  }
-});
-},{"./$.export":90,"./$.string-pad":140}],250:[function(require,module,exports){
-'use strict';
-// https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-require('./$.string-trim')('trimLeft', function($trim){
-  return function trimLeft(){
-    return $trim(this, 1);
-  };
-});
-},{"./$.string-trim":142}],251:[function(require,module,exports){
-'use strict';
-// https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-require('./$.string-trim')('trimRight', function($trim){
-  return function trimRight(){
-    return $trim(this, 2);
-  };
-});
-},{"./$.string-trim":142}],252:[function(require,module,exports){
-// JavaScript 1.6 / Strawman array statics shim
-var $       = require('./$')
-  , $export = require('./$.export')
-  , $ctx    = require('./$.ctx')
-  , $Array  = require('./$.core').Array || Array
-  , statics = {};
-var setStatics = function(keys, length){
-  $.each.call(keys.split(','), function(key){
-    if(length == undefined && key in $Array)statics[key] = $Array[key];
-    else if(key in [])statics[key] = $ctx(Function.call, [][key], length);
-  });
-};
-setStatics('pop,reverse,shift,keys,values,entries', 1);
-setStatics('indexOf,every,some,forEach,map,filter,find,findIndex,includes', 3);
-setStatics('join,slice,concat,push,splice,unshift,sort,lastIndexOf,' +
-           'reduce,reduceRight,copyWithin,fill');
-$export($export.S, 'Array', statics);
-},{"./$":114,"./$.core":84,"./$.ctx":85,"./$.export":90}],253:[function(require,module,exports){
-require('./es6.array.iterator');
-var global      = require('./$.global')
-  , hide        = require('./$.hide')
-  , Iterators   = require('./$.iterators')
-  , ITERATOR    = require('./$.wks')('iterator')
-  , NL          = global.NodeList
-  , HTC         = global.HTMLCollection
-  , NLProto     = NL && NL.prototype
-  , HTCProto    = HTC && HTC.prototype
-  , ArrayValues = Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-if(NLProto && !NLProto[ITERATOR])hide(NLProto, ITERATOR, ArrayValues);
-if(HTCProto && !HTCProto[ITERATOR])hide(HTCProto, ITERATOR, ArrayValues);
-},{"./$.global":97,"./$.hide":99,"./$.iterators":113,"./$.wks":151,"./es6.array.iterator":159}],254:[function(require,module,exports){
-var $export = require('./$.export')
-  , $task   = require('./$.task');
-$export($export.G + $export.B, {
-  setImmediate:   $task.set,
-  clearImmediate: $task.clear
-});
-},{"./$.export":90,"./$.task":143}],255:[function(require,module,exports){
-// ie9- setTimeout & setInterval additional parameters fix
-var global     = require('./$.global')
-  , $export    = require('./$.export')
-  , invoke     = require('./$.invoke')
-  , partial    = require('./$.partial')
-  , navigator  = global.navigator
-  , MSIE       = !!navigator && /MSIE .\./.test(navigator.userAgent); // <- dirty ie9- check
-var wrap = function(set){
-  return MSIE ? function(fn, time /*, ...args */){
-    return set(invoke(
-      partial,
-      [].slice.call(arguments, 2),
-      typeof fn == 'function' ? fn : Function(fn)
-    ), time);
-  } : set;
-};
-$export($export.G + $export.B + $export.F * MSIE, {
-  setTimeout:  wrap(global.setTimeout),
-  setInterval: wrap(global.setInterval)
-});
-},{"./$.export":90,"./$.global":97,"./$.invoke":101,"./$.partial":125}],256:[function(require,module,exports){
-require('./modules/es5');
-require('./modules/es6.symbol');
-require('./modules/es6.object.assign');
-require('./modules/es6.object.is');
-require('./modules/es6.object.set-prototype-of');
-require('./modules/es6.object.to-string');
-require('./modules/es6.object.freeze');
-require('./modules/es6.object.seal');
-require('./modules/es6.object.prevent-extensions');
-require('./modules/es6.object.is-frozen');
-require('./modules/es6.object.is-sealed');
-require('./modules/es6.object.is-extensible');
-require('./modules/es6.object.get-own-property-descriptor');
-require('./modules/es6.object.get-prototype-of');
-require('./modules/es6.object.keys');
-require('./modules/es6.object.get-own-property-names');
-require('./modules/es6.function.name');
-require('./modules/es6.function.has-instance');
-require('./modules/es6.number.constructor');
-require('./modules/es6.number.epsilon');
-require('./modules/es6.number.is-finite');
-require('./modules/es6.number.is-integer');
-require('./modules/es6.number.is-nan');
-require('./modules/es6.number.is-safe-integer');
-require('./modules/es6.number.max-safe-integer');
-require('./modules/es6.number.min-safe-integer');
-require('./modules/es6.number.parse-float');
-require('./modules/es6.number.parse-int');
-require('./modules/es6.math.acosh');
-require('./modules/es6.math.asinh');
-require('./modules/es6.math.atanh');
-require('./modules/es6.math.cbrt');
-require('./modules/es6.math.clz32');
-require('./modules/es6.math.cosh');
-require('./modules/es6.math.expm1');
-require('./modules/es6.math.fround');
-require('./modules/es6.math.hypot');
-require('./modules/es6.math.imul');
-require('./modules/es6.math.log10');
-require('./modules/es6.math.log1p');
-require('./modules/es6.math.log2');
-require('./modules/es6.math.sign');
-require('./modules/es6.math.sinh');
-require('./modules/es6.math.tanh');
-require('./modules/es6.math.trunc');
-require('./modules/es6.string.from-code-point');
-require('./modules/es6.string.raw');
-require('./modules/es6.string.trim');
-require('./modules/es6.string.iterator');
-require('./modules/es6.string.code-point-at');
-require('./modules/es6.string.ends-with');
-require('./modules/es6.string.includes');
-require('./modules/es6.string.repeat');
-require('./modules/es6.string.starts-with');
-require('./modules/es6.array.from');
-require('./modules/es6.array.of');
-require('./modules/es6.array.iterator');
-require('./modules/es6.array.species');
-require('./modules/es6.array.copy-within');
-require('./modules/es6.array.fill');
-require('./modules/es6.array.find');
-require('./modules/es6.array.find-index');
-require('./modules/es6.regexp.constructor');
-require('./modules/es6.regexp.flags');
-require('./modules/es6.regexp.match');
-require('./modules/es6.regexp.replace');
-require('./modules/es6.regexp.search');
-require('./modules/es6.regexp.split');
-require('./modules/es6.promise');
-require('./modules/es6.map');
-require('./modules/es6.set');
-require('./modules/es6.weak-map');
-require('./modules/es6.weak-set');
-require('./modules/es6.reflect.apply');
-require('./modules/es6.reflect.construct');
-require('./modules/es6.reflect.define-property');
-require('./modules/es6.reflect.delete-property');
-require('./modules/es6.reflect.enumerate');
-require('./modules/es6.reflect.get');
-require('./modules/es6.reflect.get-own-property-descriptor');
-require('./modules/es6.reflect.get-prototype-of');
-require('./modules/es6.reflect.has');
-require('./modules/es6.reflect.is-extensible');
-require('./modules/es6.reflect.own-keys');
-require('./modules/es6.reflect.prevent-extensions');
-require('./modules/es6.reflect.set');
-require('./modules/es6.reflect.set-prototype-of');
-require('./modules/es7.array.includes');
-require('./modules/es7.string.at');
-require('./modules/es7.string.pad-left');
-require('./modules/es7.string.pad-right');
-require('./modules/es7.string.trim-left');
-require('./modules/es7.string.trim-right');
-require('./modules/es7.regexp.escape');
-require('./modules/es7.object.get-own-property-descriptors');
-require('./modules/es7.object.values');
-require('./modules/es7.object.entries');
-require('./modules/es7.map.to-json');
-require('./modules/es7.set.to-json');
-require('./modules/js.array.statics');
-require('./modules/web.timers');
-require('./modules/web.immediate');
-require('./modules/web.dom.iterable');
-module.exports = require('./modules/$.core');
-},{"./modules/$.core":84,"./modules/es5":153,"./modules/es6.array.copy-within":154,"./modules/es6.array.fill":155,"./modules/es6.array.find":157,"./modules/es6.array.find-index":156,"./modules/es6.array.from":158,"./modules/es6.array.iterator":159,"./modules/es6.array.of":160,"./modules/es6.array.species":161,"./modules/es6.function.has-instance":162,"./modules/es6.function.name":163,"./modules/es6.map":164,"./modules/es6.math.acosh":165,"./modules/es6.math.asinh":166,"./modules/es6.math.atanh":167,"./modules/es6.math.cbrt":168,"./modules/es6.math.clz32":169,"./modules/es6.math.cosh":170,"./modules/es6.math.expm1":171,"./modules/es6.math.fround":172,"./modules/es6.math.hypot":173,"./modules/es6.math.imul":174,"./modules/es6.math.log10":175,"./modules/es6.math.log1p":176,"./modules/es6.math.log2":177,"./modules/es6.math.sign":178,"./modules/es6.math.sinh":179,"./modules/es6.math.tanh":180,"./modules/es6.math.trunc":181,"./modules/es6.number.constructor":182,"./modules/es6.number.epsilon":183,"./modules/es6.number.is-finite":184,"./modules/es6.number.is-integer":185,"./modules/es6.number.is-nan":186,"./modules/es6.number.is-safe-integer":187,"./modules/es6.number.max-safe-integer":188,"./modules/es6.number.min-safe-integer":189,"./modules/es6.number.parse-float":190,"./modules/es6.number.parse-int":191,"./modules/es6.object.assign":192,"./modules/es6.object.freeze":193,"./modules/es6.object.get-own-property-descriptor":194,"./modules/es6.object.get-own-property-names":195,"./modules/es6.object.get-prototype-of":196,"./modules/es6.object.is":200,"./modules/es6.object.is-extensible":197,"./modules/es6.object.is-frozen":198,"./modules/es6.object.is-sealed":199,"./modules/es6.object.keys":201,"./modules/es6.object.prevent-extensions":202,"./modules/es6.object.seal":203,"./modules/es6.object.set-prototype-of":204,"./modules/es6.object.to-string":205,"./modules/es6.promise":206,"./modules/es6.reflect.apply":207,"./modules/es6.reflect.construct":208,"./modules/es6.reflect.define-property":209,"./modules/es6.reflect.delete-property":210,"./modules/es6.reflect.enumerate":211,"./modules/es6.reflect.get":214,"./modules/es6.reflect.get-own-property-descriptor":212,"./modules/es6.reflect.get-prototype-of":213,"./modules/es6.reflect.has":215,"./modules/es6.reflect.is-extensible":216,"./modules/es6.reflect.own-keys":217,"./modules/es6.reflect.prevent-extensions":218,"./modules/es6.reflect.set":220,"./modules/es6.reflect.set-prototype-of":219,"./modules/es6.regexp.constructor":221,"./modules/es6.regexp.flags":222,"./modules/es6.regexp.match":223,"./modules/es6.regexp.replace":224,"./modules/es6.regexp.search":225,"./modules/es6.regexp.split":226,"./modules/es6.set":227,"./modules/es6.string.code-point-at":228,"./modules/es6.string.ends-with":229,"./modules/es6.string.from-code-point":230,"./modules/es6.string.includes":231,"./modules/es6.string.iterator":232,"./modules/es6.string.raw":233,"./modules/es6.string.repeat":234,"./modules/es6.string.starts-with":235,"./modules/es6.string.trim":236,"./modules/es6.symbol":237,"./modules/es6.weak-map":238,"./modules/es6.weak-set":239,"./modules/es7.array.includes":240,"./modules/es7.map.to-json":241,"./modules/es7.object.entries":242,"./modules/es7.object.get-own-property-descriptors":243,"./modules/es7.object.values":244,"./modules/es7.regexp.escape":245,"./modules/es7.set.to-json":246,"./modules/es7.string.at":247,"./modules/es7.string.pad-left":248,"./modules/es7.string.pad-right":249,"./modules/es7.string.trim-left":250,"./modules/es7.string.trim-right":251,"./modules/js.array.statics":252,"./modules/web.dom.iterable":253,"./modules/web.immediate":254,"./modules/web.timers":255}],257:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-(function () {
-  try {
-    cachedSetTimeout = setTimeout;
-  } catch (e) {
-    cachedSetTimeout = function () {
-      throw new Error('setTimeout is not defined');
-    }
-  }
-  try {
-    cachedClearTimeout = clearTimeout;
-  } catch (e) {
-    cachedClearTimeout = function () {
-      throw new Error('clearTimeout is not defined');
-    }
-  }
-} ())
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = cachedSetTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    cachedClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        cachedSetTimeout(drainQueue, 0);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],258:[function(require,module,exports){
-(function (process,global){
-/**
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
- * additional grant of patent rights can be found in the PATENTS file in
- * the same directory.
- */
-
-!(function(global) {
-  "use strict";
-
-  var hasOwn = Object.prototype.hasOwnProperty;
-  var undefined; // More compressible than void 0.
-  var iteratorSymbol =
-    typeof Symbol === "function" && Symbol.iterator || "@@iterator";
-
-  var inModule = typeof module === "object";
-  var runtime = global.regeneratorRuntime;
-  if (runtime) {
-    if (inModule) {
-      // If regeneratorRuntime is defined globally and we're in a module,
-      // make the exports object identical to regeneratorRuntime.
-      module.exports = runtime;
-    }
-    // Don't bother evaluating the rest of this file if the runtime was
-    // already defined globally.
-    return;
-  }
-
-  // Define the runtime globally (as expected by generated code) as either
-  // module.exports (if we're in a module) or a new, empty object.
-  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
-
-  function wrap(innerFn, outerFn, self, tryLocsList) {
-    // If outerFn provided, then outerFn.prototype instanceof Generator.
-    var generator = Object.create((outerFn || Generator).prototype);
-    var context = new Context(tryLocsList || []);
-
-    // The ._invoke method unifies the implementations of the .next,
-    // .throw, and .return methods.
-    generator._invoke = makeInvokeMethod(innerFn, self, context);
-
-    return generator;
-  }
-  runtime.wrap = wrap;
-
-  // Try/catch helper to minimize deoptimizations. Returns a completion
-  // record like context.tryEntries[i].completion. This interface could
-  // have been (and was previously) designed to take a closure to be
-  // invoked without arguments, but in all the cases we care about we
-  // already have an existing method we want to call, so there's no need
-  // to create a new function object. We can even get away with assuming
-  // the method takes exactly one argument, since that happens to be true
-  // in every case, so we don't have to touch the arguments object. The
-  // only additional allocation required is the completion record, which
-  // has a stable shape and so hopefully should be cheap to allocate.
-  function tryCatch(fn, obj, arg) {
-    try {
-      return { type: "normal", arg: fn.call(obj, arg) };
-    } catch (err) {
-      return { type: "throw", arg: err };
-    }
-  }
-
-  var GenStateSuspendedStart = "suspendedStart";
-  var GenStateSuspendedYield = "suspendedYield";
-  var GenStateExecuting = "executing";
-  var GenStateCompleted = "completed";
-
-  // Returning this object from the innerFn has the same effect as
-  // breaking out of the dispatch switch statement.
-  var ContinueSentinel = {};
-
-  // Dummy constructor functions that we use as the .constructor and
-  // .constructor.prototype properties for functions that return Generator
-  // objects. For full spec compliance, you may wish to configure your
-  // minifier not to mangle the names of these two functions.
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
-
-  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunction.displayName = "GeneratorFunction";
-
-  // Helper for defining the .next, .throw, and .return methods of the
-  // Iterator interface in terms of a single ._invoke method.
-  function defineIteratorMethods(prototype) {
-    ["next", "throw", "return"].forEach(function(method) {
-      prototype[method] = function(arg) {
-        return this._invoke(method, arg);
-      };
-    });
-  }
-
-  runtime.isGeneratorFunction = function(genFun) {
-    var ctor = typeof genFun === "function" && genFun.constructor;
-    return ctor
-      ? ctor === GeneratorFunction ||
-        // For the native GeneratorFunction constructor, the best we can
-        // do is to check its .name property.
-        (ctor.displayName || ctor.name) === "GeneratorFunction"
-      : false;
-  };
-
-  runtime.mark = function(genFun) {
-    if (Object.setPrototypeOf) {
-      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
-    } else {
-      genFun.__proto__ = GeneratorFunctionPrototype;
-    }
-    genFun.prototype = Object.create(Gp);
-    return genFun;
-  };
-
-  // Within the body of any async function, `await x` is transformed to
-  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-  // `value instanceof AwaitArgument` to determine if the yielded value is
-  // meant to be awaited. Some may consider the name of this method too
-  // cutesy, but they are curmudgeons.
-  runtime.awrap = function(arg) {
-    return new AwaitArgument(arg);
-  };
-
-  function AwaitArgument(arg) {
-    this.arg = arg;
-  }
-
-  function AsyncIterator(generator) {
-    // This invoke function is written in a style that assumes some
-    // calling function (or Promise) will handle exceptions.
-    function invoke(method, arg) {
-      var result = generator[method](arg);
-      var value = result.value;
-      return value instanceof AwaitArgument
-        ? Promise.resolve(value.arg).then(invokeNext, invokeThrow)
-        : Promise.resolve(value).then(function(unwrapped) {
-            // When a yielded Promise is resolved, its final value becomes
-            // the .value of the Promise<{value,done}> result for the
-            // current iteration. If the Promise is rejected, however, the
-            // result for this iteration will be rejected with the same
-            // reason. Note that rejections of yielded Promises are not
-            // thrown back into the generator function, as is the case
-            // when an awaited Promise is rejected. This difference in
-            // behavior between yield and await is important, because it
-            // allows the consumer to decide what to do with the yielded
-            // rejection (swallow it and continue, manually .throw it back
-            // into the generator, abandon iteration, whatever). With
-            // await, by contrast, there is no opportunity to examine the
-            // rejection reason outside the generator function, so the
-            // only option is to throw it from the await expression, and
-            // let the generator function handle the exception.
-            result.value = unwrapped;
-            return result;
-          });
-    }
-
-    if (typeof process === "object" && process.domain) {
-      invoke = process.domain.bind(invoke);
-    }
-
-    var invokeNext = invoke.bind(generator, "next");
-    var invokeThrow = invoke.bind(generator, "throw");
-    var invokeReturn = invoke.bind(generator, "return");
-    var previousPromise;
-
-    function enqueue(method, arg) {
-      function callInvokeWithMethodAndArg() {
-        return invoke(method, arg);
-      }
-
-      return previousPromise =
-        // If enqueue has been called before, then we want to wait until
-        // all previous Promises have been resolved before calling invoke,
-        // so that results are always delivered in the correct order. If
-        // enqueue has not been called before, then it is important to
-        // call invoke immediately, without waiting on a callback to fire,
-        // so that the async generator function has the opportunity to do
-        // any necessary setup in a predictable way. This predictability
-        // is why the Promise constructor synchronously invokes its
-        // executor callback, and why async functions synchronously
-        // execute code before the first await. Since we implement simple
-        // async functions in terms of async generators, it is especially
-        // important to get this right, even though it requires care.
-        previousPromise ? previousPromise.then(
-          callInvokeWithMethodAndArg,
-          // Avoid propagating failures to Promises returned by later
-          // invocations of the iterator.
-          callInvokeWithMethodAndArg
-        ) : new Promise(function (resolve) {
-          resolve(callInvokeWithMethodAndArg());
-        });
-    }
-
-    // Define the unified helper method that is used to implement .next,
-    // .throw, and .return (see defineIteratorMethods).
-    this._invoke = enqueue;
-  }
-
-  defineIteratorMethods(AsyncIterator.prototype);
-
-  // Note that simple async functions are implemented on top of
-  // AsyncIterator objects; they just return a Promise for the value of
-  // the final result produced by the iterator.
-  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
-    var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList)
-    );
-
-    return runtime.isGeneratorFunction(outerFn)
-      ? iter // If outerFn is a generator, return the full iterator.
-      : iter.next().then(function(result) {
-          return result.done ? result.value : iter.next();
-        });
-  };
-
-  function makeInvokeMethod(innerFn, self, context) {
-    var state = GenStateSuspendedStart;
-
-    return function invoke(method, arg) {
-      if (state === GenStateExecuting) {
-        throw new Error("Generator is already running");
-      }
-
-      if (state === GenStateCompleted) {
-        if (method === "throw") {
-          throw arg;
-        }
-
-        // Be forgiving, per 25.3.3.3.3 of the spec:
-        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-        return doneResult();
-      }
-
-      while (true) {
-        var delegate = context.delegate;
-        if (delegate) {
-          if (method === "return" ||
-              (method === "throw" && delegate.iterator[method] === undefined)) {
-            // A return or throw (when the delegate iterator has no throw
-            // method) always terminates the yield* loop.
-            context.delegate = null;
-
-            // If the delegate iterator has a return method, give it a
-            // chance to clean up.
-            var returnMethod = delegate.iterator["return"];
-            if (returnMethod) {
-              var record = tryCatch(returnMethod, delegate.iterator, arg);
-              if (record.type === "throw") {
-                // If the return method threw an exception, let that
-                // exception prevail over the original return or throw.
-                method = "throw";
-                arg = record.arg;
-                continue;
-              }
-            }
-
-            if (method === "return") {
-              // Continue with the outer return, now that the delegate
-              // iterator has been terminated.
-              continue;
-            }
-          }
-
-          var record = tryCatch(
-            delegate.iterator[method],
-            delegate.iterator,
-            arg
-          );
-
-          if (record.type === "throw") {
-            context.delegate = null;
-
-            // Like returning generator.throw(uncaught), but without the
-            // overhead of an extra function call.
-            method = "throw";
-            arg = record.arg;
-            continue;
-          }
-
-          // Delegate generator ran and handled its own exceptions so
-          // regardless of what the method was, we continue as if it is
-          // "next" with an undefined arg.
-          method = "next";
-          arg = undefined;
-
-          var info = record.arg;
-          if (info.done) {
-            context[delegate.resultName] = info.value;
-            context.next = delegate.nextLoc;
-          } else {
-            state = GenStateSuspendedYield;
-            return info;
-          }
-
-          context.delegate = null;
-        }
-
-        if (method === "next") {
-          if (state === GenStateSuspendedYield) {
-            context.sent = arg;
-          } else {
-            context.sent = undefined;
-          }
-
-        } else if (method === "throw") {
-          if (state === GenStateSuspendedStart) {
-            state = GenStateCompleted;
-            throw arg;
-          }
-
-          if (context.dispatchException(arg)) {
-            // If the dispatched exception was caught by a catch block,
-            // then let that catch block handle the exception normally.
-            method = "next";
-            arg = undefined;
-          }
-
-        } else if (method === "return") {
-          context.abrupt("return", arg);
-        }
-
-        state = GenStateExecuting;
-
-        var record = tryCatch(innerFn, self, context);
-        if (record.type === "normal") {
-          // If an exception is thrown from innerFn, we leave state ===
-          // GenStateExecuting and loop back for another invocation.
-          state = context.done
-            ? GenStateCompleted
-            : GenStateSuspendedYield;
-
-          var info = {
-            value: record.arg,
-            done: context.done
-          };
-
-          if (record.arg === ContinueSentinel) {
-            if (context.delegate && method === "next") {
-              // Deliberately forget the last sent value so that we don't
-              // accidentally pass it on to the delegate.
-              arg = undefined;
-            }
-          } else {
-            return info;
-          }
-
-        } else if (record.type === "throw") {
-          state = GenStateCompleted;
-          // Dispatch the exception by looping back around to the
-          // context.dispatchException(arg) call above.
-          method = "throw";
-          arg = record.arg;
-        }
-      }
-    };
-  }
-
-  // Define Generator.prototype.{next,throw,return} in terms of the
-  // unified ._invoke helper method.
-  defineIteratorMethods(Gp);
-
-  Gp[iteratorSymbol] = function() {
-    return this;
-  };
-
-  Gp.toString = function() {
-    return "[object Generator]";
-  };
-
-  function pushTryEntry(locs) {
-    var entry = { tryLoc: locs[0] };
-
-    if (1 in locs) {
-      entry.catchLoc = locs[1];
-    }
-
-    if (2 in locs) {
-      entry.finallyLoc = locs[2];
-      entry.afterLoc = locs[3];
-    }
-
-    this.tryEntries.push(entry);
-  }
-
-  function resetTryEntry(entry) {
-    var record = entry.completion || {};
-    record.type = "normal";
-    delete record.arg;
-    entry.completion = record;
-  }
-
-  function Context(tryLocsList) {
-    // The root entry object (effectively a try statement without a catch
-    // or a finally block) gives us a place to store values thrown from
-    // locations where there is no enclosing try statement.
-    this.tryEntries = [{ tryLoc: "root" }];
-    tryLocsList.forEach(pushTryEntry, this);
-    this.reset(true);
-  }
-
-  runtime.keys = function(object) {
-    var keys = [];
-    for (var key in object) {
-      keys.push(key);
-    }
-    keys.reverse();
-
-    // Rather than returning an object with a next method, we keep
-    // things simple and return the next function itself.
-    return function next() {
-      while (keys.length) {
-        var key = keys.pop();
-        if (key in object) {
-          next.value = key;
-          next.done = false;
-          return next;
-        }
-      }
-
-      // To avoid creating an additional object, we just hang the .value
-      // and .done properties off the next function object itself. This
-      // also ensures that the minifier will not anonymize the function.
-      next.done = true;
-      return next;
-    };
-  };
-
-  function values(iterable) {
-    if (iterable) {
-      var iteratorMethod = iterable[iteratorSymbol];
-      if (iteratorMethod) {
-        return iteratorMethod.call(iterable);
-      }
-
-      if (typeof iterable.next === "function") {
-        return iterable;
-      }
-
-      if (!isNaN(iterable.length)) {
-        var i = -1, next = function next() {
-          while (++i < iterable.length) {
-            if (hasOwn.call(iterable, i)) {
-              next.value = iterable[i];
-              next.done = false;
-              return next;
-            }
-          }
-
-          next.value = undefined;
-          next.done = true;
-
-          return next;
-        };
-
-        return next.next = next;
-      }
-    }
-
-    // Return an iterator with no values.
-    return { next: doneResult };
-  }
-  runtime.values = values;
-
-  function doneResult() {
-    return { value: undefined, done: true };
-  }
-
-  Context.prototype = {
-    constructor: Context,
-
-    reset: function(skipTempReset) {
-      this.prev = 0;
-      this.next = 0;
-      this.sent = undefined;
-      this.done = false;
-      this.delegate = null;
-
-      this.tryEntries.forEach(resetTryEntry);
-
-      if (!skipTempReset) {
-        for (var name in this) {
-          // Not sure about the optimal order of these conditions:
-          if (name.charAt(0) === "t" &&
-              hasOwn.call(this, name) &&
-              !isNaN(+name.slice(1))) {
-            this[name] = undefined;
-          }
-        }
-      }
-    },
-
-    stop: function() {
-      this.done = true;
-
-      var rootEntry = this.tryEntries[0];
-      var rootRecord = rootEntry.completion;
-      if (rootRecord.type === "throw") {
-        throw rootRecord.arg;
-      }
-
-      return this.rval;
-    },
-
-    dispatchException: function(exception) {
-      if (this.done) {
-        throw exception;
-      }
-
-      var context = this;
-      function handle(loc, caught) {
-        record.type = "throw";
-        record.arg = exception;
-        context.next = loc;
-        return !!caught;
-      }
-
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        var record = entry.completion;
-
-        if (entry.tryLoc === "root") {
-          // Exception thrown outside of any try block that could handle
-          // it, so set the completion value of the entire function to
-          // throw the exception.
-          return handle("end");
-        }
-
-        if (entry.tryLoc <= this.prev) {
-          var hasCatch = hasOwn.call(entry, "catchLoc");
-          var hasFinally = hasOwn.call(entry, "finallyLoc");
-
-          if (hasCatch && hasFinally) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            } else if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else if (hasCatch) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            }
-
-          } else if (hasFinally) {
-            if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else {
-            throw new Error("try statement without catch or finally");
-          }
-        }
-      }
-    },
-
-    abrupt: function(type, arg) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc <= this.prev &&
-            hasOwn.call(entry, "finallyLoc") &&
-            this.prev < entry.finallyLoc) {
-          var finallyEntry = entry;
-          break;
-        }
-      }
-
-      if (finallyEntry &&
-          (type === "break" ||
-           type === "continue") &&
-          finallyEntry.tryLoc <= arg &&
-          arg <= finallyEntry.finallyLoc) {
-        // Ignore the finally entry if control is not jumping to a
-        // location outside the try/catch block.
-        finallyEntry = null;
-      }
-
-      var record = finallyEntry ? finallyEntry.completion : {};
-      record.type = type;
-      record.arg = arg;
-
-      if (finallyEntry) {
-        this.next = finallyEntry.finallyLoc;
-      } else {
-        this.complete(record);
-      }
-
-      return ContinueSentinel;
-    },
-
-    complete: function(record, afterLoc) {
-      if (record.type === "throw") {
-        throw record.arg;
-      }
-
-      if (record.type === "break" ||
-          record.type === "continue") {
-        this.next = record.arg;
-      } else if (record.type === "return") {
-        this.rval = record.arg;
-        this.next = "end";
-      } else if (record.type === "normal" && afterLoc) {
-        this.next = afterLoc;
-      }
-    },
-
-    finish: function(finallyLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.finallyLoc === finallyLoc) {
-          this.complete(entry.completion, entry.afterLoc);
-          resetTryEntry(entry);
-          return ContinueSentinel;
-        }
-      }
-    },
-
-    "catch": function(tryLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc === tryLoc) {
-          var record = entry.completion;
-          if (record.type === "throw") {
-            var thrown = record.arg;
-            resetTryEntry(entry);
-          }
-          return thrown;
-        }
-      }
-
-      // The context.catch method must only be called with a location
-      // argument that corresponds to a known catch block.
-      throw new Error("illegal catch attempt");
-    },
-
-    delegateYield: function(iterable, resultName, nextLoc) {
-      this.delegate = {
-        iterator: values(iterable),
-        resultName: resultName,
-        nextLoc: nextLoc
-      };
-
-      return ContinueSentinel;
-    }
-  };
-})(
-  // Among the various tricks for obtaining a reference to the global
-  // object, this seems to be the most reliable technique that does not
-  // use indirect eval (which violates Content Security Policy).
-  typeof global === "object" ? global :
-  typeof window === "object" ? window :
-  typeof self === "object" ? self : this
-);
-
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":257}],259:[function(require,module,exports){
-'use strict';
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Symbol = require('babel-runtime/core-js/symbol')['default'];
-
-var _Map = require('babel-runtime/core-js/map')['default'];
-
-var _Array$from = require('babel-runtime/core-js/array/from')['default'];
-
-if (!window.altspace) {
-	window.altspace = {};
-}
-if (!window.altspace.utilities) {
-	window.altspace.utilities = {};
-}
-if (!window.altspace.utilities.behaviors) {
-	window.altspace.utilities.behaviors = {};
-}
-
-require('babel/polyfill');
-var containerMax = _Symbol('containerMax'),
-    containerMin = _Symbol('containerMin'),
-    object3D = _Symbol('object3D'),
-    boundingBox = _Symbol('boundingBox'),
-    origMatrix = _Symbol('origMatrix'),
-    origMatrixAutoUpdate = _Symbol('origMatrixAutoUpdate'),
-    parent = _Symbol('parent'),
-    enclosure = _Symbol('enclosure'),
-    origParentBoundingBoxes = new _Map();
-
-/**
- * The Layout behavior allows you to position objects easily. You can
- * position an object relative to its parent (either the Scene or a
- * another object) by using a position specifier for each of the axes.
- * The position specifier can be one of 'min', 'center' or 'max'. The default
- * specifier is 'center'. You can also add a modifier to the position in pixels
- * ('min+5'), a percentage ('min+10%') or meters ('min+1m'). Finally, you can
- * choose the location of the anchor on the object you are trying to position
- * by using the 'my' parameter.
- * You must specify at least one axis on the 'at' parameter.
- *
- * @example
- * // Position the top of the cube at 1.5 meters above the bottom of its parent.
- * cube.addBehavior(new altpsace.utilities.behaviors.Layout({
- *	   my: {y: 'max'},
- *	   at: {y: 'min+1.5m'}
- * });
- *
- * @class Layout
- * @memberof module:altspace/utilities/behaviors
- * @param {Object} config
- * @param {Object} config.at An object containing the axes and position
- *  specifiers. At least one axis must be specified. E.g. `{x: 'min', y: 'max-5%'}`
- * @param {Object} [config.my] An object containing the axes and position
- *  specifiers for the layout anchor.
- **/
-
-var Layout = (function () {
-	function Layout(_ref) {
-		var _ref$my = _ref.my;
-		var my = _ref$my === undefined ? {} : _ref$my;
-		var at = _ref.at;
-
-		_classCallCheck(this, Layout);
-
-		this.my = my;
-		this.at = at;
-		this.type = 'Layout';
-	}
-
-	// TODO-BP Ideally these would be private methods.
-
-	_createClass(Layout, [{
-		key: 'getAxisSettings',
-		value: function getAxisSettings(axis, axisValue, min, max) {
-			axisValue = axisValue || 'center';
-			axisValue = /(\w+)([-+].+)?/.exec(axisValue);
-			var position = axisValue[1];
-			var offsetSetting = axisValue[2];
-			var offset = parseFloat(offsetSetting) || 0;
-			if (offsetSetting && offsetSetting.endsWith('%')) {
-				offset = offset / 100 * (max[axis] - min[axis]);
-			} else if (offsetSetting && offsetSetting.endsWith('m')) {
-				offset = offset * this[enclosure].pixelsPerMeter;
-			}
-			return {
-				position: position,
-				offset: offset
-			};
-		}
-	}, {
-		key: 'getAnchorOffset',
-		value: function getAnchorOffset(axis, axisValue) {
-			var max = this[boundingBox].max;
-			var min = this[boundingBox].min;
-
-			var _getAxisSettings = this.getAxisSettings(axis, axisValue, min, max);
-
-			var position = _getAxisSettings.position;
-			var offset = _getAxisSettings.offset;
-
-			if (position === 'max') {
-				return -max[axis] + offset;
-			} else if (position === 'min') {
-				return -min[axis] + offset;
-			} else if (position === 'center') {
-				return offset;
-			} else {
-				throw new Error(axisValue + ' is an invalid layout position for ' + axis);
-			}
-		}
-	}, {
-		key: 'doLayout',
-		value: function doLayout() {
-			var _this = this;
-
-			_Array$from('xyz').forEach(function (axis) {
-				var _getAxisSettings2 = _this.getAxisSettings(axis, _this.at[axis], _this[containerMin], _this[containerMax]);
-
-				var position = _getAxisSettings2.position;
-				var offset = _getAxisSettings2.offset;
-
-				var anchorOffset = _this.getAnchorOffset(axis, _this.my[axis]);
-				if (position === 'max') {
-					_this[object3D].position[axis] = _this[containerMax][axis] + offset + anchorOffset;
-				} else if (position === 'min') {
-					_this[object3D].position[axis] = _this[containerMin][axis] + offset + anchorOffset;
-				} else if (position === 'center') {
-					_this[object3D].position[axis] = offset + anchorOffset;
-				} else {
-					throw new Error(_this.at[axis] + ' is an invalid layout position for ' + axis);
-				}
-			});
-
-			if (this[parent]) {
-				// Restore the original parent transform
-				this[parent].matrix = this[origMatrix];
-				this[parent].updateMatrixWorld(true);
-				this[parent].matrixAutoUpdate = this[origMatrixAutoUpdate];
-			}
-		}
-	}, {
-		key: 'awake',
-		value: function awake(_object3D) {
-			var _this2 = this;
-
-			this[object3D] = _object3D;
-			this[boundingBox] = new THREE.Box3().setFromObject(this[object3D]);
-
-			// TODO Listen for resize events on the enclosure
-			altspace.getEnclosure().then(function (_enclosure) {
-				_this2[enclosure] = _enclosure;
-				if (_this2[object3D].parent instanceof THREE.Scene) {
-					var hw = _this2[enclosure].innerWidth / 2,
-					    hh = _this2[enclosure].innerHeight / 2,
-					    hd = _this2[enclosure].innerDepth / 2;
-					_this2[containerMax] = new THREE.Vector3(hw, hh, hd);
-					_this2[containerMin] = new THREE.Vector3(-hw, -hh, -hd);
-					_this2.doLayout();
-				} else {
-					var objWorldScale = _this2[object3D].getWorldScale();
-					_this2[boundingBox].min.divide(objWorldScale);
-					_this2[boundingBox].max.divide(objWorldScale);
-
-					_this2[parent] = _this2[object3D].parent;
-
-					_this2[origMatrix] = _this2[parent].matrix.clone();
-					_this2[origMatrixAutoUpdate] = _this2[parent].matrixAutoUpdate;
-
-					// We want to use the un-transormed anchor of the parent.
-					// Reset the parent matrix so that we can get the original bounding box.
-					_this2[parent].matrixAutoUpdate = false;
-					_this2[parent].matrix.identity();
-
-					var parentBoundingBox = undefined;
-					if (origParentBoundingBoxes.has(_this2[parent].uuid)) {
-						parentBoundingBox = origParentBoundingBoxes.get(_this2[parent].uuid);
-					} else {
-						_this2[parent].remove(_this2[object3D]);
-						parentBoundingBox = new THREE.Box3().setFromObject(_this2[parent]);
-						_this2[parent].add(_this2[object3D]);
-						origParentBoundingBoxes.set(_this2[parent].uuid, parentBoundingBox);
-					}
-
-					_this2[containerMax] = parentBoundingBox.max;
-					_this2[containerMin] = parentBoundingBox.min;
-					_this2.doLayout();
-				}
-			});
-		}
-	}]);
-
-	return Layout;
-})();
-
-window.altspace.utilities.behaviors.Layout = Layout;
-},{"babel-runtime/core-js/array/from":3,"babel-runtime/core-js/map":4,"babel-runtime/core-js/symbol":6,"babel-runtime/helpers/class-call-check":7,"babel-runtime/helpers/create-class":8,"babel/polyfill":9}]},{},[259]);
-
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":5}],2:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/promise"), __esModule: true };
-},{"core-js/library/fn/promise":6}],3:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-exports.__esModule = true;
-},{}],4:[function(require,module,exports){
-"use strict";
-
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
-
-exports["default"] = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-
-      _Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":1}],5:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function defineProperty(it, key, desc){
-  return $.setDesc(it, key, desc);
-};
-},{"../../modules/$":34}],6:[function(require,module,exports){
-require('../modules/es6.object.to-string');
-require('../modules/es6.string.iterator');
-require('../modules/web.dom.iterable');
-require('../modules/es6.promise');
-module.exports = require('../modules/$.core').Promise;
-},{"../modules/$.core":12,"../modules/es6.object.to-string":56,"../modules/es6.promise":57,"../modules/es6.string.iterator":58,"../modules/web.dom.iterable":59}],7:[function(require,module,exports){
-module.exports = function(it){
-  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
-  return it;
-};
-},{}],8:[function(require,module,exports){
-module.exports = function(){ /* empty */ };
-},{}],9:[function(require,module,exports){
-var isObject = require('./$.is-object');
-module.exports = function(it){
-  if(!isObject(it))throw TypeError(it + ' is not an object!');
-  return it;
-};
-},{"./$.is-object":27}],10:[function(require,module,exports){
-// getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = require('./$.cof')
-  , TAG = require('./$.wks')('toStringTag')
-  // ES3 wrong here
-  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
-
-module.exports = function(it){
-  var O, T, B;
-  return it === undefined ? 'Undefined' : it === null ? 'Null'
-    // @@toStringTag case
-    : typeof (T = (O = Object(it))[TAG]) == 'string' ? T
-    // builtinTag case
-    : ARG ? cof(O)
-    // ES3 arguments fallback
-    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
-};
-},{"./$.cof":11,"./$.wks":53}],11:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = function(it){
-  return toString.call(it).slice(8, -1);
-};
-},{}],12:[function(require,module,exports){
-var core = module.exports = {version: '1.2.6'};
-if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],13:[function(require,module,exports){
-// optional / simple context binding
-var aFunction = require('./$.a-function');
-module.exports = function(fn, that, length){
-  aFunction(fn);
-  if(that === undefined)return fn;
-  switch(length){
-    case 1: return function(a){
-      return fn.call(that, a);
-    };
-    case 2: return function(a, b){
-      return fn.call(that, a, b);
-    };
-    case 3: return function(a, b, c){
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function(/* ...args */){
-    return fn.apply(that, arguments);
-  };
-};
-},{"./$.a-function":7}],14:[function(require,module,exports){
-// 7.2.1 RequireObjectCoercible(argument)
-module.exports = function(it){
-  if(it == undefined)throw TypeError("Can't call method on  " + it);
-  return it;
-};
-},{}],15:[function(require,module,exports){
-// Thank's IE8 for his funny defineProperty
-module.exports = !require('./$.fails')(function(){
-  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
-});
-},{"./$.fails":18}],16:[function(require,module,exports){
-var isObject = require('./$.is-object')
-  , document = require('./$.global').document
-  // in old IE typeof document.createElement is 'object'
-  , is = isObject(document) && isObject(document.createElement);
-module.exports = function(it){
-  return is ? document.createElement(it) : {};
-};
-},{"./$.global":20,"./$.is-object":27}],17:[function(require,module,exports){
-var global    = require('./$.global')
-  , core      = require('./$.core')
-  , ctx       = require('./$.ctx')
-  , PROTOTYPE = 'prototype';
-
-var $export = function(type, name, source){
-  var IS_FORCED = type & $export.F
-    , IS_GLOBAL = type & $export.G
-    , IS_STATIC = type & $export.S
-    , IS_PROTO  = type & $export.P
-    , IS_BIND   = type & $export.B
-    , IS_WRAP   = type & $export.W
-    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
-    , key, own, out;
-  if(IS_GLOBAL)source = name;
-  for(key in source){
-    // contains in native
-    own = !IS_FORCED && target && key in target;
-    if(own && key in exports)continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
-    // bind timers to global for call from export context
-    : IS_BIND && own ? ctx(out, global)
-    // wrap global constructors for prevent change them in library
-    : IS_WRAP && target[key] == out ? (function(C){
-      var F = function(param){
-        return this instanceof C ? new C(param) : C(param);
-      };
-      F[PROTOTYPE] = C[PROTOTYPE];
-      return F;
-    // make static versions for prototype methods
-    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
-  }
-};
-// type bitmap
-$export.F = 1;  // forced
-$export.G = 2;  // global
-$export.S = 4;  // static
-$export.P = 8;  // proto
-$export.B = 16; // bind
-$export.W = 32; // wrap
-module.exports = $export;
-},{"./$.core":12,"./$.ctx":13,"./$.global":20}],18:[function(require,module,exports){
-module.exports = function(exec){
-  try {
-    return !!exec();
-  } catch(e){
-    return true;
-  }
-};
-},{}],19:[function(require,module,exports){
-var ctx         = require('./$.ctx')
-  , call        = require('./$.iter-call')
-  , isArrayIter = require('./$.is-array-iter')
-  , anObject    = require('./$.an-object')
-  , toLength    = require('./$.to-length')
-  , getIterFn   = require('./core.get-iterator-method');
-module.exports = function(iterable, entries, fn, that){
-  var iterFn = getIterFn(iterable)
-    , f      = ctx(fn, that, entries ? 2 : 1)
-    , index  = 0
-    , length, step, iterator;
-  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
-  // fast case for arrays with default iterator
-  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
-    entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
-  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
-    call(iterator, f, step.value, entries);
-  }
-};
-},{"./$.an-object":9,"./$.ctx":13,"./$.is-array-iter":26,"./$.iter-call":28,"./$.to-length":51,"./core.get-iterator-method":54}],20:[function(require,module,exports){
-// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var global = module.exports = typeof window != 'undefined' && window.Math == Math
-  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],21:[function(require,module,exports){
-var hasOwnProperty = {}.hasOwnProperty;
-module.exports = function(it, key){
-  return hasOwnProperty.call(it, key);
-};
-},{}],22:[function(require,module,exports){
-var $          = require('./$')
-  , createDesc = require('./$.property-desc');
-module.exports = require('./$.descriptors') ? function(object, key, value){
-  return $.setDesc(object, key, createDesc(1, value));
-} : function(object, key, value){
-  object[key] = value;
-  return object;
-};
-},{"./$":34,"./$.descriptors":15,"./$.property-desc":37}],23:[function(require,module,exports){
-module.exports = require('./$.global').document && document.documentElement;
-},{"./$.global":20}],24:[function(require,module,exports){
-// fast apply, http://jsperf.lnkit.com/fast-apply/5
-module.exports = function(fn, args, that){
-  var un = that === undefined;
-  switch(args.length){
-    case 0: return un ? fn()
-                      : fn.call(that);
-    case 1: return un ? fn(args[0])
-                      : fn.call(that, args[0]);
-    case 2: return un ? fn(args[0], args[1])
-                      : fn.call(that, args[0], args[1]);
-    case 3: return un ? fn(args[0], args[1], args[2])
-                      : fn.call(that, args[0], args[1], args[2]);
-    case 4: return un ? fn(args[0], args[1], args[2], args[3])
-                      : fn.call(that, args[0], args[1], args[2], args[3]);
-  } return              fn.apply(that, args);
-};
-},{}],25:[function(require,module,exports){
-// fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = require('./$.cof');
-module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
-  return cof(it) == 'String' ? it.split('') : Object(it);
-};
-},{"./$.cof":11}],26:[function(require,module,exports){
-// check on default Array iterator
-var Iterators  = require('./$.iterators')
-  , ITERATOR   = require('./$.wks')('iterator')
-  , ArrayProto = Array.prototype;
-
-module.exports = function(it){
-  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
-};
-},{"./$.iterators":33,"./$.wks":53}],27:[function(require,module,exports){
-module.exports = function(it){
-  return typeof it === 'object' ? it !== null : typeof it === 'function';
-};
-},{}],28:[function(require,module,exports){
-// call something on iterator step with safe closing on error
-var anObject = require('./$.an-object');
-module.exports = function(iterator, fn, value, entries){
-  try {
-    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
-  // 7.4.6 IteratorClose(iterator, completion)
-  } catch(e){
-    var ret = iterator['return'];
-    if(ret !== undefined)anObject(ret.call(iterator));
-    throw e;
-  }
-};
-},{"./$.an-object":9}],29:[function(require,module,exports){
-'use strict';
-var $              = require('./$')
-  , descriptor     = require('./$.property-desc')
-  , setToStringTag = require('./$.set-to-string-tag')
-  , IteratorPrototype = {};
-
-// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-require('./$.hide')(IteratorPrototype, require('./$.wks')('iterator'), function(){ return this; });
-
-module.exports = function(Constructor, NAME, next){
-  Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
-  setToStringTag(Constructor, NAME + ' Iterator');
-};
-},{"./$":34,"./$.hide":22,"./$.property-desc":37,"./$.set-to-string-tag":43,"./$.wks":53}],30:[function(require,module,exports){
-'use strict';
-var LIBRARY        = require('./$.library')
-  , $export        = require('./$.export')
-  , redefine       = require('./$.redefine')
-  , hide           = require('./$.hide')
-  , has            = require('./$.has')
-  , Iterators      = require('./$.iterators')
-  , $iterCreate    = require('./$.iter-create')
-  , setToStringTag = require('./$.set-to-string-tag')
-  , getProto       = require('./$').getProto
-  , ITERATOR       = require('./$.wks')('iterator')
-  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
-  , FF_ITERATOR    = '@@iterator'
-  , KEYS           = 'keys'
-  , VALUES         = 'values';
-
-var returnThis = function(){ return this; };
-
-module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
-  $iterCreate(Constructor, NAME, next);
-  var getMethod = function(kind){
-    if(!BUGGY && kind in proto)return proto[kind];
-    switch(kind){
-      case KEYS: return function keys(){ return new Constructor(this, kind); };
-      case VALUES: return function values(){ return new Constructor(this, kind); };
-    } return function entries(){ return new Constructor(this, kind); };
-  };
-  var TAG        = NAME + ' Iterator'
-    , DEF_VALUES = DEFAULT == VALUES
-    , VALUES_BUG = false
-    , proto      = Base.prototype
-    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
-    , $default   = $native || getMethod(DEFAULT)
-    , methods, key;
-  // Fix native
-  if($native){
-    var IteratorPrototype = getProto($default.call(new Base));
-    // Set @@toStringTag to native iterators
-    setToStringTag(IteratorPrototype, TAG, true);
-    // FF fix
-    if(!LIBRARY && has(proto, FF_ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
-    // fix Array#{values, @@iterator}.name in V8 / FF
-    if(DEF_VALUES && $native.name !== VALUES){
-      VALUES_BUG = true;
-      $default = function values(){ return $native.call(this); };
-    }
-  }
-  // Define iterator
-  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
-    hide(proto, ITERATOR, $default);
-  }
-  // Plug for library
-  Iterators[NAME] = $default;
-  Iterators[TAG]  = returnThis;
-  if(DEFAULT){
-    methods = {
-      values:  DEF_VALUES  ? $default : getMethod(VALUES),
-      keys:    IS_SET      ? $default : getMethod(KEYS),
-      entries: !DEF_VALUES ? $default : getMethod('entries')
-    };
-    if(FORCED)for(key in methods){
-      if(!(key in proto))redefine(proto, key, methods[key]);
-    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
-  }
-  return methods;
-};
-},{"./$":34,"./$.export":17,"./$.has":21,"./$.hide":22,"./$.iter-create":29,"./$.iterators":33,"./$.library":35,"./$.redefine":39,"./$.set-to-string-tag":43,"./$.wks":53}],31:[function(require,module,exports){
-var ITERATOR     = require('./$.wks')('iterator')
-  , SAFE_CLOSING = false;
-
-try {
-  var riter = [7][ITERATOR]();
-  riter['return'] = function(){ SAFE_CLOSING = true; };
-  Array.from(riter, function(){ throw 2; });
-} catch(e){ /* empty */ }
-
-module.exports = function(exec, skipClosing){
-  if(!skipClosing && !SAFE_CLOSING)return false;
-  var safe = false;
-  try {
-    var arr  = [7]
-      , iter = arr[ITERATOR]();
-    iter.next = function(){ safe = true; };
-    arr[ITERATOR] = function(){ return iter; };
-    exec(arr);
-  } catch(e){ /* empty */ }
-  return safe;
-};
-},{"./$.wks":53}],32:[function(require,module,exports){
-module.exports = function(done, value){
-  return {value: value, done: !!done};
-};
-},{}],33:[function(require,module,exports){
-module.exports = {};
-},{}],34:[function(require,module,exports){
-var $Object = Object;
-module.exports = {
-  create:     $Object.create,
-  getProto:   $Object.getPrototypeOf,
-  isEnum:     {}.propertyIsEnumerable,
-  getDesc:    $Object.getOwnPropertyDescriptor,
-  setDesc:    $Object.defineProperty,
-  setDescs:   $Object.defineProperties,
-  getKeys:    $Object.keys,
-  getNames:   $Object.getOwnPropertyNames,
-  getSymbols: $Object.getOwnPropertySymbols,
-  each:       [].forEach
-};
-},{}],35:[function(require,module,exports){
-module.exports = true;
-},{}],36:[function(require,module,exports){
-var global    = require('./$.global')
-  , macrotask = require('./$.task').set
-  , Observer  = global.MutationObserver || global.WebKitMutationObserver
-  , process   = global.process
-  , Promise   = global.Promise
-  , isNode    = require('./$.cof')(process) == 'process'
-  , head, last, notify;
-
-var flush = function(){
-  var parent, domain, fn;
-  if(isNode && (parent = process.domain)){
-    process.domain = null;
-    parent.exit();
-  }
-  while(head){
-    domain = head.domain;
-    fn     = head.fn;
-    if(domain)domain.enter();
-    fn(); // <- currently we use it only for Promise - try / catch not required
-    if(domain)domain.exit();
-    head = head.next;
-  } last = undefined;
-  if(parent)parent.enter();
-};
-
-// Node.js
-if(isNode){
-  notify = function(){
-    process.nextTick(flush);
-  };
-// browsers with MutationObserver
-} else if(Observer){
-  var toggle = 1
-    , node   = document.createTextNode('');
-  new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
-  notify = function(){
-    node.data = toggle = -toggle;
-  };
-// environments with maybe non-completely correct, but existent Promise
-} else if(Promise && Promise.resolve){
-  notify = function(){
-    Promise.resolve().then(flush);
-  };
-// for other environments - macrotask based on:
-// - setImmediate
-// - MessageChannel
-// - window.postMessag
-// - onreadystatechange
-// - setTimeout
-} else {
-  notify = function(){
-    // strange IE + webpack dev server bug - use .call(global)
-    macrotask.call(global, flush);
-  };
-}
-
-module.exports = function asap(fn){
-  var task = {fn: fn, next: undefined, domain: isNode && process.domain};
-  if(last)last.next = task;
-  if(!head){
-    head = task;
-    notify();
-  } last = task;
-};
-},{"./$.cof":11,"./$.global":20,"./$.task":48}],37:[function(require,module,exports){
-module.exports = function(bitmap, value){
-  return {
-    enumerable  : !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable    : !(bitmap & 4),
-    value       : value
-  };
-};
-},{}],38:[function(require,module,exports){
-var redefine = require('./$.redefine');
-module.exports = function(target, src){
-  for(var key in src)redefine(target, key, src[key]);
-  return target;
-};
-},{"./$.redefine":39}],39:[function(require,module,exports){
-module.exports = require('./$.hide');
-},{"./$.hide":22}],40:[function(require,module,exports){
-// 7.2.9 SameValue(x, y)
-module.exports = Object.is || function is(x, y){
-  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-};
-},{}],41:[function(require,module,exports){
-// Works with __proto__ only. Old v8 can't work with null proto objects.
-/* eslint-disable no-proto */
-var getDesc  = require('./$').getDesc
-  , isObject = require('./$.is-object')
-  , anObject = require('./$.an-object');
-var check = function(O, proto){
-  anObject(O);
-  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
-};
-module.exports = {
-  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
-    function(test, buggy, set){
-      try {
-        set = require('./$.ctx')(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
-        set(test, []);
-        buggy = !(test instanceof Array);
-      } catch(e){ buggy = true; }
-      return function setPrototypeOf(O, proto){
-        check(O, proto);
-        if(buggy)O.__proto__ = proto;
-        else set(O, proto);
-        return O;
-      };
-    }({}, false) : undefined),
-  check: check
-};
-},{"./$":34,"./$.an-object":9,"./$.ctx":13,"./$.is-object":27}],42:[function(require,module,exports){
-'use strict';
-var core        = require('./$.core')
-  , $           = require('./$')
-  , DESCRIPTORS = require('./$.descriptors')
-  , SPECIES     = require('./$.wks')('species');
-
-module.exports = function(KEY){
-  var C = core[KEY];
-  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
-    configurable: true,
-    get: function(){ return this; }
-  });
-};
-},{"./$":34,"./$.core":12,"./$.descriptors":15,"./$.wks":53}],43:[function(require,module,exports){
-var def = require('./$').setDesc
-  , has = require('./$.has')
-  , TAG = require('./$.wks')('toStringTag');
-
-module.exports = function(it, tag, stat){
-  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
-};
-},{"./$":34,"./$.has":21,"./$.wks":53}],44:[function(require,module,exports){
-var global = require('./$.global')
-  , SHARED = '__core-js_shared__'
-  , store  = global[SHARED] || (global[SHARED] = {});
-module.exports = function(key){
-  return store[key] || (store[key] = {});
-};
-},{"./$.global":20}],45:[function(require,module,exports){
-// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject  = require('./$.an-object')
-  , aFunction = require('./$.a-function')
-  , SPECIES   = require('./$.wks')('species');
-module.exports = function(O, D){
-  var C = anObject(O).constructor, S;
-  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-};
-},{"./$.a-function":7,"./$.an-object":9,"./$.wks":53}],46:[function(require,module,exports){
-module.exports = function(it, Constructor, name){
-  if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
-  return it;
-};
-},{}],47:[function(require,module,exports){
-var toInteger = require('./$.to-integer')
-  , defined   = require('./$.defined');
-// true  -> String#at
-// false -> String#codePointAt
-module.exports = function(TO_STRING){
-  return function(that, pos){
-    var s = String(defined(that))
-      , i = toInteger(pos)
-      , l = s.length
-      , a, b;
-    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
-    a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-      ? TO_STRING ? s.charAt(i) : a
-      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-  };
-};
-},{"./$.defined":14,"./$.to-integer":49}],48:[function(require,module,exports){
-var ctx                = require('./$.ctx')
-  , invoke             = require('./$.invoke')
-  , html               = require('./$.html')
-  , cel                = require('./$.dom-create')
-  , global             = require('./$.global')
-  , process            = global.process
-  , setTask            = global.setImmediate
-  , clearTask          = global.clearImmediate
-  , MessageChannel     = global.MessageChannel
-  , counter            = 0
-  , queue              = {}
-  , ONREADYSTATECHANGE = 'onreadystatechange'
-  , defer, channel, port;
-var run = function(){
-  var id = +this;
-  if(queue.hasOwnProperty(id)){
-    var fn = queue[id];
-    delete queue[id];
-    fn();
-  }
-};
-var listner = function(event){
-  run.call(event.data);
-};
-// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-if(!setTask || !clearTask){
-  setTask = function setImmediate(fn){
-    var args = [], i = 1;
-    while(arguments.length > i)args.push(arguments[i++]);
-    queue[++counter] = function(){
-      invoke(typeof fn == 'function' ? fn : Function(fn), args);
-    };
-    defer(counter);
-    return counter;
-  };
-  clearTask = function clearImmediate(id){
-    delete queue[id];
-  };
-  // Node.js 0.8-
-  if(require('./$.cof')(process) == 'process'){
-    defer = function(id){
-      process.nextTick(ctx(run, id, 1));
-    };
-  // Browsers with MessageChannel, includes WebWorkers
-  } else if(MessageChannel){
-    channel = new MessageChannel;
-    port    = channel.port2;
-    channel.port1.onmessage = listner;
-    defer = ctx(port.postMessage, port, 1);
-  // Browsers with postMessage, skip WebWorkers
-  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
-    defer = function(id){
-      global.postMessage(id + '', '*');
-    };
-    global.addEventListener('message', listner, false);
-  // IE8-
-  } else if(ONREADYSTATECHANGE in cel('script')){
-    defer = function(id){
-      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
-        html.removeChild(this);
-        run.call(id);
-      };
-    };
-  // Rest old browsers
-  } else {
-    defer = function(id){
-      setTimeout(ctx(run, id, 1), 0);
-    };
-  }
-}
-module.exports = {
-  set:   setTask,
-  clear: clearTask
-};
-},{"./$.cof":11,"./$.ctx":13,"./$.dom-create":16,"./$.global":20,"./$.html":23,"./$.invoke":24}],49:[function(require,module,exports){
-// 7.1.4 ToInteger
-var ceil  = Math.ceil
-  , floor = Math.floor;
-module.exports = function(it){
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-};
-},{}],50:[function(require,module,exports){
-// to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = require('./$.iobject')
-  , defined = require('./$.defined');
-module.exports = function(it){
-  return IObject(defined(it));
-};
-},{"./$.defined":14,"./$.iobject":25}],51:[function(require,module,exports){
-// 7.1.15 ToLength
-var toInteger = require('./$.to-integer')
-  , min       = Math.min;
-module.exports = function(it){
-  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-};
-},{"./$.to-integer":49}],52:[function(require,module,exports){
-var id = 0
-  , px = Math.random();
-module.exports = function(key){
-  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-};
-},{}],53:[function(require,module,exports){
-var store  = require('./$.shared')('wks')
-  , uid    = require('./$.uid')
-  , Symbol = require('./$.global').Symbol;
-module.exports = function(name){
-  return store[name] || (store[name] =
-    Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
-};
-},{"./$.global":20,"./$.shared":44,"./$.uid":52}],54:[function(require,module,exports){
-var classof   = require('./$.classof')
-  , ITERATOR  = require('./$.wks')('iterator')
-  , Iterators = require('./$.iterators');
-module.exports = require('./$.core').getIteratorMethod = function(it){
-  if(it != undefined)return it[ITERATOR]
-    || it['@@iterator']
-    || Iterators[classof(it)];
-};
-},{"./$.classof":10,"./$.core":12,"./$.iterators":33,"./$.wks":53}],55:[function(require,module,exports){
-'use strict';
-var addToUnscopables = require('./$.add-to-unscopables')
-  , step             = require('./$.iter-step')
-  , Iterators        = require('./$.iterators')
-  , toIObject        = require('./$.to-iobject');
-
-// 22.1.3.4 Array.prototype.entries()
-// 22.1.3.13 Array.prototype.keys()
-// 22.1.3.29 Array.prototype.values()
-// 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = require('./$.iter-define')(Array, 'Array', function(iterated, kind){
-  this._t = toIObject(iterated); // target
-  this._i = 0;                   // next index
-  this._k = kind;                // kind
-// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , kind  = this._k
-    , index = this._i++;
-  if(!O || index >= O.length){
-    this._t = undefined;
-    return step(1);
-  }
-  if(kind == 'keys'  )return step(0, index);
-  if(kind == 'values')return step(0, O[index]);
-  return step(0, [index, O[index]]);
-}, 'values');
-
-// argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
-Iterators.Arguments = Iterators.Array;
-
-addToUnscopables('keys');
-addToUnscopables('values');
-addToUnscopables('entries');
-},{"./$.add-to-unscopables":8,"./$.iter-define":30,"./$.iter-step":32,"./$.iterators":33,"./$.to-iobject":50}],56:[function(require,module,exports){
-
-},{}],57:[function(require,module,exports){
-'use strict';
-var $          = require('./$')
-  , LIBRARY    = require('./$.library')
-  , global     = require('./$.global')
-  , ctx        = require('./$.ctx')
-  , classof    = require('./$.classof')
-  , $export    = require('./$.export')
-  , isObject   = require('./$.is-object')
-  , anObject   = require('./$.an-object')
-  , aFunction  = require('./$.a-function')
-  , strictNew  = require('./$.strict-new')
-  , forOf      = require('./$.for-of')
-  , setProto   = require('./$.set-proto').set
-  , same       = require('./$.same-value')
-  , SPECIES    = require('./$.wks')('species')
-  , speciesConstructor = require('./$.species-constructor')
-  , asap       = require('./$.microtask')
-  , PROMISE    = 'Promise'
-  , process    = global.process
-  , isNode     = classof(process) == 'process'
-  , P          = global[PROMISE]
-  , Wrapper;
-
-var testResolve = function(sub){
-  var test = new P(function(){});
-  if(sub)test.constructor = Object;
-  return P.resolve(test) === test;
-};
-
-var USE_NATIVE = function(){
-  var works = false;
-  function P2(x){
-    var self = new P(x);
-    setProto(self, P2.prototype);
-    return self;
-  }
-  try {
-    works = P && P.resolve && testResolve();
-    setProto(P2, P);
-    P2.prototype = $.create(P.prototype, {constructor: {value: P2}});
-    // actual Firefox has broken subclass support, test that
-    if(!(P2.resolve(5).then(function(){}) instanceof P2)){
-      works = false;
-    }
-    // actual V8 bug, https://code.google.com/p/v8/issues/detail?id=4162
-    if(works && require('./$.descriptors')){
-      var thenableThenGotten = false;
-      P.resolve($.setDesc({}, 'then', {
-        get: function(){ thenableThenGotten = true; }
-      }));
-      works = thenableThenGotten;
-    }
-  } catch(e){ works = false; }
-  return works;
-}();
-
-// helpers
-var sameConstructor = function(a, b){
-  // library wrapper special case
-  if(LIBRARY && a === P && b === Wrapper)return true;
-  return same(a, b);
-};
-var getConstructor = function(C){
-  var S = anObject(C)[SPECIES];
-  return S != undefined ? S : C;
-};
-var isThenable = function(it){
-  var then;
-  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-};
-var PromiseCapability = function(C){
-  var resolve, reject;
-  this.promise = new C(function($$resolve, $$reject){
-    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
-    resolve = $$resolve;
-    reject  = $$reject;
-  });
-  this.resolve = aFunction(resolve),
-  this.reject  = aFunction(reject)
-};
-var perform = function(exec){
-  try {
-    exec();
-  } catch(e){
-    return {error: e};
-  }
-};
-var notify = function(record, isReject){
-  if(record.n)return;
-  record.n = true;
-  var chain = record.c;
-  asap(function(){
-    var value = record.v
-      , ok    = record.s == 1
-      , i     = 0;
-    var run = function(reaction){
-      var handler = ok ? reaction.ok : reaction.fail
-        , resolve = reaction.resolve
-        , reject  = reaction.reject
-        , result, then;
-      try {
-        if(handler){
-          if(!ok)record.h = true;
-          result = handler === true ? value : handler(value);
-          if(result === reaction.promise){
-            reject(TypeError('Promise-chain cycle'));
-          } else if(then = isThenable(result)){
-            then.call(result, resolve, reject);
-          } else resolve(result);
-        } else reject(value);
-      } catch(e){
-        reject(e);
-      }
-    };
-    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
-    chain.length = 0;
-    record.n = false;
-    if(isReject)setTimeout(function(){
-      var promise = record.p
-        , handler, console;
-      if(isUnhandled(promise)){
-        if(isNode){
-          process.emit('unhandledRejection', value, promise);
-        } else if(handler = global.onunhandledrejection){
-          handler({promise: promise, reason: value});
-        } else if((console = global.console) && console.error){
-          console.error('Unhandled promise rejection', value);
-        }
-      } record.a = undefined;
-    }, 1);
-  });
-};
-var isUnhandled = function(promise){
-  var record = promise._d
-    , chain  = record.a || record.c
-    , i      = 0
-    , reaction;
-  if(record.h)return false;
-  while(chain.length > i){
-    reaction = chain[i++];
-    if(reaction.fail || !isUnhandled(reaction.promise))return false;
-  } return true;
-};
-var $reject = function(value){
-  var record = this;
-  if(record.d)return;
-  record.d = true;
-  record = record.r || record; // unwrap
-  record.v = value;
-  record.s = 2;
-  record.a = record.c.slice();
-  notify(record, true);
-};
-var $resolve = function(value){
-  var record = this
-    , then;
-  if(record.d)return;
-  record.d = true;
-  record = record.r || record; // unwrap
-  try {
-    if(record.p === value)throw TypeError("Promise can't be resolved itself");
-    if(then = isThenable(value)){
-      asap(function(){
-        var wrapper = {r: record, d: false}; // wrap
-        try {
-          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
-        } catch(e){
-          $reject.call(wrapper, e);
-        }
-      });
-    } else {
-      record.v = value;
-      record.s = 1;
-      notify(record, false);
-    }
-  } catch(e){
-    $reject.call({r: record, d: false}, e); // wrap
-  }
-};
-
-// constructor polyfill
-if(!USE_NATIVE){
-  // 25.4.3.1 Promise(executor)
-  P = function Promise(executor){
-    aFunction(executor);
-    var record = this._d = {
-      p: strictNew(this, P, PROMISE),         // <- promise
-      c: [],                                  // <- awaiting reactions
-      a: undefined,                           // <- checked in isUnhandled reactions
-      s: 0,                                   // <- state
-      d: false,                               // <- done
-      v: undefined,                           // <- value
-      h: false,                               // <- handled rejection
-      n: false                                // <- notify
-    };
-    try {
-      executor(ctx($resolve, record, 1), ctx($reject, record, 1));
-    } catch(err){
-      $reject.call(record, err);
-    }
-  };
-  require('./$.redefine-all')(P.prototype, {
-    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
-    then: function then(onFulfilled, onRejected){
-      var reaction = new PromiseCapability(speciesConstructor(this, P))
-        , promise  = reaction.promise
-        , record   = this._d;
-      reaction.ok   = typeof onFulfilled == 'function' ? onFulfilled : true;
-      reaction.fail = typeof onRejected == 'function' && onRejected;
-      record.c.push(reaction);
-      if(record.a)record.a.push(reaction);
-      if(record.s)notify(record, false);
-      return promise;
-    },
-    // 25.4.5.1 Promise.prototype.catch(onRejected)
-    'catch': function(onRejected){
-      return this.then(undefined, onRejected);
-    }
-  });
-}
-
-$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: P});
-require('./$.set-to-string-tag')(P, PROMISE);
-require('./$.set-species')(PROMISE);
-Wrapper = require('./$.core')[PROMISE];
-
-// statics
-$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
-  // 25.4.4.5 Promise.reject(r)
-  reject: function reject(r){
-    var capability = new PromiseCapability(this)
-      , $$reject   = capability.reject;
-    $$reject(r);
-    return capability.promise;
-  }
-});
-$export($export.S + $export.F * (!USE_NATIVE || testResolve(true)), PROMISE, {
-  // 25.4.4.6 Promise.resolve(x)
-  resolve: function resolve(x){
-    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
-    if(x instanceof P && sameConstructor(x.constructor, this))return x;
-    var capability = new PromiseCapability(this)
-      , $$resolve  = capability.resolve;
-    $$resolve(x);
-    return capability.promise;
-  }
-});
-$export($export.S + $export.F * !(USE_NATIVE && require('./$.iter-detect')(function(iter){
-  P.all(iter)['catch'](function(){});
-})), PROMISE, {
-  // 25.4.4.1 Promise.all(iterable)
-  all: function all(iterable){
-    var C          = getConstructor(this)
-      , capability = new PromiseCapability(C)
-      , resolve    = capability.resolve
-      , reject     = capability.reject
-      , values     = [];
-    var abrupt = perform(function(){
-      forOf(iterable, false, values.push, values);
-      var remaining = values.length
-        , results   = Array(remaining);
-      if(remaining)$.each.call(values, function(promise, index){
-        var alreadyCalled = false;
-        C.resolve(promise).then(function(value){
-          if(alreadyCalled)return;
-          alreadyCalled = true;
-          results[index] = value;
-          --remaining || resolve(results);
-        }, reject);
-      });
-      else resolve(results);
-    });
-    if(abrupt)reject(abrupt.error);
-    return capability.promise;
-  },
-  // 25.4.4.4 Promise.race(iterable)
-  race: function race(iterable){
-    var C          = getConstructor(this)
-      , capability = new PromiseCapability(C)
-      , reject     = capability.reject;
-    var abrupt = perform(function(){
-      forOf(iterable, false, function(promise){
-        C.resolve(promise).then(capability.resolve, reject);
-      });
-    });
-    if(abrupt)reject(abrupt.error);
-    return capability.promise;
-  }
-});
-},{"./$":34,"./$.a-function":7,"./$.an-object":9,"./$.classof":10,"./$.core":12,"./$.ctx":13,"./$.descriptors":15,"./$.export":17,"./$.for-of":19,"./$.global":20,"./$.is-object":27,"./$.iter-detect":31,"./$.library":35,"./$.microtask":36,"./$.redefine-all":38,"./$.same-value":40,"./$.set-proto":41,"./$.set-species":42,"./$.set-to-string-tag":43,"./$.species-constructor":45,"./$.strict-new":46,"./$.wks":53}],58:[function(require,module,exports){
-'use strict';
-var $at  = require('./$.string-at')(true);
-
-// 21.1.3.27 String.prototype[@@iterator]()
-require('./$.iter-define')(String, 'String', function(iterated){
-  this._t = String(iterated); // target
-  this._i = 0;                // next index
-// 21.1.5.2.1 %StringIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , index = this._i
-    , point;
-  if(index >= O.length)return {value: undefined, done: true};
-  point = $at(O, index);
-  this._i += point.length;
-  return {value: point, done: false};
-});
-},{"./$.iter-define":30,"./$.string-at":47}],59:[function(require,module,exports){
-require('./es6.array.iterator');
-var Iterators = require('./$.iterators');
-Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-},{"./$.iterators":33,"./es6.array.iterator":55}],60:[function(require,module,exports){
-'use strict';
+	return Spin;
+}(Behavior));
 
 // Returns a Promise that resovles static when a steamvr controller is found
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Promise = require('babel-runtime/core-js/promise')['default'];
-
 function getController(hand, config) {
-	var findGamepad = function findGamepad(resolve, reject) {
-		var gamepad = altspace.getGamepads().find(function (g) {
-			return g.mapping === 'steamvr' && g.hand === hand;
-		});
+	var findGamepad = function (resolve, reject) {
+		var gamepad = altspace.getGamepads().find(function (g) { return g.mapping === 'steamvr' && g.hand === hand; });
 		if (gamepad) {
-			if (config.logging) console.log("SteamVR input device found", gamepad);
+			if(config.logging) { console.log("SteamVR input device found", gamepad); }
 			resolve(gamepad);
 		} else {
-			if (config.logging) console.log("SteamVR input device not found trying again in 500ms...");
+			if(config.logging) { console.log("SteamVR input device not found trying again in 500ms..."); }
 			setTimeout(findGamepad, 500, resolve, reject);
 		}
 	};
 
-	return new _Promise(findGamepad);
+	return new Promise(findGamepad);
 }
 
 /**
- * The SteamVRInput behavior manages SteamVR input devices. It should be added
- * to the ThreeJS scene and is required to use [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}
- *
- * @class SteamVRInput
- * @param {Object} [config]
- * @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
- * @memberof module:altspace/utilities/behaviors
- *
- * @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
- * @prop {Gamepad} rightController the right SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
- * @prop {Gamepad} firstController the first SteamVR [Gamepad]{@link module:altspace~Gamepad}  or undefined if none have yet been found
- *
- * @prop {Promise} leftControllerPromise a promise that resolves once the left SteamVR input device is found
- * @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
- * @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
- */
-
-var SteamVRInputBehavior = (function () {
-	function SteamVRInputBehavior(config) {
-		_classCallCheck(this, SteamVRInputBehavior);
-
-		this.type = 'SteamVRInput';
-		this.config = config || {};
-		this.config.logging = this.config.logging || false;
+* The SteamVRInput behavior manages SteamVR input devices. It should be added
+* to the ThreeJS scene and is a requirement of [SteamVRTrackedObject]{@link module:altspace/utilities/behaviors.SteamVRTrackedObject}.
+*
+* @param {Object} [config]
+* @param {Boolean} [config.logging=false] Display console log output during SteamVR input device detection
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*
+* @prop {Gamepad} leftController the left SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
+* @prop {Gamepad} rightController the right SteamVR [Gamepad]{@link module:altspace~Gamepad} or undefined if one has not yet been found
+* @prop {Gamepad} firstController the first SteamVR [Gamepad]{@link module:altspace~Gamepad}  or undefined if none have yet been found
+*
+* @prop {Promise} leftControllerPromise a promise that resolves once the left SteamVR input device is found
+* @prop {Promise} rightControllerPromise a promise that resolves once the right SteamVR input device is found
+* @prop {Promise} firstControllerPromise a promise that resolves once any SteamVR input device is found
+*/
+var SteamVRInput = (function (Behavior$$1) {
+	function SteamVRInput(config) {
+		Behavior$$1.call(this);
+		this.config = Object.assign({logging: false}, config);
 	}
 
-	_createClass(SteamVRInputBehavior, [{
-		key: 'awake',
-		value: function awake() {
-			var _this = this;
+	if ( Behavior$$1 ) SteamVRInput.__proto__ = Behavior$$1;
+	SteamVRInput.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SteamVRInput.prototype.constructor = SteamVRInput;
 
-			this.leftControllerPromise = getController(SteamVRInputBehavior.LEFT_CONTROLLER, this.config);
-			this.rightControllerPromise = getController(SteamVRInputBehavior.RIGHT_CONTROLLER, this.config);
-			this.firstControllerPromise = _Promise.race([this.leftControllerPromise, this.rightControllerPromise]);
+	var prototypeAccessors = { type: {} };
 
-			this.leftControllerPromise.then(function (controller) {
-				_this.leftController = controller;
-			});
-			this.rightControllerPromise.then(function (controller) {
-				_this.rightController = controller;
-			});
-			this.firstControllerPromise.then(function (controller) {
-				_this.firstController = controller;
+	prototypeAccessors.type.get = function (){ return 'SteamVRInput'; };
 
-				var blockedAxes = controller.axes.map(function () {
-					return false;
-				});
-				var blockedButtons = controller.buttons.map(function () {
-					return false;
-				});
+	SteamVRInput.prototype.awake = function awake () {
+		var this$1 = this;
 
-				blockedButtons[SteamVRInputBehavior.BUTTON_TRIGGER] = true;
-				blockedButtons[SteamVRInputBehavior.BUTTON_TOUCHPAD] = true;
+		this.leftControllerPromise = getController(SteamVRInput.LEFT_CONTROLLER, this.config);
+		this.rightControllerPromise = getController(SteamVRInput.RIGHT_CONTROLLER, this.config);
+		this.firstControllerPromise = Promise.race([
+			this.leftControllerPromise,
+			this.rightControllerPromise ]);
 
-				controller.preventDefault(blockedAxes, blockedButtons);
-			});
-		}
-	}]);
+		this.leftControllerPromise.then(function (controller) {
+			this$1.leftController = controller;
+		});
+		this.rightControllerPromise.then(function (controller) {
+			this$1.rightController = controller;
+		});
+		this.firstControllerPromise.then(function (controller) {
+			this$1.firstController = controller;
 
-	return SteamVRInputBehavior;
-})();
+			var blockedAxes = controller.axes.map(function () { return false; });
+			var blockedButtons = controller.buttons.map(function () { return false; });
 
-SteamVRInputBehavior.BUTTON_TRIGGER = 0;
-SteamVRInputBehavior.BUTTON_GRIP = 1;
-SteamVRInputBehavior.BUTTON_TOUCHPAD = 2;
-SteamVRInputBehavior.BUTTON_DPAD_UP = 3;
-SteamVRInputBehavior.BUTTON_DPAD_RIGHT = 4;
-SteamVRInputBehavior.BUTTON_DPAD_DOWN = 5;
-SteamVRInputBehavior.BUTTON_DPAD_LEFT = 6;
+			blockedButtons[SteamVRInput.BUTTON_TRIGGER] = true;
+			blockedButtons[SteamVRInput.BUTTON_TOUCHPAD] = true;
 
-SteamVRInputBehavior.AXIS_TOUCHPAD_X = 0;
-SteamVRInputBehavior.AXIS_TOUCHPAD_Y = 1;
+			controller.preventDefault(blockedAxes, blockedButtons);
+		});
+	};
 
-SteamVRInputBehavior.FIRST_CONTROLLER = 'first';
-SteamVRInputBehavior.LEFT_CONTROLLER = 'left';
-SteamVRInputBehavior.RIGHT_CONTROLLER = 'right';
+	Object.defineProperties( SteamVRInput.prototype, prototypeAccessors );
 
-window.altspace.utilities.behaviors.SteamVRInput = SteamVRInputBehavior;
-},{"babel-runtime/core-js/promise":2,"babel-runtime/helpers/class-call-check":3,"babel-runtime/helpers/create-class":4}]},{},[60]);
+	return SteamVRInput;
+}(Behavior));
 
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":4}],2:[function(require,module,exports){
-"use strict";
+Object.assign(SteamVRInput, {
+	BUTTON_TRIGGER: 0,
+	BUTTON_GRIP: 1,
+	BUTTON_TOUCHPAD: 2,
+	BUTTON_DPAD_UP: 3,
+	BUTTON_DPAD_RIGHT: 4,
+	BUTTON_DPAD_DOWN: 5,
+	BUTTON_DPAD_LEFT: 6,
 
-exports["default"] = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
+	AXIS_TOUCHPAD_X: 0,
+	AXIS_TOUCHPAD_Y: 1,
 
-exports.__esModule = true;
-},{}],3:[function(require,module,exports){
-"use strict";
-
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
-
-exports["default"] = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-
-      _Object$defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":1}],4:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function defineProperty(it, key, desc){
-  return $.setDesc(it, key, desc);
-};
-},{"../../modules/$":5}],5:[function(require,module,exports){
-var $Object = Object;
-module.exports = {
-  create:     $Object.create,
-  getProto:   $Object.getPrototypeOf,
-  isEnum:     {}.propertyIsEnumerable,
-  getDesc:    $Object.getOwnPropertyDescriptor,
-  setDesc:    $Object.defineProperty,
-  setDescs:   $Object.defineProperties,
-  getKeys:    $Object.keys,
-  getNames:   $Object.getOwnPropertyNames,
-  getSymbols: $Object.getOwnPropertySymbols,
-  each:       [].forEach
-};
-},{}],6:[function(require,module,exports){
-'use strict';
+	FIRST_CONTROLLER: 'first',
+	LEFT_CONTROLLER: 'left',
+	RIGHT_CONTROLLER: 'right'
+});
 
 /**
- * The SteamVRTrackedObject behavior updates an objects position and rotation to
- * match the location of a SteamVR input device.
- *
- * A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
- * must be on the scene containing this object for it to function properly.
- *
- * @class SteamVRTrackedObject
- *
- * @param {Object} [config]
- * @param {string} [config.hand="first"] the input device to track. Eitehr SteamVRInput.LEFT_CONTROLLER, SteamVRInput.RIGHT_CONTROLLER, or SteamVRInput.FIRST_CONTROLLER
- * @memberof module:altspace/utilities/behaviors
- */
+* The SteamVRTrackedObject behavior updates an objects position and rotation to
+* match the location of a SteamVR input device. A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
+* must be on the scene containing this object for it to function properly.
+*
+* @param {Object} [config]
+* @param {string} [config.hand="first"] the input device to track. Eitehr SteamVRInput.LEFT_CONTROLLER, SteamVRInput.RIGHT_CONTROLLER, or SteamVRInput.FIRST_CONTROLLER
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
 
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
+var SteamVRTrackedObject = (function (Behavior$$1) {
+	function SteamVRTrackedObject(ref) {
+		var hand = ref.hand; if ( hand === void 0 ) hand = 'first';
 
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var SteamVRTrackedObjectBehavior = (function () {
-	function SteamVRTrackedObjectBehavior(_ref) {
-		var _ref$hand = _ref.hand;
-		var hand = _ref$hand === undefined ? 'first' : _ref$hand;
-
-		_classCallCheck(this, SteamVRTrackedObjectBehavior);
-
+		Behavior$$1.call(this);
 		this._hand = hand;
-		this.type = 'SteamVRTrackedObject';
 	}
 
-	_createClass(SteamVRTrackedObjectBehavior, [{
-		key: 'awake',
-		value: function awake(object3d, scene) {
-			this._object3d = object3d;
-			this._scene = scene;
+	if ( Behavior$$1 ) SteamVRTrackedObject.__proto__ = Behavior$$1;
+	SteamVRTrackedObject.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	SteamVRTrackedObject.prototype.constructor = SteamVRTrackedObject;
 
-			this._steamVRInput = this._scene.getBehaviorByType('SteamVRInput');
+	var prototypeAccessors = { type: {} };
+
+	prototypeAccessors.type.get = function (){ return 'SteamVRTrackedObject'; };
+
+	SteamVRTrackedObject.prototype.awake = function awake (object3d, scene) {
+		this._object3d = object3d;
+		this._scene = scene;
+
+		this._steamVRInput = this._scene.getBehaviorByType('SteamVRInput');
+	};
+
+	SteamVRTrackedObject.prototype.update = function update () {
+		var controller = this._steamVRInput[this._hand + "Controller"];
+		var object3d = this._object3d;
+
+		if (controller) {
+			var ref = controller.position;
+			var x = ref.x;
+			var y = ref.y;
+			var z = ref.z;
+			object3d.position.set(x, y, z);
+
+			var ref$1 = controller.rotation;
+			var x = ref$1.x;
+			var y = ref$1.y;
+			var z = ref$1.z;
+			var w = ref$1.w;
+			object3d.quaternion.set(x, y, z, w);
 		}
-	}, {
-		key: 'update',
-		value: function update() {
-			var controller = this._steamVRInput[this._hand + "Controller"];
-			var object3d = this._object3d;
+	};
 
-			if (controller) {
-				var _controller$position = controller.position;
-				var x = _controller$position.x;
-				var y = _controller$position.y;
-				var z = _controller$position.z;
+	Object.defineProperties( SteamVRTrackedObject.prototype, prototypeAccessors );
 
-				object3d.position.set(x, y, z);
+	return SteamVRTrackedObject;
+}(Behavior));
 
-				var _controller$rotation = controller.rotation;
-				var x = _controller$rotation.x;
-				var y = _controller$rotation.y;
-				var z = _controller$rotation.z;
-				var w = _controller$rotation.w;
+/**
+* Spin an object with the GearVR touchpad
+* @memberof module:altspace/utilities/behaviors
+* @extends module:altspace/utilities/behaviors.Behavior
+*/
+var TouchpadRotate = (function (Behavior$$1) {
+	function TouchpadRotate(config)
+	{
+		if ( config === void 0 ) config = {};
 
-				object3d.quaternion.set(x, y, z, w);
-			}
-		}
-	}]);
-
-	return SteamVRTrackedObjectBehavior;
-})();
-
-window.altspace.utilities.behaviors.SteamVRTrackedObject = SteamVRTrackedObjectBehavior;
-},{"babel-runtime/helpers/class-call-check":2,"babel-runtime/helpers/create-class":3}]},{},[6]);
-
-(function () {
-
-	var version = '0.28.1';
-
-	if (window.altspace && window.altspace.requestVersion) {
-		window.altspace.requestVersion(version);
+		Behavior$$1.call(this);
+		this.object3d = null;
+		this.scene = null;
+		this.startingRotation = null;
+		this.activelyRotating = false;
+		this.lastDisplacementX = 0;
+		this.runningCount = 5;
+		this.runningAverageVelocityX = 0;
 	}
 
-}());
+	if ( Behavior$$1 ) TouchpadRotate.__proto__ = Behavior$$1;
+	TouchpadRotate.prototype = Object.create( Behavior$$1 && Behavior$$1.prototype );
+	TouchpadRotate.prototype.constructor = TouchpadRotate;
 
-return altspace;
+	var prototypeAccessors = { type: {} };
 
-}));
+	prototypeAccessors.type.get = function (){ return 'TouchpadRotate'; };
+
+	TouchpadRotate.prototype.awake = function awake (o, s)
+	{
+		this.object3d = o;
+		this.scene = s;
+
+		altspace.addEventListener('touchpadup', this.onTouchpadUp.bind(this));
+		altspace.addEventListener('touchpaddown', this.onTouchpadDown.bind(this));
+		altspace.addEventListener('touchpadmove', this.onTouchpadMove.bind(this));
+	};
+
+	TouchpadRotate.prototype.update = function update (deltaTime) {
+		if (!this.activelyRotating && Math.abs(this.runningAverageVelocityX) > 0.01) {
+			this.object3d.rotation.y += this.runningAverageVelocityX;
+			this.runningAverageVelocityX *= 0.97;
+		}
+	};
+
+	TouchpadRotate.prototype.onTouchpadUp = function onTouchpadUp (event) {
+		this.activelyRotating = false;
+	};
+
+	TouchpadRotate.prototype.onTouchpadDown = function onTouchpadDown (event) {
+		this.activelyRotating = true;
+		this.startingRotation = this.object3d.rotation.clone();
+	};
+
+	TouchpadRotate.prototype.onTouchpadMove = function onTouchpadMove (event) {
+		var deltaX = event.displacementX - this.lastDisplacementX;
+		this.object3d.rotation.set(
+			this.startingRotation.x,
+			this.startingRotation.y + event.displacementX / 300,
+			this.startingRotation.z
+		);
+
+		this.runningAverageVelocityX = (this.runningAverageVelocityX * this.runningCount + deltaX/300) / (this.runningCount + 1);
+		this.lastDisplacementX = event.displacementX;
+	};
+
+	Object.defineProperties( TouchpadRotate.prototype, prototypeAccessors );
+
+	return TouchpadRotate;
+}(Behavior));
+
+/**
+* Behaviors are designed to be plug-and-play reusable modules to add some type of
+* functionality to an object. See [Behavior]{@link module:altspace/utilities/behaviors.Behavior}
+* for a full description of a behavior's lifecycle. You add behaviors to Object3Ds
+* with [addBehavior]{@link THREE.Object3D}.
+* @module altspace/utilities/behaviors
+*/
+
+
+
+
+var index$1 = Object.freeze({
+	Behavior: Behavior,
+	Bob: Bob,
+	ButtonStateStyle: ButtonStateStyle,
+	Drag: Drag,
+	GamepadControls: GamepadControls,
+	HoverColor: HoverColor,
+	HoverScale: HoverScale,
+	JointCollisionEvents: JointCollisionEvents,
+	Layout: Layout,
+	Object3DSync: Object3DSync,
+	SceneSync: SceneSync,
+	Spin: Spin,
+	SteamVRInput: SteamVRInput,
+	SteamVRTrackedObject: SteamVRTrackedObject,
+	TouchpadRotate: TouchpadRotate
+});
+
+
+
+var utilities_lib = Object.freeze({
+	sync: sync,
+	Simulation: Simulation,
+	multiloader: multiloader,
+	codePen: codepen,
+	shims: index,
+	behaviors: index$1
+});
+
+/**
+* The main module for the AltspaceVR SDK.
+* @module altspace
+*/
+
+// include source packages
+if(!Object.isFrozen(window.altspace))
+	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
+
+var version = '2.4.0';
+if (window.altspace.requestVersion) {
+	window.altspace.requestVersion(version);
+}
+
+// copy aframe's bundled version of THREE to global namespace
+if(window.AFRAME && !window.THREE){
+	window.THREE = window.AFRAME.THREE;
+}
+
+Object.assign(window.altspace.components || {}, components_lib);
+Object.assign(window.altspace.utilities || {}, utilities_lib);
+
+}(Firebase,Url,Please));

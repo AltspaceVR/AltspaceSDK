@@ -1,225 +1,243 @@
-/**
- * @module altspace/utilities/behaviors
- */
-window.altspace = window.altspace || {};
-window.altspace.utilities = window.altspace.utilities || {};
-window.altspace.utilities.behaviors = window.altspace.utilities.behaviors || {};
+'use strict';
+
+import Behavior from './Behavior';
 
 /**
- * An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
- * E.g. `['Index', 'Left', 0]` identifies the first joint on the index finger of the left hand.
- * See [TrackingSkeleton#getJoint]{@link module:altspace~TrackingSkeleton#getJoint} for available
- * joint names.
- * @typedef {Array.<String, String, Number>} module:altspace/utilities/behaviors.JointCollisionEvents~JointId
- **/
+* An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
+* E.g. `['Index', 'Left', 0]` identifies the first joint on the index finger of the left hand.
+* See [TrackingSkeleton#getJoint]{@link module:altspace~TrackingSkeleton#getJoint} for available
+* joint names.
+* @typedef {Array.<String, String, Number>} module:altspace/utilities/behaviors.JointCollisionEvents~JointId
+**/
 
-/**
- * The JointCollisionEvents behavior dispatches collision events which have been triggered by
- * [TrackingJoints]{@link module:altspace~TrackingJoint} intersecting with the object that has this behavior.
- *
- * @class JointCollisionEvents
- * @param {Object} [config] Optional parameters.
- * @param {Array.<JointId>} [config.joints] Array of
- * [JointIds]{@link module:altspace/utilities/behaviors.JointCollisionEvents~JointId} to track.<br>
- * Defaults to:
- *
- *     [
- *         ['Hand', 'Left', 0],
- *         ['Thumb', 'Left', 3],
- *         ['Index', 'Left', 3],
- *         ['Middle', 'Left', 3],
- *         ['Ring', 'Left', 3],
- *         ['Pinky', 'Left', 3],
- *
- *         ['Hand', 'Right', 0],
- *         ['Thumb', 'Right', 3],
- *         ['Index', 'Right', 3],
- *         ['Middle', 'Right', 3],
- *         ['Ring', 'Right', 3],
- *         ['Pinky', 'Right', 3],
- *     ]
- * @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.
- * For optimal results, it is recommended that the value
- * provided is scaled according to your enclosure scaling factor.
- * @memberof module:altspace/utilities/behaviors
- **/
-altspace.utilities.behaviors.JointCollisionEvents = function(_config) {
-	var object3d;
-	var config = _config || {};
+// helper function to guarantee skeleton presence, and fetch if available
+function initSkeleton(scene) {
+	return new Promise((resolve, reject) => {
+		let skel = null;
 
-	config.jointCubeSize = config.jointCubeSize || 15;
-	config.joints = config.joints || altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS;
-
-	var skeleton;
-	var jointCube;
-	var hasCollided = false;
-	var collidedJoints = [];
-	var jointIntersectUnion = null;
-
-	function initSkeleton(scene) {
-		return new Promise(function(resolve, reject) {
-			var skel = null;
-
-			// Attempt to use existing skeleton when available
-			scene.traverse(function(child) {
-				if(child.type === 'TrackingSkeleton') {
-					skel = child;
-					return;
-				}
-			});
-
-			if(skel) return resolve(skel);
-
-			// Skeleton has not been assigned to scene yet
-			altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
-				skel = trackingSkeleton;
-				scene.add(skel);
-				return resolve(skel);
-			});
+		// Attempt to use existing skeleton when available
+		scene.traverse(child => {
+			if(child.type === 'TrackingSkeleton') {
+				skel = child;
+				return;
+			}
 		});
+
+		if(skel)
+			return resolve(skel);
+
+		// Skeleton has not been assigned to scene yet
+		altspace.getThreeJSTrackingSkeleton().then(function(trackingSkeleton) {
+			skel = trackingSkeleton;
+			scene.add(skel);
+			return resolve(skel);
+		});
+	});
+}
+
+/**
+* The JointCollisionEvents behavior dispatches collision events which have been triggered by
+* [TrackingJoints]{@link module:altspace~TrackingJoint} intersecting with the object that has this behavior.
+*
+* @param {Object} [config] Optional parameters.
+* @param {Array.<JointId>} [config.joints=HAND_JOINTS] Array of
+* [JointIds]{@link module:altspace/utilities/behaviors.JointCollisionEvents~JointId} to track.
+* @param {Number} [config.jointCubeSize=15] Size of dummy cube used to track each joint.
+* For optimal results, it is recommended that the value
+* provided is scaled according to your enclosure scaling factor.
+* @extends module:altspace/utilities/behaviors.Behavior
+* @memberof module:altspace/utilities/behaviors
+*/
+class JointCollisionEvents extends Behavior
+{
+	get type(){ return 'JointCollisionEvents'; }
+
+	constructor(config)
+	{
+		super();
+		this.config = Object.assign(
+			{jointCubeSize: 15, joints: JointCollisionEvents.HAND_JOINTS},
+			config
+		);
+
+		this.object3d = null;
+		this.skeleton = null;
+		this.jointCube = null;
+		this.hasCollided = false;
+		this.collidedJoints = [];
+		this.jointIntersectUnion = null;
 	}
 
-	function awake(o, s) {
-		object3d = o;
-
+	awake(o, s) {
+		this.object3d = o;
+		let self = this;
 		// Get the tracking skeleton
-		initSkeleton(s).then(function(_skeleton) {
+		initSkeleton(s).then(_skeleton => {
 			// Attach skeleton
-			skeleton = _skeleton;
+			self.skeleton = _skeleton;
 
-			jointCube = new THREE.Vector3(
-				config.jointCubeSize,
-				config.jointCubeSize,
-				config.jointCubeSize
+			self.jointCube = new THREE.Vector3(
+				self.config.jointCubeSize,
+				self.config.jointCubeSize,
+				self.config.jointCubeSize
 			);
-		}).catch(function (err) {
+		}).catch(err => {
 			console.log('Failed to get tracking skeleton', err);
 		});
 	}
 
-	function update(deltaTime) {
-		if(!skeleton) return;
+	update(deltaTime)
+	{
+		if(!this.skeleton)
+			return;
 
 		// Collect joints based on joints config option
-		var joints = [];
-		for(var i = 0; i < config.joints.length; i++) {
-			joints[i] = skeleton.getJoint(
-				config.joints[i][0],
-				config.joints[i][1],
-				config.joints[i][2] ? config.joints[i][2] : 0
+		let joints = [];
+		for(let i = 0; i < this.config.joints.length; i++) {
+			joints[i] = this.skeleton.getJoint(
+				this.config.joints[i][0],
+				this.config.joints[i][1],
+				this.config.joints[i][2] || 0
 			);
 		}
 
 		// Get bounding box of owner object
-		var objectBB = new THREE.Box3().setFromObject(object3d);
+		let objectBB = new THREE.Box3().setFromObject(this.object3d);
 
 		// Add up all colliding joint intersects
-		var prevJointIntersectUnion = jointIntersectUnion;
-		jointIntersectUnion = null;
+		let prevJointIntersectUnion = this.jointIntersectUnion;
+		this.jointIntersectUnion = null;
 
-		var prevCollidedJoints = collidedJoints;
-		collidedJoints = [];
+		let prevCollidedJoints = this.collidedJoints;
+		this.collidedJoints = [];
 
-		var hasPrevCollided = hasCollided;
-		hasCollided = false;
+		let hasPrevCollided = this.hasCollided;
+		this.hasCollided = false;
 
 		if(
-			object3d.visible &&
-			object3d.scale.x > Number.EPSILON &&
-			object3d.scale.y > Number.EPSILON &&
-			object3d.scale.z > Number.EPSILON
+			this.object3d.visible &&
+			this.object3d.scale.x > Number.EPSILON &&
+			this.object3d.scale.y > Number.EPSILON &&
+			this.object3d.scale.z > Number.EPSILON
 		) {
-			for(var i = 0; i < config.joints.length; i++) {
-				var joint = joints[i];
+			for(let i = 0; i < this.config.joints.length; i++)
+			{
+				let joint = joints[i];
 				if(joint && joint.confidence !== 0) {
-					var jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, jointCube);
-					var collision = objectBB.intersectsBox(jointBB);
-					if(collision) {
-						var intersectBB = objectBB.intersect(jointBB);
-						if(jointIntersectUnion) {
-							jointIntersectUnion.union(intersectBB);
-						} else {
-							jointIntersectUnion = intersectBB;
-						}
+					let jointBB = new THREE.Box3().setFromCenterAndSize(joint.position, this.jointCube);
+					let collision = objectBB.intersectsBox(jointBB);
 
-						hasCollided = true;
-						collidedJoints.push(joint);
+					if(collision) {
+						let intersectBB = objectBB.intersect(jointBB);
+						if(this.jointIntersectUnion) {
+							this.jointIntersectUnion.union(intersectBB);
+						} else {
+							this.jointIntersectUnion = intersectBB;
+						}
+						this.hasCollided = true;
+						this.collidedJoints.push(joint);
 					}
 				}
 			}
 		}
 
 		// Dispatch collision event
-		if(!hasPrevCollided && hasCollided) {
-			/**
-			* Fires a single event when any specified joints initially collide with the object.
-			*
-			* @event jointcollisionenter
-			* @property {Object} detail Event details
-			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with object.
-			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} target - The object which was intersected.
-			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-			*/
-			object3d.dispatchEvent({
-				type: 'jointcollisionenter',
-				detail: {
-					intersect: jointIntersectUnion,
-					joints: collidedJoints
-				},
-				bubbles: true,
-				target: object3d
-			});
+		if(!hasPrevCollided && this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new EnterEvent(
+				this.jointIntersectUnion,
+				this.collidedJoints,
+				this.object3d
+			));
 		}
-		else if(hasPrevCollided && !hasCollided) {
-			/**
-			* Fires a single event when all joints are no longer colliding with the object.
-			*
-			* @event jointcollisionleave
-			* @property {Object} detail Event details
-			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which last intersected with the object.
-			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} target - The object which was intersected.
-			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-			*/
-			object3d.dispatchEvent({
-				type: 'jointcollisionleave',
-				detail: {
-					intersect: prevJointIntersectUnion || new THREE.Box3(),
-					joints: prevCollidedJoints
-				},
-				bubbles: true,
-				target: object3d
-			});
+		else if(hasPrevCollided && !this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new LeaveEvent(
+				prevJointIntersectUnion || new THREE.Box3(),
+				prevCollidedJoints,
+				this.object3d
+			));
 		}
 
 		// Dispatch collision event
-		if(hasCollided) {
-			/**
-			* Fires a continuous event while any joints are colliding with the object.
-			*
-			* @event jointcollision
-			* @property {Object} detail Event details
-			* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with the object.
-			* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
-			* @property {THREE.Object3D} target - The object which was intersected.
-			* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
-			*/
-			object3d.dispatchEvent({
-				type: 'jointcollision',
-				detail: {
-					intersect: jointIntersectUnion,
-					joints: collidedJoints
-				},
-				bubbles: true,
-				target: object3d
-			});
+		if(this.hasCollided)
+		{
+			this.object3d.dispatchEvent(new CollisionEvent(
+				this.jointIntersectUnion,
+				this.collidedJoints,
+				this.object3d
+			));
 		}
 	}
+}
 
-	return { awake: awake, update: update, type: 'JointCollisionEvents' };
-};
-altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS = [
+class JointCollisionEvent {
+	constructor(type, union, joints, target)
+	{
+		this.type = type;
+		this.detail = {
+			intersect: union,
+			joints: joints
+		};
+		this.bubbles = true;
+		this.target = target;
+	}
+}
+
+/**
+* Fires a single event when any specified joints initially collide with the object.
+*
+* @event jointcollisionenter
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+class EnterEvent extends JointCollisionEvent {
+	constructor(...args){
+		super('jointcollisionenter', ...args);
+	}
+}
+
+/**
+* Fires a single event when all joints are no longer colliding with the object.
+*
+* @event jointcollisionleave
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which last intersected with the object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+class LeaveEvent extends JointCollisionEvent {
+	constructor(...args){
+		super('jointcollisionleave', ...args);
+	}
+}
+
+/**
+* Fires a continuous event while any joints are colliding with the object.
+*
+* @event jointcollision
+* @property {Object} detail Event details
+* @property {THREE.Box3} detail.intersect - A union of all joint bounding boxes which intersected with the object.
+* @property {module:altspace~TrackingJoint[]} detail.joints - An array of joints which which were involved in the intersection union.
+* @property {THREE.Object3D} target - The object which was intersected.
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+class CollisionEvent extends JointCollisionEvent {
+	constructor(...args){
+		super('jointcollision', ...args);
+	}
+}
+
+/**
+* An array of JointIds describing the tip of every finger on both hands.
+* @constant {Array.<JointId>} HAND_JOINTS
+* @memberof module:altspace/utilities/behaviors.JointCollisionEvents
+*/
+JointCollisionEvents.HAND_JOINTS = [
 	['Hand', 'Left', 0],
 	['Thumb', 'Left', 3],
 	['Index', 'Left', 3],
@@ -232,5 +250,7 @@ altspace.utilities.behaviors.JointCollisionEvents.HAND_JOINTS = [
 	['Index', 'Right', 3],
 	['Middle', 'Right', 3],
 	['Ring', 'Right', 3],
-	['Pinky', 'Right', 3],
+	['Pinky', 'Right', 3]
 ];
+
+export default JointCollisionEvents;

@@ -1,144 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Home - Documentation</title>
-
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-<body>
-
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
-
-<label for="nav-trigger" class="overlay"></label>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-altspace.html">altspace</a><ul class='methods'><li data-type='method'><a href="module-altspace.html#.getDocument">getDocument</a></li><li data-type='method'><a href="module-altspace.html#.getEnclosure">getEnclosure</a></li><li data-type='method'><a href="module-altspace.html#.getGamepads">getGamepads</a></li><li data-type='method'><a href="module-altspace.html#.getSpace">getSpace</a></li><li data-type='method'><a href="module-altspace.html#.getThreeJSDebugInfo">getThreeJSDebugInfo</a></li><li data-type='method'><a href="module-altspace.html#.getThreeJSRenderer">getThreeJSRenderer</a></li><li data-type='method'><a href="module-altspace.html#.getThreeJSTrackingSkeleton">getThreeJSTrackingSkeleton</a></li><li data-type='method'><a href="module-altspace.html#.getUser">getUser</a></li><li data-type='method'><a href="module-altspace.html#.open">open</a></li></ul></li><li><a href="module-altspace_utilities.html">altspace/utilities</a></li><li><a href="module-altspace_utilities_behaviors.html">altspace/utilities/behaviors</a></li><li><a href="module-altspace_utilities_codePen.html">altspace/utilities/codePen</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_codePen.html#.ensureInVR">ensureInVR</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.getAuthorId">getAuthorId</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.getPenId">getPenId</a></li><li data-type='method'><a href="module-altspace_utilities_codePen.html#.setName">setName</a></li></ul></li><li><a href="module-altspace_utilities_shims_bubbling.html">altspace/utilities/shims/bubbling</a></li><li><a href="module-altspace_utilities_shims_cursor.html">altspace/utilities/shims/cursor</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_shims_cursor.html#.init">init</a></li></ul></li><li><a href="module-altspace_utilities_sync.html">altspace/utilities/sync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_sync.html#.connect">connect</a></li><li data-type='method'><a href="module-altspace_utilities_sync.html#.getInstance">getInstance</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="module-altspace_utilities.Simulation.html">Simulation</a></li><li><a href="module-altspace_utilities_behaviors.Bob.html">Bob</a></li><li><a href="module-altspace_utilities_behaviors.ButtonStateStyle.html">ButtonStateStyle</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html">Drag</a></li><li><a href="module-altspace_utilities_behaviors.GamepadControls.html">GamepadControls</a></li><li><a href="module-altspace_utilities_behaviors.HoverColor.html">HoverColor</a></li><li><a href="module-altspace_utilities_behaviors.HoverScale.html">HoverScale</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html">JointCollisionEvents</a></li><li><a href="module-altspace_utilities_behaviors.Layout.html">Layout</a></li><li><a href="module-altspace_utilities_behaviors.Object3DSync.html">Object3DSync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.Object3DSync.html#takeOwnership">takeOwnership</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.SceneSync.html">SceneSync</a><ul class='methods'><li data-type='method'><a href="module-altspace_utilities_behaviors.SceneSync.html#destroy">destroy</a></li><li data-type='method'><a href="module-altspace_utilities_behaviors.SceneSync.html#instantiate">instantiate</a></li></ul></li><li><a href="module-altspace_utilities_behaviors.Spin.html">Spin</a></li><li><a href="module-altspace_utilities_behaviors.SteamVRInput.html">SteamVRInput</a></li><li><a href="module-altspace_utilities_behaviors.SteamVRTrackedObject.html">SteamVRTrackedObject</a></li><li><a href="module-altspace_utilities_sync-Connection.html">Connection</a></li><li><a href="module-altspace-AltRenderer.html">AltRenderer</a><ul class='methods'><li data-type='method'><a href="module-altspace-AltRenderer.html#render">render</a></li></ul></li><li><a href="module-altspace-Document.html">Document</a><ul class='methods'><li data-type='method'><a href="module-altspace-Document.html#reset">reset</a></li></ul></li><li><a href="module-altspace-Enclosure.html">Enclosure</a><ul class='methods'><li data-type='method'><a href="module-altspace-Enclosure.html#exitFullspace">exitFullspace</a></li><li data-type='method'><a href="module-altspace-Enclosure.html#requestFullspace">requestFullspace</a></li></ul></li><li><a href="module-altspace-Gamepad.html">Gamepad</a><ul class='methods'><li data-type='method'><a href="module-altspace-Gamepad.html#preventDefault">preventDefault</a></li></ul></li><li><a href="module-altspace-GamepadButton.html">GamepadButton</a></li><li><a href="module-altspace-Popup.html">Popup</a><ul class='methods'><li data-type='method'><a href="module-altspace-Popup.html#.hide">hide</a></li><li data-type='method'><a href="module-altspace-Popup.html#.show">show</a></li></ul></li><li><a href="module-altspace-TrackingJoint.html">TrackingJoint</a><ul class='methods'></ul></li><li><a href="module-altspace-TrackingSkeleton.html">TrackingSkeleton</a><ul class='methods'><li data-type='method'><a href="module-altspace-TrackingSkeleton.html#getJoint">getJoint</a></li></ul></li><li><a href="THREE.Object3D.html">Object3D</a><ul class='methods'><li data-type='method'><a href="THREE.Object3D.html#addBehavior">addBehavior</a></li><li data-type='method'><a href="THREE.Object3D.html#addBehaviors">addBehaviors</a></li><li data-type='method'><a href="THREE.Object3D.html#getBehaviorByType">getBehaviorByType</a></li><li data-type='method'><a href="THREE.Object3D.html#removeAllBehaviors">removeAllBehaviors</a></li><li data-type='method'><a href="THREE.Object3D.html#removeBehavior">removeBehavior</a></li><li data-type='method'><a href="THREE.Object3D.html#updateBehaviors">updateBehaviors</a></li></ul></li><li><a href="THREE.Scene.html">Scene</a><ul class='methods'><li data-type='method'><a href="THREE.Scene.html#updateAllBehaviors">updateAllBehaviors</a></li></ul></li><li><a href="Window.html">Window</a></li></ul><h3>Events</h3><ul><li><a href="module-altspace.Enclosure.html#event:fullspacechange">fullspacechange</a></li><li><a href="module-altspace.html#event:touchpaddown">touchpaddown</a></li><li><a href="module-altspace.html#event:touchpadgesture">touchpadgesture</a></li><li><a href="module-altspace.html#event:touchpadmove">touchpadmove</a></li><li><a href="module-altspace.html#event:touchpadup">touchpadup</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html#.event:dragstart">dragstart</a></li><li><a href="module-altspace_utilities_behaviors.Drag.html#.event:dragstop">dragstop</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollision">jointcollision</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollisionenter">jointcollisionenter</a></li><li><a href="module-altspace_utilities_behaviors.JointCollisionEvents.html#.event:jointcollisionleave">jointcollisionleave</a></li><li><a href="THREE.Object3D.html#.event:cursordown">cursordown</a></li><li><a href="THREE.Object3D.html#.event:cursorenter">cursorenter</a></li><li><a href="THREE.Object3D.html#.event:cursorleave">cursorleave</a></li><li><a href="THREE.Object3D.html#.event:cursorup">cursorup</a></li><li><a href="THREE.Scene.html#event:cursormove">cursormove</a></li><li><a href="Window.html#event:blur">blur</a></li><li><a href="Window.html#event:focus">focus</a></li></ul>
-</nav>
-
-<div id="main">
-    
-
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-
-    
-
-
-    <section class="readme">
-        <article><h1>AltspaceVR SDK</h1><p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">three.js</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="http://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift DK2.</p>
-<p><strong>Latest Version: v0.28.1 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v0.28.1">See Changes</a></strong></p>
+<link rel="stylesheet" href="js/styles/jsdoc-default.css"/>
 <!--
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-THIS FILE IS GENERATED FROM README.md.template. EDIT THAT INSTEAD
+THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
-<p><a href="http://threejs.org/">Three.js</a> is an open-source, render-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content.</p>
-<h2>Resources</h2><ul>
-<li><strong><a href="https://developer.altvr.com/get-started/">Getting Started</a> - If you're new to the SDK, start here!</strong></li>
-<li><strong><a href="http://altspacevr.github.io/AltspaceSDK/doc/">API Reference</a> - Reference for built in API functions, utilities, and more</strong></li>
+<h1 id="altspacevr-sdk">AltspaceVR SDK</h1>
+<h2 id="-a-frame-api-https-altspacevr-github-io-altspacesdk-doc-aframe-three-js-api-https-altspacevr-github-io-altspacesdk-doc-js-"><a href="https://altspacevr.github.io/AltspaceSDK/doc/aframe/">A-Frame API</a> - <a href="https://altspacevr.github.io/AltspaceSDK/doc/js/">Three.js API</a></h2>
+<p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">Three.js</a> or <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="https://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.</p>
+<p>Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.</p>
+<p><strong>If you are brand new to web development</strong> or 3D applications, we recommend you develop with A-Frame, as it&#39;s more user-friendly and has more utility built-in. Head over to our <a href="https://altspacevr.github.io/AltspaceSDK/doc/aframe/">A-Frame API Documentation</a> for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a>.</p>
+<p><strong>If you know what you&#39;re doing</strong>, you have your choice between A-Frame and Three.js. Three.js is lower-level than A-Frame, so it is more flexible, but at the cost of additional complexity. If you think this is for you, you should read our <a href="https://altspacevr.github.io/AltspaceSDK/doc/js/">Three.js API Documentation</a>. You&#39;ll also need the upstream <a href="https://threejs.org/docs/">Three.js Reference</a>.</p>
+<h2 id="resources">Resources</h2>
+<ul>
 <li><strong><a href="http://developer.altvr.com">Developer Portal</a> - Tutorials, projects, initiative program, and app submission</strong></li>
+<li><strong>The AltspaceVR <a href="https://github.com/AltspaceVR/AltspaceSDK/wiki">SDK Wiki</a> - User-contributed tips and tricks</strong></li>
 <li><strong><a href="https://developer.altvr.com/local-dev/">Local Dev Setup</a> - Instructions for setting up a local dev environment</strong></li>
 <li><strong><a href="https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f">App Guidelines</a> - Suggestions for building apps that work well in Altspace and Gear VR</strong></li>
 <li><strong><a href="https://altspacevrsdk.slack.com">Slack</a> - Chat with other members of the community and AltspaceVR devs.  <a href="http://altspacevr-slackin.herokuapp.com">Register for Slack</a></strong></li>
 </ul>
-<h2>altspace.js</h2><p><code>altspace.js</code> should be included whenever you use the SDK. It contains core utilities and apis, and is useful both inside and outside of the client.</p>
+<h2 id="altspace-js">altspace.js</h2>
+<p><code>altspace.js</code> should be included whenever you use the SDK. It contains core utilities and APIs, and is useful both inside and outside of the client.</p>
 <p>Many APIs are present in the client without loading <code>altspace.js</code>, but please still include it, as this may change in the future.</p>
-<p><strong>The version baked into the altspace.js script you include will determine which version of the entire SDK that the client will provide your app.</strong> This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of <code>altspace.js</code> we will try to return legacy behavior appropriate to your version of <code>altspace.js</code>. Versioning will follow <a href="http://semver.org/">SEMVER</a> as closely as possible. Details for each version can be found in the <a href="https://github.com/AltspaceVR/AltspaceSDK/releases">Release Notes</a>.</p>
-<p>Include the latest version of Altspace in your app with:</p>
-<p><code>&lt;script src=&quot;http://sdk.altvr.com/libs/altspace.js/0.28.1/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p>The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of <code>altspace.js</code>, we will try to return legacy behavior appropriate to your version of <code>altspace.js</code>. Versioning will follow <a href="http://semver.org/">SEMVER</a> as closely as possible. Details for each version can be found in the <a href="https://github.com/AltspaceVR/AltspaceSDK/releases">Release Notes</a>.</p>
+<p><strong>Latest Version: v2.4.0 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.0">See Changes</a></strong></p>
+<p>Include the latest version of the SDK in your app with:</p>
+<p><code>&lt;script src=&quot;https://sdk.altvr.com/libs/altspace.js/2.4.0/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>If you use npm, you can install altspace.js with:</p>
 <p><code>npm install altspace</code></p>
-<h2>API Overview</h2><p><strong>See the <a href="http://altspacevr.github.io/AltspaceSDK/doc">API Reference</a> for full details and a complete list of APIs and utilities.</strong></p>
-<blockquote>
-<p>Note that many of our APIs make use of Promises. Learn about how they work over at <a href="http://www.html5rocks.com/en/tutorials/es6/promises/">HTML5 Rocks</a></p>
-</blockquote>
-<h4>Holographic Rendering</h4><ul>
-<li><p><code>var renderer = altspace.getThreeJSRenderer();</code>
-returns a renderer that can be used to render three.js scenes as holographic objects</p>
-<blockquote>
-<p>Holographic objects are limited to the size of the enclosure (1024 x 1024 x 1024 in the apps panel and public 3D browsers, 1280 x 720 x 300 in the browse panel, units are CSS pixels)</p>
-</blockquote>
-</li>
-</ul>
-<h4>Cursor Events</h4><p>The basic way to allow the user to interact with three.js objects in AltspaceVR is by attaching cursor event listeners.</p>
-<blockquote>
-<p>Note that currently every mesh is represented in our physics engine as object aligned cuboids, 80% the size of a full bounding box (basically a stretched cube that contains most of the object). This means that the cursor will not precisely collide with your meshes, and that significantly concave objects (buckets, etc) will block contained objects from being clicked on.</p>
-</blockquote>
+<h2 id="sdk-feature-overview">SDK Feature Overview</h2>
 <ul>
-<li><p><code>mesh.addEventListener('cursorup' / 'cursordown', callback);</code>
-listen for cursor events on a specific mesh.</p>
-<blockquote>
-<p>These events will bubble up the three.js hierarchy. <code>stopPropagation</code> and <code>stopImmediatePropagation</code> are supported and work similarly to DOM events</p>
-</blockquote>
-</li>
-<li><code>scene.addEventListner('cursormove', callback)</code>
-listen for cursor move events</li>
+<li><strong>Holographic rendering</strong> - Display your 3D models in true-to-life size, stand next to them, walk through them, etc.</li>
+<li><strong>Cursor emulation*</strong> - Receive cursor events on your objects, e.g. <code>cursordown</code>, <code>cursormove</code>, etc.</li>
+<li><strong>Synchronization</strong> - Share app state across all clients, store high scores, etc.</li>
+<li><strong>Environmental data**</strong> - Know the size and relative scale of your app&#39;s enclosure, or request access to the entire virtual space.</li>
+<li><strong>User data</strong> - Know info about who is using your app, including a unique identifier, name, and moderator status. (This data is not stored automatically, but is available upon request.)</li>
+<li><strong>Avatar tracking skeleton</strong> - Know the position and orientation of your users&#39; heads, hands, etc.</li>
+<li><strong>Unity native resources (A-Frame only)</strong> - Create proxy objects that let you manipulate native Unity assets, including pre-optimized models, particle effects, colliders, and more.</li>
 </ul>
-<h4>Enclosure Properties</h4><ul>
-<li><code>altspace.getEnclosure().then(callback)</code>
-returns a promise that will fulfill with a description of the enclosure, including its size and <code>pixelsPerMeter</code> which can be used as a coefficient to maintain static sizes for objects regardless of the scale of the enclosure.</li>
-</ul>
-<h4>User Data</h4><ul>
-<li><code>altspace.getUser().then(callback)</code>
-returns a promise that will fulfill with information about the local user</li>
-</ul>
-<h4>Tracking Skeleton</h4><ul>
-<li><code>altspace.getThreeJSTrackingSkeleton().then(callback)</code>
-returns a promise that will fulfill with a three.js object hierarchy with each object representing a joint in the unified tracking skeleton. These object's transforms will be automatically updated by AltspaceVR, so feel free to query them for position or add objects as children. <strong>Make sure to add the skeleton to your scene after receiving it</strong></li>
-</ul>
-<h2>Debugger</h2><p>The Debugger is essentially a remote Chrome inspector for AltspaceVR browsers.</p>
+<p>* For the purposes of cursor collision, meshes are approximated to be a 4/5 scale of their bounding box. If desired, default cursor collision can be disabled.</p>
+<p>** Meshes outside the bounds of the enclosure will be culled unless you request full space access.</p>
+<h2 id="altspacevr-debugger">AltspaceVR Debugger</h2>
+<p>The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.</p>
 <p><strong><a href="http://sdk.altvr.com/debugger/DebuggerMacOSX.zip">OSX Debugger</a> - <a href="http://sdk.altvr.com/debugger/DebuggerWindows.zip">Windows Debugger</a></strong></p>
 <blockquote>
 <p>Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.</p>
 </blockquote>
-<h2>Three.js Feature Support</h2><p>Altspace supports Three.js r73 to r74. r74 is recommended.</p>
+<h2 id="graphics-feature-support">Graphics Feature Support</h2>
+<p>AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame version 0.3.0 is currently the only version supported.</p>
 <p><strong>Currently supported:</strong></p>
 <ul>
 <li>Object3D transformation and hierarchy</li>
 <li>Most Geometries</li>
 <li>MeshBasicMaterial</li>
+<li>JPEG, PNG, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage">HTML5 Canvas</a> textures</li>
 <li>Face and vertex colors</li>
 </ul>
 <p><strong>Not currently supported:</strong></p>
 <ul>
-<li>Three.js r75</li>
 <li>Lighting, custom shaders, screen space effects.</li>
 <li>Texture filter, format, anisotropy, flip, THREE.MirroredRepeatWrapping.</li>
 <li>Using GIF images for textures</li>
 <li>VideoTexture</li>
 <li>Material blending, depthTest, depthWrite, alphaTest, clippingPlanes</li>
+<li>Other material types including LineBasicMateral, MeshFaceMaterial, MultiMaterial</li>
 <li>Wireframes</li>
-<li>Other material types including LineBasicMateral/MeshFaceMaterial/MultiMaterial</li>
 <li>Line Geometries</li>
-<li>Quad faces</li>
+<li>Quad/N-Gon faces</li>
 <li>Dynamic meshes, skinned meshes</li>
+<li>Interleaved BufferGeometry attributes</li>
 <li>Geometries with more than 65,000 vertices (Note: Calculated as &lt;number of faces&gt; * 3)</li>
 </ul>
-<p><strong>Habits of Successful AltspaceVR Web Apps:</strong></p>
+<h2 id="habits-of-successful-altspacevr-web-apps">Habits of Successful AltspaceVR Web Apps</h2>
 <ul>
-<li>If you're loading a texture from a URL, make sure its dimensions are a power-of-two for improved performance.</li>
+<li>If you&#39;re loading a texture from a URL, make sure its dimensions are a power-of-two for improved performance.</li>
 <li>Mind your texture sizes. Large textures can cause frame locking in the client.</li>
 <li>If your app requires many different textures and geometries, add them to a scene incrementally.</li>
 <li>Use Object3D transforms (position, rotation, scale) for animation rather than skinned meshes.</li>
@@ -153,35 +87,22 @@ returns a promise that will fulfill with a three.js object hierarchy with each o
 You can work around this by recursively setting the visibility on an object and its children.</li>
 <li>Texture wrap mode is ignored on the <code>wrapT</code> property. The value of <code>wrapS</code> is used for both axes.</li>
 </ul>
-<h2>Browser Feature Support</h2><p>Altspace's browser is based on Chromium version 40.</p>
+<h2 id="browser-feature-support">Browser Feature Support</h2>
+<p>Altspace&#39;s browser is based on Chromium version 40.</p>
 <p><strong>Currently supported:</strong></p>
 <ul>
 <li>Libre audio and video codecs (ogg, webm)</li>
+<li>ES2015 <a href="https://developers.google.com/web/fundamentals/getting-started/primers/promises">Promises</a></li>
 </ul>
 <p><strong>Not currently supported:</strong></p>
 <ul>
 <li>Proprietary audio and video codecs (h.264, mp4, mp3)</li>
 <li>WebRTC</li>
-<li>ES6</li>
+<li>WebVR</li>
+<li>Most features of ES2015</li>
+<li>The <code>&lt;audio&gt;</code> media tag</li>
+<li>The <code>&lt;a&gt;</code> tag attribute <code>target</code></li>
+<li>The <code>&lt;iframe&gt;</code> tag</li>
 </ul>
 <hr>
-<p><a href="https://david-dm.org/AltspaceVR/AltspaceSDK/#info=devDependencies"><img src="https://david-dm.org/AltspaceVR/AltspaceSDK/dev-status.svg" alt="dev dependency status"></a></p></article>
-    </section>
-
-
-
-
-
-
-</div>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using the Minami theme.
-</footer>
-
-<script>prettyPrint();</script>
-<script src="scripts/linenumber.js"></script>
-</body>
-</html>
+<p><a href="https://david-dm.org/AltspaceVR/AltspaceSDK/#info=devDependencies"><img src="https://david-dm.org/AltspaceVR/AltspaceSDK/dev-status.svg" alt="dev dependency status"></a></p>

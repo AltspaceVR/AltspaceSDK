@@ -3,7 +3,7 @@
 	<head>
 		<title>Fullspace</title>
 		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r74/build/three.min.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
 		<script src="../../../dist/altspace.js"></script>
 		<script src="meshHelpers.js"></script>
 		<style>
@@ -40,7 +40,7 @@
 				doc.rotateY(Math.PI / 4);
 				sim.scene.add(doc);
 
-				var button = meshHelpers.makeBox(1.5, boxSize * 1.5, -1.5, '../../images/click-me.jpg');
+				var button = meshHelpers.makeBox(1.5, boxSize * 1.5, -1.5, '../../resources/click-me.jpg');
 				button.userData.altspace.collider.enabled = true;
 				adjustToFullspace(enclosure, button, doc);
 				button.addEventListener('cursordown', function () {
@@ -89,4 +89,3 @@
 		</script>
 	</body>
 </html>
-
