@@ -87,7 +87,7 @@
             "byteOffset": 0,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 44700,
+            "count": 11241,
             "max": [
                 0.49978187680244446,
                 0.49989035725593567,
@@ -102,28 +102,28 @@
         },
         "accessor_buffer_Sphere.003_1": {
             "bufferView": "bufferView_buffer_Sphere.003_0",
-            "byteOffset": 536400,
+            "byteOffset": 134892,
             "byteStride": 12,
             "componentType": 5126,
-            "count": 44700,
+            "count": 11241,
             "max": [
-                0.9999999403953552,
-                0.9997824430465698,
-                0.9997820258140564
+                0.999542236328125,
+                0.999755859375,
+                1.0
             ],
             "min": [
-                -1.0,
-                -0.9997806549072266,
-                -0.9997811913490295
+                -0.999542236328125,
+                -0.999755859375,
+                -1.0
             ],
             "type": "VEC3"
         },
         "accessor_buffer_Sphere.003_2": {
             "bufferView": "bufferView_buffer_Sphere.003_0",
-            "byteOffset": 1072800,
+            "byteOffset": 269784,
             "byteStride": 8,
             "componentType": 5126,
-            "count": 44700,
+            "count": 11241,
             "max": [
                 1.4266633987426758,
                 1.0
@@ -136,10 +136,10 @@
         },
         "accessor_buffer_Sphere.003_3": {
             "bufferView": "bufferView_buffer_Sphere.003_0",
-            "byteOffset": 1430400,
+            "byteOffset": 359712,
             "byteStride": 8,
             "componentType": 5126,
-            "count": 44700,
+            "count": 11241,
             "max": [
                 1.4266633987426758,
                 1.0
@@ -157,7 +157,7 @@
             "componentType": 5123,
             "count": 66600,
             "max": [
-                44699
+                11240
             ],
             "min": [
                 0
@@ -176,31 +176,31 @@
         "bufferView_buffer_Sphere.002_0": {
             "buffer": "buffer_combined",
             "byteLength": 28880,
-            "byteOffset": 1921200,
+            "byteOffset": 582840,
             "target": 34962
         },
         "bufferView_buffer_Sphere.002_1": {
             "buffer": "buffer_combined",
             "byteLength": 8208,
-            "byteOffset": 1950080,
+            "byteOffset": 611720,
             "target": 34963
         },
         "bufferView_buffer_Sphere.003_0": {
             "buffer": "buffer_combined",
-            "byteLength": 1788000,
+            "byteLength": 449640,
             "byteOffset": 0,
             "target": 34962
         },
         "bufferView_buffer_Sphere.003_1": {
             "buffer": "buffer_combined",
             "byteLength": 133200,
-            "byteOffset": 1788000,
+            "byteOffset": 449640,
             "target": 34963
         }
     },
     "buffers": {
         "buffer_combined": {
-            "byteLength": 1958288,
+            "byteLength": 619928,
             "type": "arraybuffer",
             "uri": "buffer_combined.bin"
         }

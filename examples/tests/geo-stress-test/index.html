@@ -59,6 +59,7 @@
 				ballHigh.matrixAutoUpdate = true;
 
 				ballMat = ballLow.material;
+				ballMat.map.wrapS = THREE.RepeatWrapping;
 				ballMat.lightMap = ballMat.specularMap;
 				ballMat.specularMap = null;
 				ballMat.lightMap.wrapS = THREE.RepeatWrapping;
@@ -108,9 +109,9 @@
 </head>
 <body>
 	<div style='background-color: white'>
-		<input type='button' id='ballHigh' value='High poly' onclick='spawn(ballHigh)'></input>
-		<input type='button' id='ballLow' value='Low poly' onclick='spawn(ballLow)'></input>
-		<input type='button' id='boxes' value='Lowest poly' onclick='spawn(box)'></input>
+		<input type='button' id='ballHigh' value='Sphere high' onclick='spawn(ballHigh)'></input>
+		<input type='button' id='ballLow' value='Sphere low' onclick='spawn(ballLow)'></input>
+		<input type='button' id='boxes' value='Box' onclick='spawn(box)'></input>
 		<span id='meshcount'>0</span> meshes,
 		<span id='vertcount'>0</span> verts,
 		<span id='polycount'>0</span> polys
