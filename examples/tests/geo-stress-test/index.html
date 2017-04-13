@@ -42,6 +42,7 @@
 				new THREE.Vector3(e.innerWidth, e.innerHeight, e.innerDepth)
 					.divideScalar(e.pixelsPerMeter)
 			);
+			buttonContainer.position.set(enc.min.x, enc.max.y-0.1, 0);
 			enc.max.y -= 1;
 		});
 
@@ -70,6 +71,53 @@
 			}
 		);
 
+		var buttonContainer = new THREE.Object3D();
+		scene.add(buttonContainer);
+
+		var highButton = new THREE.Mesh(
+			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
+			new THREE.MeshBasicMaterial({color: 0xff0000})
+		);
+		highButton.position.setX(0.1);
+		highButton.addEventListener('cursorup', function(){ spawn(ballHigh, 100); });
+
+		var lowButton = new THREE.Mesh(
+			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
+			new THREE.MeshBasicMaterial({color: 0xffff00})
+		);
+		lowButton.position.setX(0.35);
+		lowButton.addEventListener('cursorup', function(){ spawn(ballLow, 100); });
+
+		var boxButton = new THREE.Mesh(
+			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
+			new THREE.MeshBasicMaterial({color: 0x00ff00})
+		);
+		boxButton.position.setX(0.6);
+		boxButton.addEventListener('cursorup', function(){ spawn(box, 100); });
+
+		var highButton2 = new THREE.Mesh(
+			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
+			new THREE.MeshBasicMaterial({color: 0x800000})
+		);
+		highButton2.position.set(0.1, -0.15, 0);
+		highButton2.addEventListener('cursorup', function(){ spawn(ballHigh, 10); });
+
+		var lowButton2 = new THREE.Mesh(
+			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
+			new THREE.MeshBasicMaterial({color: 0x808000})
+		);
+		lowButton2.position.set(0.35, -0.15, 0);
+		lowButton2.addEventListener('cursorup', function(){ spawn(ballLow, 10); });
+
+		var boxButton2 = new THREE.Mesh(
+			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
+			new THREE.MeshBasicMaterial({color: 0x008000})
+		);
+		boxButton2.position.set(0.6, -0.15, 0);
+		boxButton2.addEventListener('cursorup', function(){ spawn(box, 10); });
+
+		buttonContainer.add(highButton, lowButton, boxButton, highButton2, lowButton2, boxButton2);
+
 		function getRandomPointInBox(box){
 			var size = box.getSize();
 			return new THREE.Vector3(
@@ -83,10 +131,10 @@
 		var vertCount = 0;
 		var polyCount = 0;
 
-		function spawn(mesh)
+		function spawn(mesh, batchSize)
 		{
 			if(!mesh || !enc) return;
-			var batchSize = 100;
+			batchSize = batchSize || 100;
 
 			for(var i=0; i<batchSize; i++)
 			{
@@ -108,13 +156,10 @@
 	</script>
 </head>
 <body>
-	<div style='background-color: white'>
-		<input type='button' id='ballHigh' value='Sphere high' onclick='spawn(ballHigh)'></input>
-		<input type='button' id='ballLow' value='Sphere low' onclick='spawn(ballLow)'></input>
-		<input type='button' id='boxes' value='Box' onclick='spawn(box)'></input>
+	<span style='background-color: white; padding: 5px; float: right'>
 		<span id='meshcount'>0</span> meshes,
 		<span id='vertcount'>0</span> verts,
 		<span id='polycount'>0</span> polys
-	</div>
+	</span>
 </body>
 </html>
