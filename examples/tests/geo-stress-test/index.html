@@ -38,15 +38,17 @@
 
 		var loader = new THREE.GLTFLoader();
 		loader.load('model.gltf',
-			function(result){
-				ballLow = result.scene.getObjectByName('lowpoly').children[0];
+			function(result)
+			{
 				ballHigh = result.scene.getObjectByName('highpoly').children[0];
-				ballLow.rotateX(-Math.PI/2);
 				ballHigh.rotateX(-Math.PI/2);
-				ballLow.scale.setScalar(0.2);
 				ballHigh.scale.setScalar(0.2);
-				ballLow.matrixAutoUpdate = true;
 				ballHigh.matrixAutoUpdate = true;
+
+				ballLow = result.scene.getObjectByName('lowpoly').children[0];
+				ballLow.rotateX(-Math.PI/2);
+				ballLow.scale.setScalar(0.2);
+				ballLow.matrixAutoUpdate = true;
 
 				ballMat = ballLow.material;
 				ballMat.map.wrapS = THREE.RepeatWrapping;
