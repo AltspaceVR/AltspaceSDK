@@ -3,17 +3,11 @@
 <head>
 	<title>Geometry Stress Test</title>
 	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
-	<script src="https://cdn.rawgit.com/mrdoob/stats.js/066cb4e8/build/stats.min.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/GLTFLoader.js"></script>
 	<script src="../../../dist/altspace.min.js"></script>
 	<script>
 
-		var stats = new Stats();
-		stats.showPanel(0);
-		//document.body.appendChild(stats.dom);
-
-		var scene = new THREE.Scene();
-		var renderer = altspace.getThreeJSRenderer();
+		var sim = new altspace.utilities.Simulation();
 		var enc = null;
 		var box = new THREE.Mesh(new THREE.BoxBufferGeometry(0.05,0.05,0.05));
 		var ballMat = null;
@@ -28,14 +22,10 @@
 				var offset = ballMat.map.offset.x + 0.001;
 				ballMat.map.offset.x = offset >= 1 ? offset - 1 : offset;
 			}
-
-			stats.begin();
-			renderer.render(scene);
-			stats.end();
 		});
 
 		altspace.getEnclosure().then(function(e){
-			scene.scale.setScalar(e.pixelsPerMeter);
+			sim.scene.scale.setScalar(e.pixelsPerMeter);
 			enc = new THREE.Box3();
 			enc.setFromCenterAndSize(
 				new THREE.Vector3(),
@@ -47,7 +37,6 @@
 		});
 
 		var loader = new THREE.GLTFLoader();
-		loader.setCrossOrigin('anonymous');
 		loader.load('model.gltf',
 			function(result){
 				ballLow = result.scene.getObjectByName('lowpoly').children[0];
@@ -66,58 +55,31 @@
 				ballMat.lightMap.wrapS = THREE.RepeatWrapping;
 				ballMat.lightMapIntensity = 1;
 			},
-			undefined,
+			undefined, // onprogress callback
 			function(err){
 				console.error(err);
 			}
 		);
 
 		var buttonContainer = new THREE.Object3D();
-		scene.add(buttonContainer);
+		var buttonGeo = new THREE.BoxBufferGeometry(0.2, 0.1, 0.1);
+		sim.scene.add(buttonContainer);
 
-		var highButton = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
-			new THREE.MeshBasicMaterial({color: 0xff0000})
-		);
-		highButton.position.setX(0.1);
-		highButton.addEventListener('cursorup', function(){ spawn(ballHigh, 100); });
+		function addButton(x, y, color, callback){
+			var button = new THREE.Mesh( buttonGeo,
+				new THREE.MeshBasicMaterial({color: color})
+			);
+			button.position.set(x, y, 0);
+			button.addEventListener('cursorup', callback);
+			buttonContainer.add(button);
+		}
 
-		var lowButton = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
-			new THREE.MeshBasicMaterial({color: 0xffff00})
-		);
-		lowButton.position.setX(0.35);
-		lowButton.addEventListener('cursorup', function(){ spawn(ballLow, 100); });
-
-		var boxButton = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
-			new THREE.MeshBasicMaterial({color: 0x00ff00})
-		);
-		boxButton.position.setX(0.6);
-		boxButton.addEventListener('cursorup', function(){ spawn(box, 100); });
-
-		var highButton2 = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
-			new THREE.MeshBasicMaterial({color: 0x800000})
-		);
-		highButton2.position.set(0.1, -0.15, 0);
-		highButton2.addEventListener('cursorup', function(){ spawn(ballHigh, 10); });
-
-		var lowButton2 = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
-			new THREE.MeshBasicMaterial({color: 0x808000})
-		);
-		lowButton2.position.set(0.35, -0.15, 0);
-		lowButton2.addEventListener('cursorup', function(){ spawn(ballLow, 10); });
-
-		var boxButton2 = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(0.2, 0.1, 0.1),
-			new THREE.MeshBasicMaterial({color: 0x008000})
-		);
-		boxButton2.position.set(0.6, -0.15, 0);
-		boxButton2.addEventListener('cursorup', function(){ spawn(box, 10); });
-
-		buttonContainer.add(highButton, lowButton, boxButton, highButton2, lowButton2, boxButton2);
+		addButton(0.1, 0, 0xff0000, function(){ spawn(ballHigh, 100); });
+		addButton(0.35, 0, 0xffff00, function(){ spawn(ballLow, 100); });
+		addButton(0.6, 0, 0x00ff00, function(){ spawn(box, 100); });
+		addButton(0.1, -0.15, 0x800000, function(){ spawn(ballHigh, 10); });
+		addButton(0.35, -0.15, 0x808000, function(){ spawn(ballLow, 10); });
+		addButton(0.6, -0.15, 0x008000, function(){ spawn(box, 10); });
 
 		function getRandomPointInBox(box){
 			var size = box.getSize();
@@ -142,7 +104,7 @@
 				var item = mesh.clone();
 				//item.material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
 				item.position.copy( getRandomPointInBox(enc) );
-				scene.add(item);
+				sim.scene.add(item);
 			}
 
 			meshCount += batchSize;
