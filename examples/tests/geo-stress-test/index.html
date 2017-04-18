@@ -76,12 +76,12 @@
 			buttonContainer.add(button);
 		}
 
-		addButton(0.1, 0, 0xff0000, function(){ spawn(ballHigh, 100); });
-		addButton(0.35, 0, 0xffff00, function(){ spawn(ballLow, 100); });
-		addButton(0.6, 0, 0x00ff00, function(){ spawn(box, 100); });
-		addButton(0.1, -0.15, 0x800000, function(){ spawn(ballHigh, 10); });
-		addButton(0.35, -0.15, 0x808000, function(){ spawn(ballLow, 10); });
-		addButton(0.6, -0.15, 0x008000, function(){ spawn(box, 10); });
+		addButton(0.1,   0,    0xff0000, function(){ spawn(ballHigh, 100); });
+		addButton(0.35,  0,    0xffff00, function(){ spawn(ballLow,  100); });
+		addButton(0.6,   0,    0x00ff00, function(){ spawn(box,      100); });
+		addButton(0.1,  -0.15, 0x800000, function(){ spawn(ballHigh,  10); });
+		addButton(0.35, -0.15, 0x808000, function(){ spawn(ballLow,   10); });
+		addButton(0.6,  -0.15, 0x008000, function(){ spawn(box,       10); });
 
 		function getRandomPointInBox(box){
 			var size = box.getSize();
