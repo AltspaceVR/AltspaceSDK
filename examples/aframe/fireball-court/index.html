@@ -89,12 +89,12 @@
 			</a-entity>
 		</a-entity> -->
 
-		<a-entity id="court" position="-10 0 -10">
-			<a-entity position='0 0 0.1' rotation='0 0 0' template='src: half-court.html'></a-entity>
-			<a-entity position='0 0 -0.1' rotation='0 180 0' template='src: half-court.html'></a-entity>
+		<a-entity id="court" position="-15 0 -15">
+			<a-entity position='0 0 0.05' rotation='0 0 0' template='src: half-court.html'></a-entity>
+			<a-entity position='0 0 -0.05' rotation='0 180 0' template='src: half-court.html'></a-entity>
 
-			<a-entity position='0 0 -10' rotation='0 0 0' template='src: goal.html'></a-entity>
-			<a-entity position='0 0 10' rotation='0 180 0' template='src: goal.html'></a-entity>
+			<a-entity position='0 0 -10' rotation='0 0 0' template='src: goal.html' data-teamcolor="#0B2A70"></a-entity>
+			<a-entity position='0 0 10' rotation='0 180 0' template='src: goal.html' data-teamcolor="#A31C00"></a-entity>
 
 			<a-entity n-spawner="res:interactables/basketball" position="4 1.25 0">
 				<a-entity position="0 0.5 0" n-object="res:effects/fire"></a-entity>
