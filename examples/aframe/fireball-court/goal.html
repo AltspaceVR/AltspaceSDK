@@ -9,15 +9,15 @@
 
 	<!-- Net Collider -->
 	<a-entity>
-		<a-box color="black" position="0 1.9 0.52" 	scale="1 0.03 1" opacity="0" rotation="90 0 0" n-box-collider"></a-box>
-		<a-box color="black" position="0 1.9 -0.52" scale="1 0.03 1" opacity="0" rotation="90 0 0" n-box-collider"></a-box>
+		<a-box color="black" position="0 1.9 0.52" 	scale="1 0.1 1" opacity="0.2" rotation="90 0 0" n-box-collider"></a-box>
+		<a-box color="black" position="0 1.9 -0.52" scale="1 0.1 1" opacity="0.2" rotation="90 0 0" n-box-collider"></a-box>
 
-		<a-box color="black" position="0.52 1.9 0" 	scale="1 0.03 1" opacity="0" rotation="90 90 0" n-box-collider></a-box>
-		<a-box color="black" position="-0.52 1.9 0" scale="1 0.03 1" opacity="0" rotation="90 90 0" n-box-collider></a-box>
+		<a-box color="black" position="0.52 1.9 0" 	scale="1 0.1 1" opacity="0.2" rotation="90 90 0" n-box-collider></a-box>
+		<a-box color="black" position="-0.52 1.9 0" scale="1 0.1 1" opacity="0.2" rotation="90 90 0" n-box-collider></a-box>
 	</a-entity>
 
 
-	<a-box class="basket-container" color="yellowgreen" rotation="0 0 0" scale="0.7 0.25 0.7" material="visible:false" n-box-collider="isTrigger:true;" n-container="capacity:3" position="0 2.1 0"></a-box>
+	<a-box class="basket-container" color="yellowgreen" rotation="0 0 0" scale="1 0.25 1" material="visible:true" n-box-collider="isTrigger:true;" n-container="capacity:3" position="0 2.1 0"></a-box>
 
 	<a-entity n-object="res:objects/basketball-hoop" position="0 2.5 00" rotation="0 90 0" scale="3 3 3">
 		<a-entity  class="score-effect0" position="0 0 0">

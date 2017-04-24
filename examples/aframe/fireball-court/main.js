@@ -12,7 +12,7 @@
 			component.scoreBorder = component.el.querySelector('.score-border');
 			component.scoreEffect0 = component.el.querySelector('.score-effect0');
 			component.scoreEffect1 = component.el.querySelector('.score-effect1');
-			component.basketContainer = document.querySelector('.basket-container');
+			component.basketContainer = component.el.querySelector('.basket-container');
 			component.score = 0;
 			console.dir(component.scoreText);
 			console.dir(component.scoreEffect0);
@@ -24,7 +24,6 @@
 			}.bind(component);
 
 			component.scoreGoal = function(){
-				debugger;
 				component.score++;
 				component.displayScore();
 				component.scoreEffect0.emit('score');
@@ -37,9 +36,8 @@
 			component.scoreLabel.setAttribute('n-text', 'text', '<color=' + component.teamColor + '>SCORE</color>');
 
 		 	component.basketContainer.addEventListener('container-count-changed', function(event){
-		 		debugger;
+	 			console.log('container-count-changed ' + event.detail.oldCount + ' to ' + event.detail.count);
 		 		if(event.detail.count > event.detail.oldCount && event.detail.count > 0){
-		 			console.log('score changing from ' + event.detail.oldCount + ' to ' + event.detail.count);
 		 			component.scoreGoal();
 		 		}
 		 	});
