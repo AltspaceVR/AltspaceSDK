@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Stonehenge</title>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.js'></script>
+	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/GLTFLoader.js"></script>
+	<script src='https://sdk.altvr.com/libs/altspace.js/2.4.2/altspace.js'></script>
+</head>
+<body>
+<script>
+
+	var sim = new altspace.utilities.Simulation();
+	sim.camera.position.set(0, 1.5, 5);
+
+	var model = null, lightmap = null;
+	var gltfLoader = new THREE.GLTFLoader();
+	gltfLoader.load('stonehenge.gltf',
+		function(result){
+			sim.scene.add(result.scene);
+			model = result.scene;
+			loadingDone();
+		},
+		undefined,
+		function(err){
+			console.error(err);
+		}
+	);
+
+	var txLoader = new THREE.TextureLoader();
+	txLoader.load('lightmap.jpg', function(tex){
+		tex.flipY = false;
+		lightmap = tex;
+		loadingDone();
+	});
+
+	function loadingDone()
+	{
+		if( !model || !lightmap ) return;
+
+		model.children[0].children.forEach(function(obj)
+		{
+			var match = /^Cube\.(\d\d\d)$/.exec(obj.name);
+			if(match)
+			{
+				var num = parseInt(match[1]);
+				var mat = obj.children[0].material.clone();
+				mat.lightMap = lightmap.clone();
+				obj.children[0].material = mat;
+
+				mat.lightMap.repeat.setScalar(.125);
+				if(num < 48){
+					mat.lightMap.offset.set(
+						(num % 8) * .125,
+						Math.floor(num/8) * .125
+					);
+				}
+				else {
+					mat.lightMap.offset.set(
+						((num-48) % 6) * .125,
+						.75 + Math.floor((num-48)/6) * .125
+					);
+				}
+			}
+			else if(obj.name === 'Plane')
+			{
+				var mat = obj.children[0].material;
+				mat.lightMap = lightmap.clone();
+				mat.lightMap.repeat.setScalar(.25);
+				mat.lightMap.offset.set(.75, .75);
+			}
+			else {
+				console.log('unknown object', obj);
+			}
+		});
+	}
+
+</script>
+</body>
+</html>
