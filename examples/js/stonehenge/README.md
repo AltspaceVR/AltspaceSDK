@@ -1,7 +1,9 @@
 ## Light map texture atlassing
 
+![screenshot](screenshot.png)
+
 This example contains 59 copies of a single "block" geometry, arranged and light mapped
-independently onto a single light map atlas. See the source code in [index.html](index.html)
+independently onto a single light map texture atlas. See the source code in [index.html](index.html)
 for how this is accomplished.
 
 ## Credits

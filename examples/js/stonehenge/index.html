@@ -13,6 +13,8 @@
 	sim.camera.position.set(0, 1.5, 5);
 
 	var model = null, lightmap = null;
+
+	// load model
 	var gltfLoader = new THREE.GLTFLoader();
 	gltfLoader.load('stonehenge.gltf',
 		function(result){
@@ -26,6 +28,7 @@
 		}
 	);
 
+	// load texture
 	var txLoader = new THREE.TextureLoader();
 	txLoader.load('lightmap.jpg', function(tex){
 		tex.flipY = false;
@@ -33,27 +36,36 @@
 		loadingDone();
 	});
 
+	// model and texture loaded, start mapping
 	function loadingDone()
 	{
 		if( !model || !lightmap ) return;
 
+		// loop over each object
 		model.children[0].children.forEach(function(obj)
 		{
+			// all blocks have names like "Cube.001"
 			var match = /^Cube\.(\d\d\d)$/.exec(obj.name);
 			if(match)
 			{
+				// clone material/texture settings
 				var num = parseInt(match[1]);
 				var mat = obj.children[0].material.clone();
 				mat.lightMap = lightmap.clone();
 				obj.children[0].material = mat;
 
+				// each block only uses 1/8 square of the texture
 				mat.lightMap.repeat.setScalar(.125);
+
+				// first 48 blocks' lightmaps are in 6 rows of 8, going in ascending
+				// order by number left to right, top to bottom
 				if(num < 48){
 					mat.lightMap.offset.set(
 						(num % 8) * .125,
 						Math.floor(num/8) * .125
 					);
 				}
+				// remaining 11 blocks are in two rows of 6
 				else {
 					mat.lightMap.offset.set(
 						((num-48) % 6) * .125,
@@ -65,11 +77,10 @@
 			{
 				var mat = obj.children[0].material;
 				mat.lightMap = lightmap.clone();
+
+				// bottom right corner of texture is the ground plane
 				mat.lightMap.repeat.setScalar(.25);
 				mat.lightMap.offset.set(.75, .75);
-			}
-			else {
-				console.log('unknown object', obj);
 			}
 		});
 	}
