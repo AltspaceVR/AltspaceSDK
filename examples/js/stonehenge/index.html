@@ -12,6 +12,16 @@
 	var sim = new altspace.utilities.Simulation();
 	sim.camera.position.set(0, 1.5, 5);
 
+	if(altspace.inClient){
+		altspace.getEnclosure().then(function(enc){
+			sim.scene.scale.setScalar(enc.pixelsPerMeter);
+			enc.requestFullspace();
+			enc.addEventListener('fullspacechange', function(){
+				sim.scene.scale.setScalar(enc.pixelsPerMeter);
+			});
+		});
+	}
+
 	var model = null, lightmap = null;
 
 	// load model
