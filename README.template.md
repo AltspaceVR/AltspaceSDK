@@ -60,7 +60,7 @@ If you use npm, you can install altspace.js with:
 
 The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.
 
-**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.zip)**
+**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
 > Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.
 
 ## Graphics Feature Support
