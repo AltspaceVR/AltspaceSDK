@@ -32,11 +32,11 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js`, we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
 
-**Latest Version: v2.4.2 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.2)**
+**Latest Version: v2.4.3 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.3)**
 
 Include the latest version of the SDK in your app with:
 
-`<script src="https://sdk.altvr.com/libs/altspace.js/2.4.2/altspace.min.js"></script>`
+`<script src="https://sdk.altvr.com/libs/altspace.js/2.4.3/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -60,7 +60,7 @@ If you use npm, you can install altspace.js with:
 
 The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.
 
-**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.zip)**
+**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
 > Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.
 
 ## Graphics Feature Support
