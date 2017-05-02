@@ -4,7 +4,7 @@
 	<title>Stonehenge</title>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.js'></script>
 	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/GLTFLoader.js"></script>
-	<script src='https://sdk.altvr.com/libs/altspace.js/2.4.2/altspace.js'></script>
+	<script src='../../../dist/altspace.js'></script>
 </head>
 <body>
 <script>
@@ -41,6 +41,8 @@
 	// load texture
 	var txLoader = new THREE.TextureLoader();
 	txLoader.load('lightmap.jpg', function(tex){
+		// gltf models need this field to be false
+		// GLTFLoader does it for the diffuse texture automatically
 		tex.flipY = false;
 		lightmap = tex;
 		loadingDone();
