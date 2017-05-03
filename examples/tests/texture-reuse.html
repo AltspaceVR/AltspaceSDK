@@ -8,6 +8,7 @@
 		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
+		<h1 style='color: white'>All cubes should be the same color</h1>
 		<script>
 			var sim = new altspace.utilities.Simulation({auto: false}), controls;
 
@@ -21,14 +22,14 @@
 				canvas.width = textureSize;
 				canvas.height = textureSize;
 				var context = canvas.getContext('2d');
-				var canvasTexture = new THREE.CanvasTexture(canvas);
-				context.fillStyle = '#660000';
+				context.fillStyle = '#ff0000';
 				context.fillRect(0, 0, textureSize, textureSize);
+				var canvasTexture = new THREE.CanvasTexture(canvas);
 				return canvasTexture;
 			}
 
 			function createMaterial(texture) {
-				return new THREE.MeshBasicMaterial({ color: '#330000', map: texture });
+				return new THREE.MeshBasicMaterial({ color: 'white', map: texture });
 			}
 
 			function createBox(material, x) {
@@ -64,6 +65,7 @@
 				sim.renderer.render(sim.scene, sim.camera);
 			}
 			animate(0);
+
 		</script>
 	</body>
 </html>
