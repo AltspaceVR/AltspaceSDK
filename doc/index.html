@@ -39,13 +39,20 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 </ul>
 <p>* For the purposes of cursor collision, meshes are approximated to be a 4/5 scale of their bounding box. If desired, default cursor collision can be disabled.</p>
 <p>** Meshes outside the bounds of the enclosure will be culled unless you request full space access.</p>
-<h2 id="altspacevr-debugger">AltspaceVR Debugger</h2>
-<p>The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.</p>
+<h2 id="debugging-sdk-apps">Debugging SDK Apps</h2>
+<p>We provide a standalone debugger that can connect to SDK apps while they&#39;re running in Altspace and has the normal functionality of the Chrome developer tools (i.e. you can read console logs, look at the values of variables, execute Javascript, etc.) You can download it here:</p>
 <p><strong><a href="http://sdk.altvr.com/debugger/DebuggerMacOSX.zip">OSX Debugger</a> - <a href="http://sdk.altvr.com/debugger/DebuggerWindows.exe">Windows Debugger</a></strong></p>
-<blockquote>
-<p>Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.</p>
-</blockquote>
-<h2 id="graphics-feature-support">Graphics Feature Support</h2>
+<p>(Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.)</p>
+<p>More generally, Altspace browsers are implemented using an embedded Chromium which exposes the Chrome debugging protocol version 1.1. You can find documentation on the protocol and usage <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">here</a>. The protocol is exposed via a WebSocket interface on port 9999, rather than 9222 as is typical for the Chrome desktop browser. You can test it out by accessing <a href="http://localhost:9999/json">http://localhost:9999/json</a> while running Altspace to see a list of active in-world browsers and enclosures in JSON format.</p>
+<p>There are many third-party tools that speak this protocol which you can point at running Altspace browsers, e.g.:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Tools/WebIDE">WebIDE</a> - an implementation of the Firefox developer tools.</li>
+<li><a href="https://github.com/devtools-html/debugger.html">debugger.html</a> - a reasonably barebones, open-source Javascript debugger.</li>
+<li>Probably many of the projects listed <a href="https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface">here</a>.</li>
+</ul>
+<p>Note that many of these will expect to be connecting to port 9222, so you might have to forward from that port, e.g. on Windows you can use <a href="https://technet.microsoft.com/en-us/library/cc731068.aspx">netsh</a>:</p>
+<pre><code>$ netsh interface portproxy add v4tov4 protocol=tcp listenport=9222 listenaddress=127.0.0.1 connectport=9999 connectaddress=127.0.0.1
+</code></pre><h2 id="graphics-feature-support">Graphics Feature Support</h2>
 <p>AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame version 0.3.0 is currently the only version supported.</p>
 <p><strong>Currently supported:</strong></p>
 <ul>

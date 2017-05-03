@@ -56,12 +56,26 @@ If you use npm, you can install altspace.js with:
 
 \*\* Meshes outside the bounds of the enclosure will be culled unless you request full space access.
 
-## AltspaceVR Debugger
+## Debugging SDK Apps
 
-The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.
+We provide a standalone debugger that can connect to SDK apps while they're running in Altspace and has the normal functionality of the Chrome developer tools (i.e. you can read console logs, look at the values of variables, execute Javascript, etc.) You can download it here:
 
 **[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
-> Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.
+
+(Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.)
+
+More generally, Altspace browsers are implemented using an embedded Chromium which exposes the Chrome debugging protocol version 1.1. You can find documentation on the protocol and usage [here](https://developer.chrome.com/devtools/docs/debugger-protocol). The protocol is exposed via a WebSocket interface on port 9999, rather than 9222 as is typical for the Chrome desktop browser. You can test it out by accessing http://localhost:9999/json while running Altspace to see a list of active in-world browsers and enclosures in JSON format.
+
+There are many third-party tools that speak this protocol which you can point at running Altspace browsers, e.g.:
+
+* [WebIDE](https://developer.mozilla.org/en-US/docs/Tools/WebIDE) - an implementation of the Firefox developer tools.
+* [debugger.html](https://github.com/devtools-html/debugger.html) - a reasonably barebones, open-source Javascript debugger.
+* Probably many of the projects listed [here](https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface).
+
+Note that many of these will expect to be connecting to port 9222, so you might have to forward from that port, e.g. on Windows you can use [netsh](https://technet.microsoft.com/en-us/library/cc731068.aspx):
+```
+$ netsh interface portproxy add v4tov4 protocol=tcp listenport=9222 listenaddress=127.0.0.1 connectport=9999 connectaddress=127.0.0.1
+```
 
 ## Graphics Feature Support
 
