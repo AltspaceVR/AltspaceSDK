@@ -22,13 +22,13 @@
 				canvas.height = textureSize;
 				var context = canvas.getContext('2d');
 				var canvasTexture = new THREE.CanvasTexture(canvas);
-				context.fillStyle = '#eeaaaa';
+				context.fillStyle = '#660000';
 				context.fillRect(0, 0, textureSize, textureSize);
 				return canvasTexture;
 			}
 
 			function createMaterial(texture) {
-				return new THREE.MeshBasicMaterial({ color: 'red', map: texture });
+				return new THREE.MeshBasicMaterial({ color: '#330000', map: texture });
 			}
 
 			function createBox(material, x) {
