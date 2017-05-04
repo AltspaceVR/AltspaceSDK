@@ -8,7 +8,11 @@
 		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
-		<h1 style='color: white'>All cubes should be the same color. Hit the refresh button a few times</h1>
+		<h1 style='color: white'>
+			All cubes should be the same color. <br>
+			Wait for three additional cubes to appear.<br>
+			Hit the refresh button a few times
+		</h1>
 		<button onclick="location.search='?' + Date.now()">refresh</button>
 		<script>
 			var sim = new altspace.utilities.Simulation({auto: false}), controls;
@@ -37,7 +41,7 @@
 				var boxSize = 20;
 				var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
 				var boxMesh = new THREE.Mesh(box, material);
-				boxMesh.position.x = 200 - sim.scene.children.length * 25;
+				boxMesh.position.x = 250 - sim.scene.children.length * 25;
 				sim.scene.add(boxMesh);
 			}
 
