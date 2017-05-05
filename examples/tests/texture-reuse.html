@@ -8,6 +8,12 @@
 		<script src="../../dist/altspace.js"></script>
 	</head>
 	<body>
+		<h1 style='color: white'>
+			All cubes should be the same color. <br>
+			Wait for three additional cubes to appear.<br>
+			Hit the refresh button a few times
+		</h1>
+		<button onclick="location.search='?' + Date.now()">refresh</button>
 		<script>
 			var sim = new altspace.utilities.Simulation({auto: false}), controls;
 
@@ -21,21 +27,21 @@
 				canvas.width = textureSize;
 				canvas.height = textureSize;
 				var context = canvas.getContext('2d');
-				var canvasTexture = new THREE.CanvasTexture(canvas);
-				context.fillStyle = '#eeaaaa';
+				context.fillStyle = '#ff0000';
 				context.fillRect(0, 0, textureSize, textureSize);
+				var canvasTexture = new THREE.CanvasTexture(canvas);
 				return canvasTexture;
 			}
 
 			function createMaterial(texture) {
-				return new THREE.MeshBasicMaterial({ color: 'red', map: texture });
+				return new THREE.MeshBasicMaterial({ color: 'white', map: texture });
 			}
 
 			function createBox(material, x) {
 				var boxSize = 20;
 				var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
 				var boxMesh = new THREE.Mesh(box, material);
-				boxMesh.position.x = sim.scene.children.length * 25;
+				boxMesh.position.x = 250 - sim.scene.children.length * 25;
 				sim.scene.add(boxMesh);
 			}
 
@@ -43,6 +49,9 @@
 			var matOne = createMaterial(tex);
 
 			createBox(matOne);
+			for (var i = 0; i < 30; i++) {
+				createBox(createMaterial(tex));
+			}
 
 			setTimeout(function () {
 				createBox(matOne);
@@ -64,6 +73,7 @@
 				sim.renderer.render(sim.scene, sim.camera);
 			}
 			animate(0);
+
 		</script>
 	</body>
 </html>
