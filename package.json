@@ -1,7 +1,7 @@
 {
   "name": "altspace",
   "author": "AltspaceVR",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AltspaceVR/AltspaceSDK.git"
