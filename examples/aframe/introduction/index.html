@@ -6,6 +6,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
 	<script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
 	<script src="gallery.js"></script>
+	<script src="poster.js"></script>
 	<script>
 
 	AFRAME.registerComponent('unfolding-path', {
@@ -195,13 +196,7 @@
 			<a-entity position='0 3 -0.6' rotation='0 180 0'
 				n-text='text: What is the Playground?; fontSize: 4'></a-entity>
 			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
-				n-text='text: The Playground is an activity where you can easily
-				and quickly create, share, and play web-based VR content that makes
-				use of the advanced features in AltspaceVR. The space consists of
-				a space-wide browser, and all the content you experience in this
-				activity is defined via the web. Our initial release of the Playground
-				focuses on spawnable physics items and the creation of games,
-				puzzles, and environments that play well with them.;
+				n-text='text: The Playground is an activity where you can easily and quickly create, share, and play web-based VR content that makes use of the advanced features in AltspaceVR. The space consists of a space-wide browser, and all the content you experience in this activity is defined via the web. Our initial release of the Playground focuses on spawnable physics items and the creation of games, puzzles, and environments that play well with them.;
 				fontSize: 2; width: 5; height: 3; verticalAlign: top; horizontalAlign: left;'></a-entity>
 			<a-entity id="backdrop" scale='0.7 0.8 1' position="0 0.5 0">
 				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
@@ -231,7 +226,7 @@
 			</a-entity>
 		</a-entity>
 
-		<a-entity position='-6 1 0' rotation='0 -90 0' scale="0.3 0.3 0.3">
+		<!--a-entity position='-6 1 0' rotation='0 -90 0' scale="0.3 0.3 0.3">
 			<a-entity position='0 3 -0.6' rotation='0 180 0'
 				n-text='text: What does being in Beta mean?; fontSize: 3'></a-entity>
 			<a-entity position='0 1.2 -0.6' rotation='0 180 0'
@@ -240,7 +235,7 @@
 				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
 				<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
 			</a-entity>
-		</a-entity>
+		</a-entity-->
 
 		<a-entity position='-5 1 3' rotation='0 -60 0' scale="0.3 0.3 0.3">
 			<a-entity position='0 3 -0.6' rotation='0 180 0'
@@ -271,24 +266,13 @@
 			<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity>
 			<a-entity class="ring" rotation="0 45 0">
 				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
-				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity> -->
-
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="4 0 0" rotation="0 270 0"></a-entity> -->
-				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 -4"></a-entity>
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity> -->
 				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
 			</a-entity>
 			<a-entity class="ring" position="0 4" rotation="0 -45 180">
 				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="4 0 0"></a-entity>
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity> -->
 				<a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity> -->
 
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="4 0 0" rotation="0 270 0"></a-entity> -->
 				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 -4"></a-entity>
-				<!-- <a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="-4 0 0" rotation="0 90 0"></a-entity> -->
 				<a-entity n-object="res:architecture/wall-base-curve-convex-4r" position="0 0 4" rotation="0 180 0"></a-entity>
 			</a-entity>
 		</a-entity>
@@ -297,6 +281,19 @@
 	<a-entity position='6 0.25 -50' rotation='0 180 0' template='src: gallery.html'></a-entity>
 	<a-entity position='2 0 -46' n-object='res: architecture/floor-4w-4l'></a-entity>
 	<a-entity position='2 0 -42' n-object='res: architecture/floor-4w-4l'></a-entity>
+
+	<a-entity position='-14 0.25 -32' rotation='0 90 0'>
+
+		<a-entity template='src: poster.html'></a-entity>
+
+		<a-entity n-object="res:architecture/floor-slice-concave-4r" position="4 0 0"></a-entity>
+		<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 -4" rotation="0 90 0"></a-entity>
+		<a-entity n-object="res:architecture/floor-slice-concave-4r" position="-4 0 0" rotation="0 180 0"></a-entity>
+		<a-entity n-object="res:architecture/floor-slice-concave-4r" position="0 0 4" rotation="0 270 0"></a-entity>
+
+		<a-entity position='2 -0.25 4' n-object='res: architecture/floor-4w-4l'></a-entity>
+		<a-entity position='2 -0.25 0' n-object='res: architecture/floor-4w-4l'></a-entity>
+	</a-entity>
 
 </a-scene>
 </body>
