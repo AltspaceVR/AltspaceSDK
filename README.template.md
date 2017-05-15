@@ -12,6 +12,8 @@ The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create h
 
 Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
 
+If you choose, you can apply for AltspaceVR developer privileges [here](http://developer.altvr.com/devflag). You will typically have a response within 2-3 days. Once granted, you will have access to a host of new activity types that are designed for SDK use. This is not required to use the SDK though.
+
 **If you are brand new to web development** or 3D applications, we recommend you develop with A-Frame, as it's more user-friendly and has more utility built-in. Head over to our [A-Frame API Documentation] for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from [A-Frame].
 
 **If you know what you're doing**, you have your choice between A-Frame and Three.js. Three.js is lower-level than A-Frame, so it is more flexible, but at the cost of additional complexity. If you think this is for you, you should read our [Three.js API Documentation]. You'll also need the upstream [Three.js Reference].
