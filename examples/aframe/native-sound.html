@@ -53,10 +53,24 @@
 	</a-entity>
 
 	<a-entity
+		geometry="primitive: box" material="color: lightblue" position="-3 4 -4"
+		n-sound="src: resources/big-buck-bunny-intro.mp3; on: click;"
+		altspace-cursor-collider="enabled: true">
+		<a-entity n-text="fontSize: 2; text: mp3" position="1 0 0"></a-entity>
+	</a-entity>
+
+	<a-entity
+		geometry="primitive: box" material="color: lightblue" position="-3 2.5 -4"
+		n-sound="src: resources/big-buck-bunny-intro.ogg; on: click;"
+		altspace-cursor-collider="enabled: true">
+		<a-entity n-text="fontSize: 2; text: ogg" position="1 0 0"></a-entity>
+	</a-entity>
+
+	<a-entity
 		geometry="primitive: box" material="color: lightblue" position="-3 1 -4"
 		n-sound="src: resources/big-buck-bunny-intro.wav; on: click; rolloff: linear; minDistance: 2; maxDistance: 5"
 		altspace-cursor-collider="enabled: true">
-		<a-entity n-text="fontSize: 2; text: linear" position="0 1 0"></a-entity>
+		<a-entity n-text="fontSize: 2; text: linear (wav)" position="1 0 0"></a-entity>
 	</a-entity>
 
 	<a-entity
