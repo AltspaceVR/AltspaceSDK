@@ -8,6 +8,7 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 <h2 id="-a-frame-api-https-altspacevr-github-io-altspacesdk-doc-aframe-three-js-api-https-altspacevr-github-io-altspacesdk-doc-js-"><a href="https://altspacevr.github.io/AltspaceSDK/doc/aframe/">A-Frame API</a> - <a href="https://altspacevr.github.io/AltspaceSDK/doc/js/">Three.js API</a></h2>
 <p>The AltspaceVR SDK can be used together with <a href="http://threejs.org/">Three.js</a> or <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a> to create holographic, multi-user web apps for virtual reality. When running inside <a href="https://altvr.com/">AltspaceVR</a> they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.</p>
 <p>Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.</p>
+<p>If you choose, you can apply for AltspaceVR developer privileges <a href="http://developer.altvr.com/devflag">here</a>. You will typically have a response within 2-3 days. Once granted, you will have access to a host of new activity types that are designed for SDK use. This is not required to use the SDK though.</p>
 <p><strong>If you are brand new to web development</strong> or 3D applications, we recommend you develop with A-Frame, as it&#39;s more user-friendly and has more utility built-in. Head over to our <a href="https://altspacevr.github.io/AltspaceSDK/doc/aframe/">A-Frame API Documentation</a> for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from <a href="https://aframe.io/docs/0.3.0/introduction/">A-Frame</a>.</p>
 <p><strong>If you know what you&#39;re doing</strong>, you have your choice between A-Frame and Three.js. Three.js is lower-level than A-Frame, so it is more flexible, but at the cost of additional complexity. If you think this is for you, you should read our <a href="https://altspacevr.github.io/AltspaceSDK/doc/js/">Three.js API Documentation</a>. You&#39;ll also need the upstream <a href="https://threejs.org/docs/">Three.js Reference</a>.</p>
 <h2 id="resources">Resources</h2>
@@ -22,9 +23,9 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 <p><code>altspace.js</code> should be included whenever you use the SDK. It contains core utilities and APIs, and is useful both inside and outside of the client.</p>
 <p>Many APIs are present in the client without loading <code>altspace.js</code>, but please still include it, as this may change in the future.</p>
 <p>The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of <code>altspace.js</code>, we will try to return legacy behavior appropriate to your version of <code>altspace.js</code>. Versioning will follow <a href="http://semver.org/">SEMVER</a> as closely as possible. Details for each version can be found in the <a href="https://github.com/AltspaceVR/AltspaceSDK/releases">Release Notes</a>.</p>
-<p><strong>Latest Version: v2.2.0 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.2.0">See Changes</a></strong></p>
+<p><strong>Latest Version: v2.4.5 -- <a href="https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.5">See Changes</a></strong></p>
 <p>Include the latest version of the SDK in your app with:</p>
-<p><code>&lt;script src=&quot;https://sdk.altvr.com/libs/altspace.js/2.2.0/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><code>&lt;script src=&quot;https://sdk.altvr.com/libs/altspace.js/2.4.5/altspace.min.js&quot;&gt;&lt;/script&gt;</code></p>
 <p>If you use npm, you can install altspace.js with:</p>
 <p><code>npm install altspace</code></p>
 <h2 id="sdk-feature-overview">SDK Feature Overview</h2>
@@ -39,13 +40,20 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 </ul>
 <p>* For the purposes of cursor collision, meshes are approximated to be a 4/5 scale of their bounding box. If desired, default cursor collision can be disabled.</p>
 <p>** Meshes outside the bounds of the enclosure will be culled unless you request full space access.</p>
-<h2 id="altspacevr-debugger">AltspaceVR Debugger</h2>
-<p>The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.</p>
-<p><strong><a href="http://sdk.altvr.com/debugger/DebuggerMacOSX.zip">OSX Debugger</a> - <a href="http://sdk.altvr.com/debugger/DebuggerWindows.zip">Windows Debugger</a></strong></p>
-<blockquote>
-<p>Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.</p>
-</blockquote>
-<h2 id="graphics-feature-support">Graphics Feature Support</h2>
+<h2 id="debugging-sdk-apps">Debugging SDK Apps</h2>
+<p>We provide a standalone debugger that can connect to SDK apps while they&#39;re running in Altspace and has the normal functionality of the Chrome developer tools (i.e. you can read console logs, look at the values of variables, execute Javascript, etc.) You can download it here:</p>
+<p><strong><a href="http://sdk.altvr.com/debugger/DebuggerMacOSX.zip">OSX Debugger</a> - <a href="http://sdk.altvr.com/debugger/DebuggerWindows.exe">Windows Debugger</a></strong></p>
+<p>(Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.)</p>
+<p>More generally, Altspace browsers are implemented using an embedded Chromium which exposes the Chrome debugging protocol version 1.1. You can find documentation on the protocol and usage <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">here</a>. The protocol is exposed via a WebSocket interface on port 9999, rather than 9222 as is typical for the Chrome desktop browser. You can test it out by accessing <a href="http://localhost:9999/json">http://localhost:9999/json</a> while running Altspace to see a list of active in-world browsers and enclosures in JSON format.</p>
+<p>There are many third-party tools that speak this protocol which you can point at running Altspace browsers, e.g.:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Tools/WebIDE">WebIDE</a> - an implementation of the Firefox developer tools.</li>
+<li><a href="https://github.com/devtools-html/debugger.html">debugger.html</a> - a reasonably barebones, open-source Javascript debugger.</li>
+<li>Probably many of the projects listed <a href="https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface">here</a>.</li>
+</ul>
+<p>Note that many of these will expect to be connecting to port 9222, so you might have to forward from that port, e.g. on Windows you can use <a href="https://technet.microsoft.com/en-us/library/cc731068.aspx">netsh</a>:</p>
+<pre><code>$ netsh interface portproxy add v4tov4 protocol=tcp listenport=9222 listenaddress=127.0.0.1 connectport=9999 connectaddress=127.0.0.1
+</code></pre><h2 id="graphics-feature-support">Graphics Feature Support</h2>
 <p>AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame version 0.3.0 is currently the only version supported.</p>
 <p><strong>Currently supported:</strong></p>
 <ul>

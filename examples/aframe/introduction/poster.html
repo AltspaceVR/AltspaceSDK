@@ -1,0 +1,122 @@
+
+	<a-mixin id="phrase" n-text="fontSize: 9; width: 8; verticalAlign: center;" position="0 1.2 0.1"></a-mixin>
+	<a-mixin id="title" n-text="fontSize: 6; width: 6; verticalAlign: top;" position="0 3.1 0.1"></a-mixin>
+	<a-mixin id="description" n-text="fontSize: 5; width: 5; height: 3; verticalAlign: top;" position="0 1.2 0.1"></a-mixin>
+	<a-mixin id="picture" n-billboard scale="0.77 0.77 0.77"></a-mixin>
+
+	<a-entity rotation="0 0 0" >
+
+		<a-entity position="0 1.5 0" scale="0.5 0.5 0.5">
+
+			<a-entity id="header" position="0 3.6 -1" rotation="15 0 0" scale="0.37 0.37 0.37">
+				<a-entity scale="1 0.8 1">
+					<a-entity position="-2.4 3.4 0.1" n-object="res:ui/altspacevr-logo" scale="1.5 1.5 1.5"></a-entity>
+					<a-entity position="0.7 3.3 0.1" n-text="text: AltspaceVR; fontSize:10;"></a-entity>
+					<a-entity position="0 1.65 0.1" rotation="0 0 0" scale="1.5 1.5 1.5" n-text="text: Web SDK;"></a-entity>
+				</a-entity>
+
+				<a-entity id="backdrop" scale="0.9 0.8 1" position="0 0.5 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position="0 2.3 -0.5" rotation="0 0 0" scale="0.3 0.3 0.3">
+				<a-entity position="0 0.65 0.1" mixin="description" n-text="text: The fastest way to create cross-platform, multiplayer VR apps and games; fontSize: 6; width: 11" scale="1.1 1.1 1.1"></a-entity>
+				<a-entity id="backdrop" scale="0.75 0.55 1" position="0 0.6 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-8 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<!--a-entity position="0 3.5 0" rotation="0 90 0" circle-layout="radius: 6">
+				<a-image mixin="picture" src="images/1.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/2.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/3.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/4.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/5.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/7.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/8.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/9.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/10.jpg" width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/11.jpg" width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/1.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/2.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/3.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/4.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/5.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/7.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/8.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/9.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/10.jpg" width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/11.jpg" width="1.92" height="1.08"></a-image>
+			</a-entity-->
+
+			<a-entity position="-0.9 0.2 0" rotation="0 20 0" scale="0.26 0.26 0.26">
+				<a-entity mixin="title" position="0 3.1 0.1" rotation="0 0 0" n-text="text: Open Web;"></a-entity>
+				<a-entity mixin="description" n-text="text: Host at any URL \n Use A-Frame & Three.js \nRuns on Chromium; width: 6;"></a-entity>
+				<a-entity id="backdrop" scale="0.7 0.8 1" position="0 0.75 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position="0.9 0.2 0" rotation="0 -20 0" scale="0.26 0.26 0.26">
+				<a-entity mixin="title" n-text="text: Funding Grants;"></a-entity>
+				<a-entity mixin="description" n-text="text:Receive $1k-$10k\n Make your own idea \nKeep what you build; width: 6;"></a-entity>
+				<a-entity id="backdrop" scale="0.7 0.8 1" position="0 0.75 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<a-entity position="0 -0.8 -0.5" rotation="0 0 0" scale="0.3 0.3 0.3">
+				<a-entity position="0 1.05 0.1" mixin="description" n-text="text: Gain an automatic audience with one of the largest social VR communities on the planet; fontSize: 6; width: 8"></a-entity>
+				<a-entity id="backdrop" scale="0.55 0.55 1" position="0 0.6 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-8 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+			<!--a-entity position="0 -2.5 0" circle-layout="radius: 6">
+				<a-image mixin="picture" src="images/1.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/2.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/3.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/4.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/5.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/7.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/8.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/9.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/10.jpg" width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/11.jpg" width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/1.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/2.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/3.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/4.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/5.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/7.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/8.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/9.jpg"  width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/10.jpg" width="1.92" height="1.08"></a-image>
+				<a-image mixin="picture" src="images/11.jpg" width="1.92" height="1.08"></a-image>
+			</a-entity-->
+
+			<a-entity position="0 -2.5 -0.5" rotation="0 0 0" scale="0.25 0.25 0.25">
+				<a-entity position="0.05 0.25 0.1" mixin="description" n-text="text: Start building at <color=#1ECED5>developer.altvr.com </color>; fontSize: 7; width: 11" scale="1.1 1.1 1.1"></a-entity>
+				<a-entity id="backdrop" scale="0.77 0.45 1" position="0 0.6 0">
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="0 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-4 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="-8 0 0"></a-entity>
+					<a-entity n-object="res:architecture/wall-4w-4h" rotation="0 90 0" position="4 0 0"></a-entity>
+				</a-entity>
+			</a-entity>
+
+		</a-entity>
+
+		<a-entity position="0.08 0.57 1.85" rotation="-16 0 0" scale="0.28 0.28 0.28" n-object="res:objects/crowd"></a-entity>
+
+	</a-entity>

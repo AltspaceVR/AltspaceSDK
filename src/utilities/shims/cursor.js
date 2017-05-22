@@ -35,7 +35,7 @@ function init(_scene, _camera, _params) {
 	scene = _scene;
 	camera = _camera;
 
-	p = _params || {};
+	var p = _params || {};
 	domElem = p.renderer && p.renderer.domElement || window;
 
 	domElem.addEventListener('mousedown', mouseDown, false)
