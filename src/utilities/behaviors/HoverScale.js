@@ -9,6 +9,7 @@ import Behavior from './Behavior';
 * @param {Number} [config.scale=1.15] A scaling factor that will be applied to the object's initial scale when the cursor hovers over it.
 * @param {Number} [config.duration=75] Duration the scaling effect is intended to take to complete, in milliseconds.
 * @param {Boolean} [config.revertOnDispose=true] Specifies whether the object's original scale should be restored when the behavior has been destroyed.
+* @param {Object} [config.eventListener=null] Specifies an optional object that will listen for cursor events.  By default the object that the behavior is attached to will be used as the event listener.
 * @extends module:altspace/utilities/behaviors.Behavior
 * @memberof module:altspace/utilities/behaviors
 */
@@ -20,7 +21,7 @@ class HoverScale extends Behavior
 	{
 		super();
 		this.config = Object.assign(
-			{scale: 1.15, duration: 75, revertOnDispose: true},
+			{scale: 1.15, duration: 75, revertOnDispose: true, eventListener: null},
 			config
 		);
 
@@ -30,11 +31,12 @@ class HoverScale extends Behavior
 		this.progress = 1;
 		this.srcScale = null;
 		this.destScale = null;
+		this.eventListener = null;
 
 		this.onHoverStateChange = (() => {
 			[this.srcScale, this.destScale] = [this.destScale, this.srcScale];
 			this.progress = 1 - this.progress;
-			this.elapsedTime = this.config.duration - this.elapsedTime;
+			this.elapsedTime = this.config.duration * this.progress;
 		}).bind(this);
 	}
 
@@ -52,8 +54,9 @@ class HoverScale extends Behavior
 		this.progress = 1;
 		this.elapsedTime = this.config.duration;
 
-		this.object3d.addEventListener('cursorenter', this.onHoverStateChange);
-		this.object3d.addEventListener('cursorleave', this.onHoverStateChange);
+		this.eventListener = this.config.eventListener || this.object3d;
+		this.eventListener.addEventListener('cursorenter', this.onHoverStateChange);
+		this.eventListener.addEventListener('cursorleave', this.onHoverStateChange);
 	}
 
 	update(deltaTime)
@@ -70,8 +73,8 @@ class HoverScale extends Behavior
 
 	dispose()
 	{
-		this.object3d.removeEventListener('cursorenter', this.onHoverStateChange);
-		this.object3d.removeEventListener('cursorleave', this.onHoverStateChange);
+		this.eventListener.removeEventListener('cursorenter', this.onHoverStateChange);
+		this.eventListener.removeEventListener('cursorleave', this.onHoverStateChange);
 
 		// Restore Original Object Scale Before Behavior Was Applied
 		if(this.config.revertOnDispose)
@@ -81,6 +84,7 @@ class HoverScale extends Behavior
 		this.srcScale = null;
 		this.destScale = null;
 		this.object3d = null;
+		this.eventListener = null;
 	}
 
 
