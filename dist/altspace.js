@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.5/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.3/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -2924,7 +2924,7 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.5/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.3/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6138,7 +6138,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.4.5';
+var version = '2.4.3';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
