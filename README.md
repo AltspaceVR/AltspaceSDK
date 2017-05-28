@@ -12,6 +12,8 @@ The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create h
 
 Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
 
+If you choose, you can apply for AltspaceVR developer privileges [here](http://developer.altvr.com/devflag). You will typically have a response within 2-3 days. Once granted, you will have access to a host of new activity types that are designed for SDK use. This is not required to use the SDK though.
+
 **If you are brand new to web development** or 3D applications, we recommend you develop with A-Frame, as it's more user-friendly and has more utility built-in. Head over to our [A-Frame API Documentation] for more info on how to get started using A-Frame with AltspaceVR. You should also check out the official reference from [A-Frame].
 
 **If you know what you're doing**, you have your choice between A-Frame and Three.js. Three.js is lower-level than A-Frame, so it is more flexible, but at the cost of additional complexity. If you think this is for you, you should read our [Three.js API Documentation]. You'll also need the upstream [Three.js Reference].
@@ -32,11 +34,11 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js`, we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
 
-**Latest Version: v2.4.3 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.3)**
+**Latest Version: v2.4.5 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.5)**
 
 Include the latest version of the SDK in your app with:
 
-`<script src="https://sdk.altvr.com/libs/altspace.js/2.4.3/altspace.min.js"></script>`
+`<script src="https://sdk.altvr.com/libs/altspace.js/2.4.5/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -56,12 +58,26 @@ If you use npm, you can install altspace.js with:
 
 \*\* Meshes outside the bounds of the enclosure will be culled unless you request full space access.
 
-## AltspaceVR Debugger
+## Debugging SDK Apps
 
-The debugger is essentially a remote Chrome inspector for AltspaceVR browsers. This allows you to view and modify your app in real-time, as well as see any errors that occur.
+We provide a standalone debugger that can connect to SDK apps while they're running in Altspace and has the normal functionality of the Chrome developer tools (i.e. you can read console logs, look at the values of variables, execute Javascript, etc.) You can download it here:
 
 **[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
-> Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.
+
+(Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.)
+
+More generally, Altspace browsers are implemented using an embedded Chromium which exposes the Chrome debugging protocol version 1.1. You can find documentation on the protocol and usage [here](https://developer.chrome.com/devtools/docs/debugger-protocol). The protocol is exposed via a WebSocket interface on port 9999, rather than 9222 as is typical for the Chrome desktop browser. You can test it out by accessing http://localhost:9999/json while running Altspace to see a list of active in-world browsers and enclosures in JSON format.
+
+There are many third-party tools that speak this protocol which you can point at running Altspace browsers, e.g.:
+
+* [WebIDE](https://developer.mozilla.org/en-US/docs/Tools/WebIDE) - an implementation of the Firefox developer tools.
+* [debugger.html](https://github.com/devtools-html/debugger.html) - a reasonably barebones, open-source Javascript debugger.
+* Probably many of the projects listed [here](https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface).
+
+Note that many of these will expect to be connecting to port 9222, so you might have to forward from that port, e.g. on Windows you can use [netsh](https://technet.microsoft.com/en-us/library/cc731068.aspx):
+```
+$ netsh interface portproxy add v4tov4 protocol=tcp listenport=9222 listenaddress=127.0.0.1 connectport=9999 connectaddress=127.0.0.1
+```
 
 ## Graphics Feature Support
 
