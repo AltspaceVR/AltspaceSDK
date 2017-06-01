@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang=en>
+	<head>
+		<meta charset=utf-8>
+		<title>HoverScale Test</title>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
+		<script src="../../dist/altspace.js"></script>
+	</head>
+	<body>
+		<script>
+		if (!window.altspace || !window.altspace.inClient) {
+			document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+		}
+
+		var sim = new altspace.utilities.Simulation();
+
+		altspace.getEnclosure().then(function(enclosure) {
+			enclosure.requestFullspace().then(function() {
+				// Hovering over boxTarget will affect the scale of boxTarget
+				// Hovering over boxNeutral or boxTrigger will not affect the scale of boxTarget
+				var boxTrigger = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.3), new THREE.MeshBasicMaterial({ color: 'blue' }));
+				var boxNeutral = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.3), new THREE.MeshBasicMaterial({ color: 'green' }));
+				boxNeutral.position.x = 1;
+				var boxTarget = new THREE.Mesh(new THREE.BoxBufferGeometry(2, 0.5, 0.3), new THREE.MeshBasicMaterial({ color: 'red' }));
+				boxTarget.position.set(0.5, -0.8, 0);
+				boxTarget.addBehavior(new altspace.utilities.behaviors.HoverScale({ scale: 1.2, duration: 150 }));
+
+				var boxes = new THREE.Group();
+				boxes.position.set(-2.5, 2, 0);
+				boxes.add(boxTrigger, boxNeutral, boxTarget);
+				sim.scene.add(boxes);
+
+				// Hovering over boxTrigger, boxNeutral or boxTarget will affect the scale of boxTrigger, boxNeutral and boxTarget
+				var boxTrigger = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.3), new THREE.MeshBasicMaterial({ color: 'blue' }));
+				var boxNeutral = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.3), new THREE.MeshBasicMaterial({ color: 'green' }));
+				boxNeutral.position.x = 1;
+				var boxTarget = new THREE.Mesh(new THREE.BoxBufferGeometry(2, 0.5, 0.3), new THREE.MeshBasicMaterial({ color: 'red' }));
+				boxTarget.position.set(0.5, -0.8, 0);
+
+				var boxes = new THREE.Group();
+				boxes.position.set(0, 2, 0);
+				boxes.add(boxTrigger, boxNeutral, boxTarget);
+				boxes.addBehavior(new altspace.utilities.behaviors.HoverScale({ scale: 1.2, duration: 150 }));
+				sim.scene.add(boxes);
+
+				// Hovering over boxTrigger will affect the scale of boxTarget
+				// Hovering over boxNeutral or boxTarget will not affect the scale of boxTarget
+				var boxTrigger = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.3), new THREE.MeshBasicMaterial({ color: 'blue' }));
+				var boxNeutral = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.3), new THREE.MeshBasicMaterial({ color: 'green' }));
+				boxNeutral.position.x = 1;
+				var boxTarget = new THREE.Mesh(new THREE.BoxBufferGeometry(2, 0.5, 0.3), new THREE.MeshBasicMaterial({ color: 'red' }));
+				boxTarget.position.set(0.5, -0.8, 0);
+				boxTarget.addBehavior(new altspace.utilities.behaviors.HoverScale({ scale: 1.2, duration: 150, eventListener: boxTrigger }));
+
+				var boxes = new THREE.Group();
+				boxes.position.set(2.5, 2, 0);
+				boxes.add(boxTrigger, boxNeutral, boxTarget);
+				sim.scene.add(boxes);
+			});
+		});
+		</script>
+	</body>
+</html>
