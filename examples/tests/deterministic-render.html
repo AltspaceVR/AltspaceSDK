@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Deterministic Render</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+<script src="../../../UnityClient/js/src/AltRenderer.js"></script>
+<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<h1 class="instructions">
+Stare at this for about 30 seconds. You should only ever see a single red cube. If you see a blue cube or multiple cubes,
+something is wrong.
+</h1>
+<script>
+var sim = new altspace.utilities.Simulation({auto: true});
+sim.scene.scale.setScalar(800);
+var geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+var mat = new THREE.MeshBasicMaterial({ color:'dodgerblue' });
+
+setInterval(function () {
+	sim.scene.children.length = 0;
+	var box = new THREE.Mesh(geo, mat);
+	box.material.color.setStyle('dodgerblue');
+	box.position.set(Math.random() / 10, Math.random() / 10, Math.random() / 10);
+	sim.scene.add(box);
+	box.addBehavior({awake: function (obj) {
+		obj.material.color.setStyle('darkred');
+	}});
+}, 50);
+</script>
+</body>
+</html>
+
