@@ -21,6 +21,13 @@ class NPortal extends NativeComponent {
 			*/
 			targetSpace: {type: 'string'},
 			/**
+			* The id of the event that you want the portal to send users to.
+			* @instance
+			* @member {string} targetEvent
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetEvent: {type: 'string'},
+			/**
 			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
 			* and rotate the user in its direction. Note: The target position/rotation will not be updated if the
 			* targetEntity moves.
@@ -46,6 +53,7 @@ class NPortal extends NativeComponent {
 
 		var data = {
 			targetSpace: this.data.targetSpace,
+			targetEvent: this.data.targetEvent,
 			targetPosition: targetPosition,
 			targetQuaternion: targetQuaternion
 		}
