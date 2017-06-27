@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.5.1/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.0/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -2616,6 +2616,13 @@ var NPortal = (function (NativeComponent$$1) {
 			*/
 			targetSpace: {type: 'string'},
 			/**
+			* The id of the event that you want the portal to send users to.
+			* @instance
+			* @member {string} targetEvent
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetEvent: {type: 'string'},
+			/**
 			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
 			* and rotate the user in its direction. Note: The target position/rotation will not be updated if the
 			* targetEntity moves.
@@ -2641,6 +2648,7 @@ var NPortal = (function (NativeComponent$$1) {
 
 		var data = {
 			targetSpace: this.data.targetSpace,
+			targetEvent: this.data.targetEvent,
 			targetPosition: targetPosition,
 			targetQuaternion: targetQuaternion
 		};
@@ -2924,7 +2932,7 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.5.1/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.0/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6138,7 +6146,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.5.1';
+var version = '2.6.0';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
