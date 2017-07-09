@@ -81,6 +81,10 @@ class SyncSystem extends AFrameSystem
 		}
 		console.log(this.data);
 
+		// temporary way of having unique identifiers for each client
+		this.clientId = this.sceneEl.object3D.uuid;
+		this.masterClientId = null;
+
 		this.queuedInstantiations = [];
 		this.isConnected = false;
 		Promise.all([
@@ -105,10 +109,6 @@ class SyncSystem extends AFrameSystem
 
 		this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
 		this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
-
-		// temporary way of having unique identifiers for each client
-		this.clientId = this.sceneEl.object3D.uuid;
-		this.masterClientId = null;
 
 		let self = this;
 
