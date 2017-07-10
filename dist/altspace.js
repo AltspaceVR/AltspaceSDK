@@ -486,7 +486,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.0/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.1/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -1086,6 +1086,10 @@ var SyncSystem = (function (AFrameSystem$$1) {
 		}
 		console.log(this.data);
 
+		// temporary way of having unique identifiers for each client
+		this.clientId = this.sceneEl.object3D.uuid;
+		this.masterClientId = null;
+
 		this.queuedInstantiations = [];
 		this.isConnected = false;
 		Promise.all([
@@ -1110,10 +1114,6 @@ var SyncSystem = (function (AFrameSystem$$1) {
 
 		this.instantiatedElementsRef.on('child_added', this.listenToInstantiationGroup.bind(this));
 		this.instantiatedElementsRef.on('child_removed', this.stopListeningToInstantiationGroup.bind(this));
-
-		// temporary way of having unique identifiers for each client
-		this.clientId = this.sceneEl.object3D.uuid;
-		this.masterClientId = null;
 
 		var self = this;
 
@@ -2932,7 +2932,7 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.0/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.1/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6146,7 +6146,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.6.0';
+var version = '2.6.1';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
