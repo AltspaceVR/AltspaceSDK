@@ -21,7 +21,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} author
 			* @memberof module:altspace/components.sync-system
 			*/
-			author: { type: 'string', default: null },
+			author: { type: 'string' },
 
 			/**
 			* The name of the app.
@@ -29,7 +29,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} app
 			* @memberof module:altspace/components.sync-system
 			*/
-			app: { type: 'string', default: null },
+			app: { type: 'string' },
 
 			/**
 			* Override the instance ID. Can also be overridden with a URL parameter.
@@ -37,7 +37,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} instance
 			* @memberof module:altspace/components.sync-system
 			*/
-			instance: { type: 'string', default: null },
+			instance: { type: 'string' },
 
 			/**
 			* Override the base reference. Set this to use your own Firebase.
@@ -45,7 +45,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} refUrl
 			* @memberof module:altspace/components.sync-system
 			*/
-			refUrl: { type: 'string', default: null }
+			refUrl: { type: 'string' }
 		};
 	}
 

@@ -101,7 +101,7 @@ class NBoxCollider extends NCollider {
 			* @default [1, 1, 1]
 			* @memberof module:altspace/components.n-box-collider
 			*/
-			size: { type: 'vec3', default: '1 1 1' }
+			size: { type: 'vec3', default: {x:1,y:1,z:1} }
 		};
 	}
 }
@@ -125,7 +125,7 @@ class NCapsuleCollider extends NCollider {
 			* @default 1
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			radius: { default: '0', type: 'number' },
+			radius: { default: 0, type: 'number' },
 
 			/**
 			* The height of the shaft of the capsule in meters.
@@ -134,7 +134,7 @@ class NCapsuleCollider extends NCollider {
 			* @default 0
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			height: { default: '0', type: 'number' },
+			height: { default: 0, type: 'number' },
 
 			/**
 			* The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.
@@ -170,7 +170,7 @@ class NMeshCollider extends NCollider {
 			* @default true
 			* @memberof module:altspace/components.n-mesh-collider
 			*/
-			convex: { type: 'boolean', default: 'true' }
+			convex: { type: 'boolean', default: true }
 		};
 	}
 

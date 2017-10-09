@@ -54,7 +54,7 @@ class Instantiator extends AFrameComponent
 		* @default true
 		* @memberof module:altspace/components.instantiator
 		*/
-		removeLast: {type: 'boolean', default: 'true'},
+		removeLast: {type: 'boolean', default: true},
 	}; }
 
 	init() {

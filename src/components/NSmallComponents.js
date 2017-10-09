@@ -76,7 +76,7 @@ class NText extends NativeComponent {
 			* @default 10
 			* @memberof module:altspace/components.n-text
 			*/
-			fontSize: { default: '10', type: 'int' },//roughly a meter tall
+			fontSize: { default: 10, type: 'int' },//roughly a meter tall
 
 			/**
 			* The width of the text area in meters. If the
@@ -86,7 +86,7 @@ class NText extends NativeComponent {
 			* @default 10
 			* @memberof module:altspace/components.n-text
 			*/
-			width: { default: '10', type: 'number' },//in meters
+			width: { default: 10, type: 'number' },//in meters
 
 			/**
 			* The height of the text area in meters. If the
@@ -96,7 +96,7 @@ class NText extends NativeComponent {
 			* @default 1
 			* @memberof module:altspace/components.n-text
 			*/
-			height: { default: '1', type: 'number' },//in meters
+			height: { default: 1, type: 'number' },//in meters
 
 			/**
 			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.

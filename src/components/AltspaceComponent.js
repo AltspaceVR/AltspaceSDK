@@ -38,7 +38,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			usePixelScale: { type: 'boolean', default: 'false'},
+			usePixelScale: { type: 'boolean', default: false},
 
 			/**
 			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
@@ -56,7 +56,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default true
 			* @memberof module:altspace/components.altspace
 			*/
-			enclosuresOnly: { type: 'boolean', default: 'true'},
+			enclosuresOnly: { type: 'boolean', default: true},
 
 			/**
 			* Puts the app into fullspace mode.
@@ -65,7 +65,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			fullspace: { type: 'boolean', default: 'false'}
+			fullspace: { type: 'boolean', default: false}
 		}
 	}
 
@@ -160,8 +160,10 @@ class AltspaceComponent extends AFrameComponent
 		renderer.getPixelRatio = noop;
 		renderer.getMaxAnisotropy = noop;
 		renderer.setFaceCulling = noop;
+		renderer.submitFrame = noop;
 		renderer.context = {canvas: {}};
 		renderer.shadowMap = {};
+		renderer.requestAnimationFrame = window.requestAnimationFrame;
 	}
 
 	/*

@@ -22,7 +22,7 @@ class AltspaceCursorCollider extends AFrameComponent
 			* @default true
 			* @memberof module:altspace/components.altspace-cursor-collider
 			*/
-			enabled: {type: 'boolean', default: 'true'}
+			enabled: {type: 'boolean', default: true}
 		};
 	}
 
