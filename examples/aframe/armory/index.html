@@ -26,21 +26,12 @@
 			<a-assets>
 				<a-asset-item id="helmet-obj" src="models/helmet.obj"></a-asset-item>
 				<a-asset-item id="helmet-mtl" src="models/helmet.mtl"></a-asset-item>
-				<a-asset-item id="voxel-helmet-obj" src="models/vhelmet.obj"></a-asset-item>
-				<a-asset-item id="voxel-helmet-mtl" src="models/vhelmet.mtl"></a-asset-item>
 				<a-asset-item id="armor-obj" src="models/armor.obj"></a-asset-item>
 				<a-asset-item id="armor-mtl" src="models/armor.mtl"></a-asset-item>
-				<a-asset-item id="voxel-armor-obj" src="models/varmor.obj"></a-asset-item>
-				<a-asset-item id="voxel-armor-mtl" src="models/varmor.mtl"></a-asset-item>
-				<a-asset-item id="voxel-axe-obj" src="models/vaxe.obj"></a-asset-item>
-				<a-asset-item id="voxel-axe-mtl" src="models/vaxe.mtl"></a-asset-item>
 
 				<a-mixin id="helmet"
 					obj-model="obj: #helmet-obj; mtl: #helmet-mtl" collapse-model
 					scale="0.52 0.52 0.52"></a-mixin>
-				<a-mixin id="voxel-helmet"
-					obj-model="obj: #voxel-helmet-obj; mtl: #voxel-helmet-mtl" collapse-model
-					scale="1 1 1"></a-mixin>
 				<a-mixin id="parent-to-head"
 					position="0 0.05 0.03"
 					n-skeleton-parent="part: head;"
@@ -49,21 +40,16 @@
 				<a-mixin id="metal-armor"
 					obj-model="obj: #armor-obj; mtl: #armor-mtl" collapse-model
 					scale="0.35 0.35 0.35"></a-mixin>
-				<a-mixin id="voxel-armor"
-					obj-model="obj: #voxel-armor-obj; mtl: #voxel-armor-mtl" collapse-model
-					animation="property: rotation; from: 0 0 0; to: 0 360 0; dir: reverse; startEvents: spin"></a-mixin>
-					scale="1 1 1"></a-mixin>
 				<a-mixin id="parent-to-chest"
 					position="0 0.35 0"
 					n-skeleton-parent="part: spine;"
 					sync sync-n-skeleton-parent></a-mixin>
 
 				<a-mixin id="voxel-axe"
-					obj-model="obj: #voxel-axe-obj; mtl: #voxel-axe-mtl" collapse-model
-					scale="1 1 1"
+					geometry='primitive: box; width: .9; depth: .1; height: .03' material='shader: flat; color: #606060'
+					collapse-model position='.5 0 0' scale="1 1 1"
 					animation="property: rotation; from: 0 0 0; to: 360 0 0; dir: reverse; startEvents: spin"></a-mixin>
 				<a-mixin id="parent-to-left-hand"
-					position="0 0 0"
 					rotation="0 0 0"
 					n-skeleton-parent="part: hand; side: left;"
 					sync sync-n-skeleton-parent></a-mixin>
@@ -83,12 +69,6 @@
 			   Demonstrates instantiators that instantiate synced objects attached to users' heads.
 			-->
 			<a-entity
-				id="voxel-helmet-instantiator"
-				mixin="voxel-helmet"
-				instantiator="on: click; mixin: voxel-helmet parent-to-head"
-				position="0 2 0">
-			</a-entity>
-			<a-entity
 				id="helmet-instantiator"
 				mixin="helmet"
 				instantiator="on: click; mixin: helmet parent-to-head"
@@ -99,12 +79,6 @@
 			   Demonstrates a separate 'armor' group of instantiators that instantiate synced objects attached to
 			   users' chests.
 			-->
-			<a-entity
-				id="voxel-armor-instantiator"
-				mixin="voxel-armor"
-				instantiator="group: armor; on: click; mixin: voxel-armor parent-to-chest"
-				position="1.5 2 0">
-			</a-entity>
 			<a-entity
 				id="metal-armor-instantiator"
 				mixin="metal-armor"
