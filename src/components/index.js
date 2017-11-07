@@ -44,7 +44,7 @@ import NContainer from './NContainer';
 import NPortal from './NPortal';
 import NSound from './NSound';
 import NLayoutBrowser from './NLayoutBrowser';
-import {CollapseModel} from './UtilComponents';
+import CollapseModel from './CollapseModel';
 
 if (window.AFRAME)
 {
