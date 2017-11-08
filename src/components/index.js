@@ -45,6 +45,7 @@ import NPortal from './NPortal';
 import NSound from './NSound';
 import NLayoutBrowser from './NLayoutBrowser';
 import CollapseModel from './CollapseModel';
+import Visible from './visible';
 
 if (window.AFRAME)
 {
@@ -75,6 +76,7 @@ if (window.AFRAME)
 	registerComponentClass('n-mesh-collider', NMeshCollider);
 	registerComponentClass('n-layout-browser', NLayoutBrowser);
 	registerComponentClass('collapse-model', CollapseModel);
+	registerComponentClass('visible', Visible);
 }
 
 export {

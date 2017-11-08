@@ -269,9 +269,11 @@ var Url=function(){"use strict";var t={protocol:"protocol",host:"hostname",port:
 (function (Firebase$1,Url,Please) {
 'use strict';
 
-Firebase$1 = 'default' in Firebase$1 ? Firebase$1['default'] : Firebase$1;
-Url = 'default' in Url ? Url['default'] : Url;
-Please = 'default' in Please ? Please['default'] : Please;
+Firebase$1 = Firebase$1 && Firebase$1.hasOwnProperty('default') ? Firebase$1['default'] : Firebase$1;
+Url = Url && Url.hasOwnProperty('default') ? Url['default'] : Url;
+Please = Please && Please.hasOwnProperty('default') ? Please['default'] : Please;
+
+'use strict';
 
 /**
 * Stubs out the A-Frame "system" concept.
@@ -345,6 +347,8 @@ function registerSystemClass(name, cls)
 	AFRAME.registerSystem(name, flatten(new cls()));
 }
 
+'use strict';
+
 function safeDeepSet(obj, keys, value)
 {
 	if(keys.length === 0)
@@ -354,6 +358,8 @@ function safeDeepSet(obj, keys, value)
 		return obj;
 	}
 }
+
+'use strict';
 
 /**
 * Enable or disable cursor collision on the object. @aframe
@@ -382,7 +388,7 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 			* @default true
 			* @memberof module:altspace/components.altspace-cursor-collider
 			*/
-			enabled: {type: 'boolean', default: 'true'}
+			enabled: {type: 'boolean', default: true}
 		};
 	};
 
@@ -418,6 +424,8 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 
 	return AltspaceCursorCollider;
 }(AFrameComponent));
+
+'use strict';
 
 /**
 * Enables tracked control support for A-Frame applications that use the built-in
@@ -476,6 +484,8 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 	return AltspaceTrackedControls;
 }(AFrameComponent));
 
+'use strict';
+
 /**
 * The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
 *
@@ -520,7 +530,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			usePixelScale: { type: 'boolean', default: 'false'},
+			usePixelScale: { type: 'boolean', default: false},
 
 			/**
 			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
@@ -538,7 +548,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			* @default true
 			* @memberof module:altspace/components.altspace
 			*/
-			enclosuresOnly: { type: 'boolean', default: 'true'},
+			enclosuresOnly: { type: 'boolean', default: true},
 
 			/**
 			* Puts the app into fullspace mode.
@@ -547,7 +557,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			fullspace: { type: 'boolean', default: 'false'}
+			fullspace: { type: 'boolean', default: false}
 		}
 	};
 
@@ -643,8 +653,10 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		renderer.getPixelRatio = noop;
 		renderer.getMaxAnisotropy = noop;
 		renderer.setFaceCulling = noop;
+		renderer.submitFrame = noop;
 		renderer.context = {canvas: {}};
 		renderer.shadowMap = {};
+		renderer.requestAnimationFrame = window.requestAnimationFrame;
 	};
 
 	/*
@@ -752,6 +764,8 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 	return AltspaceComponent;
 }(AFrameComponent));
 
+'use strict';
+
 /**
 * Sync the color property of the object between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
@@ -824,6 +838,8 @@ var SyncColor = (function (AFrameComponent$$1) {
 
 	return SyncColor;
 }(AFrameComponent));
+
+'use strict';
 
 /**
 * Enables the synchronization of properties of the entity. Must be used in
@@ -998,6 +1014,8 @@ var SyncComponent = (function (AFrameComponent$$1) {
 	return SyncComponent;
 }(AFrameComponent));
 
+'use strict';
+
 /**
 * Connect to a remote Firebase server, and facilitate synchronization. These
 * options correspond exactly with the configuration options for
@@ -1026,7 +1044,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} author
 			* @memberof module:altspace/components.sync-system
 			*/
-			author: { type: 'string', default: null },
+			author: { type: 'string' },
 
 			/**
 			* The name of the app.
@@ -1034,7 +1052,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} app
 			* @memberof module:altspace/components.sync-system
 			*/
-			app: { type: 'string', default: null },
+			app: { type: 'string' },
 
 			/**
 			* Override the instance ID. Can also be overridden with a URL parameter.
@@ -1042,7 +1060,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} instance
 			* @memberof module:altspace/components.sync-system
 			*/
-			instance: { type: 'string', default: null },
+			instance: { type: 'string' },
 
 			/**
 			* Override the base reference. Set this to use your own Firebase.
@@ -1050,7 +1068,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} refUrl
 			* @memberof module:altspace/components.sync-system
 			*/
-			refUrl: { type: 'string', default: null }
+			refUrl: { type: 'string' }
 		};
 	};
 
@@ -1280,6 +1298,8 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	return SyncSystem;
 }(AFrameSystem));
 
+'use strict';
+
 //from underscore.js
 function throttle(func, wait, options) {
 	var timeout, context, args, result;
@@ -1430,6 +1450,8 @@ var SyncTransform = (function (AFrameComponent$$1) {
 	return SyncTransform;
 }(AFrameComponent));
 
+'use strict';
+
 /**
 * Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
@@ -1534,6 +1556,8 @@ var SyncNSound = (function (AFrameComponent$$1) {
 	return SyncNSound;
 }(AFrameComponent));
 
+'use strict';
+
 /**
 * Syncs the attributes of an n-skeleton-parent component across clients @aframe
 * @alias sync-n-skeleton-parent
@@ -1599,6 +1623,8 @@ var SyncNSkeletonParent = (function (AFrameComponent$$1) {
 
 	return SyncNSkeletonParent;
 }(AFrameComponent));
+
+'use strict';
 
 /**
 * The wire component allows you to trigger an event on another entity when an event
@@ -1759,6 +1785,8 @@ var Wire = (function (AFrameComponent$$1) {
 	return Wire;
 }(AFrameComponent));
 
+'use strict';
+
 /**
 * Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
 * @alias one-per-user
@@ -1807,6 +1835,8 @@ var OnePerUser = (function (AFrameComponent$$1) {
 
 	return OnePerUser;
 }(AFrameComponent));
+
+'use strict';
 
 /**
 * Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
@@ -1869,7 +1899,7 @@ var Instantiator = (function (AFrameComponent$$1) {
 		* @default true
 		* @memberof module:altspace/components.instantiator
 		*/
-		removeLast: {type: 'boolean', default: 'true'},
+		removeLast: {type: 'boolean', default: true},
 	}; };
 
 	Instantiator.prototype.init = function init () {
@@ -1900,6 +1930,8 @@ var Instantiator = (function (AFrameComponent$$1) {
 
 	return Instantiator;
 }(AFrameComponent));
+
+'use strict';
 
 // graceful fallback in web browsers
 if (!window.altspace || !altspace.inClient)
@@ -1992,6 +2024,8 @@ var NativeComponent = (function (AFrameComponent$$1) {
 
 	return NativeComponent;
 }(AFrameComponent));
+
+'use strict';
 
 /**
 * Attach a given native object to this entity. @aframe
@@ -2093,7 +2127,7 @@ var NText = (function (NativeComponent$$1) {
 			* @default 10
 			* @memberof module:altspace/components.n-text
 			*/
-			fontSize: { default: '10', type: 'int' },//roughly a meter tall
+			fontSize: { default: 10, type: 'int' },//roughly a meter tall
 
 			/**
 			* The width of the text area in meters. If the
@@ -2103,7 +2137,7 @@ var NText = (function (NativeComponent$$1) {
 			* @default 10
 			* @memberof module:altspace/components.n-text
 			*/
-			width: { default: '10', type: 'number' },//in meters
+			width: { default: 10, type: 'number' },//in meters
 
 			/**
 			* The height of the text area in meters. If the
@@ -2113,7 +2147,7 @@ var NText = (function (NativeComponent$$1) {
 			* @default 1
 			* @memberof module:altspace/components.n-text
 			*/
-			height: { default: '1', type: 'number' },//in meters
+			height: { default: 1, type: 'number' },//in meters
 
 			/**
 			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.
@@ -2222,6 +2256,8 @@ var NCockpitParent = (function (NativeComponent$$1) {
 
 	return NCockpitParent;
 }(NativeComponent));
+
+'use strict';
 
 /**
 * Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
@@ -2352,7 +2388,7 @@ var NBoxCollider = (function (NCollider) {
 			* @default [1, 1, 1]
 			* @memberof module:altspace/components.n-box-collider
 			*/
-			size: { type: 'vec3', default: '1 1 1' }
+			size: { type: 'vec3', default: {x:1,y:1,z:1} }
 		};
 	};
 
@@ -2386,7 +2422,7 @@ var NCapsuleCollider = (function (NCollider) {
 			* @default 1
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			radius: { default: '0', type: 'number' },
+			radius: { default: 0, type: 'number' },
 
 			/**
 			* The height of the shaft of the capsule in meters.
@@ -2395,7 +2431,7 @@ var NCapsuleCollider = (function (NCollider) {
 			* @default 0
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			height: { default: '0', type: 'number' },
+			height: { default: 0, type: 'number' },
 
 			/**
 			* The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.
@@ -2449,7 +2485,7 @@ var NMeshCollider = (function (NCollider) {
 			* @default true
 			* @memberof module:altspace/components.n-mesh-collider
 			*/
-			convex: { type: 'boolean', default: 'true' }
+			convex: { type: 'boolean', default: true }
 		};
 	};
 
@@ -2508,6 +2544,8 @@ var NMeshCollider = (function (NCollider) {
 
 	return NMeshCollider;
 }(NCollider));
+
+'use strict';
 
 /**
 * A container keeps a running tally of how many objects are within
@@ -2591,6 +2629,8 @@ var NContainer = (function (NativeComponent$$1) {
 	return NContainer;
 }(NativeComponent));
 
+'use strict';
+
 /**
 * Spawn a portal that allows you to travel to a different space or a different location in the current space.
 * @aframe
@@ -2664,6 +2704,8 @@ var NPortal = (function (NativeComponent$$1) {
 !function(){"use strict";function r(r){for(var t=[],e=0;e<r.length;e++){ t.push(r[e]); }return t}String.prototype.codePointAt||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=t.length,n=r?+r:0;if(n!=n&&(n=0),!(n<0||n>=e)){var o,i=t.charCodeAt(n);return i>=55296&&i<=56319&&e>n+1&&(o=t.charCodeAt(n+1),o>=56320&&o<=57343)?1024*(i-55296)+o-56320+65536:i}};r?r(String.prototype,"codePointAt",{value:t,configurable:!0,writable:!0}):String.prototype.codePointAt=t;}(),String.prototype.repeat||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=function(r){if(null==this){ throw TypeError(); }var t=this+"",e=r?+r:0;if(e!=e&&(e=0),e<0||e==1/0){ throw RangeError(); }for(var n="";e;){ e%2==1&&(n+=t),e>1&&(t+=t),e>>=1; }return n};r?r(String.prototype,"repeat",{value:t,configurable:!0,writable:!0}):String.prototype.repeat=t;}(),String.prototype.includes||!function(){var r={}.toString,t=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),e="".indexOf,n=function(t){if(null==this){ throw TypeError(); }var n=this+"";if(t&&"[object RegExp]"==r.call(t)){ throw TypeError(); }var o=n.length,i=t+"",a=i.length,c=arguments.length>1?arguments[1]:void 0,u=c?+c:0;return u!=u&&(u=0),!(a+Math.min(Math.max(u,0),o)>o)&&e.call(n,i,u)!=-1};t?t(String.prototype,"includes",{value:n,configurable:!0,writable:!0}):String.prototype.includes=n;}(),String.prototype.startsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=arguments.length>1?arguments[1]:void 0,c=a?+a:0;c!=c&&(c=0);var u=Math.min(Math.max(c,0),n);if(i+u>n){ return!1; }for(var l=-1;++l<i;){ if(e.charCodeAt(u+l)!=o.charCodeAt(l)){ return!1; } }return!0};r?r(String.prototype,"startsWith",{value:e,configurable:!0,writable:!0}):String.prototype.startsWith=e;}(),String.prototype.endsWith||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t={}.toString,e=function(r){if(null==this){ throw TypeError(); }var e=this+"";if(r&&"[object RegExp]"==t.call(r)){ throw TypeError(); }var n=e.length,o=r+"",i=o.length,a=n;if(arguments.length>1){var c=arguments[1];void 0!==c&&(a=c?+c:0,a!=a&&(a=0));}var u=Math.min(Math.max(a,0),n),l=u-i;if(l<0){ return!1; }for(var h=-1;++h<i;){ if(e.charCodeAt(l+h)!=o.charCodeAt(h)){ return!1; } }return!0};r?r(String.prototype,"endsWith",{value:e,configurable:!0,writable:!0}):String.prototype.endsWith=e;}(),String.fromCodePoint||!function(){var r=function(){try{var r={},t=Object.defineProperty,e=t(r,r,r)&&t;}catch(r){}return e}(),t=String.fromCharCode,e=Math.floor,n=function(r){
 var arguments$1 = arguments;
 var n,o,i=16384,a=[],c=-1,u=arguments.length;if(!u){ return""; }for(var l="";++c<u;){var h=+arguments$1[c];if(!isFinite(h)||h<0||h>1114111||e(h)!=h){ throw RangeError("Invalid code point: "+h); }h<=65535?a.push(h):(h-=65536,n=(h>>10)+55296,o=h%1024+56320,a.push(n,o)),(c+1==u||a.length>i)&&(l+=t.apply(null,a),a.length=0);}return l};r?r(String,"fromCodePoint",{value:n,configurable:!0,writable:!0}):String.fromCodePoint=n;}(),Object.defineProperty(String,"raw",{configurable:!0,enumerable:!1,writable:!0,value:function(t,e){var n;t=null!=t?t:{},e=arguments.length>1?r(arguments).slice(1):[];try{n=r(t.raw);}catch(r){throw new TypeError("Cannot convert undefined or null to object")}return n.map(function(r,n){return t.raw.length<=n?r:null!=e[n-1]?e[n-1]+r:r}).join("")}});}();
+
+'use strict';
 
 /**
 * Play a sound from a particular location. Limiting sound duration to 5 seconds
@@ -2879,6 +2921,8 @@ var NSound = (function (NativeComponent$$1) {
 	return NSound;
 }(NativeComponent));
 
+'use strict';
+
 /**
 * Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
 * Layout browsers can only be used by apps that are set as the default app in a space.
@@ -2921,6 +2965,70 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
+* Reaches into a model's hierarchy and directly assigns the first mesh found
+* to the containing entity. This is mostly necessary for use alongside native
+* components like [n-skeleton-parent]{@link module:altspace/components.n-skeleton-parent}. @aframe
+*
+* @alias collapse-model
+* @memberof module:altspace/components
+* @extends module:altspace/components.AFrameComponent
+*/
+var CollapseModel = (function (AFrameComponent$$1) {
+	function CollapseModel () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) CollapseModel.__proto__ = AFrameComponent$$1;
+	CollapseModel.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	CollapseModel.prototype.constructor = CollapseModel;
+
+	CollapseModel.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		function getFirstMesh(obj){
+			if(obj.isMesh)
+				{ return obj; }
+			else if(obj.children.length === 0)
+				{ return null; }
+			else
+				{ return obj.children.map(function (c) { return getFirstMesh(c); }).find(function (o) { return !!o; }); }
+		}
+
+		this.el.addEventListener('model-loaded', function () {
+			this$1.el.setObject3D('mesh', getFirstMesh(this$1.el.object3DMap.mesh));
+		});
+	};
+
+	return CollapseModel;
+}(AFrameComponent));
+
+delete AFRAME.components['visible'];
+
+var Visible = (function (AFrameComponent$$1) {
+	function Visible () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) Visible.__proto__ = AFrameComponent$$1;
+	Visible.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Visible.prototype.constructor = Visible;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){ return {default: true}; };
+	Visible.prototype.update = function update (){
+		var this$1 = this;
+
+		this.el.object3D.traverse(function (obj) { return obj.visible = this$1.data; });
+	};
+
+	Object.defineProperties( Visible.prototype, prototypeAccessors );
+
+	return Visible;
+}(AFrameComponent));
+
+/**
 * AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
 * In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
 * this SDK provides a set of components to add AltspaceVR compatibility and additional
@@ -2941,6 +3049,8 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 *   </body>
 * </html>
 */
+
+'use strict';
 
 if (window.AFRAME)
 {
@@ -2970,6 +3080,8 @@ if (window.AFRAME)
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
 	registerComponentClass('n-layout-browser', NLayoutBrowser);
+	registerComponentClass('collapse-model', CollapseModel);
+	registerComponentClass('visible', Visible);
 }
 
 
@@ -3001,7 +3113,8 @@ var components_lib = Object.freeze({
 	NBoxCollider: NBoxCollider,
 	NCapsuleCollider: NCapsuleCollider,
 	NMeshCollider: NMeshCollider,
-	NLayoutBrowser: NLayoutBrowser
+	NLayoutBrowser: NLayoutBrowser,
+	CollapseModel: CollapseModel
 });
 
 /* global Url */
@@ -3168,6 +3281,8 @@ var sync = Object.freeze({
 * Altspace events.
 * @module altspace/utilities/shims/cursor
 */
+'use strict';
+
 var scene;
 var camera;
 var domElem;
@@ -3285,6 +3400,8 @@ function findIntersection(mouseEvent) {
 var cursor = Object.freeze({
 	init: init
 });
+
+'use strict';
 
 /**
 * Simulation is a helper class that lets you quickly setup a three.js app with support for AltspaceVR. It creates a basic scene for you and starts the render and behavior loop.
@@ -3409,6 +3526,8 @@ prototypeAccessors$1.renderer.get = function (){ return this._renderer; };
 prototypeAccessors$1.camera.get = function (){ return this._camera; };
 
 Object.defineProperties( Simulation.prototype, prototypeAccessors$1 );
+
+'use strict';
 
 var loader;
 var TRACE;
@@ -3616,6 +3735,8 @@ var codepen = Object.freeze({
 	getAuthorId: getAuthorId,
 	printDebugInfo: printDebugInfo
 });
+
+'use strict';
 
 /**
 * Load an OBJ file and its material definition in one pass.
@@ -3980,6 +4101,8 @@ THREE.Object3D.prototype.updateBehaviors = function(deltaTime, scene) {
 /**
 * @module altspace/utilities/shims
 */
+'use strict';
+
 
 
 
@@ -3987,6 +4110,8 @@ var index = Object.freeze({
 	OBJMTLLoader: OBJMTLLoader,
 	cursor: cursor
 });
+
+'use strict';
 
 /**
 * Base class for all behaviors. Use this class as a pattern, but do not use
@@ -4044,6 +4169,8 @@ Behavior.prototype.update = function update (deltaTime){};
 Behavior.prototype.dispose = function dispose (obj){};
 
 Object.defineProperties( Behavior.prototype, prototypeAccessors$2 );
+
+'use strict';
 
 /**
 * The Bob behavior adds a bobbing animation to an object
@@ -4105,6 +4232,8 @@ var Bob = (function (Behavior$$1) {
 
 	return Bob;
 }(Behavior));
+
+'use strict';
 
 /**
 * A behavior that changes the color of an object when the cursor interacts with it.
@@ -4206,6 +4335,8 @@ var ButtonStateStyle = (function (Behavior$$1) {
 
 	return ButtonStateStyle;
 }(Behavior));
+
+'use strict';
 
 //idea: API for symbolic camera from altspace? altspace.getThreeJSCenterCamera();
 //idea: offset (drag from bottom of piece). Workaround if you reparent
@@ -4453,6 +4584,8 @@ var Drag = (function (Behavior$$1) {
 	return Drag;
 }(Behavior));
 
+'use strict';
+
 // ignore stick dead zone
 var tolerance = 0.2;
 
@@ -4694,6 +4827,8 @@ var GamepadControls = (function (Behavior$$1) {
 	return GamepadControls;
 }(Behavior));
 
+'use strict';
+
 /**
 * Changes the color of an object when cursor hovers over it.
 * @param {Object} [config] Optional parameters.
@@ -4823,6 +4958,8 @@ var HoverColor = (function (Behavior$$1) {
 	return HoverColor;
 }(Behavior));
 
+'use strict';
+
 /**
 * Changes the scale of an object when the cursor hovers over it, and restores the original scale when the cursor is no longer hovering over the object.
 * @class HoverScale
@@ -4916,6 +5053,8 @@ var HoverScale = (function (Behavior$$1) {
 
 	return HoverScale;
 }(Behavior));
+
+'use strict';
 
 /**
 * An array in the form of `[bodyPart, side, subIndex]` identifying a joint in the tracking skeleton.
@@ -5204,6 +5343,8 @@ JointCollisionEvents.HAND_JOINTS = [
 	['Pinky', 'Right', 3]
 ];
 
+'use strict';
+
 var containerMax = Symbol('containerMax');
 var containerMin = Symbol('containerMin');
 var object3D = Symbol('object3D');
@@ -5388,6 +5529,8 @@ var Layout = (function (Behavior$$1) {
 
 	return Layout;
 }(Behavior));
+
+'use strict';
 
 // deep object comparison
 function isEqual(a, b)
@@ -5594,6 +5737,8 @@ var Object3DSync = (function (Behavior$$1) {
 
 	return Object3DSync;
 }(Behavior));
+
+'use strict';
 
 // common maps between identifiers and objects
 var syncBehaviors = [];
@@ -5829,6 +5974,8 @@ var SceneSync = (function (Behavior$$1) {
 	return SceneSync;
 }(Behavior));
 
+'use strict';
+
 /**
 * The Spin behavior adds a spinning animation to an object.
 * @param {Object} [config]
@@ -5869,6 +6016,8 @@ var Spin = (function (Behavior$$1) {
 
 	return Spin;
 }(Behavior));
+
+'use strict';
 
 // Returns a Promise that resovles static when a steamvr controller is found
 function getController(hand, config) {
@@ -5967,6 +6116,8 @@ Object.assign(SteamVRInput, {
 	RIGHT_CONTROLLER: 'right'
 });
 
+'use strict';
+
 /**
 * The SteamVRTrackedObject behavior updates an objects position and rotation to
 * match the location of a SteamVR input device. A [SteamVRInput]{@link module:altspace/utilities/behaviors.SteamVRInput} behavior
@@ -6025,6 +6176,8 @@ var SteamVRTrackedObject = (function (Behavior$$1) {
 
 	return SteamVRTrackedObject;
 }(Behavior));
+
+'use strict';
 
 /**
 * Spin an object with the GearVR touchpad
@@ -6105,6 +6258,8 @@ var TouchpadRotate = (function (Behavior$$1) {
 * @module altspace/utilities/behaviors
 */
 
+'use strict';
+
 
 
 
@@ -6126,6 +6281,9 @@ var index$1 = Object.freeze({
 	TouchpadRotate: TouchpadRotate
 });
 
+'use strict';
+
+
 
 
 var utilities_lib = Object.freeze({
@@ -6136,6 +6294,8 @@ var utilities_lib = Object.freeze({
 	shims: index,
 	behaviors: index$1
 });
+
+'use strict';
 
 /**
 * The main module for the AltspaceVR SDK.

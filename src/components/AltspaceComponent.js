@@ -267,8 +267,4 @@ class AltspaceComponent extends AFrameComponent
 	}
 }
 
-AFRAME.components.visible.Component.prototype.update = () => {
-	this.el.object3D.traverse(obj => obj.visible = this.data);
-}
-
 export default AltspaceComponent;
