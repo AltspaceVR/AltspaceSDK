@@ -2992,7 +2992,7 @@ var CollapseModel = (function (AFrameComponent$$1) {
 			else if(obj.children.length === 0)
 				{ return null; }
 			else
-				{ return obj.children.map(function (c) { return getFirstMesh(c); }).find(function (o) { return !!o; }); }
+				{ return obj.children.reduce(function (m,o) { return m || getFirstMesh(o); }, null); }
 		}
 
 		this.el.addEventListener('model-loaded', function () {

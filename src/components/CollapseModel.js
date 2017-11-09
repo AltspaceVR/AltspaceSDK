@@ -9,7 +9,7 @@ import {AFrameComponent} from './AFrameComponent';
 * @memberof module:altspace/components
 * @extends module:altspace/components.AFrameComponent
 */
-export default class CollapseModel extends AFrameComponent
+class CollapseModel extends AFrameComponent
 {
 	init()
 	{
@@ -19,7 +19,7 @@ export default class CollapseModel extends AFrameComponent
 			else if(obj.children.length === 0)
 				return null;
 			else
-				return obj.children.map(c => getFirstMesh(c)).find(o => !!o);
+				return obj.children.reduce((m,o) => m || getFirstMesh(o), null);
 		}
 
 		this.el.addEventListener('model-loaded', () => {
@@ -27,3 +27,5 @@ export default class CollapseModel extends AFrameComponent
 		});
 	}
 }
+
+export default CollapseModel;
