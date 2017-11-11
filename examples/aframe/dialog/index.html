@@ -9,11 +9,11 @@
 <a id="weblink" style="display: none;" href="https://www.altvr.com"></a>
 <a-scene altspace="fullspace: true">
 	<a-assets>
-		<img id="message" src="examples/images/sm-notification-MACH.png">
-		<img id="ok-button" src="examples/images/btn-CLICK-HERE.png">
-		<img id="cockpit-button" src="examples/images/btn-NEW-NOTIFICATION.png">	
-		<img id="close-icon" src="examples/images/icon-close.png">
-		<img id="close-hover-icon" src="examples/images/close-hover.png">
+		<img id="message" src="resources/sm-notification-MACH.png">
+		<img id="ok-button" src="resources/btn-CLICK-HERE.png">
+		<img id="cockpit-button" src="resources/btn-NEW-NOTIFICATION.png">	
+		<img id="close-icon" src="resources/icon-close.png">
+		<img id="close-hover-icon" src="resources/close-hover.png">
 		<a-mixin id="notification-bg"
 			geometry="primitive: plane; width: 1; height: 0.5" material="transparent: true; src: #message"
 			n-cockpit-parent altspace-cursor-collider="enabled: true"></a-mixin>
@@ -43,14 +43,12 @@
 		<a-entity mixin="notification-bg"></a-entity>
 		<a-entity id="ok" mixin="button closes-dialog"
 			navigate="link: #weblink"
-		  	wire__remove="on: click; emit: remove-cockpit; target: #cockpit-notification;"
 		  	wire__enter="on: mouseenter; emit: over; target: #ok"
 			wire__leave="on: mouseleave; emit: leave; target: #ok">
 			<a-animation attribute="scale" begin="over" dur="100" from="1 1 1" to="1.1 1.1 1.1"></a-animation>
 			<a-animation attribute="scale" begin="leave" dur="100" from="1.1 1.1 1.1" to="1 1 1"></a-animation>
 		</a-entity>
 		<a-entity mixin="close closes-dialog"
-		  	wire__remove="on: click; emit: remove-cockpit; target: #cockpit-notification;"
 			wire__over="on: mouseenter; emit: over; target: #close-hover;"
 			wire__leave="on: mouseleave; emit: leave; target: #close-hover;"></a-entity>
 		<a-entity id="close-hover" mixin="close2">
@@ -64,9 +62,7 @@
 		wire__leave="on: mouseleave; emit: cockpit-leave;">
 		<a-animation attribute="scale" begin="cockpit-over" dur="100" from="1 1 1" to="1.1 1.1 1.1"></a-animation>
 		<a-animation attribute="scale" begin="cockpit-leave" dur="100" from="1.1 1.1 1.1" to="1 1 1"></a-animation>
-		<a-animation attribute="scale" begin="remove-cockpit" dur="1" from="1.1 1.1 1.1" to="0.0001 0.0001 0.0001"></a-animation>
 	</a-entity>
-
 </a-scene>
 </body>
 </html>
