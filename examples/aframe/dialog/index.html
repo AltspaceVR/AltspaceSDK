@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.4.2/dist/altspace.min.js"></script>
+<script src="navigate.js"></script>
+</head>
+<body>
+<a id="weblink" style="display: none;" href="https://www.altvr.com"></a>
+<a-scene altspace="fullspace: true">
+	<a-assets>
+		<img id="message" src="examples/images/sm-notification-MACH.png">
+		<img id="ok-button" src="examples/images/btn-CLICK-HERE.png">
+		<img id="cockpit-button" src="examples/images/btn-NEW-NOTIFICATION.png">	
+		<img id="close-icon" src="examples/images/icon-close.png">
+		<img id="close-hover-icon" src="examples/images/close-hover.png">
+		<a-mixin id="notification-bg"
+			geometry="primitive: plane; width: 1; height: 0.5" material="transparent: true; src: #message"
+			n-cockpit-parent altspace-cursor-collider="enabled: true"></a-mixin>
+		<a-mixin id="closes-dialog"
+			wire="on: click; emit: close-dialog; targets: #dialog"></a-mixin>
+		<a-mixin id="button"
+			geometry="primitive: plane; width: 0.4; height: 0.1;" position="0 -0.12 0.001"
+			material="transparent: true; src: #ok-button"
+			n-cockpit-parent altspace-cursor-collider="enabled: true"></a-mixin>
+		<a-mixin id="close"
+			geometry="primitive: circle" material="transparent: true; src: #close-icon"
+			scale="0.05 0.05 0.05" position="0 -0.3 0"
+			n-cockpit-parent altspace-cursor-collider="enabled: true"></a-mixin>
+		<a-mixin id="close2"
+			geometry="primitive: circle" material="transparent: true; src: #close-hover-icon"
+			scale="0.0001 0.0001 0.0001" position="0 -0.3 -0.001"
+			n-cockpit-parent altspace-cursor-collider="enabled: true"></a-mixin>
+		<a-mixin id="cockpit"
+	    		position="0.6 -0.15 -0.8" rotation="-30 0 0" 
+			geometry="primitive: plane; width: 0.4; height: 0.1" 
+		    	material="transparent: true; src: #cockpit-button"
+		 	n-cockpit-parent altspace-cursor-collider="enabled: true"></a-mixin>
+	</a-assets>
+	<a-entity id="dialog" position="0 0.6 -1" scale="0.0001 0.0001 0.0001" n-cockpit-parent>
+		<a-animation attribute="scale" begin="toggle-dialog" dur="1" from="0.0001 0.0001 0.0001" to="1 1 1" direction="alternate"></a-animation>
+		<a-animation attribute="scale" begin="close-dialog" dur="1" from="1 1 1" to="0.0001 0.0001 0.0001"></a-animation>
+		<a-entity mixin="notification-bg"></a-entity>
+		<a-entity id="ok" mixin="button closes-dialog"
+			navigate="link: #weblink"
+		  	wire__remove="on: click; emit: remove-cockpit; target: #cockpit-notification;"
+		  	wire__enter="on: mouseenter; emit: over; target: #ok"
+			wire__leave="on: mouseleave; emit: leave; target: #ok">
+			<a-animation attribute="scale" begin="over" dur="100" from="1 1 1" to="1.1 1.1 1.1"></a-animation>
+			<a-animation attribute="scale" begin="leave" dur="100" from="1.1 1.1 1.1" to="1 1 1"></a-animation>
+		</a-entity>
+		<a-entity mixin="close closes-dialog"
+		  	wire__remove="on: click; emit: remove-cockpit; target: #cockpit-notification;"
+			wire__over="on: mouseenter; emit: over; target: #close-hover;"
+			wire__leave="on: mouseleave; emit: leave; target: #close-hover;"></a-entity>
+		<a-entity id="close-hover" mixin="close2">
+			<a-animation attribute="scale" begin="over" dur="1" from="0.0001 0.0001 0.0001" to="0.05 0.05 0.05"></a-animation>
+			<a-animation attribute="scale" begin="leave" dur="1" from="0.05 0.05 0.05" to="0.0001 0.0001 0.0001"></a-animation>
+		</a-entity>			  
+	</a-entity>
+	<a-entity id="cockpit-notification" mixin="cockpit"
+	  	wire="on: click; emit: toggle-dialog; targets: #dialog;"
+		wire__over="on: mouseenter; emit: cockpit-over;"
+		wire__leave="on: mouseleave; emit: cockpit-leave;">
+		<a-animation attribute="scale" begin="cockpit-over" dur="100" from="1 1 1" to="1.1 1.1 1.1"></a-animation>
+		<a-animation attribute="scale" begin="cockpit-leave" dur="100" from="1.1 1.1 1.1" to="1 1 1"></a-animation>
+		<a-animation attribute="scale" begin="remove-cockpit" dur="1" from="1.1 1.1 1.1" to="0.0001 0.0001 0.0001"></a-animation>
+	</a-entity>
+
+</a-scene>
+</body>
+</html>
