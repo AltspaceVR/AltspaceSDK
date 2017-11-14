@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Model Repositories</title>
+	<script src="https://aframe.io/releases/0.7.0/aframe.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<a-scene altspace>
+	<a-assets>
+		<a-asset-item id='moon'
+			src='https://poly.google.com/downloads/63c8LKpoXTO/1IgQrpx8XJT/PUSHILIN_moon.gltf'
+			data-attribution='https://poly.google.com/view/63c8LKpoXTO'></a-asset-item>
+		<a-asset-item id='bear'
+			src='https://ugcorigin.s-microsoft.com/12/018d801a-0000-0000-7a48-6505f2d556f9/952/1508436299416.gltf'
+			data-attribution='https://www.remix3d.com/details/G009SXJCMDL3'></a-asset-item>
+	</a-assets>
+
+	<a-entity id='moon' position='0 -.77 .05' gltf-model='#moon'></a-entity>
+	<a-entity id='bear' scale='2.5 2.5 2.5' gltf-model='#bear'></a-entity>
+</a-scene>
+</body>
+</html>
