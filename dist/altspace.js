@@ -3017,6 +3017,9 @@ var Visible = (function (AFrameComponent$$1) {
 	var prototypeAccessors = { schema: {} };
 
 	prototypeAccessors.schema.get = function (){ return {default: true}; };
+	Visible.prototype.init = function init (){
+		this.el.addEventListener('model-loaded', this.update.bind(this));
+	};
 	Visible.prototype.update = function update (){
 		var this$1 = this;
 
