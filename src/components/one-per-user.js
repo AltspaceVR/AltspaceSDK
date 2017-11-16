@@ -3,10 +3,12 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
-* @alias one-per-user
-* @memberof module:altspace/components
+* @name module:altspace/components.one-per-user
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Instantiates an entity for each user using [sync-system]{@link module:altspace/components.sync-system}. @aframe
+* @example <a-mixin id='handbox' n-skeleton-parent='part: hand; side: right' geometry='primitive: box;'></a-mixin>
+* <a-entity one-per-user='mixin: #handbox'></a-entity>
 */
 class OnePerUser extends AFrameComponent
 {

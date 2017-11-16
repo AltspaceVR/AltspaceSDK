@@ -3,12 +3,12 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
+* @name module:altspace/components.n-layout-browser
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
 * Layout browsers can only be used by apps that are set as the default app in a space.
 * @aframe
-* @alias n-layout-browser
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
 */
 class NLayoutBrowser extends NativeComponent
 {

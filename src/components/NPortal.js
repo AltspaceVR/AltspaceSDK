@@ -3,11 +3,11 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* Spawn a portal that allows you to travel to a different space or a different location in the current space.
-* @aframe
-* @alias n-portal
-* @memberof module:altspace/components
+* @name module:altspace/components.n-portal
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Spawn a portal that allows you to travel to a different space or a different location in the current space. @aframe
+* @example <a-entity n-portal='target-space: campfire-lobby'></a-entity>
 */
 class NPortal extends NativeComponent {
 	constructor(){ super('n-portal'); }

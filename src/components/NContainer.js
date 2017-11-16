@@ -3,15 +3,14 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* A container keeps a running tally of how many objects are within
+* @name module:altspace/components.n-container
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc A container keeps a running tally of how many objects are within
 * its bounds, and adds and removes the states `container-full` and
 * `container-empty` based on the current count of objects. Requires a native
 * collider component set to trigger mode. @aframe
-* @alias n-container
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
-* @example
-* <a-box n-box-collider="isTrigger: true" n-container="capacity: 6"></a-box>
+* @example <a-box n-box-collider="isTrigger: true" n-container="capacity: 6"></a-box>
 */
 class NContainer extends NativeComponent
 {

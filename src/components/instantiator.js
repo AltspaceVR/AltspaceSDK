@@ -3,11 +3,14 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
-* The instantiated objects are built using the specified mixins. @aframe
-* @alias instantiator
-* @memberof module:altspace/components
+* @name module:altspace/components.instantiator
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
+* The instantiated objects are built using the specified mixins. @aframe
+* @example <!-- attaches a ball to your head if you click the box -->
+* <a-mixin id='headbox' geometry='primitive:sphere;' n-skeleton-parent='part: head'></a-mixin>
+* <a-box instantiator='on: click; mixin: headbox;'></a-box>
 */
 class Instantiator extends AFrameComponent
 {

@@ -3,10 +3,13 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Syncs the attributes of an n-skeleton-parent component across clients @aframe
-* @alias sync-n-skeleton-parent
-* @memberof module:altspace/components
+* @name module:altspace/components.sync-n-skeleton-parent
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Syncs the attributes of an [n-skeleton-parent]{@link module:altspace/components.n-skeleton-parent} component across clients.
+* Requires the [sync]{@link module:altspace/components.sync} component be present
+* on the entity. @aframe
+* @example <a-box n-skeleton-parent='userId: 123123123123;' sync sync-n-skeleton-parent></a-box>
 */
 
 class SyncNSkeletonParent extends AFrameComponent

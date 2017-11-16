@@ -4,7 +4,7 @@
 * this SDK provides a set of components to add AltspaceVR compatibility and additional
 * functionality to the toolset. At a minimum, A-Frame apps will need the [altspace]{@link module:altspace/components.altspace}
 * component on the `<a-scene>` tag to function as an AltspaceVR app.
-* @module altspace/components
+* @module module:altspace/components
 * @example
 * <html>
 *   <head>
@@ -37,13 +37,14 @@ import OnePerUser from './one-per-user';
 import Instantiator from './instantiator';
 
 import {
-	NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent
+	NObject, NSpawner, NBillboard, NSkeletonParent, NCockpitParent
 } from './NSmallComponents';
 import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
 import NContainer from './NContainer';
 import NPortal from './NPortal';
 import NSound from './NSound';
 import NLayoutBrowser from './NLayoutBrowser';
+import NText from './NText';
 import CollapseModel from './CollapseModel';
 import Visible from './visible';
 

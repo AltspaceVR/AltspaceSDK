@@ -4,10 +4,14 @@ import {AFrameComponent} from './AFrameComponent';
 import {safeDeepSet} from './utilities';
 
 /**
-* The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
+* @name module:altspace/components.altspace
+* @class
+* @extends module:altspace/components.AFrameComponent
+
+* @classdesc The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: This component can have side-effects on some default components. To be
-* safe, this component should be specified last.
+* safe, this component should be specified last. @aframe
 *
 * @example
 * <head>
@@ -20,10 +24,6 @@ import {safeDeepSet} from './utilities';
 *     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
 *   </a-scene>
 * </body>
-*
-* @alias altspace
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
 */
 class AltspaceComponent extends AFrameComponent
 {

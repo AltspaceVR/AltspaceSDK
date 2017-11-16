@@ -4,11 +4,12 @@ import 'es6-string-polyfills';
 import NativeComponent from './NativeComponent';
 
 /**
-* Play a sound from a particular location. Limiting sound duration to 5 seconds
-* or less is recommended to prevent hitching when the sound loads. @aframe
-* @alias n-sound
-* @memberof module:altspace/components
+* @name module:altspace/components.n-sound
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Play a sound from a particular location. Limiting sound duration to 5 seconds
+* or less is recommended to prevent hitching when the sound loads. @aframe
+* @example <a-entity n-sound='res: effects/fanfare-start; on: begin'></a-entity>
 */
 class NSound extends NativeComponent
 {
@@ -173,29 +174,21 @@ class NSound extends NativeComponent
 
 	/**
 	* Stop the playing sound, and preserve position in clip.
+	* @fires module:altspace/components.n-sound#sound-paused
 	*/
 	pauseSound() {
 		this.callComponent('pause');
 
-		/**
-		* Emitted when the sound stops playing
-		* @event sound-paused
-		* @memberof module:altspace/components.NSound
-		*/
 		this.el.emit('sound-paused');
 	}
 
 	/**
 	* Start the sound playing.
+	* @fires module:altspace/components.n-sound#sound-played
 	*/
 	playSound() {
 		this.callComponent('play');
 
-		/**
-		* Emitted when the sound starts playing
-		* @event sound-played
-		* @memberof module:altspace/components.NSound
-		*/
 		this.el.emit('sound-played');
 	}
 
@@ -209,9 +202,18 @@ class NSound extends NativeComponent
 }
 
 /**
+* Emitted when the sound stops playing
+* @event module:altspace/components.n-sound#sound-paused
+*/
+
+/**
+* Emitted when the sound starts playing
+* @event module:altspace/components.n-sound#sound-played
+*/
+
+/**
 * Fired when a sound has loaded and is ready to be played
-* @event n-sound-loaded
-* @memberof module:altspace/components.NSound
+* @event module:altspace/components.n-sound#n-sound-loaded
 */
 
 export default NSound;
