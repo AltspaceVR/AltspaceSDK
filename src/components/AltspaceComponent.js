@@ -16,7 +16,7 @@ import {safeDeepSet} from './utilities';
 * @example
 * <head>
 *   <title>My A-Frame Scene</title>
-*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 *   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v{{SDK_VERSION}}/dist/altspace.min.js"></script>
 * </head>
 * <body>

@@ -23,7 +23,7 @@ This is a fully functional example of what A-Frame code looks like.
 ```html
 <!DOCTYPE html>
 <html><head>
-<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+<script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 <script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>
 <script>
 

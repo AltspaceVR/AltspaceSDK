@@ -3,12 +3,13 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Enables the synchronization of properties of the entity. Must be used in
+* @name module:altspace/components.sync
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Enables the synchronization of properties of the entity. Must be used in
 * conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
 * specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
-* @alias sync
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
+* @example <a-box random-color sync='own-on: click' sync-color></a-box>
 */
 class SyncComponent extends AFrameComponent
 {
@@ -102,6 +103,10 @@ class SyncComponent extends AFrameComponent
 			return;
 		}
 
+		/**
+		 * @event connected
+		 * @memberof module:altspace/components.sync
+		 */
 		this.isConnected = true;
 		this.el.emit('connected', null, false);
 	}

@@ -2,7 +2,7 @@
 
 /**
 * Stubs out the A-Frame "system" concept.
-* @see {@link https://aframe.io/docs/0.3.0/core/systems.html}
+* @see {@link https://aframe.io/docs/0.7.0/core/systems.html}
 * @memberof module:altspace/components
 */
 class AFrameSystem
@@ -19,7 +19,7 @@ class AFrameSystem
 
 /**
 * Stubs out the A-Frame "component" concept.
-* @see {@link https://aframe.io/docs/0.3.0/core/component.html}
+* @see {@link https://aframe.io/docs/0.7.0/core/component.html}
 * @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */

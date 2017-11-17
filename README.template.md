@@ -81,7 +81,7 @@ $ netsh interface portproxy add v4tov4 protocol=tcp listenport=9222 listenaddres
 
 ## Graphics Feature Support
 
-AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame version 0.3.0 is currently the only version supported.
+AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame versions 0.3.0 and 0.7.0 are the only versions tested and known to work, though others may as well.
 
 **Currently supported:**
 * Object3D transformation and hierarchy
