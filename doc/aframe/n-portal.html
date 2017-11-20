@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>n-portal - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script>
+        function saveVerticalScrollPosition(evt){
+            window.localStorage.setItem('navscrollpos', evt.target.scrollTop);
+        }
+        function loadVerticalScrollPosition(){
+            var nav = document.querySelector('nav');
+            nav.scrollTop = window.localStorage.getItem('navscrollpos');
+        }
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav onscroll='saveVerticalScrollPosition(event)'>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-altspace_components.html">altspace/components</a></li><li><a href="module-altspace_resources.html">altspace/resources</a></li></ul><h3>Classes</h3><ul><li><a href="module-altspace_components.AFrameComponent.html">AFrameComponent</a></li><li><a href="module-altspace_components.AFrameSystem.html">AFrameSystem</a></li><li><a href="altspace.html">altspace</a></li><li><a href="altspace-cursor-collider.html">altspace-cursor-collider</a></li><li><a href="altspace-tracked-controls.html">altspace-tracked-controls</a></li><li><a href="instantiator.html">instantiator</a></li><li><a href="n-billboard.html">n-billboard</a></li><li><a href="n-box-collider.html">n-box-collider</a></li><li><a href="n-capsule-collider.html">n-capsule-collider</a></li><li><a href="n-cockpit-parent.html">n-cockpit-parent</a></li><li><a href="n-container.html">n-container</a></li><li><a href="n-layout-browser.html">n-layout-browser</a></li><li><a href="n-mesh-collider.html">n-mesh-collider</a></li><li><a href="n-object.html">n-object</a></li><li><a href="n-portal.html">n-portal</a></li><li><a href="n-skeleton-parent.html">n-skeleton-parent</a></li><li><a href="n-sound.html">n-sound</a><ul class='methods'><li data-type='method'><a href="n-sound.html#pauseSound">pauseSound</a></li><li data-type='method'><a href="n-sound.html#playSound">playSound</a></li><li data-type='method'><a href="n-sound.html#seek">seek</a></li></ul></li><li><a href="n-spawner.html">n-spawner</a></li><li><a href="n-sphere-collider.html">n-sphere-collider</a></li><li><a href="n-text.html">n-text</a></li><li><a href="module-altspace_components.NativeComponent.html">NativeComponent</a></li><li><a href="module-altspace_components.NCollider.html">NCollider</a></li><li><a href="one-per-user.html">one-per-user</a></li><li><a href="sync.html">sync</a></li><li><a href="sync-color.html">sync-color</a></li><li><a href="sync-n-skeleton-parent.html">sync-n-skeleton-parent</a></li><li><a href="sync-n-sound.html">sync-n-sound</a></li><li><a href="sync-system.html">sync-system</a><ul class='methods'><li data-type='method'><a href="sync-system.html#instantiate">instantiate</a></li><li data-type='method'><a href="sync-system.html#removeLast">removeLast</a></li></ul></li><li><a href="sync-transform.html">sync-transform</a></li><li><a href="wire.html">wire</a></li></ul><h3>Events</h3><ul><li><a href="module-altspace_components.sync-system.html#event:clientjoined">clientjoined</a></li><li><a href="module-altspace_components.sync-system.html#event:clientleft">clientleft</a></li><li><a href="module-altspace_components.sync-system.html#event:connected">connected</a></li><li><a href="module-altspace_components.n-container.html#.event:container-count-changed">container-count-changed</a></li><li><a href="module-altspace_components.n-container.html#.event:container-empty">container-empty</a></li><li><a href="module-altspace_components.n-container.html#.event:container-full">container-full</a></li><li><a href="module-altspace_components.NSound.html#.event:n-sound-loaded">n-sound-loaded</a></li><li><a href="module-altspace_components.NSound.html#.event:sound-paused">sound-paused</a></li><li><a href="module-altspace_components.NSound.html#.event:sound-played">sound-played</a></li><li><a href="module-altspace_components.NCollider.html#.event:triggerenter">triggerenter</a></li><li><a href="module-altspace_components.NCollider.html#.event:triggerexit">triggerexit</a></li></ul>
+</nav>
+<script>loadVerticalScrollPosition()</script>
+
+<div id="main">
+    
+    <h1 class="page-title">n-portal</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a></span>
+        
+        n-portal
+        </h2>
+        
+            <div class="class-description"><p>Spawn a portal that allows you to travel to a different space or a different location in the current space.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="module-altspace_components.NativeComponent.html">module:altspace/components.NativeComponent</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
