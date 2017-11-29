@@ -3,10 +3,10 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* Attach a given native object to this entity. @aframe
-* @alias n-object
-* @memberof module:altspace/components
+* @name module:altspace/components.n-object
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Attach a given native object to this entity. @aframe
 * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
 */
 class NObject extends NativeComponent {
@@ -26,12 +26,12 @@ class NObject extends NativeComponent {
 }
 
 /**
-* Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
+* @name module:altspace/components.n-spawner
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 * These copies will be physically interactive and automatically synchronized
 * between users. @aframe
-* @alias n-spawner
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
 * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
 */
 class NSpawner extends NativeComponent {
@@ -50,91 +50,25 @@ class NSpawner extends NativeComponent {
 	}
 }
 
+
 /**
-* Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
-* This text will be clearer than texture-based text and more performant than geometry-based test. @aframe
-* @alias n-text
-* @memberof module:altspace/components
+* @name module:altspace/components.n-billboard
+* @class
 * @extends module:altspace/components.NativeComponent
-*/
-class NText extends NativeComponent {
-	constructor(){ super('n-text'); }
-	get schema(){
-		return {
-			/**
-			* The text to be drawn.
-			* @instance
-			* @member {string} text
-			* @memberof module:altspace/components.n-text
-			*/
-			text: { default: '', type: 'string' },
-
-			/**
-			* The height of the letters. 10pt ~= 1m
-			* @instance
-			* @member {int} fontSize
-			* @default 10
-			* @memberof module:altspace/components.n-text
-			*/
-			fontSize: { default: '10', type: 'int' },//roughly a meter tall
-
-			/**
-			* The width of the text area in meters. If the
-			* text is wider than this value, the overflow will be wrapped to the next line.
-			* @instance
-			* @member {number} width
-			* @default 10
-			* @memberof module:altspace/components.n-text
-			*/
-			width: { default: '10', type: 'number' },//in meters
-
-			/**
-			* The height of the text area in meters. If the
-			* text is taller than this value, the overflow will be cut off.
-			* @instance
-			* @member {number} height
-			* @default 1
-			* @memberof module:altspace/components.n-text
-			*/
-			height: { default: '1', type: 'number' },//in meters
-
-			/**
-			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.
-			* @instance
-			* @member {string} horizontalAlign
-			* @default "middle"
-			* @memberof module:altspace/components.n-text
-			*/
-			horizontalAlign: { default: 'middle'},
-
-			/**
-			* The vertical anchor point for the text. Can be `top`, `middle`, or `bottom`.
-			* @instance
-			* @member {string} verticalAlign
-			* @default "middle"
-			* @memberof module:altspace/components.n-text
-			*/
-			verticalAlign: { default: 'middle'}
-		};
-	}
-}
-
-/**
-* Make the object's +Z always face the viewer. Currently will only directly apply
+* @classdesc Make the object's +Z always face the viewer. Currently will only directly apply
 * to main mesh or native component on the attached entity, not any children or submeshes. @aframe
-* @alias n-billboard
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
+* @example <a-image src='#tree' n-billboard></a-image>
 */
 class NBillboard extends NativeComponent {
 	constructor(){ super('n-billboard', false); }
 }
 
 /**
-* Parents an entity to a joint on the avatar skeleton. @aframe
-* @alias n-skeleton-parent
-* @memberof module:altspace/components
+* @name module:altspace/components.n-skeleton-parent
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Parents an entity to a joint on the avatar skeleton. @aframe
+* @example <a-sphere n-skeleton-parent='part: head'></a-sphere>
 */
 class NSkeletonParent extends NativeComponent {
 	constructor(){ super('n-skeleton-parent'); }
@@ -171,13 +105,16 @@ class NSkeletonParent extends NativeComponent {
 }
 
 /**
-* Parents an entity to the cockpit. @aframe
-* @alias n-cockpit-parent
-* @memberof module:altspace/components
+* 
+* @name module:altspace/components.n-cockpit-parent
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Parents an entity to the cockpit, i.e. the player's HUD. This is primarily used for UI elements.
+* Note that this does not dock the items to the radial menu. If you want that, use [altspace.open](../js/module-altspace.html#.open). @aframe
+* @example <a-image src='#button' n-cockpit-parent></a-image>
 */
 class NCockpitParent extends NativeComponent {
 	constructor(){ super('n-cockpit-parent', false); }
 }
 
-export {NObject, NSpawner, NText, NBillboard, NSkeletonParent, NCockpitParent};
+export {NObject, NSpawner, NBillboard, NSkeletonParent, NCockpitParent};

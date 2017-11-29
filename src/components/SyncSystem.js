@@ -3,13 +3,14 @@
 import {AFrameSystem} from './AFrameComponent';
 
 /**
-* Connect to a remote Firebase server, and facilitate synchronization. These
-* options correspond exactly with the configuration options for
-* [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
-* This component must be present on `a-scene` for any other sync components to work. @aframe
-* @alias sync-system
+* @name module:altspace/components.sync-system
+* @class
 * @extends module:altspace/components.AFrameSystem
-* @memberof module:altspace/components
+* @classdesc Connect to a remote Firebase server, and facilitate synchronization. These
+* options correspond exactly with the configuration options for
+* [altspace.utilities.sync.connect]{@link ../js/module-altspace_utilities_sync.html#.connect}.
+* This component must be present on `a-scene` for any other sync components to work. @aframe
+* @example <a-scene sync-system='app: Testing; author: Altspace' altspace></a-scene>
 */
 class SyncSystem extends AFrameSystem
 {
@@ -21,7 +22,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} author
 			* @memberof module:altspace/components.sync-system
 			*/
-			author: { type: 'string', default: null },
+			author: { type: 'string' },
 
 			/**
 			* The name of the app.
@@ -29,7 +30,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} app
 			* @memberof module:altspace/components.sync-system
 			*/
-			app: { type: 'string', default: null },
+			app: { type: 'string' },
 
 			/**
 			* Override the instance ID. Can also be overridden with a URL parameter.
@@ -37,7 +38,7 @@ class SyncSystem extends AFrameSystem
 			* @member {string} instance
 			* @memberof module:altspace/components.sync-system
 			*/
-			instance: { type: 'string', default: null },
+			instance: { type: 'string' },
 
 			/**
 			* Override the base reference. Set this to use your own Firebase.
@@ -45,13 +46,14 @@ class SyncSystem extends AFrameSystem
 			* @member {string} refUrl
 			* @memberof module:altspace/components.sync-system
 			*/
-			refUrl: { type: 'string', default: null }
+			refUrl: { type: 'string' }
 		};
 	}
 
 	/**
 	* True if the sync system is connected and ready for syncing.
-	* @member {boolean} module:altspace/components.sync-system#isConnected
+	* @member {boolean} isConnected
+	* @memberof module:altspace/components.sync-system
 	* @readonly
 	*/
 
@@ -189,6 +191,8 @@ class SyncSystem extends AFrameSystem
 	/**
 	* Instantiate an entity with the given mixins. Instantiated entities that belong to the current user are given a
 	* "mine" class name, so that they can be selected against.
+	* @instance
+	* @method module:altspace/components.sync-system#instantiate
 	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.

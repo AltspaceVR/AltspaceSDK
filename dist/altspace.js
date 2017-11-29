@@ -277,7 +277,7 @@ Please = Please && Please.hasOwnProperty('default') ? Please['default'] : Please
 
 /**
 * Stubs out the A-Frame "system" concept.
-* @see {@link https://aframe.io/docs/0.3.0/core/systems.html}
+* @see {@link https://aframe.io/docs/0.7.0/core/systems.html}
 * @memberof module:altspace/components
 */
 var AFrameSystem = function AFrameSystem () {};
@@ -297,7 +297,7 @@ Object.defineProperties( AFrameSystem.prototype, prototypeAccessors );
 
 /**
 * Stubs out the A-Frame "component" concept.
-* @see {@link https://aframe.io/docs/0.3.0/core/component.html}
+* @see {@link https://aframe.io/docs/0.7.0/core/component.html}
 * @extends module:altspace/components.AFrameSystem
 * @memberof module:altspace/components
 */
@@ -362,10 +362,11 @@ function safeDeepSet(obj, keys, value)
 'use strict';
 
 /**
-* Enable or disable cursor collision on the object. @aframe
-* @alias altspace-cursor-collider
-* @memberof module:altspace/components
+* @name module:altspace/components.altspace-cursor-collider
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Enable or disable cursor collision on the object. @aframe
+* @example <a-box altspace-cursor-collider='enabled: false'></a-box>
 */
 var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 	function AltspaceCursorCollider () {
@@ -388,7 +389,7 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 			* @default true
 			* @memberof module:altspace/components.altspace-cursor-collider
 			*/
-			enabled: {type: 'boolean', default: 'true'}
+			enabled: {type: 'boolean', default: true}
 		};
 	};
 
@@ -428,11 +429,11 @@ var AltspaceCursorCollider = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Enables tracked control support for A-Frame applications that use the built-in
-* `tracked-controls`, `vive-controls` or `hand-controls` components. @aframe
-* @alias altspace-tracked-controls
+* @name module:altspace/components.altspace-tracked-controls
+* @class
 * @extends module:altspace/components.AFrameComponent
-* @memberof module:altspace/components
+* @classdesc Enables tracked control support for A-Frame applications that use the built-in
+* `tracked-controls`, `vive-controls` or `hand-controls` components. @aframe
 */
 var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 	function AltspaceTrackedControls () {
@@ -487,15 +488,19 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
+* @name module:altspace/components.altspace
+* @class
+* @extends module:altspace/components.AFrameComponent
+
+* @classdesc The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: This component can have side-effects on some default components. To be
-* safe, this component should be specified last.
+* safe, this component should be specified last. @aframe
 *
 * @example
 * <head>
 *   <title>My A-Frame Scene</title>
-*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 *   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.2/dist/altspace.min.js"></script>
 * </head>
 * <body>
@@ -503,10 +508,6 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 *     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
 *   </a-scene>
 * </body>
-*
-* @alias altspace
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
 */
 var AltspaceComponent = (function (AFrameComponent$$1) {
 	function AltspaceComponent () {
@@ -530,7 +531,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			usePixelScale: { type: 'boolean', default: 'false'},
+			usePixelScale: { type: 'boolean', default: false},
 
 			/**
 			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
@@ -548,7 +549,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			* @default true
 			* @memberof module:altspace/components.altspace
 			*/
-			enclosuresOnly: { type: 'boolean', default: 'true'},
+			enclosuresOnly: { type: 'boolean', default: true},
 
 			/**
 			* Puts the app into fullspace mode.
@@ -557,7 +558,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			fullspace: { type: 'boolean', default: 'false'}
+			fullspace: { type: 'boolean', default: false}
 		}
 	};
 
@@ -653,8 +654,10 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		renderer.getPixelRatio = noop;
 		renderer.getMaxAnisotropy = noop;
 		renderer.setFaceCulling = noop;
+		renderer.submitFrame = noop;
 		renderer.context = {canvas: {}};
 		renderer.shadowMap = {};
+		renderer.requestAnimationFrame = window.requestAnimationFrame;
 	};
 
 	/*
@@ -765,12 +768,13 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Sync the color property of the object between clients.
+* @name module:altspace/components.sync-color
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Sync the color property of the object between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
-* @alias sync-color
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
+* @example <a-box random-color sync='own-on: click' sync-color></a-box>
 */
 
 var SyncColor = (function (AFrameComponent$$1) {
@@ -840,12 +844,13 @@ var SyncColor = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Enables the synchronization of properties of the entity. Must be used in
+* @name module:altspace/components.sync
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Enables the synchronization of properties of the entity. Must be used in
 * conjuction with the [sync-system]{@link module:altspace/components.sync-system} component and a component for a
 * specific property (e.g. [sync-transform]{@link module:altspace/components.sync-transform}). @aframe
-* @alias sync
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
+* @example <a-box random-color sync='own-on: click' sync-color></a-box>
 */
 var SyncComponent = (function (AFrameComponent$$1) {
 	function SyncComponent () {
@@ -952,6 +957,11 @@ var SyncComponent = (function (AFrameComponent$$1) {
 			return;
 		}
 
+		/**
+		 * @event connected
+		 * @memberof module:altspace/components.sync
+		 * Fired when the connection with the sync server is established.
+		 */
 		this.isConnected = true;
 		this.el.emit('connected', null, false);
 	};
@@ -1015,13 +1025,14 @@ var SyncComponent = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Connect to a remote Firebase server, and facilitate synchronization. These
-* options correspond exactly with the configuration options for
-* [altspace.utilities.sync.connect]{@link module:altspace/utilities/sync.connect}.
-* This component must be present on `a-scene` for any other sync components to work. @aframe
-* @alias sync-system
+* @name module:altspace/components.sync-system
+* @class
 * @extends module:altspace/components.AFrameSystem
-* @memberof module:altspace/components
+* @classdesc Connect to a remote Firebase server, and facilitate synchronization. These
+* options correspond exactly with the configuration options for
+* [altspace.utilities.sync.connect]{@link ../js/module-altspace_utilities_sync.html#.connect}.
+* This component must be present on `a-scene` for any other sync components to work. @aframe
+* @example <a-scene sync-system='app: Testing; author: Altspace' altspace></a-scene>
 */
 var SyncSystem = (function (AFrameSystem$$1) {
 	function SyncSystem () {
@@ -1042,7 +1053,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} author
 			* @memberof module:altspace/components.sync-system
 			*/
-			author: { type: 'string', default: null },
+			author: { type: 'string' },
 
 			/**
 			* The name of the app.
@@ -1050,7 +1061,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} app
 			* @memberof module:altspace/components.sync-system
 			*/
-			app: { type: 'string', default: null },
+			app: { type: 'string' },
 
 			/**
 			* Override the instance ID. Can also be overridden with a URL parameter.
@@ -1058,7 +1069,7 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} instance
 			* @memberof module:altspace/components.sync-system
 			*/
-			instance: { type: 'string', default: null },
+			instance: { type: 'string' },
 
 			/**
 			* Override the base reference. Set this to use your own Firebase.
@@ -1066,13 +1077,14 @@ var SyncSystem = (function (AFrameSystem$$1) {
 			* @member {string} refUrl
 			* @memberof module:altspace/components.sync-system
 			*/
-			refUrl: { type: 'string', default: null }
+			refUrl: { type: 'string' }
 		};
 	};
 
 	/**
 	* True if the sync system is connected and ready for syncing.
-	* @member {boolean} module:altspace/components.sync-system#isConnected
+	* @member {boolean} isConnected
+	* @memberof module:altspace/components.sync-system
 	* @readonly
 	*/
 
@@ -1212,6 +1224,8 @@ var SyncSystem = (function (AFrameSystem$$1) {
 	/**
 	* Instantiate an entity with the given mixins. Instantiated entities that belong to the current user are given a
 	* "mine" class name, so that they can be selected against.
+	* @instance
+	* @method module:altspace/components.sync-system#instantiate
 	* @param {string} mixin - A comma-separated list of mixin ids which should be used to instantiate the entity.
 	* @param {Element} [parent] - An element to which the entity should be added. Defaults to the scene.
 	* @param {Element} [el] - The element responsible for instantiating this entity.
@@ -1342,12 +1356,12 @@ function throttle(func, wait, options) {
 
 
 /**
-* Synchronize the position, rotation, and scale of this object with all clients.
+* @name module:altspace/components.sync-transform
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Synchronize the position, rotation, and scale of this object with all clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
-* @alias sync-transform
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
 * @example
 * <a-scene sync-system='app: myapp; author: name'>
 *     <a-box move-it-around sync sync-transform></a-box>
@@ -1451,12 +1465,12 @@ var SyncTransform = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
+* @name module:altspace/components.sync-n-sound
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
-* @alias sync-n-sound
-* @extends module:altspace/components.AFrameComponent
-* @memberof module:altspace/components
 */
 var SyncNSound = (function (AFrameComponent$$1) {
 	function SyncNSound () {
@@ -1557,10 +1571,13 @@ var SyncNSound = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Syncs the attributes of an n-skeleton-parent component across clients @aframe
-* @alias sync-n-skeleton-parent
-* @memberof module:altspace/components
+* @name module:altspace/components.sync-n-skeleton-parent
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Syncs the attributes of an [n-skeleton-parent]{@link module:altspace/components.n-skeleton-parent} component across clients.
+* Requires the [sync]{@link module:altspace/components.sync} component be present
+* on the entity. @aframe
+* @example <a-box n-skeleton-parent='userId: 123123123123;' sync sync-n-skeleton-parent></a-box>
 */
 
 var SyncNSkeletonParent = (function (AFrameComponent$$1) {
@@ -1625,11 +1642,13 @@ var SyncNSkeletonParent = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* The wire component allows you to trigger an event on another entity when an event
-* occurs on an entity. If no targets are selected, it will target itself. @aframe
-* @alias wire
-* @memberof module:altspace/components
+* @name module:altspace/components.wire
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc The wire component allows you to trigger an event on one entity when an event
+* occurs on the another entity. If no targets are selected, it will target itself. @aframe
+* @example <a-box id='proxy' wire='on: click; emit: click; target: #otherbox></a-box>
+* <a-box id='otherbox' random-color></a-box>
 **/
 
 var Wire = (function (AFrameComponent$$1) {
@@ -1786,10 +1805,12 @@ var Wire = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Instantiates an entity for each user using [sync-system]{@link sync.sync-system}. @aframe
-* @alias one-per-user
-* @memberof module:altspace/components
+* @name module:altspace/components.one-per-user
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Instantiates an entity for every user in the space using [sync-system]{@link module:altspace/components.sync-system}. @aframe
+* @example <a-mixin id='handbox' n-skeleton-parent='part: hand; side: right' geometry='primitive: box;'></a-mixin>
+* <a-entity one-per-user='mixin: #handbox'></a-entity>
 */
 var OnePerUser = (function (AFrameComponent$$1) {
 	function OnePerUser () {
@@ -1837,11 +1858,14 @@ var OnePerUser = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
-* The instantiated objects are built using the specified mixins. @aframe
-* @alias instantiator
-* @memberof module:altspace/components
+* @name module:altspace/components.instantiator
+* @class
 * @extends module:altspace/components.AFrameComponent
+* @classdesc Instantiates objects on an event trigger, adds them to the scene and syncs their creation across clients.
+* The instantiated objects are built using the specified mixins. @aframe
+* @example <!-- attaches a ball to your head if you click the box -->
+* <a-mixin id='headbox' geometry='primitive:sphere;' n-skeleton-parent='part: head'></a-mixin>
+* <a-box instantiator='on: click; mixin: headbox;'></a-box>
 */
 var Instantiator = (function (AFrameComponent$$1) {
 	function Instantiator () {
@@ -1897,7 +1921,7 @@ var Instantiator = (function (AFrameComponent$$1) {
 		* @default true
 		* @memberof module:altspace/components.instantiator
 		*/
-		removeLast: {type: 'boolean', default: 'true'},
+		removeLast: {type: 'boolean', default: true},
 	}; };
 
 	Instantiator.prototype.init = function init () {
@@ -2026,10 +2050,10 @@ var NativeComponent = (function (AFrameComponent$$1) {
 'use strict';
 
 /**
-* Attach a given native object to this entity. @aframe
-* @alias n-object
-* @memberof module:altspace/components
+* @name module:altspace/components.n-object
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Attach a given native object to this entity. @aframe
 * @example <a-entity n-object='res:architecture/wall-4w-4h'></a-entity>
 */
 var NObject = (function (NativeComponent$$1) {
@@ -2059,12 +2083,12 @@ var NObject = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
-* Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
+* @name module:altspace/components.n-spawner
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Create an object that spawns additional copies of itself when grabbed by a user (the copies are not spawners themselves).
 * These copies will be physically interactive and automatically synchronized
 * between users. @aframe
-* @alias n-spawner
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
 * @example <a-entity n-spawner='res: interactables/basketball'></a-entity>
 */
 var NSpawner = (function (NativeComponent$$1) {
@@ -2093,91 +2117,14 @@ var NSpawner = (function (NativeComponent$$1) {
 	return NSpawner;
 }(NativeComponent));
 
+
 /**
-* Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
-* This text will be clearer than texture-based text and more performant than geometry-based test. @aframe
-* @alias n-text
-* @memberof module:altspace/components
+* @name module:altspace/components.n-billboard
+* @class
 * @extends module:altspace/components.NativeComponent
-*/
-var NText = (function (NativeComponent$$1) {
-	function NText(){ NativeComponent$$1.call(this, 'n-text'); }
-
-	if ( NativeComponent$$1 ) NText.__proto__ = NativeComponent$$1;
-	NText.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
-	NText.prototype.constructor = NText;
-
-	var prototypeAccessors$2 = { schema: {} };
-	prototypeAccessors$2.schema.get = function (){
-		return {
-			/**
-			* The text to be drawn.
-			* @instance
-			* @member {string} text
-			* @memberof module:altspace/components.n-text
-			*/
-			text: { default: '', type: 'string' },
-
-			/**
-			* The height of the letters. 10pt ~= 1m
-			* @instance
-			* @member {int} fontSize
-			* @default 10
-			* @memberof module:altspace/components.n-text
-			*/
-			fontSize: { default: '10', type: 'int' },//roughly a meter tall
-
-			/**
-			* The width of the text area in meters. If the
-			* text is wider than this value, the overflow will be wrapped to the next line.
-			* @instance
-			* @member {number} width
-			* @default 10
-			* @memberof module:altspace/components.n-text
-			*/
-			width: { default: '10', type: 'number' },//in meters
-
-			/**
-			* The height of the text area in meters. If the
-			* text is taller than this value, the overflow will be cut off.
-			* @instance
-			* @member {number} height
-			* @default 1
-			* @memberof module:altspace/components.n-text
-			*/
-			height: { default: '1', type: 'number' },//in meters
-
-			/**
-			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.
-			* @instance
-			* @member {string} horizontalAlign
-			* @default "middle"
-			* @memberof module:altspace/components.n-text
-			*/
-			horizontalAlign: { default: 'middle'},
-
-			/**
-			* The vertical anchor point for the text. Can be `top`, `middle`, or `bottom`.
-			* @instance
-			* @member {string} verticalAlign
-			* @default "middle"
-			* @memberof module:altspace/components.n-text
-			*/
-			verticalAlign: { default: 'middle'}
-		};
-	};
-
-	Object.defineProperties( NText.prototype, prototypeAccessors$2 );
-
-	return NText;
-}(NativeComponent));
-
-/**
-* Make the object's +Z always face the viewer. Currently will only directly apply
+* @classdesc Make the object's +Z always face the viewer. Currently will only directly apply
 * to main mesh or native component on the attached entity, not any children or submeshes. @aframe
-* @alias n-billboard
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
+* @example <a-image src='#tree' n-billboard></a-image>
 */
 var NBillboard = (function (NativeComponent$$1) {
 	function NBillboard(){ NativeComponent$$1.call(this, 'n-billboard', false); }
@@ -2190,10 +2137,11 @@ var NBillboard = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
-* Parents an entity to a joint on the avatar skeleton. @aframe
-* @alias n-skeleton-parent
-* @memberof module:altspace/components
+* @name module:altspace/components.n-skeleton-parent
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Parents an entity to a joint on the avatar skeleton. @aframe
+* @example <a-sphere n-skeleton-parent='part: head'></a-sphere>
 */
 var NSkeletonParent = (function (NativeComponent$$1) {
 	function NSkeletonParent(){ NativeComponent$$1.call(this, 'n-skeleton-parent'); }
@@ -2202,8 +2150,8 @@ var NSkeletonParent = (function (NativeComponent$$1) {
 	NSkeletonParent.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
 	NSkeletonParent.prototype.constructor = NSkeletonParent;
 
-	var prototypeAccessors$3 = { schema: {} };
-	prototypeAccessors$3.schema.get = function (){ return {
+	var prototypeAccessors$2 = { schema: {} };
+	prototypeAccessors$2.schema.get = function (){ return {
 		/**
 		* One of 'eye, 'head', 'neck', 'spine', 'hips', 'upper-leg', 'lower-leg',
 		* 'foot', 'toes', 'shoulder', 'upper-arm', 'lower-arm', 'hand', 'thumb',
@@ -2234,16 +2182,19 @@ var NSkeletonParent = (function (NativeComponent$$1) {
 		userId: {type: 'string'}
 	}; };
 
-	Object.defineProperties( NSkeletonParent.prototype, prototypeAccessors$3 );
+	Object.defineProperties( NSkeletonParent.prototype, prototypeAccessors$2 );
 
 	return NSkeletonParent;
 }(NativeComponent));
 
 /**
-* Parents an entity to the cockpit. @aframe
-* @alias n-cockpit-parent
-* @memberof module:altspace/components
+* 
+* @name module:altspace/components.n-cockpit-parent
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Parents an entity to the cockpit, i.e. the player's HUD. This is primarily used for UI elements.
+* Note that this does not dock the items to the radial menu. If you want that, use [altspace.open](../js/module-altspace.html#.open). @aframe
+* @example <a-image src='#button' n-cockpit-parent></a-image>
 */
 var NCockpitParent = (function (NativeComponent$$1) {
 	function NCockpitParent(){ NativeComponent$$1.call(this, 'n-cockpit-parent', false); }
@@ -2258,14 +2209,15 @@ var NCockpitParent = (function (NativeComponent$$1) {
 'use strict';
 
 /**
-* Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
+* @name module:altspace/components.n-collider
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
 * [n-box-collider]{@link module:altspace/components.n-box-collider},
 * [n-capsule-collider]{@link module:altspace/components.n-capsule-collider},
 * and [n-mesh-collider]{@link module:altspace/components.n-mesh-collider}. You cannot use
 * this class directly, but instead you should add one of those components
-* to your objects.
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
+* to your objects. @aframe
 */
 var NCollider = (function (NativeComponent$$1) {
 	function NCollider () {
@@ -2285,7 +2237,7 @@ var NCollider = (function (NativeComponent$$1) {
 			* @instance
 			* @member {vec3} center
 			* @default [0, 0, 0]
-			* @memberof module:altspace/components.NCollider
+			* @memberof module:altspace/components.n-collider
 			*/
 			center: { type: 'vec3' },
 
@@ -2298,7 +2250,7 @@ var NCollider = (function (NativeComponent$$1) {
 			* @instance
 			* @member {string} type
 			* @default "hologram"
-			* @memberof module:altspace/components.NCollider
+			* @memberof module:altspace/components.n-collider
 			*/
 			type: { type: 'string', default: 'object' },
 
@@ -2309,7 +2261,7 @@ var NCollider = (function (NativeComponent$$1) {
 			* @instance
 			* @member {boolean} isTrigger
 			* @default false
-			* @memberof module:altspace/components.NCollider
+			* @memberof module:altspace/components.n-collider
 			*/
 			isTrigger: { default: false, type: 'boolean' }
 		};
@@ -2322,19 +2274,20 @@ var NCollider = (function (NativeComponent$$1) {
 
 /**
 * Fired when an object enters a trigger volume, e.g. `isTrigger: true`
-* @event module:altspace/components.NCollider.triggerenter
+* @event module:altspace/components.n-collider.triggerenter
 */
 
 /**
 * Fired when an object leaves a trigger volume, e.g. `isTrigger: true`
-* @event module:altspace/components.NCollider.triggerexit
+* @event module:altspace/components.n-collider.triggerexit
 */
 
 /**
-* A sphere-shaped collider. @aframe
-* @alias n-sphere-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @name module:altspace/components.n-sphere-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Creates a sphere-shaped collider of the given radius. Collides with
+* the cursor or avatars depending on the [type]{@link module:altspace/components.n-sphere-collider#type} property. @aframe
 * @example <a-sphere radius=1 n-sphere-collider='radius: 1; type: object;'></a-sphere>
 */
 var NSphereCollider = (function (NCollider) {
@@ -2364,10 +2317,12 @@ var NSphereCollider = (function (NCollider) {
 }(NCollider));
 
 /**
-* Create a box-shaped collider on this entity. @aframe
-* @alias n-box-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @name module:altspace/components.n-box-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Creates a box-shaped collider with the given dimensions. Collides with
+* the cursor or avatars depending on the [type]{@link module:altspace/components.n-box-collider#type} property. @aframe
+* @example <a-box n-box-collider='type: environment; size: 1, 0.5, 1'></a-box>
 */
 var NBoxCollider = (function (NCollider) {
 	function NBoxCollider(){ NCollider.call(this, 'n-box-collider'); }
@@ -2386,7 +2341,7 @@ var NBoxCollider = (function (NCollider) {
 			* @default [1, 1, 1]
 			* @memberof module:altspace/components.n-box-collider
 			*/
-			size: { type: 'vec3', default: '1 1 1' }
+			size: { type: 'vec3', default: {x:1,y:1,z:1} }
 		};
 	};
 
@@ -2396,11 +2351,13 @@ var NBoxCollider = (function (NCollider) {
 }(NCollider));
 
 /**
-* Create a capsule-shaped collider on this entity. Capsules
-* are a union of a cylinder and two spheres on top and bottom. @aframe
-* @alias n-capsule-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @name module:altspace/components.n-capsule-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Create a capsule-shaped collider on this entity. Capsules
+* are a union of a cylinder and two hemispheres on top and bottom. Collides with
+* the cursor or avatars depending on the [type]{@link module:altspace/components.n-capsule-collider#type} property. @aframe
+* @example <a-cylinder n-capsule-collider='type: environment'></a-cylinder>
 */
 var NCapsuleCollider = (function (NCollider) {
 	function NCapsuleCollider(){ NCollider.call(this, 'n-capsule-collider'); }
@@ -2420,7 +2377,7 @@ var NCapsuleCollider = (function (NCollider) {
 			* @default 1
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			radius: { default: '0', type: 'number' },
+			radius: { default: 0, type: 'number' },
 
 			/**
 			* The height of the shaft of the capsule in meters.
@@ -2429,7 +2386,7 @@ var NCapsuleCollider = (function (NCollider) {
 			* @default 0
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			height: { default: '0', type: 'number' },
+			height: { default: 0, type: 'number' },
 
 			/**
 			* The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.
@@ -2448,13 +2405,13 @@ var NCapsuleCollider = (function (NCollider) {
 }(NCollider));
 
 /**
-* Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
+* @name module:altspace/components.n-mesh-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
 * low-poly meshes. If using this alongside the `geometry` component, make sure that
 * `geometry` comes before this component. @aframe
-* @example <a-box n-mesh-collider></a-box>
-* @alias n-mesh-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @example <a-entity gltf-model='#building' n-mesh-collider='type: environment'></a-entity>
 */
 var NMeshCollider = (function (NCollider) {
 	function NMeshCollider(mesh, data){
@@ -2477,13 +2434,13 @@ var NMeshCollider = (function (NCollider) {
 			/**
 			* Whether the collider should be convex or concave. Set this to false if you have holes
 			* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
-			* expensive compared to convex colliders.
+			* expensive to evaluate compared to convex colliders, so should be used sparingly.
 			* @instance
 			* @member {boolean} convex
 			* @default true
 			* @memberof module:altspace/components.n-mesh-collider
 			*/
-			convex: { type: 'boolean', default: 'true' }
+			convex: { type: 'boolean', default: true }
 		};
 	};
 
@@ -2546,15 +2503,14 @@ var NMeshCollider = (function (NCollider) {
 'use strict';
 
 /**
-* A container keeps a running tally of how many objects are within
+* @name module:altspace/components.n-container
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc A container keeps a running tally of how many objects are within
 * its bounds, and adds and removes the states `container-full` and
 * `container-empty` based on the current count of objects. Requires a native
 * collider component set to trigger mode. @aframe
-* @alias n-container
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
-* @example
-* <a-box n-box-collider="isTrigger: true" n-container="capacity: 6"></a-box>
+* @example <a-box n-box-collider="isTrigger: true" n-container="capacity: 6"></a-box>
 */
 var NContainer = (function (NativeComponent$$1) {
 	function NContainer(){ NativeComponent$$1.call(this, 'n-container'); }
@@ -2586,7 +2542,7 @@ var NContainer = (function (NativeComponent$$1) {
 		el.addEventListener('stateadded', function (event) {
 			if(event.detail.state === 'container-full'){
 				/**
-				* Fired when the n-container reaches its capacity
+				* Fired when the n-container reaches its capacity.
 				* @event container-full
 				* @memberof module:altspace/components.n-container
 				*/
@@ -2594,7 +2550,7 @@ var NContainer = (function (NativeComponent$$1) {
 			}
 			if(event.detail.state === 'container-empty'){
 				/**
-				* Fired when the n-container reaches zero objects contained
+				* Fired when the n-container reaches zero objects contained.
 				* @event container-empty
 				* @memberof module:altspace/components.n-container
 				*/
@@ -2603,7 +2559,7 @@ var NContainer = (function (NativeComponent$$1) {
 		});
 
 		/**
-		* Fired every time an object enters or leaves the bounds of the n-container
+		* Fired every time an object enters or leaves the bounds of the n-container.
 		* @event container-count-changed
 		* @memberof module:altspace/components.n-container
 		* @param {Object} event - Contains details of the event. The new object count
@@ -2630,11 +2586,11 @@ var NContainer = (function (NativeComponent$$1) {
 'use strict';
 
 /**
-* Spawn a portal that allows you to travel to a different space or a different location in the current space.
-* @aframe
-* @alias n-portal
-* @memberof module:altspace/components
+* @name module:altspace/components.n-portal
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Spawn a portal that allows you to travel to a different space or a different location in the current space. @aframe
+* @example <a-entity n-portal='target-space: campfire-lobby'></a-entity>
 */
 var NPortal = (function (NativeComponent$$1) {
 	function NPortal(){ NativeComponent$$1.call(this, 'n-portal'); }
@@ -2706,11 +2662,12 @@ var n,o,i=16384,a=[],c=-1,u=arguments.length;if(!u){ return""; }for(var l="";++c
 'use strict';
 
 /**
-* Play a sound from a particular location. Limiting sound duration to 5 seconds
-* or less is recommended to prevent hitching when the sound loads. @aframe
-* @alias n-sound
-* @memberof module:altspace/components
+* @name module:altspace/components.n-sound
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Play a sound from a particular location. Limiting sound duration to 5 seconds
+* or less is recommended to prevent hitching when the sound loads. @aframe
+* @example <a-entity n-sound='res: effects/fanfare-start; on: begin'></a-entity>
 */
 var NSound = (function (NativeComponent$$1) {
 	function NSound(){ NativeComponent$$1.call(this, 'n-sound'); }
@@ -2725,7 +2682,7 @@ var NSound = (function (NativeComponent$$1) {
 
 			/**
 			* Play the sound given by the `src` or `res` property from the location
-			* of the entity. @aframe
+			* of the entity.
 			* The resource identifier for a built-in sound clip.
 			* @instance
 			* @member {string} res
@@ -2734,7 +2691,7 @@ var NSound = (function (NativeComponent$$1) {
 			res: { type: 'string' },
 
 			/**
-			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However, only
 			* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
 			* @instance
 			* @member {string} src
@@ -2809,7 +2766,7 @@ var NSound = (function (NativeComponent$$1) {
 			pitch: { type: 'float', default: 1 },
 
 			/**
-			* Inside this distance in meters, the sound volume is at full volume.
+			* Inside this distance in meters, the sound is at full volume.
 			* @instance
 			* @member {number} minDistance
 			* @default 1
@@ -2818,7 +2775,7 @@ var NSound = (function (NativeComponent$$1) {
 			minDistance: { type: 'float', default: 1 },
 
 			/**
-			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance in meters.
 			* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
 			* @instance
 			* @member {number} maxDistance
@@ -2880,29 +2837,21 @@ var NSound = (function (NativeComponent$$1) {
 
 	/**
 	* Stop the playing sound, and preserve position in clip.
+	* @fires module:altspace/components.n-sound#sound-paused
 	*/
 	NSound.prototype.pauseSound = function pauseSound () {
 		this.callComponent('pause');
 
-		/**
-		* Emitted when the sound stops playing
-		* @event sound-paused
-		* @memberof module:altspace/components.NSound
-		*/
 		this.el.emit('sound-paused');
 	};
 
 	/**
 	* Start the sound playing.
+	* @fires module:altspace/components.n-sound#sound-played
 	*/
 	NSound.prototype.playSound = function playSound () {
 		this.callComponent('play');
 
-		/**
-		* Emitted when the sound starts playing
-		* @event sound-played
-		* @memberof module:altspace/components.NSound
-		*/
 		this.el.emit('sound-played');
 	};
 
@@ -2922,12 +2871,12 @@ var NSound = (function (NativeComponent$$1) {
 'use strict';
 
 /**
-* Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
+* @name module:altspace/components.n-layout-browser
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Spawn a browser or enclosure during the "layout" phase when a space is first created or reset. 
 * Layout browsers can only be used by apps that are set as the default app in a space.
 * @aframe
-* @alias n-layout-browser
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
 */
 var NLayoutBrowser = (function (NativeComponent$$1) {
 	function NLayoutBrowser(){ NativeComponent$$1.call(this, 'n-layout-browser'); }
@@ -2963,17 +2912,164 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 }(NativeComponent));
 
 /**
-* AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.3.0/introduction/}.
-* In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.3.0/core/component.html},
+* @name module:altspace/components.n-text
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
+* This text will be clearer than texture-based text and more performant than geometry-based text. @aframe
+* @example <a-entity n-text='text: Hello world!;'></a-entity>
+*/
+var NText = (function (NativeComponent$$1) {
+	function NText(){ NativeComponent$$1.call(this, 'n-text'); }
+
+	if ( NativeComponent$$1 ) NText.__proto__ = NativeComponent$$1;
+	NText.prototype = Object.create( NativeComponent$$1 && NativeComponent$$1.prototype );
+	NText.prototype.constructor = NText;
+
+	var prototypeAccessors = { schema: {} };
+	prototypeAccessors.schema.get = function (){
+		return {
+			/**
+			* The text to be drawn.
+			* @instance
+			* @member {string} text
+			* @memberof module:altspace/components.n-text
+			*/
+			text: { default: '', type: 'string' },
+
+			/**
+			* The height of the letters. 10pt ~= 1m
+			* @instance
+			* @member {int} fontSize
+			* @default 10
+			* @memberof module:altspace/components.n-text
+			*/
+			fontSize: { default: 10, type: 'int' },//roughly a meter tall
+
+			/**
+			* The width of the text area in meters. If the
+			* text is wider than this value, the overflow will be wrapped to the next line.
+			* @instance
+			* @member {number} width
+			* @default 10
+			* @memberof module:altspace/components.n-text
+			*/
+			width: { default: 10, type: 'number' },//in meters
+
+			/**
+			* The height of the text area in meters. If the
+			* text is taller than this value, the overflow will be cut off.
+			* @instance
+			* @member {number} height
+			* @default 1
+			* @memberof module:altspace/components.n-text
+			*/
+			height: { default: 1, type: 'number' },//in meters
+
+			/**
+			* The horizontal anchor point for the text. Can be `left`, `middle`, or `right`.
+			* @instance
+			* @member {string} horizontalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.n-text
+			*/
+			horizontalAlign: { default: 'middle'},
+
+			/**
+			* The vertical anchor point for the text. Can be `top`, `middle`, or `bottom`.
+			* @instance
+			* @member {string} verticalAlign
+			* @default "middle"
+			* @memberof module:altspace/components.n-text
+			*/
+			verticalAlign: { default: 'middle'}
+		};
+	};
+
+	Object.defineProperties( NText.prototype, prototypeAccessors );
+
+	return NText;
+}(NativeComponent));
+
+/**
+* @name module:altspace/components.collapse-model
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Reaches into a model's hierarchy and directly assigns the first mesh found
+* to the containing entity. This is mostly necessary for use alongside native
+* components like [n-skeleton-parent]{@link module:altspace/components.n-skeleton-parent}. @aframe
+* @example <a-gltf-model src='#thing' collapse-model n-skeleton-parent='part: hand'></a-gltf-model>
+*/
+var CollapseModel = (function (AFrameComponent$$1) {
+	function CollapseModel () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) CollapseModel.__proto__ = AFrameComponent$$1;
+	CollapseModel.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	CollapseModel.prototype.constructor = CollapseModel;
+
+	CollapseModel.prototype.init = function init ()
+	{
+		var this$1 = this;
+
+		function getFirstMesh(obj){
+			if(obj.isMesh)
+				{ return obj; }
+			else if(obj.children.length === 0)
+				{ return null; }
+			else
+				{ return obj.children.reduce(function (m,o) { return m || getFirstMesh(o); }, null); }
+		}
+
+		this.el.addEventListener('model-loaded', function () {
+			this$1.el.setObject3D('mesh', getFirstMesh(this$1.el.object3DMap.mesh));
+		});
+	};
+
+	return CollapseModel;
+}(AFrameComponent));
+
+delete AFRAME.components['visible'];
+
+var Visible = (function (AFrameComponent$$1) {
+	function Visible () {
+		AFrameComponent$$1.apply(this, arguments);
+	}
+
+	if ( AFrameComponent$$1 ) Visible.__proto__ = AFrameComponent$$1;
+	Visible.prototype = Object.create( AFrameComponent$$1 && AFrameComponent$$1.prototype );
+	Visible.prototype.constructor = Visible;
+
+	var prototypeAccessors = { schema: {} };
+
+	prototypeAccessors.schema.get = function (){ return {default: true}; };
+	Visible.prototype.init = function init (){
+		this.el.addEventListener('model-loaded', this.update.bind(this));
+	};
+	Visible.prototype.update = function update (){
+		var this$1 = this;
+
+		this.el.object3D.traverse(function (obj) { return obj.visible = this$1.data; });
+	};
+
+	Object.defineProperties( Visible.prototype, prototypeAccessors );
+
+	return Visible;
+}(AFrameComponent));
+
+/**
+* AltspaceVR supports the 3D scene-building tool [A-Frame]{@link https://aframe.io/docs/0.7.0/introduction/}.
+* In addition to the set of [default components provided by A-Frame]{@link https://aframe.io/docs/0.7.0/core/component.html},
 * this SDK provides a set of components to add AltspaceVR compatibility and additional
 * functionality to the toolset. At a minimum, A-Frame apps will need the [altspace]{@link module:altspace/components.altspace}
 * component on the `<a-scene>` tag to function as an AltspaceVR app.
-* @module altspace/components
+* @module module:altspace/components
 * @example
 * <html>
 *   <head>
 *     <title>My A-Frame Scene</title>
-*     <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 *     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.6.2/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
@@ -3014,6 +3110,8 @@ if (window.AFRAME)
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
 	registerComponentClass('n-layout-browser', NLayoutBrowser);
+	registerComponentClass('collapse-model', CollapseModel);
+	registerComponentClass('visible', Visible);
 }
 
 
@@ -3045,7 +3143,8 @@ var components_lib = Object.freeze({
 	NBoxCollider: NBoxCollider,
 	NCapsuleCollider: NCapsuleCollider,
 	NMeshCollider: NMeshCollider,
-	NLayoutBrowser: NLayoutBrowser
+	NLayoutBrowser: NLayoutBrowser,
+	CollapseModel: CollapseModel
 });
 
 /* global Url */
