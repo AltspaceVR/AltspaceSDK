@@ -19,7 +19,7 @@ class NSound extends NativeComponent
 
 			/**
 			* Play the sound given by the `src` or `res` property from the location
-			* of the entity. @aframe
+			* of the entity.
 			* The resource identifier for a built-in sound clip.
 			* @instance
 			* @member {string} res
@@ -28,7 +28,7 @@ class NSound extends NativeComponent
 			res: { type: 'string' },
 
 			/**
-			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However, only
 			* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
 			* @instance
 			* @member {string} src
@@ -103,7 +103,7 @@ class NSound extends NativeComponent
 			pitch: { type: 'float', default: 1 },
 
 			/**
-			* Inside this distance in meters, the sound volume is at full volume.
+			* Inside this distance in meters, the sound is at full volume.
 			* @instance
 			* @member {number} minDistance
 			* @default 1
@@ -112,7 +112,7 @@ class NSound extends NativeComponent
 			minDistance: { type: 'float', default: 1 },
 
 			/**
-			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance in meters.
 			* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
 			* @instance
 			* @member {number} maxDistance

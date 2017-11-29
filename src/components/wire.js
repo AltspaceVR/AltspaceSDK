@@ -6,8 +6,8 @@ import {AFrameComponent} from './AFrameComponent';
 * @name module:altspace/components.wire
 * @class
 * @extends module:altspace/components.AFrameComponent
-* @classdesc The wire component allows you to trigger an event on another entity when an event
-* occurs on an entity. If no targets are selected, it will target itself. @aframe
+* @classdesc The wire component allows you to trigger an event on one entity when an event
+* occurs on the another entity. If no targets are selected, it will target itself. @aframe
 * @example <a-box id='proxy' wire='on: click; emit: click; target: #otherbox></a-box>
 * <a-box id='otherbox' random-color></a-box>
 **/

@@ -37,7 +37,7 @@ class NContainer extends NativeComponent
 		el.addEventListener('stateadded', event => {
 			if(event.detail.state === 'container-full'){
 				/**
-				* Fired when the n-container reaches its capacity
+				* Fired when the n-container reaches its capacity.
 				* @event container-full
 				* @memberof module:altspace/components.n-container
 				*/
@@ -45,7 +45,7 @@ class NContainer extends NativeComponent
 			}
 			if(event.detail.state === 'container-empty'){
 				/**
-				* Fired when the n-container reaches zero objects contained
+				* Fired when the n-container reaches zero objects contained.
 				* @event container-empty
 				* @memberof module:altspace/components.n-container
 				*/
@@ -54,7 +54,7 @@ class NContainer extends NativeComponent
 		});
 
 		/**
-		* Fired every time an object enters or leaves the bounds of the n-container
+		* Fired every time an object enters or leaves the bounds of the n-container.
 		* @event container-count-changed
 		* @memberof module:altspace/components.n-container
 		* @param {Object} event - Contains details of the event. The new object count

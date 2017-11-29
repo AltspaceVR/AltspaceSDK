@@ -23,7 +23,7 @@ If you choose, you can apply for AltspaceVR developer privileges [here](http://d
 - **The AltspaceVR [SDK Wiki] - User-contributed tips and tricks**
 - **[Local Dev Setup] - Instructions for setting up a local dev environment**
 - **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
-- **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**
+- **[Slack](https://developer.altvr.com/slack) - Chat with other members of the community and AltspaceVR devs.**
 
 
 ## altspace.js
@@ -138,7 +138,7 @@ Altspace's browser is based on Chromium version 40.
 
 [Three.js]: http://threejs.org/
 [Three.js Reference]: https://threejs.org/docs/
-[A-Frame]: https://aframe.io/docs/0.3.0/introduction/
+[A-Frame]: https://aframe.io/docs/0.7.0/introduction/
 
 [SDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
@@ -148,7 +148,6 @@ Altspace's browser is based on Chromium version 40.
 [Local Dev Setup]: https://developer.altvr.com/local-dev/
 [App Guidelines]: https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f
 [Getting Started]: https://developer.altvr.com/get-started/
-[Slack]: https://altspacevrsdk.slack.com
 
 ---
 

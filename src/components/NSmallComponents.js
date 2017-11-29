@@ -57,7 +57,7 @@ class NSpawner extends NativeComponent {
 * @extends module:altspace/components.NativeComponent
 * @classdesc Make the object's +Z always face the viewer. Currently will only directly apply
 * to main mesh or native component on the attached entity, not any children or submeshes. @aframe
-* @example <a-entity n-billboard></a-entity>
+* @example <a-image src='#tree' n-billboard></a-image>
 */
 class NBillboard extends NativeComponent {
 	constructor(){ super('n-billboard', false); }
@@ -109,7 +109,9 @@ class NSkeletonParent extends NativeComponent {
 * @name module:altspace/components.n-cockpit-parent
 * @class
 * @extends module:altspace/components.NativeComponent
-* @classdesc Parents an entity to the cockpit. @aframe
+* @classdesc Parents an entity to the cockpit, i.e. the player's HUD. This is primarily used for UI elements.
+* Note that this does not dock the items to the radial menu. If you want that, use [altspace.open](../js/module-altspace.html#.open). @aframe
+* @example <a-image src='#button' n-cockpit-parent></a-image>
 */
 class NCockpitParent extends NativeComponent {
 	constructor(){ super('n-cockpit-parent', false); }

@@ -106,6 +106,7 @@ class SyncComponent extends AFrameComponent
 		/**
 		 * @event connected
 		 * @memberof module:altspace/components.sync
+		 * Fired when the connection with the sync server is established.
 		 */
 		this.isConnected = true;
 		this.el.emit('connected', null, false);

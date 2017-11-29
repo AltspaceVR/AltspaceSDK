@@ -5,7 +5,7 @@ import NativeComponent from './NativeComponent';
 * @class
 * @extends module:altspace/components.NativeComponent
 * @classdesc Creates dynamic 2D text on the entity. The text will wrap automatically based on the width and height provided.
-* This text will be clearer than texture-based text and more performant than geometry-based test. @aframe
+* This text will be clearer than texture-based text and more performant than geometry-based text. @aframe
 * @example <a-entity n-text='text: Hello world!;'></a-entity>
 */
 class NText extends NativeComponent {

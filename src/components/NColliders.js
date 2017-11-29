@@ -90,9 +90,9 @@ class NSphereCollider extends NCollider {
 * @name module:altspace/components.n-box-collider
 * @class
 * @extends module:altspace/components.n-collider
-* @classdesc Creates a sphere-shaped collider of the given radius. Collides with
+* @classdesc Creates a box-shaped collider with the given dimensions. Collides with
 * the cursor or avatars depending on the [type]{@link module:altspace/components.n-box-collider#type} property. @aframe
-* @example <a-box n-box-collider='type: environment'></a-box>
+* @example <a-box n-box-collider='type: environment; size: 1, 0.5, 1'></a-box>
 */
 class NBoxCollider extends NCollider {
 	constructor(){ super('n-box-collider'); }
@@ -115,7 +115,7 @@ class NBoxCollider extends NCollider {
 * @class
 * @extends module:altspace/components.n-collider
 * @classdesc Create a capsule-shaped collider on this entity. Capsules
-* are a union of a cylinder and two spheres on top and bottom. Collides with
+* are a union of a cylinder and two hemispheres on top and bottom. Collides with
 * the cursor or avatars depending on the [type]{@link module:altspace/components.n-capsule-collider#type} property. @aframe
 * @example <a-cylinder n-capsule-collider='type: environment'></a-cylinder>
 */
