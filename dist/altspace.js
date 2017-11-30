@@ -501,7 +501,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.0/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.1/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -3030,7 +3030,10 @@ var CollapseModel = (function (AFrameComponent$$1) {
 	return CollapseModel;
 }(AFrameComponent));
 
-delete AFRAME.components['visible'];
+// kill default visible component, replace with clone
+if(window.AFRAME){
+	delete AFRAME.components['visible'];
+}
 
 var Visible = (function (AFrameComponent$$1) {
 	function Visible () {
@@ -3070,7 +3073,7 @@ var Visible = (function (AFrameComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.0/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.1/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6336,7 +6339,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.7.0';
+var version = '2.7.1';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
