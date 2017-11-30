@@ -1,6 +1,9 @@
 import {AFrameComponent} from './AFrameComponent';
 
-delete AFRAME.components['visible'];
+// kill default visible component, replace with clone
+if(window.AFRAME){
+	delete AFRAME.components['visible'];
+}
 
 export default class Visible extends AFrameComponent {
 	get schema(){ return {default: true}; }
