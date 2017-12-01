@@ -8,18 +8,14 @@
 <body>
 <a-scene altspace='vertical-align: bottom'>
 	<a-assets>
-		<!-- For prototype purposes only! Not official -->
-		<a-asset-item id='bear'
-			src='https://ugcorigin.s-microsoft.com/12/018d801a-0000-0000-7a48-6505f2d556f9/952/1508436299416.gltf'
-			data-attribution='https://www.remix3d.com/details/G009SXJCMDL3'></a-asset-item>
-		<!-- This IS official! Use Poly models, but provide credit -->
-		<a-asset-item id='stoplight'
-			src='https://poly.googleapis.com/downloads/fVSLIGfhFnJ/5BsJsn9VjEq/CUPIC_STOPLIGHT.gltf',
-			data-attribution='https://poly.google.com/view/fVSLIGfhFnJ'></a-asset-item>
+		<!-- Use Poly models, but provide credit -->
+		<a-asset-item id='sign-obj'
+			src='https://poly.googleapis.com/downloads/3RgctQfhbwt/6T1w9ZvIAMY/model-triangulated.obj',
+			data-attribution='https://poly.google.com/view/3RgctQfhbwt'></a-asset-item>
+		<a-asset-item id='sign-mtl' src='https://poly.googleapis.com/downloads/3RgctQfhbwt/6T1w9ZvIAMY/materials.mtl'></a-asset-item>
 	</a-assets>
 
-	<a-gltf-model id='bear' src='#bear' position='0 0 -.5' scale='15 15 15'></a-gltf-model>
-	<a-gltf-model id='stoplight' src='#stoplight' position='-1 0 2' rotation='0 0 0' scale='.005 .005 .005'></a-gltf-model>
+	<a-obj-model id='sign' src='#sign-obj' mtl='#sign-mtl' position='0 1 0'></a-obj-model>
 </a-scene>
 </body>
 </html>
