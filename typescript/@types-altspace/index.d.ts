@@ -6,12 +6,12 @@
 
 /// <reference types="three" />
 
-import {Mesh, Quaternion, Scene, Vector3} from "three";
+import {Mesh, Quaternion, Renderer, Scene, Vector3} from "three";
 
 declare namespace Alt {
 
     interface Global{
-        getThreeJSRenderer():Promise<Renderer>;
+        getThreeJSRenderer():Promise<AltRenderer>;
         getThreeJSDebugInfo():Promise<DebugInfo[]>;
         getDocument():Promise<Document>;
         getEnclosure():Promise<Enclosure>;
@@ -21,9 +21,20 @@ declare namespace Alt {
         getSpace():Promise<Space>;
         getUser():Promise<User>;
         inClient:boolean;
+        utilities:Utilities;
     }
 
-    interface Renderer{
+    interface Utilities{
+        Simulation():Simulation;
+    }
+
+
+    interface Simulation{
+        scene:Scene;
+        renderer:Renderer;
+    }
+
+    interface AltRenderer{
         render(scene:Scene):void;
     }
 
