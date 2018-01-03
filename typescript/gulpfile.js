@@ -9,8 +9,7 @@ var browserify = require('browserify');
 var tsify = require("tsify");
 var watchify = require('watchify');
 var babel = require('babelify');
-var concat = require("gulp-concat");
-var addsrc = require("gulp-add-src");
+var rename = require("gulp-rename");
 var browserSync = require('browser-sync').create();
 var bundle = function(bundler) {
     bundler.bundle()
@@ -19,8 +18,7 @@ var bundle = function(bundler) {
         .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(sourcemaps.write())
-        .pipe(addsrc(['./node_modules/three/build/three.min.js','../dist/altspace.js']))
-        .pipe(concat('index.js'))
+        .pipe(rename('index.js'))
         .pipe(gulp.dest('./dist'))
         .pipe(browserSync.stream({once: true}));
 };
@@ -44,6 +42,8 @@ var compileIndex = function(){
         <head>
             <meta charset="UTF-8">
             <title>Example</title>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js"></script>
+            <script src="https://sdk.altvr.com/libs/altspace.js/2.6.1/altspace.js"></script>
             <script src="index.js"></script>
         </head>
         <body>

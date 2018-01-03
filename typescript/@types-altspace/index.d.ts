@@ -25,7 +25,7 @@ declare namespace Alt {
     }
 
     interface Utilities{
-        Simulation():Simulation;
+        Simulation:Simulation;
     }
 
 
