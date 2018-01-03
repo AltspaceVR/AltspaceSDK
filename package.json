@@ -37,6 +37,7 @@
     "three": "~0.73.0"
   },
   "devDependencies": {
+    "@types/three": "^0.84.36",
     "conventional-github-releaser": "0.5.1",
     "del": "^2.2.2",
     "es6-map": "^0.1.4",
