@@ -27,9 +27,8 @@ declare namespace Alt {
     interface Utilities{
         Simulation:Simulation;
     }
-
-
     interface Simulation{
+        new (): Simulation;
         scene:Scene;
         renderer:Renderer;
     }
