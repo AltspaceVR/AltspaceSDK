@@ -52,7 +52,7 @@ class SyncNSkeletonParent extends AFrameComponent
 			if (!this.sync.isMine) return;
 			var name = event.detail.name;
 			if (name === 'n-skeleton-parent') {
-				this.attributeRef.set(event.detail.newData);
+				this.attributeRef.set(this.el.getAttribute(name));
 			}
 		}.bind(this));
 	}

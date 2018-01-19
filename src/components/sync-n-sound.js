@@ -79,7 +79,7 @@ class SyncNSound extends AFrameComponent
 			if (!this.sync.isMine) return;
 			let name = event.detail.name;
 			if (name !== 'n-sound') return;
-			this.soundStateRef.set(event.detail.newData);
+			this.soundStateRef.set(this.el.getAttribute(name));
 		});
 
 		this.soundStateRef.on('value', snapshot => {

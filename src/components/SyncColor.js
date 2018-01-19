@@ -21,6 +21,7 @@ class SyncColor extends AFrameComponent
 	init()
 	{
 		this.sync = this.el.components.sync;
+		this.lastValue = null;
 
 		// wait for firebase connection to start sync routine
 		if(this.sync.isConnected)
@@ -39,13 +40,15 @@ class SyncColor extends AFrameComponent
 		this.el.addEventListener('componentchanged', event =>
 		{
 			let name = event.detail.name;
-			let oldData = event.detail.oldData;
-			let newData = event.detail.newData;
 
-			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && self.sync.isMine)
-			{
-				//For some reason A-Frame has a misconfigured material reference if we do this too early
-				setTimeout(() => colorRef.set(newData.color), 0);
+			if (name === 'material'){
+				let newData = self.el.getAttribute('material').color;
+				if(!refChangedLocked && this.lastValue !== newData && self.sync.isMine)
+				{
+					self.lastValue = newData;
+					//For some reason A-Frame has a misconfigured material reference if we do this too early
+					setTimeout(() => colorRef.set(newData), 0);
+				}
 			}
 		});
 

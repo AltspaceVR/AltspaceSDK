@@ -32,7 +32,7 @@ AFRAME.registerComponent('color-cycle', {
     schema: {},
     init: function(){
         var self = this;
-        self.el.object3D.addEventListener('cursorup', function(){
+        this.el.addEventListener('click', function(){
             var rgb = [
                 Math.floor(Math.random()*255),
                 Math.floor(Math.random()*255),

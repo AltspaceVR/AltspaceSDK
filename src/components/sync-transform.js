@@ -124,7 +124,7 @@ class SyncTransform extends AFrameComponent
 			if (!sync.isMine) return;
 
 			let name = event.detail.name;
-			let newData = event.detail.newData;
+			let newData = component.el.getAttribute(name);
 
 			if (name === 'position') {
 				sendPosition(newData);
