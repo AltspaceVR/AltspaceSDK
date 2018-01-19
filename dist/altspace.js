@@ -501,7 +501,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.1/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.2/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -795,6 +795,7 @@ var SyncColor = (function (AFrameComponent$$1) {
 	SyncColor.prototype.init = function init ()
 	{
 		this.sync = this.el.components.sync;
+		this.lastValue = null;
 
 		// wait for firebase connection to start sync routine
 		if(this.sync.isConnected)
@@ -805,6 +806,8 @@ var SyncColor = (function (AFrameComponent$$1) {
 
 	SyncColor.prototype.start = function start ()
 	{
+		var this$1 = this;
+
 		var colorRef = this.sync.dataRef.child('material/color');
 		var refChangedLocked = false;
 		var firstValue = true;
@@ -812,13 +815,15 @@ var SyncColor = (function (AFrameComponent$$1) {
 
 		this.el.addEventListener('componentchanged', function (event) {
 			var name = event.detail.name;
-			var oldData = event.detail.oldData;
-			var newData = event.detail.newData;
 
-			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && self.sync.isMine)
-			{
-				//For some reason A-Frame has a misconfigured material reference if we do this too early
-				setTimeout(function () { return colorRef.set(newData.color); }, 0);
+			if (name === 'material'){
+				var newData = self.el.getAttribute('material').color;
+				if(!refChangedLocked && this$1.lastValue !== newData && self.sync.isMine)
+				{
+					self.lastValue = newData;
+					//For some reason A-Frame has a misconfigured material reference if we do this too early
+					setTimeout(function () { return colorRef.set(newData); }, 0);
+				}
 			}
 		});
 
@@ -1443,7 +1448,7 @@ var SyncTransform = (function (AFrameComponent$$1) {
 			if (!sync.isMine) { return; }
 
 			var name = event.detail.name;
-			var newData = event.detail.newData;
+			var newData = component.el.getAttribute(name);
 
 			if (name === 'position') {
 				sendPosition(newData);
@@ -1552,7 +1557,7 @@ var SyncNSound = (function (AFrameComponent$$1) {
 			if (!this$1.sync.isMine) { return; }
 			var name = event.detail.name;
 			if (name !== 'n-sound') { return; }
-			this$1.soundStateRef.set(event.detail.newData);
+			this$1.soundStateRef.set(this$1.el.getAttribute(name));
 		});
 
 		this.soundStateRef.on('value', function (snapshot) {
@@ -1629,7 +1634,7 @@ var SyncNSkeletonParent = (function (AFrameComponent$$1) {
 			if (!this.sync.isMine) { return; }
 			var name = event.detail.name;
 			if (name === 'n-skeleton-parent') {
-				this.attributeRef.set(event.detail.newData);
+				this.attributeRef.set(this.el.getAttribute(name));
 			}
 		}.bind(this));
 	};
@@ -3073,7 +3078,7 @@ var Visible = (function (AFrameComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.1/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.7.2/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6339,7 +6344,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.7.1';
+var version = '2.7.2';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
