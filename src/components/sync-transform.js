@@ -64,7 +64,7 @@ class SyncTransform extends AFrameComponent
 	{
 		this.sync = this.el.components.sync;
 		if(this.sync.isConnected)
-			start();
+			this.start();
 		else
 			this.el.addEventListener('connected', this.start.bind(this));
 	}
