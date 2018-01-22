@@ -1,5 +1,2 @@
 Metal armor derived from "knight" model by Gabriel Piacenti (piacenti) (CC-BY)
 http://opengameart.org/content/knight-2
-
-Voxel armor derived from "chr_knight" model by Ephtracy from MagicaVoxel
-http://ephtracy.github.io/

@@ -3,14 +3,15 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
+* @name module:altspace/components.n-collider
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Abstract base class for [n-sphere-collider]{@link module:altspace/components.n-sphere-collider},
 * [n-box-collider]{@link module:altspace/components.n-box-collider},
 * [n-capsule-collider]{@link module:altspace/components.n-capsule-collider},
 * and [n-mesh-collider]{@link module:altspace/components.n-mesh-collider}. You cannot use
 * this class directly, but instead you should add one of those components
-* to your objects.
-* @memberof module:altspace/components
-* @extends module:altspace/components.NativeComponent
+* to your objects. @aframe
 */
 class NCollider extends NativeComponent {
 	get schema(){
@@ -20,7 +21,7 @@ class NCollider extends NativeComponent {
 			* @instance
 			* @member {vec3} center
 			* @default [0, 0, 0]
-			* @memberof module:altspace/components.NCollider
+			* @memberof module:altspace/components.n-collider
 			*/
 			center: { type: 'vec3' },
 
@@ -33,7 +34,7 @@ class NCollider extends NativeComponent {
 			* @instance
 			* @member {string} type
 			* @default "hologram"
-			* @memberof module:altspace/components.NCollider
+			* @memberof module:altspace/components.n-collider
 			*/
 			type: { type: 'string', default: 'object' },
 
@@ -44,7 +45,7 @@ class NCollider extends NativeComponent {
 			* @instance
 			* @member {boolean} isTrigger
 			* @default false
-			* @memberof module:altspace/components.NCollider
+			* @memberof module:altspace/components.n-collider
 			*/
 			isTrigger: { default: false, type: 'boolean' }
 		};
@@ -53,19 +54,20 @@ class NCollider extends NativeComponent {
 
 /**
 * Fired when an object enters a trigger volume, e.g. `isTrigger: true`
-* @event module:altspace/components.NCollider.triggerenter
+* @event module:altspace/components.n-collider.triggerenter
 */
 
 /**
 * Fired when an object leaves a trigger volume, e.g. `isTrigger: true`
-* @event module:altspace/components.NCollider.triggerexit
+* @event module:altspace/components.n-collider.triggerexit
 */
 
 /**
-* A sphere-shaped collider. @aframe
-* @alias n-sphere-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @name module:altspace/components.n-sphere-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Creates a sphere-shaped collider of the given radius. Collides with
+* the cursor or avatars depending on the [type]{@link module:altspace/components.n-sphere-collider#type} property. @aframe
 * @example <a-sphere radius=1 n-sphere-collider='radius: 1; type: object;'></a-sphere>
 */
 class NSphereCollider extends NCollider {
@@ -85,10 +87,12 @@ class NSphereCollider extends NCollider {
 }
 
 /**
-* Create a box-shaped collider on this entity. @aframe
-* @alias n-box-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @name module:altspace/components.n-box-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Creates a box-shaped collider with the given dimensions. Collides with
+* the cursor or avatars depending on the [type]{@link module:altspace/components.n-box-collider#type} property. @aframe
+* @example <a-box n-box-collider='type: environment; size: 1, 0.5, 1'></a-box>
 */
 class NBoxCollider extends NCollider {
 	constructor(){ super('n-box-collider'); }
@@ -101,17 +105,19 @@ class NBoxCollider extends NCollider {
 			* @default [1, 1, 1]
 			* @memberof module:altspace/components.n-box-collider
 			*/
-			size: { type: 'vec3', default: '1 1 1' }
+			size: { type: 'vec3', default: {x:1,y:1,z:1} }
 		};
 	}
 }
 
 /**
-* Create a capsule-shaped collider on this entity. Capsules
-* are a union of a cylinder and two spheres on top and bottom. @aframe
-* @alias n-capsule-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @name module:altspace/components.n-capsule-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Create a capsule-shaped collider on this entity. Capsules
+* are a union of a cylinder and two hemispheres on top and bottom. Collides with
+* the cursor or avatars depending on the [type]{@link module:altspace/components.n-capsule-collider#type} property. @aframe
+* @example <a-cylinder n-capsule-collider='type: environment'></a-cylinder>
 */
 class NCapsuleCollider extends NCollider {
 	constructor(){ super('n-capsule-collider'); }
@@ -125,7 +131,7 @@ class NCapsuleCollider extends NCollider {
 			* @default 1
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			radius: { default: '0', type: 'number' },
+			radius: { default: 0, type: 'number' },
 
 			/**
 			* The height of the shaft of the capsule in meters.
@@ -134,7 +140,7 @@ class NCapsuleCollider extends NCollider {
 			* @default 0
 			* @memberof module:altspace/components.n-capsule-collider
 			*/
-			height: { default: '0', type: 'number' },
+			height: { default: 0, type: 'number' },
 
 			/**
 			* The axis with which the capsule is aligned. Must be one of 'x', 'y' or 'z'.
@@ -149,13 +155,13 @@ class NCapsuleCollider extends NCollider {
 }
 
 /**
-* Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
+* @name module:altspace/components.n-mesh-collider
+* @class
+* @extends module:altspace/components.n-collider
+* @classdesc Enable collision for the entire attached mesh. This is expensive to evaluate, so should only be used on
 * low-poly meshes. If using this alongside the `geometry` component, make sure that
 * `geometry` comes before this component. @aframe
-* @example <a-box n-mesh-collider></a-box>
-* @alias n-mesh-collider
-* @memberof module:altspace/components
-* @extends module:altspace/components.NCollider
+* @example <a-entity gltf-model='#building' n-mesh-collider='type: environment'></a-entity>
 */
 class NMeshCollider extends NCollider {
 	get schema(){
@@ -164,13 +170,13 @@ class NMeshCollider extends NCollider {
 			/**
 			* Whether the collider should be convex or concave. Set this to false if you have holes
 			* in your mesh. Convex colliders are limited to 255 triangles. Note: concave colliders can be significantly more
-			* expensive compared to convex colliders.
+			* expensive to evaluate compared to convex colliders, so should be used sparingly.
 			* @instance
 			* @member {boolean} convex
 			* @default true
 			* @memberof module:altspace/components.n-mesh-collider
 			*/
-			convex: { type: 'boolean', default: 'true' }
+			convex: { type: 'boolean', default: true }
 		};
 	}
 

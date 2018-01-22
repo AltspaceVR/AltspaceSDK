@@ -23,7 +23,7 @@ If you choose, you can apply for AltspaceVR developer privileges [here](http://d
 - **The AltspaceVR [SDK Wiki] - User-contributed tips and tricks**
 - **[Local Dev Setup] - Instructions for setting up a local dev environment**
 - **[App Guidelines] - Suggestions for building apps that work well in Altspace and Gear VR**
-- **[Slack] - Chat with other members of the community and AltspaceVR devs.  [Register for Slack](http://altspacevr-slackin.herokuapp.com)**
+- **[Slack](https://developer.altvr.com/slack) - Chat with other members of the community and AltspaceVR devs.**
 
 
 ## altspace.js
@@ -34,11 +34,11 @@ Many APIs are present in the client without loading `altspace.js`, but please st
 
 The version baked into the altspace.js script will determine which version of the entire SDK  the client will provide your app. This means that if we make any breaking internal changes to things like rendering or cursor events, and you are using an older version of `altspace.js`, we will try to return legacy behavior appropriate to your version of `altspace.js`. Versioning will follow [SEMVER](http://semver.org/) as closely as possible. Details for each version can be found in the [Release Notes](https://github.com/AltspaceVR/AltspaceSDK/releases).
 
-**Latest Version: v2.4.5 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.4.5)**
+**Latest Version: v2.7.3 -- [See Changes](https://github.com/AltspaceVR/AltspaceSDK/releases/tag/v2.7.3)**
 
 Include the latest version of the SDK in your app with:
 
-`<script src="https://sdk.altvr.com/libs/altspace.js/2.4.5/altspace.min.js"></script>`
+`<script src="https://sdk.altvr.com/libs/altspace.js/2.7.3/altspace.min.js"></script>`
 
 If you use npm, you can install altspace.js with:
 
@@ -81,7 +81,7 @@ $ netsh interface portproxy add v4tov4 protocol=tcp listenport=9222 listenaddres
 
 ## Graphics Feature Support
 
-AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame version 0.3.0 is currently the only version supported.
+AltspaceVR supports Three.js versions r73, r74, r76, and r84. r84 is recommended. A-Frame versions 0.3.0 and 0.7.0 are the only versions tested and known to work, though others may as well.
 
 **Currently supported:**
 * Object3D transformation and hierarchy
@@ -138,7 +138,7 @@ Altspace's browser is based on Chromium version 40.
 
 [Three.js]: http://threejs.org/
 [Three.js Reference]: https://threejs.org/docs/
-[A-Frame]: https://aframe.io/docs/0.3.0/introduction/
+[A-Frame]: https://aframe.io/docs/0.7.0/introduction/
 
 [SDK Wiki]: https://github.com/AltspaceVR/AltspaceSDK/wiki
 [GitHub Issues]: https://github.com/AltspaceVR/AltspaceSDK/issues
@@ -148,7 +148,6 @@ Altspace's browser is based on Chromium version 40.
 [Local Dev Setup]: https://developer.altvr.com/local-dev/
 [App Guidelines]: https://slack-files.com/T0B35FQCT-F0LED1QC9-299cb2300f
 [Getting Started]: https://developer.altvr.com/get-started/
-[Slack]: https://altspacevrsdk.slack.com
 
 ---
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head>
-	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 	<script src="../../dist/altspace.js"></script>
 	<script>
 
@@ -10,12 +10,9 @@
 			init: function(){
 				var self = this;
 				self.el.addEventListener('click', function(){
-					var rgb = [
-						Math.floor(Math.random()*256),
-						Math.floor(Math.random()*256),
-						Math.floor(Math.random()*256)
-					];
-					self.el.setAttribute('color', 'rgb('+rgb.join(',')+')');
+					var randomColor = Math.floor(Math.random() * 0x1000000);
+					randomColor = '#' + ('000000'+(randomColor).toString(16)).slice(-6);
+					self.el.setAttribute('color', randomColor);
 				});
 			}
 		});
@@ -25,7 +22,7 @@
 <body>
 
 	<!-- set up the scene -->
-	<a-scene altspace='vertical-align: bottom;'>
+	<a-scene altspace='verticalAlign: bottom'>
 		<a-box position='0 1 0' color-cycle></a-box>
 	</a-scene>
 

@@ -3,11 +3,11 @@
 import NativeComponent from './NativeComponent';
 
 /**
-* Spawn a portal that allows you to travel to a different space or a different location in the current space.
-* @aframe
-* @alias n-portal
-* @memberof module:altspace/components
+* @name module:altspace/components.n-portal
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Spawn a portal that allows you to travel to a different space or a different location in the current space. @aframe
+* @example <a-entity n-portal='target-space: campfire-lobby'></a-entity>
 */
 class NPortal extends NativeComponent {
 	constructor(){ super('n-portal'); }
@@ -20,6 +20,13 @@ class NPortal extends NativeComponent {
 			* @memberof module:altspace/components.n-portal
 			*/
 			targetSpace: {type: 'string'},
+			/**
+			* The id of the event that you want the portal to send users to.
+			* @instance
+			* @member {string} targetEvent
+			* @memberof module:altspace/components.n-portal
+			*/
+			targetEvent: {type: 'string'},
 			/**
 			* A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
 			* and rotate the user in its direction. Note: The target position/rotation will not be updated if the
@@ -46,6 +53,7 @@ class NPortal extends NativeComponent {
 
 		var data = {
 			targetSpace: this.data.targetSpace,
+			targetEvent: this.data.targetEvent,
 			targetPosition: targetPosition,
 			targetQuaternion: targetQuaternion
 		}
