@@ -3,12 +3,12 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
+* @name module:altspace/components.sync-n-sound
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Synchronize the playback state of an [n-sound]{@link module:altspace/components.n-sound} component between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
-* @alias sync-n-sound
-* @extends module:altspace/components.AFrameComponent
-* @memberof module:altspace/components
 */
 class SyncNSound extends AFrameComponent
 {
@@ -79,7 +79,7 @@ class SyncNSound extends AFrameComponent
 			if (!this.sync.isMine) return;
 			let name = event.detail.name;
 			if (name !== 'n-sound') return;
-			this.soundStateRef.set(event.detail.newData);
+			this.soundStateRef.set(this.el.getAttribute(name));
 		});
 
 		this.soundStateRef.on('value', snapshot => {

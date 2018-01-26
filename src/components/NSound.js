@@ -4,11 +4,12 @@ import 'es6-string-polyfills';
 import NativeComponent from './NativeComponent';
 
 /**
-* Play a sound from a particular location. Limiting sound duration to 5 seconds
-* or less is recommended to prevent hitching when the sound loads. @aframe
-* @alias n-sound
-* @memberof module:altspace/components
+* @name module:altspace/components.n-sound
+* @class
 * @extends module:altspace/components.NativeComponent
+* @classdesc Play a sound from a particular location. Limiting sound duration to 5 seconds
+* or less is recommended to prevent hitching when the sound loads. @aframe
+* @example <a-entity n-sound='res: effects/fanfare-start; on: begin'></a-entity>
 */
 class NSound extends NativeComponent
 {
@@ -18,7 +19,7 @@ class NSound extends NativeComponent
 
 			/**
 			* Play the sound given by the `src` or `res` property from the location
-			* of the entity. @aframe
+			* of the entity.
 			* The resource identifier for a built-in sound clip.
 			* @instance
 			* @member {string} res
@@ -27,7 +28,7 @@ class NSound extends NativeComponent
 			res: { type: 'string' },
 
 			/**
-			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However. only
+			* A URL to an external sound clip. The sound can be in WAV, OGG or MP3 format. However, only
 			* WAV is supported on all platforms. MP3 is supported on Gear VR and OGG is supported on desktop.
 			* @instance
 			* @member {string} src
@@ -102,7 +103,7 @@ class NSound extends NativeComponent
 			pitch: { type: 'float', default: 1 },
 
 			/**
-			* Inside this distance in meters, the sound volume is at full volume.
+			* Inside this distance in meters, the sound is at full volume.
 			* @instance
 			* @member {number} minDistance
 			* @default 1
@@ -111,7 +112,7 @@ class NSound extends NativeComponent
 			minDistance: { type: 'float', default: 1 },
 
 			/**
-			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance.
+			* If rolloff is 'logarithmic', the sound will stop attenuating at this distance in meters.
 			* If rolloff is 'linear' or 'cosine', the sound will be silent at this distance.
 			* @instance
 			* @member {number} maxDistance
@@ -173,29 +174,21 @@ class NSound extends NativeComponent
 
 	/**
 	* Stop the playing sound, and preserve position in clip.
+	* @fires module:altspace/components.n-sound#sound-paused
 	*/
 	pauseSound() {
 		this.callComponent('pause');
 
-		/**
-		* Emitted when the sound stops playing
-		* @event sound-paused
-		* @memberof module:altspace/components.NSound
-		*/
 		this.el.emit('sound-paused');
 	}
 
 	/**
 	* Start the sound playing.
+	* @fires module:altspace/components.n-sound#sound-played
 	*/
 	playSound() {
 		this.callComponent('play');
 
-		/**
-		* Emitted when the sound starts playing
-		* @event sound-played
-		* @memberof module:altspace/components.NSound
-		*/
 		this.el.emit('sound-played');
 	}
 
@@ -209,9 +202,18 @@ class NSound extends NativeComponent
 }
 
 /**
+* Emitted when the sound stops playing
+* @event module:altspace/components.n-sound#sound-paused
+*/
+
+/**
+* Emitted when the sound starts playing
+* @event module:altspace/components.n-sound#sound-played
+*/
+
+/**
 * Fired when a sound has loaded and is ready to be played
-* @event n-sound-loaded
-* @memberof module:altspace/components.NSound
+* @event module:altspace/components.n-sound#n-sound-loaded
 */
 
 export default NSound;

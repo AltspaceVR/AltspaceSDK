@@ -3,12 +3,13 @@
 import {AFrameComponent} from './AFrameComponent';
 
 /**
-* Sync the color property of the object between clients.
+* @name module:altspace/components.sync-color
+* @class
+* @extends module:altspace/components.AFrameComponent
+* @classdesc Sync the color property of the object between clients.
 * Requires both a [sync-system]{@link module:altspace/components.sync-system} component on the `a-scene`, and a
 * [sync]{@link module:altspace/components.sync} component on the target entity. @aframe
-* @alias sync-color
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
+* @example <a-box random-color sync='own-on: click' sync-color></a-box>
 */
 
 class SyncColor extends AFrameComponent
@@ -20,6 +21,7 @@ class SyncColor extends AFrameComponent
 	init()
 	{
 		this.sync = this.el.components.sync;
+		this.lastValue = null;
 
 		// wait for firebase connection to start sync routine
 		if(this.sync.isConnected)
@@ -38,13 +40,15 @@ class SyncColor extends AFrameComponent
 		this.el.addEventListener('componentchanged', event =>
 		{
 			let name = event.detail.name;
-			let oldData = event.detail.oldData;
-			let newData = event.detail.newData;
 
-			if (name === 'material' && !refChangedLocked && oldData.color !== newData.color && self.sync.isMine)
-			{
-				//For some reason A-Frame has a misconfigured material reference if we do this too early
-				setTimeout(() => colorRef.set(newData.color), 0);
+			if (name === 'material'){
+				let newData = self.el.getAttribute('material').color;
+				if(!refChangedLocked && this.lastValue !== newData && self.sync.isMine)
+				{
+					self.lastValue = newData;
+					//For some reason A-Frame has a misconfigured material reference if we do this too early
+					setTimeout(() => colorRef.set(newData), 0);
+				}
 			}
 		});
 

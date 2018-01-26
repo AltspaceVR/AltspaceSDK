@@ -23,3 +23,12 @@
 * @method reset
 * @memberof module:altspace~Document
 */
+
+/**
+* Enable cursor input on Android devices.
+* Note that transparency hit-testing is not supported on the document on Android. The cursor will register a hit even
+* on transparent portions of the document.
+* @instance
+* @member {Boolean} inputEnabled
+* @memberof module:altspace~Document
+*/

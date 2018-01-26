@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Model Repositories</title>
+	<script src="https://aframe.io/releases/0.7.0/aframe.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<a-scene altspace='vertical-align: bottom'>
+	<a-assets>
+		<!-- Use Poly models, but provide credit -->
+		<a-asset-item id='sign-obj'
+			src='https://poly.googleapis.com/downloads/3RgctQfhbwt/6T1w9ZvIAMY/model-triangulated.obj',
+			data-attribution='https://poly.google.com/view/3RgctQfhbwt'></a-asset-item>
+		<a-asset-item id='sign-mtl' src='https://poly.googleapis.com/downloads/3RgctQfhbwt/6T1w9ZvIAMY/materials.mtl'></a-asset-item>
+	</a-assets>
+
+	<a-obj-model id='sign' src='#sign-obj' mtl='#sign-mtl' position='0 1 0'></a-obj-model>
+</a-scene>
+</body>
+</html>

@@ -4,15 +4,19 @@ import {AFrameComponent} from './AFrameComponent';
 import {safeDeepSet} from './utilities';
 
 /**
-* The altspace component makes A-Frame apps compatible with AltspaceVR. @aframe
+* @name module:altspace/components.altspace
+* @class
+* @extends module:altspace/components.AFrameComponent
+
+* @classdesc The altspace component makes A-Frame apps compatible with AltspaceVR.
 *
 * **Note**: This component can have side-effects on some default components. To be
-* safe, this component should be specified last.
+* safe, this component should be specified last. @aframe
 *
 * @example
 * <head>
 *   <title>My A-Frame Scene</title>
-*   <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+*   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 *   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v{{SDK_VERSION}}/dist/altspace.min.js"></script>
 * </head>
 * <body>
@@ -20,10 +24,6 @@ import {safeDeepSet} from './utilities';
 *     <a-entity geometry="primitive: box" material="color: #C03546"></a-entity>
 *   </a-scene>
 * </body>
-*
-* @alias altspace
-* @memberof module:altspace/components
-* @extends module:altspace/components.AFrameComponent
 */
 class AltspaceComponent extends AFrameComponent
 {
@@ -38,7 +38,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			usePixelScale: { type: 'boolean', default: 'false'},
+			usePixelScale: { type: 'boolean', default: false},
 
 			/**
 			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
@@ -56,7 +56,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default true
 			* @memberof module:altspace/components.altspace
 			*/
-			enclosuresOnly: { type: 'boolean', default: 'true'},
+			enclosuresOnly: { type: 'boolean', default: true},
 
 			/**
 			* Puts the app into fullspace mode.
@@ -65,7 +65,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			fullspace: { type: 'boolean', default: 'false'}
+			fullspace: { type: 'boolean', default: false}
 		}
 	}
 
@@ -160,8 +160,10 @@ class AltspaceComponent extends AFrameComponent
 		renderer.getPixelRatio = noop;
 		renderer.getMaxAnisotropy = noop;
 		renderer.setFaceCulling = noop;
+		renderer.submitFrame = noop;
 		renderer.context = {canvas: {}};
 		renderer.shadowMap = {};
+		renderer.requestAnimationFrame = window.requestAnimationFrame;
 	}
 
 	/*

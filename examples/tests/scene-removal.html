@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Scene Removal</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<h1 class="instructions">Five boxes, except for the purple one, should blink in and out of the scene. </h1>
+<script>
+var sim = new altspace.utilities.Simulation({auto: false});
+var scene = sim.scene;
+scene.scale.multiplyScalar(20);
+sim.camera.position.z = 40;
+
+function createBox(color) {
+	var box = new THREE.Mesh(
+		new THREE.BoxGeometry(1, 1, 1),
+		new THREE.MeshBasicMaterial({color: color})
+	);
+	box.position.set(1, 1, 1);
+	return box;
+}
+
+var boxOne = createBox('red');
+scene.add(boxOne);
+
+var boxTwo = createBox('green');
+boxOne.add(boxTwo);
+
+var boxThree = createBox('blue');
+boxThree.material = boxThree.material.clone();
+boxThree.material.visible = false;
+boxTwo.add(boxThree);
+
+var boxFour = createBox('orange');
+boxThree.add(boxFour);
+
+var boxFive = createBox('pink');
+boxFive.position.set(0, 0, 0);
+scene.add(boxFive);
+
+var boxSix = createBox('purple');
+boxSix.position.set(0, 1, 0);
+scene.add(boxSix);
+
+var boxSeven = createBox('yellow');
+boxSeven.position.set(-1, 1, 0);
+boxSix.add(boxSeven);
+
+var boxEight = createBox('brown');
+boxEight.material = boxEight.material.clone();
+boxEight.material.visible = false;
+boxEight.position.set(-1, 3, 0);
+scene.add(boxEight);
+
+sim.renderer.render(scene, sim.camera);
+
+var parented = true;
+setInterval(function () {
+	if (parented) {
+		scene.remove(boxOne);
+		boxThree.remove(boxFour);
+		scene.remove(boxFive);
+		boxSix.remove(boxSeven);
+		scene.remove(boxEight);
+	} else {
+		scene.add(boxOne);
+		boxThree.add(boxFour);
+		scene.add(boxFive);
+		boxSix.add(boxSeven);
+		scene.add(boxEight);
+	}
+	parented = !parented;
+	sim.renderer.render(scene, sim.camera);
+}, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Temperature Benchmark</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+<body>
+<script>
+var sim = new altspace.utilities.Simulation({auto: false});
+var scene = sim.scene;
+scene.scale.multiplyScalar(20);
+sim.camera.position.z = 40;
+
+var loader = new THREE.TextureLoader();
+var num = 5;
+var numtex = 5;
+var spacing = 2;
+
+function createBox(x, y) {
+	var box = new THREE.Mesh(
+		new THREE.SphereGeometry(1),
+		new THREE.MeshBasicMaterial({
+			color: 0xffffff * Math.random(),
+			map: loader.load('resources/UV_Grid_Sm.jpg?_=' + ((x + y) % numtex))
+		})
+	);
+	box.position.set(x * spacing - num * spacing / 2, y * spacing - num * spacing  / 2, -25);
+	return box;
+}
+
+var boxes = [];
+var added = false;
+function toggleBoxes() {
+	if (added) {
+		boxes.forEach(function (box) {
+			scene.remove(box);
+		});
+		setTimeout(toggleBoxes, 500);
+	} else {
+		for (var i = 0; i < num; i++) {
+			for (var j = 0; j < num; j++) {
+				var box = createBox(i, j);
+				boxes.push(box);
+				scene.add(box);
+			}
+		}
+		setTimeout(toggleBoxes, 2000);
+	}
+	added = !added;
+}
+toggleBoxes();
+
+function animate(timestamp) {
+	boxes.forEach(function (box, i) {
+		box.position.z = Math.sin(timestamp / 1000) * 10 - 25;
+		box.rotation.y = i + timestamp / 1000;
+		box.rotation.x = i + timestamp / 1000;
+	});
+	sim.renderer.render(scene, sim.camera);
+	requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
+
