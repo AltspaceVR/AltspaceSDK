@@ -2,12 +2,23 @@
 <html>
 <head>
 	<title>Native glTF</title>
-	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 	<script src='../../dist/altspace.js'></script>
+	<script>
+	AFRAME.registerComponent('detect-click', {
+		init: function(){
+			var self = this;
+			this.el.addEventListener('click', function(){
+				self.el.nextElementSibling.setAttribute('color', '#0f0');
+			});
+		}
+	});
+	</script>
 </head>
 <body>
 <a-scene altspace debug>
-	<a-entity id='model' n-gltf='url: resources/glTF/Corset.gltf; scene-index: 0'></a-entity>
+	<a-entity id='model' detect-click n-gltf='url: resources/glTF/Corset.gltf'></a-entity>
+	<a-box width='.3' height='.3' depth='.3' position='0 -1 0'></a-box>
 </a-scene>
 </body>
 </html>
