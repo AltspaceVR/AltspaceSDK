@@ -2,12 +2,13 @@
 <html>
 <head>
 	<title>Native glTF</title>
-	<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+	<script src="https://aframe.io/releases/0.7.1/aframe.js"></script>
 	<script src='../../dist/altspace.js'></script>
 </head>
 <body>
-<a-scene altspace debug>
-	<a-entity id='model' n-gltf='url: resources/glTF/Corset.gltf; scene-index: 0'></a-entity>
+<a-scene altspace>
+	<a-entity id='sdk' position='-.5 0 0' gltf-model='resources/glTF/Corset.gltf'></a-entity>
+	<a-entity id='native' position='.5 0 0' n-gltf='url: resources/glTF/Corset.gltf; scene-index: 0'></a-entity>
 </a-scene>
 </body>
 </html>
