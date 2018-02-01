@@ -657,7 +657,7 @@ var AltspaceComponent = (function (AFrameComponent$$1) {
 		renderer.submitFrame = noop;
 		renderer.context = {canvas: {}};
 		renderer.shadowMap = {};
-		renderer.requestAnimationFrame = window.requestAnimationFrame;
+		renderer.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 	};
 
 	/*
