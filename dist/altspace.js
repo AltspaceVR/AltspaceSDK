@@ -2916,6 +2916,14 @@ var NLayoutBrowser = (function (NativeComponent$$1) {
 	return NLayoutBrowser;
 }(NativeComponent));
 
+/**
+* @name module:altspace/components.n-gltf
+* @class
+* @extends module:altspace/components.NativeComponent
+* @classdesc Load a 3D model as a native asset, and attach it to this node.
+* As a native asset, the model will be inaccessible from javascript, but
+* will have better performance, materials, and colliders than normal SDK objects. @aframe
+*/
 var NGLTF = (function (NativeComponent$$1) {
 	function NGLTF() {NativeComponent$$1.call(this, 'n-gltf'); }
 
@@ -2926,7 +2934,20 @@ var NGLTF = (function (NativeComponent$$1) {
 	var prototypeAccessors = { schema: {} };
 	prototypeAccessors.schema.get = function () {
 		return {
+			/**
+			* The URL of the glTF model.
+			* @instance
+			* @member {vec3} url
+			* @memberof module:altspace/components.n-gltf
+			*/
 			url: { type: 'string' },
+
+			/**
+			* If the model file describes multiple scenes, load this one instead of the default.
+			* @instance
+			* @member {vec3} sceneIndex
+			* @memberof module:altspace/components.n-gltf
+			*/
 			sceneIndex: { type: 'int' }
 		};
 	};

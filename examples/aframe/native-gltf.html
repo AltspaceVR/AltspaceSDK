@@ -4,6 +4,16 @@
 	<title>Native glTF</title>
 	<script src="https://aframe.io/releases/0.7.1/aframe.js"></script>
 	<script src='../../dist/altspace.js'></script>
+	<script>
+	AFRAME.registerComponent('detect-click', {
+		init: function(){
+			var self = this;
+			this.el.addEventListener('click', function(){
+				self.el.nextElementSibling.setAttribute('color', '#0f0');
+			});
+		}
+	});
+	</script>
 </head>
 <body>
 <a-scene altspace>
