@@ -7,14 +7,17 @@ import Url from 'urllib';
 * @extends module:altspace/components.NativeComponent
 * @classdesc Load a 3D model as a native asset, and attach it to this node.
 * As a native asset, the model will be inaccessible from javascript, but
-* will have better performance, materials, and colliders than normal SDK objects. @aframe
+* may have better performance, materials, and colliders than normal SDK objects.
+* This feature is a work in progress, with improvements going out periodically.
+* Because of the higher-fidelity material system, using this feature may cause
+* framerates to drop, so proceed with caution. @aframe
 */
 export default class NGLTF extends NativeComponent {
 	constructor() {super('n-gltf'); }
 	get schema() {
 		return {
 			/**
-			* The URL of the glTF model.
+			* The URL of a glTF model.
 			* @instance
 			* @member {vec3} url
 			* @memberof module:altspace/components.n-gltf
