@@ -19,7 +19,7 @@ export default class NGLTF extends NativeComponent {
 			/**
 			* The URL of a glTF model.
 			* @instance
-			* @member {vec3} url
+			* @member {string} url
 			* @memberof module:altspace/components.n-gltf
 			*/
 			url: { type: 'string' },
@@ -27,7 +27,7 @@ export default class NGLTF extends NativeComponent {
 			/**
 			* If the model file describes multiple scenes, load this one instead of the default.
 			* @instance
-			* @member {vec3} sceneIndex
+			* @member {int} sceneIndex
 			* @memberof module:altspace/components.n-gltf
 			*/
 			sceneIndex: { type: 'int' }
