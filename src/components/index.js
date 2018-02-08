@@ -44,6 +44,7 @@ import NContainer from './NContainer';
 import NPortal from './NPortal';
 import NSound from './NSound';
 import NLayoutBrowser from './NLayoutBrowser';
+import NGLTF from './NGLTF';
 import NText from './NText';
 import CollapseModel from './CollapseModel';
 import Visible from './visible';
@@ -76,6 +77,7 @@ if (window.AFRAME)
 	registerComponentClass('n-capsule-collider', NCapsuleCollider);
 	registerComponentClass('n-mesh-collider', NMeshCollider);
 	registerComponentClass('n-layout-browser', NLayoutBrowser);
+	registerComponentClass('n-gltf', NGLTF);
 	registerComponentClass('collapse-model', CollapseModel);
 	registerComponentClass('visible', Visible);
 }
@@ -85,5 +87,5 @@ export {
 	SyncComponent, SyncColor, SyncTransform, SyncNSound, Wire, OnePerUser, Instantiator,
 	SyncNSkeletonParent, NObject, NPortal, NSpawner, NText, NBillboard, NSkeletonParent,
 	NCockpitParent, NContainer, NSound, NSphereCollider, NBoxCollider, NCapsuleCollider,
-	NMeshCollider, NLayoutBrowser, CollapseModel
+	NMeshCollider, NLayoutBrowser, CollapseModel, NGLTF
 };

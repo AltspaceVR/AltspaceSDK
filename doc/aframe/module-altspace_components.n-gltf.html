@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>n-portal - Documentation</title>
+    <title>n-gltf - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -39,7 +39,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">n-portal</h1>
+    <h1 class="page-title">n-gltf</h1>
     
 
     
@@ -54,10 +54,15 @@
         <h2>
             <span class="ancestors"><a href="module-altspace_components.html">altspace/components</a>.</span>
         
-        n-portal
+        n-gltf
         </h2>
         
-            <div class="class-description"><p>Spawn a portal that allows you to travel to a different space or a different location in the current space.</p></div>
+            <div class="class-description"><p>Load a 3D model as a native asset, and attach it to this node.
+As a native asset, the model will be inaccessible from javascript, but
+may have better performance, materials, and colliders than normal SDK objects.
+This feature is a work in progress, with improvements going out periodically.
+Because of the higher-fidelity material system, using this feature may cause
+framerates to drop, so proceed with caution.</p></div>
         
     
 </header>
@@ -130,11 +135,6 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;a-entity n-portal='target-space: campfire-lobby'>&lt;/a-entity></code></pre>
-
-
 
     
     </div>
@@ -165,15 +165,13 @@
 
         
             
-<h4 class="name" id="targetEntity"><span class="type-signature"></span>targetEntity<span class="type-signature"> :selector</span></h4>
+<h4 class="name" id="sceneIndex"><span class="type-signature"></span>sceneIndex<span class="type-signature"> :int</span></h4>
 
 
 
 
 <div class="description">
-    <p>A selector pointing to an A-Frame Entity. The portal will send users to the selected entity's position
-and rotate the user in its direction. Note: The target position/rotation will not be updated if the
-targetEntity moves.</p>
+    <p>If the model file describes multiple scenes, load this one instead of the default.</p>
 </div>
 
 
@@ -224,70 +222,13 @@ targetEntity moves.</p>
 
         
             
-<h4 class="name" id="targetEvent"><span class="type-signature"></span>targetEvent<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="url"><span class="type-signature"></span>url<span class="type-signature"> :string</span></h4>
 
 
 
 
 <div class="description">
-    <p>The id of the event that you want the portal to send users to.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="targetSpace"><span class="type-signature"></span>targetSpace<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    <p>The space id of the space that you want the portal to send users to.</p>
+    <p>The URL of a glTF model.</p>
 </div>
 
 
