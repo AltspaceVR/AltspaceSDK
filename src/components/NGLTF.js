@@ -42,4 +42,27 @@ export default class NGLTF extends NativeComponent {
 			altspace.updateNativeComponent(mesh, this.name, data);
 		}
 	}
+
+	/**
+	* Returns a promise that resolves with a [THREE.Box3](https://threejs.org/docs/index.html#api/math/Box3)
+	* @instance
+	* @method getBoundingBox
+	* @memberof module:altspace/components.n-gltf
+	* @returns {Promise}
+	*/
+	getBoundingBox()
+	{
+		return this.callComponent('GetBoundingBox').then(data => {
+			const V3 = AFRAME.THREE.Vector3;
+			return new AFRAME.THREE.Box3(
+				new V3().subVectors(data.center, data.extents),
+				new V3().addVectors(data.center, data.extents)
+			);
+		})
+	}
 }
+
+/**
+* Emitted when the glTF model is finished loading
+* @event module:altspace/components.n-gltf#n-gltf-loaded
+*/
