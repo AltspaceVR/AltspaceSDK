@@ -52,7 +52,7 @@ export default class NGLTF extends NativeComponent {
 	*/
 	getBoundingBox()
 	{
-		return this.callComponent('GetBoundingBox').then(data => {
+		return this.callComponentFunc('GetBoundingBox').then(data => {
 			const V3 = AFRAME.THREE.Vector3;
 			return new AFRAME.THREE.Box3(
 				new V3().subVectors(data.center, data.extents),

@@ -71,9 +71,14 @@ class NativeComponent extends AFrameComponent
 		altspace.removeNativeComponent(mesh, this.name);
 	}
 
-	callComponent(name, ...args){
+	callComponentFunc(name, ...args){
 		let mesh = this.mesh || this.el.object3DMap.mesh;
-		return altspace.callNativeComponent(mesh, this.name, name, args);
+		return altspace.callNativeComponentFunc(mesh, this.name, name, args);
+	}
+
+	callComponentAction(name, ...args){
+		let mesh = this.mesh || this.el.object3DMap.mesh;
+		return altspace.callNativeComponentAction(mesh, this.name, name, args);
 	}
 }
 

@@ -177,7 +177,7 @@ class NSound extends NativeComponent
 	* @fires module:altspace/components.n-sound#sound-paused
 	*/
 	pauseSound() {
-		this.callComponent('pause');
+		this.callComponentAction('pause');
 
 		this.el.emit('sound-paused');
 	}
@@ -187,7 +187,7 @@ class NSound extends NativeComponent
 	* @fires module:altspace/components.n-sound#sound-played
 	*/
 	playSound() {
-		this.callComponent('play');
+		this.callComponentAction('play');
 
 		this.el.emit('sound-played');
 	}
@@ -197,7 +197,7 @@ class NSound extends NativeComponent
 	* @param {number} time - The time in milliseconds to jump to.
 	*/
 	seek(time) {
-		this.callComponent('seek', {time: time});
+		this.callComponentAction('seek', {time: time});
 	}
 }
 
