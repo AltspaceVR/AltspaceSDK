@@ -33,13 +33,22 @@ export default class NGLTF extends NativeComponent {
 			sceneIndex: { type: 'int' }
 		};
 	}
-	update(){
+	init(){
+		NativeComponent.prototype.init.call(this);
+		this.boundsCache = null;
+	}
+	update(oldData)
+	{
 		let mesh = this.mesh || this.el.object3DMap.mesh;
 		var data = Object.assign({}, this.data);
 		data.url = new Url(data.url).toString();
 
 		if(this.sendUpdates){
 			altspace.updateNativeComponent(mesh, this.name, data);
+		}
+
+		if(this.data.url && oldData && this.data.url !== oldData.url){
+			this.boundsCache = null;
 		}
 	}
 
@@ -52,13 +61,16 @@ export default class NGLTF extends NativeComponent {
 	*/
 	getBoundingBox()
 	{
-		return this.callComponentFunc('GetBoundingBox').then(data => {
-			const V3 = AFRAME.THREE.Vector3;
-			return new AFRAME.THREE.Box3(
-				new V3().subVectors(data.center, data.extents),
-				new V3().addVectors(data.center, data.extents)
-			);
-		})
+		if(!this.boundsCache){
+			this.boundsCache = this.callComponentFunc('GetBoundingBox').then(data => {
+				const V3 = AFRAME.THREE.Vector3;
+				return new AFRAME.THREE.Box3(
+					new V3().subVectors(data.center, data.extents),
+					new V3().addVectors(data.center, data.extents)
+				);
+			});
+		}
+		return this.boundsCache;
 	}
 }
 

@@ -32,9 +32,12 @@
 </head>
 <body>
 <a-scene altspace>
-	<a-entity id='native'
-		n-gltf='url: https://rawgit.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf'
+	<a-entity id='helmet' position='-1 0 0'
+		n-gltf='url: https://rawgit.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb'
 		draw-bounds></a-entity>
+	<a-entity id='lantern' position='1 -1.5 0' scale='.1 .1 .1'
+		n-gltf='url: https://rawgit.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-pbrSpecularGlossiness/Lantern.gltf'
+		></a-entity>
 </a-scene>
 </body>
 </html>
