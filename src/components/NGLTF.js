@@ -33,7 +33,12 @@ export default class NGLTF extends NativeComponent {
 			sceneIndex: { type: 'int' }
 		};
 	}
-	update(){
+	init(){
+		NativeComponent.prototype.init.call(this);
+		this.boundsCache = null;
+	}
+	update(oldData)
+	{
 		let mesh = this.mesh || this.el.object3DMap.mesh;
 		var data = Object.assign({}, this.data);
 		data.url = new Url(data.url).toString();
@@ -41,5 +46,35 @@ export default class NGLTF extends NativeComponent {
 		if(this.sendUpdates){
 			altspace.updateNativeComponent(mesh, this.name, data);
 		}
+
+		if(this.data.url && oldData && this.data.url !== oldData.url){
+			this.boundsCache = null;
+		}
+	}
+
+	/**
+	* Returns a promise that resolves with a [THREE.Box3](https://threejs.org/docs/index.html#api/math/Box3)
+	* @instance
+	* @method getBoundingBox
+	* @memberof module:altspace/components.n-gltf
+	* @returns {Promise}
+	*/
+	getBoundingBox()
+	{
+		if(!this.boundsCache){
+			this.boundsCache = this.callComponentFunc('GetBoundingBox').then(data => {
+				const V3 = AFRAME.THREE.Vector3;
+				return new AFRAME.THREE.Box3(
+					new V3().subVectors(data.center, data.extents),
+					new V3().addVectors(data.center, data.extents)
+				);
+			});
+		}
+		return this.boundsCache;
 	}
 }
+
+/**
+* Emitted when the glTF model is finished loading
+* @event module:altspace/components.n-gltf#n-gltf-loaded
+*/
