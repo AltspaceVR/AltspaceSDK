@@ -501,7 +501,7 @@ var AltspaceTrackedControls = (function (AFrameComponent$$1) {
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.8.0/dist/altspace.min.js"></script>
+*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.8.1/dist/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -2041,12 +2041,20 @@ var NativeComponent = (function (AFrameComponent$$1) {
 		altspace.removeNativeComponent(mesh, this.name);
 	};
 
-	NativeComponent.prototype.callComponent = function callComponent (name){
+	NativeComponent.prototype.callComponentFunc = function callComponentFunc (name){
 		var args = [], len = arguments.length - 1;
 		while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
 
 		var mesh = this.mesh || this.el.object3DMap.mesh;
-		altspace.callNativeComponent(mesh, this.name, name, args);
+		return altspace.callNativeComponentFunc(mesh, this.name, name, args);
+	};
+
+	NativeComponent.prototype.callComponentAction = function callComponentAction (name){
+		var args = [], len = arguments.length - 1;
+		while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+		var mesh = this.mesh || this.el.object3DMap.mesh;
+		return altspace.callNativeComponentAction(mesh, this.name, name, args);
 	};
 
 	return NativeComponent;
@@ -2845,7 +2853,7 @@ var NSound = (function (NativeComponent$$1) {
 	* @fires module:altspace/components.n-sound#sound-paused
 	*/
 	NSound.prototype.pauseSound = function pauseSound () {
-		this.callComponent('pause');
+		this.callComponentAction('pause');
 
 		this.el.emit('sound-paused');
 	};
@@ -2855,7 +2863,7 @@ var NSound = (function (NativeComponent$$1) {
 	* @fires module:altspace/components.n-sound#sound-played
 	*/
 	NSound.prototype.playSound = function playSound () {
-		this.callComponent('play');
+		this.callComponentAction('play');
 
 		this.el.emit('sound-played');
 	};
@@ -2865,7 +2873,7 @@ var NSound = (function (NativeComponent$$1) {
 	* @param {number} time - The time in milliseconds to jump to.
 	*/
 	NSound.prototype.seek = function seek (time) {
-		this.callComponent('seek', {time: time});
+		this.callComponentAction('seek', {time: time});
 	};
 
 	Object.defineProperties( NSound.prototype, prototypeAccessors );
@@ -2954,7 +2962,12 @@ var NGLTF = (function (NativeComponent$$1) {
 			sceneIndex: { type: 'int' }
 		};
 	};
-	NGLTF.prototype.update = function update (){
+	NGLTF.prototype.init = function init (){
+		NativeComponent$$1.prototype.init.call(this);
+		this.boundsCache = null;
+	};
+	NGLTF.prototype.update = function update (oldData)
+	{
 		var mesh = this.mesh || this.el.object3DMap.mesh;
 		var data = Object.assign({}, this.data);
 		data.url = new Url(data.url).toString();
@@ -2962,12 +2975,44 @@ var NGLTF = (function (NativeComponent$$1) {
 		if(this.sendUpdates){
 			altspace.updateNativeComponent(mesh, this.name, data);
 		}
+
+		if(this.data.url && oldData && this.data.url !== oldData.url){
+			this.boundsCache = null;
+		}
+	};
+
+	/**
+	* Returns a promise that resolves with a [THREE.Box3](https://threejs.org/docs/index.html#api/math/Box3)
+	* @instance
+	* @method getBoundingBox
+	* @memberof module:altspace/components.n-gltf
+	* @returns {Promise}
+	*/
+	NGLTF.prototype.getBoundingBox = function getBoundingBox ()
+	{
+		if(!this.boundsCache){
+			this.boundsCache = this.callComponentFunc('GetBoundingBox').then(function (data) {
+				var V3 = AFRAME.THREE.Vector3;
+				return new AFRAME.THREE.Box3(
+					new V3().subVectors(data.center, data.extents),
+					new V3().addVectors(data.center, data.extents)
+				);
+			});
+		}
+		return this.boundsCache;
 	};
 
 	Object.defineProperties( NGLTF.prototype, prototypeAccessors );
 
 	return NGLTF;
 }(NativeComponent));
+
+
+
+/**
+* Emitted when the glTF model is finished loading
+* @event module:altspace/components.n-gltf#n-gltf-loaded
+*/
 
 /**
 * @name module:altspace/components.n-text
@@ -3131,7 +3176,7 @@ var Visible = (function (AFrameComponent$$1) {
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.8.0/dist/altspace.min.js"></script>
+*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v2.8.1/dist/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -6399,7 +6444,7 @@ var utilities_lib = Object.freeze({
 if(!Object.isFrozen(window.altspace))
 	{ Object.assign(window.altspace, {components: {}, utilities: {}, inClient: false}); }
 
-var version = '2.8.0';
+var version = '2.8.1';
 if (window.altspace.requestVersion) {
 	window.altspace.requestVersion(version);
 }
