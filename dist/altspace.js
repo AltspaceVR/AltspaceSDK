@@ -3555,7 +3555,7 @@ var cursor = Object.freeze({
 */
 var Simulation = function Simulation(config)
 {
-	if ( config === void 0 ) config = {auto: true};
+	if ( config === void 0 ) config = {auto: true, rendererOptions: {}};
 
 	this._scene = null;
 	this._renderer = null;
@@ -3576,7 +3576,7 @@ var Simulation = function Simulation(config)
 	else if (window.altspace && altspace.inClient)
 	{
 		this._scene = new THREE.Scene();
-		this._renderer = altspace.getThreeJSRenderer();
+		this._renderer = altspace.getThreeJSRenderer(rendererOptions || {});
 		this._camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
 	}
 	else {

@@ -51,7 +51,7 @@ ChessApp = (function(){
 			authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
 			instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
 		}).then(function(connection) {
-			sim = new altspace.utilities.Simulation();
+			sim = new altspace.utilities.Simulation({rendererOptions: {profile: true}});
 			instanceRef = connection.instance;
 
 			if (altspace.inClient) {

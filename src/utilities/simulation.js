@@ -16,7 +16,7 @@ import * as CursorShim from './shims/cursor';
 */
 class Simulation
 {
-	constructor(config = {auto: true})
+	constructor(config = {auto: true, rendererOptions: {}})
 	{
 		this._scene = null;
 		this._renderer = null;
@@ -37,7 +37,7 @@ class Simulation
 		else if (window.altspace && altspace.inClient)
 		{
 			this._scene = new THREE.Scene();
-			this._renderer = altspace.getThreeJSRenderer();
+			this._renderer = altspace.getThreeJSRenderer(rendererOptions || {});
 			this._camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
 		}
 		else {
