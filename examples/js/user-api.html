@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<title>Test Users API</title>
+	<style>
+		body {
+			background-color: white;
+			font-size: 200%;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		
+		altspace.getUser().then(function(user)
+		{
+			var p = document.createElement('p');
+			p.innerHTML = 'User data: '+JSON.stringify(user, null, '  ');
+			document.body.appendChild(p);
+
+			user.addEventListener('avatarchange', function(evt){
+				var p = document.createElement('p');
+				p.innerHTML = 'Avatar change: '+ JSON.stringify(evt.data);
+				document.body.appendChild(p);
+			});
+		});
+
+	</script>
+</body>
+</html>
