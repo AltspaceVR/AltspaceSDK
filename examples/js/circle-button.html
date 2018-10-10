@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang=en>
-	<head>
-		<meta charset=utf-8>
-		<title>Circle Button Example</title>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
-		<script src="../../dist/altspace.js"></script>
-	</head>
-	<body>
-		<script>
+
+<head>
+	<meta charset=utf-8>
+	<title>Circle Button Example</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+
+<body>
+	<script>
 		if (!window.altspace || !window.altspace.inClient) {
 			document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 		}
@@ -28,20 +30,20 @@
 		circlebutton.addBehavior(new altspace.utilities.behaviors.HoverColor({ event: 'cursordown', color: new THREE.Color('red') }));
 
 		// Assign button event handlers
-		circlebutton.addEventListener('cursorenter', function(event) {
+		circlebutton.addEventListener('cursorenter', function (event) {
 			console.log('Button is being hovered over.');
 		});
 
-		circlebutton.addEventListener('cursorleave', function(event) {
+		circlebutton.addEventListener('cursorleave', function (event) {
 			console.log('Button is no longer being hovered over.');
 		});
 
-		circlebutton.addEventListener('cursordown', function(event) {
+		circlebutton.addEventListener('cursordown', function (event) {
 			console.log('Button is being clicked on.');
 		});
 
 		// Attach cursorup event to scene to trigger event even when it has moved away from button before being released
-		scene.addEventListener('cursorup', function(event) {
+		scene.addEventListener('cursorup', function (event) {
 			console.log('Button is no longer being clicked on.');
 		});
 
@@ -54,6 +56,7 @@
 			renderer.render(scene);
 		}
 		render();
-		</script>
-	</body>
+	</script>
+</body>
+
 </html>

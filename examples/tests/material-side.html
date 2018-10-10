@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Material Side Tests</title>
-		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
-		<script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
-		<style>
-			body { margin: 0px; overflow: hidden; }
+
+<head>
+	<title>Material Side Tests</title>
+	<meta charset="utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../js/libs/OrbitControls.js"></script>
+	<script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+	<style>
+		body { margin: 0px; overflow: hidden; }
 			label {
 				font: bold 40pt sans-serif;
 				position: absolute;
@@ -16,10 +17,11 @@
 				top: 300px;
 			}
 		</style>
-	</head>
-	<body>
-		<button>toggle transparency</button>
-		<script type="text/babel">
+</head>
+
+<body>
+	<button>toggle transparency</button>
+	<script type="text/babel">
 			var scene, renderer, camera, controls, flip = true, lastFlip = 0, transparent = false, spheres = [];
 
 			scene = new THREE.Scene();
@@ -116,5 +118,6 @@
 
 			animate(0);
 		</script>
-	</body>
+</body>
+
 </html>

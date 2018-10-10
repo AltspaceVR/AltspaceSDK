@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang=en>
-	<head>
-		<meta charset=utf-8>
-		<title>My first Three.js app in Altspace</title>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
-		<script src="../../dist/altspace.js"></script>
-	</head>
-	<body>
-		<script>
+
+<head>
+	<meta charset=utf-8>
+	<title>My first Three.js app in Altspace</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+
+<body>
+	<script>
 		if (!window.altspace || !window.altspace.inClient) {
 			document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 		}
 
 		var scene = new THREE.Scene();
-		var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+		var renderer = altspace.getThreeJSRenderer({ version: '0.2.0' });
 
 		var geometry = new THREE.BoxGeometry(200, 200, 200);
 		var material = new THREE.MeshBasicMaterial({
@@ -32,6 +34,7 @@
 			renderer.render(scene);
 		}
 		render();
-		</script>
-	</body>
+	</script>
+</body>
+
 </html>

@@ -1,45 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Behavior Tests</title>
-		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
-		<script src="../../dist/altspace.js"></script>
-	</head>
-	<body>
-		<select id="behaviorSelector">
-			<option>none</option>
-			<option data-config='{"x": 0.1, "y": 0.2}'>Bob</option>
-			<option>Spin</option>
-			<option data-config='{"x": true, "z": true}'>Drag</option>
-			<option>ButtonStateStyle</option>
-			<option>HoverColor</option>
-			<option>HoverScale</option>
-		</select>
-		<script>
-			var sim = new altspace.utilities.Simulation();
-			sim.scene.scale.multiplyScalar(200);
 
-			var container = new THREE.Group();
-			container.scale.multiplyScalar(0.5);
-			container.rotation.x = Math.PI * 0.25;
-			container.position.y = -1;
+<head>
+	<title>Behavior Tests</title>
+	<meta charset="utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../js/libs/OrbitControls.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
 
-			var boxSize = 1;
+<body>
+	<select id="behaviorSelector">
+		<option>none</option>
+		<option data-config='{"x": 0.1, "y": 0.2}'>Bob</option>
+		<option>Spin</option>
+		<option data-config='{"x": true, "z": true}'>Drag</option>
+		<option>ButtonStateStyle</option>
+		<option>HoverColor</option>
+		<option>HoverScale</option>
+	</select>
+	<script>
+		var sim = new altspace.utilities.Simulation();
+		sim.scene.scale.multiplyScalar(200);
 
-			var boxTex = new THREE.TextureLoader().load('resources/UV_Grid_Sm.jpg');
-			var boxMesh = new THREE.Mesh(
-				new THREE.BoxGeometry(boxSize, boxSize, boxSize),
-				new THREE.MeshBasicMaterial({color: 'green', map: boxTex}));
-			boxMesh.position.set(0.5, -0.3, 0.5);
-			container.add(boxMesh);
+		var container = new THREE.Group();
+		container.scale.multiplyScalar(0.5);
+		container.rotation.x = Math.PI * 0.25;
+		container.position.y = -1;
 
-			sim.scene.add(container);
+		var boxSize = 1;
 
-			var behaviorSelector = document.getElementById('behaviorSelector')
+		var boxTex = new THREE.TextureLoader().load('resources/UV_Grid_Sm.jpg');
+		var boxMesh = new THREE.Mesh(
+			new THREE.BoxGeometry(boxSize, boxSize, boxSize),
+			new THREE.MeshBasicMaterial({ color: 'green', map: boxTex }));
+		boxMesh.position.set(0.5, -0.3, 0.5);
+		container.add(boxMesh);
 
-			var behaviorConfigs = Array.prototype.slice.call(behaviorSelector.options)
+		sim.scene.add(container);
+
+		var behaviorSelector = document.getElementById('behaviorSelector')
+
+		var behaviorConfigs = Array.prototype.slice.call(behaviorSelector.options)
 			.reduce(function (configs, opt) {
 				if (opt.dataset.config) {
 					configs[opt.value] = JSON.parse(opt.dataset.config);
@@ -47,23 +49,24 @@
 				return configs;
 			}, {});
 
-			behaviorSelector.addEventListener('change', function () {
-				var behaviorName = this.value;
-				if (behaviorName === 'none') { return; }
-				boxMesh.removeAllBehaviors();
-				var behavior = altspace.utilities.behaviors[behaviorName];
-				var config = behaviorConfigs[behaviorName];
-				boxMesh.addBehavior(new behavior(config));
-			});
+		behaviorSelector.addEventListener('change', function () {
+			var behaviorName = this.value;
+			if (behaviorName === 'none') { return; }
+			boxMesh.removeAllBehaviors();
+			var behavior = altspace.utilities.behaviors[behaviorName];
+			var config = behaviorConfigs[behaviorName];
+			boxMesh.addBehavior(new behavior(config));
+		});
 
-			if (location.search) {
-				var behaviorName = location.search.substr(1);
-				var behavior = altspace.utilities.behaviors[behaviorName];
-				var config = behaviorConfigs[behaviorName];
-				boxMesh.addBehavior(new behavior(config));
-				behaviorSelector.selectedIndex = Array.prototype.slice.call(behaviorSelector.options).
-					map(function (opt) { return opt.value; }).indexOf(behaviorName);
-			}
-		</script>
-	</body>
+		if (location.search) {
+			var behaviorName = location.search.substr(1);
+			var behavior = altspace.utilities.behaviors[behaviorName];
+			var config = behaviorConfigs[behaviorName];
+			boxMesh.addBehavior(new behavior(config));
+			behaviorSelector.selectedIndex = Array.prototype.slice.call(behaviorSelector.options).
+				map(function (opt) { return opt.value; }).indexOf(behaviorName);
+		}
+	</script>
+</body>
+
 </html>

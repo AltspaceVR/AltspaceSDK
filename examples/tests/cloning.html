@@ -1,68 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Cloning Tests</title>
-		<meta charset="utf-8">
-		<style>
-			body {
-				margin: 0px;
-				overflow: hidden;
-			}
-		</style>
-	</head>
-	<body>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
 
-		<script >
-			var scene, renderer, camera;
+<head>
+	<title>Cloning Tests</title>
+	<meta charset="utf-8">
+	<style>
+		body {
+			margin: 0px;
+			overflow: hidden;
+		}
+	</style>
+</head>
 
-			scene = new THREE.Scene();
-			scene.position.set(0, -60, 0);
-			scene.scale.multiplyScalar(2);
+<body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../libs/MTLLoader.js"></script>
 
-			var geometry = new THREE.BoxGeometry(1, 1, 1);
-			var material = new THREE.MeshBasicMaterial({color:'#ffffff'});
-			var cube = new THREE.Mesh(geometry, material);
-			cube.scale.multiplyScalar(100);
+	<script>
+		var scene, renderer, camera;
 
-			setTimeout(function()
-			{
-				var clonedCube = cube.clone();
-				scene.add(clonedCube);
-				clonedCube.position.set(0, -50, 0);
+		scene = new THREE.Scene();
+		scene.position.set(0, -60, 0);
+		scene.scale.multiplyScalar(2);
 
-				setTimeout(function()
-				{
-					var secondClonedCube = cube.clone();
-					scene.add(secondClonedCube);
-				}, 4000);
-			}, 2000);
+		var geometry = new THREE.BoxGeometry(1, 1, 1);
+		var material = new THREE.MeshBasicMaterial({ color: '#ffffff' });
+		var cube = new THREE.Mesh(geometry, material);
+		cube.scale.multiplyScalar(100);
 
-			if (window.altspace) {
-				renderer = altspace.getThreeJSRenderer();
-			}
-			else {
-				renderer = new THREE.WebGLRenderer();
-				renderer.setClearColor("#AAAAAA");
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
+		setTimeout(function () {
+			var clonedCube = cube.clone();
+			scene.add(clonedCube);
+			clonedCube.position.set(0, -50, 0);
 
-				var aspect = window.innerWidth / window.innerHeight;
-				camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000 );
-				camera.position.z = 400;
-				camera.position.y = 50;
-				camera.lookAt( scene.position );
+			setTimeout(function () {
+				var secondClonedCube = cube.clone();
+				scene.add(secondClonedCube);
+			}, 4000);
+		}, 2000);
 
-				scene.add( new THREE.AmbientLight( 0xffffff ) );
-			}
+		if (window.altspace) {
+			renderer = altspace.getThreeJSRenderer();
+		}
+		else {
+			renderer = new THREE.WebGLRenderer();
+			renderer.setClearColor("#AAAAAA");
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
 
-			function animate(elapsed) {
-				requestAnimationFrame(animate);
-				renderer.render(scene, camera);
-			}
+			var aspect = window.innerWidth / window.innerHeight;
+			camera = new THREE.PerspectiveCamera(45, aspect, 1, 2000);
+			camera.position.z = 400;
+			camera.position.y = 50;
+			camera.lookAt(scene.position);
 
-			animate(0);
-		</script>
-	</body>
+			scene.add(new THREE.AmbientLight(0xffffff));
+		}
+
+		function animate(elapsed) {
+			requestAnimationFrame(animate);
+			renderer.render(scene, camera);
+		}
+
+		animate(0);
+	</script>
+</body>
+
 </html>

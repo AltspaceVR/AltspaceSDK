@@ -1,7 +1,7 @@
 'use strict';
 
-import {AFrameComponent} from './AFrameComponent';
-import {safeDeepSet} from './utilities';
+import { AFrameComponent } from './AFrameComponent';
+import { safeDeepSet } from './utilities';
 
 /**
 * @name module:altspace/components.altspace
@@ -17,7 +17,7 @@ import {safeDeepSet} from './utilities';
 * <head>
 *   <title>My A-Frame Scene</title>
 *   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*   <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v{{SDK_VERSION}}/dist/altspace.min.js"></script>
+*   <script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>
 * </head>
 * <body>
 *   <a-scene altspace>
@@ -25,9 +25,8 @@ import {safeDeepSet} from './utilities';
 *   </a-scene>
 * </body>
 */
-class AltspaceComponent extends AFrameComponent
-{
-	get schema(){
+class AltspaceComponent extends AFrameComponent {
+	get schema() {
 		return {
 
 			/**
@@ -38,7 +37,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			usePixelScale: { type: 'boolean', default: false},
+			usePixelScale: { type: 'boolean', default: false },
 
 			/**
 			* Puts the origin at the `bottom`, `middle` (default), or `top` of the Altspace enclosure.
@@ -47,7 +46,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default "middle"
 			* @memberof module:altspace/components.altspace
 			*/
-			verticalAlign: { type: 'string',  default: 'middle'},
+			verticalAlign: { type: 'string', default: 'middle' },
 
 			/**
 			* Prevents the scene from being created if enclosure is flat.
@@ -56,7 +55,7 @@ class AltspaceComponent extends AFrameComponent
 			* @default true
 			* @memberof module:altspace/components.altspace
 			*/
-			enclosuresOnly: { type: 'boolean', default: true},
+			enclosuresOnly: { type: 'boolean', default: true },
 
 			/**
 			* Puts the app into fullspace mode.
@@ -65,20 +64,19 @@ class AltspaceComponent extends AFrameComponent
 			* @default false
 			* @memberof module:altspace/components.altspace
 			*/
-			fullspace: { type: 'boolean', default: false}
+			fullspace: { type: 'boolean', default: false }
 		}
 	}
 
-	init()
-	{
+	init() {
 		this.version = 'AFRAME_ALTSPACE_VERSION';
-		if(!(this.el.object3D instanceof THREE.Scene)){
+		if (!(this.el.object3D instanceof THREE.Scene)) {
 			console.warn('aframe-altspace-component can only be attached to a-scene');
 			return;
 		}
 
 		if (window.altspace && window.altspace.inClient) {
-			this.el.setAttribute('vr-mode-ui', {enabled: false});
+			this.el.setAttribute('vr-mode-ui', { enabled: false });
 			this.initRenderer();
 			this.initCursorEvents();
 			this.initCollisionEvents();
@@ -88,24 +86,21 @@ class AltspaceComponent extends AFrameComponent
 		}
 	}
 
-	tick(t, dt)
-	{
-		if(this.el.object3D.updateAllBehaviors)
+	tick(t, dt) {
+		if (this.el.object3D.updateAllBehaviors)
 			this.el.object3D.updateAllBehaviors();
 	}
 
 	/*
 	* Swap in Altspace renderer when running in AltspaceVR.
 	*/
-	initRenderer()
-	{
+	initRenderer() {
 		let scene = this.el.object3D;
 		let sceneEl = this.el.sceneEl;
-		let naturalScale = sceneEl.getAttribute('scale') || {x: 1, y: 1, z: 1};
-		altspace.getEnclosure().then((enclosure =>
-		{
+		let naturalScale = sceneEl.getAttribute('scale') || { x: 1, y: 1, z: 1 };
+		altspace.getEnclosure().then((enclosure => {
 
-			if(this.data.fullspace){
+			if (this.data.fullspace) {
 				if (enclosure.fullspace) {
 					safeDeepSet(scene.userData, ['altspace', 'initialized'], true);
 				}
@@ -117,24 +112,24 @@ class AltspaceComponent extends AFrameComponent
 				});
 			}
 
-			if (!this.data.usePixelScale || this.data.fullspace){
+			if (!this.data.usePixelScale || this.data.fullspace) {
 				scene.scale.copy(naturalScale).multiplyScalar(enclosure.pixelsPerMeter);
 			}
 
 			switch (this.data.verticalAlign) {
-			case 'bottom':
-				scene.position.y -= enclosure.innerHeight / 2;
-				break;
-			case 'top':
-				scene.position.y += enclosure.innerHeight / 2;
-				break;
-			case 'middle':
-				break;
-			default:
-				console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
+				case 'bottom':
+					scene.position.y -= enclosure.innerHeight / 2;
+					break;
+				case 'top':
+					scene.position.y += enclosure.innerHeight / 2;
+					break;
+				case 'middle':
+					break;
+				default:
+					console.warn('Unexpected value for verticalAlign: ', this.data.verticalAlign);
 			}
 
-			if(this.data.enclosuresOnly && enclosure.innerDepth === 1){
+			if (this.data.enclosuresOnly && enclosure.innerDepth === 1) {
 				this.el.renderer.render(new THREE.Scene());
 				this.el.renderer = this.el.effect = oldRenderer;
 			}
@@ -149,7 +144,7 @@ class AltspaceComponent extends AFrameComponent
 			aframeComponentVersion: this.version
 		});
 
-		let noop = function() {};
+		let noop = function () { };
 		renderer.setSize = noop;
 		renderer.setPixelRatio = noop;
 		renderer.setClearColor = noop;
@@ -161,7 +156,7 @@ class AltspaceComponent extends AFrameComponent
 		renderer.getMaxAnisotropy = noop;
 		renderer.setFaceCulling = noop;
 		renderer.submitFrame = noop;
-		renderer.context = {canvas: {}};
+		renderer.context = { canvas: {} };
 		renderer.shadowMap = {};
 		renderer.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 	}
@@ -169,8 +164,7 @@ class AltspaceComponent extends AFrameComponent
 	/*
 	* Emulate A-Frame cursor events when running in AltspaceVR.
 	*/
-	initCursorEvents()
-	{
+	initCursorEvents() {
 
 		let scene = this.el.object3D;
 		let cursorEl = document.querySelector('a-cursor') || document.querySelector('a-entity[cursor]');
@@ -180,15 +174,14 @@ class AltspaceComponent extends AFrameComponent
 			cursorEl.setAttribute('material', 'opacity', 0.0);
 		}
 
-		function emit(eventName, event)
-		{
+		function emit(eventName, event) {
 			// Fire events on intersected object and A-Frame cursor.
 			let targetEl = event.target.el;
-			if (cursorEl){
+			if (cursorEl) {
 				cursorEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
 			}
 
-			if (targetEl){
+			if (targetEl) {
 				targetEl.emit(eventName, { target: targetEl, ray: event.ray, point: event.point });
 			}
 		}
@@ -208,34 +201,32 @@ class AltspaceComponent extends AFrameComponent
 		});
 
 		scene.addEventListener('cursorenter', event => {
-			if (!event.target.el){
+			if (!event.target.el) {
 				return;
 			}
 			event.target.el.addState('hovered');
-			if (cursorEl){
+			if (cursorEl) {
 				cursorEl.addState('hovering');
 			}
 			emit('mouseenter', event);
 		});
 
 		scene.addEventListener('cursorleave', event => {
-			if (!event.target.el){
+			if (!event.target.el) {
 				return;
 			}
 			event.target.el.removeState('hovered');
-			if (cursorEl){
+			if (cursorEl) {
 				cursorEl.removeState('hovering');
 			}
 			emit('mouseleave', event);
 		});
 	}
 
-	initCollisionEvents()
-	{
+	initCollisionEvents() {
 		let scene = this.el.object3D;
 
-		function emit(eventName, event)
-		{
+		function emit(eventName, event) {
 			let targetEl = event.target.el;
 			if (!targetEl)
 				return;

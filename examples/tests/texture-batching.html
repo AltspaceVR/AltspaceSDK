@@ -1,77 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Texture Batching Test</title>
-		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
-		<script src="../../dist/altspace.js"></script>
-	</head>
-	<body>
-		<button id="more_canvas">more canvas</button>
-		<button id="more_image">more image</button>
-		<script>
-			var sim = new altspace.utilities.Simulation({auto: false}), controls;
 
-			if (!altspace.inClient) {
-				controls = new THREE.OrbitControls(sim.camera);
+<head>
+	<title>Texture Batching Test</title>
+	<meta charset="utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../js/libs/OrbitControls.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
+
+<body>
+	<button id="more_canvas">more canvas</button>
+	<button id="more_image">more image</button>
+	<script>
+		var sim = new altspace.utilities.Simulation({ auto: false }), controls;
+
+		if (!altspace.inClient) {
+			controls = new THREE.OrbitControls(sim.camera);
+		}
+
+		var boxSize = 20;
+		var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+
+		var textureSize = 512;
+		var canvas = document.createElement('canvas');
+		canvas.width = textureSize;
+		canvas.height = textureSize;
+		var context = canvas.getContext('2d');
+		var canvasTexture = new THREE.CanvasTexture(canvas);
+		var canvasMaterial = new THREE.MeshBasicMaterial({ map: canvasTexture });
+		context.fillStyle = '#eeaaaa';
+		context.fillRect(0, 0, textureSize, textureSize);
+		canvasTexture.needsUpdate = true;
+
+		var loader = new THREE.TextureLoader();
+		var imageTexture = loader.load('resources/UV_Grid_Sm.jpg');
+		var imageMat = new THREE.MeshBasicMaterial({ map: imageTexture });
+
+		function makeBoxAdder(material, offset) {
+			return function (i) {
+				var boxMesh = new THREE.Mesh(box, material);
+				boxMesh.position.x = offset * boxSize * 3 + Math.cos(i) * boxSize * 1.5;
+				boxMesh.position.z = Math.sin(i) * boxSize * 1.5;
+				boxMesh.position.y = i * boxSize / 4;
+				sim.scene.add(boxMesh);
+			};
+		}
+		var addCanvasBox = makeBoxAdder(canvasMaterial, -1);
+		var addImageBox = makeBoxAdder(imageMat, 1);
+
+		var j = 0, k = 0;
+		for (var i = 0; i < 10; i++) {
+			addCanvasBox(j++);
+			addImageBox(k++);
+		}
+
+		function animate(elapsed) {
+			if (controls) {
+				controls.update();
 			}
+			requestAnimationFrame(animate);
+			sim.renderer.render(sim.scene, sim.camera);
+		}
+		animate(0);
 
-			var boxSize = 20;
-			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-
-			var textureSize = 512;
-			var canvas = document.createElement('canvas');
-			canvas.width = textureSize;
-			canvas.height = textureSize;
-			var context = canvas.getContext('2d');
-			var canvasTexture = new THREE.CanvasTexture(canvas);
-			var canvasMaterial = new THREE.MeshBasicMaterial({ map: canvasTexture });
-			context.fillStyle = '#eeaaaa';
-			context.fillRect(0, 0, textureSize, textureSize);
-			canvasTexture.needsUpdate = true;
-
-			var loader = new THREE.TextureLoader();
-			var imageTexture = loader.load('resources/UV_Grid_Sm.jpg');
-			var imageMat = new THREE.MeshBasicMaterial({ map: imageTexture });
-
-			function makeBoxAdder(material, offset) {
-				return function (i) {
-					var boxMesh = new THREE.Mesh(box, material);
-					boxMesh.position.x = offset * boxSize * 3 + Math.cos(i) * boxSize * 1.5;
-					boxMesh.position.z = Math.sin(i) * boxSize * 1.5;
-					boxMesh.position.y = i * boxSize / 4;
-					sim.scene.add(boxMesh);
-				};
-			}
-			var addCanvasBox = makeBoxAdder(canvasMaterial, -1);
-			var addImageBox = makeBoxAdder(imageMat, 1);
-
-			var j = 0, k = 0;
+		more_canvas.addEventListener('click', function () {
 			for (var i = 0; i < 10; i++) {
 				addCanvasBox(j++);
+			}
+		});
+		more_image.addEventListener('click', function () {
+			for (var i = 0; i < 10; i++) {
 				addImageBox(k++);
 			}
+		});
+	</script>
+</body>
 
-			function animate(elapsed) {
-				if (controls) {
-					controls.update();
-				}
-				requestAnimationFrame(animate);
-				sim.renderer.render(sim.scene, sim.camera);
-			}
-			animate(0);
-
-			more_canvas.addEventListener('click', function () {
-				for (var i = 0; i < 10; i++) {
-					addCanvasBox(j++);
-				}
-			});
-			more_image.addEventListener('click', function () {
-				for (var i = 0; i < 10; i++) {
-					addImageBox(k++);
-				}
-			});
-		</script>
-	</body>
 </html>

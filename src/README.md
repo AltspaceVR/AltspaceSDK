@@ -31,7 +31,7 @@ This is a fully functional example of what Three.js code looks like.
 <!DOCTYPE html>
 <html lang=en>
 	<head>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.js"></script>
 		<script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>
 	</head>
 	<body>

@@ -1,272 +1,275 @@
 <!DOCTYPE html>
 <html lang='en'>
+
 <head>
-<title>Chess</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
-<script src="../../dist/altspace.js"></script>
+	<title>Chess</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="libs/MTLLoader.js"></script>
+	<script src="libs/OBJLoader.js"></script>
+	<script src="../../dist/altspace.js"></script>
 
 </head>
+
 <body>
-<script>
+	<script>
 
-ChessApp = (function(){
-	//Chess Board with draggable pieces and multiplayer synchronization.
-	//Logic for 'responsive' chess board, which sizes itself based on boardSize.
-	//Pieces are placed in their initial positions when first loaded, but then
-	//can be dragged without restriction (no checking if the move is legal).
-	var sim;
-	var instanceRef;
-	var sceneSync;
+		ChessApp = (function () {
+			//Chess Board with draggable pieces and multiplayer synchronization.
+			//Logic for 'responsive' chess board, which sizes itself based on boardSize.
+			//Pieces are placed in their initial positions when first loaded, but then
+			//can be dragged without restriction (no checking if the move is legal).
+			var sim;
+			var instanceRef;
+			var sceneSync;
 
-	var board;
-	var whitePieces = [];
-	var blackPieces = [];
-	var gameObjects = new THREE.Group();
+			var board;
+			var whitePieces = [];
+			var blackPieces = [];
+			var gameObjects = new THREE.Group();
 
-	var CONFIG = Object.freeze({//constants
-		boardSize: 700,//chess piece models are scaled to fit the board
-		tableHeight: 0,//chess board is raised to be on top of table
-		dragPlaneSize: 1000,//boundary for dragging pieces, should be larger than boardSize
-		pieces: {
-			king: {modelFile: 'king', count: 1},
-			queen: {modelFile: 'queen', count: 1},
-			bishop: {modelFile: 'bishop', count: 2},
-			knight: {modelFile: 'knight', count: 2},
-			rook: {modelFile: 'rook', count: 2},
-			pawn: {modelFile: 'pawn', count: 8}
-		},
-		pieceWidth: 16,
-		board: {modelFile: 'board', width: 50, height: 1},
-		directory: 'models/chess',
-	});
-	var modelScale = CONFIG.boardSize / 8 / CONFIG.pieceWidth;
-	var boardScale = CONFIG.boardSize / CONFIG.board.width;
+			var CONFIG = Object.freeze({//constants
+				boardSize: 700,//chess piece models are scaled to fit the board
+				tableHeight: 0,//chess board is raised to be on top of table
+				dragPlaneSize: 1000,//boundary for dragging pieces, should be larger than boardSize
+				pieces: {
+					king: { modelFile: 'king', count: 1 },
+					queen: { modelFile: 'queen', count: 1 },
+					bishop: { modelFile: 'bishop', count: 2 },
+					knight: { modelFile: 'knight', count: 2 },
+					rook: { modelFile: 'rook', count: 2 },
+					pawn: { modelFile: 'pawn', count: 8 }
+				},
+				pieceWidth: 16,
+				board: { modelFile: 'board', width: 50, height: 1 },
+				directory: 'models/chess',
+			});
+			var modelScale = CONFIG.boardSize / 8 / CONFIG.pieceWidth;
+			var boardScale = CONFIG.boardSize / CONFIG.board.width;
 
-	function main(){
-		var inCodePen = altspace.utilities.codePen.inCodePen;
-		altspace.utilities.sync.connect({
-			appId: 'Chess',
-			authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
-			instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
-		}).then(function(connection) {
-			sim = new altspace.utilities.Simulation();
-			instanceRef = connection.instance;
+			function main() {
+				var inCodePen = altspace.utilities.codePen.inCodePen;
+				altspace.utilities.sync.connect({
+					appId: 'Chess',
+					authorId: inCodePen ? altspace.utilities.codePen.getAuthorId() : 'AltspaceVR',
+					instanceId: inCodePen ? altspace.utilities.codePen.getPenId() : null
+				}).then(function (connection) {
+					sim = new altspace.utilities.Simulation();
+					instanceRef = connection.instance;
 
-			if (altspace.inClient) {
-				altspace.getEnclosure().then(function (enclosure) {
-					gameObjects.position.y -= enclosure.innerHeight / 2;
+					if (altspace.inClient) {
+						altspace.getEnclosure().then(function (enclosure) {
+							gameObjects.position.y -= enclosure.innerHeight / 2;
+						});
+					} else {
+						sim.camera.position.z = CONFIG.boardSize;
+						sim.camera.position.y = CONFIG.boardSize + 100;
+						sim.camera.lookAt(sim.scene.position);
+					}
+
+					loadModels(initBoard);
 				});
-			} else {
-				sim.camera.position.z = CONFIG.boardSize;
-				sim.camera.position.y = CONFIG.boardSize + 100;
-				sim.camera.lookAt(sim.scene.position);
-			}
 
-			loadModels(initBoard);
-		});
+			}//end main
 
-	}//end main
-
-	function loadModels(onComplete){
-		//Models will take a couple seconds to download, so callback when done.
-		//Load only 7 different models, then clone and color as necessary.
-		console.log('Downloading chess models...');
-		altspace.utilities.multiloader.init({
-			crossOrigin: 'anonymous',
-			baseUrl: CONFIG.directory,
-		});
-		var req = new altspace.utilities.multiloader.LoadRequest();
-		var names = Object.keys(CONFIG.pieces);
-		for (var i=0; i < names.length; i++){
-			var file = CONFIG.pieces[names[i]].modelFile;
-			req.objUrls.push(file+'.obj.txt');
-			req.mtlUrls.push(file+'.mtl');
-		}
-		var boardFile = CONFIG.board.modelFile;
-		req.objUrls.push(boardFile+'.obj.txt');
-		req.mtlUrls.push(boardFile+'.mtl');
-		altspace.utilities.multiloader.load(req, function(){//onComplete
-			if(req.error) {
-				throw new Error(req.error);
-			}
-			for(var i=0; i < req.objects.length; i++) {
-				var object = req.objects[i];
-				if(i+1 === req.objects.length) {//board is last object
-					object.name = 'board';
-					board = object;
-					continue;
+			function loadModels(onComplete) {
+				//Models will take a couple seconds to download, so callback when done.
+				//Load only 7 different models, then clone and color as necessary.
+				console.log('Downloading chess models...');
+				altspace.utilities.multiloader.init({
+					crossOrigin: 'anonymous',
+					baseUrl: CONFIG.directory,
+				});
+				var req = new altspace.utilities.multiloader.LoadRequest();
+				var names = Object.keys(CONFIG.pieces);
+				for (var i = 0; i < names.length; i++) {
+					var file = CONFIG.pieces[names[i]].modelFile;
+					req.objUrls.push(file + '.obj.txt');
+					req.mtlUrls.push(file + '.mtl');
 				}
-				object.scale.set(modelScale, modelScale, modelScale);
-				object.userData.pieceType = names[i];
-				object.userData.pieceColor = 'white';
-				whitePieces[i] = object;
-				var objectClone = object.clone();
-				objectClone.userData.pieceColor = 'black';
-				blackPieces[i] = objectClone;
-				//Set the black color later.
-			}
-			onComplete();
-		});
-	}//end loadModels
+				var boardFile = CONFIG.board.modelFile;
+				req.objUrls.push(boardFile + '.obj.txt');
+				req.mtlUrls.push(boardFile + '.mtl');
+				altspace.utilities.multiloader.load(req, function () {//onComplete
+					if (req.error) {
+						throw new Error(req.error);
+					}
+					for (var i = 0; i < req.objects.length; i++) {
+						var object = req.objects[i];
+						if (i + 1 === req.objects.length) {//board is last object
+							object.name = 'board';
+							board = object;
+							continue;
+						}
+						object.scale.set(modelScale, modelScale, modelScale);
+						object.userData.pieceType = names[i];
+						object.userData.pieceColor = 'white';
+						whitePieces[i] = object;
+						var objectClone = object.clone();
+						objectClone.userData.pieceColor = 'black';
+						blackPieces[i] = objectClone;
+						//Set the black color later.
+					}
+					onComplete();
+				});
+			}//end loadModels
 
-	function initBoard() {
-		//Make the board model same size as our boardSize constant.
-		board.scale.set(boardScale, boardScale, boardScale);
-		board.position.y = CONFIG.tableHeight + (CONFIG.board.height * boardScale / 2);
-		var whiteTint = new THREE.Color(1, 1, 1);
-		var blackTint = new THREE.Color(0.2, 0.2, 0.2);
-		whitePieces = cloneModels(whitePieces, whiteTint);
-		blackPieces = cloneModels(blackPieces, blackTint);
+			function initBoard() {
+				//Make the board model same size as our boardSize constant.
+				board.scale.set(boardScale, boardScale, boardScale);
+				board.position.y = CONFIG.tableHeight + (CONFIG.board.height * boardScale / 2);
+				var whiteTint = new THREE.Color(1, 1, 1);
+				var blackTint = new THREE.Color(0.2, 0.2, 0.2);
+				whitePieces = cloneModels(whitePieces, whiteTint);
+				blackPieces = cloneModels(blackPieces, blackTint);
 
-		sceneSync = new altspace.utilities.behaviors.SceneSync(instanceRef, {
-			instantiators: {
-				'Piece': function(initData){
-					var i = initData.index;
-					var array = initData.color === 'white' ? whitePieces : blackPieces;
-					var object3d = array[i];
-					var limit = CONFIG.dragPlaneSize;
-					object3d.addBehaviors(
-						new altspace.utilities.behaviors.Object3DSync({position: true}),
-						new altspace.utilities.behaviors.Drag({
-							x: {min: -1 * limit, max: limit},
-							z: {min: -1 * limit, max: limit}
-						}),
-						new altspace.utilities.behaviors.HoverColor({
-							//event: 'cursordown',
-							scene: sim.scene,
-							color: new THREE.Color(0.8, 0.2, 0.2)
-						})
-					);
-					gameObjects.add(object3d);
-					return object3d;
-				}
-			},
-			ready: function(firstInstance){
-				if (firstInstance){
-					arrangePieces();
-				}
-				gameObjects.add(board);
-				sim.scene.add(gameObjects);
-				for(var i=0; i < whitePieces.length; i++){
-					if (firstInstance) {
-						var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
-						var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
+				sceneSync = new altspace.utilities.behaviors.SceneSync(instanceRef, {
+					instantiators: {
+						'Piece': function (initData) {
+							var i = initData.index;
+							var array = initData.color === 'white' ? whitePieces : blackPieces;
+							var object3d = array[i];
+							var limit = CONFIG.dragPlaneSize;
+							object3d.addBehaviors(
+								new altspace.utilities.behaviors.Object3DSync({ position: true }),
+								new altspace.utilities.behaviors.Drag({
+									x: { min: -1 * limit, max: limit },
+									z: { min: -1 * limit, max: limit }
+								}),
+								new altspace.utilities.behaviors.HoverColor({
+									//event: 'cursordown',
+									scene: sim.scene,
+									color: new THREE.Color(0.8, 0.2, 0.2)
+								})
+							);
+							gameObjects.add(object3d);
+							return object3d;
+						}
+					},
+					ready: function (firstInstance) {
+						if (firstInstance) {
+							arrangePieces();
+						}
+						gameObjects.add(board);
+						sim.scene.add(gameObjects);
+						for (var i = 0; i < whitePieces.length; i++) {
+							if (firstInstance) {
+								var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
+								var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
+							}
+						}
+					}
+				});
+				sim.scene.addBehavior(sceneSync);
+				console.log('Chess Board initialized');
+
+			}//end onLoadComplete
+
+			function cloneModels(pieces, color) {
+				//Duplicate models so we have a full chess set.
+				var newPieces = [];
+				var names = Object.keys(CONFIG.pieces);
+				for (var i = 0; i < names.length; i++) {
+					for (var j = 0; j < CONFIG.pieces[names[i]].count; j++) {
+						pieces[i].userData.pieceNum = j + 1;
+						var pieceClone = pieces[i].clone();
+						var deepColor = function (obj, color) {
+							if (obj.material) {
+								//Clone material so only 1 piece will change, not all of that type.
+								obj.material = obj.material.clone();
+								obj.material.color = color;
+							}
+							for (var i = 0; i < obj.children.length; i++) {
+								deepColor(obj.children[i], color);
+							}
+						}
+						deepColor(pieceClone, color);
+						newPieces.push(pieceClone);
 					}
 				}
-			}
-		});
-		sim.scene.addBehavior(sceneSync);
-		console.log('Chess Board initialized');
+				for (var i = 0; i < newPieces.length; i++) {
+					var object = newPieces[i];
+					object.scale.set(modelScale, modelScale, modelScale);
+					object.name = //e.g. 'rook-2-white'
+						object.userData.pieceType + '-' +
+						object.userData.pieceNum + '-' +
+						object.userData.pieceColor;
+					//Put pieces on top of the board.
+					var boardWidth = CONFIG.board.height * boardScale / 2;
+					object.position.y += board.position.y + boardWidth;
+				}
+				return newPieces;
 
-	}//end onLoadComplete
+			}//end cloneModels
 
-	function cloneModels(pieces, color){
-		//Duplicate models so we have a full chess set.
-		var newPieces = [];
-		var names = Object.keys(CONFIG.pieces);
-		for (var i=0; i < names.length; i++){
-			for (var j=0; j < CONFIG.pieces[ names[i] ].count; j++){
-				pieces[i].userData.pieceNum = j+1;
-				var pieceClone = pieces[i].clone();
-				var deepColor = function(obj, color){
-					if (obj.material){
-						//Clone material so only 1 piece will change, not all of that type.
-						obj.material = obj.material.clone();
-						obj.material.color = color;
-					}
-					for(var i=0; i< obj.children.length; i++){
-						deepColor(obj.children[i], color);
+			function arrangePieces() {
+				//Algorithm for determining initial position of pieces.
+				var boardSize = CONFIG.boardSize;
+				var width = CONFIG.pieceWidth * modelScale;
+				var pawnRow = -width + boardSize / 2 - width / 2;
+				var rankRow = boardSize / 2 - width / 2;
+				var offsetX = - boardSize / 2 + width / 2;
+				var secondPiece = function (i, widthOffset) {
+					var w = 7 - widthOffset;
+					object = whitePieces[i];
+					object.position.x = (w * width) + offsetX;
+					object.position.z = rankRow;
+				};
+				for (var i = 0; i < whitePieces.length; i++) {
+					var object = whitePieces[i];
+					object.position.z = rankRow;
+					switch (object.userData.pieceType) {
+						case 'queen':
+							object.position.x = (3 * width) + offsetX;
+							break;
+						case 'king':
+							object.position.x = (4 * width) + offsetX;
+							break;
+						case 'bishop':
+							object.position.x = (2 * width) + offsetX;
+							secondPiece(++i, 2);
+							break;
+						case 'knight':
+							object.position.x = (1 * width) + offsetX;
+							secondPiece(++i, 1);
+							break;
+						case 'rook':
+							object.position.x = (0 * width) + offsetX;
+							secondPiece(++i, 0);
+							break;
+						case 'pawn':
+							for (var j = 0; j < 8; j++) {
+								object = whitePieces[i++];
+								object.position.x = (j * width) + offsetX;
+								object.position.z = pawnRow;
+							}
+							break;
+						default:
+							console.error('Unexpected piece type', object.userData.pieceType);
 					}
 				}
-				deepColor(pieceClone, color);
-				newPieces.push(pieceClone);
-			}
-		}
-		for (var i=0; i < newPieces.length; i++){
-			var object = newPieces[i];
-			object.scale.set(modelScale, modelScale, modelScale);
-			object.name = //e.g. 'rook-2-white'
-				object.userData.pieceType + '-'+
-				object.userData.pieceNum + '-' +
-				object.userData.pieceColor;
-			//Put pieces on top of the board.
-			var boardWidth = CONFIG.board.height * boardScale / 2;
-			object.position.y += board.position.y + boardWidth;
-		}
-		return newPieces;
-
-	}//end cloneModels
-
-	function arrangePieces(){
-		//Algorithm for determining initial position of pieces.
-		var boardSize = CONFIG.boardSize;
-		var width = CONFIG.pieceWidth * modelScale;
-		var pawnRow = -width + boardSize/2 - width/2;
-		var rankRow = boardSize/2 - width/2;
-		var offsetX = - boardSize/2 + width/2;
-		var secondPiece = function(i, widthOffset){
-			var w = 7 - widthOffset;
-			object = whitePieces[i];
-			object.position.x = (w * width) + offsetX;
-			object.position.z = rankRow;
-		};
-		for (var i=0; i < whitePieces.length; i++){
-			var object = whitePieces[i];
-			object.position.z = rankRow;
-			switch(object.userData.pieceType){
-			case 'queen':
-				object.position.x = (3 * width) + offsetX;
-				break;
-			case 'king':
-				object.position.x = (4 * width) + offsetX;
-				break;
-			case 'bishop':
-				object.position.x = (2 * width) + offsetX;
-				secondPiece(++i, 2);
-				break;
-			case 'knight':
-				object.position.x = (1 * width) + offsetX;
-				secondPiece(++i, 1);
-				break;
-			case 'rook':
-				object.position.x = (0 * width) + offsetX;
-				secondPiece(++i, 0);
-				break;
-			case 'pawn':
-				for (var j=0; j < 8; j++){
-					object = whitePieces[i++];
-					object.position.x = (j * width) + offsetX;
-					object.position.z = pawnRow;
+				//Black pieces mirror position of white ones.
+				for (var i = 0; i < whitePieces.length; i++) {
+					var white = whitePieces[i];
+					var black = blackPieces[i];
+					black.position.copy(white.position);
+					if (black.userData.pieceType === 'pawn') {
+						black.position.z -= boardSize - width * 3;
+					} else {
+						black.position.z -= boardSize - width;
+					}
 				}
-				break;
-			default:
-				console.error('Unexpected piece type', object.userData.pieceType);
-			}
-		}
-		//Black pieces mirror position of white ones.
-		for (var i=0; i < whitePieces.length; i++){
-			var white = whitePieces[i];
-			var black = blackPieces[i];
-			black.position.copy(white.position);
-			if (black.userData.pieceType === 'pawn'){
-				black.position.z -= boardSize - width * 3;
-			} else {
-				black.position.z -= boardSize - width;
-			}
-		}
-	}//end arrangePieces
+			}//end arrangePieces
 
-	return {
-		main: main
-	};
+			return {
+				main: main
+			};
 
-}());//end ChessApp
+		}());//end ChessApp
 
 
-ChessApp.main();
+		ChessApp.main();
 
-</script>
+	</script>
 </body>
+
 </html>

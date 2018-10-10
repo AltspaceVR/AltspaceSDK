@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang=en>
-	<head>
-		<meta charset=utf-8>
-		<title>Hello World</title>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
-		<script src="../../dist/altspace.js"></script>
 
-	</head>
-	<body>
-		<script>
+<head>
+	<meta charset=utf-8>
+	<title>Hello World</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../../dist/altspace.js"></script>
+
+</head>
+
+<body>
+	<script>
 		if (!window.altspace || !window.altspace.inClient) {
 			document.write('<h3>To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
 		}
@@ -17,17 +19,17 @@
 
 		//Setup
 		var scene = new THREE.Scene();
-		var renderer = altspace.getThreeJSRenderer({version:'0.2.0'});
+		var renderer = altspace.getThreeJSRenderer({ version: '0.2.0' });
 
 		new THREE.FontLoader().load(
-			'https://cdn.rawgit.com/mrdoob/three.js/r74/examples/fonts/helvetiker_regular.typeface.js',
+			'libs/helvetiker_regular.typeface.json',
 			createTextAndAddToScene
 		);
 
 		function createTextAndAddToScene(font) {
 			//Text
-			var geometry = new THREE.TextGeometry(text, {font: font});
-			var material = new THREE.MeshBasicMaterial({color:'green'});
+			var geometry = new THREE.TextGeometry(text, { font: font });
+			var material = new THREE.MeshBasicMaterial({ color: 'green' });
 			var mesh = new THREE.Mesh(geometry, material);
 			mesh.position.x = -400;
 			mesh.scale.z = 0.3;
@@ -43,6 +45,7 @@
 		}
 		animate();
 
-		</script>
-	</body>
+	</script>
+</body>
+
 </html>

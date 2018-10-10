@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Geometry Stress Test</title>
-	<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
-    <script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.js"></script>
+	<script src="../js/libs/GLTFLoader.js"></script>
 	<script src="../../../dist/altspace.min.js"></script>
 	<script>
 
 		var sim = new altspace.utilities.Simulation();
 		var enc = null;
-		var box = new THREE.Mesh(new THREE.BoxBufferGeometry(0.05,0.05,0.05));
+		var box = new THREE.Mesh(new THREE.BoxBufferGeometry(0.05, 0.05, 0.05));
 		var ballMat = null;
 		var ballLow = null;
 		var ballHigh = null;
 
-		window.requestAnimationFrame(function animate(timestamp){
+		window.requestAnimationFrame(function animate(timestamp) {
 			window.requestAnimationFrame(animate);
 
 			// animate texture
-			if(ballMat){
+			if (ballMat) {
 				var offset = ballMat.map.offset.x + 0.001;
 				ballMat.map.offset.x = offset >= 1 ? offset - 1 : offset;
 			}
 		});
 
-		altspace.getEnclosure().then(function(e){
+		altspace.getEnclosure().then(function (e) {
 			sim.scene.scale.setScalar(e.pixelsPerMeter);
 			enc = new THREE.Box3();
 			enc.setFromCenterAndSize(
@@ -32,21 +33,20 @@
 				new THREE.Vector3(e.innerWidth, e.innerHeight, e.innerDepth)
 					.divideScalar(e.pixelsPerMeter)
 			);
-			buttonContainer.position.set(enc.min.x, enc.max.y-0.1, 0);
+			buttonContainer.position.set(enc.min.x, enc.max.y - 0.1, 0);
 			enc.max.y -= 1;
 		});
 
 		var loader = new THREE.GLTFLoader();
 		loader.load('model.gltf',
-			function(result)
-			{
+			function (result) {
 				ballHigh = result.scene.getObjectByName('highpoly').children[0];
-				ballHigh.rotateX(-Math.PI/2);
+				ballHigh.rotateX(-Math.PI / 2);
 				ballHigh.scale.setScalar(0.2);
 				ballHigh.matrixAutoUpdate = true;
 
 				ballLow = result.scene.getObjectByName('lowpoly').children[0];
-				ballLow.rotateX(-Math.PI/2);
+				ballLow.rotateX(-Math.PI / 2);
 				ballLow.scale.setScalar(0.2);
 				ballLow.matrixAutoUpdate = true;
 
@@ -58,7 +58,7 @@
 				ballMat.lightMapIntensity = 1;
 			},
 			undefined, // onprogress callback
-			function(err){
+			function (err) {
 				console.error(err);
 			}
 		);
@@ -67,23 +67,23 @@
 		var buttonGeo = new THREE.BoxBufferGeometry(0.2, 0.1, 0.1);
 		sim.scene.add(buttonContainer);
 
-		function addButton(x, y, color, callback){
-			var button = new THREE.Mesh( buttonGeo,
-				new THREE.MeshBasicMaterial({color: color})
+		function addButton(x, y, color, callback) {
+			var button = new THREE.Mesh(buttonGeo,
+				new THREE.MeshBasicMaterial({ color: color })
 			);
 			button.position.set(x, y, 0);
 			button.addEventListener('cursorup', callback);
 			buttonContainer.add(button);
 		}
 
-		addButton(0.1,   0,    0xff0000, function(){ spawn(ballHigh, 100); });
-		addButton(0.35,  0,    0xffff00, function(){ spawn(ballLow,  100); });
-		addButton(0.6,   0,    0x00ff00, function(){ spawn(box,      100); });
-		addButton(0.1,  -0.15, 0x800000, function(){ spawn(ballHigh,  10); });
-		addButton(0.35, -0.15, 0x808000, function(){ spawn(ballLow,   10); });
-		addButton(0.6,  -0.15, 0x008000, function(){ spawn(box,       10); });
+		addButton(0.1, 0, 0xff0000, function () { spawn(ballHigh, 100); });
+		addButton(0.35, 0, 0xffff00, function () { spawn(ballLow, 100); });
+		addButton(0.6, 0, 0x00ff00, function () { spawn(box, 100); });
+		addButton(0.1, -0.15, 0x800000, function () { spawn(ballHigh, 10); });
+		addButton(0.35, -0.15, 0x808000, function () { spawn(ballLow, 10); });
+		addButton(0.6, -0.15, 0x008000, function () { spawn(box, 10); });
 
-		function getRandomPointInBox(box){
+		function getRandomPointInBox(box) {
 			var size = box.getSize();
 			return new THREE.Vector3(
 				Math.random() * size.x + box.min.x,
@@ -96,16 +96,14 @@
 		var vertCount = 0;
 		var polyCount = 0;
 
-		function spawn(mesh, batchSize)
-		{
-			if(!mesh || !enc) return;
+		function spawn(mesh, batchSize) {
+			if (!mesh || !enc) return;
 			batchSize = batchSize || 100;
 
-			for(var i=0; i<batchSize; i++)
-			{
+			for (var i = 0; i < batchSize; i++) {
 				var item = mesh.clone();
 				//item.material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
-				item.position.copy( getRandomPointInBox(enc) );
+				item.position.copy(getRandomPointInBox(enc));
 				sim.scene.add(item);
 			}
 
@@ -120,6 +118,7 @@
 
 	</script>
 </head>
+
 <body>
 	<span style='background-color: white; padding: 5px; float: right'>
 		<span id='meshcount'>0</span> meshes,
@@ -127,4 +126,5 @@
 		<span id='polycount'>0</span> polys
 	</span>
 </body>
+
 </html>

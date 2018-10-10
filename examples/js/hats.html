@@ -1,13 +1,15 @@
 ﻿<!DOCTYPE html>
 <html lang=en>
+
 <head>
-<meta charset=utf-8>
-<title>Hats Example</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
-<script src="../../dist/altspace.js"></script>
+	<meta charset=utf-8>
+	<title>Hats Example</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="libs/MTLLoader.js"></script>
+	<script src="libs/OBJLoader.js"></script>
+	<script src="../../dist/altspace.js"></script>
 </head>
+
 <body>
 	<script>
 		if (!window.altspace || !window.altspace.inClient) {
@@ -152,12 +154,12 @@
 				this.sync = null;
 			}
 
-			FollowBehavior.prototype.awake = function(o) {
+			FollowBehavior.prototype.awake = function (o) {
 				this.object3d = o;
 				this.sync = this.object3d.getBehaviorByType('Object3DSync');
 			}
 
-			FollowBehavior.prototype.update = function() {
+			FollowBehavior.prototype.update = function () {
 				//No need to take ownership of this hat, since we created it.
 				this.object3d.position.copy(this.joint.position);
 				this.object3d.rotation.copy(this.joint.rotation);
@@ -184,4 +186,5 @@
 		});
 	</script>
 </body>
+
 </html>

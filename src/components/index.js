@@ -10,7 +10,7 @@
 *   <head>
 *     <title>My A-Frame Scene</title>
 *     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
-*     <script src="https://cdn.rawgit.com/AltspaceVR/AltspaceSDK/v{{SDK_VERSION}}/dist/altspace.min.js"></script>
+*     <script src="https://sdk.altvr.com/libs/altspace.js/{{SDK_VERSION}}/altspace.min.js"></script>
 *   </head>
 *   <body>
 *     <a-scene altspace>
@@ -22,7 +22,7 @@
 
 'use strict';
 
-import {registerComponentClass, registerSystemClass} from './AFrameComponent';
+import { registerComponentClass, registerSystemClass } from './AFrameComponent';
 import AltspaceCursorCollider from './AltspaceCursorCollider';
 import AltspaceTrackedControls from './AltspaceTrackedControls';
 import AltspaceComponent from './AltspaceComponent';
@@ -39,7 +39,7 @@ import Instantiator from './instantiator';
 import {
 	NObject, NSpawner, NBillboard, NSkeletonParent, NCockpitParent
 } from './NSmallComponents';
-import {NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider} from './NColliders';
+import { NSphereCollider, NBoxCollider, NCapsuleCollider, NMeshCollider } from './NColliders';
 import NContainer from './NContainer';
 import NPortal from './NPortal';
 import NSound from './NSound';
@@ -49,8 +49,7 @@ import NText from './NText';
 import CollapseModel from './CollapseModel';
 import Visible from './visible';
 
-if (window.AFRAME)
-{
+if (window.AFRAME) {
 	registerComponentClass('altspace-cursor-collider', AltspaceCursorCollider);
 	registerComponentClass('altspace-tracked-controls', AltspaceTrackedControls);
 	registerComponentClass('altspace', AltspaceComponent);

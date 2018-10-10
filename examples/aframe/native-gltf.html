@@ -1,43 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Native glTF</title>
 	<script src="https://aframe.io/releases/0.7.0/aframe.js"></script>
 	<script src='../../dist/altspace.js'></script>
 	<script>
-	AFRAME.registerComponent('draw-bounds', {
-		dependencies: ['n-gltf'],
-		init: function()
-		{
-			var gltf = this.el.components['n-gltf'];
-			var generateBox = this.generateBox.bind(this);
-			this.el.addEventListener('n-gltf-loaded', function(){
-				gltf.getBoundingBox().then(generateBox);
-			});
-		},
-		generateBox: function(bounds)
-		{
-			console.log(bounds);
-			var size = bounds.getSize();
-			var box = new AFRAME.THREE.Mesh(
-				new AFRAME.THREE.BoxBufferGeometry(size.x, size.y, size.z),
-				new AFRAME.THREE.MeshBasicMaterial({transparent: true, opacity: 0.3})
-			);
-			bounds.getCenter(box.position);
-			this.el.object3D.add(box);
-			this.el.setObject3D('bounds', box);
-		}
-	});
+		AFRAME.registerComponent('draw-bounds', {
+			dependencies: ['n-gltf'],
+			init: function () {
+				var gltf = this.el.components['n-gltf'];
+				var generateBox = this.generateBox.bind(this);
+				this.el.addEventListener('n-gltf-loaded', function () {
+					gltf.getBoundingBox().then(generateBox);
+				});
+			},
+			generateBox: function (bounds) {
+				console.log(bounds);
+				var size = bounds.getSize();
+				var box = new AFRAME.THREE.Mesh(
+					new AFRAME.THREE.BoxBufferGeometry(size.x, size.y, size.z),
+					new AFRAME.THREE.MeshBasicMaterial({ transparent: true, opacity: 0.3 })
+				);
+				bounds.getCenter(box.position);
+				this.el.object3D.add(box);
+				this.el.setObject3D('bounds', box);
+			}
+		});
 	</script>
 </head>
+
 <body>
-<a-scene altspace>
-	<a-entity id='helmet' position='-1 0 0'
-		n-gltf='url: https://rawgit.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb'
-		draw-bounds></a-entity>
-	<a-entity id='lantern' position='1 -1.5 0' scale='.1 .1 .1'
-		n-gltf='url: https://rawgit.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-pbrSpecularGlossiness/Lantern.gltf'
-		></a-entity>
-</a-scene>
+	<a-scene altspace>
+		<a-entity id='helmet' position='-1 0 0' n-gltf='url: https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb'
+		 draw-bounds></a-entity>
+		<a-entity id='lantern' position='1 -1.5 0' scale='.1 .1 .1' n-gltf='url: https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Lantern/glTF/Lantern.gltf'></a-entity>
+	</a-scene>
 </body>
+
 </html>

@@ -1,48 +1,53 @@
 ﻿<!DOCTYPE html>
 <html lang=en>
+
 <head>
-<meta charset=utf-8>
-<title>Solar System Example</title>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/loaders/OBJLoader.js"></script>
-<script src="../../dist/altspace.js"></script>
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<meta charset=utf-8>
+	<title>Solar System Example</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="libs/MTLLoader.js"></script>
+	<script src="libs/OBJLoader.js"></script>
+	<script src="../../dist/altspace.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
-<style>
-	body {
-		font-family: Monospace;
-		color: #fff;
-		margin: 0px;
-		overflow: hidden;
-	}
-	#test-frame{
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		margin-top: -250px;
-		margin-left: -250px;
-		width: 500px;
-		height: 500px;
-		border-radius: 500px;
-		background-color: rgba(1, 0, 0, 0);
-		box-shadow: 0 0 8px 600px rgba(0, 0, 0, 1);
-	}
-	#planet-list{
-		font-size: 40px;
-		left: -300px;
-		position: absolute;
-	}
-	.ontop {
-		position: absolute;
-		padding-left: 10px;
-	}
+	<style>
+		body {
+			font-family: Monospace;
+			color: #fff;
+			margin: 0px;
+			overflow: hidden;
+		}
 
-	.ontop a {
-		color: white;
-	}
-</style>
+		#test-frame {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin-top: -250px;
+			margin-left: -250px;
+			width: 500px;
+			height: 500px;
+			border-radius: 500px;
+			background-color: rgba(1, 0, 0, 0);
+			box-shadow: 0 0 8px 600px rgba(0, 0, 0, 1);
+		}
+
+		#planet-list {
+			font-size: 40px;
+			left: -300px;
+			position: absolute;
+		}
+
+		.ontop {
+			position: absolute;
+			padding-left: 10px;
+		}
+
+		.ontop a {
+			color: white;
+		}
+	</style>
 </head>
+
 <body>
 	<div id="test-frame">
 		<ul id="planet-list">
@@ -50,169 +55,170 @@
 	</div>
 </body>
 <script>
-if (!window.altspace || !window.altspace.inClient) {
-	document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
-}
+	if (!window.altspace || !window.altspace.inClient) {
+		document.write('<h3 class="ontop">To view this example, please open this page in <a href="http://altvr.com"> AltspaceVR </a></h3>');
+	}
 
-SolarSystemApp = (function(){
+	SolarSystemApp = (function () {
 
-	var CONFIG = [
-		// name, radius, distance, orbitalPeriod
-		['sun',	     30,   0,   1],
-		['mercury',	 2.4,  2,   0.2409],
-		['venus',    6,    3,   0.616],
-		['earth',    6.3,  4,   1],
-		['mars',     3.3,  5,   1.9],
-		['jupiter',	 14,   8,   12.0],
-		['saturn',	 12,   10,  29.5],
-		['uranus', 	 10,   12,  84],
-		['neptune',  8,    14,  165],
-	];
-	var radiusCoeff = 0.022;
-	var distanceCoeff = 9;
-	var velocityCoeff = 0.005;
+		var CONFIG = [
+			// name, radius, distance, orbitalPeriod
+			['sun', 30, 0, 1],
+			['mercury', 2.4, 2, 0.2409],
+			['venus', 6, 3, 0.616],
+			['earth', 6.3, 4, 1],
+			['mars', 3.3, 5, 1.9],
+			['jupiter', 14, 8, 12.0],
+			['saturn', 12, 10, 29.5],
+			['uranus', 10, 12, 84],
+			['neptune', 8, 14, 165],
+		];
+		var radiusCoeff = 0.022;
+		var distanceCoeff = 9;
+		var velocityCoeff = 0.005;
 
-	var sim;
-	var planets = [];
-	var planetsByName = {};
-	var compactMode;
-	var selectedPlanetName = 'earth';
-	var solarSystem = new THREE.Object3D();
-	var multiloader = altspace.utilities.multiloader;
-	var loadRequest;
+		var sim;
+		var planets = [];
+		var planetsByName = {};
+		var compactMode;
+		var selectedPlanetName = 'earth';
+		var solarSystem = new THREE.Object3D();
+		var multiloader = altspace.utilities.multiloader;
+		var loadRequest;
 
-	function main() {
-		sim = window.sim = new altspace.utilities.Simulation();
-		sim.scene.add(solarSystem);
-		if (altspace.inClient) {
-			altspace.getEnclosure().then(function (enclosure) {
-				sim.scene.position.y -= enclosure.innerHeight / enclosure.pixelsPerMeter / 3;
-				// HACK: Personal web panels are 1280 pixels.
-				compactMode = enclosure.innerWidth > 1024;
-				if (compactMode) {
-					solarSystem.scale.multiplyScalar(enclosure.pixelsPerMeter / 150);
-				}
-				else {
-					solarSystem.scale.multiplyScalar(enclosure.pixelsPerMeter / 80);
-				}
+		function main() {
+			sim = window.sim = new altspace.utilities.Simulation();
+			sim.scene.add(solarSystem);
+			if (altspace.inClient) {
+				altspace.getEnclosure().then(function (enclosure) {
+					sim.scene.position.y -= enclosure.innerHeight / enclosure.pixelsPerMeter / 3;
+					// HACK: Personal web panels are 1280 pixels.
+					compactMode = enclosure.innerWidth > 1024;
+					if (compactMode) {
+						solarSystem.scale.multiplyScalar(enclosure.pixelsPerMeter / 150);
+					}
+					else {
+						solarSystem.scale.multiplyScalar(enclosure.pixelsPerMeter / 80);
+					}
+					loadModels();
+				});
+			}
+			else {
+				compactMode = false;
+				solarSystem.scale.set(20, 20, 20);
 				loadModels();
+			}
+		}
+
+		function loadModels() {// Load up the models
+			multiloader.init({
+				crossOrigin: 'anonymous',
+				baseUrl: 'models/solar-system/'
 			});
+			loadRequest = new multiloader.LoadRequest();
+			for (var i = 0; i < CONFIG.length; i++) {
+				var name = CONFIG[i][0];
+				var planetElement = $("#planet-list").append('<li><span>' + name + '</span></li>')[0];
+				$(planetElement).click(function (el) {
+					selectedPlanetName = el.target.innerHTML;
+				});
+				loadRequest.objUrls.push(name + '.obj');
+				loadRequest.mtlUrls.push(name + '.mtl');
+			}
+			multiloader.load(loadRequest, initPlanets);
 		}
-		else {
-			compactMode = false;
-			solarSystem.scale.set(20, 20, 20);
-			loadModels();
+
+		function initPlanets() {//Callback to be sure all models are loaded.
+			for (var i = 0; i < loadRequest.objects.length; i++) {
+
+				var p = CONFIG[i];//guaranteed to be in same order
+				var name = p[0];
+				var radius = p[1];
+				var distance = p[2];
+				var orbitalPeriod = p[3];
+
+				var obj = loadRequest.objects[i];
+
+				planetsByName[name] = obj;
+				obj.solarDistance = distance * distanceCoeff;
+				obj.position.y = 10;
+				obj.orbitalPosition = Math.random() * 3.14;
+				obj.orbitalVelocity = (1 / orbitalPeriod) * velocityCoeff;
+				obj.name = name;
+				obj.scale.x = radius * radiusCoeff;
+				obj.scale.y = radius * radiusCoeff;
+				obj.scale.z = radius * radiusCoeff;
+				obj.userData.originalScale = {};
+				obj.userData.originalScale.x = obj.scale.x;
+				obj.userData.originalScale.y = obj.scale.y;
+				obj.userData.originalScale.z = obj.scale.z;
+
+				planets.push(obj);
+				solarSystem.add(obj);
+				obj.addBehaviors(new OrbitBehavior());
+			}
 		}
-	}
 
-	function loadModels(){// Load up the models
-		multiloader.init({
-			crossOrigin: 'anonymous',
-			baseUrl: 'models/solar-system/'
-		});
-		loadRequest = new multiloader.LoadRequest();
-		for (var i=0; i < CONFIG.length; i++) {
-			var name = CONFIG[i][0];
-			var planetElement = $("#planet-list").append('<li><span>' + name + '</span></li>')[0];
-			$(planetElement).click(function(el){
-				selectedPlanetName = el.target.innerHTML;
-			});
-			loadRequest.objUrls.push(name+'.obj');
-			loadRequest.mtlUrls.push(name+'.mtl');
+		function OrbitBehavior() {
+			this.obj = null;
 		}
-		multiloader.load(loadRequest, initPlanets);
-	}
 
-	function initPlanets(){//Callback to be sure all models are loaded.
-		for (var i=0; i < loadRequest.objects.length; i++) {
-
-			var p = CONFIG[i];//guaranteed to be in same order
-			var name = p[0];
-			var radius = p[1];
-			var distance = p[2];
-			var orbitalPeriod = p[3];
-
-			var obj = loadRequest.objects[i];
-
-			planetsByName[name] = obj;
-			obj.solarDistance = distance * distanceCoeff;
-			obj.position.y = 10;
-			obj.orbitalPosition = Math.random() * 3.14;
-			obj.orbitalVelocity = (1 / orbitalPeriod) * velocityCoeff;
-			obj.name = name;
-			obj.scale.x = radius * radiusCoeff;
-			obj.scale.y = radius * radiusCoeff;
-			obj.scale.z = radius * radiusCoeff;
-			obj.userData.originalScale = {};
-			obj.userData.originalScale.x = obj.scale.x;
-			obj.userData.originalScale.y = obj.scale.y;
-			obj.userData.originalScale.z = obj.scale.z;
-
-			planets.push(obj);
-			solarSystem.add(obj);
-			obj.addBehaviors(new OrbitBehavior());
+		OrbitBehavior.prototype.awake = function (o) {
+			this.obj = o;
 		}
-	}
 
-	function OrbitBehavior(){
-		this.obj = null;
-	}
-
-	OrbitBehavior.prototype.awake = function(o) {
-		this.obj = o;
-	}
-
-	OrbitBehavior.prototype.update = function(deltatime) {
-		if(compactMode){
-			if(this.obj === planetsByName[selectedPlanetName]) {
-				this.obj.visible = true;
-				this.obj.position.x = 0;
-				this.obj.position.y = 0;
-				this.obj.position.z = 0;
-				// We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
-				var scale = altspace.inClient ? 3.6 : 0.4 ;
-				this.obj.scale.x = scale;
-				this.obj.scale.y = scale;
-				this.obj.scale.z = scale;
+		OrbitBehavior.prototype.update = function (deltatime) {
+			if (compactMode) {
+				if (this.obj === planetsByName[selectedPlanetName]) {
+					this.obj.visible = true;
+					this.obj.position.x = 0;
+					this.obj.position.y = 0;
+					this.obj.position.z = 0;
+					// We should be calculating the bounding box and matching it up to the innerWidth and innerHeight
+					var scale = altspace.inClient ? 3.6 : 0.4;
+					this.obj.scale.x = scale;
+					this.obj.scale.y = scale;
+					this.obj.scale.z = scale;
+				} else {
+					this.obj.visible = false;
+					this.obj.scale.x = 0.00001;
+					this.obj.scale.y = 0.00001;
+					this.obj.scale.z = 0.00001;
+				}
 			} else {
-				this.obj.visible = false;
-				this.obj.scale.x = 0.00001;
-				this.obj.scale.y = 0.00001;
-				this.obj.scale.z = 0.00001;
+				this.obj.orbitalPosition += this.obj.orbitalVelocity;
+				var r = this.obj.solarDistance;
+				var x = r * Math.sin(this.obj.orbitalPosition);
+				var z = r * Math.cos(this.obj.orbitalPosition);
+				this.obj.position.x = x;
+				this.obj.position.z = z;
 			}
-		} else {
-			this.obj.orbitalPosition += this.obj.orbitalVelocity;
-			var r = this.obj.solarDistance;
-			var x = r*Math.sin(this.obj.orbitalPosition);
-			var z = r*Math.cos(this.obj.orbitalPosition);
-			this.obj.position.x = x;
-			this.obj.position.z = z;
+			this.obj.rotation.y += 0.001;
 		}
-		this.obj.rotation.y += 0.001;
-	}
 
 
-	window.addEventListener('resize', function(){
-		if(compactMode){
-			document.getElementById('test-frame').style.visibility = 'visible';
-		} else {
-			document.getElementById('test-frame').style.visibility= 'hidden';
-			for(var i = 0, max = planets.length; i < max; i++){
-				var obj = planets[i];
-				obj.scale.x = obj.userData.originalScale.x;
-				obj.scale.y = obj.userData.originalScale.y;
-				obj.scale.z = obj.userData.originalScale.z;
+		window.addEventListener('resize', function () {
+			if (compactMode) {
+				document.getElementById('test-frame').style.visibility = 'visible';
+			} else {
+				document.getElementById('test-frame').style.visibility = 'hidden';
+				for (var i = 0, max = planets.length; i < max; i++) {
+					var obj = planets[i];
+					obj.scale.x = obj.userData.originalScale.x;
+					obj.scale.y = obj.userData.originalScale.y;
+					obj.scale.z = obj.userData.originalScale.z;
+				}
 			}
+		});
+
+		return {
+			main: main,
 		}
-	});
 
-	return {
-		main: main,
-	}
+	}());
 
-}());
-
-SolarSystemApp.main();
+	SolarSystemApp.main();
 
 </script>
+
 </html>

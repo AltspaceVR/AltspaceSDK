@@ -1,79 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Texture Reuse Test</title>
-		<meta charset="utf-8">
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.min.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r84/examples/js/controls/OrbitControls.js"></script>
-		<script src="../../dist/altspace.js"></script>
-	</head>
-	<body>
-		<h1 style='color: white'>
-			All cubes should be the same color. <br>
-			Wait for three additional cubes to appear.<br>
-			Hit the refresh button a few times
-		</h1>
-		<button onclick="location.search='?' + Date.now()">refresh</button>
-		<script>
-			var sim = new altspace.utilities.Simulation({auto: false}), controls;
 
-			if (!altspace.inClient) {
-				controls = new THREE.OrbitControls(sim.camera);
-			}
+<head>
+	<title>Texture Reuse Test</title>
+	<meta charset="utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="../js/libs/OrbitControls.js"></script>
+	<script src="../../dist/altspace.js"></script>
+</head>
 
-			function createTexture() {
-				var textureSize = 8;
-				var canvas = document.createElement('canvas');
-				canvas.width = textureSize;
-				canvas.height = textureSize;
-				var context = canvas.getContext('2d');
-				context.fillStyle = '#ff0000';
-				context.fillRect(0, 0, textureSize, textureSize);
-				var canvasTexture = new THREE.CanvasTexture(canvas);
-				return canvasTexture;
-			}
+<body>
+	<h1 style='color: white'>
+		All cubes should be the same color. <br>
+		Wait for three additional cubes to appear.<br>
+		Hit the refresh button a few times
+	</h1>
+	<button onclick="location.search='?' + Date.now()">refresh</button>
+	<script>
+		var sim = new altspace.utilities.Simulation({ auto: false }), controls;
 
-			function createMaterial(texture) {
-				return new THREE.MeshBasicMaterial({ color: 'white', map: texture });
-			}
+		if (!altspace.inClient) {
+			controls = new THREE.OrbitControls(sim.camera);
+		}
 
-			function createBox(material, x) {
-				var boxSize = 20;
-				var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-				var boxMesh = new THREE.Mesh(box, material);
-				boxMesh.position.x = 250 - sim.scene.children.length * 25;
-				sim.scene.add(boxMesh);
-			}
+		function createTexture() {
+			var textureSize = 8;
+			var canvas = document.createElement('canvas');
+			canvas.width = textureSize;
+			canvas.height = textureSize;
+			var context = canvas.getContext('2d');
+			context.fillStyle = '#ff0000';
+			context.fillRect(0, 0, textureSize, textureSize);
+			var canvasTexture = new THREE.CanvasTexture(canvas);
+			return canvasTexture;
+		}
 
-			var tex = createTexture();
-			var matOne = createMaterial(tex);
+		function createMaterial(texture) {
+			return new THREE.MeshBasicMaterial({ color: 'white', map: texture });
+		}
 
+		function createBox(material, x) {
+			var boxSize = 20;
+			var box = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+			var boxMesh = new THREE.Mesh(box, material);
+			boxMesh.position.x = 250 - sim.scene.children.length * 25;
+			sim.scene.add(boxMesh);
+		}
+
+		var tex = createTexture();
+		var matOne = createMaterial(tex);
+
+		createBox(matOne);
+		for (var i = 0; i < 30; i++) {
+			createBox(createMaterial(tex));
+		}
+
+		setTimeout(function () {
 			createBox(matOne);
-			for (var i = 0; i < 30; i++) {
-				createBox(createMaterial(tex));
+		}, 1000);
+
+		setTimeout(function () {
+			createBox(createMaterial(tex));
+		}, 2000);
+
+		setTimeout(function () {
+			createBox(createMaterial(tex));
+		}, 3000);
+
+		function animate(elapsed) {
+			if (controls) {
+				controls.update();
 			}
+			requestAnimationFrame(animate);
+			sim.renderer.render(sim.scene, sim.camera);
+		}
+		animate(0);
 
-			setTimeout(function () {
-				createBox(matOne);
-			}, 1000);
+	</script>
+</body>
 
-			setTimeout(function () {
-				createBox(createMaterial(tex));
-			}, 2000);
-
-			setTimeout(function () {
-				createBox(createMaterial(tex));
-			}, 3000);
-
-			function animate(elapsed) {
-				if (controls) {
-					controls.update();
-				}
-				requestAnimationFrame(animate);
-				sim.renderer.render(sim.scene, sim.camera);
-			}
-			animate(0);
-
-		</script>
-	</body>
 </html>
