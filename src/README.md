@@ -18,7 +18,7 @@ Note that many of our APIs make use of Promises. Learn about how they work [here
 
 ## Examples and Resources
 
-* [Examples list](/examples/) ([Source code](https://github.com/AltspaceVR/AltspaceSDK/tree/master/examples))
+* [Examples list](https://altspacevr.github.io/AltspaceSDK/examples/) ([Source code](https://github.com/AltspaceVR/AltspaceSDK/tree/master/examples))
 * [Three.js documentation](https://threejs.org/docs)
 * [Report a bug](https://github.com/AltspaceVR/AltspaceSDK/issues)
 
