@@ -60,6 +60,8 @@ If you use npm, you can install altspace.js with:
 
 ## Debugging SDK Apps
 
+NOTE: these instructions do not apply to Android-based devices!
+
 We provide a standalone debugger that can connect to SDK apps while they're running in Altspace and has the normal functionality of the Chrome developer tools (i.e. you can read console logs, look at the values of variables, execute Javascript, etc.) You can download it here:
 
 **[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
