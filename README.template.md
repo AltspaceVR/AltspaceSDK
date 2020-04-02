@@ -8,7 +8,7 @@ THIS FILE IS GENERATED FROM README.template.md. EDIT THAT INSTEAD
 
 ## [A-Frame API](https://altspacevr.github.io/AltspaceSDK/doc/aframe/) - [Three.js API](https://altspacevr.github.io/AltspaceSDK/doc/js/)
 
-The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](https://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC, Mac, and Mobile.
+The AltspaceVR SDK can be used together with [Three.js] or [A-Frame] to create holographic, multi-user web apps for virtual reality. When running inside [AltspaceVR](https://altvr.com/) they can be experienced with consumer VR hardware including the Oculus Rift, HTC Vive, Samsung GearVR, and Google Daydream, as well as in non-VR mode for PC.
 
 Three.js is an open-source, renderer-agnostic 3D engine written in Javascript. It is used to construct much of the 3D graphics you see on the web, and can be used to create entire applications, or enhance existing webpages with 3D content. A-Frame is a later addition to the 3D Web family, simplifying the process with the use of HTML-style markup to build 3D scenes instead of Javascript.
 
@@ -62,9 +62,7 @@ If you use npm, you can install altspace.js with:
 
 We provide a standalone debugger that can connect to SDK apps while they're running in Altspace and has the normal functionality of the Chrome developer tools (i.e. you can read console logs, look at the values of variables, execute Javascript, etc.) You can download it here:
 
-**[OSX Debugger](http://sdk.altvr.com/debugger/DebuggerMacOSX.zip) - [Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
-
-(Note that you cannot rename the OSX Debugger from Debugger.app after you extract it, or it won’t run due to legacy .app bundle structure — it needs an Info.plist with metadata.)
+[Windows Debugger](http://sdk.altvr.com/debugger/DebuggerWindows.exe)**
 
 More generally, Altspace browsers are implemented using an embedded Chromium which exposes the Chrome debugging protocol version 1.1. You can find documentation on the protocol and usage [here](https://developer.chrome.com/devtools/docs/debugger-protocol). The protocol is exposed via a WebSocket interface on port 9999, rather than 9222 as is typical for the Chrome desktop browser. You can test it out by accessing http://localhost:9999/json while running Altspace to see a list of active in-world browsers and enclosures in JSON format.
 
