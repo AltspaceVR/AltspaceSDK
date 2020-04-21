@@ -12,11 +12,13 @@ import * as CursorShim from './shims/cursor';
 * @class Simulation
 * @param {Object} [config] Optional parameters.
 * @param {Boolean} [config.auto=true] Automatically start the render loop.
+* @param {Boolean} [config.profile=false] Enable profiling of serialization buffer memory usage.
+* @param {Number} [config.initialSerializationBufferSize=1024] Size in bytes to initially expand serialization buffer by to optimize performance. (Minimum: 1,024 bytes, Maximum: 67,108,864 bytes)
 * @memberof module:altspace/utilities
 */
 class Simulation
 {
-	constructor(config = {auto: true})
+	constructor(config = {auto: true, profile: false, initialSerializationBufferSize: 1024})
 	{
 		this._scene = null;
 		this._renderer = null;
@@ -37,7 +39,7 @@ class Simulation
 		else if (window.altspace && altspace.inClient)
 		{
 			this._scene = new THREE.Scene();
-			this._renderer = altspace.getThreeJSRenderer();
+			this._renderer = altspace.getThreeJSRenderer({profile: config.profile, initialSerializationBufferSize: config.initialSerializationBufferSize});
 			this._camera = new THREE.PerspectiveCamera(); // TODO: change from shim to symbolic
 		}
 		else {
